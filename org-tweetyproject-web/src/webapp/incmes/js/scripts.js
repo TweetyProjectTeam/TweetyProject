@@ -156,7 +156,14 @@ function select(){
   		url: tweetyserverInc,
   		data: JSON.stringify({
     	             "cmd" : "measures",
-    	             "email" : "tweetyweb@mthimm.de"
+    	             "email" : "tweetyweb@mthimm.de",
+					 "measure": "",
+					 "kb":"",
+					 "format": "",
+					 "timeout": 60000,
+					 "unit_timeout": "ms"
+
+
    	           }),
   		dataType: "json",
   		success: function(response){populateMeasures(response);},
