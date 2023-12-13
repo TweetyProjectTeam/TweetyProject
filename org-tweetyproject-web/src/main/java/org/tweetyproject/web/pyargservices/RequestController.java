@@ -12,12 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.json.JSONException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -26,6 +22,7 @@ import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
+import org.tweetyproject.logics.commons.analysis.NaiveMusEnumerator;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.syntax.Negation;
@@ -33,9 +30,15 @@ import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory;
 import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
 import org.tweetyproject.logics.pl.parser.PlParserFactory;
 import org.tweetyproject.logics.pl.parser.PlParserFactory.Format;
+import org.tweetyproject.logics.pl.sat.PlMusEnumerator;
+import org.tweetyproject.logics.pl.sat.Sat4jSolver;
+import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
+import org.tweetyproject.math.opt.solver.ApacheCommonsSimplex;
+import org.tweetyproject.math.opt.solver.GlpkSolver;
+import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.web.TweetyServer;
 import org.tweetyproject.web.pyargservices.dung.AbstractExtensionReasonerFactory;
 import org.tweetyproject.web.pyargservices.dung.DungReasonerCalleeFactory;
@@ -50,7 +53,6 @@ import org.tweetyproject.web.services.DelpService;
 import org.tweetyproject.web.services.InconsistencyMeasurementService;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.tweetyproject.arg.delp.parser.DelpParser;
 import org.tweetyproject.arg.delp.reasoner.DelpReasoner;
 import org.tweetyproject.arg.delp.semantics.ComparisonCriterion;
@@ -259,6 +261,12 @@ public class RequestController {
 		int user_timeout = Utils.checkUserTimeout(query.getTimeout(), SERVICES_TIMEOUT_INCMES, unit);
 		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
 		// 	throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
+		// set sub-solvers
+		SatSolver.setDefaultSolver(new Sat4jSolver());
+		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PlFormula>(new Sat4jSolver()));
+		Solver.setDefaultLinearSolver(new ApacheCommonsSimplex());
+		Solver.setDefaultIntegerLinearSolver(new GlpkSolver());	
+		// get measure
 		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure =
 				InconsistencyMeasureFactory.getInconsistencyMeasure(
 						Measure.getMeasure(query.getMeasure()));
