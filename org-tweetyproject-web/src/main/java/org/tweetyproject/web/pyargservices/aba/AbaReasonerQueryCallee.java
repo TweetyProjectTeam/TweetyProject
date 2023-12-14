@@ -1,22 +1,22 @@
 package org.tweetyproject.web.pyargservices.aba;
-
-import java.util.Collection;
-
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
-import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
+import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
+
 import org.tweetyproject.web.pyargservices.Callee;
 
-public class  AbaReasonerGetModelsCallee<T extends Formula> extends Callee {
+public class  AbaReasonerQueryCallee<T extends Formula> extends Callee {
 		GeneralAbaReasoner<T> reasoner;
 		AbaTheory<T> bbase;
-		public  AbaReasonerGetModelsCallee(GeneralAbaReasoner<T> reasoner, AbaTheory<T> bbase){
+		Assumption<T> assumption;
+		public  AbaReasonerQueryCallee(GeneralAbaReasoner<T> reasoner, AbaTheory<T> bbase, Assumption<T> a){
 			this.reasoner = reasoner;
 			this.bbase = bbase;
+			this.assumption = a;
 		}
 		@Override
-		public Collection<AbaExtension<T>> call() throws Exception {
-			return this.reasoner.getModels(this.bbase);
+		public Boolean call() throws Exception {
+			return this.reasoner.query(this.bbase,assumption);
 		}
 }

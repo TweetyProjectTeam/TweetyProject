@@ -1,7 +1,11 @@
 package org.tweetyproject.web.pyargservices.aba;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.syntax.AbaTheory;
+import org.tweetyproject.arg.aba.syntax.Assumption;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.logics.fol.syntax.FolFormula;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.web.pyargservices.Callee;
 
 
@@ -10,18 +14,19 @@ import org.tweetyproject.web.pyargservices.Callee;
 public class AbaReasonerCalleeFactory {
     public enum Command{
 		GET_MODELS ("get_models", "Get all models"),
+		QUERY ("query", "query aba framework"),
 		GET_MODEL ("get_model", "Get some model");
 		/**id*/
 		public String id;
 		/**label*/
 		public String label;
-		
+
 		Command(String id, String label){
 			this.id = id;
-			this.label = label;			
+			this.label = label;
 		}
 		/**
-		 * 
+		 *
 		 * @param id ID
 		 * @return the measure
 		 */
@@ -32,7 +37,7 @@ public class AbaReasonerCalleeFactory {
 			return null;
 		}
 	}
-    
+
     public static Command [] getCommands(){
         return Command.values();
     }
@@ -42,13 +47,30 @@ public class AbaReasonerCalleeFactory {
 	 * @param im some identifier of an inconsistency measure.
 	 * @return the requested inconsistency measure.
 	 */
-	public static  Callee getCallee(Command cmd, AbstractExtensionReasoner reasoner, DungTheory bbase){
+	public static <T extends Formula> Callee getCallee(Command cmd, GeneralAbaReasoner<T> reasoner,  AbaTheory<T> bbase, Assumption<T> a){
+            // Create an instance of the object using the constructor
 		switch(cmd){
 			case GET_MODELS:
-				return new AbaReasonerGetModelsCallee(reasoner, bbase);
+				return new AbaReasonerGetModelsCallee<T>(reasoner, bbase);
+
+			case GET_MODEL:
+				return new AbaReasonerGetModelCallee<T>(reasoner, bbase);
+
+			case QUERY:
+				return new AbaReasonerQueryCallee<T>(reasoner, bbase, a);
+
 			default:
 				throw new RuntimeException("Command not found: " + cmd.toString());
 		}
 	}
-    
+	// public static Callee getCallee(org.tweetyproject.web.pyargservices.dung.DungReasonerCalleeFactory.Command command,
+	// 		GeneralAbaReasoner<PlFormula> r1, AbaTheory<PlFormula> abat1) {
+	// 	switch(command){
+	// 		case GET_MODELS:
+	// 			return new AbaReasonerGetModelsCallee<PlFormula>(r1, abat1);
+	// 		default:
+	// 			throw new RuntimeException("Command not found: " + command.toString());
+	// 	}
+	// }
+
 }

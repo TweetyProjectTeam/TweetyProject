@@ -1,6 +1,5 @@
 package org.tweetyproject.web.pyargservices.aba;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.tweetyproject.web.pyargservices.Response;
@@ -8,40 +7,49 @@ public class AbaReasonerResponse extends Response {
 
     private String reply;
     private String email;
-    private int nr_of_arguments;
-    private List<List<Integer>> attacks;
+    private String kb;
+    private String kb_format;
+    private String fol_signature;
+
+    private String query_assumption;
     private String semantics;
-    private String solver;
+    private int timeout;
     private String answer;
     private double time;
     private String unit_time;
-    
-    public String getUnit_time() {
-        return unit_time;
-    }
-
-    public void setUnit_time(String unit_time) {
-        this.unit_time = unit_time;
-    }
-
     private String status;
 
-    
+    public String getFol_signature() {
+      return fol_signature;
+    }
+
+    public void setFol_signature(String fol_signature) {
+      this.fol_signature = fol_signature;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public AbaReasonerResponse() {
     }
 
-    public AbaReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks, String semantics, String solver, String answer, int time, String unit_time, String status) {
+    public AbaReasonerResponse(String reply, String email, String kb, String kb_format, String fol_signature, String query_assumption, String semantics, int timeout, String answer, double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
-        this.nr_of_arguments = nr_of_arguments;
-        this.attacks = attacks;
+        this.kb = kb;
+        this.kb_format = kb_format;
+        this.query_assumption = query_assumption;
         this.semantics = semantics;
-        this.solver = solver;
+        this.timeout = timeout;
         this.answer = answer;
         this.time = time;
         this.unit_time = unit_time;
         this.status = status;
+        this.fol_signature = fol_signature;
     }
 
     public String getReply() {
@@ -60,20 +68,28 @@ public class AbaReasonerResponse extends Response {
         this.email = email;
     }
 
-    public int getNr_of_arguments() {
-        return this.nr_of_arguments;
+    public String getKb() {
+        return this.kb;
     }
 
-    public void setNr_of_arguments(int nr_of_arguments) {
-        this.nr_of_arguments = nr_of_arguments;
+    public void setKb(String kb) {
+        this.kb = kb;
     }
 
-    public List<List<Integer>> getAttacks() {
-        return this.attacks;
+    public String getKb_format() {
+        return this.kb_format;
     }
 
-    public void setAttacks(List<List<Integer>> attacks) {
-        this.attacks = attacks;
+    public void setKb_format(String kb_format) {
+        this.kb_format = kb_format;
+    }
+
+    public String getQuery_assumption() {
+        return this.query_assumption;
+    }
+
+    public void setQuery_assumption(String query_assumption) {
+        this.query_assumption = query_assumption;
     }
 
     public String getSemantics() {
@@ -84,12 +100,12 @@ public class AbaReasonerResponse extends Response {
         this.semantics = semantics;
     }
 
-    public String getSolver() {
-        return this.solver;
+    public int getTimeout() {
+        return this.timeout;
     }
 
-    public void setSolver(String solver) {
-        this.solver = solver;
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public String getAnswer() {
@@ -108,12 +124,12 @@ public class AbaReasonerResponse extends Response {
         this.time = time;
     }
 
-    public String getStatus() {
-        return this.status;
+    public String getUnit_time() {
+        return this.unit_time;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setUnit_time(String unit_time) {
+        this.unit_time = unit_time;
     }
 
     public AbaReasonerResponse reply(String reply) {
@@ -126,13 +142,18 @@ public class AbaReasonerResponse extends Response {
         return this;
     }
 
-    public AbaReasonerResponse nr_of_arguments(int nr_of_arguments) {
-        setNr_of_arguments(nr_of_arguments);
+    public AbaReasonerResponse kb(String kb) {
+        setKb(kb);
         return this;
     }
 
-    public AbaReasonerResponse attacks(List<List<Integer>> attacks) {
-        setAttacks(attacks);
+    public AbaReasonerResponse kb_format(String kb_format) {
+        setKb_format(kb_format);
+        return this;
+    }
+
+    public AbaReasonerResponse query_assumption(String query_assumption) {
+        setQuery_assumption(query_assumption);
         return this;
     }
 
@@ -141,8 +162,8 @@ public class AbaReasonerResponse extends Response {
         return this;
     }
 
-    public AbaReasonerResponse solver(String solver) {
-        setSolver(solver);
+    public AbaReasonerResponse timeout(int timeout) {
+        setTimeout(timeout);
         return this;
     }
 
@@ -151,13 +172,13 @@ public class AbaReasonerResponse extends Response {
         return this;
     }
 
-    public AbaReasonerResponse time(int time) {
+    public AbaReasonerResponse time(double time) {
         setTime(time);
         return this;
     }
 
-    public AbaReasonerResponse status(String status) {
-        setStatus(status);
+    public AbaReasonerResponse unit_time(String unit_time) {
+        setUnit_time(unit_time);
         return this;
     }
 
@@ -168,13 +189,13 @@ public class AbaReasonerResponse extends Response {
         if (!(o instanceof AbaReasonerResponse)) {
             return false;
         }
-        AbaReasonerResponse tweetyResponse = (AbaReasonerResponse) o;
-        return Objects.equals(reply, tweetyResponse.reply) && Objects.equals(email, tweetyResponse.email) && nr_of_arguments == tweetyResponse.nr_of_arguments && Objects.equals(attacks, tweetyResponse.attacks) && Objects.equals(semantics, tweetyResponse.semantics) && Objects.equals(solver, tweetyResponse.solver) && Objects.equals(answer, tweetyResponse.answer) && time == tweetyResponse.time && Objects.equals(status, tweetyResponse.status);
+        AbaReasonerResponse abaReasonerResponse = (AbaReasonerResponse) o;
+        return Objects.equals(reply, abaReasonerResponse.reply) && Objects.equals(email, abaReasonerResponse.email) && Objects.equals(kb, abaReasonerResponse.kb) && Objects.equals(kb_format, abaReasonerResponse.kb_format) && Objects.equals(query_assumption, abaReasonerResponse.query_assumption) && Objects.equals(semantics, abaReasonerResponse.semantics) && timeout == abaReasonerResponse.timeout && Objects.equals(answer, abaReasonerResponse.answer) && time == abaReasonerResponse.time && Objects.equals(unit_time, abaReasonerResponse.unit_time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reply, email, nr_of_arguments, attacks, semantics, solver, answer, time, status);
+        return Objects.hash(reply, email, kb, kb_format, query_assumption, semantics, timeout, answer, time, unit_time);
     }
 
     @Override
@@ -182,15 +203,15 @@ public class AbaReasonerResponse extends Response {
         return "{" +
             " reply='" + getReply() + "'" +
             ", email='" + getEmail() + "'" +
-            ", nr_of_arguments='" + getNr_of_arguments() + "'" +
-            ", attacks='" + getAttacks() + "'" +
+            ", kb='" + getKb() + "'" +
+            ", kb_format='" + getKb_format() + "'" +
+            ", query_assumption='" + getQuery_assumption() + "'" +
             ", semantics='" + getSemantics() + "'" +
-            ", solver='" + getSolver() + "'" +
+            ", timeout='" + getTimeout() + "'" +
             ", answer='" + getAnswer() + "'" +
             ", time='" + getTime() + "'" +
-            ", status='" + getStatus() + "'" +
+            ", unit_time='" + getUnit_time() + "'" +
             "}";
     }
 
-    // standard getters/setters
 }
