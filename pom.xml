@@ -229,7 +229,6 @@
     <module>org-tweetyproject-sat</module>
     <module>org-tweetyproject-comparator</module>
     <module>org-tweetyproject-arg-weighted</module>
-    <module>weighted</module>
   </modules>
 
 </project>
