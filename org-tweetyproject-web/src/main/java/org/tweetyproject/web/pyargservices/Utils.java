@@ -30,26 +30,11 @@ public final class Utils {
         }
         for (List<Integer> list : atttacks) { 
             af_graph.add(new DirectedEdge<Argument>(arguments.get(list.get(0) - 1),arguments.get(list.get(1) - 1)));
-  
-        //     for (String item : list) { 
-        //         System.out.print("  "
-        //                          + item 
-        //                          + ", "); 
-        //     } 
-        //     System.out.println("], "); 
-        // } 
-        // System.out.println("]"); 
-        // return "";
         }
         
         DungTheory dungTheory = new DungTheory(af_graph);
         return dungTheory;
     } 
-
-    //    Gson gson = new Gson();
-    //     List<List<String>> firstList = gson.fromJson(atttacks, new TypeToken<List<List<Float>>>() {}.getType());
-    //     System.out.println(firstList.toString());
-
 
     public static String returnLowerCase(String stringInput) {
         return stringInput.toLowerCase();
@@ -98,5 +83,7 @@ public final class Utils {
 		}
         return user_timeout;
     }
+
+    
 
 }
