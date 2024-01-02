@@ -24,7 +24,7 @@ package org.tweetyproject.math.algebra;
  * 
  * In this semiring, the multiplication operation corresponds to finding the minimum of two weights,
  * the addition operation corresponds to adding weights, Double.POSITIVE_INFINITY represents the
- * additve identity, and 0.0 represents the multiplicative identity.
+ * additive identity, and 0.0 represents the multiplicative identity.
  * 
  * @author Sandra Hoffmann
  */
@@ -36,5 +36,10 @@ public class WeightedSemiring extends Semiring<Double> {
     public WeightedSemiring() {
         super((a, b) -> Math.min(a, b), (a, b) -> a + b, Double.POSITIVE_INFINITY, 0.0);
     }
+
+	@Override
+	public Double getRandomElement() {
+		return random.nextDouble(Double.MAX_VALUE- 1);
+	}
 }
 

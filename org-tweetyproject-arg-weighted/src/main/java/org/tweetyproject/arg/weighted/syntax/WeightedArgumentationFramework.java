@@ -35,17 +35,26 @@ import org.tweetyproject.commons.Signature;
 import org.tweetyproject.math.algebra.*;
 
 public class WeightedArgumentationFramework<T> extends DungTheory{
-	//default constructor returns classic Dung style AF
+	
     private Map<String, T> weightMap;
     private Semiring<T> semiring;
     
+  //default constructor returns classic Dung style AF
     public WeightedArgumentationFramework() {
     	super();
     	this.weightMap  = new HashMap<>();
-        this.semiring = (Semiring<T>) new FuzzySemiring();
+        this.semiring = (Semiring<T>) new BooleanSemiring();
     }
     
     //constructor for WAF with specific Semiring
+    
+    public WeightedArgumentationFramework(
+            Semiring<T> semiring
+    ) {
+    	super();
+        this.weightMap = new HashMap<>();
+        this.semiring = semiring;
+    }
     
     
     //constructor for WAF from graph with specific Semiring

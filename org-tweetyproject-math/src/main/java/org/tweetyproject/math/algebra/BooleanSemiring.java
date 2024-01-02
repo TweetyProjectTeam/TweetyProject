@@ -31,4 +31,9 @@ public class BooleanSemiring extends Semiring<Boolean> {
     public BooleanSemiring() {
         super((a, b) -> a || b, (a, b) -> a && b, false,true);
     }
+
+	@Override
+	public Boolean getRandomElement() {
+		return random.nextBoolean();
+	}
 }

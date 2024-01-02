@@ -19,6 +19,7 @@
 
 package org.tweetyproject.math.algebra;
 
+import java.util.Random;
 import java.util.function.BinaryOperator;
 
 /**
@@ -29,11 +30,12 @@ import java.util.function.BinaryOperator;
  * 
  * @author Sandra Hoffmann
  */
-public class Semiring<T> {
+public abstract class Semiring<T> {
     private BinaryOperator<T> addition;
     private BinaryOperator<T> multiplication;
     private T zeroElement;
     private T oneElement;
+    protected final Random random = new Random();
 
     /**
      * Constructs a Semiring instance.
@@ -129,5 +131,13 @@ public class Semiring<T> {
     public T validateAndReturn(T value) {
         return value;
     }
+    
+    /**
+     * Generates a random element of the semiring.
+     * Note: Concrete implementations in subclasses should provide the actual logic.
+     *
+     * @return A random element of the semiring.
+     */
+    public abstract T getRandomElement();
 }
 

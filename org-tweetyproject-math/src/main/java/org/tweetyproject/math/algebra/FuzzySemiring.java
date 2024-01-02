@@ -49,4 +49,9 @@ public class FuzzySemiring extends Semiring<Double> {
         }
         return value;
     }
+
+	@Override
+	public Double getRandomElement() {
+		return random.nextDouble();
+	}
 }
