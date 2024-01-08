@@ -19,12 +19,10 @@
 package org.tweetyproject.math.algebra;
 
 /**
- * This class represents an example for a non numeric semiring as 
+ * This class represents an example for a non numeric semiring. This implementation uses an example semiring from the following paper: Bistarelli, Stefano, and Francesco Santini. "Weighted Argumentation." FLAP 8.6 (2021): 1589-1622.
  * @author Sandra Hoffmann
  *
  */
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.BinaryOperator;
 
 
@@ -35,9 +33,6 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
 	public enum SemiringElement {
 	    BAD, FAIR, GOOD
 	}
-
-    // Define the set of elements in the semiring
-    private static final List<SemiringElement> SEMIRING_SET = Arrays.asList(SemiringElement.BAD, SemiringElement.FAIR, SemiringElement.GOOD);
 
     // Define the total ordering
     private static final BinaryOperator<SemiringElement> TOTAL_ORDERING = (a, b) -> {
@@ -54,8 +49,9 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
     @Override
     public SemiringElement getRandomElement() {
         // Concrete implementation for generating a random element in the semiring
-        int randomIndex = random.nextInt(SEMIRING_SET.size());
-        return SEMIRING_SET.get(randomIndex);
+        SemiringElement[] values = SemiringElement.values();
+        int randomIndex = random.nextInt(values.length);
+        return values[randomIndex];
     }
     
     @Override
