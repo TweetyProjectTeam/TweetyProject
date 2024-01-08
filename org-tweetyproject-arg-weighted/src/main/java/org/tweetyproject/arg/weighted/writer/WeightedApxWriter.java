@@ -21,9 +21,12 @@ package org.tweetyproject.arg.weighted.writer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.writer.AbstractDungWriter;
 import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
 
 /**
@@ -35,14 +38,57 @@ import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
  */
 public class WeightedApxWriter {
 
+	/**
+	 * Writes the weighted argumentation framework to a file.
+	 *
+	 * @param waf The WeightedArgumentationFramework to write.
+	 * @param f   The File where the framework should be written.
+	 * @throws IOException If an I/O error occurs while writing to the file.
+	 */
 	public void write(WeightedArgumentationFramework waf, File f) throws IOException {
-		PrintWriter writer = new PrintWriter(f, "UTF-8");
-		for(Argument a: waf)
-			writer.println("arg(" + a.getName() + ").");
-		for(Attack att: waf.getAttacks())
-			writer.println("att(" + att.getAttacker().getName() + "," + att.getAttacked().getName() + "):-" + waf.getWeight(att) +".");		
-		writer.close();	
-		
+	    write(waf, f, -1);
+	}
+
+	/**
+	 * Writes the weighted argumentation framework to a file with the specified precision.
+	 *
+	 * @param waf       The WeightedArgumentationFramework to write.
+	 * @param f         The File where the framework should be written.
+	 * @param precision The precision for formatting floating-point numbers. Use -1 to retain the original float value.
+	 * @throws IOException If an I/O error occurs while writing to the file.
+	 */
+	public void write(WeightedArgumentationFramework waf, File f, int precision) throws IOException {
+	    PrintWriter writer = new PrintWriter(f, "UTF-8");
+	    Object weight;
+	    for (Argument a : waf)
+	        writer.println("arg(" + a.getName() + ").");
+
+	    for (Attack att : waf.getAttacks()) {
+	        String formattedWeight;
+	        if (isFloatingPoint(waf.getWeight(att)) && precision != -1) {
+	            // Check if it's a floating-point number and apply precision formatting
+	        	weight = waf.getWeight(att);
+                // Round the floating-point number to the specified precision
+                double roundedValue = Math.round((double)weight * Math.pow(10, precision)) / Math.pow(10, precision);
+                formattedWeight = String.valueOf(roundedValue);
+	        } else {
+	            // Use the original value if precision is -1 or if it's not a floating-point number
+	            formattedWeight = String.valueOf(waf.getWeight(att));
+	        }
+	        writer.println("att(" + att.getAttacker().getName() + "," + att.getAttacked().getName() + "):-" + formattedWeight + ".");
+	    }
+
+	    writer.close();
+	}
+
+	/**
+	 * Checks if the given object is a floating-point number (float or double).
+	 *
+	 * @param object The object to check.
+	 * @return True if the object is a floating-point number, false otherwise.
+	 */
+	private boolean isFloatingPoint(Object object) {
+	    return object instanceof Float || object instanceof Double;
 	}
 
 }

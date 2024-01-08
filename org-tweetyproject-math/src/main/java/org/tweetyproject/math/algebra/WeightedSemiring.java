@@ -29,17 +29,27 @@ package org.tweetyproject.math.algebra;
  * @author Sandra Hoffmann
  */
 public class WeightedSemiring extends Semiring<Double> {
+	private Double maxValue;
 
     /**
      * Constructs a WeightedSemiring instance.
      */
     public WeightedSemiring() {
         super((a, b) -> Math.min(a, b), (a, b) -> a + b, Double.POSITIVE_INFINITY, 0.0);
+        maxValue = Double.MAX_VALUE - 1;
+    }
+    
+    /**
+     * Constructs a WeightedSemiring instance with a max weight.
+     */
+    public WeightedSemiring(double maxWeight) {
+        super((a, b) -> Math.min(a, b), (a, b) -> a + b, maxWeight, 0.0);
+        maxValue = maxWeight;
     }
 
 	@Override
 	public Double getRandomElement() {
-		return random.nextDouble(Double.MAX_VALUE- 1);
+		return random.nextDouble(maxValue);
 	}
 }
 

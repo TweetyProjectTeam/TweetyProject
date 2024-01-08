@@ -28,6 +28,7 @@ import org.tweetyproject.arg.weighted.util.WeightedSemiringDungTheoryGenerator;
 import org.tweetyproject.arg.weighted.writer.WeightedApxWriter;
 import org.tweetyproject.math.algebra.BooleanSemiring;
 import org.tweetyproject.math.algebra.FuzzySemiring;
+import org.tweetyproject.math.algebra.ProbabilisticSemiring;
 import org.tweetyproject.math.algebra.WeightedSemiring;
 
 /**
@@ -49,28 +50,37 @@ public class WeightedDungTheoryGeneratorExample {
 		
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 		
-		//weighted Semiring
-		WeightedSemiringDungTheoryGenerator genWeighted = new WeightedSemiringDungTheoryGenerator(params, new WeightedSemiring());
+		//weighted Semiring with a max weight of 20
+		WeightedSemiringDungTheoryGenerator<Double> genWeighted = new WeightedSemiringDungTheoryGenerator<>(params, new WeightedSemiring(20f));
 		String pathSubFolder = path + File.separator + "Weighted";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "weighted" + i + ".dl");
-			writer.write(genWeighted.next(), f); 
+			writer.write(genWeighted.next(), f, 2); 
 		}
 		
 		
 		//fuzzy Semiring
-		WeightedSemiringDungTheoryGenerator genFuzzy = new WeightedSemiringDungTheoryGenerator(params, new FuzzySemiring());
+		WeightedSemiringDungTheoryGenerator<Double> genFuzzy = new WeightedSemiringDungTheoryGenerator<>(params, new FuzzySemiring());
 		pathSubFolder = path + File.separator + "Fuzzy";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "fuzzy" + i + ".dl");
-			writer.write(genFuzzy.next(), f); 
+			writer.write(genFuzzy.next(), f, 2); 
+		}
+		
+		//probabilistic Semiring
+		WeightedSemiringDungTheoryGenerator<Double> genProbabilistic = new WeightedSemiringDungTheoryGenerator<>(params, new ProbabilisticSemiring());
+		pathSubFolder = path + File.separator + "Probabilistic";
+		createDir(pathSubFolder);
+		for (int i = 0; i < 20; i++) {
+			File f = new File(pathSubFolder + File.separator +  "probabilistic" + i + ".dl");
+			writer.write(genProbabilistic.next(), f, 2); 
 		}
 		
 		
 		//boolean Semiring (Dung Style Framework)
-		WeightedSemiringDungTheoryGenerator genBoolean = new WeightedSemiringDungTheoryGenerator(params, new BooleanSemiring());
+		WeightedSemiringDungTheoryGenerator<Boolean> genBoolean = new WeightedSemiringDungTheoryGenerator<>(params, new BooleanSemiring());
 		pathSubFolder = path + File.separator + "Boolean";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
