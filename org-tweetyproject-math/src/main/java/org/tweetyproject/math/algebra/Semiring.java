@@ -22,6 +22,8 @@ package org.tweetyproject.math.algebra;
 import java.util.Random;
 import java.util.function.BinaryOperator;
 
+import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
+
 /**
  * This class represents a generic Semiring, an algebraic structure with two binary operations
  * (addition and multiplication), and two corresponding identity elements (zeroElement and oneElement).
@@ -139,5 +141,22 @@ public abstract class Semiring<T> {
      * @return A random element of the semiring.
      */
     public abstract T getRandomElement();
+    
+    /**
+     * Converts a value in a semiring to a numerical representation.
+     *
+     * @param weight The value in the semiring.
+     * @return The numerical representation of the semiring value.
+     * @throws IllegalArgumentException If the provided semiring value is not a valid numeric representation.
+     */
+    public double toNumericalValue(T value) {
+        // overwrite this method in non numeric semirings.
+    	if (value instanceof Double) {
+    		return (double) value;
+    	} else {
+    		throw new IllegalArgumentException("Unknown SemiringElement: " + value);
+    	}
+    }
+    
 }
 

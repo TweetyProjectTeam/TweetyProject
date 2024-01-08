@@ -28,6 +28,8 @@ import org.tweetyproject.arg.weighted.util.WeightedSemiringDungTheoryGenerator;
 import org.tweetyproject.arg.weighted.writer.WeightedApxWriter;
 import org.tweetyproject.math.algebra.BooleanSemiring;
 import org.tweetyproject.math.algebra.FuzzySemiring;
+import org.tweetyproject.math.algebra.NonNumericSemiring;
+import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
 import org.tweetyproject.math.algebra.ProbabilisticSemiring;
 import org.tweetyproject.math.algebra.WeightedSemiring;
 
@@ -79,13 +81,23 @@ public class WeightedDungTheoryGeneratorExample {
 		}
 		
 		
-		//boolean Semiring (Dung Style Framework)
+		//boolean Semiring (Dung Style Framework) where the Boolean values are converted to doubles (false = 0.0, true = 1.0)
 		WeightedSemiringDungTheoryGenerator<Boolean> genBoolean = new WeightedSemiringDungTheoryGenerator<>(params, new BooleanSemiring());
 		pathSubFolder = path + File.separator + "Boolean";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "boolean" + i + ".dl");
-			writer.write(genBoolean.next(), f); 
+			writer.write(genBoolean.next(), f, true); 
+		}
+		
+		
+		//NonNumeric Semiring with Elements Good, Fair, Bad where the weight values are converted to doubles (bad = 0.0, fair = 1.0, good = 2.0)
+		WeightedSemiringDungTheoryGenerator<SemiringElement> genNonNumeric = new WeightedSemiringDungTheoryGenerator<>(params, new NonNumericSemiring());
+		pathSubFolder = path + File.separator + "NonNumeric";
+		createDir(pathSubFolder);
+		for (int i = 0; i < 20; i++) {
+			File f = new File(pathSubFolder + File.separator +  "nonNumeric" + i + ".dl");
+			writer.write(genNonNumeric.next(), f, true); 
 		}
 
 	}

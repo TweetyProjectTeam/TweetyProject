@@ -19,6 +19,8 @@
 
 package org.tweetyproject.math.algebra;
 
+import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
+
 /**
  * This class represents a Boolean semiring. In this semiring, the addition operation corresponds to logical OR (||),
  * the multiplication operation corresponds to logical AND (&&), the additive identity is false,
@@ -36,4 +38,10 @@ public class BooleanSemiring extends Semiring<Boolean> {
 	public Boolean getRandomElement() {
 		return random.nextBoolean();
 	}
+	
+    @Override
+    public double toNumericalValue(Boolean weight) {
+        // Convert weight to 1 if weight == true and 0 otherwise.
+        return weight ? 1.0 : 0.0;
+    }
 }

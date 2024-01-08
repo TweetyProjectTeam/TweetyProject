@@ -126,7 +126,14 @@ public class WeightedArgumentationFramework<T> extends DungTheory{
     	return weightMap.get(attack.toString());
     }
     
+    public double getNumericWeight(Attack attack) {
+    	T weight = weightMap.get(attack.toString());
+    	return semiring.toNumericalValue(weight);
+    }
     
+    public Semiring<T> getSemiring() {
+    	return this.semiring;
+    }
     
 	public String toString(){		
 		return "(" + super.toString() + "," + this.weightMap + ")";

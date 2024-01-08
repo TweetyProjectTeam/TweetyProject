@@ -46,7 +46,31 @@ public class WeightedApxWriter {
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
 	public void write(WeightedArgumentationFramework waf, File f) throws IOException {
-	    write(waf, f, -1);
+	    write(waf, f, -1, false);
+	}
+	
+	/**
+	 * Writes the weighted argumentation framework to a file.
+	 *
+	 * @param waf The WeightedArgumentationFramework to write.
+	 * @param f   The File where the framework should be written.
+	 * @param precision The precision for formatting floating-point numbers. Use -1 to retain the original value.
+	 * @throws IOException If an I/O error occurs while writing to the file.
+	 */
+	public void write(WeightedArgumentationFramework waf, File f, int precision) throws IOException {
+	    write(waf, f, precision, false);
+	}
+	
+	/**
+	 * Writes the weighted argumentation framework to a file.
+	 *
+	 * @param waf The WeightedArgumentationFramework to write.
+	 * @param f   The File where the framework should be written.
+	 * @param convertToNumericWeight Convert non numeric values to their assigned double values.
+	 * @throws IOException If an I/O error occurs while writing to the file.
+	 */
+	public void write(WeightedArgumentationFramework waf, File f, Boolean convertToNumericWeight) throws IOException {
+	    write(waf, f, -1, convertToNumericWeight);
 	}
 
 	/**
@@ -54,10 +78,11 @@ public class WeightedApxWriter {
 	 *
 	 * @param waf       The WeightedArgumentationFramework to write.
 	 * @param f         The File where the framework should be written.
-	 * @param precision The precision for formatting floating-point numbers. Use -1 to retain the original float value.
+	 * @param precision The precision for formatting floating-point numbers. Use -1 to retain the original value.
+	 * @param convertToNumericWeight Convert non numeric values to their assigned double values.
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
-	public void write(WeightedArgumentationFramework waf, File f, int precision) throws IOException {
+	public void write(WeightedArgumentationFramework waf, File f, int precision, Boolean convertToNumericWeight) throws IOException {
 	    PrintWriter writer = new PrintWriter(f, "UTF-8");
 	    Object weight;
 	    for (Argument a : waf)
@@ -73,8 +98,15 @@ public class WeightedApxWriter {
                 formattedWeight = String.valueOf(roundedValue);
 	        } else {
 	            // Use the original value if precision is -1 or if it's not a floating-point number
-	            formattedWeight = String.valueOf(waf.getWeight(att));
+	        	// Use numeric value if convertToNumericWeight is true
+	        	if (convertToNumericWeight) {
+	        		formattedWeight = String.valueOf(waf.getNumericWeight(att));
+	        	} else {
+		            formattedWeight = String.valueOf(waf.getWeight(att));
+	        	}
+	        	
 	        }
+	        
 	        writer.println("att(" + att.getAttacker().getName() + "," + att.getAttacked().getName() + "):-" + formattedWeight + ".");
 	    }
 
