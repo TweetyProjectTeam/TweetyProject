@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.weighted.syntax;
 
+import java.util.Collection;
 /**
  * @author Sandra Hoffmann
  *
@@ -32,113 +33,167 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.Signature;
+import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.math.algebra.*;
 
-public class WeightedArgumentationFramework<T> extends DungTheory{
-	
-    private Map<String, T> weightMap;
-    private Semiring<T> semiring;
-    
-  //default constructor returns classic Dung style AF
-    public WeightedArgumentationFramework() {
-    	super();
-    	this.weightMap  = new HashMap<>();
-        this.semiring = (Semiring<T>) new BooleanSemiring();
-    }
-    
-    //constructor for WAF with specific Semiring
-    
-    public WeightedArgumentationFramework(
-            Semiring<T> semiring
-    ) {
-    	super();
-        this.weightMap = new HashMap<>();
-        this.semiring = semiring;
-    }
-    
-    
-    //constructor for WAF from graph with specific Semiring
+public class WeightedArgumentationFramework<T> extends DungTheory {
 
-    public WeightedArgumentationFramework(
-            Map<String, T> weightMap,
-            Semiring<T> semiring
-    ) {
-    	super();
-        this.weightMap = weightMap;
-        this.semiring = semiring;
-    }
-    
-    
+	private Map<String, T> weightMap;
+	private Semiring<T> semiring;
+
+	// default constructor returns classic Dung style AF
+	public WeightedArgumentationFramework() {
+		super();
+		this.weightMap = new HashMap<>();
+		this.semiring = (Semiring<T>) new BooleanSemiring();
+	}
+
+	// constructor for WAF with specific Semiring
+
+	public WeightedArgumentationFramework(Semiring<T> semiring) {
+		super();
+		this.weightMap = new HashMap<>();
+		this.semiring = semiring;
+	}
+
+	// constructor for WAF from graph with specific Semiring and empty weightMap
+	public WeightedArgumentationFramework(Semiring<T> semiring, Graph<Argument> graph) {
+		super(graph);
+		this.weightMap = new HashMap<>();
+		this.semiring = semiring;
+	}
+
+	// constructor for WAF from graph with specific Semiring and given weightMap
+	public WeightedArgumentationFramework(Semiring<T> semiring, Graph<Argument> graph, Map<String, T> weightMap) {
+		super(graph);
+		this.weightMap = weightMap;
+		this.semiring = semiring;
+	}
+
 	/**
 	 * Adds the given attack to this weighted Dung theory.
+	 * 
 	 * @param attack an attack
 	 * @param weight
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean add(Attack attack, T weight){
-		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight); 
+	public boolean add(Attack attack, T weight) {
+		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
 	}
-	
+
 	/**
-	 * Adds an attack from the first argument to the second to this weighted Dung theory.
+	 * Adds the given attacks to this dung theory.
+	 * 
+	 * @param weights a map containing the attacks as key and the weights as values.
+	 * @param attacks some attacks
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean add(Map<String, T> weights, Attack... attacks) {
+		  boolean result = true; 
+		  for (Attack f : attacks) {
+			  T weight = weights.get(f.toString());
+			  boolean sub = this.add(f, weight);
+			  result = result && sub; 
+		  }
+		return result;
+	}
+
+	/**
+	 * Adds an attack from the first argument to the second to this weighted Dung
+	 * theory.
+	 * 
 	 * @param attacker some argument
 	 * @param attacked some argument
 	 * @param weight
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean addAttack(Argument attacker, Argument attacked, T weight){
+	public boolean addAttack(Argument attacker, Argument attacked, T weight) {
 		boolean result = super.addAttack(attacker, attacked);
 		this.setWeight(attacker, attacked, weight);
-		return result; 
+		return result;
 	}
-	
-	//returns the strongerAttack
-	public Attack strongerAttack (Attack attackA, Attack attackB) {
+
+	/**
+	 * Removes the given attack from this weighted Dung theory.
+	 * 
+	 * @param attack an attack
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean remove(Attack attack) {
+		  this.weightMap.remove(attack.toString());
+		  boolean result = super.remove(attack);
+		  return result; 
+	}
+
+	/**
+	 * Removes the argument and all its attacks and the corresponding weights
+	 * 
+	 * @param a some argument
+	 * @return true if this structure has been changed
+	 */
+	public boolean remove(Argument a) {
+		Collection<Argument> attackers = super.getAttackers(a);
+		Collection<Argument> attacked = super.getAttacked(a);
+		
+		//delete weights for a
+		for(Argument att:attackers) {
+			Attack attack = new Attack(att, a);
+			this.weightMap.remove(attack.toString());
+		}
+		for(Argument atts:attacked) {
+			Attack attack = new Attack(a, atts);
+			this.weightMap.remove(attack.toString());
+		}
+		return super.remove(a);
+	}
+
+	// returns the strongerAttack
+	public Attack strongerAttack(Attack attackA, Attack attackB) {
 		T weigthAttackA = this.getWeight(attackA);
 		T weigthAttackB = this.getWeight(attackB);
-		if (semiring.largerOrSame(weigthAttackA, weigthAttackB) ) {
+		if (semiring.largerOrSame(weigthAttackA, weigthAttackB)) {
 			return attackA;
 		} else {
 			return attackB;
 		}
 	}
-	
-	//returns the weight of the stronger Attack
-	public T compareWeights (Attack attackA, Attack attackB) {
+
+	// returns the weight of the stronger Attack
+	public T compareWeights(Attack attackA, Attack attackB) {
 		T weigthAttackA = this.getWeight(attackA);
 		T weigthAttackB = this.getWeight(attackB);
-		return (semiring.add(weigthAttackA,weigthAttackB));
-	}
-	
-	
-    
-    //sets the weight of a given attack
-    public void setWeight(Attack attack, T weight) {
-    	weightMap.put(attack.toString(), semiring.validateAndReturn(weight));
-    }
-    
-    public void setWeight(Argument attacker, Argument attacked, T weight) {
-    	String attack = "(" + attacker.getName() +"," + attacked.getName()+ ")";
-    	weightMap.put(attack, semiring.validateAndReturn(weight));
-    }
-    
-    public T getWeight(Attack attack) {
-    	return weightMap.get(attack.toString());
-    }
-    
-    public double getNumericWeight(Attack attack) {
-    	T weight = weightMap.get(attack.toString());
-    	return semiring.toNumericalValue(weight);
-    }
-    
-    public Semiring<T> getSemiring() {
-    	return this.semiring;
-    }
-    
-	public String toString(){		
-		return "(" + super.toString() + "," + this.weightMap + ")";
+		return (semiring.add(weigthAttackA, weigthAttackB));
 	}
 
- 
+	// sets the weight of a given attack
+	public void setWeight(Attack attack, T weight) {
+		weightMap.put(attack.toString(), semiring.validateAndReturn(weight));
+	}
+
+	public void setWeight(Argument attacker, Argument attacked, T weight) {
+		String attack = "(" + attacker.getName() + "," + attacked.getName() + ")";
+		weightMap.put(attack, semiring.validateAndReturn(weight));
+	}
+
+	public T getWeight(Attack attack) {
+		return weightMap.get(attack.toString());
+	}
+	
+	public Map<String, T> getWeights() {
+		return weightMap;
+	}
+
+	public double getNumericWeight(Attack attack) {
+		T weight = weightMap.get(attack.toString());
+		return semiring.toNumericalValue(weight);
+	}
+
+	public Semiring<T> getSemiring() {
+		return this.semiring;
+	}
+
+	public String toString() {
+		return "(" + super.toString() + "," + this.weightMap + ")";
+	}
 
 }
