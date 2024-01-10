@@ -25,7 +25,7 @@ package org.tweetyproject.arg.dung.util;
  */
 public class DungTheoryGenerationParameters{
 	/** The number of arguments to be created in a theory. */
-	public int numberOfArguments = 5;
+	public int numberOfArguments = 20;
 	/** The attack probability for each two arguments in the theory. */
 	public double attackProbability = 0.5;
 	/** Whether to avoid self-attacks. */

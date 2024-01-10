@@ -21,8 +21,11 @@ package org.tweetyproject.arg.weighted.examples;
 import java.io.File;
 import java.io.IOException;
 
+import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
+import org.tweetyproject.arg.dung.util.KwtDungTheoryGenerator;
+import org.tweetyproject.arg.dung.util.PodlaszewskiCaminadaDungTheoryGenerator;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 import org.tweetyproject.arg.weighted.util.WeightedSemiringDungTheoryGenerator;
 import org.tweetyproject.arg.weighted.writer.WeightedApxWriter;
@@ -53,51 +56,80 @@ public class WeightedDungTheoryGeneratorExample {
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 		
 		//weighted Semiring with a max weight of 20
-		WeightedSemiringDungTheoryGenerator<Double> genWeighted = new WeightedSemiringDungTheoryGenerator<>(params, new WeightedSemiring(20f));
+		WeightedSemiringDungTheoryGenerator<Double> genWeighted = new WeightedSemiringDungTheoryGenerator<>(new DefaultDungTheoryGenerator(params), new WeightedSemiring(20f));
 		String pathSubFolder = path + File.separator + "Weighted";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "weighted" + i + ".dl");
-			writer.write(genWeighted.next(), f, 2); 
+			//write the weighted AF to file. The weights are rounded to the nearest integer value.
+			writer.write(genWeighted.next(), f, 0); 
 		}
 		
 		
-		//fuzzy Semiring
-		WeightedSemiringDungTheoryGenerator<Double> genFuzzy = new WeightedSemiringDungTheoryGenerator<>(params, new FuzzySemiring());
+		//fuzzy Semiring and KwtDungTheoryGenerator
+		int num_arguments = 150;
+		int num_skept_arguments = 50;
+		int size_ideal_extension = 20;
+		int num_cred_arguments = 10;
+		int num_pref_exts = 100;
+		double p_ideal_attacked = 0.3;
+		double p_ideal_attack_back = 0.2;
+		double p_other_skept_args_attacked = 0.3;
+		double p_other_skept_args_attack_back = 0.2;
+		double p_cred_args_attacked = 0.3;
+		double p_cred_args_attack_back = 0.2;
+		double p_other_attacks = 0.2;
+		
+		WeightedSemiringDungTheoryGenerator<Double> genFuzzy = new WeightedSemiringDungTheoryGenerator<>(new KwtDungTheoryGenerator(num_arguments,
+				num_skept_arguments,
+				size_ideal_extension,
+				num_cred_arguments,
+				num_pref_exts,
+				p_ideal_attacked,
+				p_ideal_attack_back,
+				p_other_skept_args_attacked,
+				p_other_skept_args_attack_back,
+				p_cred_args_attacked,
+				p_cred_args_attack_back,
+				p_other_attacks), new FuzzySemiring());
 		pathSubFolder = path + File.separator + "Fuzzy";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "fuzzy" + i + ".dl");
+			//write the weighted AF to file. The weights are rounded to 2 decimal places.
 			writer.write(genFuzzy.next(), f, 2); 
 		}
 		
-		//probabilistic Semiring
-		WeightedSemiringDungTheoryGenerator<Double> genProbabilistic = new WeightedSemiringDungTheoryGenerator<>(params, new ProbabilisticSemiring());
+		//probabilistic Semiring and PodlaszewskiCaminadaDungTheoryGenerator
+		WeightedSemiringDungTheoryGenerator<Double> genProbabilistic = new WeightedSemiringDungTheoryGenerator<>(new PodlaszewskiCaminadaDungTheoryGenerator(3), new ProbabilisticSemiring());
 		pathSubFolder = path + File.separator + "Probabilistic";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "probabilistic" + i + ".dl");
+			//write the weighted AF to file. The weights are rounded to 2 decimal places.
 			writer.write(genProbabilistic.next(), f, 2); 
 		}
 		
 		
 		//boolean Semiring (Dung Style Framework) where the Boolean values are converted to doubles (false = 0.0, true = 1.0)
-		WeightedSemiringDungTheoryGenerator<Boolean> genBoolean = new WeightedSemiringDungTheoryGenerator<>(params, new BooleanSemiring());
+		WeightedSemiringDungTheoryGenerator<Boolean> genBoolean = new WeightedSemiringDungTheoryGenerator<>(new DefaultDungTheoryGenerator(params), new BooleanSemiring());
 		pathSubFolder = path + File.separator + "Boolean";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "boolean" + i + ".dl");
+			//write the weighted AF to file. The weights are converted to numerical values.
 			writer.write(genBoolean.next(), f, true); 
 		}
 		
 		
 		//NonNumeric Semiring with Elements Good, Fair, Bad where the weight values are converted to doubles (bad = 0.0, fair = 1.0, good = 2.0)
-		WeightedSemiringDungTheoryGenerator<SemiringElement> genNonNumeric = new WeightedSemiringDungTheoryGenerator<>(params, new NonNumericSemiring());
+		WeightedSemiringDungTheoryGenerator<SemiringElement> genNonNumeric = new WeightedSemiringDungTheoryGenerator<>(new DefaultDungTheoryGenerator(params), new NonNumericSemiring());
 		pathSubFolder = path + File.separator + "NonNumeric";
 		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
 			File f = new File(pathSubFolder + File.separator +  "nonNumeric" + i + ".dl");
-			writer.write(genNonNumeric.next(), f, true); 
+			//write the weighted AF to file.
+			writer.write(genNonNumeric.next(), f); 
 		}
 
 	}
