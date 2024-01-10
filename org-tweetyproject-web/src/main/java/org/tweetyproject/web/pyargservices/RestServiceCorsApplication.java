@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class RestServiceCorsApplication {
     String allowedOrigins = "http://tweetyproject.org";
+	String debug_allowedOrigins = "http://127.0.0.1:5500/";
 	public static void main(String[] args) {
 		SpringApplication.run(RestServiceCorsApplication.class, args);
 	}
@@ -23,6 +24,7 @@ public class RestServiceCorsApplication {
 				registry.addMapping("/delp").allowedOrigins(allowedOrigins);
 				registry.addMapping("/ping").allowedOrigins(allowedOrigins);
 				registry.addMapping("/incmes").allowedOrigins(allowedOrigins);
+				registry.addMapping("/aba").allowedOrigins(debug_allowedOrigins);
 			}
 		};
 	}

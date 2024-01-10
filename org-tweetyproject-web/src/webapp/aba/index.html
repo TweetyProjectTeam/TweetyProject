@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>TweetyProject@Web: Inconsistency Measurement</title>
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<script type="text/JavaScript" src="js/jquery-2.1.1.min.js"></script>
+		<script type="text/JavaScript" src="js/scripts.js"></script>
+	</head>
+	<body style="font-family: Arial;">
+		<div align="center" width="100%">
+			<table style="width:800px;" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2">
+						<a href="http://tweetyproject.org"><img border="0" src="img/tweety_small.png" style="float:left;width:40px;padding-right:6px;"/></a>
+						<div style="font-size:14pt;font-weight:bold;">TweetyProject@Web</div>
+						<div style="font-size:11pt;">Inconsistency Measurement
+							<span style="float:right;font-size:10pt;">Server status: <span id="server_status"><img style="vertical-align:text-top;" width="15" height="15" src="img/loading.gif"></img></span></span>
+						</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">Inconsistency Measurement (IM) is a subfield of Knowledge Representation (KR) that deals with quantitative measures of inconsistency. Formally, an inconsistency measure I is a function that assigns to any knowledge base K in propositional logic a value I(K) with the idea that larger values indicate a larger inconsistency in K. In recent years, a lot of proposals have been given of how an inconsistency measure I can be defined. For a more elaborate introduction to inconsistency measures see the <a href="incmes_doc_v3.pdf">Technical Documentation</a> and the references listed therein.</p>
+
+						<p style="font-size:10pt;">This page complements the theoretical research in IM by providing an experimentation platform for the practical use of inconsistency measures. It is part of the <a href="http://tweetyproject.org" target="_blank">TweetyProject collection of Java libraries for logical aspects of artificial intelligence and knowledge representation</a> which contains implementations of various inconsistency measures. This page serves as documentation to these implementations and provides both a web-based interface for using these implementations and a REST API for integrating them in your own applications.</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Online Inconsistency Measurement</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span style="font-size:10pt;color:red;" id="server_message"></span>
+						<p style="font-size:10pt;">You can try out different inconsistency measures directly below by entering a knowledge base in propositional logic in the field <i>Knowledge base</i>. The syntax used on this page is the one of Boolean expressions in most programming languages (such as Java). Each line in the field is a separate formula and each formula can be composed using arbitrary propositions (starting with a letter or &quot;_&quot; and containing only letters, numbers, and &quot;_&quot;) and the connectives &quot;&amp;&amp;&quot; (conjunction), &quot;||&quot; (disjunction), and &quot;!&quot; (negation). The operators follow the usual order of preference
+(&quot;!&quot;&gt;&quot;&amp;&amp;&quot;&gt;&quot;||&quot;) and parentheses &quot;(&quot; and &quot;)&quot; can be used to override this order.</p>
+
+					<p style="font-size:10pt;">Once a knowledge base has been entered a set of inconsistency measures can be selected (using the button &quot;...&quot;) and the inconsistency values of those measures wrt. the given knowledge base are computed using the button &quot;Compute inconsistency values&quot;. The computation of a measure can be aborted at any time by pressing the corresponding button (note that for large knowledge bases the computation of some measures can take quite some time). The request is handled on the server and the runtime of a request on the server is also shown besides the actual inconsistency value.</p>
+
+					<p style="font-size:10pt;">For more information on the individual inconsistency measures see the <a href="incmes_doc_v2.pdf">Technical Documentation</a>.</p>
+						<div style="font-size:10pt;font-weight:bold;">Knowledge base:</div>
+<textarea id="kb" style="width:100%;height:150px;font-size:8pt;">
+{a, b}
+c
+a <- b
+z <- y, b
+y <-
+x <- c
+</textarea>
+<!--
+						<div style="font-size:10pt;font-weight:bold;">Knowledge base format (<a style="font-weigth:normal;" href="javascript:formatinfo();">?</a>):&nbsp;&nbsp;
+							<select name="kbformat" size="1">
+						    	<option>Tweety</option>
+    	  						<option>Whatever</option>
+    						</select>
+    					</div>
+-->
+    					<div style="font-size:10pt;"><span style="font-weight:bold;">Selected inconsistency measures:</span> <span id="selectedmeasures"></span>&nbsp;&nbsp;<button type="button" onclick="select()">...</button></div>
+    					<br/>
+						<div style="font-size:10pt;"><button style="margin:0px;" type="button" onclick="query()" id="computeButton" disabled="disabled">Compute inconsistency values</button></div>
+						<div id="results" style="margin:0px;"></div>
+						<br/>
+						<div style="font-size:10pt;"><span style="font-weight:bold;">Query:</span> <span></span>&nbsp;&nbsp;<input id="query" style="width:100%;font-size:8pt;" value="a"></input></div>
+    					<br/>
+						<div style="font-size:10pt;"><button style="margin:0px;" type="button" onclick="query_assumption()" id="computeButton_query">Submit</button></div>
+						<div id="qresults" style="margin:0px;"></div>
+						<br/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">REST API and source code</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">The above web interface uses a REST API to remotely compute inconsistency values. If you need to integrate inconsistency measurement in your own applications you can also use this REST API directly. Communication between a client and the server is done using JSON (in UTF-8), the URL of the server is <span id="serverurl"></span>. The API supports two commands:</p>
+						<ol style="font-size:10pt;">
+							<li><b>Get list of inconsistency measures</b>
+								<p>Simply send a JSON of the form</p>
+								<div style="font-family: Courier;background:#f1f1f1;padding:10px;border:1px solid #aaa;">
+			{<br/>
+			&nbsp;&nbsp;	&quot;cmd&quot;:		&quot;measures&quot;,<br/>
+			&nbsp;&nbsp;	&quot;email&quot;:	&quot;&lt;your e-mail&gt;&quot;<br/>
+			}
+		</div>
+								<p>to the server. The field &quot;email&quot; serves as an identification of your request. I recommend to use a valid e-mail address as it can also be used if issues arise during the computation and I would like to contact you. However, if you feel uncomfortable with that you may also use any other arbitrary identification string.</p>
+								<p>In reply to the above request the server will send you back a JSON of the form</p>
+								<div style="font-family: Courier;background:#f1f1f1;padding:10px;border:1px solid #aaa;">
+			{<br/>
+			&nbsp;&nbsp;	&quot;measures&quot;:<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;[<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;id&quot;: &quot;drastic&quot;,<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;label&quot;: &quot;Drastic Inconsistency Measure&quot;,</br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;description&quot;: &quot;&lt;some description in HTML&gt;&quot;<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br/>
+
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;id&quot;: &quot;mi&quot;,<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;label&quot;: &quot;MI Inconsistency Measure&quot;,</br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					&quot;description&quot;: &quot;&lt;some description in HTML&gt;&quot;<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+			&nbsp;&nbsp;	&quot;reply&quot;:&quot;measures&quot;,<br/>
+			&nbsp;&nbsp;	&quot;email&quot;:&quot;&lt;your e-mail&gt;&quot;<br/>
+			}
+		</div>
+		<p>which lists all currently available measures with their id.</p>
+							</li>
+							<li><b>Retrieve inconsistency value</b>
+								<p>Let <i>id</i> be the id of any inconsistency measure currently supported (see above). Then you retrieve the inconsistency value of this measure wrt. some given knowledge base (the format is the same as for web-based interface above) by issuing the request</p>
+								<div style="font-family: Courier;background:#f1f1f1;padding:10px;border:1px solid #aaa;">
+			{<br/>
+			&nbsp;&nbsp; &quot;cmd&quot;: &quot;value&quot;,<br/>
+			&nbsp;&nbsp; &quot;email&quot;: &quot;&lt;your e-mail&gt;&quot;, <br/>
+			&nbsp;&nbsp; &quot;measure&quot;: &quot;&lt;<i>id</i>&gt;&quot;,<br/>
+			&nbsp;&nbsp; &quot;kb&quot;: &quot;&lt;your knowledge base&gt;&quot,<br/>
+			&nbsp;&nbsp; &quot;format&quot;: &quot;tweety&quot;<br/>
+			}
+		</div>
+		<p>to the server. The field &quot;format&quot; indicates the syntactical format of the knowledge base (currently, only the &quot;tweety&quot;-format as explained above is allowed; other formats may be added in the future). In response to this request the server will reply with a JSON of the form</p>
+								<div style="font-family: Courier;background:#f1f1f1;padding:10px;border:1px solid #aaa;">
+			{<br/>
+			&nbsp;&nbsp; &quot;reply&quot;: &quot;value&quot;,<br/>
+			&nbsp;&nbsp; &quot;email&quot;: &quot;&lt;your e-mail&gt;&quot;, <br/>
+			&nbsp;&nbsp; &quot;measure&quot;: &quot;&lt;<i>id</i>&gt;&quot;,<br/>
+			&nbsp;&nbsp; &quot;kb&quot;: &quot;&lt;your knowledge base&gt;&quot,<br/>
+			&nbsp;&nbsp; &quot;format&quot;: &quot;tweety&quot;,<br/>
+			&nbsp;&nbsp; &quot;value&quot;: &quot;&lt;the inconsistency value&gt;&quot;,<br/>
+			&nbsp;&nbsp; &quot;time&quot;: &quot;&lt;time needed to compute the value (in milliseconds)&gt;&quot;<br/>
+			}
+		</div>
+							</li>
+						</ol>
+						<p style="font-size:10pt;">You may also want to look at <a href="js/scripts.js">scripts.js</a> which is the JavaScript file underlying the web-based client on this page in order to see how the API is used from within JavaScript.</p>
+						<p style="font-size:10pt;">The source code of the server and all inconsistency measures can be found in the <a href="http://tweetyproject.org" target="_blank">TweetyProject collection of Java libraries for logical aspects of artificial intelligence and knowledge representation</a>. More specifically, a good entry point for the server software is the package <a href="https://github.com/TweetyProjectTeam/TweetyProject/tree/main/org-tweetyproject-web/src/main/java/org/tweetyproject/web" target="_blank"><span style="font-family: Courier;">org.tweetyproject.web</span></a> and for the inconsistency measures this is <a href="https://github.com/TweetyProjectTeam/TweetyProject/blob/main/org-tweetyproject-logics-pl/src/main/java/org/tweetyproject/logics/pl/analysis/InconsistencyMeasureFactory.java" target="_blank"><span style="font-family: Courier;">InconsistencyMeasureFactory.java</span></a>. All source code is published under the GNU Lesser General Public License version 3.0 except when this is noted otherwise.</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Contact</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">This page and TweetyProject is maintained by <a href="http://www.mthimm.de">Matthias Thimm</a>. If you are interested in participating in the development of TweetyProject or have general comments and/or questions please write an e-mail to <a href="mailto:matthias@mthimm.de">matthias@mthimm.de</a>.</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td style="font-size:8pt;">Last updated 13.12.2023, Matthias Thimm</td>
+					<td style="font-size:8pt;" align="right"></td>
+				</tr>
+			</table>
+			<div id="lightBox">
+				<div style="display:none;" id="boxMeasures">
+					<div id="boxMeasuresContent"></div>
+					<div style="width:100%;">
+						<br/>
+						<span style="float:left;font-size:10pt;"><a href="#" onclick="checkAll();">all</a> <a href="#" onclick="checkNone();">none</a></span>
+						<span style="float:right;"><button type="button" onclick="applyMeasures()">Apply</button></span>
+					</div>
+				</div>
+				<div style="display:none;" id="boxFormats">
+					<div id="boxFormatsContent"></div>
+					<div style="align:center"><button type="button" onclick="closeFormats()">Close</button></div>
+				</div>
+				<div style="display:none;height:300px;width:100%;background:url(img/loading.gif) no-repeat center center" id="boxLoading"></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/JavaScript">
+		checkServerStatus();
+		document.getElementById("serverurl").innerHTML = tweetyserverInc;
+	</script>
+</html>

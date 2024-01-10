@@ -73,6 +73,7 @@ import org.tweetyproject.arg.delp.semantics.GeneralizedSpecificity;
 import org.tweetyproject.arg.delp.syntax.DefeasibleLogicProgram;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.web.pyargservices.aba.AbaGetSemanticsResponse;
 import org.tweetyproject.web.pyargservices.aba.AbaReasonerCalleeFactory;
 import org.tweetyproject.web.pyargservices.aba.AbaReasonerGetModelsCallee;
 import org.tweetyproject.web.pyargservices.aba.AbaReasonerPost;
@@ -91,16 +92,15 @@ public class RequestController {
 	private final int SERVICES_TIMEOUT_DELP = 600;
 	private final int SERVICES_TIMEOUT_INCMES = 300;
 
-	private AbaReasonerResponse handleQueryAbaRequest(AbaReasonerPost AbaReasonerPost){
-
-
-		return null;
-	}
-
 	@PostMapping(value = "/aba", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
-			@RequestBody AbaReasonerPost AbaReasonerPost) throws ParserException, IOException {
+			@RequestBody AbaReasonerPost AbaReasonerPost) throws ParserException, IOException, JSONException, org.codehaus.jettison.json.JSONException {
+
+
+			if (AbaReasonerPost.getCmd().equals("semantics")) {
+				return handleGetSemantics(AbaReasonerPost);
+			}
 
 
 			// DungTheory dungTheory =
@@ -173,8 +173,11 @@ public class RequestController {
 				// handle timeout
 				if (AbaReasonerPost.getCmd().equals("get_models") || AbaReasonerPost.getCmd().equals("get_model")) {
 										Future<Collection<AbaExtension<Formula>>> future = executor.submit(callee);
+
+					System.out.print("Run command: "+ AbaReasonerPost.getCmd() + " with timeout: " + user_timeout + ".....");
 					Pair<Collection<AbaExtension<Formula>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
+					System.out.println("DONE!");
 						reasonerResponse.setTime(result.getValue());
 						reasonerResponse.setAnswer(result.getKey().toString());
 						reasonerResponse.setStatus("SUCCESS");
@@ -495,5 +498,32 @@ public class RequestController {
 		response.reply(query.getCmd());
 		return response;
 	}
+
+
+	/**
+	 * Handles the "List semanctics" command for aba
+	 *
+	 * @param query some query
+	 * @return the reply
+	 * @throws JSONException                            if some JSON issue occurs.
+	 * @throws org.codehaus.jettison.json.JSONException
+	 */
+	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
+			throws JSONException, org.codehaus.jettison.json.JSONException {
+		AbaGetSemanticsResponse response = new AbaGetSemanticsResponse();
+		List<HashMap<String, String>> value = new LinkedList<HashMap<String, String>>();
+		HashMap<String, String> jsonMes;
+		for (org.tweetyproject.web.pyargservices.aba.GeneralAbaReasonerFactory.Semantics m : GeneralAbaReasonerFactory.Semantics.values()) {
+			jsonMes = new HashMap<String, String>();
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_ID, m.id);
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);
+			value.add(jsonMes);
+		}
+		response.setSemantics(value);
+		response.setEmail(query.getEmail());
+		response.reply(query.getCmd());
+		return response;
+	}
+
 
 }
