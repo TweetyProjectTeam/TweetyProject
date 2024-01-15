@@ -46,6 +46,21 @@ public class WeightedSemiring extends Semiring<Double> {
         super((a, b) -> Math.min(a, b), (a, b) -> a + b, maxWeight, 0.0);
         maxValue = maxWeight;
     }
+    
+    
+    /**
+     * Validates and returns the given value if valid.
+     * 
+     * @param value The value to be validated.
+     * @return The validated value.
+     * @throws IllegalArgumentException If the value is outside the valid range [0.0, maxValue].
+     */
+    public Double validateAndReturn(Double value) {
+        if (value < 0.0 || value > maxValue) {
+            throw new IllegalArgumentException("Value must be between 0.0 and " + maxValue);
+        }
+        return value;
+    }
 
 	@Override
 	public Double getRandomElement() {

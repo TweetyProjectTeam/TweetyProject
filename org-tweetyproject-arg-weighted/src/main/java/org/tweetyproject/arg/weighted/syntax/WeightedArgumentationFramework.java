@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.weighted.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 /**
  * @author Sandra Hoffmann
@@ -25,6 +26,8 @@ import java.util.Collection;
  */
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BinaryOperator;
@@ -56,11 +59,16 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.semiring = semiring;
 	}
 
-	// constructor for WAF from graph with specific Semiring and empty weightMap
+	// constructor for WAF from graph with specific Semiring. The weights will be set to the zeroElement of the Semiring.
 	public WeightedArgumentationFramework(Semiring<T> semiring, Graph<Argument> graph) {
 		super(graph);
 		this.weightMap = new HashMap<>();
 		this.semiring = semiring;
+		//set weights
+		T weight = this.semiring.getZeroElement();
+		for(Attack att:this.getAttacks()) {
+			this.setWeight(att, weight);
+		}
 	}
 
 	// constructor for WAF from graph with specific Semiring and given weightMap
@@ -69,6 +77,19 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.weightMap = weightMap;
 		this.semiring = semiring;
 	}
+	
+	/**
+	 * Adds the given attack to this weighted Dung theory. The weight will be set to the zeroElement of the Semiring.
+	 * 
+	 * @param attack an attack
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	@Override
+	public boolean add(Attack attack) {
+		T weight = this.semiring.getZeroElement();
+		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
+	}
+	
 
 	/**
 	 * Adds the given attack to this weighted Dung theory.
@@ -80,6 +101,21 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean add(Attack attack, T weight) {
 		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
 	}
+	
+	
+	/**
+	 * Adds the given attacks to this dung theory. The weights will be set to the zeroElement of the Semiring.
+	 * @param attacks some attacks
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean add(Attack... attacks){
+		Map<String,T> weightList = new HashMap<>();
+        for (Attack att:attacks) {
+        	weightList.put(att.toString(),semiring.getZeroElement());
+        }
+		return this.add(weightList, attacks);
+	}
+
 
 	/**
 	 * Adds the given attacks to this dung theory.
@@ -97,7 +133,52 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		  }
 		return result;
 	}
+	
+	/**
+	 * Adds all arguments and attacks of the given theory to
+	 * this theory. The weights will be set to the zeroElement of the Semiring.
+	 * @param theory some Dung theory
+	 * @return "true" if this Weighted Dung Theory has been modified 
+	 */
+	public boolean add(DungTheory theory){
+		T weight = this.semiring.getZeroElement();
+		boolean result = super.add(theory);
+		/*
+		 * Set<Attack> attacks = theory.getAttacks(); for (Attack f : attacks) { boolean
+		 * sub = this.add(f, weight); result = result && sub; }
+		 */
+		return result;
+	}
+	
+	
+	/**
+	 * Adds the given attack to this weighted Dung theory. The weight will be set to the zeroElement of the Semiring.
+	 * 
+	 * @param attack an attack
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean addAttack(Attack attack) {
+		T weight = this.semiring.getZeroElement();
+		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
+	}
 
+	/**
+	 * Adds an attack from the first argument to the second to this weighted Dung
+	 * theory. The weight will be set to the zeroElement of the Semiring.
+	 * 
+	 * @param attacker some argument
+	 * @param attacked some argument
+	 * @param weight
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean addAttack(Argument attacker, Argument attacked) {
+		T weight = this.semiring.getZeroElement();
+		boolean result = super.addAttack(attacker, attacked);
+		this.setWeight(attacker, attacked, weight);
+		return result;
+	}
+	
+	
 	/**
 	 * Adds an attack from the first argument to the second to this weighted Dung
 	 * theory.
@@ -112,6 +193,34 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.setWeight(attacker, attacked, weight);
 		return result;
 	}
+	
+	/**
+	 * Adds the set of attacks to this Weighted Dung theory. The weights will be set to the zeroElement of the Semiring.
+	 * @param c a collection of attacks
+	 * @return "true" if this Dung theory has been modified.
+	 */
+	public boolean addAllAttacks(Collection<? extends Attack> c){
+		Map<String,T> weightList = new HashMap<>();
+        for (Attack att:c) {
+        	weightList.put(att.toString(),semiring.getZeroElement());
+        }
+        return addAllAttacks(c,weightList);
+	}
+	
+	/**
+	 * Adds the set of attacks to this Weighted Dung theory. 
+	 * @param c a collection of attacks
+	 * @return "true" if this Dung theory has been modified.
+	 */
+	public boolean addAllAttacks(Collection<? extends Attack> c, Map<String,T> weights){
+		boolean result = false;
+		for(Attack att: c) {
+			T weight = weights.get(att.toString());
+			result |= this.add(att, weight);
+		}
+		return result;
+	}
+
 
 	/**
 	 * Removes the given attack from this weighted Dung theory.
@@ -171,7 +280,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	}
 
 	public void setWeight(Argument attacker, Argument attacked, T weight) {
-		String attack = "(" + attacker.getName() + "," + attacked.getName() + ")";
+		String attack = new Attack(attacker, attacked).toString();
 		weightMap.put(attack, semiring.validateAndReturn(weight));
 	}
 
@@ -191,6 +300,31 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public Semiring<T> getSemiring() {
 		return this.semiring;
 	}
+	
+	@Override
+	public boolean isWeightedGraph() {
+		return true;
+	}
+	
+	
+	/** Pretty print of the theory.
+	 * @return the pretty print of the theory.
+	 */
+	public String prettyPrint(){
+		String output = new String();
+		Iterator<Argument> it = this.iterator();
+		while(it.hasNext())
+			output += "argument("+it.next().toString()+").\n";
+		output += "\n";
+		Iterator<Attack> it2 = this.getAttacks().iterator();
+		while(it2.hasNext()) {
+			Attack temp = it2.next();
+			output += "attack"+temp.toString()+ ":- " + this.weightMap.get(temp.toString())+".\n";
+		}
+
+		return output;
+	}
+	
 
 	public String toString() {
 		return "(" + super.toString() + "," + this.weightMap + ")";
