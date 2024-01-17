@@ -171,6 +171,7 @@ function query_assumption(){
 		s += "<a href=\"#\" onclick=\"abort(\'" + measure + "\');\"><img alt=\"abort\" title=\"abort\" width=\"15\" height=\"15\" style=\"padding-left:10px;\" border=\"0\" src=\"img/abort-icon.png\"></img></a></td>";
 		s += "</td></tr>";
 		var jsonObj = {};
+
 		jsonObj.cmd = "query";
 		jsonObj.email = "tweetyweb@mthimm.de",
 		jsonObj.semantics = measure,
@@ -179,7 +180,7 @@ function query_assumption(){
 		jsonObj.fol_signature = '';
 		jsonObj.timeout = 600;
 		jsonObj.unit_timeout = "ms";
-		jsonObj.query_assumption =  $('#query').val()
+		jsonObj.query_assumption =  $('#aquery').val()
 
 		$.ajax({
 	  		type: "POST",
