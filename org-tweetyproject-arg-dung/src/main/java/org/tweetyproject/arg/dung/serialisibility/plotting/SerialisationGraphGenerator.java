@@ -113,7 +113,7 @@ public class SerialisationGraphGenerator {
 
 	/**
 	 * Changes the Parameter to generate exemplary serializability analyses.
-	 * @param seed {@link org.tweetyproject.argumentation.util.DungTheoryGenerator#setSeed}
+	 * @param seed {@link org.tweetyproject.arg.dung.util.DungTheoryGenerator#setSeed}
 	 */
 	public void changeParameterSeed(long seed) {
 		this.generator.setSeed(seed);
@@ -307,7 +307,9 @@ public class SerialisationGraphGenerator {
 	}
 
 	/**
-	 * Generates a framework, which complies to the specified conditions
+	 * Generates a framework, which complies to the specified conditions	  
+	 * @param abortFrameworkNotComply *description missing*
+	 * @return *description missing*
 	 * @throws NoExampleFoundException Throws an exception, if the generated frameworks couldn't satisfy the condition within the specified number of allowed attempts
 	 */
 	private DungTheory generateFramework(boolean abortFrameworkNotComply) throws NoExampleFoundException {
@@ -339,7 +341,6 @@ public class SerialisationGraphGenerator {
 	 * @param semanticsForSerializing Semantics used to serialize the extensions
 	 * @param framework Argumentation framework, in which the extension will be searched
 	 * @return TRUE iff derived graph of the framework complies the conditions of the generator.
-	 * @throws NoExampleFoundException Throws the exception if the derived analysis, couldn't satisfy the condition
 	 */
 	private boolean checkGraph(
 			Semantics semanticsForSerializing,

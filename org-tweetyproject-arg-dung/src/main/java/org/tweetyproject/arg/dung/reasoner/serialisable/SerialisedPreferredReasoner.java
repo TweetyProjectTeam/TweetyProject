@@ -31,6 +31,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SerialisedPreferredReasoner extends SerialisedAdmissibleReasoner {
     
+	/**
+	 * *description missing*
+	 */
 	public SerialisedPreferredReasoner() {
 		super();
 		setSemantic(Semantics.PR);

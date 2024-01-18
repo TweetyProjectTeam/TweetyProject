@@ -61,7 +61,7 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param bbase Abstract argumentation framework in which the specified set and argument are part of
      * @param admSet Set of arguments, which might defend the specified argument
      * @param candidate Argument, which is to be examined
-     * @return TRUE iff the specified argument {@link candidate} is strongly defended by the set {@link admSet}
+     * @return TRUE iff the specified argument  candidate is strongly defended by the set admSet.
      */
 	private boolean checkStrongyDefended(DungTheory bbase, Extension<DungTheory> admSet,Argument candidate) {
 		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);

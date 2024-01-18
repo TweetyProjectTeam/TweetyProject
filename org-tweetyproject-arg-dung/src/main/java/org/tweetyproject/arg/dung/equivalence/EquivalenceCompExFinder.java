@@ -70,7 +70,7 @@ public class EquivalenceCompExFinder {
 	 * equivalent theory if wished, in case this generator fails. 
 	 * @param askIf1stFrameInteresting Function which checks if the generated 1st framework is interesting enough to try to generate a partner framework
 	 * @param askIfInterestingPair Function which checks, if the generated pair is interesting enough to examine its equivalence
-	 * @param askContinueGenerate2nd Function which checks, if the generation of 2nd frameworks in order to form a valide pair, 
+	 * @param askGen2Finished Function which checks, if the generation of 2nd frameworks in order to form a valide pair, 
 	 * should be continued or not, based on the properties of the last generated pair
 	 * @return Pair of frameworks, which are equivalent to each other as specified in the method call
 	 * @throws NoExampleFoundException Thrown if no pair of frameworks (compliant to the equivalent-conditions) could be generated

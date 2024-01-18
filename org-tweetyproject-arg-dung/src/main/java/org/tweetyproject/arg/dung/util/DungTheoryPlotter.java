@@ -31,8 +31,8 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.syntax.*;
 
 /**
- * This class represents a specialization of {@link GraphPlotter GraphPlotters} used to visualize argumentation frameworks, 
- * also called {@link org.tweetyproject.arg.dung.syntax.DungTheory DungTheories}.
+ * This class represents a specialization of graph plotters used to visualize argumentation frameworks, 
+ * also called @see org.tweetyproject.arg.dung.syntax.DungTheory.
  * <br>
  * The class defines the layout specifications of the visualization:
  * <ul>
@@ -43,7 +43,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * 		<li> spacing between nodes
  * </ul>
  * <br>
- * This work was inspired by {@link org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter}.  
+ * This work was inspired by @see org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter.  
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -146,7 +146,7 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	/**
 	 * Plots the specified framework in a new created frame.
 	 * 
-	 * @param frameworks Argumentation framework to plot
+	 * @param framework Argumentation framework to plot
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 * @param titleGraph Title of the graph to be shown.

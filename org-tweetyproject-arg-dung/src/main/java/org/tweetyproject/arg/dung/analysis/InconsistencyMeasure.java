@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.analysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
+ * *description missing*
  * @author Timothy Gillespie
  * @param <T> the type of Dung theories used
  */

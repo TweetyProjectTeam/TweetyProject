@@ -47,6 +47,10 @@ import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
  */
 public class EquivalenceClassifierExample {
 
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 		int argNumber = Integer.parseInt(args[0]);
 		Semantics[] semanticsUsed;

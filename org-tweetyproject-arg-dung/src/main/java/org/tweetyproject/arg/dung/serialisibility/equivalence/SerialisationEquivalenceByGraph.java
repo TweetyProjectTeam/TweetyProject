@@ -36,7 +36,7 @@ public class SerialisationEquivalenceByGraph extends SerialisationEquivalence<Se
 	private SerialisableExtensionReasoner reasoner;
 
 	/**
-	 * @param comparator {@link SerialisationEquivalence::comparator}
+	 * @param comparator @see SerialisationEquivalence
 	 * @param reasoner Reasoner used to compute the graphs
 	 */
 	public SerialisationEquivalenceByGraph(Equivalence<SerialisationGraph> comparator,

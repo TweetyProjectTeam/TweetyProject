@@ -1,13 +1,3 @@
-package org.tweetyproject.web.spring_services.aba;
-
-import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
-import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
-import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
-import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
-import org.tweetyproject.arg.aba.reasoner.StableReasoner;
-import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
-
-
 /*
  *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
@@ -24,8 +14,17 @@ import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+package org.tweetyproject.web.spring_services.aba;
+
+import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
+import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
+import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.aba.reasoner.StableReasoner;
+import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
+
 /**
  * Main factory for retrieving reasoners for aba.
  * @author Jonas Klein
@@ -34,10 +33,25 @@ public abstract class GeneralAbaReasonerFactory {
 
 	/** An enumeration of all available inconsistency measures. */
 	public enum Semantics{
+		/**
+		 * *description missing* 
+		 */
 		ID ("id", "Ideal"),
+		/**
+		 * *description missing* 
+		 */
 		PR ("pr", "Preffered"),
+		/**
+		 * *description missing* 
+		 */
 		CO ("co", "Complete"),
+		/**
+		 * *description missing* 
+		 */
 		ST ("st", "Stable"),
+		/**
+		 * *description missing* 
+		 */
 		WF ("wf", "Well founded");
 		/**id*/
 		public String id;
@@ -61,15 +75,19 @@ public abstract class GeneralAbaReasonerFactory {
 		}
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public static Semantics [] getSemantics(){
 		return Semantics.values();
 	}
 
 	/**
-	 * Creates a new inconsistency measure of the given type with default
-	 * settings.
-	 * @param im some identifier of an inconsistency measure.
-	 * @return the requested inconsistency measure.
+	 * *description missing*
+	 * @param sem *description missing*
+	 * @return *description missing*
+	 * @param <T> *description missing*
 	 */
 	public static  <T> GeneralAbaReasoner getReasoner(Semantics sem){
 		switch(sem){

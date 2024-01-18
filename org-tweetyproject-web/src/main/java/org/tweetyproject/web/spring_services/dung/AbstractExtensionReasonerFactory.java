@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
@@ -47,24 +65,81 @@ public abstract class AbstractExtensionReasonerFactory {
 
 	/** An enumeration of all available inconsistency measures. */
 	public enum Semantics{
+		/**
+		 * *description missing* 
+		 */
 		WAD ("wad", "Weakly Admissable "),
+		/**
+		 * *description missing* 
+		 */
 		WCO ("wco", "Weakly Complete "),
+		/**
+		 * *description missing* 
+		 */
 		WGR ("wgr", "Weakly Grounded"),
+		/**
+		 * *description missing* 
+		 */
 		WPR ("wgr", "Weakly Preffered"),
+		/**
+		 * *description missing* 
+		 */
 		SOAD ("soad", "Solid Admissible"),
+		/**
+		 * *description missing* 
+		 */
 		SAD ("sad", "Strongly Admissable "),
+		/**
+		 * *description missing* 
+		 */
 		STAGE ("stage", "Stage"),
+		/**
+		 * *description missing* 
+		 */
 		STAGE2 ("stage2", "Stage2"),
+		/**
+		 * *description missing* 
+		 */
 		SST ("SST", "Semi Stable"),
+		/**
+		 * *description missing* 
+		 */
 		CF ("cf", "Conflict-free"),
+		/**
+		 * *description missing* 
+		 */
 		ID ("id", "Ideal"),
+		/**
+		 * *description missing* 
+		 */
 		GR ("gr", "Grounded"),
+		/**
+		 * *description missing* 
+		 */
 		PR ("pr", "Preffered"),
+		/**
+		 * *description missing* 
+		 */
 		CO ("co", "Complete"),
+		/**
+		 * *description missing* 
+		 */
 		ST ("st", "Stable"),
+		/**
+		 * *description missing* 
+		 */
 		EA ("ea", "Eager"),
+		/**
+		 * *description missing* 
+		 */
 		IN ("in", "Initial"),
+		/**
+		 * *description missing* 
+		 */
 		AD ("ad", "Admissible"),
+		/**
+		 * *description missing* 
+		 */
 		NA ("na", "Naive");
 		/**id*/
 		public String id;
@@ -88,15 +163,18 @@ public abstract class AbstractExtensionReasonerFactory {
 		}
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public static Semantics [] getSemantics(){
 		return Semantics.values();
 	}
 
 	/**
-	 * Creates a new inconsistency measure of the given type with default
-	 * settings.
-	 * @param im some identifier of an inconsistency measure.
-	 * @return the requested inconsistency measure.
+	 * *description missing*
+	 * @param sem *description missing*
+	 * @return *description missing*
 	 */
 	public static AbstractExtensionReasoner getReasoner(Semantics sem){
 		switch(sem){

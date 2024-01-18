@@ -31,6 +31,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SerialisationAnalysisPlotterExample {
 	
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 		var frameworks = new DungTheory[3];
 		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();

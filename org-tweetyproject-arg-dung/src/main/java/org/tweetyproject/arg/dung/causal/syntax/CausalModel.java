@@ -33,7 +33,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 /**
  * This class describes a causal model.
  *
- * @see "Argumentation-based Causal and Counterfactual Reasoning" by
+ * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
  * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
  *
@@ -44,7 +44,10 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 public class CausalModel extends PlBeliefSet {
 
 	/**
-	 * Builds the necessary elements of a causal model, from a specified set of equivalences, used as structural equations
+	 * Builds the necessary elements of a causal model, from a specified set of equivalences, used as structural equations	 
+	 * @param structuralEquations *description missing*
+	 * @param out_ExplainableAtoms *description missing*
+	 * @param out_BackGroundAtoms *description missing*
 	 */
 	private static void buildModel(Set<Equivalence> structuralEquations, HashSet<Proposition> out_ExplainableAtoms,
 			HashSet<Proposition> out_BackGroundAtoms) {
@@ -74,6 +77,7 @@ public class CausalModel extends PlBeliefSet {
 	 * @param explainableAtoms set of explainable atoms
 	 * @param structuralEquations boolean structural equations; one equation for each explainable atom,
 	 * which is the only literal on exactly one side of the equation
+	 * @return *description missing*
 	 */
 	private static boolean checkCorrectForm(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
 		for(var atom : explainableAtoms) {
@@ -106,6 +110,9 @@ public class CausalModel extends PlBeliefSet {
 	}
 	/**
 	 * Checks that the specified structural equations only use background or explainable atoms
+	 * @param backGroundAtoms *description missing*
+	 * @param explainableAtoms *description missing*
+	 * @param formula *description missing*
 	 */
 	private static void checkIfOnlyExplainableBackgroundAtoms(Set<Proposition> backGroundAtoms,
 			Set<Proposition> explainableAtoms, PlFormula formula) {
@@ -291,14 +298,26 @@ public class CausalModel extends PlBeliefSet {
 		}
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<Proposition> getBackGroundAtoms() {
 		return new HashSet<>(this.backGroundAtoms);
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<Proposition> getExplainableAtoms() {
 		return new HashSet<>(this.explainableAtoms);
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<Equivalence> getStructuralEquations(){
 		var output = new HashSet<Equivalence>();
 		for(var formula : this.formulas) {

@@ -50,6 +50,13 @@ public class ApxParser extends AbstractDungParser {
 	 return parse(reader, false, false);
 	}
 	
+	/**
+	 * *description missing*
+	 * @param reader *description missing*
+	 * @param printCommands *description missing*
+	 * @return *description missing*
+	 * @throws IOException *description missing*
+	 */
 	public DungTheory parseIgnoreComments(Reader reader, boolean printCommands) throws IOException{
 		 return parse(reader, true, printCommands);
 		}

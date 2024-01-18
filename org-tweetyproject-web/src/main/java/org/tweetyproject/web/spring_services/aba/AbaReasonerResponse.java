@@ -1,8 +1,29 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.aba;
 
 import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
+/**
+ * *description missing* 
+ */
 public class AbaReasonerResponse extends Response {
 
     private String reply;
@@ -19,24 +40,58 @@ public class AbaReasonerResponse extends Response {
     private String unit_time;
     private String status;
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getFol_signature() {
       return fol_signature;
     }
 
+    /**
+     * *description missing*
+     * @param fol_signature *description missing*
+     */
     public void setFol_signature(String fol_signature) {
       this.fol_signature = fol_signature;
     }
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * *description missing*
+     * @param status *description missing*
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * *description missing*
+     */
     public AbaReasonerResponse() {
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     * @param email *description missing*
+     * @param kb *description missing*
+     * @param kb_format *description missing*
+     * @param fol_signature *description missing*
+     * @param query_assumption *description missing*
+     * @param semantics *description missing*
+     * @param timeout *description missing*
+     * @param answer *description missing*
+     * @param time *description missing*
+     * @param unit_time *description missing*
+     * @param status *description missing*
+     */
     public AbaReasonerResponse(String reply, String email, String kb, String kb_format, String fol_signature, String query_assumption, String semantics, int timeout, String answer, double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
@@ -52,131 +107,261 @@ public class AbaReasonerResponse extends Response {
         this.fol_signature = fol_signature;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getReply() {
         return this.reply;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getKb() {
         return this.kb;
     }
 
+    /**
+     * *description missing*
+     * @param kb *description missing*
+     */
     public void setKb(String kb) {
         this.kb = kb;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getKb_format() {
         return this.kb_format;
     }
 
+    /**
+     * *description missing*
+     * @param kb_format *description missing*
+     */
     public void setKb_format(String kb_format) {
         this.kb_format = kb_format;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getQuery_assumption() {
         return this.query_assumption;
     }
 
+    /**
+     * *description missing*
+     * @param query_assumption *description missing*
+     */
     public void setQuery_assumption(String query_assumption) {
         this.query_assumption = query_assumption;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getSemantics() {
         return this.semantics;
     }
 
+    /**
+     * *description missing*
+     * @param semantics *description missing*
+     */
     public void setSemantics(String semantics) {
         this.semantics = semantics;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public int getTimeout() {
         return this.timeout;
     }
 
+    /**
+     * *description missing*
+     * @param timeout *description missing*
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getAnswer() {
         return this.answer;
     }
 
+    /**
+     * *description missing*
+     * @param answer *description missing*
+     */
     public void setAnswer(String answer) {
         this.answer = answer;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public double getTime() {
         return this.time;
     }
 
+    /**
+     * *description missing*
+     * @param time *description missing*
+     */
     public void setTime(double time) {
         this.time = time;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getUnit_time() {
         return this.unit_time;
     }
 
+    /**
+     * *description missing*
+     * @param unit_time *description missing*
+     */
     public void setUnit_time(String unit_time) {
         this.unit_time = unit_time;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse reply(String reply) {
         setReply(reply);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse email(String email) {
         setEmail(email);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param kb *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse kb(String kb) {
         setKb(kb);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param kb_format *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse kb_format(String kb_format) {
         setKb_format(kb_format);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param query_assumption *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse query_assumption(String query_assumption) {
         setQuery_assumption(query_assumption);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param semantics *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse semantics(String semantics) {
         setSemantics(semantics);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param timeout *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse timeout(int timeout) {
         setTimeout(timeout);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param answer *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse answer(String answer) {
         setAnswer(answer);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param time *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse time(double time) {
         setTime(time);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param unit_time *description missing*
+     * @return *description missing*
+     */
     public AbaReasonerResponse unit_time(String unit_time) {
         setUnit_time(unit_time);
         return this;

@@ -61,7 +61,8 @@ public class GraphStructureInconsistencyMeasure {
 	
 	
 	/**
-	 * @throws java.lang.Exception
+	 * *description missing*
+	 * @throws java.lang.Exception *description missing*
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -146,6 +147,9 @@ public class GraphStructureInconsistencyMeasure {
 		
 	}
 
+	/**
+	 * *description missing*
+	 */
 	@Test
 	public void drasticWithAttackReturnsOne() {
 		
@@ -155,6 +159,9 @@ public class GraphStructureInconsistencyMeasure {
 		assertEquals(1.0d, drasticActual, 0.0);
 	}
 	
+	/**
+	 * *description missing*
+	 */
 	@Test
 	public void drasticWithNoAttackReturnsZero() {
 		
@@ -164,6 +171,9 @@ public class GraphStructureInconsistencyMeasure {
 		assertEquals(0.0d, drasticActual, 0.0);
 	}
 	
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void inSumWithThreeEdgesReturnsThree() {
 		
@@ -172,7 +182,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double inSumActual = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals(3.0d, inSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void inSumWithNoAttackReturnsZero() {
 		
@@ -181,7 +194,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double inSumActual = tester.inconsistencyMeasure(attackFreeFramework);
 		assertEquals(0.0d, inSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void inSumWorksWithCycles() {
 		
@@ -190,7 +206,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double inSumActual = tester.inconsistencyMeasure(hunterExample14G1);
 		assertEquals(4.0d, inSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedInSumExample1() {
 		
@@ -199,7 +218,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedInSumActual = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals((1.0 / 3.0) , weightedInSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedInSumExample2() {
 		
@@ -208,7 +230,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedInSumActual = tester.inconsistencyMeasure(hunterExample13G2);
 		assertEquals((1.0 / 2.0) , weightedInSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedInSumWorkedWithCycles() {
 		
@@ -218,6 +243,9 @@ public class GraphStructureInconsistencyMeasure {
 		assertEquals(4d , weightedInSumActual, 0.0);
 	}
 
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedOutSumExample1() {
 		
@@ -226,7 +254,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedOutSumActual = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals(3d, weightedOutSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedOutSumExample2() {
 		
@@ -235,7 +266,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedOutSumActual = tester.inconsistencyMeasure(hunterExample13G2);
 		assertEquals(2d, weightedOutSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedOutSumWorkedWithCycles() {
 		
@@ -244,7 +278,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedOutSumActual = tester.inconsistencyMeasure(hunterExample14G1);
 		assertEquals(4d, weightedOutSumActual, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedComponentCountExample1() {
 		
@@ -253,7 +290,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedComponentCount = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals(9d, weightedComponentCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedComponentCountExample2() {
 			
@@ -262,7 +302,10 @@ public class GraphStructureInconsistencyMeasure {
 			Double weightedComponentCount = tester.inconsistencyMeasure(hunterExample13G2);
 			assertEquals(4d, weightedComponentCount, 0.0);
 		}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedComponentCountWorksWithCycles() {
 		
@@ -271,7 +314,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedComponentCount = tester.inconsistencyMeasure(hunterExample14G1);
 		assertEquals(9d, weightedComponentCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedComponentCountWorksWithTwoComponent() {
 		
@@ -280,7 +326,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedComponentCount = tester.inconsistencyMeasure(twoComponentFramework);
 		assertEquals(13d, weightedComponentCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountExample1() {
 		
@@ -289,7 +338,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals(0d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountExample2() {
 		
@@ -298,7 +350,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(hunterExample13G2);
 		assertEquals(0d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountExample3() {
 		
@@ -307,7 +362,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(hunterExample14G1);
 		assertEquals(1d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountExample4() {
 		
@@ -316,7 +374,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(hunterExample14G2);
 		assertEquals(1d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountExample5() {
 		
@@ -325,7 +386,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(hunterExample10);
 		assertEquals(7d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void cycleCountWorksWithTwoComponents() {
 		
@@ -334,7 +398,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double cycleCount = tester.inconsistencyMeasure(twoComponentFramework);
 		assertEquals(0d, cycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountExample1() {
 		
@@ -343,7 +410,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample13G1);
 		assertEquals(0d, weightedCycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountExample2() {
 		
@@ -352,7 +422,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample13G2);
 		assertEquals(0d, weightedCycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountExample3() {
 		
@@ -361,7 +434,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample14G1);
 		assertEquals(1.0/4.0, weightedCycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountExample4() {
 		
@@ -370,7 +446,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample14G2);
 		assertEquals(1.0/3.0, weightedCycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountExample5() {
 		
@@ -379,7 +458,10 @@ public class GraphStructureInconsistencyMeasure {
 		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample10);
 		assertEquals((29.0/6.0), weightedCycleCount, 0.0);
 	}
-	
+
+	/**
+	 * *description missing*
+	 */	
 	@Test
 	public void weightedCycleCountWorksWithTwoComponents() {
 		

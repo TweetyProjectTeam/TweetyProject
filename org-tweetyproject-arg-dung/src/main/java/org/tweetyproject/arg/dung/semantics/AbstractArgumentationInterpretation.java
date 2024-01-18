@@ -29,9 +29,17 @@ import org.tweetyproject.commons.AbstractInterpretation;
  * abstract argumentation frameworks.
  * 
  * @author Matthias Thimm
+ * @param <T> The type of argumentation framework
  */
 public abstract class AbstractArgumentationInterpretation <T extends ArgumentationFramework<Argument>> extends AbstractInterpretation<T,Argument> {
 
+	/**
+	 * Default constructor
+	 */
+	public AbstractArgumentationInterpretation() {
+		super();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.Formula)
 	 */

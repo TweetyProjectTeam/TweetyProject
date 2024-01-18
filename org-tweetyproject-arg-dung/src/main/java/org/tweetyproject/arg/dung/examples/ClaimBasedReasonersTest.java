@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +29,6 @@ import org.tweetyproject.arg.dung.reasoner.SimpleClStableReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleClStagedReasoner;
 import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;

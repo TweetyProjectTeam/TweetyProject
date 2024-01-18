@@ -36,9 +36,9 @@ import org.tweetyproject.commons.PlotterMultiFrame;
  * 
  * @see SerialisationGraphPlotter
  * @see org.tweetyproject.arg.dung.util.DungTheoryPlotter
- * @see Matthias Thimm. Revisiting initial sets in abstract argumentation.
- *      Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
- * @see Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
+ * Reference: Matthias Thimm. Revisiting initial sets in abstract argumentation.
+ *      Argument and Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
+ * Reference: Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
  *      Argumentation. Computational Models of Argument (2022) DOI:
  *      10.3233/FAIA220143
  *
@@ -49,6 +49,7 @@ public class SerialisationAnalysisPlotter {
 
 	/**
 	 * Plots specified analyses of the serialising generation of extensions, each in a separate frame.
+	 * @param framework *description missing*
 	 * @param graphs Graphs of the serialisation process.
 	 * @param title Title, common to all specified  serialisation graphs  to plot
 	 * @param width Width of the new frames created.
@@ -105,9 +106,9 @@ public class SerialisationAnalysisPlotter {
 	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
 	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
 	 * @param title Title of the frameworks
-	 * @param plotter The plotter, in which a new frame will be created.
 	 * @param width Width of the new frames created.
-	 * @param height Height of the new frames created.
+	 * @param height Height of the new frames created.	 
+	 * @return *description missing*
 	 */
 	public static PlotterMultiFrame plotAnalysesOneFrame(
 			HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
@@ -136,9 +137,9 @@ public class SerialisationAnalysisPlotter {
 	 * @param semantics Semantics of the extension created
 	 * @param frameworks Frameworks, for which the extensions should be found.
 	 * @param titles Titles of the frameworks
-	 * @param plotter The plotter, in which a new frame will be created.
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
+	 * @return *description missing*
 	 */
 	public static PlotterMultiFrame plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String[] titles, int width, int height) {
 		var groundPlotter = new PlotterMultiFrame();

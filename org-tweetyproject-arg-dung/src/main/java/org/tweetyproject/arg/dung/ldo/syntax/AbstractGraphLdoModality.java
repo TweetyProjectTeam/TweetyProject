@@ -33,7 +33,7 @@ public abstract class AbstractGraphLdoModality extends AbstractLdoModality {
 	private Set<LdoArgument> lowerReferenceArguments;
 	
 	/**
-	 * 
+	 * *description missing*
 	 * @param innerFormula Formula
 	 * @param lowerReferenceArguments Arguments
 	 * @param upperReferenceArguments Arguments

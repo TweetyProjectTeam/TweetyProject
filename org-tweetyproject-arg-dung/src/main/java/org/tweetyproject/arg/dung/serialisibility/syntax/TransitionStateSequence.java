@@ -39,8 +39,8 @@ public class TransitionStateSequence extends LinkedList<TransitionState>{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Creates a new {@link TransitionSequence}
-	 * @param origin {@link DungTheory Abstract argumentation framework}, which serialisability is described by this {@link TransitionSequence}
+	 * Creates a new {@link TransitionStateSequence}
+	 * @param origin {@link DungTheory Abstract argumentation framework}, which serialisability is described by this {@link TransitionStateSequence}
 	 * @param sequence {@link SerialisationSequence}, which describes the se
 	 */
 	public TransitionStateSequence(DungTheory origin, SerialisationSequence sequence) {

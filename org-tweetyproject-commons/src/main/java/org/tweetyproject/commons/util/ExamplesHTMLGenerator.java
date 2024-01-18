@@ -319,7 +319,7 @@ public class ExamplesHTMLGenerator {
 	 * @throws IOException throws
 	 */
 	public static void main(String[] args) throws IOException {
-		printExamplesToHtmlFile("/Users/mthimm/Downloads/example/");
+		printExamplesToHtmlFile("/Users/mthimm/Downloads/");
 	}
 
 }

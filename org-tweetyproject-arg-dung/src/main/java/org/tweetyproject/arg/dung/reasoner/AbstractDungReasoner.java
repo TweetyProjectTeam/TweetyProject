@@ -30,6 +30,13 @@ import org.tweetyproject.commons.QualitativeReasoner;
  */
 public abstract class AbstractDungReasoner implements QualitativeReasoner<DungTheory,Argument>{
 
+	/**
+	 * Default constructor
+	 */
+	public AbstractDungReasoner() {
+		super();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */

@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services;
 
 import java.io.FileNotFoundException;
@@ -86,6 +104,9 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 
 import javafx.util.Pair;
 
+/**
+ * *description missing*
+ */
 @RestController
 public class RequestController {
 
@@ -93,6 +114,15 @@ public class RequestController {
 	private final int SERVICES_TIMEOUT_DELP = 600;
 	private final int SERVICES_TIMEOUT_INCMES = 300;
 
+	/**
+	 * *description missing*
+	 * @param AbaReasonerPost *description missing*
+	 * @return *description missing*
+	 * @throws ParserException *description missing*
+	 * @throws IOException *description missing*
+	 * @throws JSONException *description missing*
+	 * @throws org.codehaus.jettison.json.JSONException *description missing*
+	 */
 	@PostMapping(value = "/aba", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -218,6 +248,11 @@ public class RequestController {
 
 	}
 
+	/**
+	 * *description missing*
+	 * @param dungReasonerPost *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/dung", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -267,6 +302,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * *description missing*
+	 * @param ping_Greeting *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/ping", produces = "application/json")
 	@ResponseBody
 	public Ping ping(@RequestBody Ping ping_Greeting) {
@@ -274,6 +314,11 @@ public class RequestController {
 		return ping_Greeting;
 	}
 
+	/**
+	 * *description missing*
+	 * @param dungPost *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/info", produces = "application/json")
 	@ResponseBody
 	public DungServicesInfoResponse getInfo(@RequestBody DungReasonerPost dungPost) {
@@ -299,6 +344,11 @@ public class RequestController {
 		return response;
 	}
 
+	/**
+	 * *description missing*
+	 * @param delpPost *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/delp", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -364,6 +414,11 @@ public class RequestController {
 		return delpResponse;
 	}
 
+	/**
+	 * *description missing*
+	 * @param incmesPost *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/incmes", produces = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -481,7 +536,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException
+	 * @throws org.codehaus.jettison.json.JSONException *description missing*
 	 */
 	private InconsistencyGetMeasuresResponse handleGetMeasures(InconsistencyPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {
@@ -507,7 +562,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException
+	 * @throws org.codehaus.jettison.json.JSONException *description missing*
 	 */
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {

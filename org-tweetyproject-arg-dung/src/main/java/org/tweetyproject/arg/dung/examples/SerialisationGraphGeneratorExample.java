@@ -34,10 +34,11 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
 /**
  * This class summarises examples displaying the usage of {@link SerialisationGraphGenerator}
  * for a chosen type of serialisable semantics.
- *
- * @see source Matthias Thimm. Revisiting initial sets in abstract argumentation.
- *      Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
- * @see source Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
+ * <br>
+ * Reference: Matthias Thimm. Revisiting initial sets in abstract argumentation.
+ *      Argument and Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
+ * <br>
+ * Reference: Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
  *      Argumentation. Computational Models of Argument (2022) DOI:
  *      10.3233/FAIA220143
  *
@@ -47,6 +48,10 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class SerialisationGraphGeneratorExample {
 
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 
 		try {

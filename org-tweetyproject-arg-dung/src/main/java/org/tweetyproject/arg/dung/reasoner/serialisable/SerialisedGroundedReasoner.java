@@ -32,6 +32,9 @@ import java.util.HashSet;
  */
 public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
     
+	/**
+	 * *description missing*
+	 */
 	public SerialisedGroundedReasoner() {
 		super();
 		setSemantic(Semantics.GR);
@@ -49,6 +52,11 @@ public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
         return select(unattacked);
     }
 
+	/**
+	 * *description missing*
+	 * @param unattacked *description missing*
+	 * @return *description missing*
+	 */
 	public static Collection<Extension<DungTheory>> select(Collection<Extension<DungTheory>> unattacked) {
 		Collection<Extension<DungTheory>> result = new HashSet<>();
 

@@ -48,6 +48,13 @@ import org.tweetyproject.commons.ParserException;
 public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
+	 * Default constructor
+	 */
+	public AbstractDungParser() {
+		super();
+	}
+	
+	/**
 	 * Retrieves the parser for the given file format.
 	 * 
 	 * @param f

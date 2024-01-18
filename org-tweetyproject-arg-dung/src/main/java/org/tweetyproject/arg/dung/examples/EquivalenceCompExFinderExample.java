@@ -62,6 +62,10 @@ public class EquivalenceCompExFinderExample {
 	
 	private static final String VERSION = "21";
 
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 
 		int numArgugments = Integer.parseInt(args[0]);
@@ -304,6 +308,21 @@ public class EquivalenceCompExFinderExample {
 		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
 	}
 
+	/**
+	 * *description missing*
+	 * @param semanticsUsed1 *description missing*
+	 * @param semanticsUsed2 *description missing*
+	 * @param equivalence1 *description missing*
+	 * @param equivalence2 *description missing*
+	 * @param path *description missing*
+	 * @param idSeries *description missing*
+	 * @param indexInSeries *description missing*
+	 * @param numFstFramesGenerated *description missing*
+	 * @param timeStampProcessStart *description missing*
+	 * @param framework1 *description missing*
+	 * @param framework2 *description missing*
+	 * @param timeStampProcessFinished *description missing*
+	 */
 	public static void saveExamples(
 			Semantics semanticsUsed1, 
 			Semantics semanticsUsed2,
@@ -371,8 +390,11 @@ public class EquivalenceCompExFinderExample {
 		customDir.mkdirs();
 	}
 
-	/*
-	 * Appends a file with a set of comments
+	/**
+	 * Appends a file with a set of comments	 
+	 * @param f *description missing*
+	 * @param comments *description missing*
+	 * @throws IOException *description missing*
 	 */
 	public static void writeComment(File f, String[] comments) throws IOException {
 

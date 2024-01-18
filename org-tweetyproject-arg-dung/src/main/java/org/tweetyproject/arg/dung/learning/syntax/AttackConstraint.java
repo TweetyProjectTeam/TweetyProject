@@ -22,12 +22,14 @@ package org.tweetyproject.arg.dung.learning.syntax;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- *
+ * *description missing*
  * @param <T> the type of condition
  * @author Lars Bengel
  */
 public interface AttackConstraint<T> {
-	/**returns condition*/
+	/**returns condition
+     * @return *description missing*
+     */
     public T getCondition();
     /**
      * 

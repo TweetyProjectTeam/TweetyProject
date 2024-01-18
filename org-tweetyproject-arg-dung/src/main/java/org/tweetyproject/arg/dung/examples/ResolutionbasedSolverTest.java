@@ -23,7 +23,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * 
+ * *description missing*
  * @author Sebastian Franke
  *
  */

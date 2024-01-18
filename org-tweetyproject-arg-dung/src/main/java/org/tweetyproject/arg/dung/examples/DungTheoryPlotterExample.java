@@ -34,7 +34,8 @@ import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 public class DungTheoryPlotterExample {
 	
 	/**
-	 * Creates example no.1
+	 * Creates example no.1	 
+	 * @return *description missing*
 	 */
 	public static DungTheory example1() {
 		// AF: ({a,b,c,d},{(a,b),(a,c),(c,d)})
@@ -57,7 +58,8 @@ public class DungTheoryPlotterExample {
 	}
 	
 	/**
-	 * Creates example no.2
+	 * Creates example no.2	 
+	 * @return *description missing*
 	 */
 	public static DungTheory example2() {
 		// AF: ({a,b,c},{(a,b),(b,c),(c,a)})
@@ -78,7 +80,8 @@ public class DungTheoryPlotterExample {
 	}
 	
 	/**
-	 * Creates example no.3
+	 * Creates example no.3	 
+	 * @return *description missing*
 	 */
 	public static DungTheory example3() {
 		// AF: ({a,b,c,d,e,f},{(a,a),(a,b),(b,a),(b,d),(d,c),(e,c),(e,f),(f,e)})
@@ -110,6 +113,10 @@ public class DungTheoryPlotterExample {
 	}
 	
 		
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 		HashSet<DungTheory> examples = new HashSet<DungTheory>();
 		examples.add(example1());
