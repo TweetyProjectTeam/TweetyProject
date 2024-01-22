@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -260,7 +261,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public Attack strongerAttack(Attack attackA, Attack attackB) {
 		T weigthAttackA = this.getWeight(attackA);
 		T weigthAttackB = this.getWeight(attackB);
-		if (semiring.largerOrSame(weigthAttackA, weigthAttackB)) {
+		if (semiring.betterOrSame(weigthAttackA, weigthAttackB)) {
 			return attackA;
 		} else {
 			return attackB;
@@ -273,6 +274,136 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		T weigthAttackB = this.getWeight(attackB);
 		return (semiring.add(weigthAttackA, weigthAttackB));
 	}
+	
+	
+	
+	// define w-defense
+	//returns true if the Extension e can defend itself from all attacks
+	public boolean wDefence(Extension<DungTheory> e) {
+		
+		//Argument attacker = att.getAttacker();
+		Set<Argument> attackers = new HashSet<Argument>();
+		for(Argument arg:e) {
+			attackers.addAll(this.getAttackers(arg));
+		}
+		
+		return wDefence(e, attackers, new HashSet<Argument>());				
+	}
+	
+	// define w-defense
+	//returns true if the Extension e can defend argument a from all attacks
+	public boolean wDefence(Argument a, Extension<DungTheory> e) {
+	
+		Set<Argument> attackers = this.getAttackers(a);
+		Set<Argument> attacked = new HashSet<>();
+		attacked.add(a);
+		return wDefence(e, attackers, attacked);				
+	}
+	
+	// define w-defense
+	//returns true if the Extension e can defend itself from attackers
+	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers) {
+		return wDefence(e, attackers, new HashSet<Argument>());				
+	}
+	
+	
+	// define w-defense
+	//returns true if the Extension e can defend itself and attacked from attackers
+	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
+		//add attacked arguments to extension, if they are not included yet
+		e.addAll(attacked);
+
+		//get strength of attack
+		for(Argument attacker:attackers) {
+			T strengthAttack = null;
+			T strengthDefense = null;
+			
+			Set<Argument> attacksToE = new HashSet<Argument>();
+			attacksToE.addAll(this.getAttacked(attacker));
+			attacksToE.retainAll(e);
+			if(attacksToE.isEmpty()) {
+				//there is no attack
+				return true;
+			} else {
+				for(Argument att:attacksToE) {
+					if (strengthAttack == null) {
+						strengthAttack = this.getWeight(new Attack(attacker,att));
+					} else {
+						strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
+					}
+				}
+			}
+			//get strength of defense
+			Set<Argument> attacksFromE = this.getAttackers(attacker);
+			attacksFromE.retainAll(e);
+			if(attacksFromE.isEmpty()) {
+				//Attack is undefeated
+				return false;
+			} else {
+				for(Argument defender:attacksFromE) {
+					if (strengthDefense == null) {
+						strengthDefense = this.getWeight(new Attack(defender,attacker));
+					} else {
+						strengthDefense = semiring.multiply(strengthDefense, this.getWeight(new Attack(defender,attacker)));		
+					}
+				}
+				
+				//Extension cannot defend against attacker
+				if(!semiring.betterOrSame(strengthAttack, strengthDefense)) return false;
+			}
+		}
+		return true;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// define w-defense
+	//returns true if the attacked argument is w-defended by Extension e
+	public boolean weightedDefence(Attack att, Extension<DungTheory> e) {
+		T strengthAttack = null;
+		T strengthDefense = null;
+		Argument attacker = att.getAttacker();
+		//get strength of attack
+		Set<Argument> attacksToE = this.getAttacked(attacker);
+		attacksToE.retainAll(e);
+		for(Argument attacked:attacksToE) {
+			if (strengthAttack == null) {
+				strengthAttack = this.getWeight(new Attack(attacker,attacked));
+			} else {
+				strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,attacked)));
+			}
+		}
+		
+		//get strength of defense
+		Set<Argument> attacksFromE = this.getAttackers(attacker);
+		attacksFromE.retainAll(e);
+		if(attacksFromE.isEmpty()) {
+			//Attack is undefeated
+			return false;
+		} else {
+			for(Argument defender:attacksFromE) {
+				if (strengthDefense == null) {
+					strengthDefense = this.getWeight(new Attack(defender,attacker));
+				} else {
+					strengthDefense = semiring.multiply(strengthDefense, this.getWeight(new Attack(defender,attacker)));		
+				}
+			}
+			
+			//check if attack can be defended
+			if(semiring.betterOrSame(strengthAttack, strengthDefense)) return true;
+		}
+		
+		return false;
+	}
+	
 
 	// sets the weight of a given attack
 	public void setWeight(Attack attack, T weight) {

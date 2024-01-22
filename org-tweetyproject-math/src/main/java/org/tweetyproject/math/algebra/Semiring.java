@@ -113,15 +113,15 @@ public abstract class Semiring<T> {
     }
     
     /**
-     * Returns true if value 'a' is larger than or equal to value 'b' in the semiring.
+     * Returns true if value 'a' is better than or equal to value 'b' in the semiring.
      * 
      * @param a The first operand.
      * @param b The second operand.
-     * @return True if 'a' is larger than or equal to 'b'; otherwise, false.
+     * @return True if 'a' is better than or equal to 'b'; otherwise, false.
      */
-    public Boolean largerOrSame(T a, T b) {
-        T larger = add(a, b);
-        return a == larger;
+    public Boolean betterOrSame(T a, T b) {
+        T better = add(a, b);
+        return a.equals(better);
     }
 
     /**
