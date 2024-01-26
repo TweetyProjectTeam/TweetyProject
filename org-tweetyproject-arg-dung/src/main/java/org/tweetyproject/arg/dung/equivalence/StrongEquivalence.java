@@ -71,7 +71,7 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 	 * all useless attacks of theory and use them to create other strongly
 	 * equivalent theories
 	 * 
-	 * @param theory a dung theory
+	 * @param baseTheory a dung theory
 	 * @return the collection of strongly equivalent theories
 	 *//*
 		 * public Collection<DungTheory> getEquivalentTheories(DungTheory theory) {

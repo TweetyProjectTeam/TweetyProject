@@ -8,7 +8,8 @@
     <parent>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>parent-pom</artifactId>
-  		<version>1.24-SNAPSHOT</version>
+  		<version>1.25-SNAPSHOT</version>  		
+        <relativePath>..</relativePath>
   	</parent>
 
     <dependencyManagement>
@@ -61,7 +62,6 @@
          <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.1</version>
          </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -93,28 +93,27 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>commons</artifactId>
-    		<version>1.24-SNAPSHOT</version>
+    		<version>1.25-SNAPSHOT</version>
 	    </dependency>
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>pl</artifactId>
-    		<version>1.24-SNAPSHOT</version>
+    		<version>1.25-SNAPSHOT</version>
 	    </dependency>
 	    <dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>delp</artifactId>
-    		<version>1.24-SNAPSHOT</version>
+    		<version>1.25-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>aba</artifactId>
-    		<version>1.24-SNAPSHOT</version>
+    		<version>1.25-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
 		    <groupId>org.json</groupId>

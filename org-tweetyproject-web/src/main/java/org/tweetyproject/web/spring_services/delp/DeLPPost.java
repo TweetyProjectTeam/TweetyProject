@@ -74,58 +74,114 @@ public class DeLPPost {
         this.unit_timeout = unit_timeout;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getCmd() {
         return this.cmd;
     }
 
+    /**
+     * *description missing*
+     * @param cmd *description missing*
+     */
     public void setCmd(String cmd) {
         this.cmd = cmd;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getCompcriterion() {
         return this.compcriterion;
     }
 
+    /**
+     * *description missing*
+     * @param compcriterion *description missing*
+     */
     public void setCompcriterion(String compcriterion) {
         this.compcriterion = compcriterion;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getKb() {
         return this.kb;
     }
 
+    /**
+     * *description missing*
+     * @param kb *description missing*
+     */
     public void setKb(String kb) {
         this.kb = kb;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getQuery() {
         return this.query;
     }
 
+    /**
+     * *description missing*
+     * @param query *description missing*
+     */
     public void setQuery(String query) {
         this.query = query;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public int getTimeout() {
         return this.timeout;
     }
 
+    /**
+     * *description missing*
+     * @param timeout *description missing*
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getUnit_timeout() {
         return this.unit_timeout;
     }
 
+    /**
+     * *description missing*
+     * @param unit_timeout *description missing*
+     */
     public void setUnit_timeout(String unit_timeout) {
         this.unit_timeout = unit_timeout;
     }

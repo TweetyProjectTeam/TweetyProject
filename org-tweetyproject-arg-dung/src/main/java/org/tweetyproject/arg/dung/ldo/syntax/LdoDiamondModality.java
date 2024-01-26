@@ -20,7 +20,7 @@ package org.tweetyproject.arg.dung.ldo.syntax;
 
 /**
  * 
- * 
+ * *description missing*
  * @author Matthias Thimm
  * 
  */

@@ -27,7 +27,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 /**
  * This class describes a causal knowledge base.
  *
- * @see "Argumentation-based Causal and Counterfactual Reasoning" by
+ * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
  * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
  *
@@ -86,6 +86,10 @@ public class CausalKnowledgeBase extends KnowledgeBase {
 		return output;
 	}
 	
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<PlFormula> getBeliefsWithoutStructuralEquations(){
 		return new HashSet<PlFormula>(this.formulas);
 	}

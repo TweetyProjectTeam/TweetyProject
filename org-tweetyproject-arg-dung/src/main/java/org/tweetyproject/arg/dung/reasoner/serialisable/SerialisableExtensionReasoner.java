@@ -210,11 +210,10 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 
 	/**
 	 * recursively computes all possible states of the transition system defined by the selection and termination function
-	 * the transition system is traversed with a depth-first search approach
-	 * @param in_State the current state of the transition system
-	 * @param parentSequence Sequence of extensions of the transition states leading to this state
-	 * @param out_SequencesFound Out parameter, defining the sequences of all final extensions
-	 * @return Collection of all final extension regarding the semantics of the reasoner
+	 * the transition system is traversed with a depth-first search approach 
+	 * @param currentFramework *description missing*
+	 * @param parentSequence *description missing*
+	 * @return *description missing*
 	 */
 	private HashSet<SerialisationSequence> getModelsRecursive(
 			DungTheory currentFramework,

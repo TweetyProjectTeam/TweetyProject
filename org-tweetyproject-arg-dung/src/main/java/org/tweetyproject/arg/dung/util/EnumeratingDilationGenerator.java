@@ -34,6 +34,10 @@ public class EnumeratingDilationGenerator extends EnumeratingDungTheoryGenerator
 
 	private DungTheory frameworkOriginal;
 	
+	/**
+	 * *description missing*
+	 * @param frameworkOriginal *description missing*
+	 */
 	public EnumeratingDilationGenerator(DungTheory frameworkOriginal) {
 		this.frameworkOriginal = frameworkOriginal;
 		super.setCurrentSize(frameworkOriginal.size() + 1);

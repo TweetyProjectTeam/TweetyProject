@@ -24,6 +24,10 @@ import java.util.Objects;
  * connectivity or response of a service.
  */
 
+/**
+ *
+ * *description missing*
+ */
 public class Ping {
 
     private final long id;

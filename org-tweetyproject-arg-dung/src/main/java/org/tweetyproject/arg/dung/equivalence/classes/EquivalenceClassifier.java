@@ -39,6 +39,11 @@ public class EquivalenceClassifier {
 	private String pathToFolderClasses;
 	private Equivalence<DungTheory> equivalence;
 
+	/**
+	 * *description missing*
+	 * @param equivalence *description missing*
+	 * @param path *description missing*
+	 */
 	public EquivalenceClassifier(Equivalence<DungTheory> equivalence, String path) {
 		super();
 		this.pathToFolderClasses = path;

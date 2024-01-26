@@ -33,6 +33,9 @@ import java.util.HashSet;
 public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner {
     
 	
+	/**
+	 * *description missing*
+	 */
 	public SerialisedAdmissibleReasoner() {
 		super(Semantics.ADM);
 	}

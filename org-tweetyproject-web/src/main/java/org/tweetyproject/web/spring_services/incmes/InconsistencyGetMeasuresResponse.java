@@ -44,49 +44,97 @@ public class InconsistencyGetMeasuresResponse extends Response {
     private String reply;
     private String email;
 
+    /**
+     * *description missing*
+     */
     public InconsistencyGetMeasuresResponse() {
     }
 
+    /**
+     * *description missing*
+     * @param measures *description missing*
+     * @param reply *description missing*
+     * @param email *description missing*
+     */
     public InconsistencyGetMeasuresResponse(List<HashMap<String,String>> measures, String reply, String email) {
         this.measures = measures;
         this.reply = reply;
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public List<HashMap<String,String>> getMeasures() {
         return this.measures;
     }
 
+    /**
+     * *description missing*
+     * @param measures *description missing*
+     */
     public void setMeasures(List<HashMap<String,String>> measures) {
         this.measures = measures;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getReply() {
         return this.reply;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @param measures *description missing*
+     * @return *description missing*
+     */
     public InconsistencyGetMeasuresResponse measures(List<HashMap<String,String>> measures) {
         setMeasures(measures);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     * @return *description missing*
+     */
     public InconsistencyGetMeasuresResponse reply(String reply) {
         setReply(reply);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     * @return *description missing*
+     */
     public InconsistencyGetMeasuresResponse email(String email) {
         setEmail(email);
         return this;

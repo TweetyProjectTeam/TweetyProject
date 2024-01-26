@@ -64,6 +64,7 @@ public enum Semantics {
 	/**
 	 * all semantics
 	 */
+	@SuppressWarnings("javadoc")
 	public static final Semantics 
 		/** GROUNDED SEMANTICS*/
 		GROUNDED_SEMANTICS = GR,

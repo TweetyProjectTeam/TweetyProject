@@ -90,82 +90,162 @@ public class DeLPResponse extends Response {
         this.status = status;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getReply() {
         return this.reply;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getCompcriterion() {
         return this.compcriterion;
     }
 
+    /**
+     * *description missing*
+     * @param compcriterion *description missing*
+     */
     public void setCompcriterion(String compcriterion) {
         this.compcriterion = compcriterion;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getKb() {
         return this.kb;
     }
 
+    /**
+     * *description missing*
+     * @param kb *description missing*
+     */
     public void setKb(String kb) {
         this.kb = kb;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getQuery() {
         return this.query;
     }
 
+    /**
+     * *description missing*
+     * @param query *description missing*
+     */
     public void setQuery(String query) {
         this.query = query;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public int getTimeout() {
         return this.timeout;
     }
 
+    /**
+     * *description missing*
+     * @param timeout *description missing*
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getAnswer() {
         return this.answer;
     }
 
+    /**
+     * *description missing*
+     * @param answer *description missing*
+     */
     public void setAnswer(String answer) {
         this.answer = answer;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public double getTime() {
         return this.time;
     }
 
+    /**
+     * *description missing*
+     * @param time *description missing*
+     */
     public void setTime(double time) {
         this.time = time;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getUnit_time() {
         return this.unit_time;
     }
 
+    /**
+     * *description missing*
+     * @param unit_time *description missing*
+     */
     public void setUnit_time(String unit_time) {
         this.unit_time = unit_time;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getStatus() {
         return this.status;
     }
 
+    /**
+     * *description missing*
+     * @param status *description missing*
+     */
     public void setStatus(String status) {
         this.status = status;
     }

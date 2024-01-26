@@ -59,41 +59,75 @@ public class AbaGetSemanticsResponse extends Response {
         this.email = email;
     }
 
-
     public List<HashMap<String,String>> getSemantics() {
         return this.semantics;
     }
 
+    /**
+     * *description missing*
+     * @param measures *description missing*
+     */
     public void setSemantics(List<HashMap<String,String>> measures) {
         this.semantics = measures;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getReply() {
         return this.reply;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * *description missing*
+     * @param measures *description missing*
+     * @return *description missing*
+     */
     public AbaGetSemanticsResponse measures(List<HashMap<String,String>> measures) {
         setSemantics(measures);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param reply *description missing*
+     * @return *description missing*
+     */
     public AbaGetSemanticsResponse reply(String reply) {
         setReply(reply);
         return this;
     }
 
+    /**
+     * *description missing*
+     * @param email *description missing*
+     * @return *description missing*
+     */
     public AbaGetSemanticsResponse email(String email) {
         setEmail(email);
         return this;

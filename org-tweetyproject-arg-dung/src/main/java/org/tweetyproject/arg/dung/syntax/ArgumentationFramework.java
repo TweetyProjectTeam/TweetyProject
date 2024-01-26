@@ -25,9 +25,10 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.commons.BeliefBase;
 
 /**
- * 
+ * *description missing*
  * @author Sebastian Franke
  *
+ * @param <Arg> *description missing*
  */
 public interface ArgumentationFramework<Arg> extends BeliefBase{
 	/**

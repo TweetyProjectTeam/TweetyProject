@@ -5,7 +5,7 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.24-SNAPSHOT</version>
+  	<version>1.25-SNAPSHOT</version>
   </parent>
   <dependencies>
      <dependency>
@@ -17,12 +17,12 @@
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.24-SNAPSHOT</version>
+  		<version>1.25-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>pcl</artifactId>
-  		<version>1.24-SNAPSHOT</version>
+  		<version>1.25-SNAPSHOT</version>
   	</dependency>
   </dependencies>
   <groupId>org.tweetyproject.logics</groupId>

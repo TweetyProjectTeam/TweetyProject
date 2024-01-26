@@ -35,6 +35,10 @@ public class RestServiceCorsApplication {
 	// Allowed origins for production and debug environments
     static String allowedOrigins = "http://tweetyproject.org";
 	String debug_allowedOrigins = "http://127.0.0.1:5500/";
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 		LoggerUtil.logger.info("Server started.");
 		LoggerUtil.logger.info("Allowed Origins: "+ allowedOrigins);
@@ -42,6 +46,10 @@ public class RestServiceCorsApplication {
 		SpringApplication.run(RestServiceCorsApplication.class, args);
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	@Bean
 	/**
      * Configuration method for CORS support in the application.

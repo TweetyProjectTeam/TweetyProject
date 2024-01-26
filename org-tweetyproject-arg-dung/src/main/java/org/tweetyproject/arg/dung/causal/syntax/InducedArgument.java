@@ -27,7 +27,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 /**
  * This class is responsible for the representation of an {@link Argument} that was induced by a {@link CausalKnowledgeBase}
  *
- * @see "Argumentation-based Causal and Counterfactual Reasoning" by
+ * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
  * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
  *
@@ -62,14 +62,26 @@ public class InducedArgument extends Argument{
 		this.conclusion = conclusion;
 	}
 
+	/**
+	 * *description missing*	 
+	 * @return *description missing*
+	 */
 	public PlFormula getConclusion() {
 		return this.conclusion;
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */	
 	public CausalKnowledgeBase getKnowledgeBase() {
 		return this.knowledgeBase;
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */	
 	public HashSet<PlFormula> getPremises() {
 		return new HashSet<>(this.premises);
 	}

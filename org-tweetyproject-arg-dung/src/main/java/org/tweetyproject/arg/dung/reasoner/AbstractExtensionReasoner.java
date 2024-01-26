@@ -35,6 +35,13 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  */
 public abstract class AbstractExtensionReasoner extends AbstractDungReasoner implements ModelProvider<Argument,DungTheory,Extension<DungTheory>>, PostulateEvaluatable<Argument> {
 
+	/**
+	 * Default constructor 
+	 */
+	public AbstractExtensionReasoner() {
+		super();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
 	 */

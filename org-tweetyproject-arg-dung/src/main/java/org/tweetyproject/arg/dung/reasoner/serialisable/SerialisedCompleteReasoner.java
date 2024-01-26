@@ -29,6 +29,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SerialisedCompleteReasoner extends SerialisedAdmissibleReasoner {
     
+	/**
+	 * *description missing*
+	 */
 	public SerialisedCompleteReasoner() {
 		super();
 		setSemantic(Semantics.CO);

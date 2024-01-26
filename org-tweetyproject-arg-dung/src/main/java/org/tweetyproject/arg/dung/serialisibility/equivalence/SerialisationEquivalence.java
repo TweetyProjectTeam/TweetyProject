@@ -31,6 +31,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
+ * @param <T> *description missing*
  */
 public abstract class SerialisationEquivalence<T> implements Equivalence<DungTheory> {
 

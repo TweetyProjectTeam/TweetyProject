@@ -29,6 +29,7 @@ import org.tweetyproject.graphs.Node;
  *  
  * @author Matthias Thimm
  *
+ * @param <T> The type of argumentation framework
  */
 public class Extension <T extends ArgumentationFramework<Argument>> extends AbstractArgumentationInterpretation<T> implements Collection<Argument>, Comparable<Extension<T>> , Node {
 	

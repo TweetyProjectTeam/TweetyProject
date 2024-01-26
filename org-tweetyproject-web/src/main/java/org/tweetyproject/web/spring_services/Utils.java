@@ -40,6 +40,9 @@ import javafx.util.Pair;
 
 public final class Utils {
 
+    /**
+     * *description missing*
+     */
     private Utils(){}
 
     /**

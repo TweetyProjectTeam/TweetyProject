@@ -39,7 +39,8 @@ public class SerialisationEquivalenceBySequence extends SerialisationEquivalence
 	private SerialisableExtensionReasoner reasoner;
 	
 	/**
-	 * @param comparator {@link SerialisationEquivalence.Comparator}
+	 * *description missing*
+	 * @param comparator *description missing*
 	 * @param reasoner Reasoner used to compute the sequences
 	 */
 	public SerialisationEquivalenceBySequence(Equivalence<Collection<SerialisationSequence>> comparator,

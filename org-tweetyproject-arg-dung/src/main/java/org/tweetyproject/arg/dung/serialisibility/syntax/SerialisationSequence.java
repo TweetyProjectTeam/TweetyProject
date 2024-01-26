@@ -35,6 +35,9 @@ public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 
 	private static final long serialVersionUID = -109538431325318647L;
 
+	/**
+	 * *description missing*
+	 */
 	public SerialisationSequence() {
 		super();
 	}

@@ -1,13 +1,3 @@
-package org.tweetyproject.web.spring_services.aba;
-
-import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
-import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
-import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
-import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
-import org.tweetyproject.arg.aba.reasoner.StableReasoner;
-import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
-
-
 /*
  *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
@@ -24,8 +14,17 @@ import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+package org.tweetyproject.web.spring_services.aba;
+
+import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
+import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
+import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.aba.reasoner.StableReasoner;
+import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
+
 /**
  * Main factory for retrieving reasoners for aba.
  * @author Jonas Klein

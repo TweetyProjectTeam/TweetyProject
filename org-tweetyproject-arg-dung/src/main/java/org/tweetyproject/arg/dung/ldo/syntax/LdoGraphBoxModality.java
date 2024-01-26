@@ -21,7 +21,7 @@ package org.tweetyproject.arg.dung.ldo.syntax;
 import java.util.Set;
 
 /**
- * 
+ * *description missing*
  * @author Matthias Thimm
  *
  */

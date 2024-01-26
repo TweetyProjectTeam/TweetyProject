@@ -106,6 +106,9 @@ import javafx.util.Pair;
 import java.util.logging.Level;
 
 
+/**
+ * *description missing*
+ */
 @RestController
 public class RequestController {
 
@@ -357,6 +360,11 @@ public class RequestController {
 		return ping_Greeting;
 	}
 
+	/**
+	 * *description missing*
+	 * @param dungPost *description missing*
+	 * @return *description missing*
+	 */
 	@PostMapping(value = "/info", produces = "application/json")
 	@ResponseBody
 	public DungServicesInfoResponse getInfo(@RequestBody DungReasonerPost dungPost) {
@@ -645,7 +653,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException
+	 * @throws org.codehaus.jettison.json.JSONException *description missing*
 	 */
 	private InconsistencyGetMeasuresResponse handleGetMeasures(InconsistencyPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {
@@ -671,7 +679,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException
+	 * @throws org.codehaus.jettison.json.JSONException *description missing*
 	 */
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {

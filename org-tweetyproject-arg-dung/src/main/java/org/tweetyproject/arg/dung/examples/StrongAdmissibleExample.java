@@ -25,6 +25,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
+ * *description missing*
  * @author Lars Bengel
  */
 public class StrongAdmissibleExample {

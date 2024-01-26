@@ -35,6 +35,9 @@ import java.util.Map;
  */
 public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasoner {
     	
+	/**
+	 * *description missing*
+	 */
 	public SerialisedUnchallengedReasoner() {
 		super(Semantics.UC);
 	}

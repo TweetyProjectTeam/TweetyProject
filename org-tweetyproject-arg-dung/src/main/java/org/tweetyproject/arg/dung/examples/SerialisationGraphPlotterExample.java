@@ -30,7 +30,7 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
  * <br> See
  * <br>
  * <br> Matthias Thimm. Revisiting initial sets in abstract argumentation.
- * <br> Argument & Computation 13 (2022) 325–360 
+ * <br> Argument and Computation 13 (2022) 325–360 
  * <br> DOI 10.3233/AAC-210018
  * <br>
  * <br> and
@@ -45,6 +45,10 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 public class SerialisationGraphPlotterExample {
 	
 	
+	/**
+	 * *description missing*
+	 * @param args *description missing*
+	 */
 	public static void main(String[] args) {
 		Semantics semanticsUsed = Semantics.PR;
 		SerialisationGraph[] examples = new SerialisationGraph[] {

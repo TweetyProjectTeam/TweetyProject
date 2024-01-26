@@ -40,7 +40,7 @@ public class SerialisationEquivalenceByTransitionStateSequence extends Serialisa
 	private SerialisableExtensionReasoner reasoner;
 	
 	/**
-	 * @param comparator {@link SerialisationEquivalence.comparator}
+	 * @param comparator *description missing*
 	 * @param reasoner Reasoner used to compute the {@link SerialisationSequence SerialisationSequences}
 	 */
 	public SerialisationEquivalenceByTransitionStateSequence(Equivalence<Collection<TransitionStateSequence>> comparator,

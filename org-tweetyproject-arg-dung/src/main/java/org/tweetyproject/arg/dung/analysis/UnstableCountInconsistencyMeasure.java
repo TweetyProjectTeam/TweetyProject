@@ -27,8 +27,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.Graph;
 
 /**
+ * *description missing*
  * @author Timothy Gillespie
- *
+ * @param <T> *description missing*
  */
 public class UnstableCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 

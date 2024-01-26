@@ -99,6 +99,7 @@ public class SerialisationSequenceTest {
 	}
 
 
+	@SuppressWarnings("javadoc")
 	public static void CreateSequencesForTest(
 			SerialisationSequence out_seqAB11, 
 			SerialisationSequence out_seqAB12, 

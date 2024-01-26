@@ -45,9 +45,9 @@ import com.mxgraph.util.mxConstants;
  * </ul>
  * <br>
  * @see org.tweetyproject.arg.dung.util.DungTheoryPlotter
- * @see Matthias Thimm. Revisiting initial sets in abstract argumentation.
- *      Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
- * @see Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
+ * Reference: Matthias Thimm. Revisiting initial sets in abstract argumentation.
+ *      Argument and Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
+ * Reference: Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
  *      Argumentation. Computational Models of Argument (2022) DOI:
  *      10.3233/FAIA220143
  *
@@ -106,6 +106,11 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 
 	private SerialisationGraph graph;
 
+	/**
+	 * *description missing*
+	 * @param plotter *description missing*
+	 * @param graph *description missing*
+	 */
 	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 		super(plotter, graph);
 

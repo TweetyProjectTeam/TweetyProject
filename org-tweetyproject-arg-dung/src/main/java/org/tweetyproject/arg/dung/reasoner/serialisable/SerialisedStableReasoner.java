@@ -30,6 +30,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SerialisedStableReasoner extends SerialisedAdmissibleReasoner {
     	
+	/**
+	 * *description missing*
+	 */
 	public SerialisedStableReasoner() {
 		super();
 		setSemantic(Semantics.ST);

@@ -23,25 +23,48 @@ import java.util.Objects;
  * string, which is commonly used in the payload of POST requests.
  */
 
+/**
+ * *description missing*
+ */
 public class Post {
     private String cmd;
 
 
+    /**
+     * *description missing*
+     */
     public Post() {
     }
 
+    /**
+     * *description missing*
+     * @param cmd *description missing*
+     */
     public Post(String cmd) {
         this.cmd = cmd;
     }
 
+    /**
+     * *description missing*
+     * @return *description missing*
+     */
     public String getCmd() {
         return this.cmd;
     }
 
+    /**
+     * *description missing*
+     * @param cmd *description missing*
+     */
     public void setCmd(String cmd) {
         this.cmd = cmd;
     }
 
+    /**
+     * *description missing*
+     * @param cmd *description missing*
+     * @return *description missing*
+     */
     public Post cmd(String cmd) {
         setCmd(cmd);
         return this;
