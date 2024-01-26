@@ -1,24 +1,83 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.delp;
 import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
-public class DelpResponse extends Response {
+/**
+ * The DeLPResponse class extends the Response class and represents
+ * a response containing information related to a Defeasible Logic Program (DeLP) operation.
+ */
+public class DeLPResponse extends Response {
+
+    /** The reply message in the DeLP response */
     private String reply;
+
+    /** The email associated with the DeLP response */
     private String email;
+
+    /** The completeness criterion specified in the DeLP response */
     private String compcriterion;
+
+    /** The knowledge base (KB) provided in the DeLP response */
     private String kb;
+
+    /** The query string in the DeLP response */
     private String query;
+
+    /** The timeout value (in seconds) specified in the DeLP response */
     private int timeout;
+
+    /** The answer provided by the DeLP response */
     private String answer;
+
+    /** The time taken for the DeLP operation */
     private double time;
+
+    /** The unit time specified in the DeLP response */
     private String unit_time;
+
+    /** The status of the DeLP response */
     private String status;
 
-
-    public DelpResponse() {
+    /**
+     * Default constructor for DeLPResponse.
+     */
+    public DeLPResponse() {
     }
 
-    public DelpResponse(String reply, String email, String compcriterion, String kb, String query, int timeout, String answer, double time, String unit_time, String status) {
+    /**
+     * Parameterized constructor for DeLPResponse.
+     *
+     * @param reply         The reply message
+     * @param email         The email associated with the response
+     * @param compcriterion The completeness criterion
+     * @param kb            The knowledge base (KB)
+     * @param query         The query string
+     * @param timeout       The timeout value (in seconds)
+     * @param answer        The answer provided
+     * @param time          The time taken for the operation
+     * @param unit_time     The unit time specified
+     * @param status        The status of the response
+     */
+    public DeLPResponse(String reply, String email, String compcriterion, String kb, String query,
+                        int timeout, String answer, double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.compcriterion = compcriterion;
@@ -111,52 +170,52 @@ public class DelpResponse extends Response {
         this.status = status;
     }
 
-    public DelpResponse reply(String reply) {
+    public DeLPResponse reply(String reply) {
         setReply(reply);
         return this;
     }
 
-    public DelpResponse email(String email) {
+    public DeLPResponse email(String email) {
         setEmail(email);
         return this;
     }
 
-    public DelpResponse compcriterion(String compcriterion) {
+    public DeLPResponse compcriterion(String compcriterion) {
         setCompcriterion(compcriterion);
         return this;
     }
 
-    public DelpResponse kb(String kb) {
+    public DeLPResponse kb(String kb) {
         setKb(kb);
         return this;
     }
 
-    public DelpResponse query(String query) {
+    public DeLPResponse query(String query) {
         setQuery(query);
         return this;
     }
 
-    public DelpResponse timeout(int timeout) {
+    public DeLPResponse timeout(int timeout) {
         setTimeout(timeout);
         return this;
     }
 
-    public DelpResponse answer(String answer) {
+    public DeLPResponse answer(String answer) {
         setAnswer(answer);
         return this;
     }
 
-    public DelpResponse time(double time) {
+    public DeLPResponse time(double time) {
         setTime(time);
         return this;
     }
 
-    public DelpResponse unit_time(String unit_time) {
+    public DeLPResponse unit_time(String unit_time) {
         setUnit_time(unit_time);
         return this;
     }
 
-    public DelpResponse status(String status) {
+    public DeLPResponse status(String status) {
         setStatus(status);
         return this;
     }
@@ -165,10 +224,10 @@ public class DelpResponse extends Response {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof DelpResponse)) {
+        if (!(o instanceof DeLPResponse)) {
             return false;
         }
-        DelpResponse delpResponse = (DelpResponse) o;
+        DeLPResponse delpResponse = (DeLPResponse) o;
         return Objects.equals(reply, delpResponse.reply) && Objects.equals(email, delpResponse.email) && Objects.equals(compcriterion, delpResponse.compcriterion) && Objects.equals(kb, delpResponse.kb) && Objects.equals(query, delpResponse.query) && timeout == delpResponse.timeout && Objects.equals(answer, delpResponse.answer) && time == delpResponse.time && Objects.equals(unit_time, delpResponse.unit_time) && Objects.equals(status, delpResponse.status);
     }
 

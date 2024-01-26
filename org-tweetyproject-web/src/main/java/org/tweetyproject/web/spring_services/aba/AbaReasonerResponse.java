@@ -1,43 +1,93 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.aba;
 
 import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
+/**
+ * The AbaReasonerResponse class extends the Response class and represents the response
+ * data structure for an Argumentation-Based Argumentation (ABA) reasoner.
+ */
 public class AbaReasonerResponse extends Response {
 
+    /** The reply from the ABA reasoner */
     private String reply;
+
+    /** The email associated with the response */
     private String email;
+
+    /** The knowledge base (KB) used in the ABA reasoner */
     private String kb;
+
+    /** The format of the knowledge base (KB) */
     private String kb_format;
+
+    /** The first-order logic (FOL) signature */
     private String fol_signature;
 
+    /** The query assumption used in the ABA reasoner */
     private String query_assumption;
+
+    /** The semantics used in the ABA reasoner */
     private String semantics;
+
+    /** The timeout in seconds for the ABA reasoner operation */
     private int timeout;
+
+    /** The answer/result of the ABA reasoner operation */
     private String answer;
+
+    /** The execution time of the ABA reasoner operation */
     private double time;
+
+    /** The unit time for the ABA reasoner operation */
     private String unit_time;
+
+    /** The status of the ABA reasoner response */
     private String status;
 
-    public String getFol_signature() {
-      return fol_signature;
-    }
-
-    public void setFol_signature(String fol_signature) {
-      this.fol_signature = fol_signature;
-    }
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+    /**
+     * Default constructor for AbaReasonerResponse.
+     */
     public AbaReasonerResponse() {
     }
 
-    public AbaReasonerResponse(String reply, String email, String kb, String kb_format, String fol_signature, String query_assumption, String semantics, int timeout, String answer, double time, String unit_time, String status) {
+    /**
+     * Parameterized constructor for AbaReasonerResponse.
+     *
+     * @param reply            The reply from the ABA reasoner
+     * @param email            The email associated with the response
+     * @param kb               The knowledge base (KB) used in the ABA reasoner
+     * @param kb_format        The format of the knowledge base (KB)
+     * @param fol_signature    The first-order logic (FOL) signature
+     * @param query_assumption The query assumption used in the ABA reasoner
+     * @param semantics        The semantics used in the ABA reasoner
+     * @param timeout          The timeout in seconds for the ABA reasoner operation
+     * @param answer           The answer/result of the ABA reasoner operation
+     * @param time             The execution time of the ABA reasoner operation
+     * @param unit_time        The unit time for the ABA reasoner operation
+     * @param status           The status of the ABA reasoner response
+     */
+    public AbaReasonerResponse(String reply, String email, String kb, String kb_format, String fol_signature,
+                                String query_assumption, String semantics, int timeout, String answer,
+                                double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.kb = kb;
@@ -51,6 +101,21 @@ public class AbaReasonerResponse extends Response {
         this.status = status;
         this.fol_signature = fol_signature;
     }
+
+        public String getFol_signature() {
+          return fol_signature;
+        }
+
+        public void setFol_signature(String fol_signature) {
+          this.fol_signature = fol_signature;
+        }
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
 
     public String getReply() {
         return this.reply;

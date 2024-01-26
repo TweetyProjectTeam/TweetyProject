@@ -32,6 +32,12 @@
 
 
     <dependencies>
+
+<!-- Logging with java.util.logging -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-logging</artifactId>
+</dependency>
 	  	<dependency>
     		<groupId>org.openjfx</groupId>
     		<artifactId>javafx-controls</artifactId>
@@ -64,7 +70,7 @@
 		<dependency>
     		<groupId>org.glassfish.jersey.media</groupId>
     		<artifactId>jersey-media-json-jettison</artifactId>
-   		</dependency>        
+   		</dependency>
    		<dependency>
     		<groupId>org.glassfish.jersey.inject</groupId>
     		<artifactId>jersey-hk2</artifactId>
@@ -132,5 +138,5 @@
 			</plugin>
 		</plugins>
 	</build>
-    
+
 </project>

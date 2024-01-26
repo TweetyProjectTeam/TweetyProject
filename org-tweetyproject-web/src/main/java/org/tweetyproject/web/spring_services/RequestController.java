@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services;
 
 import java.io.FileNotFoundException;
@@ -53,9 +71,9 @@ import org.tweetyproject.web.spring_services.aba.AbaReasonerGetModelsCallee;
 import org.tweetyproject.web.spring_services.aba.AbaReasonerPost;
 import org.tweetyproject.web.spring_services.aba.AbaReasonerResponse;
 import org.tweetyproject.web.spring_services.aba.GeneralAbaReasonerFactory;
-import org.tweetyproject.web.spring_services.delp.DelpCallee;
-import org.tweetyproject.web.spring_services.delp.DelpPost;
-import org.tweetyproject.web.spring_services.delp.DelpResponse;
+import org.tweetyproject.web.spring_services.delp.DeLPCallee;
+import org.tweetyproject.web.spring_services.delp.DeLPPost;
+import org.tweetyproject.web.spring_services.delp.DeLPResponse;
 import org.tweetyproject.web.spring_services.dung.AbstractExtensionReasonerFactory;
 import org.tweetyproject.web.spring_services.dung.DungReasonerCalleeFactory;
 import org.tweetyproject.web.spring_services.dung.DungReasonerPost;
@@ -85,6 +103,8 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 import javafx.util.Pair;
+import java.util.logging.Level;
+
 
 @RestController
 public class RequestController {
@@ -93,21 +113,33 @@ public class RequestController {
 	private final int SERVICES_TIMEOUT_DELP = 600;
 	private final int SERVICES_TIMEOUT_INCMES = 300;
 
+
+
+/**
+ * Handles HTTP POST requests at the endpoint "/aba". Parses and processes the incoming
+ * JSON payload to perform various ABA reasoning commands.
+ * Supported commands are:
+ * - get_models: Return all models for a given semantics and beliefbase
+ * - get_model: Return some model for a given semantics and beliefbase
+ * - query: Query an assumption
+ * - semantics: Return supported semantics
+ *
+ * @param AbaReasonerPost The request payload containing information for ABA reasoning.
+ * @return A Response object containing the result of the ABA reasoning operation.
+ * @throws ParserException If there is an error while parsing the input data.
+ * @throws IOException If there is an error reading or writing data.
+ * @throws JSONException If there is an error with JSON processing.
+ * @throws org.codehaus.jettison.json.JSONException If there is an error with Jettison JSON processing.
+ */
 	@PostMapping(value = "/aba", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
 			@RequestBody AbaReasonerPost AbaReasonerPost) throws ParserException, IOException, JSONException, org.codehaus.jettison.json.JSONException {
 
-
+			LoggerUtil.logger.info(String.format("User: %s  Command: %s", AbaReasonerPost.getEmail(), AbaReasonerPost.getCmd()));
 			if (AbaReasonerPost.getCmd().equals("semantics")) {
 				return handleGetSemantics(AbaReasonerPost);
 			}
-
-
-			// DungTheory dungTheory =
-			// Utils.getDungTheory(AbaReasonerPost.getNr_of_arguments(),
-			// AbaReasonerPost.getAttacks());
-			System.out.println(AbaReasonerPost.getKb());
 			Callee callee = null;
 			SatSolver.setDefaultSolver(new Sat4jSolver());
 			if (AbaReasonerPost.getKb_format().equals("pl")) {
@@ -116,14 +148,16 @@ public class RequestController {
 				AbaTheory<PlFormula> abat1 = null;
 				try {
 					abat1 = parser1.parseBeliefBase(AbaReasonerPost.getKb());
-					System.out.println("Parsed belief base: " + abat1);
 				} catch (FileNotFoundException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParserException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -146,20 +180,30 @@ public class RequestController {
 					abat1 = parser1.parseBeliefBase(AbaReasonerPost.getKb());
 					System.out.println("Parsed belief base: " + abat1);
 				} catch (FileNotFoundException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParserException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName())));
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 				GeneralAbaReasoner<FolFormula> r1 = GeneralAbaReasonerFactory
 						.getReasoner(GeneralAbaReasonerFactory.Semantics.getSemantics(AbaReasonerPost.getSemantics()));
-				callee = AbaReasonerCalleeFactory
+
+				try {
+					callee = AbaReasonerCalleeFactory
 						.getCallee(AbaReasonerCalleeFactory.Command.getCommand(AbaReasonerPost.getCmd()), r1, abat1,a);
+				}
+				catch (Exception e) {
+					LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while creating ABAReasonerCallee:%s", e.getClass().getSimpleName())));
+				}
+
 			}
 
 			ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -172,13 +216,13 @@ public class RequestController {
 			int user_timeout = Utils.checkUserTimeout(AbaReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
+				LoggerUtil.logger.info(String.format("Run command \"%s\" with timeout: %s %s", AbaReasonerPost.getCmd(),user_timeout, AbaReasonerPost.getUnit_timeout()));
 				if (AbaReasonerPost.getCmd().equals("get_models") || AbaReasonerPost.getCmd().equals("get_model")) {
-										Future<Collection<AbaExtension<Formula>>> future = executor.submit(callee);
 
-					System.out.print("Run command: "+ AbaReasonerPost.getCmd() + " with timeout: " + user_timeout + ".....");
+					Future<Collection<AbaExtension<Formula>>> future = executor.submit(callee);
 					Pair<Collection<AbaExtension<Formula>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
-					System.out.println("DONE!");
+					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
 						reasonerResponse.setTime(result.getValue());
 						reasonerResponse.setAnswer(result.getKey().toString());
 						reasonerResponse.setStatus("SUCCESS");
@@ -188,11 +232,14 @@ public class RequestController {
 					Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 
+					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
+
 						reasonerResponse.setTime(result.getValue());
 					reasonerResponse.setAnswer(result.getKey().toString());
 					reasonerResponse.setStatus("SUCCESS");
 				}
 				else{
+					LoggerUtil.logger.log(Level.SEVERE,String.format("Command \"%s\"  not found.", AbaReasonerPost.getCmd()));
 					Pair<String,Integer> result = new Pair<String,Integer>("Command not found",0 );
 					System.out.println(result.getKey().toString());
 					reasonerResponse.setTime(result.getValue());
@@ -202,12 +249,13 @@ public class RequestController {
 
 				executor.shutdownNow();
 			} catch (TimeoutException e) {
+				LoggerUtil.logger.info(String.format("Execution of command \"%s\" reached timeout of %s %s and was aborted.", AbaReasonerPost.getCmd(),AbaReasonerPost.getTimeout(),AbaReasonerPost.getUnit_timeout()));
 				reasonerResponse.setTime(AbaReasonerPost.getTimeout());
 				reasonerResponse.setAnswer(null);
 				reasonerResponse.setStatus("TIMEOUT");
 				executor.shutdownNow();
 			} catch (Exception e) {
-				System.out.println(e.toString());
+				LoggerUtil.logger.log(Level.SEVERE,(String.format("Error while running command \"%s\": %s",AbaReasonerPost.getCmd(), e.getClass().getSimpleName())));
 				reasonerResponse.setTime(0.0);
 				reasonerResponse.setAnswer(null);
 				reasonerResponse.setStatus("Error");
@@ -218,6 +266,28 @@ public class RequestController {
 
 	}
 
+	/**
+ 	* Handles HTTP POST requests for Dung Reasoner operations.
+ 	*
+ 	* <p>This method processes requests with the endpoint "/dung" that have the specified content types
+ 	* for both request and response. It takes a DungReasonerPost object as the request body and returns
+ 	* a Response object as the response body.</p>
+ 	*
+ 	* <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+ 	* operations based on the command. If the command is "info," it delegates the request to the getInfo
+ 	* method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+ 	* AbstractExtensionReasoner, and other components. The result includes information about the execution
+ 	* time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+ 	*
+ 	* <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+ 	* the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+ 	* and the method provides a generic response with a time of 0.0 and a null answer.</p>
+ 	*
+ 	* <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+ 	*
+ 	* @param dungReasonerPost The DungReasonerPost object representing the request payload.
+ 	* @return A Response object representing the response payload.
+ 	*/
 	@PostMapping(value = "/dung", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -267,10 +337,23 @@ public class RequestController {
 		}
 	}
 
+	/**
+ 	* Handles HTTP POST requests for ping operations.
+ 	*
+ 	* <p>This method processes requests with the endpoint "/ping" that have the specified content type
+ 	* for the request and response. It takes a Ping object as the request body and returns the same
+ 	* Ping object as the response body.</p>
+ 	*
+ 	* <p>The method echoes the received Ping object, providing a simple way to test the connectivity
+ 	* or response of the service. The response contains the same information as the request, including
+ 	* the identifier (id) and content of the Ping object.</p>
+ 	*
+ 	* @param ping_Greeting The Ping object representing the request payload.
+ 	* @return A Ping object representing the response payload.
+ 	*/
 	@PostMapping(value = "/ping", produces = "application/json")
 	@ResponseBody
 	public Ping ping(@RequestBody Ping ping_Greeting) {
-		System.out.println("==== PING ====");
 		return ping_Greeting;
 	}
 
@@ -299,14 +382,35 @@ public class RequestController {
 		return response;
 	}
 
+	/**
+ * Handles HTTP POST requests for Defeasible logic programming DeLP Reasoner operations.
+ *
+ * This method processes requests with the endpoint "/delp" that have the specified content types
+ * for both request and response. It takes a DeLPPost object as the request body and returns a
+ * DelpResponse object as the response body.
+ *
+ * The method prints the received DelpPost object to the console for debugging purposes. It then
+ * constructs a DeLPResponse object with default values, prepares the DelpReasoner, and executes it
+ * asynchronously using a separate thread. The result includes information about the execution time,
+ * answer, and status, encapsulated in a DelpResponse object.
+ *
+ * If the execution times out, the method sets the response status to "TIMEOUT" and includes the
+ * specified timeout duration. If a parsing exception occurs during knowledge base or query parsing,
+ * the method throws a JSONException with an appropriate error message. If any other unexpected exception
+ * occurs, the method prints the stack trace and throws a JSONException with a generic error message.
+ *
+ * @param delpPost The DelpPost object representing the request payload.
+ * @return A Response object representing the response payload.
+ * @throws JSONException If there is a parsing error or an unexpected error occurs during processing.
+ */
 	@PostMapping(value = "/delp", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
-			@RequestBody DelpPost delpPost) {
+			@RequestBody DeLPPost delpPost) {
 
 		System.out.println(delpPost.toString());
 
-		DelpResponse delpResponse = new DelpResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(),
+		DeLPResponse delpResponse = new DeLPResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(),
 				delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(), null, 0.0, delpPost.getUnit_timeout(),
 				null);
 		TimeUnit unit = Utils.getTimoutUnit(delpPost.getUnit_timeout());
@@ -332,7 +436,7 @@ public class RequestController {
 				f = new Negation((FolFormula) folParser.parseFormula(qString.substring(1)));
 			else
 				f = folParser.parseFormula(qString);
-			Callee delpCallee = new DelpCallee(delp, reasoner, f);
+			Callee delpCallee = new DeLPCallee(delp, reasoner, f);
 			Future<DelpAnswer.Type> future = executor.submit(delpCallee);
 			Pair<DelpAnswer.Type, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 
@@ -364,6 +468,25 @@ public class RequestController {
 		return delpResponse;
 	}
 
+	/**
+ 	* Handles HTTP POST requests for Inconsistency Measures operations.
+ 	*
+ 	* This method processes requests with the endpoint "/incmes" that have the specified content type
+ 	* for the request and response. It takes an InconsistencyPost object as the request body and returns a
+ 	* Response object as the response body.
+ 	*
+ 	* The method initializes an InconsistencyValueResponse object for the response. It then checks the
+ 	* command (cmd) from the InconsistencyPost object and delegates the request to specific methods based on
+ 	* the command. If the command is "value," it calls the handleGetICMESValue method. If the command is
+ 	* "measures," it calls the handleGetMeasures method. Any exceptions that occur during the processing are
+ 	* caught, and a generic error message is printed to the console.
+ 	*
+ 	* If the command is not recognized or not applicable, the method returns a default InconsistencyValueResponse.
+ 	*
+ 	* @param incmesPost The InconsistencyPost object representing the request payload.
+ 	* @return A Response object representing the response payload.
+ 	*/
+
 	@PostMapping(value = "/incmes", produces = "application/json")
 	@ResponseBody
 	public Response handleRequest(
@@ -387,6 +510,26 @@ public class RequestController {
 		return icmesResponse;
 	}
 
+	/**
+ 	* Private inner class representing a Callable task for measuring inconsistency of a belief set.
+ 	*
+ 	* The MeasurementCallee class implements the Callable interface with a generic type of Double.
+ 	* Instances of this class are used to perform asynchronous calculations of inconsistency measures
+ 	* for a given BeliefSet using a specific InconsistencyMeasure.
+ 	*
+ 	* The class has two fields: "measure," representing the InconsistencyMeasure to be applied,
+ 	* and "beliefSet," representing the BeliefSet for which the inconsistency measure is calculated.
+ 	*
+ 	* The constructor initializes the MeasurementCallee with a specific InconsistencyMeasure and
+ 	* a BeliefSet.
+ 	*
+ 	* The call method, required by the Callable interface, invokes the inconsistencyMeasure method
+ 	* of the provided InconsistencyMeasure on the given BeliefSet, returning the calculated inconsistency
+ 	* measure value as a Double.
+ 	*
+ 	* @param <T> The type of formulas in the belief set, e.g., PlFormula.
+ 	* @param <S> The type of signature associated with the belief set, e.g., PlSignature.
+ 	*/
 	private class MeasurementCallee implements Callable<Double> {
 		InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure;
 		BeliefSet<PlFormula, PlSignature> beliefSet;
@@ -403,12 +546,35 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 *
+	 * Handles the computation of the inconsistency value for a given belief set and inconsistency measure.
+	 * This method takes an InconsistencyPost object representing the request payload and calculates
+	 * the inconsistency value based on the specified belief set, inconsistency measure, and other parameters.
+	 *
+	 * The method initializes an InconsistencyValueResponse object for the response and sets up the necessary
+	 * sub-solvers for the computation. It then retrieves the inconsistency measure and parser based on the request's
+	 * attributes. The belief set is parsed from the knowledge base using the selected parser, and an asynchronous
+	 * calculation of the inconsistency measure is performed using a separate thread. The execution time and result
+	 * are then encapsulated in the InconsistencyValueResponse object.
+	 *
+	 * If the calculation times out, the method sets the response status to "TIMEOUT" and includes the specified
+	 * timeout duration. If a parsing exception occurs during knowledge base parsing, the method throws a JSONException
+	 * with an appropriate error message. If any other unexpected exception occurs, the method logs the error and
+	 * throws a JSONException with a generic error message.
+	 *
+	 * The inconsistency value is set to specific sentinel values (-1 for timeout, -2 for general error, -3 for infinity),
+	 * and the response object includes information about the request and the computed inconsistency value.
+	 *
+	 * @param query The InconsistencyPost object representing the request payload.
+	 * @return An InconsistencyValueResponse object representing the response payload.
+	 * @throws JSONException If there is a parsing error or an unexpected error occurs during processing.
+	 */
+
 	private InconsistencyValueResponse handleGetICMESValue(InconsistencyPost query) throws JSONException {
 		InconsistencyValueResponse icmesResponse = new InconsistencyValueResponse();
 		TimeUnit unit = Utils.getTimoutUnit(query.getUnit_timeout());
 		int user_timeout = Utils.checkUserTimeout(query.getTimeout(), SERVICES_TIMEOUT_INCMES, unit);
-		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
-		// throw new JSONException("Malformed JSON: no \"measure\" attribute given");
 		// set sub-solvers
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PlFormula>(new Sat4jSolver()));
@@ -419,8 +585,6 @@ public class RequestController {
 				Measure.getMeasure(query.getMeasure()));
 		if (measure == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"measure\"");
-		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_FORMAT))
-		// throw new JSONException("Malformed JSON: no \"format\" attribute given");
 		Parser<PlBeliefSet, PlFormula> parser = PlParserFactory.getParserForFormat(
 				Format.getFormat(query.getFormat()));
 		if (parser == null)
@@ -511,6 +675,8 @@ public class RequestController {
 	 */
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {
+
+		LoggerUtil.logger.info(String.format("User: %s  Command: %s", query.getEmail(), query.getCmd()));
 		AbaGetSemanticsResponse response = new AbaGetSemanticsResponse();
 		List<HashMap<String, String>> value = new LinkedList<HashMap<String, String>>();
 		HashMap<String, String> jsonMes;

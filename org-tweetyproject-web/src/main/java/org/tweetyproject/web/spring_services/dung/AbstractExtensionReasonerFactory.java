@@ -40,12 +40,12 @@ import org.tweetyproject.arg.dung.reasoner.WeaklyPreferredReasoner;
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 /**
- * Main factory for retrieving inconsistency measures for propositional logic.
+ * Main factory for retrieving abstract extension reasoners.
  * @author Jonas Klein
  */
 public abstract class AbstractExtensionReasonerFactory {
 
-	/** An enumeration of all available inconsistency measures. */
+	/** An enumeration of all available semantics. */
 	public enum Semantics{
 		WAD ("wad", "Weakly Admissable "),
 		WCO ("wco", "Weakly Complete "),
@@ -78,7 +78,7 @@ public abstract class AbstractExtensionReasonerFactory {
 		/**
 		 *
 		 * @param id ID
-		 * @return the measure
+		 * @return the semantics
 		 */
 		public static Semantics getSemantics(String id){
 			for(Semantics m: Semantics.values())
@@ -93,10 +93,10 @@ public abstract class AbstractExtensionReasonerFactory {
 	}
 
 	/**
-	 * Creates a new inconsistency measure of the given type with default
+	 * Creates a new reasoner measure of the given semantics with default
 	 * settings.
-	 * @param im some identifier of an inconsistency measure.
-	 * @return the requested inconsistency measure.
+	 * @param sem some identifier of an semantics.
+	 * @return the requested reasoner.
 	 */
 	public static AbstractExtensionReasoner getReasoner(Semantics sem){
 		switch(sem){

@@ -1,20 +1,64 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.dung;
 
 import java.util.List;
 import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
+
+
+/**
+ * The DungReasonerResponse class extends the Response class and represents
+ * a response containing information related to a Dung argumentation reasoner result.
+ */
 public class DungReasonerResponse extends Response {
 
+    /** The reply message in the Dung reasoner response */
     private String reply;
+
+    /** The email associated with the Dung reasoner response */
     private String email;
+
+    /** The number of arguments in the Dung reasoner response */
     private int nr_of_arguments;
+
+    /** The attacks information in the Dung reasoner response */
     private List<List<Integer>> attacks;
+
+    /** The semantics specified in the Dung reasoner response */
     private String semantics;
+
+    /** The solver specified in the Dung reasoner response */
     private String solver;
+
+    /** The answer provided by the Dung reasoner response */
     private String answer;
+
+    /** The time taken for the Dung reasoner operation (in seconds) */
     private double time;
+
+    /** The unit time specified in the Dung reasoner response */
     private String unit_time;
+
+    /** The status of the Dung reasoner response */
+    private String status;
 
     public String getUnit_time() {
         return unit_time;
@@ -24,13 +68,22 @@ public class DungReasonerResponse extends Response {
         this.unit_time = unit_time;
     }
 
-    private String status;
-
-
-
     public DungReasonerResponse() {
     }
-
+    /**
+     * Parameterized constructor for DungReasonerResponse.
+     *
+     * @param reply           The reply message
+     * @param email           The email associated with the response
+     * @param nr_of_arguments The number of arguments
+     * @param attacks         The attacks information
+     * @param semantics       The semantics specified
+     * @param solver          The solver specified
+     * @param answer          The answer provided
+     * @param time            The time taken for the operation
+     * @param unit_time       The unit time specified
+     * @param status          The status of the response
+     */
     public DungReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks, String semantics, String solver, String answer, int time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
@@ -192,5 +245,5 @@ public class DungReasonerResponse extends Response {
             "}";
     }
 
-    // standard getters/setters
+
 }

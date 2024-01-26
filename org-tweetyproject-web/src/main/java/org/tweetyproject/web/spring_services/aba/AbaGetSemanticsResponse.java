@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.aba;
 
 import java.util.HashMap;
@@ -6,19 +24,41 @@ import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
 
+/**
+ * The AbaGetSemanticsResponse class extends the Response class and represents
+ * a response containing information about the supported semantics for Assumption
+ * Based Argumentation (ABA).
+ */
 public class AbaGetSemanticsResponse extends Response {
+
+    /** The list of semantics represented as a list of HashMaps */
     private List<HashMap<String, String>> semantics;
+
+    /** The reply message in the AbaGetSemanticsResponse */
     private String reply;
+
+    /** The email associated with the AbaGetSemanticsResponse */
     private String email;
 
+    /**
+     * Default constructor for AbaGetSemanticsResponse.
+     */
     public AbaGetSemanticsResponse() {
     }
 
-    public AbaGetSemanticsResponse(List<HashMap<String,String>> measures, String reply, String email) {
-        this.semantics = measures;
+    /**
+     * Parameterized constructor for AbaGetSemanticsResponse.
+     *
+     * @param semantics The list of semantics represented as a list of HashMaps
+     * @param reply     The reply message
+     * @param email     The email associated with the response
+     */
+    public AbaGetSemanticsResponse(List<HashMap<String, String>> semantics, String reply, String email) {
+        this.semantics = semantics;
         this.reply = reply;
         this.email = email;
     }
+
 
     public List<HashMap<String,String>> getSemantics() {
         return this.semantics;

@@ -1,46 +1,87 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.aba;
 
 import java.util.Objects;
 
-public class AbaReasonerPost
- {
+/**
+ * The AbaReasonerPost class represents a data structure for sending post requests
+ * to an Argumentation-Based Argumentation (ABA) reasoner.
+ */
+public class AbaReasonerPost {
 
-    private String cmd;
-    private String email;
-    private String kb;
-    private String kb_format;
-    private String fol_signature;
+  /** The command for the ABA reasoner post request */
+  private String cmd;
+
+  /** The email associated with the request */
+  private String email;
+
+  /** The knowledge base (KB) for the ABA reasoner post request */
+  private String kb;
+
+  /** The format of the knowledge base (KB) */
+  private String kb_format;
+
+  /** The first-order logic (FOL) signature */
+  private String fol_signature;
+
+  /** The query assumption for the ABA reasoner post request */
+  private String query_assumption;
+
+  /** The semantics to be used in the ABA reasoner post request */
+  private String semantics;
+
+  /** The timeout in seconds for the ABA reasoner post request */
+  private int timeout;
+
+  /** The unit timeout for the ABA reasoner post request */
+  private String unit_timeout;
+
+
+
+    /**
+     * Default constructor for AbaReasonerPost.
+     */
+    public AbaReasonerPost() {
+    }
+
+    /**
+     * Parameterized constructor for AbaReasonerPost.
+     *
+     * @param cmd              The command for the ABA reasoner post request
+     * @param email            The email associated with the request
+     * @param kb               The knowledge base (KB) for the ABA reasoner post request
+     * @param kb_format        The format of the knowledge base (KB)
+     * @param fol_signature    The first-order logic (FOL) signature
+     * @param query_assumption The query assumption for the ABA reasoner post request
+     * @param semantics        The semantics to be used in the ABA reasoner post request
+     * @param timeout          The timeout in seconds for the ABA reasoner post request
+     * @param unit_timeout     The unit timeout for the ABA reasoner post request
+     */
     public String getFol_signature() {
       return fol_signature;
     }
-
     public void setFol_signature(String fol_signature) {
       this.fol_signature = fol_signature;
     }
-
-    private String query_assumption;
-    private String semantics;
-    private int timeout;
-    private String unit_timeout;
-
-
-  public AbaReasonerPost() {
-  }
-
-  public AbaReasonerPost(String cmd, String email, String kb, String kb_format, String fol_signature, String query_assumption, String semantics, int timeout, String unit_timeout) {
-    this.cmd = cmd;
-    this.email = email;
-    this.kb = kb;
-    this.kb_format = kb_format;
-    this.query_assumption = query_assumption;
-    this.semantics = semantics;
-    this.timeout = timeout;
-    this.unit_timeout = unit_timeout;
-    this.fol_signature = fol_signature;
-  }
-
-  public String getCmd() {
-    return this.cmd;
+    public String getCmd() {
+      return this.cmd;
   }
 
   public void setCmd(String cmd) {

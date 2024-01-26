@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.spring_services.dung;
 
 import java.util.List;
@@ -5,18 +23,43 @@ import java.util.Objects;
 
 import org.tweetyproject.web.spring_services.Response;
 
+
+/**
+ * The DungServicesInfoResponse class extends the Response class and represents
+ * a response containing information about Dung argumentation services.
+ */
 public class DungServicesInfoResponse extends Response {
+
+    /** The reply message in the Dung services info response */
     private String reply;
+
+    /** The email associated with the Dung services info response */
     private String email;
+
+    /** The backend timeout value specified in the Dung services info response */
     private int backend_timeout;
+
+    /** The list of supported semantics in the Dung services info response */
     private List<String> semantics;
+
+    /** The list of supported commands in the Dung services info response */
     private List<String> commands;
 
-
-
+    /**
+     * Default constructor for DungServicesInfoResponse.
+     */
     public DungServicesInfoResponse() {
     }
 
+    /**
+     * Parameterized constructor for DungServicesInfoResponse.
+     *
+     * @param reply           The reply message
+     * @param email           The email associated with the response
+     * @param backend_timeout The backend timeout value
+     * @param semantics       The list of supported semantics
+     * @param commands        The list of supported commands
+     */
     public DungServicesInfoResponse(String reply, String email, int backend_timeout, List<String> semantics, List<String> commands) {
         this.reply = reply;
         this.email = email;
