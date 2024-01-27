@@ -40,7 +40,7 @@ public class SerialisedStronglyAdmissibleReasoner extends SerialisedAdmissibleRe
 	 */
 	public SerialisedStronglyAdmissibleReasoner() {
 		super();
-		setSemantic(Semantics.SA);
+		setSemantic(Semantics.SAD);
 	}
 	
 	@Override

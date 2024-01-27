@@ -96,7 +96,7 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 			case SCF2: return new SCF2Reasoner();
 			case WAD: return new WeaklyAdmissibleReasoner();
 			case NA: return new SimpleNaiveReasoner();
-			case SA: return new StronglyAdmissibleReasoner();
+			case SAD: return new StronglyAdmissibleReasoner();
 		default:
 			throw new IllegalArgumentException("Unknown semantics.");			
 		}		

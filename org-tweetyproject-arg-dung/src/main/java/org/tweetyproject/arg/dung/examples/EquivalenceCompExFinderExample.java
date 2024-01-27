@@ -96,7 +96,7 @@ public class EquivalenceCompExFinderExample {
 			semanticsUsed2[3] = Semantics.PR;
 			semanticsUsed2[4] = Semantics.ST;
 			semanticsUsed2[5] = Semantics.UC;
-			semanticsUsed2[6] = Semantics.SA;
+			semanticsUsed2[6] = Semantics.SAD;
 		}
 		
 		String pathToFolder = args.length > 7 ? args[7] : System.getProperty("user.dir");
@@ -356,7 +356,7 @@ public class EquivalenceCompExFinderExample {
 		case "strong":
 			return new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
 		case "standard":
-			if(semanticsUsed.equals(Semantics.UC) || semanticsUsed.equals(Semantics.SA)) {
+			if(semanticsUsed.equals(Semantics.UC) || semanticsUsed.equals(Semantics.SAD)) {
 				return new StandardEquivalence(SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 			}
 			else {

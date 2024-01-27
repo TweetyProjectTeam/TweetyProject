@@ -106,7 +106,7 @@ public abstract class EquivalenceKernel {
 		case UC:{
 			return EquivalenceKernel.UNCHALLENGED;
 		}
-		case SA:{
+		case SAD:{
 			return EquivalenceKernel.STRONGADMISSIBLE;
 		}
 		default:
