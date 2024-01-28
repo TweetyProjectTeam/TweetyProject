@@ -99,10 +99,10 @@ public class UnchallengedKernel extends EquivalenceKernel {
 	}
 	
 	private Collection<Extension<DungTheory>> getInitialSets(DungTheory framework) {
-		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
+		Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
 		Collection<Extension<DungTheory>> result = new HashSet<>();
-        result.addAll(initialSets.get("unattacked"));
-        result.addAll(initialSets.get("unchallenged"));
+        result.addAll(initialSets.get(SimpleInitialReasoner.Initial.UA));
+        result.addAll(initialSets.get(SimpleInitialReasoner.Initial.UC));
 		return result;
 	}
 

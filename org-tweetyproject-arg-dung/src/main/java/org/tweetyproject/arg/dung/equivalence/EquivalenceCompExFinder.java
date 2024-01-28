@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
+import org.tweetyproject.arg.dung.serialisability.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 /**

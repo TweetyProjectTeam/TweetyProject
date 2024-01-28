@@ -24,7 +24,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;

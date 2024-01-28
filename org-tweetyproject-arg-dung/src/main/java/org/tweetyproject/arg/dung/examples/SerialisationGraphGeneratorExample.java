@@ -25,9 +25,9 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
-import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationGraphGenerator;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.plotting.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisability.plotting.SerialisationGraphGenerator;
+import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 

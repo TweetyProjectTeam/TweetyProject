@@ -16,32 +16,42 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.examples;
+package org.tweetyproject.arg.dung.serialisability.equivalence;
 
-import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.plotting.SerialisationAnalysisPlotter;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import java.util.Collection;
+
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
+import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
 
 /**
- * This class represents a summary of examples to show the use of {@link SerialisationAnalysisPlotter}.
+ * This class represents an comparator, which defines if 2 graphs are equivalent, by comparing their set of nodes. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationAnalysisPlotterExample {
-	
-	/**
-	 * *description missing*
-	 * @param args *description missing*
-	 */
-	public static void main(String[] args) {
-		var frameworks = new DungTheory[3];
-		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
-		frameworks[1] = SerialisableExtensionReasonerExample.buildExample2();
-		frameworks[2] = SerialisableExtensionReasonerExample.buildExample3();
-		
-		SerialisationAnalysisPlotter.plotAnalyses(new Semantics[] {Semantics.CO}, frameworks, "Example_", 2000, 1000);
+public class SerialisationEquivalenceByGraphNaiv implements Equivalence<SerialisationGraph>{
+
+	@Override
+	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
+		return graph1.getNodes().equals(graph2.getNodes());
 	}
+
+	@Override
+	public boolean isEquivalent(Collection<SerialisationGraph> graphs) {
+		SerialisationGraph first = graphs.iterator().next();
+		for (SerialisationGraph graph : graphs) {
+			if(!isEquivalent(first, graph))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String getDescription() {
+		return "serialGraphNaivEQ";
+	}
+
+	
 
 }

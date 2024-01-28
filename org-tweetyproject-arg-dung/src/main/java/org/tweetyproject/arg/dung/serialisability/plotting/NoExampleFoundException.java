@@ -16,32 +16,20 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.examples;
-
-import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.plotting.SerialisationAnalysisPlotter;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+package org.tweetyproject.arg.dung.serialisability.plotting;
 
 /**
- * This class represents a summary of examples to show the use of {@link SerialisationAnalysisPlotter}.
- *
+ * This class represents an exception, thrown if no example was found.
+ * 
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationAnalysisPlotterExample {
-	
+public class NoExampleFoundException extends Exception {
+
 	/**
-	 * *description missing*
-	 * @param args *description missing*
+	 * 
 	 */
-	public static void main(String[] args) {
-		var frameworks = new DungTheory[3];
-		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
-		frameworks[1] = SerialisableExtensionReasonerExample.buildExample2();
-		frameworks[2] = SerialisableExtensionReasonerExample.buildExample3();
-		
-		SerialisationAnalysisPlotter.plotAnalyses(new Semantics[] {Semantics.CO}, frameworks, "Example_", 2000, 1000);
-	}
+	private static final long serialVersionUID = 1846199849923418223L;
 
 }

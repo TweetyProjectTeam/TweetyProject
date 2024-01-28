@@ -63,7 +63,7 @@ public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasone
      * @return true, if there are no unattacked or unchallenged initial sets
      */
     public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
-        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(reducedFramework);
-        return initialSets.get("unattacked").isEmpty() && initialSets.get("unchallenged").isEmpty();
+        Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(reducedFramework);
+        return initialSets.get(SimpleInitialReasoner.Initial.UA).isEmpty() && initialSets.get(SimpleInitialReasoner.Initial.UC).isEmpty();
     }
 }

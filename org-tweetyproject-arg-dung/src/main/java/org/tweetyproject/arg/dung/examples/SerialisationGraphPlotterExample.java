@@ -20,8 +20,8 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationGraphPlotter;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.plotting.SerialisationGraphPlotter;
+import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisationGraphPlotter} 

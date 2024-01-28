@@ -26,8 +26,8 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DirectedEdge;
 
@@ -153,10 +153,9 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	protected Collection<Extension<DungTheory>> selectInitialSetsForReduction(DungTheory framework) {
 		// compute the candidate sets S' via the selection function
 		// compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
-		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
+		Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
 		// select initial sets according to the given semantics
-		Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
-		return newExts;
+        return this.selectionFunction(initialSets.get(SimpleInitialReasoner.Initial.UA), initialSets.get(SimpleInitialReasoner.Initial.UC), initialSets.get(SimpleInitialReasoner.Initial.C));
 	}
 
 	/**
@@ -185,7 +184,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		var sequence = iterationOfSequences.next(); // get first sequence
 		var iterationOfSets = sequence.iterator();
 		var tmpParent = iterationOfSets.next(); // get first set
-		SerialisationGraph graph = new SerialisationGraph(tmpParent, this.semantics, this.computeExtension(sequences));
+		SerialisationGraph graph = new SerialisationGraph(new Extension<>(tmpParent), this.semantics, this.computeExtension(sequences));
 
 		do {
 			//iterate through sequences
@@ -197,7 +196,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				if(!graph.add(newChild)) {
 					newChild = graph.getNode(newChild);
 				}
-				graph.add(new DirectedEdge<>(tmpParent, newChild, argSet.toString()));
+				graph.add(new DirectedEdge<>(new Extension<>(tmpParent), newChild, argSet.toString()));
 				tmpParent = newChild;
 			}
 			if(iterationOfSequences.hasNext()) {
