@@ -16,8 +16,8 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+package org.tweetyproject.arg.dung.equivalence.kernel;
 
-package org.tweetyproject.arg.dung.equivalence.strong;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Attack;
@@ -31,31 +31,14 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public abstract class EquivalenceKernel {
-
-	/**
-	 * STABLE
-	 */
+	/** STABLE kernel */
     public static final EquivalenceKernel STABLE = new StableKernel();
-    /**
-     * COMPLETE
-     */
+    /** COMPLETE kernel */
     public static final EquivalenceKernel COMPLETE = new CompleteKernel();
-    /**
-     * GROUNDED
-     */
+    /** GROUNDED kernel */
     public static final EquivalenceKernel GROUNDED = new GroundedKernel();
-    /**
-     * ADMISSIBLE
-     */
+    /** ADMISSIBLE kernel */
     public static final EquivalenceKernel ADMISSIBLE = new AdmissibleKernel();
-    /**
-     * UNCHALLENGED
-     */
-    public static final EquivalenceKernel UNCHALLENGED = new UnchallengedKernel();
-    /**
-     * STRONG ADMISSIBLE
-     */
-    public static final EquivalenceKernel STRONGADMISSIBLE = new StrongAdmissibleKernel();
 
     /**
      * computes the kernel of the given AF
@@ -86,31 +69,21 @@ public abstract class EquivalenceKernel {
      * @param semantics Semantics influencing the equivalence
      * @return kernel to assess the equivalence
      */
-    public static EquivalenceKernel getKernel(Semantics semantics) {
-    	switch (semantics) {
-		case ADM: {
-			return EquivalenceKernel.ADMISSIBLE;
-		}
-		case CO:{
-			return EquivalenceKernel.COMPLETE;
-		}
-		case GR:{
-			return EquivalenceKernel.GROUNDED;
-		}
-		case ST:{
-			return EquivalenceKernel.STABLE;
-		}
-		case PR:{
-			return EquivalenceKernel.ADMISSIBLE;
-		}
-		case UC:{
-			return EquivalenceKernel.UNCHALLENGED;
-		}
-		case SAD:{
-			return EquivalenceKernel.STRONGADMISSIBLE;
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + semantics);
-		}
+    public static EquivalenceKernel getKernelForSemantics(Semantics semantics) {
+        switch (semantics) {
+			case ADM,PR,UC,ID,SST,EA -> {
+                return EquivalenceKernel.ADMISSIBLE;
+            }
+            case CO -> {
+                return EquivalenceKernel.COMPLETE;
+            }
+			case GR,SAD -> {
+                return EquivalenceKernel.GROUNDED;
+            }
+            case ST -> {
+                return EquivalenceKernel.STABLE;
+            }
+            default -> throw new IllegalArgumentException("Unexpected value: " + semantics);
+        }
     }
 }

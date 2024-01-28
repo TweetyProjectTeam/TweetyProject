@@ -1,14 +1,19 @@
-package org.tweetyproject.arg.dung.serialisability.syntax;
+package org.tweetyproject.arg.dung.serialisability.semantics;
 
+import org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation;
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
 
-public class SerialisationSequence implements List<Collection<? extends Argument>>, Comparable<SerialisationSequence> {
+/**
+ * Representation of a serialisation sequence, i.e., a sequence of initial sets of the respective reducts
+ */
+public class SerialisationSequence extends AbstractArgumentationInterpretation<DungTheory> implements List<Collection<? extends Argument>>, Comparable<SerialisationSequence> {
 
-    /** internal storage of the serialisation sequence itself*/
+    /** internal storage of the serialisation sequence itself */
     private List<Collection<? extends Argument>> sequence;
     /** the corresponding extension of the sequence */
     private Collection<Argument> arguments;
@@ -19,6 +24,15 @@ public class SerialisationSequence implements List<Collection<? extends Argument
     public SerialisationSequence() {
         sequence = new LinkedList<>();
         arguments = new HashSet<>();
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
+     */
+    @Override
+    public Extension<DungTheory> getArgumentsOfStatus(ArgumentStatus status) {
+        if(status.equals(ArgumentStatus.IN)) return new Extension<>(this.arguments);
+        throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
     }
 
     /**
@@ -44,12 +58,12 @@ public class SerialisationSequence implements List<Collection<? extends Argument
      * @return An extension containing all arguments of this sequence
      */
     public Extension<DungTheory> getExtension() {
-        return new Extension<>(arguments);
+        return getArgumentsOfStatus(ArgumentStatus.IN);
     }
 
     @Override
     public int size() {
-        return sequence.size();
+        return arguments.size();
     }
 
     @Override
@@ -241,7 +255,8 @@ public class SerialisationSequence implements List<Collection<? extends Argument
     public String toString() {
         StringBuilder s = new StringBuilder("(");
         for (Collection<? extends Argument> ext: this.sequence) {
-            s.append(ext.toString()).append(",");
+            s.append(ext.toString());
+            if (this.sequence.indexOf(ext) != this.sequence.size()-1) s.append(",");
         }
         s.append(")");
         return s.toString();

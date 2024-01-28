@@ -16,14 +16,13 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisability.plotting;
+package org.tweetyproject.arg.dung.serialisability.util;
 
 import java.util.ArrayList;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationNode;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.util.GraphPlotter;
@@ -54,7 +53,7 @@ import com.mxgraph.util.mxConstants;
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
-public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory>, Edge<Extension<DungTheory>>> {
+public class SerialisationGraphPlotter extends GraphPlotter<SerialisationNode, Edge<SerialisationNode>> {
 
 	/**
 	 * Plots the specified graph in a new created frame.
@@ -123,8 +122,8 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 	}
 
 	@Override
-	public String getStyle(Extension<DungTheory> node) {
-		boolean isHighlighted = this.graph.getExtensions().contains(node);
+	public String getStyle(SerialisationNode node) {
+		boolean isHighlighted = node.isTerminal();
 		String style;
 
 		if(isHighlighted) {
@@ -143,7 +142,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 	}
 
 	@Override
-	protected String getPrettyName(Edge<Extension<DungTheory>> edge) {
+	protected String getPrettyName(Edge<SerialisationNode> edge) {
 		String label = edge.getLabel();
 		if((label == null) || label.isEmpty()) {
 			label = this.LABEL_DEFAULT_EDGE;
@@ -152,7 +151,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 	}
 
 	@Override
-	protected String getPrettyName(Extension<DungTheory> node) {
+	protected String getPrettyName(SerialisationNode node) {
 		String name = node.toString();
 		if((name == null)|| name.isEmpty()) {
 			name = this.LABEL_DEFAULT_NODE;
@@ -165,7 +164,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 	 * @param node Node, that shall be represented.
 	 * @return String describing the layout of the regular node.
 	 */
-	protected String getStyleNode(Extension<DungTheory> node) {
+	protected String getStyleNode(SerialisationNode node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString
@@ -179,7 +178,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory
 	 * @param node Node, that shall be represented as highlighted.
 	 * @return String describing the layout of the highlighted node.
 	 */
-	protected String getStyleNodeHighlighted(Extension<DungTheory> node) {
+	protected String getStyleNodeHighlighted(SerialisationNode node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString

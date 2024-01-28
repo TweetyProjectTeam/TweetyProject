@@ -16,8 +16,8 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+package org.tweetyproject.arg.dung.equivalence.kernel;
 
-package org.tweetyproject.arg.dung.equivalence.strong;
 
 import org.tweetyproject.arg.dung.syntax.*;
 
@@ -25,13 +25,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK = (A, R') for strong equivalence wrt. admissible, preferred, ideal, semi-stable and eager semantics
- *
- * R' = R \ { (a, b) | a!=b, (a,a) in R, (b,a) in R || (b,b) in R }
+ * Kernel SK = (A, R') for strong equivalence wrt. stable semantics
+ * <p>
+ * R' = R \ { (a, b) | a!=b, (a,a) in R }
  *
  * @author Lars Bengel
  */
-public class AdmissibleKernel extends EquivalenceKernel {
+public class StableKernel extends EquivalenceKernel {
 
     @Override
     public Collection<Attack> getUselessAttacks(DungTheory theory) {
@@ -40,9 +40,7 @@ public class AdmissibleKernel extends EquivalenceKernel {
             if (theory.isAttackedBy(a, a)) {
                 for (Argument b : theory) {
                     if (a != b) {
-                        if (theory.isAttackedBy(b, b) || theory.isAttackedBy(a, b)) {
-                            uselessAttacks.add(new Attack(a, b));
-                        }
+                        uselessAttacks.add(new Attack(a, b));
                     }
                 }
             }

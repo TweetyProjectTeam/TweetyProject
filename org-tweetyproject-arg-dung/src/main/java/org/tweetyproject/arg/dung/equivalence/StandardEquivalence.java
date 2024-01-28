@@ -21,10 +21,11 @@ package org.tweetyproject.arg.dung.equivalence;
 import java.util.Collection;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 argumentation frameworks are equivalent,
+ * This class represents a comparator, which defines if 2 argumentation frameworks are equivalent,
  * by comparing if they have the same extensions wrt a semantics specified by a reasoner.
  *
  * @author Julian Sander
@@ -33,29 +34,28 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class StandardEquivalence implements Equivalence<DungTheory>  {
 
-	private AbstractExtensionReasoner reasoner;
+	private final Semantics semantics;
 
 	/**
 	 * @param reasoner Reasoner used to compute the extensions of a argumentation framework, in order to examine its equivalence
 	 */
-	public StandardEquivalence(AbstractExtensionReasoner reasoner) {
-		super();
-		this.reasoner = reasoner;
+	public StandardEquivalence(Semantics semantics) {
+		this.semantics = semantics;
 	}
 
 	@Override
 	public String getDescription() {
-		return "standardEQ";
+		return "Standard Equivalence";
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<DungTheory> objects) {
-		DungTheory first = objects.iterator().next();
-		for (DungTheory framework : objects) {
-			if(framework == first) {
+	public boolean isEquivalent(Collection<DungTheory> theories) {
+		DungTheory first = theories.iterator().next();
+		for (DungTheory theory : theories) {
+			if(theory == first) {
 				continue;
 			}
-			if(!this.isEquivalent(framework, first)) {
+			if(!this.isEquivalent(theory, first)) {
 				return false;
 			}
 		}
@@ -64,6 +64,7 @@ public class StandardEquivalence implements Equivalence<DungTheory>  {
 
 	@Override
 	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		return this.reasoner.getModels(obj1).equals(this.reasoner.getModels(obj2));
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
+		return reasoner.getModels(obj1).equals(reasoner.getModels(obj2));
 	}
 }

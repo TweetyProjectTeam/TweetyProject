@@ -18,33 +18,42 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
-import java.util.Collection;
-
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
+import java.util.Collection;
+
 /**
- * This class represents a comparator, which defines if 2 argumentation frameworks are equivalent,
- * by comparing if they are syntactically equal.
+ * This class represents a comparator for deciding whether two {@link DungTheory Argumentation Frameworks} are equivalent
+ * wrt. their serialisation sequences for some semantics
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
- *
  */
-public class IdentityEquivalence implements Equivalence<DungTheory>  {
+public class SerialisationEquivalence implements Equivalence<DungTheory> {
 
-	@Override
-	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		return obj1.equals(obj2);
+	/** the semantics by which the argumentation frameworks are compared */
+	private final Semantics semantics;
+
+	public SerialisationEquivalence(Semantics semantics) {
+		this.semantics = semantics;
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<DungTheory> objects) {
-		DungTheory first = objects.iterator().next();
-		for (DungTheory framework : objects) {
-			if(framework == first) {
+	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
+		SerialisableExtensionReasoner reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(this.semantics);
+		return reasoner.getSequences(obj1).equals(reasoner.getSequences(obj2));
+	}
+
+	@Override
+	public boolean isEquivalent(Collection<DungTheory> theories) {
+		DungTheory first = theories.iterator().next();
+		for (DungTheory theory : theories) {
+			if(theory == first) {
 				continue;
 			}
-			if(!this.isEquivalent(framework, first)) {
+			if(!this.isEquivalent(theory, first)) {
 				return false;
 			}
 		}
@@ -53,7 +62,6 @@ public class IdentityEquivalence implements Equivalence<DungTheory>  {
 
 	@Override
 	public String getDescription() {
-		return "Syntactic Equivalence";
+		return "Serialisation Equivalence";
 	}
-
 }

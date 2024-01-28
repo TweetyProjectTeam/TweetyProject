@@ -37,7 +37,7 @@ public interface Equivalence<T> {
      * @param obj2 an object of the type-parameter
      * @return true if both theories are equivalent
      */
-	public boolean isEquivalent(T obj1, T obj2);
+    boolean isEquivalent(T obj1, T obj2);
 	
 	 /**
      * Checks whether the specified objects are equivalent, 
@@ -45,11 +45,11 @@ public interface Equivalence<T> {
      * @param objects A collection of objects of the type-parameter
      * @return TRUE iff all objects are equivalent
      */
-	public boolean isEquivalent(Collection<T> objects);
+     boolean isEquivalent(Collection<T> theories);
 	
 	/**
 	 * 
 	 * @return Description of the definition
 	 */
-	public String getDescription();
+    String getDescription();
 }

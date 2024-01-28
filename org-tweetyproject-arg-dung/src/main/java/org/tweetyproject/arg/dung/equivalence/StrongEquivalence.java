@@ -19,7 +19,7 @@
 
 package org.tweetyproject.arg.dung.equivalence;
 
-import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
+import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 
@@ -30,9 +30,9 @@ import java.util.*;
  *
  * @author Lars Bengel
  */
-public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentTheories<DungTheory> {
+public class StrongEquivalence implements Equivalence<DungTheory> {
 
-	private EquivalenceKernel kernel;
+	private final EquivalenceKernel kernel;
 
 	/**
 	 * initialize Equivalence with the given kernel
@@ -56,42 +56,19 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 	public boolean isEquivalent(Collection<DungTheory> theories) {
 		var first = theories.iterator().next();
 		
-		for(var elem : theories) {
-			if(elem == first) continue;
-			else if(!isEquivalent(elem, first)) {
+		for(var theory : theories) {
+			if (!isEquivalent(theory, first)) {
 				return false;
 			}
 		}
-		
 		return true;
 	}
 
 	/**
-	 * compute all strongly equivalent theories for the the given theory i.e. get
-	 * all useless attacks of theory and use them to create other strongly
-	 * equivalent theories
-	 * 
-	 * @param baseTheory a dung theory
-	 * @return the collection of strongly equivalent theories
-	 *//*
-		 * public Collection<DungTheory> getEquivalentTheories(DungTheory theory) {
-		 * Collection<Attack> uselessAttacks = this.kernel.getUselessAttacks(theory);
-		 * 
-		 * DungTheory kernelTheory = this.kernel.getKernel(theory);
-		 * 
-		 * // iterate over all combinations of useless attacks Collection<DungTheory>
-		 * theories = new HashSet<>(); for (Set<Attack> subset: new
-		 * SetTools<Attack>().subsets(uselessAttacks)) { // create copy of kernel and
-		 * add some useless attacks DungTheory newTheory = new DungTheory(kernelTheory);
-		 * newTheory.addAllAttacks(kernelTheory.getAttacks());
-		 * newTheory.addAllAttacks(subset);
-		 * 
-		 * theories.add(newTheory); }
-		 * 
-		 * return theories; }
-		 */
-
-	@Override
+	 * TODO fix
+	 * @param baseTheory
+	 * @return
+	 */
 	public Collection<DungTheory> getEquivalentTheories(DungTheory baseTheory) {
 		EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
 		int numArgs = baseTheory.size();
@@ -105,11 +82,8 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 			if (theory.size() > numArgs) {
 				break;
 			}
-			if (theory.size() < numArgs) {
-				// continue;
-			}
 
-			DungTheory kernelTheory = this.kernel.getKernel(theory);
+            DungTheory kernelTheory = this.kernel.getKernel(theory);
 
 			if (kernelTheory.getAttacks().equals(baseKernel.getAttacks())) {
 				theories.add(theory);
@@ -121,6 +95,6 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 
 	@Override
 	public String getDescription() {
-		return "strongEQ";
+		return "Strong Equivalence";
 	}
 }

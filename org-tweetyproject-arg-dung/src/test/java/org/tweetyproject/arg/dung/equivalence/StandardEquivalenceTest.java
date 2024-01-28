@@ -18,15 +18,14 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
-import java.util.LinkedList;
-
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+
+import java.util.LinkedList;
 
 /**
  * Tests to verify the code in the class {@link StandardEquivalence}.
@@ -48,8 +47,7 @@ class StandardEquivalenceTest {
 		createFrameworksAdmEQ(frameEQ1, frameEQ2);
 		createFrameworksAdmNotEQ(frameNotEQ1, frameNotEQ2);
 		
-		var equivalence = new StandardEquivalence(AbstractExtensionReasoner
-				.getSimpleReasonerForSemantics(Semantics.ADM));
+		var equivalence = new StandardEquivalence(Semantics.ADM);
 		
 		//Act
 		//Assert
@@ -76,8 +74,7 @@ class StandardEquivalenceTest {
 				createFrameworksAdmEQ(frameEQ1, frameEQ2);
 				createFrameworksAdmNotEQ(frameNotEQ1, frameNotEQ2);
 				
-				var equivalence = new StandardEquivalence(AbstractExtensionReasoner
-						.getSimpleReasonerForSemantics(Semantics.ADM));
+				var equivalence = new StandardEquivalence(Semantics.ADM);
 				
 				//Act
 				//Assert

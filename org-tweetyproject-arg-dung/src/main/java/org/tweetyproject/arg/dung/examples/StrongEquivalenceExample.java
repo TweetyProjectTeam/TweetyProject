@@ -20,7 +20,7 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
-import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
+import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 

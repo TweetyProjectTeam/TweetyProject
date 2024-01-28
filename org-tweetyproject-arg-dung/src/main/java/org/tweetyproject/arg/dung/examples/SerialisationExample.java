@@ -1,10 +1,10 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedAdmissibleReasoner;
-import org.tweetyproject.arg.dung.serialisability.syntax.NewSerialisationGraph;
-import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisability.syntax.SerialisationSequence;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.util.SerialisationGraphPlotter;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -26,10 +26,13 @@ public class SerialisationExample {
         theory.addAttack(b,c);
         theory.addAttack(c,d);
 
-        SerialisableExtensionReasoner reasoner = new SerialisedAdmissibleReasoner();
-        Collection<SerialisationSequence> sequences = reasoner.getModelsSequences(theory);
+        Semantics semantics = Semantics.COMPLETE_SEMANTICS;
+        SerialisableExtensionReasoner reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
+        Collection<SerialisationSequence> sequences = reasoner.getSequences(theory);
         System.out.println(sequences);
-        NewSerialisationGraph graph = new NewSerialisationGraph(theory, sequences);
+        SerialisationGraph graph = new SerialisationGraph(theory, sequences, semantics);
         System.out.println(graph.prettyPrint());
+
+        SerialisationGraphPlotter.plotGraph(graph, 1000, 2000, "");
     }
 }

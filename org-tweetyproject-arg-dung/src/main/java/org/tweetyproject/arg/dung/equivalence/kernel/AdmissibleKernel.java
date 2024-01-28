@@ -16,8 +16,8 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+package org.tweetyproject.arg.dung.equivalence.kernel;
 
-package org.tweetyproject.arg.dung.equivalence.strong;
 
 import org.tweetyproject.arg.dung.syntax.*;
 
@@ -25,22 +25,24 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK = (A, R') for strong equivalence wrt. grounded semantics
- *
- * R' = R \ { (a, b) | a!=b, (b,b) in R, (a,a) in R || (b,a) in R}
+ * Kernel SK = (A, R') for strong equivalence wrt. admissible, preferred, unchallenged, ideal, semi-stable and eager semantics
+ * <p>
+ * R' = R \ { (a, b) | a!=b, (a,a) in R, (b,a) in R || (b,b) in R }
  *
  * @author Lars Bengel
  */
-public class GroundedKernel extends EquivalenceKernel {
+public class AdmissibleKernel extends EquivalenceKernel {
 
     @Override
     public Collection<Attack> getUselessAttacks(DungTheory theory) {
         Collection<Attack> uselessAttacks = new HashSet<>();
         for (Argument a: theory) {
-            for (Argument b : theory) {
-                if (a != b && theory.isAttackedBy(b, b)) {
-                    if (theory.isAttackedBy(a, a) || theory.isAttackedBy(a, b)) {
-                        uselessAttacks.add(new Attack(a, b));
+            if (theory.isAttackedBy(a, a)) {
+                for (Argument b : theory) {
+                    if (a != b) {
+                        if (theory.isAttackedBy(b, b) || theory.isAttackedBy(a, b)) {
+                            uselessAttacks.add(new Attack(a, b));
+                        }
                     }
                 }
             }

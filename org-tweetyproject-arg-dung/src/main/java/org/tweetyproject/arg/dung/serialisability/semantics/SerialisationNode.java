@@ -1,4 +1,4 @@
-package org.tweetyproject.arg.dung.serialisability.syntax;
+package org.tweetyproject.arg.dung.serialisability.semantics;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -9,20 +9,26 @@ import org.tweetyproject.graphs.Node;
  */
 public class SerialisationNode implements Node {
     /** theory */
-    private DungTheory theory;
+    private final DungTheory theory;
     /** extension */
-    private Extension<DungTheory> extension;
+    private final Extension<DungTheory> extension;
     /** true if this node represents a valid extension */
-    private boolean terminal;
+    private final boolean terminal;
 
     /**
      *
      * @param theory a dung theory
      * @param extension an extension
+     * @param terminal if the corresponding extension is valid
      */
-    public SerialisationNode(DungTheory theory, Extension<DungTheory> extension) {
+    public SerialisationNode(DungTheory theory, Extension<DungTheory> extension, boolean terminal) {
         this.theory = theory;
         this.extension = extension;
+        this.terminal = terminal;
+    }
+
+    public SerialisationNode(DungTheory theory, Extension<DungTheory> extension) {
+        this(theory, extension, false);
     }
 
     /**
@@ -33,7 +39,7 @@ public class SerialisationNode implements Node {
     }
 
     /**
-     * @return the extension
+     * @return the associated serialisation sequence
      */
     public Extension<DungTheory> getExtension() {
         return extension;
