@@ -36,18 +36,18 @@ import java.util.Map;
 public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasoner {
     	
 	/**
-	 * *description missing*
+	 * Initializes a {@link SerialisableExtensionReasoner} for the unchallenged semantics
 	 */
 	public SerialisedUnchallengedReasoner() {
 		super(Semantics.UC);
 	}
 
 	/**
-     * a selection function that simply returns all unattacked and unchallenged sets
+     * Select a subset of the initial sets of the AF, i.e. the possible successor states
      * @param unattacked the set of unattacked initial sets
      * @param unchallenged the set of unchallenged initial sets
      * @param challenged the set of challenged initial sets
-     * @return the union of unattacked and unchallenged sets
+     * @return all unattacked and unchallenged initial sets
      */
     public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
         Collection<Extension<DungTheory>> result = new HashSet<>();
@@ -57,10 +57,10 @@ public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasone
     }
 
     /**
-     * terminate if there is no unattacked or unchallenged initial set remaining
+     * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
      * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far.
-     * @return true, if there are no more unattacked or unchallenged inital sets
+	 * @param constructedExtension The extension constructed so far
+     * @return true, if there are no unattacked or unchallenged initial sets
      */
     public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
         Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(reducedFramework);

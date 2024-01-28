@@ -20,7 +20,6 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
@@ -28,29 +27,23 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * Serialised version of the complete semantics
  */
 public class SerialisedCompleteReasoner extends SerialisedAdmissibleReasoner {
-    
-	/**
-	 * *description missing*
-	 */
+
+    /**
+     * Initializes a {@link SerialisableExtensionReasoner} for the complete semantics
+     */
 	public SerialisedCompleteReasoner() {
-		super();
-		setSemantic(Semantics.CO);
-	}
+        super();
+        this.semantics = Semantics.CO;
+    }
 
 	/**
-     * a set is accepted iff the specified framework has no unattacked arguments
+     * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
      * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far.
-     * @return true, if no unattacked argument exists in AF
+	 * @param constructedExtension The extension constructed so far
+     * @return true, if no unattacked initial set exists in the AF
      */
     @Override
     public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
-        DungTheory theory = reducedFramework;
-        for (Argument arg: theory) {
-            if (theory.getAttackers(arg).isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return reducedFramework.faf(new Extension<>()).isEmpty();
     }
 }

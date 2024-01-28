@@ -25,22 +25,21 @@ import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 frameworks are equivalent,
- * by comparing their serialisability.
+ * This class represents a comparator for deciding whether two {@link DungTheory Argumentation Frameworks} are equivalent
+ * depending on their serialisation sequences
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
- * @param <T> *description missing*
+ * @param <T> The Parameter by which the equivalence is decided
  */
 public abstract class SerialisationEquivalence<T> implements Equivalence<DungTheory> {
 
-	/**
-	 * Comparator used to define the equivalence of two graphs
-	 */
+	/** Comparator used to define the equivalence of two graphs */
 	private Equivalence<T> comparator;
 
 	/**
+	 * Initializes the comparator for serialisation equivalence
 	 * @param comparator Comparator used to define the equivalence of two graphs
 	 */
 	public SerialisationEquivalence(Equivalence<T> comparator) {

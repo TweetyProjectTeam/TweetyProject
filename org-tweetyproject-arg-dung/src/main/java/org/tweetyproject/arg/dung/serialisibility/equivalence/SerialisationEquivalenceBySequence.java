@@ -27,7 +27,7 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 frameworks are equivalent, 
+ * This class represents a comparator, which defines if 2 frameworks are equivalent,
  * by comparing their serialisation sequences. 
  *
  * @author Julian Sander

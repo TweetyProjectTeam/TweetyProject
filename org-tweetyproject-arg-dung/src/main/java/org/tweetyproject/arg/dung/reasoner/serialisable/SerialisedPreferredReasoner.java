@@ -32,18 +32,18 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class SerialisedPreferredReasoner extends SerialisedAdmissibleReasoner {
     
 	/**
-	 * *description missing*
+	 * Initializes a {@link SerialisableExtensionReasoner} for the preferred semantics
 	 */
 	public SerialisedPreferredReasoner() {
 		super();
-		setSemantic(Semantics.PR);
+		this.semantics = Semantics.PR;
 	}
 
 	/**
-     * a set S is accepted, iff the framework has no initial extensions
+     * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
      * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far.
-     * @return true, iff the AF has no initial extensions
+	 * @param constructedExtension The extension constructed so far
+     * @return true, iff the AF has no initial sets
      */
     @Override
     public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {

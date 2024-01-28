@@ -24,8 +24,8 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents a sequence of sets of arguments. 
- * Each set of arguments is a part of the serialisable extensions of an abstract argumentation framework.
+ * This class represents a sequence of sets of initial sets.
+ * More precisely, each set is an initial set of the reduct wrt. the union of the previous initial sets.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -36,14 +36,14 @@ public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 	private static final long serialVersionUID = -109538431325318647L;
 
 	/**
-	 * *description missing*
+	 * Creates an empty serialisation sequence
 	 */
 	public SerialisationSequence() {
 		super();
 	}
 
 	/**
-	 * Creates a sequence, containing the specified element as the first element in the list
+	 * Creates a serialisation sequence, containing the specified element as the first element in the list.
 	 * @param root First element of the sequence
 	 */
 	public SerialisationSequence(Extension<DungTheory> root) {
@@ -52,11 +52,11 @@ public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 	}
 
 	/**
-	 * Creates a sequence, containing all arguments of the specified sequence, in the same order
-	 * @param parentSequence Sequence specifying part of the arguments on this sequence
+	 * Creates a serialisation sequence, by copying the given sequence
+	 * @param sequence serialisation sequence to be copied
 	 */
-	public SerialisationSequence(SerialisationSequence parentSequence) {
-		super(parentSequence);
+	public SerialisationSequence(SerialisationSequence sequence) {
+		super(sequence);
 	}
 	
 	@Override
@@ -64,7 +64,6 @@ public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 		if(this.contains(element)) {
 			return false;
 		}
-		
 		return super.add(element);
 	}
 	
@@ -73,33 +72,18 @@ public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 		if(this.contains(element)) {
 			return;
 		}
-		
 		super.add(index, element);
-		return;
-	}
+    }
 
 	/**
-	 * @return An extension containing all arguments of the sets of this sequence
+	 * Computes the corresponding extension as the union of all the sets in the sequence
+	 * @return An extension containing all arguments of this sequence
 	 */
-	public Extension<DungTheory> getCompleteExtension() {
+	public Extension<DungTheory> getExtension() {
 		Extension<DungTheory> output = new Extension<>();
 		for (Extension<DungTheory> extension : this) {
 			output.addAll(extension);
 		}
 		return output;
 	}
-	
-	/*
-	 * @Override public boolean equals(Object o) { if(!(o instanceof
-	 * SerialisationSequence)) return false;
-	 * 
-	 * var otherSequence = (SerialisationSequence) o;
-	 * 
-	 * if(!super.equals(otherSequence)) return false;
-	 * 
-	 * // consider order of elements var iteratorThis = this.iterator(); var
-	 * iteratorOther = otherSequence.iterator(); while(iteratorThis.hasNext()) {
-	 * if(!iteratorThis.next().equals(iteratorOther.next())) return false; } return
-	 * true; }
-	 */
 }

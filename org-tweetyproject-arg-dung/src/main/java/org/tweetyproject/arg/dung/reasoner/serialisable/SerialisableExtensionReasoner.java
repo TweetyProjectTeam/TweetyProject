@@ -33,20 +33,20 @@ import org.tweetyproject.graphs.DirectedEdge;
 
 /**
  * Abstract class for computing extensions via a serialised transition system
- *
- * to implement this class, you need to define a selection and a termination function
- * Selection function a(UA, UC, C):     selects and returns a subset of the initial sets
+ * <p>
+ * to implement this class, you need to define a selection and a termination function.<br>
+ * Selection function a(UA, UC, C):     selects and returns a subset of the initial sets.<br>
  * Termination function b((AF, S)):      If the given state satisfies a specific condition, 
- * its extension may be accepted by the associated serialised semantics
+ * its extension may be accepted by the associated serialisable semantics.
  *
  * @author Lars Bengel
  * @author Julian Sander
  */
 public abstract class SerialisableExtensionReasoner extends AbstractExtensionReasoner {
 	/**
-	 * Creates a reasoner for the given semantics.
+	 * Returns a reasoner for the given semantics.
 	 * @param semantics a semantics
-	 * @return a reasoner for the given Dung theory, inference type, and semantics
+	 * @return a serialisable extension reasoner for the given semantics
 	 */
 	public static SerialisableExtensionReasoner getSerialisableReasonerForSemantics(Semantics semantics){
 		return switch (semantics) {
@@ -57,13 +57,14 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		case ADM -> new SerialisedAdmissibleReasoner();
 		case UC -> new SerialisedUnchallengedReasoner();
 		case SAD -> new SerialisedStronglyAdmissibleReasoner();
-		default -> throw new IllegalArgumentException("Unknown semantics.");
+		default -> throw new IllegalArgumentException("Semantics is not serialisable: " + semantics);
 		};
 	}
 
 	protected Semantics semantics;
 
 	/**
+	 * Constructs a serialisable extension reasoner for the given semantics
 	 * @param semantics Semantics used to generate the extensions found during the examination.
 	 */
 	public SerialisableExtensionReasoner(Semantics semantics) {
@@ -71,16 +72,22 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		this.semantics = semantics;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 */
 	@Override
 	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// not supported
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 */
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		var initSeq = new SerialisationSequence();
-		initSeq.add(new Extension<DungTheory>());
+		initSeq.add(new Extension<>());
 		return this.computeExtension(this.getModelsRecursive( bbase, initSeq));
 	}
 
@@ -93,7 +100,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 */
 	public SerialisationGraph getModelsGraph(DungTheory bbase) {
 		var initSeq = new SerialisationSequence();
-		initSeq.add(new Extension<DungTheory>());
+		initSeq.add(new Extension<>());
 		return this.computeGraph(this.getModelsRecursive( bbase, initSeq));
 	}
 
@@ -105,23 +112,23 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 */
 	public HashSet<SerialisationSequence> getModelsSequences(DungTheory bbase){
 		var initSeq = new SerialisationSequence();
-		initSeq.add(new Extension<DungTheory>());
+		initSeq.add(new Extension<>());
 		return this.getModelsRecursive( bbase, initSeq);
 	}
 
 	/**
-	 * @return Semantics used to generate the extensions found during the examination.
+	 * @return The semantics of this reasoner.
 	 */
 	public Semantics getSemantics() {
 		return this.semantics;
 	}
 
 	/**
-	 * select a subset of the initial sets of the theory, i.e. the possible successor states
+	 * Select a subset of the initial sets of the AF, i.e. the possible successor states
 	 * @param unattacked the set of unattacked initial sets
 	 * @param unchallenged the set of unchallenged initial sets
 	 * @param challenged the set of challenged initial sets
-	 * @return a subset of the initial sets of the theory, selected via a specific criteria
+	 * @return a subset of the initial sets of the theory, depends on the semantics of the reasoner
 	 */
 	public abstract Collection<Extension<DungTheory>> selectionFunction(
 			Collection<Extension<DungTheory>> unattacked,
@@ -129,10 +136,10 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 			Collection<Extension<DungTheory>> challenged);
 
 	/**
-	 * Checks whether the current state satisfies some condition, i.e. its extension can be accepted by the corresponding semantics
+	 * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
 	 * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far.
-	 * @return true, if the state satisfies the condition
+	 * @param constructedExtension The extension constructed so far
+	 * @return true, if the state satisfies the condition of the semantics
 	 */
 	public abstract boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension);
 
@@ -147,30 +154,32 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		// compute the candidate sets S' via the selection function
 		// compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
 		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
-		// select initial sets according to given specific semantic
-		Collection<Extension<DungTheory>> newExts = this.selectionFunction(
-				initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
+		// select initial sets according to the given semantics
+		Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
 		return newExts;
 	}
 
 	/**
-	 * @param semantics Semantics used to generate the extensions
+	 * Transforms a given set of serialisation sequences into the corresponding set of extensions
+	 * @param sequences a set of serialisation sequences
+	 * @return the set of extensions that correspond to some serialisation sequence in the given set
 	 */
-	protected void setSemantic(Semantics semantics) {
-		this.semantics = semantics;
-	}
-
 	private Collection<Extension<DungTheory>> computeExtension(HashSet<SerialisationSequence> sequences){
 		var output = new HashSet<Extension<DungTheory>>();
 
 		for (SerialisationSequence sequence : sequences) {
-			output.add(sequence.getCompleteExtension());
+			output.add(sequence.getExtension());
 		}
 		return output;
 	}
 
+	/**
+	 * Constructs a graph from the given set of serialisation sequences
+	 * @param sequences a set of serialisation sequences
+	 * @return the serialisation graph constructed from the given serialisation sequences
+	 */
 	private SerialisationGraph computeGraph(HashSet<SerialisationSequence> sequences) {
-		if(sequences.isEmpty())return new SerialisationGraph(this.semantics, new HashSet<Extension<DungTheory>>());
+		if(sequences.isEmpty())return new SerialisationGraph(this.semantics, new HashSet<>());
 		
 		var iterationOfSequences = sequences.iterator();
 		var sequence = iterationOfSequences.next(); // get first sequence
@@ -215,14 +224,12 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * @param parentSequence *description missing*
 	 * @return *description missing*
 	 */
-	private HashSet<SerialisationSequence> getModelsRecursive(
-			DungTheory currentFramework,
-			SerialisationSequence parentSequence) {
+	private HashSet<SerialisationSequence> getModelsRecursive(DungTheory currentFramework, SerialisationSequence parentSequence) {
 
 		var output = new HashSet<SerialisationSequence>();
 
 		// check whether the current state is acceptable, if yes add to results
-		if (this.terminationFunction(currentFramework, parentSequence.getCompleteExtension())) {
+		if (this.terminationFunction(currentFramework, parentSequence.getExtension())) {
 			output.add(parentSequence);
 		}
 

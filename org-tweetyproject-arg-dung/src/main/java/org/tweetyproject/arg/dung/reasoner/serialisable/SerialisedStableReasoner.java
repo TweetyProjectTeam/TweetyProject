@@ -31,18 +31,18 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class SerialisedStableReasoner extends SerialisedAdmissibleReasoner {
     	
 	/**
-	 * *description missing*
+	 * Initializes a {@link SerialisableExtensionReasoner} for the stable semantics
 	 */
 	public SerialisedStableReasoner() {
 		super();
-		setSemantic(Semantics.ST);
+		this.semantics = Semantics.ST;
 	}
 
 	/**
-     * A set S is accepted iff the framework is empty
+     * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
      * @param reducedFramework The current framework of the transition system
 	 * @param constructedExtension The extension constructed so far.
-     * @return true, iff the AF has  no arguments or attacks
+     * @return true, iff the AF has no arguments or attacks
      */
     @Override
     public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
