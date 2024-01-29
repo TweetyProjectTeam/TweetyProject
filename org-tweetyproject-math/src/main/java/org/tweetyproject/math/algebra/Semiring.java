@@ -33,10 +33,10 @@ import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
  * @author Sandra Hoffmann
  */
 public abstract class Semiring<T> {
-    private BinaryOperator<T> addition;
-    private BinaryOperator<T> multiplication;
-    private T zeroElement;
-    private T oneElement;
+	protected BinaryOperator<T> addition;
+	protected BinaryOperator<T> multiplication;
+    protected T zeroElement;
+    protected T oneElement;
     protected final Random random = new Random();
 
     /**
@@ -141,6 +141,14 @@ public abstract class Semiring<T> {
      * @return A random element of the semiring.
      */
     public abstract T getRandomElement();
+    
+    /**
+     * Performs the division operation as definded in the semiring class. Needed for g-defense.
+     * Note: Concrete implementations in subclasses should provide the actual logic.
+     *
+     * @return The inverse of element.
+     */
+    public abstract T divide(T dividend, T divisor);
     
     /**
      * Converts a value in a semiring to a numerical representation.

@@ -57,4 +57,13 @@ public class ProbabilisticSemiring extends Semiring<Double>{
 		return random.nextDouble();
 	}
 
+	@Override
+	public Double divide(Double dividend, Double divisor) {
+		if (divisor >= dividend) {
+			return this.oneElement;
+		} else {
+			return dividend /divisor;
+		}
+	}
+
 }

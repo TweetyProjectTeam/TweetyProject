@@ -69,4 +69,15 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
         }
     }
 
+
+	@Override
+	public SemiringElement divide(SemiringElement dividend, SemiringElement divisor) {
+		double numDivisor = toNumericalValue(divisor);
+		double numDividend = toNumericalValue(dividend);
+		if (numDivisor < numDividend) {
+			return SemiringElement.BAD;
+		} else {
+			return dividend;
+		}
     }
+}

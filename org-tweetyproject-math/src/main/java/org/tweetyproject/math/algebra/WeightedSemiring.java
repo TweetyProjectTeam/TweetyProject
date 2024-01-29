@@ -66,5 +66,19 @@ public class WeightedSemiring extends Semiring<Double> {
 	public Double getRandomElement() {
 		return random.nextDouble(maxValue);
 	}
+
+	@Override
+	public Double divide(Double dividend, Double divisor) {
+		if (divisor >= dividend) {
+			return this.oneElement;
+		} else {
+			return dividend - divisor;
+		}
+
+	}
+	
+
+	
+	
 }
 

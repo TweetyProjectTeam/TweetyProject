@@ -54,4 +54,13 @@ public class FuzzySemiring extends Semiring<Double> {
 	public Double getRandomElement() {
 		return random.nextDouble();
 	}
+
+	@Override
+	public Double divide(Double dividend, Double divisor) {
+		if (divisor <= dividend) {
+			return this.zeroElement;
+		} else {
+			return dividend;
+		}
+	}
 }

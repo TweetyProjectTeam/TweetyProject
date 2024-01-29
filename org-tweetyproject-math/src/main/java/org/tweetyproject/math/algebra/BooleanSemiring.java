@@ -44,4 +44,9 @@ public class BooleanSemiring extends Semiring<Boolean> {
         // Convert weight to 1 if weight == true and 0 otherwise.
         return weight ? 1.0 : 0.0;
     }
+
+	@Override
+	public Boolean divide(Boolean dividend, Boolean divisor) {
+		return this.multiply(dividend, divisor);
+	}
 }

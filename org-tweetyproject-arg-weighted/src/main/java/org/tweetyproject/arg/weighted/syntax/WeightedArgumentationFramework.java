@@ -34,6 +34,7 @@ import java.util.function.BinaryOperator;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.Signature;
@@ -290,7 +291,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return wDefence(e, attackers, new HashSet<Argument>());				
 	}
 	
-	// define w-defense
+	// define w-defence
 	//returns true if the Extension e can defend argument a from all attacks
 	public boolean wDefence(Argument a, Extension<DungTheory> e) {
 	
@@ -300,14 +301,14 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return wDefence(e, attackers, attacked);				
 	}
 	
-	// define w-defense
+	// define w-defence
 	//returns true if the Extension e can defend itself from attackers
 	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers) {
 		return wDefence(e, attackers, new HashSet<Argument>());				
 	}
 	
 	
-	// define w-defense
+	// define w-defence
 	//returns true if the Extension e can defend itself and attacked from attackers
 	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
 		//add attacked arguments to extension, if they are not included yet
@@ -316,14 +317,14 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		//get strength of attack
 		for(Argument attacker:attackers) {
 			T strengthAttack = null;
-			T strengthDefense = null;
+			T strengthDefence = null;
 			
 			Set<Argument> attacksToE = new HashSet<Argument>();
 			attacksToE.addAll(this.getAttacked(attacker));
 			attacksToE.retainAll(e);
 			if(attacksToE.isEmpty()) {
 				//there is no attack
-				return true;
+				continue;
 			} else {
 				for(Argument att:attacksToE) {
 					if (strengthAttack == null) {
@@ -333,7 +334,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					}
 				}
 			}
-			//get strength of defense
+			//get strength of defence
 			Set<Argument> attacksFromE = this.getAttackers(attacker);
 			attacksFromE.retainAll(e);
 			if(attacksFromE.isEmpty()) {
@@ -341,15 +342,15 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 				return false;
 			} else {
 				for(Argument defender:attacksFromE) {
-					if (strengthDefense == null) {
-						strengthDefense = this.getWeight(new Attack(defender,attacker));
+					if (strengthDefence == null) {
+						strengthDefence = this.getWeight(new Attack(defender,attacker));
 					} else {
-						strengthDefense = semiring.multiply(strengthDefense, this.getWeight(new Attack(defender,attacker)));		
+						strengthDefence = semiring.multiply(strengthDefence, this.getWeight(new Attack(defender,attacker)));		
 					}
 				}
 				
 				//Extension cannot defend against attacker
-				if(!semiring.betterOrSame(strengthAttack, strengthDefense)) return false;
+				if(semiring.betterOrSame(strengthAttack, strengthDefence)) return false;
 			}
 		}
 		return true;
@@ -359,50 +360,123 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	// define w-defense
-	//returns true if the attacked argument is w-defended by Extension e
-	public boolean weightedDefence(Attack att, Extension<DungTheory> e) {
+	// define gamma-defence
+	//returns true if the Extension e can defend itself and attacked from attackers up to a threshold of gamma. I. e the difference between the aggregated
+	//weights of attack and defence is better than gamma.
+	public boolean gDefence(T gamma, Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
+		//add attacked arguments to extension, if they are not included yet
+		e.addAll(attacked);
 		T strengthAttack = null;
-		T strengthDefense = null;
-		Argument attacker = att.getAttacker();
-		//get strength of attack
-		Set<Argument> attacksToE = this.getAttacked(attacker);
-		attacksToE.retainAll(e);
-		for(Argument attacked:attacksToE) {
-			if (strengthAttack == null) {
-				strengthAttack = this.getWeight(new Attack(attacker,attacked));
-			} else {
-				strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,attacked)));
-			}
-		}
+		T strengthDefence = null;
 		
-		//get strength of defense
-		Set<Argument> attacksFromE = this.getAttackers(attacker);
-		attacksFromE.retainAll(e);
-		if(attacksFromE.isEmpty()) {
-			//Attack is undefeated
-			return false;
-		} else {
-			for(Argument defender:attacksFromE) {
-				if (strengthDefense == null) {
-					strengthDefense = this.getWeight(new Attack(defender,attacker));
-				} else {
-					strengthDefense = semiring.multiply(strengthDefense, this.getWeight(new Attack(defender,attacker)));		
+		//get strength of attack
+		for(Argument attacker:attackers) {
+			Set<Argument> attacksToE = new HashSet<Argument>();
+			attacksToE.addAll(this.getAttacked(attacker));
+			attacksToE.retainAll(e);
+			if(attacksToE.isEmpty()) {
+				//there is no attack
+				continue;
+			} else {
+				for(Argument att:attacksToE) {
+					if (strengthAttack == null) {
+						strengthAttack = this.getWeight(new Attack(attacker,att));
+					} else {
+						strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
+					}
 				}
 			}
-			
-			//check if attack can be defended
-			if(semiring.betterOrSame(strengthAttack, strengthDefense)) return true;
+			//get strength of defence
+			Set<Argument> attacksFromE = this.getAttackers(attacker);
+			attacksFromE.retainAll(e);
+			if(attacksFromE.isEmpty()) {
+				//Attack is undefeated
+				return false;
+			} else {
+				for(Argument defender:attacksFromE) {
+					if (strengthDefence == null) {
+						strengthDefence = this.getWeight(new Attack(defender,attacker));
+					} else {
+						strengthDefence = semiring.multiply(strengthDefence, this.getWeight(new Attack(defender,attacker)));		
+					}
+				}
+			}
 		}
-		
-		return false;
+		return semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma);
 	}
+	
+	/**
+	 * returns true if some argument of <code>ext</code> attacks argument and argument cannot w-defend itself.
+	 * @param argument an argument
+	 * @param ext an extension, ie. a set of arguments
+	 * @return true if some argument of <code>ext</code> successfully attacks argument.
+	 */
+	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework> ext){
+		if (getAttackers(argument) == null)
+			return false;
+	    // Create extension with single argument
+	    Set<Argument> singleArgumentSet = new HashSet<>();
+	    singleArgumentSet.add(argument);
+	    Extension<DungTheory> singleArgumentExtension = new Extension<>(singleArgumentSet);
+
+	    // Create a set of attackers from the given extension
+	    Set<Argument> attackers = new HashSet<>(ext);
+
+	    // Check if the argument cannot defend itself
+	    return !wDefence(singleArgumentExtension, attackers);
+	}
+	
+	/**
+	 * returns true if some argument of <code>ext</code> is attacked by argument and cannot be w-defended by ext.
+	 * @param argument an argument
+	 * @param ext an extension, ie. a set of arguments
+	 * @return true if some argument of <code>ext</code> is attacked by argument.
+	 */
+	public boolean isAttackedBy(Argument argument, Collection<Argument> ext){
+		if (getAttacked(argument) == null)
+			return false;
+		
+	    // Create a set for the attacker
+	    Set<Argument> attacker = new HashSet<>();
+	    attacker.add(argument);
+	    
+	    return !wDefence(new Extension<DungTheory>(ext), attacker);
+
+	}
+	
+	
+	/**
+	 * returns true if some argument of <code>ext2</code> attacks some argument
+	 * in <code>ext1</code> and ext1 cannot w-defend itself
+	 * @param ext1 an extension, ie. a set of arguments
+	 * @param ext2 an extension, ie. a set of arguments
+	 * @return true if some argument of <code>ext2</code> attacks some argument
+	 * in <code>ext1</code>
+	 */
+	public boolean isAttacked(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
+		    Set<Argument> attackers = new HashSet<>();
+		    attackers.addAll(ext2);
+			return wDefence(ext1, attackers);
+	}
+	
+	
+	/**
+	 * Checks whether arg1 is attacked by arg2 and cannot w-defend itself.
+	 * @param arg1 an argument.
+	 * @param arg2 an argument.
+	 * @return "true" if arg1 is attacked by arg2
+	 */
+	public boolean isAttackedBy(Argument arg1, Argument arg2){
+		if(!this.getAttacked(arg2).contains(arg1))
+			return false;
+		
+		Attack attack = new Attack(arg2, arg1);
+		Attack defence = new Attack(arg1, arg2);
+		if(!semiring.betterOrSame(this.getWeight(attack), this.getWeight(defence))) 
+			return false;
+		return true;
+	}
+	
 	
 
 	// sets the weight of a given attack

@@ -59,4 +59,13 @@ public class BottleneckSemiring extends Semiring<Double>{
 		return random.nextDouble(maxValue);
 	}
 
+	@Override
+	public Double divide(Double dividend, Double divisor) {
+		if (divisor >= dividend) {
+			return dividend;
+		} else {
+			return divisor;
+		}
+	}
+
 }
