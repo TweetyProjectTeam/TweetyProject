@@ -41,8 +41,15 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
         return a;
     };
 
+ // Define the multiplication operation
+    private static final BinaryOperator<SemiringElement> MULTIPLICATION = (a, b) -> {
+        if (a == SemiringElement.BAD || (a == SemiringElement.FAIR && b == SemiringElement.GOOD))
+            return a;
+        return b;
+    };
+    
     public NonNumericSemiring() {
-        super(TOTAL_ORDERING, (a, b) -> a == SemiringElement.BAD ? SemiringElement.BAD : b, SemiringElement.GOOD, SemiringElement.BAD);
+        super(TOTAL_ORDERING, MULTIPLICATION, SemiringElement.GOOD, SemiringElement.BAD);
     }
     
     
@@ -74,10 +81,11 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
 	public SemiringElement divide(SemiringElement dividend, SemiringElement divisor) {
 		double numDivisor = toNumericalValue(divisor);
 		double numDividend = toNumericalValue(dividend);
-		if (numDivisor < numDividend) {
-			return SemiringElement.BAD;
-		} else {
+		if (numDivisor >= numDividend) {
 			return dividend;
+		} else {
+			return divisor;
 		}
     }
+
 }
