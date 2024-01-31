@@ -20,6 +20,7 @@
 package org.tweetyproject.arg.dung.equivalence;
 
 import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 
@@ -35,8 +36,15 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 	private final EquivalenceKernel kernel;
 
 	/**
-	 * initialize Equivalence with the given kernel
-	 * 
+	 * Initializes a Strong Equivalence Instance with a kernel for the given semantics
+	 * @param semantics some semantics
+	 */
+	public StrongEquivalence(Semantics semantics) {
+		this(EquivalenceKernel.getKernelForSemantics(semantics));
+	}
+
+	/**
+	 * initialize Strong Equivalence with the given kernel
 	 * @param kernel an equivalence kernel
 	 */
 	public StrongEquivalence(EquivalenceKernel kernel) {
