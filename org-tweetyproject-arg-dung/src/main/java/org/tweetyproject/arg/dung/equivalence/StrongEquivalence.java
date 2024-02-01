@@ -16,7 +16,6 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.equivalence;
 
 import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;

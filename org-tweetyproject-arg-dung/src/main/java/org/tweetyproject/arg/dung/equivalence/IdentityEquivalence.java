@@ -27,8 +27,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * by comparing if they are syntactically equal.
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public class IdentityEquivalence implements Equivalence<DungTheory>  {
 

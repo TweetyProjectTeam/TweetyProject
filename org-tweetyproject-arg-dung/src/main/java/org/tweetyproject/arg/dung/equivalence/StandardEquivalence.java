@@ -29,8 +29,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * by comparing if they have the same extensions wrt a semantics specified by a reasoner.
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public class StandardEquivalence implements Equivalence<DungTheory>  {
 

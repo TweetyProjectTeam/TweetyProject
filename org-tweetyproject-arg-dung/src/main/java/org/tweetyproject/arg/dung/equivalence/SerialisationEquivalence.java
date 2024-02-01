@@ -29,7 +29,6 @@ import java.util.Collection;
  * wrt. their serialisation sequences for some semantics
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
  */
 public class SerialisationEquivalence implements Equivalence<DungTheory> {
 
