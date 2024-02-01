@@ -354,6 +354,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is complete.
 	 */
 	public boolean isComplete(Extension<DungTheory> e) {
+		if(!this.isAdmissable(e)) return false;
 		for(Argument a: this)
 			if(!e.contains(a))
 				if(this.isAcceptable(a, e))

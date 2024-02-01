@@ -360,7 +360,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	//weights of attack and defence is better than gamma.
 	public boolean gDefence(T gamma, Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
 		//add attacked arguments to extension, if they are not included yet
-		Extension<DungTheory> extUnionattacked = e;
+		Extension<DungTheory> extUnionattacked = new Extension<>();
+		extUnionattacked.addAll(e);
 		extUnionattacked.addAll(attacked);
 		T strengthAttack = this.getSemiring().getOneElement();
 		T strengthDefence = this.getSemiring().getOneElement();
@@ -370,10 +371,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			Set<Argument> attacksToE = new HashSet<Argument>();
 			attacksToE.addAll(this.getAttacked(attacker));
 			attacksToE.retainAll(extUnionattacked);
-			if(attacksToE.isEmpty()) {
-				//there is no attack
-				continue;
-			} else {
+			if(!attacksToE.isEmpty()) {
 				for(Argument att:attacksToE) {
 					strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
 				}
@@ -381,10 +379,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			//get strength of defence
 			Set<Argument> attacksFromE = this.getAttackers(attacker);
 			attacksFromE.retainAll(e);
-			if(attacksFromE.isEmpty()) {
-				//Attack is undefeated
-				return false;
-			} else {
+			if(!attacksFromE.isEmpty()) {
 				for(Argument defender:attacksFromE) {
 					strengthDefence = semiring.multiply(strengthDefence, this.getWeight(new Attack(defender,attacker)));
 				}
