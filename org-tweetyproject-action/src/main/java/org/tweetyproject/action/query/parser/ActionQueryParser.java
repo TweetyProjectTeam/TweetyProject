@@ -80,7 +80,11 @@ public class ActionQueryParser
   extends Parser<SActionQuerySet,SActionQuery> {
   private ActionSignature signature;
   
-  public ActionQueryParser(ActionSignature signature) {
+  /**
+   * constructor
+ * @param signature 
+ */
+public ActionQueryParser(ActionSignature signature) {
     this.signature = signature;
   }
   

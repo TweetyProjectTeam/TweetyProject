@@ -24,6 +24,8 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.tweetyproject.commons.Interpretation;
@@ -63,23 +65,24 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	 * @param hardConstraints a collection of formulas
 	 * @param softConstraints a map mapping clauses to weights
 	 * @param prop_index a map of propositions (=signature) to the indices that are used for writing the clauses.
-	 * @return a string in Dimacs CNF.
+	 * @return a list of strings in Dimacs CNF.
 	 * @throws IllegalArgumentException if any soft constraint is not a clause.
 	 */
-	protected static String convertToDimacsWcnf(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index) throws IllegalArgumentException{
-		String s = "";
+	protected static List<String> convertToDimacsWcnf(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index) throws IllegalArgumentException{
+		List<String> result = new LinkedList<>();
+		String s;
 		int num_clauses = 0;		
 		int sum_weight = 0;
 		for(PlFormula f: softConstraints.keySet()) {
 			sum_weight += softConstraints.get(f);
 			if(f instanceof Proposition) {
-				s += softConstraints.get(f) + " " + prop_index.get(f) + " 0\n";
+				result.add(softConstraints.get(f) + " " + prop_index.get(f) + " 0");
 			}else if(f.isLiteral()){
-				s += softConstraints.get(f) + " -" +  prop_index.get((Proposition)((Negation)f).getFormula()) + " 0\n";
+				result.add(softConstraints.get(f) + " -" +  prop_index.get((Proposition)((Negation)f).getFormula()) + " 0");
 			}else if(!(f instanceof Disjunction)) {
 				throw new IllegalArgumentException("Clause expected.");
 			}else {
-				s += softConstraints.get(f) + " ";
+				s = softConstraints.get(f) + " ";
 				for(PlFormula p2: (Disjunction) f){
 					if(p2 instanceof Proposition)
 						s += prop_index.get(p2) + " ";
@@ -87,7 +90,8 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 						s += "-" + prop_index.get((Proposition)((Negation)p2).getFormula()) + " ";
 					}else throw new IllegalArgumentException("Clause expected.");				
 				}
-				s += "0\n";	
+				s += "0";
+				result.add(s);
 			}					
 		}		
 		sum_weight++;
@@ -101,7 +105,7 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 			for(PlFormula p1: conj){
 				num_clauses++;
 				// max weight as we have a hard clause
-				s += sum_weight + " ";
+				s = sum_weight + " ";
 				// as conj is in CNF all formulas should be disjunctions
 				Disjunction disj = (Disjunction) p1;
 				for(PlFormula p2: disj){
@@ -111,10 +115,12 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 						s += "-" + prop_index.get((Proposition)((Negation)p2).getFormula()) + " ";
 					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
 				}			
-				s += "0\n";
+				s += "0";
+				result.add(s);
 			}
 		}
-		return "p wcnf " + prop_index.keySet().size() + " " + num_clauses + " " + sum_weight + "\n" + s;
+		result.add(0, "p wcnf " + prop_index.keySet().size() + " " + num_clauses + " " + sum_weight);
+		return result;
 	}
 
 
@@ -131,11 +137,12 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	 * @throws IOException if some file issue occurs
 	 */
 	protected static File createTmpDimacsWcnfFile(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index) throws IOException{
-		String r = DimacsMaxSatSolver.convertToDimacsWcnf(hardConstraints, softConstraints, prop_index);
+		List<String> r = DimacsMaxSatSolver.convertToDimacsWcnf(hardConstraints, softConstraints, prop_index);
 		File f = File.createTempFile("tweety-sat", ".wcnf", DimacsMaxSatSolver.tempFolder);		
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
-		writer.print(r);
+		for(String s: r)
+			writer.println(s);
 		writer.close();		
 		return f;
 	}

@@ -147,9 +147,11 @@ public class ProboI23Reasoner extends AbstractExtensionReasoner{
 			Extension<DungTheory> ext = null;			
 			if(lines.length>1) {
 				ext = new Extension<DungTheory>();
-				for(String a: lines[1].substring(2).split("\\s+"))
-					if(!a.trim().equals(""))
-						ext.add(writer.getArgument(Integer.parseInt(a.trim())));				
+				if(lines[1].strip().length() > 2) {				
+					for(String a: lines[1].substring(2).split("\\s+"))
+						if(!a.trim().equals(""))
+							ext.add(writer.getArgument(Integer.parseInt(a.trim())));
+				}
 			}
 			return new Pair<Boolean,Extension<DungTheory>>(lines[0].trim().toLowerCase().startsWith("yes"),ext);
 			

@@ -76,5 +76,4 @@ public class AllowingAbstentionPrinciple extends Principle {
         }
         return true;
 	}
-
 }

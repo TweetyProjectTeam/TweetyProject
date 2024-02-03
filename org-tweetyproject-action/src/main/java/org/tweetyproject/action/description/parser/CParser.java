@@ -113,10 +113,18 @@ public class CParser extends Parser<CActionDescription, Formula> {
 		return new CLawParser(signature).parseFormula(formula);
 	}
 
+	/**
+	 * *description missing*
+	 * @param signature *description missing*
+	 */
 	public void setSignature(ActionSignature signature) {
 		this.signature = signature;
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public ActionSignature getSignature() {
 		return this.signature;
 	}

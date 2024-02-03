@@ -24,9 +24,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * implementation of incomplete argumentation frameworks
  * 
  * @author Sebastian Franke
- * implementation of incomplete argumentation frameworks
+ * 
  *
  */
 public class IncompleteTheory extends DungTheory{

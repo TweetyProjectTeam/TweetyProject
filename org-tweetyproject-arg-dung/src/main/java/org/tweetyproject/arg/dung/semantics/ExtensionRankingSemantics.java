@@ -50,14 +50,16 @@ public enum ExtensionRankingSemantics {
      */
     R_SST("semi-stable", "R_SST");
 
-
 	/**
-	 * class for extension rnking semantics
+	 * class for extension ranking semantics
 	 */
-    public static final ExtensionRankingSemantics
+    @SuppressWarnings("javadoc")
+	public static final ExtensionRankingSemantics
      /** conflict free */
     CONFLICT_FREE_SEMANTICS = R_CF,
-     /** ADMISSIBLE */
+     /**
+      * ADMISSIBLE
+      */
      ADMISSIBLE_SEMANTICS = R_AD,
      /**
       * COMPLETE

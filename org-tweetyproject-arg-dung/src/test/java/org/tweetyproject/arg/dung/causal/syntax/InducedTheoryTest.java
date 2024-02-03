@@ -90,7 +90,7 @@ class InducedTheoryTest {
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.InducedTheory#CausalTheory(org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase)}.
+	 * Test method for @see org.tweetyproject.arg.dung.causal.syntax.InducedTheory.
 	 */
 	@Test
 	void testCausalTheory() {

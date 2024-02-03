@@ -30,10 +30,12 @@ import org.tweetyproject.commons.QualitativeReasoner;
 /**
  * Ancestor class for all claim based reasoner.
  * 
- * @author Sebatsian Franke
+ * @author Sebastian Franke
  *
  */
 public abstract class AbstractClaimBasedReasoner implements QualitativeReasoner<ClaimBasedTheory,ClaimArgument>, ModelProvider<ClaimArgument,ClaimBasedTheory,ClaimSet>{
+	/** Default constructor */
+	public AbstractClaimBasedReasoner() { super(); }
 	/**get all claim sets that fulfill the given semantics*/
 	public abstract Set<ClaimSet> getModels(ClaimBasedTheory bbase);
 	/**get one claim sets that fulfill the given semantics*/

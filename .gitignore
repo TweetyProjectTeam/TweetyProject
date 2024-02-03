@@ -8,3 +8,6 @@ bin/
 .idea/
 *.iml
 /org-tweetyproject-web/tweetyserver.log
+.vscode
+
+*.log

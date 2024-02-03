@@ -82,7 +82,6 @@ public class DirectionalityPrinciple extends Principle {
 		DungTheory theory_set = (DungTheory) theory.getRestriction(unattackedSet);
         return reasoner.getModels(theory_set);
 	}
-
 	/**
 	 * utility method for calculating unattacked sets in a given theory
 	 * a set E is unattacked in theory iff there exists no argument a in theory \ E, with a attacks E

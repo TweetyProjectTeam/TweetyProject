@@ -98,10 +98,10 @@ public abstract class Principle implements Postulate<Argument> {
      */
     
     /**
-     * 
-     * @param kb kb
-     * @param ev ev
-     * @return is Satisfied
+     * Computes whether the given extension reasoner (i.e. semantics) satisfies this principle for this specific instance
+     * @param kb some argumentation framework
+     * @param ev an extension reasoner
+     * @return true, if this principle is satisfied for this instance and semantics
      */
     public abstract boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev);
 }

@@ -27,12 +27,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
 
 /**
+ * *description missing*
  * @author Timothy Gillespie
  * @param <T> the type of Dung theories used
  *
  */
 public class CycleCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
-
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops(argumentationFramework);
 		// Distinct cycles are defined as a distinct set of it's nodes

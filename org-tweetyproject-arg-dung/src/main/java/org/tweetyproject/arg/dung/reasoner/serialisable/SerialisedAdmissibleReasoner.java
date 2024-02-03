@@ -31,18 +31,27 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner {
-    
-	
+
+
+    /**
+     * Initializes a {@link SerialisableExtensionReasoner} for the admissible semantics
+     */
 	public SerialisedAdmissibleReasoner() {
 		super(Semantics.ADM);
 	}
 
+    /**
+     * Select a subset of the initial sets of the AF, i.e. the possible successor states
+     * @param unattacked the set of unattacked initial sets
+     * @param unchallenged the set of unchallenged initial sets
+     * @param challenged the set of challenged initial sets
+     * @return all initial sets
+     */
 	@Override
     public Collection<Extension<DungTheory>> selectionFunction(
     		Collection<Extension<DungTheory>> unattacked, 
     		Collection<Extension<DungTheory>> unchallenged, 
     		Collection<Extension<DungTheory>> challenged) {
-        // select all initial sets as possible successors
         Collection<Extension<DungTheory>> result = new HashSet<>(unattacked);
         result.addAll(unchallenged);
         result.addAll(challenged);
@@ -50,9 +59,14 @@ public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner 
         return result;
     }
 
+    /**
+     * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
+     * @param theory The current framework of the transition system
+     * @param extension The extension constructed so far
+     * @return true, since every state corresponds to an admissible extension
+     */
     @Override
-    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
-        // terminate iff there are no more initial sets
+    public boolean terminationFunction(DungTheory theory, Extension<DungTheory> extension) {
         return true;
     }
 }

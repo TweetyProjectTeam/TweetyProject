@@ -1,9 +1,9 @@
 /*
  * URLs of the TweetyServer
  */
-var tweetyserver = "http://141.26.208.49:8080";
-var tweetyserverInc = tweetyserver + "/tweety/incmes";
-var tweetyserverPing = tweetyserver + "/tweety/ping";
+var tweetyserver = "http://localhost:8080";
+var tweetyserverInc = tweetyserver + "/incmes";
+var tweetyserverPing = tweetyserver + "/ping";
 
 /*
  * Array of currently selected measures.
@@ -29,13 +29,15 @@ var cnt;
 
 function checkServerStatus(){
     var jsonObj = {};
+	jsonObj.id = 42;
+	jsonObj.content = "PING SERVER"
 	$.ajax({
 	  	type: "POST",
 		contentType: "application/json; charset=utf-8",
 		url: tweetyserverPing,
 		data: JSON.stringify(jsonObj),
 		dataType: "json",
-		timeout:10000,
+		timeout:1000,
 		success: function(response){ 
 			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
   		},
@@ -91,6 +93,8 @@ function query(){
 		jsonObj.measure = measure,
 	   	jsonObj.kb = $('#kb').val(),
 	    jsonObj.format = format;
+		jsonObj.timeout = 600000;
+		jsonObj.unit_timeout = "ms";
 		$.ajax({
 	  		type: "POST",
 	  		contentType: "application/json; charset=utf-8",
@@ -152,7 +156,12 @@ function select(){
   		url: tweetyserverInc,
   		data: JSON.stringify({
     	             "cmd" : "measures",
-    	             "email" : "tweetyweb@mthimm.de"
+    	             "email" : "tweetyweb@mthimm.de",
+					 "measure": "",
+					 "kb":"",
+					 "format": "",
+					 "timeout": 60000,
+					 "unit_timeout": "ms"
    	           }),
   		dataType: "json",
   		success: function(response){populateMeasures(response);},

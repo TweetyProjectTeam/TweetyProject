@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.pl.sat;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.tweetyproject.commons.Interpretation;
@@ -73,8 +74,8 @@ public class Sat4jSolver extends DimacsSatSolver{
 	}
 
 	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {
-		if(num_additional_clauses > 0)
+	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses) {
+		if(additional_clauses.size() > 0)
 			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newDefault();
 		solver.newVar(this.maxvar);
@@ -116,8 +117,8 @@ public class Sat4jSolver extends DimacsSatSolver{
 	}
 
 	@Override
-	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, String additional_clauses, int num_additional_clauses) {
-		if(num_additional_clauses > 0)
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, List<String> additional_clauses) {
+		if(additional_clauses.size() > 0)
 			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);

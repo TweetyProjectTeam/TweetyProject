@@ -33,6 +33,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public abstract class AbstractAcceptabilityReasoner extends AbstractDungReasoner {
 	
 	/**
+	 * Default constructor
+	 */
+	public AbstractAcceptabilityReasoner() {
+		super();
+	}
+	
+	/**
 	 * Returns the set of acceptable arguments of this reasoner.
 	 * @param aaf some AAF
 	 * @return the set of acceptable arguments of this reasoner.

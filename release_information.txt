@@ -1,3 +1,19 @@
+18.01.2024 - TweetyProject 1.25
+  New libraries: <none>
+  New functionalities: 
+    - Added functionalities for reasoning with serialisable semantics for
+      abstract argumentation frameworks (org.tweetyproject.arg.dung)
+    - Added equivalence testing classes for abstract argumentation frameworks,
+      in particular for standard equivalence, strong equivalence, and serialisation
+      equivalence (org.tweetyproject.arg.dung)
+    - Added functionalities for causal reasoning with abstract argumentation frameworks
+      (org.tweetyproject.arg.dung)
+    - updated web packages with Spring framework (org.tweetyproject.web)
+    - added web components for reasoning with abstract argumentation and ABA 
+      (org.tweetyproject.web)
+  Minor changes:
+    - Improved DIMACS conversion for MaxSAT solving
+    - Minor bugfixes    
 11.07.2023 - TweetyProject 1.24
   New libraries: <none>
   New functionalities: <none>

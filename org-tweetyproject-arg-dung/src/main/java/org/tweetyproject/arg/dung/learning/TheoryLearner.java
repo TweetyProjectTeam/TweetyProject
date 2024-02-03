@@ -146,6 +146,7 @@ public class TheoryLearner {
 
     /**
      * create the formula encoding the conflict-free restriction on the extension
+     * @param theory *description missing*
      * @param labeling an extension
      * @return a formula encoding the conflict-freeness of the extension
      * @throws IOException Exception
@@ -195,7 +196,7 @@ public class TheoryLearner {
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the stability of ext
-     * @throws IOException
+     * @throws IOException *description missing*
      */
     private PlFormula getStableClause(DungTheory theory, Labeling labeling) throws IOException {
         Collection<Argument> ext = labeling.getArgumentsOfStatus(ArgumentStatus.IN);
@@ -220,7 +221,7 @@ public class TheoryLearner {
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the completeness of ext
-     * @throws IOException
+     * @throws IOException *description missing*
      */
     private PlFormula getCompleteClause(DungTheory theory, Labeling labeling) throws IOException {
         Collection<Argument> ext = labeling.getArgumentsOfStatus(ArgumentStatus.IN);

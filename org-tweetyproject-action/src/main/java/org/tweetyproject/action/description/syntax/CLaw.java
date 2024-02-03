@@ -176,6 +176,10 @@ public abstract class CLaw implements CausalLaw {
 		this.ifFormula = (FolFormula) ifFormula.collapseAssociativeFormulas();
 	}
 
+	/**
+	 * *description missing*
+	 * @param c
+	 */
 	public void addGroundingRequirement(GroundingRequirement c) {
 		requirements.add(c);
 	}
@@ -194,6 +198,10 @@ public abstract class CLaw implements CausalLaw {
 		return ifFormula;
 	}
 
+	/**
+	 * *description missing*
+	 * @return *missing*
+	 */
 	public boolean isGround() {
 		for (FolAtom a : getAtoms())
 			if (!a.isGround())

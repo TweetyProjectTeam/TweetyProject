@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.pl.examples;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.pl.parser.DimacsParser;
@@ -68,8 +69,9 @@ public class SatSolverExample {
 
 		// The conversion into dimacs format is done automatically by CmdLineSatSolver,
 		// but the method can also be called manually:
-		String re = DimacsSatSolver.convertToDimacs(kb1);
-		System.out.println(re);
+		List<String> re = DimacsSatSolver.convertToDimacs(kb1);
+		for(String s: re)
+			System.out.println(s);
 
 		// Parsing a belief base in dimacs format
 		DimacsParser dimacsParser = new DimacsParser();

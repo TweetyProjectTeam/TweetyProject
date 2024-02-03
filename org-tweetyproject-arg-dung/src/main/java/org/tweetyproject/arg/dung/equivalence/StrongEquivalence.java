@@ -16,27 +16,40 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.equivalence;
 
-import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
+import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 
 import java.util.*;
 
 /**
- * Models strong equivalence wrt. to a given kernel
+ * This class defines 'Strong' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
+ *  * i.e., two AFs F,G are strongly equivalent if they possess the same set of
+ *  * {@link org.tweetyproject.arg.dung.semantics.Extension Extensions} wrt. some {@link Semantics} when conjoined
+ *  with some arbitrary AF H.
+ *
+ * @see "Oikarinen, Emilia, and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
  *
  * @author Lars Bengel
  */
-public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentTheories<DungTheory> {
+public class StrongEquivalence implements Equivalence<DungTheory> {
 
-	private EquivalenceKernel kernel;
+	/** the semantics equivalence kernel for this instance */
+	private final EquivalenceKernel kernel;
 
 	/**
-	 * initialize Equivalence with the given kernel
-	 * 
+	 * Initializes a Strong Equivalence Instance with a kernel for the given semantics
+	 * @param semantics some semantics
+	 */
+	public StrongEquivalence(Semantics semantics) {
+		this(EquivalenceKernel.getKernelForSemantics(semantics));
+	}
+
+	/**
+	 * Initialize Strong Equivalence with the given kernel
 	 * @param kernel an equivalence kernel
 	 */
 	public StrongEquivalence(EquivalenceKernel kernel) {
@@ -53,50 +66,27 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<DungTheory> theories) {
-		var first = theories.iterator().next();
+	public boolean isEquivalent(Collection<DungTheory> objects) {
+		var first = objects.iterator().next();
 		
-		for(var elem : theories) {
-			if(elem == first) continue;
-			else if(!isEquivalent(elem, first)) {
+		for(var theory : objects) {
+			if (!isEquivalent(theory, first)) {
 				return false;
 			}
 		}
-		
 		return true;
 	}
 
 	/**
-	 * compute all strongly equivalent theories for the the given theory i.e. get
-	 * all useless attacks of theory and use them to create other strongly
-	 * equivalent theories
-	 * 
-	 * @param theory a dung theory
-	 * @return the collection of strongly equivalent theories
-	 *//*
-		 * public Collection<DungTheory> getEquivalentTheories(DungTheory theory) {
-		 * Collection<Attack> uselessAttacks = this.kernel.getUselessAttacks(theory);
-		 * 
-		 * DungTheory kernelTheory = this.kernel.getKernel(theory);
-		 * 
-		 * // iterate over all combinations of useless attacks Collection<DungTheory>
-		 * theories = new HashSet<>(); for (Set<Attack> subset: new
-		 * SetTools<Attack>().subsets(uselessAttacks)) { // create copy of kernel and
-		 * add some useless attacks DungTheory newTheory = new DungTheory(kernelTheory);
-		 * newTheory.addAllAttacks(kernelTheory.getAttacks());
-		 * newTheory.addAllAttacks(subset);
-		 * 
-		 * theories.add(newTheory); }
-		 * 
-		 * return theories; }
-		 */
-
-	@Override
+	 * Computes the 'equivalence class' of the given Argumentation Framework,
+	 * i.e., the set of all argumentation frameworks that are strongly equivalent wrt. the kernel
+	 * @param baseTheory some argumentation framework
+	 * @return the set of equivalent argumentation frameworks
+	 */
 	public Collection<DungTheory> getEquivalentTheories(DungTheory baseTheory) {
 		EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
 		int numArgs = baseTheory.size();
 		theoryGenerator.setCurrentSize(numArgs);
-		DungTheory baseKernel = this.kernel.getKernel(baseTheory);
 
 		Collection<DungTheory> theories = new HashSet<>();
 		while (theoryGenerator.hasNext()) {
@@ -105,22 +95,16 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 			if (theory.size() > numArgs) {
 				break;
 			}
-			if (theory.size() < numArgs) {
-				// continue;
-			}
 
-			DungTheory kernelTheory = this.kernel.getKernel(theory);
-
-			if (kernelTheory.getAttacks().equals(baseKernel.getAttacks())) {
+			if (isEquivalent(baseTheory, theory)) {
 				theories.add(theory);
 			}
 		}
-
 		return theories;
 	}
 
 	@Override
-	public String getDescription() {
-		return "strongEQ";
+	public String getName() {
+		return "Strong Equivalence";
 	}
 }
