@@ -65,12 +65,12 @@ public abstract class Principle implements Postulate<Argument> {
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
     /** The allowing abstention principle **/
-    public static final Principle ALLOW_ABSTENTION = new AllowingAbstentionPrinciple();
+    public static final Principle ALLOWING_ABSTENTION = new AllowingAbstentionPrinciple();
     /** The indirect conflict-freeness principle **/
-    public static final Principle INDIRECT_CONFLICT_FREE = new IndirectConﬂictFreenessPrinciple();
+    public static final Principle INDIRECT_CONFLICT_FREENESS = new IndirectConﬂictFreenessPrinciple();
     /** The defence principle **/
     public static final Principle DEFENCE = new DefencePrinciple();
-    /** The non interference principle **/
+    /** The non-interference principle **/
     public static final Principle NON_INTERFERENCE = new NonInterferencePrinciple();
     /** The weak directionality principle **/
     public static final Principle WEAK_DIRECTIONALITY = new WeakDirectionalityPrinciple();

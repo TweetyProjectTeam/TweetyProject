@@ -51,12 +51,5 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
-    
-	/**
-	 * the solver is natively installed and is therefore always installed
-	 */
-	@Override
-	public boolean isInstalled() {
-		return true;
-	}
+
 }

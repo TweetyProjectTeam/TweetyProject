@@ -26,16 +26,15 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Defence principle <br>
- * A semantics S satisﬁes the defence principle if and only if <br>
- * for every argumentation framework F, for every E in S(F), for every a in E, E defends a.
- * 
- * @author Julian Sander
- * @version TweetyProject 1.24
- * 
- * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics. 
+ * Defence principle
+ * <p>
+ * A semantics S satisfies the defence principle if and only if
+ * for every argumentation framework F, for every E in S(F) and for every argument 'a' in E, E defends 'a'.
+ *
+ * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics.
  * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
  *
+ * @author Julian Sander
  */
 public class DefencePrinciple extends Principle {
 
@@ -53,8 +52,8 @@ public class DefencePrinciple extends Principle {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
 		DungTheory theory = (DungTheory) kb;
 		Collection<Extension<DungTheory>> exts = ev.getModels(theory);
-		for(var ext : exts) {
-			for(var a : ext) {			
+		for(Extension<DungTheory> ext : exts) {
+			for(Argument a : ext) {
 				if(!theory.isAcceptable(a,ext)) {
 					return false;
 				}

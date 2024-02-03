@@ -26,22 +26,21 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Indirect conﬂict-freeness<br>
- * A semantics S satisﬁes the indirect conﬂict-freeness principle if and only if <br>
- * for every argumentation framework F, for every E in S(F), E is without indirect conﬂicts in F.
- * 
- * @author Julian Sander
- * @version TweetyProject 1.24
+ * Indirect Conflict-Freeness Principle
+ * <p>
+ * A semantics S satisfies the indirect conflict-freeness principle if and only if
+ * for every argumentation framework F, for every E in S(F), E is without indirect conflicts in F.
  * 
  * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics. 
  * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
  *
+ * @author Julian Sander
  */
 public class IndirectConﬂictFreenessPrinciple extends Principle{
 
 	@Override
 	public String getName() {
-		return "Indirect Conﬂictfree";
+		return "Indirect Conflict-Freeness";
 	}
 
 	@Override

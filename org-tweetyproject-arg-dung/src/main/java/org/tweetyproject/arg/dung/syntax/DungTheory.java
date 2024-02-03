@@ -191,7 +191,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
-	 * Checks a specified extension, if it's strongly admissible or not.
+	 * Checks whether the specified extension is strongly admissible or not.
 	 * @param ext Extension of this instance, which is to be checked if strongly admissible.
 	 * @return TRUE iff the specified extension {@code ext} is strongly admissible.
 	 * In other words all arguments in {@code ext} are strongly defended by {@code ext}, 
