@@ -2,7 +2,7 @@ package org.tweetyproject.arg.dung.equivalence;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
+import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
 import org.tweetyproject.arg.dung.syntax.*;
 
 class StrongEquivalenceTest {

@@ -58,12 +58,12 @@ public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasone
 
     /**
      * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
-     * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far
+     * @param theory The current framework of the transition system
+	 * @param extension The extension constructed so far
      * @return true, if there are no unattacked or unchallenged initial sets
      */
-    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
-        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(reducedFramework);
-        return initialSets.get("unattacked").isEmpty() && initialSets.get("unchallenged").isEmpty();
+    public boolean terminationFunction(DungTheory theory, Extension<DungTheory> extension) {
+        Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(theory);
+        return initialSets.get(SimpleInitialReasoner.Initial.UA).isEmpty() && initialSets.get(SimpleInitialReasoner.Initial.UC).isEmpty();
     }
 }

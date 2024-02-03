@@ -40,12 +40,12 @@ public class SerialisedStableReasoner extends SerialisedAdmissibleReasoner {
 
 	/**
      * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
-     * @param reducedFramework The current framework of the transition system
-	 * @param constructedExtension The extension constructed so far.
+     * @param theory The current framework of the transition system
+	 * @param extension The extension constructed so far.
      * @return true, iff the AF has no arguments or attacks
      */
     @Override
-    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
-        return reducedFramework.isEmpty();
+    public boolean terminationFunction(DungTheory theory, Extension<DungTheory> extension) {
+        return theory.isEmpty();
     }
 }

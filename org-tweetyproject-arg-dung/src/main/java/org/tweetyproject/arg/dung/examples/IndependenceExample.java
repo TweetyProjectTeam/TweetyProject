@@ -26,7 +26,7 @@ import java.util.*;
 
 /**
  * Example usage of the Independence class
- *
+ * <p>
  * example theory taken from:
  * Rienstra, Tjitze, et al. "Independence and D-separation in Abstract Argumentation." Proceedings of the International
  * Conference on Principles of Knowledge Representation and Reasoning. Vol. 17. No. 1. 2020.

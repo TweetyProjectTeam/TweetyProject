@@ -18,31 +18,47 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
-import java.util.Collection;
-
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
+import java.util.Collection;
+
 /**
- * This class defines 'syntactic' equivalence of {@link DungTheory Argumentation Frameworks},
- * i.e., it checks whether two AFs have exactly the same arguments and attacks.
+ * This class defines 'Serialisation' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
+ * i.e., two AFs are serialisation equivalent if they possess the same set of
+ * {@link org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence Serialisation Sequences} wrt. some {@link Semantics}.
  *
  * @author Julian Sander
+ * @author Lars Bengel
  */
-public class IdentityEquivalence implements Equivalence<DungTheory>  {
+public class SerialisationEquivalence implements Equivalence<DungTheory> {
+
+	/** the semantics by which the serialisation sequences of the AFs are compared */
+	private final Semantics semantics;
+
+	/**
+	 * Initializes a new instance of this equivalence notion for the given semantics
+	 * @param semantics some semantics
+	 */
+	public SerialisationEquivalence(Semantics semantics) {
+		this.semantics = semantics;
+	}
 
 	@Override
 	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		return obj1.equals(obj2);
+		SerialisableExtensionReasoner reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(this.semantics);
+		return reasoner.getSequences(obj1).equals(reasoner.getSequences(obj2));
 	}
 
 	@Override
 	public boolean isEquivalent(Collection<DungTheory> objects) {
 		DungTheory first = objects.iterator().next();
-		for (DungTheory framework : objects) {
-			if(framework == first) {
+		for (DungTheory theory : objects) {
+			if(theory == first) {
 				continue;
 			}
-			if(!this.isEquivalent(framework, first)) {
+			if(!this.isEquivalent(theory, first)) {
 				return false;
 			}
 		}
@@ -51,7 +67,6 @@ public class IdentityEquivalence implements Equivalence<DungTheory>  {
 
 	@Override
 	public String getName() {
-		return "Syntactic Equivalence";
+		return "Serialisation Equivalence";
 	}
-
 }
