@@ -28,10 +28,11 @@ import java.util.Collection;
 
 /**
  * Principle of Strong Admissibility
- * A semantics satisfies strong admissibility iff for every extensions E in every AF it holds that:
+ * <p>
+ * A semantics satisfies strong admissibility iff for every extension E in every AF it holds that:
  * all arguments in E are strongly defended by E, i.e. the argument is defended by some other argument in E
  *
- * @see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Lars Bengel
  */
@@ -47,17 +48,15 @@ public class StrongAdmissibilityPrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
     	DungTheory theory = (DungTheory) kb;
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         for (Extension<DungTheory> ext: exts) {
-            if (!theory.isStronglyAdmissable(ext)) {
-                return false;
+            for (Argument arg: ext) {
+                if (!theory.isStronglyDefendedBy(arg, ext)) return false;
             }
         }
-        return true;
     }
 }

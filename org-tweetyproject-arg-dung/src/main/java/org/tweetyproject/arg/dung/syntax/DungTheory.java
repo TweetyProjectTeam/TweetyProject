@@ -189,55 +189,30 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Checks whether the specified extension is strongly admissible or not.
-	 * @param ext Extension of this instance, which is to be checked if strongly admissible.
-	 * @return TRUE iff the specified extension {@code ext} is strongly admissible.
-	 * In other words all arguments in {@code ext} are strongly defended by {@code ext}, 
-	 * i.e. the argument is defended by some other argument in {@code ext}
+	 * Checks whether a specified argument is strongly defended by the given set of arguments.
+	 *
+	 * @param arg some argument
+	 * @param ext a set of arguments
+	 * @return true, iff the specified argument is strongly defended by the set
 	 */
-	public boolean isStronglyAdmissable(Extension<DungTheory> ext) {
-		if(!this.isAdmissable(ext)) return false;
-		boolean isDefended = true;
-        for (Argument a: ext) {
-            if (!checkStrongyDefended(ext, a)) 
-            {
-            	isDefended = false;
-            	break;
-            }  
-        }
-        return isDefended;
-	}
-	
-	/**
-     * Checks whether a specified argument is strongly defended or not by a specified set of arguments
-     *
-     * @param admSet Set of arguments, which might defend the specified argument
-     * @param candidate Argument, which is to be examined
-     * @return TRUE iff the specified argument {@code candidate} is strongly defended by the set {@code admSet}
-     */
-	public boolean checkStrongyDefended(Extension<DungTheory> admSet,Argument candidate) {
-		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);
-		extWithoutCandidate.remove(candidate);
-		for (Argument attacker: this.getAttackers(candidate)) {
-		    if (!this.isAttacked(attacker, extWithoutCandidate)) {
-		        return false;
-		    }
-		    
-		    var defenders = this.getAttackers(attacker);
-		    boolean atLeastOneDefenderIsDefended = false;
-		    //[TERMINATION CONDITION]
-		    for (Argument defender : defenders) {
-		    	//[RECURSIVE CALL]
-				if(checkStrongyDefended(extWithoutCandidate, defender))
-				{
-					atLeastOneDefenderIsDefended = true;
+	public boolean isStronglyDefendedBy(Argument arg, Collection<Argument> ext) {
+		Collection<Argument> extWithoutArgument = new HashSet<>(ext);
+		extWithoutArgument.remove(arg);
+
+		for (Argument attacker: getAttackers(arg)) {
+			Collection<Argument> defenders = getAttackers(attacker);
+			if (defenders.isEmpty()) return false;
+
+			boolean stronglyDefended = false;
+			for (Argument defender: defenders) {
+				if (isStronglyDefendedBy(defender, extWithoutArgument)) {
+					stronglyDefended = true;
+					break;
 				}
 			}
-		    if(!atLeastOneDefenderIsDefended) {
-		    	return false;
-		    }
+			if (!stronglyDefended) return false;
 		}
 		return true;
 	}

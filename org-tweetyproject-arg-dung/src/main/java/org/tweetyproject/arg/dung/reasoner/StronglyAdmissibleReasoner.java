@@ -20,15 +20,18 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.util.SetTools;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Reasoner for strong admissibility
- * A set of arguments E is strongly admissible iff all every argument A in E is defended by some argument B in E \ {A}, which itself is strongly defended by E \ {A}, 
+ * <p>
+ * A set of arguments E is strongly admissible iff all every argument 'a' in E is defended by some argument 'b' in E \ {a}, which itself is strongly defended by E \ {a},
  * i.e. no argument in E is defended only by itself
  *
  * @author Lars Bengel
@@ -36,15 +39,21 @@ import java.util.HashSet;
 public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        // check all admissible extensions of bbase
-        Collection<Extension<DungTheory>> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
-        Collection<Extension<DungTheory>> exts = new HashSet<>();
-        for (Extension<DungTheory> ext: admExts) {
-            if (bbase.isStronglyAdmissable(ext)) {
-            	exts.add(ext);
-            } 
+        // check all subsets of the grounded extension of bbase
+        Set<Set<Argument>> candidates = new SetTools<Argument>().subsets(new SimpleGroundedReasoner().getModel(bbase));
+        Collection<Extension<DungTheory>> result = new HashSet<>();
+        for (Set<Argument> ext: candidates) {
+            boolean isStronglyDefended = true;
+            for (Argument a: ext) {
+                if (!bbase.isStronglyDefendedBy(a, ext)) {
+                    isStronglyDefended = false;
+                    break;
+                }
+            }
+            if (isStronglyDefended)
+                result.add(new Extension<>(ext));
         }
-        return exts;
+        return result;
     }
 
     @Override
