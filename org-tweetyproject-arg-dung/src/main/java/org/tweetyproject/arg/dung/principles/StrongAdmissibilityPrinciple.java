@@ -58,5 +58,6 @@ public class StrongAdmissibilityPrinciple extends Principle {
                 if (!theory.isStronglyDefendedBy(arg, ext)) return false;
             }
         }
+        return true;
     }
 }

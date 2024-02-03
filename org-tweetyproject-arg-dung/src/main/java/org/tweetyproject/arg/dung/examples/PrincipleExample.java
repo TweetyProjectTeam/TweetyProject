@@ -57,7 +57,11 @@ public class PrincipleExample {
         all_principles.add(Principle.REDUCT_ADM);
         all_principles.add(Principle.SEMIQUAL_ADM);
         all_principles.add(Principle.SCC_DECOMPOSABILITY);
-        all_principles.add(Principle.ALLOWINGABSTENTION);
+        all_principles.add(Principle.ALLOWING_ABSTENTION);
+        all_principles.add(Principle.DEFENCE);
+        all_principles.add(Principle.WEAK_DIRECTIONALITY);
+        all_principles.add(Principle.NON_INTERFERENCE);
+        all_principles.add(Principle.SEMI_DIRECTIONALITY);
 
         AdmissibleExample();
         GroundedExample();

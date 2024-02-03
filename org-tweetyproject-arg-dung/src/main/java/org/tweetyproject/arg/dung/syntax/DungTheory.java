@@ -192,10 +192,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		Collection<Argument> extWithoutArgument = new HashSet<>(ext);
 		extWithoutArgument.remove(arg);
 
-		for (Argument attacker: getAttackers(arg)) {
+		Collection<Argument> attackers = getAttackers(arg);
+		for (Argument attacker: attackers) {
 			Collection<Argument> defenders = getAttackers(attacker);
+			defenders.retainAll(extWithoutArgument);
 			if (defenders.isEmpty()) return false;
-
+			
 			boolean stronglyDefended = false;
 			for (Argument defender: defenders) {
 				if (isStronglyDefendedBy(defender, extWithoutArgument)) {
