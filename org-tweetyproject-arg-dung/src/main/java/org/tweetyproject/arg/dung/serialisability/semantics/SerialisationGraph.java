@@ -127,20 +127,6 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     /**
-     * Returns all sequences of sets of arguments from the root to the specified node
-     * @param node Destination of the path
-     * @return Sequences of sets, used to construct the extension, represented by the node
-     */
-    public Collection<SerialisationSequence> getSerialisationSequences(Extension<DungTheory> node) {
-        Collection<SerialisationSequence> sequences = new HashSet<>();
-        SerialisationNode root = getNodeForExtension(new Extension<>());
-
-
-        // TODO implement
-        return null;
-    }
-
-    /**
      * Return the node of this graph that corresponds to the given extension
      * @param extension some extension
      * @return the node corresponding to the extension
