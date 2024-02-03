@@ -33,12 +33,12 @@ import java.util.Map;
 import static org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner.Initial.*;
 
 /**
- * Abstract class for computing extensions via a serialised transition system
+ * Ancestor class for serialisable AF reasoners
  * <p>
- * to implement this class, you need to define a selection and a termination function.<br>
- * Selection function a(UA, UC, C):     selects and returns a subset of the initial sets.<br>
- * Termination function b((AF, S)):      If the given state satisfies a specific condition,
- * its extension may be accepted by the associated serialisable semantics.
+ * A serialisable reasoner is defined via the following two methods:
+ * <br>
+ * {@code Selection function a(UA, UC, C)}:     Return a subset of the initial sets.<br>
+ * {@code Termination function b((AF, S))}:     True, if S is an extension.
  *
  * @author Lars Bengel
  * @author Julian Sander
@@ -115,7 +115,8 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
     }
 
     /**
-     * @return The semantics of this reasoner.
+     * Return the semantics of this reasoner
+     * @return The semantics of this reasoner
      */
     public Semantics getSemantics() {
         return this.semantics;

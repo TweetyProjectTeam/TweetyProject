@@ -29,7 +29,8 @@ import org.tweetyproject.math.matrix.Matrix;
 import java.util.*;
 
 /**
- * A Graph-based representation of the {@link SerialisationSequence} of some {@link DungTheory} wrt. some {@link Semantics}
+ * A Graph-based representation of the {@link SerialisationSequence Serialisation Sequences}
+ * of some {@link DungTheory Argumentation Framework} wrt. some {@link Semantics}.
  *
  * @author Lars Bengel
  * @author Julian Sander
@@ -93,7 +94,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
 
     /**
      * Return the semantics of this serialisation graph
-     * @return the semantics for the serialisation graph has been constructed
+     * @return the semantics for which the serialisation graph has been constructed
      */
     public Semantics getSemantics() {
         return this.semantics;

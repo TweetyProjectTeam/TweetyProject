@@ -27,7 +27,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.*;
 
 /**
- * Representation of a serialisation sequence, i.e., a sequence of initial sets of the respective reducts
+ * Representation of a serialisation sequence,
+ * i.e., a sequence of initial sets of the respective reducts.
+ *
+ * @see "Lydia Blümel, Matthias Thimm. 'A Ranking Semantics for Abstract Argumentation based on Serialisability.' Computational Models of Argument: Proceedings of COMMA 2022 353 (2022): 104."
  *
  * @author Lars Bengel
  * @author Julian Sander

@@ -24,7 +24,9 @@ import org.tweetyproject.graphs.Node;
 
 /**
  * Representation of a 'state' in the serialisation process, consisting of the current {@link DungTheory}
- * and a (partial) {@link SerialisationSequence}.
+ * and a (partial) {@link Extension}.
+ *
+ * @see "Matthias Thimm. Revisiting initial sets in abstract argumentation. Argument and Computation 13 (2022) 325–360"
  *
  * @author Lars Bengel
  */
