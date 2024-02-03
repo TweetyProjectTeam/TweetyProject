@@ -30,8 +30,7 @@ import java.util.Collection;
  * Weak Reinstatement Principle
  * <p>
  * A semantics satisfies weak reinstatement if for all extensions E it holds that:
- * if E strongly defends an argument 'a', then 'a' is in E
- * An argument 'a' is strongly defended by E iff some argument in E \ {a} defends 'a'.
+ * if E strongly defends an argument 'a', then 'a' is in E.
  *
  * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
@@ -48,7 +47,6 @@ public class WeakReinstatementPrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
@@ -58,14 +56,7 @@ public class WeakReinstatementPrinciple extends Principle {
             for (Argument a: theory) {
                 if (ext.contains(a))
                     continue;
-                boolean stronglyDefended = true;
-                for (Argument b: theory.getAttackers(a)) {
-                    if (!theory.isAttacked(b, ext)) {
-                        stronglyDefended = false;
-                        break;
-                    }
-                }
-                if (stronglyDefended)
+                if (theory.isStronglyDefendedBy(a, ext))
                     return false;
             }
         }

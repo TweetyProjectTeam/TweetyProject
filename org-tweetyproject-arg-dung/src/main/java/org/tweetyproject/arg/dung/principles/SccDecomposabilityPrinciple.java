@@ -32,6 +32,9 @@ import java.util.Collection;
  * <p>
  * A semantics satisfies SCC decomposability iff for all AFs we have:
  * The extensions of F are the same as computing the extensions of each SCC individually and combining the result
+ * 
+ * Can return false even if principle is not violated, in case that the semantics is different to the base function. 
+ * E.g. SCF2-semantics or CF2-semantics
  *
  * @see "Pietro Baroni et al. 'On the input/output behavior of argumentation frameworks' 2014"
  *

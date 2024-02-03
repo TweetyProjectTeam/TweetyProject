@@ -54,7 +54,7 @@ public class AdmissibilityPrinciple extends Principle {
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         for (Extension<DungTheory> ext: exts) {
-            if (!theory.isAdmissable(ext)) {
+            if (!theory.IsAdmissible(ext)) {
                 return false;
             }
         }

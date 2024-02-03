@@ -20,16 +20,18 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.util.SetTools;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Reasoner for strong admissibility
- * A set of arguments E is strongly admissible iff all every argument A in E is defended by some argument B in E \ {A}, which itself is strongly defended by E \ {A}, 
+ * <p>
+ * A set of arguments E is strongly admissible iff all every argument 'a' in E is defended by some argument 'b' in E \ {a}, which itself is strongly defended by E \ {a},
  * i.e. no argument in E is defended only by itself
  *
  * @author Lars Bengel
@@ -37,67 +39,26 @@ import java.util.HashSet;
 public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        // check all admissible extensions of bbase
-        Collection<Extension<DungTheory>> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
-        Collection<Extension<DungTheory>> exts = new HashSet<>();
-        for (Extension<DungTheory> ext: admExts) {
-            boolean isDefended = true;
+        // check all subsets of the grounded extension of bbase
+        Set<Set<Argument>> candidates = new SetTools<Argument>().subsets(new SimpleGroundedReasoner().getModel(bbase));
+        Collection<Extension<DungTheory>> result = new HashSet<>();
+        for (Set<Argument> ext: candidates) {
+            boolean isStronglyDefended = true;
             for (Argument a: ext) {
-                if (!checkStrongyDefended(bbase, ext, a)) 
-                {
-                	isDefended = false;
-                	break;
-                }  
+                if (!bbase.isStronglyDefendedBy(a, ext)) {
+                    isStronglyDefended = false;
+                    break;
+                }
             }
-            if (isDefended)
-                exts.add(ext);
+            if (isStronglyDefended)
+                result.add(new Extension<>(ext));
         }
-        return exts;
+        return result;
     }
-
-    /**
-     * Checks wheter a specified argument is strongly defended or not by a specified set of arguments
-     * 
-     * @param bbase Abstract argumentation framework in which the specified set and argument are part of
-     * @param admSet Set of arguments, which might defend the specified argument
-     * @param candidate Argument, which is to be examined
-     * @return TRUE iff the specified argument  candidate is strongly defended by the set admSet.
-     */
-	private boolean checkStrongyDefended(DungTheory bbase, Extension<DungTheory> admSet,Argument candidate) {
-		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);
-		extWithoutCandidate.remove(candidate);
-		for (Argument attacker: ((DungTheory) bbase).getAttackers(candidate)) {
-		    if (!bbase.isAttacked(attacker, extWithoutCandidate)) {
-		        return false;
-		    }
-		    
-		    var defenders = bbase.getAttackers(attacker);
-		    boolean atLeastOneDefenderIsDefended = false;
-		    //[TERMINATION CONDITION]
-		    for (Argument defender : defenders) {
-		    	//[RECURSIVE CALL]
-				if(checkStrongyDefended(bbase, extWithoutCandidate, defender))
-				{
-					atLeastOneDefenderIsDefended = true;
-				}
-			}
-		    if(!atLeastOneDefenderIsDefended) {
-		    	return false;
-		    }
-		}
-		return true;
-	}
 
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
-    
-	/**
-	 * the solver is natively installed and is therefore always installed
-	 */
-	@Override
-	public boolean isInstalled() {
-		return true;
-	}
+
 }

@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.dung.principles;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
@@ -27,22 +26,21 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Allowing abstention principle
+ * Indirect Conflict-Freeness Principle
  * <p>
- * A semantics satisfies allowing abstention iff for all arguments 'a', it holds that:
- * if there is some extension S with 'a' in S and some extension S' with 'a' in S'^+, then there is some extension
- * S'' with 'a' not in S'' or S''^+.
- *
- * @see "Baroni P, Caminada M, Giacomin M. An introduction to argumentation semantics. The knowledge engineering review. 2011;26(4):365-410."
+ * A semantics S satisfies the indirect conflict-freeness principle if and only if
+ * for every argumentation framework F, for every E in S(F), E is without indirect conflicts in F.
+ * 
+ * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics. 
+ * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
  *
  * @author Julian Sander
- * @author Lars Bengel
  */
-public class AllowingAbstentionPrinciple extends Principle {
+public class IndirectConﬂictFreenessPrinciple extends Principle{
 
 	@Override
 	public String getName() {
-		return "Allowing Abstention";
+		return "Indirect Conflict-Freeness";
 	}
 
 	@Override
@@ -53,27 +51,20 @@ public class AllowingAbstentionPrinciple extends Principle {
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
 		DungTheory theory = (DungTheory) kb;
-        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
-		Collection<Argument> accepted = new HashSet<>();
-		Collection<Argument> attacked = new HashSet<>();
-		for (Extension<DungTheory> extension: exts) {
-			accepted.addAll(extension);
-			attacked.addAll(theory.getAttacked(extension));
-		}
-
-		// only retain arguments that are both credulously accepted and also rejected by some extension
-		accepted.retainAll(attacked);
-
-        for(Argument arg: accepted) {
-			boolean abstention = false;
-        	for (Extension<DungTheory> extension: exts) {
-				if (!extension.contains(arg) && !theory.isAttacked(arg, extension)) {
-					abstention = true;
-					break;
+		Collection<Extension<DungTheory>> exts = ev.getModels(theory);
+		for(var ext : exts) {
+			for(var a : ext) {
+				for(var b : ext) {
+					if(a.equals(b)) {
+						continue;
+					}
+					if(theory.isIndirectAttack(a, b)) {
+						return false;
+					}
 				}
 			}
-			if (!abstention) return false;
-        }
-        return true;
+		}
+		return true;
 	}
+
 }
