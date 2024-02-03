@@ -27,7 +27,7 @@ import org.tweetyproject.commons.util.SetTools;
 import java.util.*;
 
 /**
- * Argument Learning example.
+ * Argumentation Framework Learning from Labelings example.
  *
  * @author Lars Bengel
  */

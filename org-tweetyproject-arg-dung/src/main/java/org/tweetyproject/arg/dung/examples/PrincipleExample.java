@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Example code for principles for argumentation semantics
+ * Example code for checking principles for argumentation semantics
  *
  * @author Lars Bengel
  */

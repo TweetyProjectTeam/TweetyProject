@@ -30,7 +30,7 @@ import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -117,8 +117,8 @@ class SerialisableExtensionReasonerTest {
 		var expectedSeqs2 = getSequencesForExample2(a0, a1, a2, a3);
 		
 		//Act
-		var actualSeqs1 = reasonerToTest.getModelsSequences(example1);
-		var actualSeqs2 = reasonerToTest.getModelsSequences(example2);
+		var actualSeqs1 = reasonerToTest.getSequences(example1);
+		var actualSeqs2 = reasonerToTest.getSequences(example2);
 		
 		//Assert
 		Assert.assertEquals(expectedSeqs1, actualSeqs1);

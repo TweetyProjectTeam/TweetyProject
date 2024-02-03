@@ -31,11 +31,25 @@ import java.util.Map;
  * Basic Implementation of a reasoner for initial sets
  * A set of arguments S is considered initial iff it is non-empty and minimal among the non-empty admissible sets
  *
- * see: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
+ * @see: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
  *
  * @author Lars Bengel
  */
 public class SimpleInitialReasoner extends AbstractExtensionReasoner {
+
+    public enum Initial {
+        UA("unattacked", "ua"),
+        UC("unchallenged", "uc"),
+        C("challenged", "c");
+
+        private final String description;
+        private final String abbreviation;
+
+        Initial(String desc, String abbrev) {
+            this.description = desc;
+            this.abbreviation = abbrev;
+        }
+    }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Collection<Extension<DungTheory>> admExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
@@ -70,21 +84,7 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
      * @return true if S is unattacked in F
      */
     public boolean isUnattacked(Extension<DungTheory> ext, DungTheory theory) {
-        Collection<Extension<DungTheory>> initExtensions = this.getModels(theory);
-
-        // method is only supposed to be used with initial sets
-        if (!initExtensions.contains(ext)) {
-            throw new IllegalArgumentException("Extensions must be an initial set of theory");
-        }
-
-        // If any argument a in the extension S has an attacker, then S is not unattacked
-        for (Argument arg: ext) {
-            if (!theory.getAttackers(arg).isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-
+        return theory.getAttackers(ext).isEmpty();
     }
 
     /**
@@ -125,7 +125,7 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
      * @param theory some argumentation theory F
      * @return a map contain the three groups of initial sets
      */
-    public static Map<String,Collection<Extension<DungTheory>>> partitionInitialSets(DungTheory theory) {
+    public static Map<Initial,Collection<Extension<DungTheory>>> partitionInitialSets(DungTheory theory) {
         Collection<Extension<DungTheory>> unattacked = new HashSet<>();
         Collection<Extension<DungTheory>> unchallenged = new HashSet<>();
         Collection<Extension<DungTheory>> challenged = new HashSet<>();
@@ -155,10 +155,10 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
             }
         }
 
-        Map<String,Collection<Extension<DungTheory>>> initialSets = new HashMap<>();
-        initialSets.put("unattacked", unattacked);
-        initialSets.put("unchallenged", unchallenged);
-        initialSets.put("challenged", challenged);
+        Map<Initial,Collection<Extension<DungTheory>>> initialSets = new HashMap<>();
+        initialSets.put(Initial.UA, unattacked);
+        initialSets.put(Initial.UC, unchallenged);
+        initialSets.put(Initial.C, challenged);
         return initialSets;
     }
 }
