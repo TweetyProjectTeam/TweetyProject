@@ -25,8 +25,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK = (A, R') for strong equivalence wrt. complete semantics
- *
+ * Kernel CK = (A, R') for strong equivalence wrt. complete semantics
+ * <p> defined as:
  * R' = R \ { (a, b) | a!=b, (a,a) in R, (b,b) in R }
  *
  * @author Lars Bengel
@@ -34,17 +34,17 @@ import java.util.HashSet;
 public class CompleteKernel extends EquivalenceKernel {
 
     @Override
-    public Collection<Attack> getUselessAttacks(DungTheory theory) {
-        Collection<Attack> uselessAttacks = new HashSet<>();
+    public Collection<Attack> getRedundantAttacks(DungTheory theory) {
+        Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
             if (theory.isAttackedBy(a, a)) {
                 for (Argument b : theory) {
                     if (a != b && theory.isAttackedBy(b, b)) {
-                        uselessAttacks.add(new Attack(a, b));
+                        attacks.add(new Attack(a, b));
                     }
                 }
             }
         }
-        return uselessAttacks;
+        return attacks;
     }
 }

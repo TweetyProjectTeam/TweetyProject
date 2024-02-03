@@ -26,7 +26,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * An abstract kernel for strong equivalence in abstract argumentation frameworks
+ * A strong equivalence kernel for abstract argumentation frameworks, used to characterise strong equivalence wrt. different semantics.
+ * A kernel defines which attacks are redundant an can be removed from the framework without influencing the extensions wrt the semantics.
+ *
+ * @see "Oikarinen, Emilia, and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
  *
  * @author Lars Bengel
  */
@@ -51,23 +54,23 @@ public abstract class EquivalenceKernel {
         DungTheory kernel = new DungTheory(theory);
         kernel.addAllAttacks(theory.getAttacks());
 
-        // remove all useless attacks to retrieve the kernel of the theory
-        Collection<Attack> uselessAttacks = getUselessAttacks(theory);
-        kernel.removeAll(uselessAttacks);
+        // remove all redundant attacks to retrieve the kernel of the theory
+        Collection<Attack> redundantAttacks = getRedundantAttacks(theory);
+        kernel.removeAll(redundantAttacks);
         return kernel;
     }
 
     /**
-     * compute the set of 'useless' attacks, i.e. all attacks that are are cut to retrieve the kernel of the AF
+     * compute the set of redundant attacks, i.e., all attacks that are removed in oder to retrieve the kernel of the given AF
      * @param theory a dung theory
-     * @return the set of useless attacks
+     * @return the set of redundant attacks
      */
-    public abstract Collection<Attack> getUselessAttacks(DungTheory theory);
+    public abstract Collection<Attack> getRedundantAttacks(DungTheory theory);
     
     /**
-     * Returns a suitable kernel for the specified semantics
-     * @param semantics Semantics influencing the equivalence
-     * @return kernel to assess the equivalence
+     * Returns the corresponding kernel for the specified semantics
+     * @param semantics some semantics
+     * @return equivalence kernel for the given semantics
      */
     public static EquivalenceKernel getKernelForSemantics(Semantics semantics) {
         switch (semantics) {
@@ -83,7 +86,7 @@ public abstract class EquivalenceKernel {
             case ST -> {
                 return EquivalenceKernel.STABLE;
             }
-            default -> throw new IllegalArgumentException("Unexpected value: " + semantics);
+            default -> throw new IllegalArgumentException("No kernel exists for semantics: " + semantics);
         }
     }
 }

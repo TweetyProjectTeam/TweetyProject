@@ -25,8 +25,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK = (A, R') for strong equivalence wrt. grounded semantics
- *
+ * Kernel GK = (A, R') for strong equivalence wrt. grounded semantics
+ * <p> defined as:
  * R' = R \ { (a, b) | a!=b, (b,b) in R, (a,a) in R || (b,a) in R}
  *
  * @author Lars Bengel
@@ -34,17 +34,17 @@ import java.util.HashSet;
 public class GroundedKernel extends EquivalenceKernel {
 
     @Override
-    public Collection<Attack> getUselessAttacks(DungTheory theory) {
-        Collection<Attack> uselessAttacks = new HashSet<>();
+    public Collection<Attack> getRedundantAttacks(DungTheory theory) {
+        Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
             for (Argument b : theory) {
                 if (a != b && theory.isAttackedBy(b, b)) {
                     if (theory.isAttackedBy(a, a) || theory.isAttackedBy(a, b)) {
-                        uselessAttacks.add(new Attack(a, b));
+                        attacks.add(new Attack(a, b));
                     }
                 }
             }
         }
-        return uselessAttacks;
+        return attacks;
     }
 }

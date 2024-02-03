@@ -71,10 +71,10 @@ public class EquivalenceExample {
         Equivalence<DungTheory> serialisationEquivalence = new SerialisationEquivalence(semantics);
         Equivalence<DungTheory> strongEquivalence = new StrongEquivalence(semantics);
 
-        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", standardEquivalence.getDescription(), semantics.description(), standardEquivalence.isEquivalent(theory1, theory2));
-        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", serialisationEquivalence.getDescription(), semantics.description(), serialisationEquivalence.isEquivalent(theory1, theory2));
-        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", strongEquivalence.getDescription(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory2));
-        System.out.printf("%s wrt. %s for F_1 and F_3: %s%n", strongEquivalence.getDescription(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory3));
+        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", standardEquivalence.getName(), semantics.description(), standardEquivalence.isEquivalent(theory1, theory2));
+        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", serialisationEquivalence.getName(), semantics.description(), serialisationEquivalence.isEquivalent(theory1, theory2));
+        System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", strongEquivalence.getName(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory2));
+        System.out.printf("%s wrt. %s for F_1 and F_3: %s%n", strongEquivalence.getName(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory3));
 
     }
 }

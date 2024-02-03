@@ -25,16 +25,22 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * This class represents a comparator for deciding whether two {@link DungTheory Argumentation Frameworks} are equivalent
- * wrt. their serialisation sequences for some semantics
+ * This class defines 'Serialisation' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
+ * i.e., two AFs are serialisation equivalent if they possess the same set of
+ * {@link org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence Serialisation Sequences} wrt. some {@link Semantics}.
  *
  * @author Julian Sander
+ * @author Lars Bengel
  */
 public class SerialisationEquivalence implements Equivalence<DungTheory> {
 
-	/** the semantics by which the argumentation frameworks are compared */
+	/** the semantics by which the serialisation sequences of the AFs are compared */
 	private final Semantics semantics;
 
+	/**
+	 * Initializes a new instance of this equivalence notion for the given semantics
+	 * @param semantics some semantics
+	 */
 	public SerialisationEquivalence(Semantics semantics) {
 		this.semantics = semantics;
 	}
@@ -46,9 +52,9 @@ public class SerialisationEquivalence implements Equivalence<DungTheory> {
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<DungTheory> theories) {
-		DungTheory first = theories.iterator().next();
-		for (DungTheory theory : theories) {
+	public boolean isEquivalent(Collection<DungTheory> objects) {
+		DungTheory first = objects.iterator().next();
+		for (DungTheory theory : objects) {
 			if(theory == first) {
 				continue;
 			}
@@ -60,7 +66,7 @@ public class SerialisationEquivalence implements Equivalence<DungTheory> {
 	}
 
 	@Override
-	public String getDescription() {
+	public String getName() {
 		return "Serialisation Equivalence";
 	}
 }

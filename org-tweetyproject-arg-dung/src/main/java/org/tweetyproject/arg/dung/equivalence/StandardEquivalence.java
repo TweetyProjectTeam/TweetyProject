@@ -25,44 +25,47 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents a comparator, which defines if 2 argumentation frameworks are equivalent,
- * by comparing if they have the same extensions wrt a semantics specified by a reasoner.
+ * This class defines 'standard' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
+ * i.e., two AFs are standard equivalent if they possess the same set of
+ * {@link org.tweetyproject.arg.dung.semantics.Extension Extensions} wrt. some {@link Semantics}.
  *
  * @author Julian Sander
  */
-public class StandardEquivalence implements Equivalence<DungTheory>  {
+public class StandardEquivalence implements Equivalence<DungTheory> {
 
-	private final Semantics semantics;
+	/** the semantics for this equivalence instance */
+    private final Semantics semantics;
 
-	/**
-	 * @param reasoner Reasoner used to compute the extensions of a argumentation framework, in order to examine its equivalence
-	 */
-	public StandardEquivalence(Semantics semantics) {
-		this.semantics = semantics;
-	}
+    /**
+	 * Initializes a new instance of this equivalence notion for the given semantics
+     * @param semantics some semantics
+     */
+    public StandardEquivalence(Semantics semantics) {
+        this.semantics = semantics;
+    }
+
+    @Override
+    public boolean isEquivalent(Collection<DungTheory> objects) {
+        DungTheory first = objects.iterator().next();
+        for (DungTheory theory : objects) {
+            if (theory == first) {
+                continue;
+            }
+            if (!this.isEquivalent(theory, first)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
+        AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
+        return reasoner.getModels(obj1).equals(reasoner.getModels(obj2));
+    }
 
 	@Override
-	public String getDescription() {
+	public String getName() {
 		return "Standard Equivalence";
-	}
-
-	@Override
-	public boolean isEquivalent(Collection<DungTheory> theories) {
-		DungTheory first = theories.iterator().next();
-		for (DungTheory theory : theories) {
-			if(theory == first) {
-				continue;
-			}
-			if(!this.isEquivalent(theory, first)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
-		return reasoner.getModels(obj1).equals(reasoner.getModels(obj2));
 	}
 }
