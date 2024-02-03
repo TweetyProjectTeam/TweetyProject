@@ -138,7 +138,6 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
-
 	public boolean isAcceptable(Argument argument, Extension<DungTheory> ext){
 		Set<Argument> attackers = this.getAttackers(argument);
 		Iterator<Argument> it = attackers.iterator();
@@ -151,14 +150,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
 	 * returns true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
-	 * @param Ext a extension.
+	 * @param ext an extension
 	 * @return true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
-	 */
-	/**
-	 * 
-	 * @param ext parameter
-	 * @return isConflictFree
 	 */
 	public boolean isConflictFree(Extension<DungTheory> ext){
 		for(Argument a: ext.getArgumentsOfStatus(ArgumentStatus.IN))
@@ -171,16 +165,11 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
 	 * returns true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given Dung theory.
-	 * @param Ext an extension. 
-	 * @return true if every accepted argument of this is defended by some accepted
+	 * @param ext an extension
+	 * @return true, if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given Dung theory.
 	 */
-	/**
-	 * 
-	 * @param ext parameter
-	 * @return isAdmissable
-	 */
-	public boolean isAdmissable(Extension<DungTheory> ext){
+	public boolean IsAdmissible(Extension<DungTheory> ext){
 		if(!this.isConflictFree(ext)) return false;
 		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
 		while(it.hasNext()){			
