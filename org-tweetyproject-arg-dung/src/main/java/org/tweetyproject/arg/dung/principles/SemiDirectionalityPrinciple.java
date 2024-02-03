@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.principles;
 
 import java.util.Collection;
 
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -43,11 +44,21 @@ public class SemiDirectionalityPrinciple extends DirectionalityPrinciple {
 		return "Semi Directionality";
 	}
 
-    @Override
-	protected boolean checkIfViolation(Collection<Extension<DungTheory>> extsRestriction,
-			Collection<Extension<DungTheory>> extsIntersection) {
-		// if these two sets are not equal, then this semantics violates directionality
-		return !extsIntersection.containsAll(extsRestriction);
-	}
+	@Override
+	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
+		DungTheory theory = (DungTheory) kb;
+		Collection<Extension<DungTheory>> exts = ev.getModels(theory);
+		Collection<Extension<DungTheory>> unattackedSets = this.getUnattackedSets(theory);
 
+		for (Extension<DungTheory> set: unattackedSets) {
+			// calculate extensions of the theory restricted to set
+			Collection<Extension<DungTheory>> extsRestriction = getExtensionsRestriction(ev, theory, set);
+
+			// get intersections of the extensions of theory with set
+			Collection<Extension<DungTheory>> extsIntersection = getExtensionsIntersection(exts, set);
+
+			if (!extsIntersection.containsAll(extsRestriction)) return false;
+		}
+		return true;
+	}
 }

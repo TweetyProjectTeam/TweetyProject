@@ -19,7 +19,9 @@
 package org.tweetyproject.arg.dung.principles;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
@@ -38,24 +40,19 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  * @author Julian Sander
  */
-public class NonInterferencePrinciple extends Principle {
+public class NonInterferencePrinciple extends DirectionalityPrinciple {
 
 	@Override
 	public String getName() {
 		return "Non-Interference";
 	}
 
-	@Override
-	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb instanceof DungTheory);
-	}
-
-	@Override
+    @Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
 		DungTheory theory = (DungTheory) kb;
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        Collection<Extension<DungTheory>> isolatedSets = theory.getIsolatedSets();
+        Collection<Extension<DungTheory>> isolatedSets = getIsolatedSets(theory);
         for (Extension<DungTheory> set: isolatedSets) {
             // calculate extensions of the theory restricted to the set
             DungTheory theory_set = (DungTheory) theory.getRestriction(set);
@@ -75,4 +72,36 @@ public class NonInterferencePrinciple extends Principle {
         }
         return true;
 	}
+
+    /**
+     * Method for calculating isolated sets in a given theory <br>
+     * A set E is isolated in a theory AF iff there exists no argument a in {AF \ E}, with a attacks E
+     * and there exists no argument b in E, with b attacks {AF \ E}.
+     * @param theory An abstract argumentation framework
+     * @return A set of isolated arguments in the specified framework.
+     */
+    public Collection<Extension<DungTheory>> getIsolatedSets(DungTheory theory) {
+        //store attacked of each argument
+        Map<Argument, Collection<Argument>> attacked = new HashMap<>();
+        for (Argument a: theory) {
+            attacked.put(a, theory.getAttacked(a));
+        }
+
+        // check all subsets
+        var unattackedSets = getUnattackedSets(theory);
+        Collection<Extension<DungTheory>> isolatedSets = new HashSet<>();
+        for (var subset: unattackedSets) {
+            boolean isIsolated = true;
+            for (Argument a: subset) {
+                if (!subset.containsAll(attacked.get(a))) {
+                    isIsolated = false;
+                    break;
+                }
+            }
+            if (isIsolated) {
+                isolatedSets.add(subset);
+            }
+        }
+        return isolatedSets;
+    }
 }
