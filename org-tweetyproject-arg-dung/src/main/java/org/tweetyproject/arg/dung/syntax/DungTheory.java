@@ -18,17 +18,19 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 
-import java.util.*;
-
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
-import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.commons.*;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.commons.BeliefSet;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.*;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.IntegerConstant;
+
+import java.util.*;
 
 
 /**
