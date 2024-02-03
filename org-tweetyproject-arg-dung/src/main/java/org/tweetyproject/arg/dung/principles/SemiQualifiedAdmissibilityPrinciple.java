@@ -29,10 +29,11 @@ import java.util.HashSet;
 
 /**
  * Semi-Qualified Admissibility Principle
+ * <p>
  * A semantics s satisfies semi-qualified admissibility iff for every AF F and every s-extension E we have:
- * For all arguments a in E: if an argument b attacks a and b is in any s-extension, then E attacks b
+ * For all arguments 'a' in E: if an argument 'b' attacks 'a' and 'b' is in any s-extension, then E attacks 'b'
  *
- * see: Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. "A Principle-Based Analysis of Weakly Admissible Semantics." 2020
+ * @see "Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. 'A Principle-Based Analysis of Weakly Admissible Semantics.' 2020"
  *
  * @author Lars Bengel
  */

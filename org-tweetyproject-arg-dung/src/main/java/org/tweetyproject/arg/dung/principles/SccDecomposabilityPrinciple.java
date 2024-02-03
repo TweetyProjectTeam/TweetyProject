@@ -28,13 +28,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * SCC Decomposability Principle
- * also: SCC-Recursiveness
- *
+ * SCC Decomposability Principle (also SCC-Recursiveness)
+ * <p>
  * A semantics satisfies SCC decomposability iff for all AFs we have:
  * The extensions of F are the same as computing the extensions of each SCC individually and combining the result
  *
- * see: Pietro Baroni et al. “On the input/output behavior of argumentation frameworks” 2014
+ * @see "Pietro Baroni et al. 'On the input/output behavior of argumentation frameworks' 2014"
  *
  * @author Lars Bengel
  */

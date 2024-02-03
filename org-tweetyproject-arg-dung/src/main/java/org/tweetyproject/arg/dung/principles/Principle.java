@@ -64,6 +64,8 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle SCC_DECOMPOSABILITY = new SccDecomposabilityPrinciple();
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
+    /** The Allowing Abstention Principle */
+    public static final Principle ALLOWINGABSTENTION = new AllowingAbstentionPrinciple();
 
     /* (non-Javadoc)
      * @see org.tweetyproject.commons.postulates.Postulate#isApplicable(java.util.Collection)
@@ -86,10 +88,10 @@ public abstract class Principle implements Postulate<Argument> {
      */
     
     /**
-     * *description missing*
-     * @param kb kb
-     * @param ev ev
-     * @return is Satisfied
+     * Computes whether the given extension reasoner (i.e. semantics) satisfies this principle for this specific instance
+     * @param kb some argumentation framework
+     * @param ev an extension reasoner
+     * @return true, if this principle is satisfied for this instance and semantics
      */
     public abstract boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev);
 }

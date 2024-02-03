@@ -29,10 +29,11 @@ import java.util.*;
 
 /**
  * Directionality Principle
- * A semantics satisfies directionality if for every unattacked set U in a dung theory F it holds that:
- * The extensions of F restricted to U are equal to the extensions of F intersected with U
+ * <p>
+ * A semantics satisfies directionality if for every unattacked set 'U' in a dung theory F it holds that:
+ * The extensions of F restricted to 'U' are equal to the extensions of F intersected with 'U'
  *
- * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Lars Bengel
  */
@@ -46,7 +47,6 @@ public class DirectionalityPrinciple extends Principle {
     public boolean isApplicable(Collection<Argument> kb) {
         return (kb instanceof DungTheory);
     }
-
 
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
@@ -100,7 +100,7 @@ public class DirectionalityPrinciple extends Principle {
                 }
             }
             if (!attacked)
-                unattackedSets.add(new Extension<DungTheory>(subset));
+                unattackedSets.add(new Extension<>(subset));
 
         }
         return unattackedSets;

@@ -28,11 +28,11 @@ import java.util.Collection;
 
 /**
  * Reinstatement Principle
+ * <p>
  * A semantics satisfies reinstatement if for all extensions E it holds that:
- * for all arguments a, if E defends a, then a is in E
- * i.e E is a complete extension
+ * for all arguments 'a', if E defends 'a', then 'a' is in E.
  *
- * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Lars Bengel
  */
@@ -59,9 +59,6 @@ public class ReinstatementPrinciple extends Principle {
                 return false;
             }
         }
-
-
-
         return true;
     }
 }
