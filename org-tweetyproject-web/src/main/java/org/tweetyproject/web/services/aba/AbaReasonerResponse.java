@@ -21,8 +21,10 @@ package org.tweetyproject.web.services.aba;
 import java.util.Objects;
 
 import org.tweetyproject.web.services.Response;
+
 /**
- * The AbaReasonerResponse class extends the Response class and represents the response
+ * The AbaReasonerResponse class extends the Response class and represents the
+ * response
  * data structure for an Argumentation-Based Argumentation (ABA) reasoner.
  */
 public class AbaReasonerResponse extends Response {
@@ -86,8 +88,8 @@ public class AbaReasonerResponse extends Response {
      * @param status           The status of the ABA reasoner response
      */
     public AbaReasonerResponse(String reply, String email, String kb, String kb_format, String fol_signature,
-                                String query_assumption, String semantics, int timeout, String answer,
-                                double time, String unit_time, String status) {
+            String query_assumption, String semantics, int timeout, String answer,
+            double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.kb = kb;
@@ -102,181 +104,228 @@ public class AbaReasonerResponse extends Response {
         this.fol_signature = fol_signature;
     }
 
-        public String getFol_signature() {
-          return fol_signature;
-        }
+    /**
+     * Gets the fol_signature associated with this object.
+     *
+     * @return The fol_signature.
+     */
+    public String getFol_signature() {
+        return fol_signature;
+    }
 
-        public void setFol_signature(String fol_signature) {
-          this.fol_signature = fol_signature;
-        }
-        public String getStatus() {
-            return status;
-        }
+    /**
+     * Sets the fol_signature for this object.
+     *
+     * @param fol_signature The fol_signature to be set.
+     */
+    public void setFol_signature(String fol_signature) {
+        this.fol_signature = fol_signature;
+    }
 
-        public void setStatus(String status) {
-            this.status = status;
-        }
+    /**
+     * Gets the status associated with this object.
+     *
+     * @return The status.
+     */
+    public String getStatus() {
+        return status;
+    }
 
+    /**
+     * Sets the status for this object.
+     *
+     * @param status The status to be set.
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * Gets the reply associated with this object.
+     *
+     * @return The reply.
+     */
     public String getReply() {
         return this.reply;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
+     * Sets the reply for this object.
+     *
+     * @param reply The reply to be set.
      */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the email associated with this object.
+     *
+     * @return The email.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
+     * Sets the email for this object.
+     *
+     * @param email The email to be set.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the kb associated with this object.
+     *
+     * @return The kb.
      */
     public String getKb() {
         return this.kb;
     }
 
     /**
-     * *description missing*
-     * @param kb *description missing*
+     * Sets the knowledge base for this object.
+     *
+     * @param kb The kb to be set.
      */
     public void setKb(String kb) {
         this.kb = kb;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the kb_format associated with this object.
+     *
+     * @return The kb_format.
      */
     public String getKb_format() {
         return this.kb_format;
     }
 
     /**
-     * *description missing*
-     * @param kb_format *description missing*
+     * Sets the kb_format for this object.
+     *
+     * @param kb_format The kb_format to be set.
      */
     public void setKb_format(String kb_format) {
         this.kb_format = kb_format;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the query_assumption associated with this object.
+     *
+     * @return The query_assumption.
      */
     public String getQuery_assumption() {
         return this.query_assumption;
     }
 
     /**
-     * *description missing*
-     * @param query_assumption *description missing*
+     * Sets the query_assumption for this object.
+     *
+     * @param query_assumption The query_assumption to be set.
      */
     public void setQuery_assumption(String query_assumption) {
         this.query_assumption = query_assumption;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the semantics associated with this object.
+     *
+     * @return The semantics.
      */
     public String getSemantics() {
         return this.semantics;
     }
 
     /**
-     * *description missing*
-     * @param semantics *description missing*
+     * Sets the semantics for this object.
+     *
+     * @param semantics The semantics to be set.
      */
     public void setSemantics(String semantics) {
         this.semantics = semantics;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the timeout value associated with this object.
+     *
+     * @return The timeout value.
      */
     public int getTimeout() {
         return this.timeout;
     }
 
     /**
-     * *description missing*
-     * @param timeout *description missing*
+     * Sets the timeout value for this object.
+     *
+     * @param timeout The timeout value to be set.
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the answer associated with this object.
+     *
+     * @return The answer.
      */
     public String getAnswer() {
         return this.answer;
     }
 
     /**
-     * *description missing*
-     * @param answer *description missing*
+     * Sets the answer for this object.
+     *
+     * @param answer The answer to be set.
      */
     public void setAnswer(String answer) {
         this.answer = answer;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the time value associated with this object.
+     *
+     * @return The time value.
      */
     public double getTime() {
         return this.time;
     }
 
     /**
-     * *description missing*
-     * @param time *description missing*
+     * Sets the time value for this object.
+     *
+     * @param time The time value to be set.
      */
     public void setTime(double time) {
         this.time = time;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the unit time associated with this object.
+     *
+     * @return The unit time.
      */
     public String getUnit_time() {
         return this.unit_time;
     }
 
     /**
-     * *description missing*
-     * @param unit_time *description missing*
+     * Sets the unit time for this object.
+     *
+     * @param unit_time The unit time to be set.
      */
     public void setUnit_time(String unit_time) {
         this.unit_time = unit_time;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
-     * @return *description missing*
+     * Sets the reply for this object and returns the instance of
+     * AbaReasonerResponse.
+     *
+     * @param reply The reply to be set.
+     * @return This AbaReasonerResponse instance.
      */
     public AbaReasonerResponse reply(String reply) {
         setReply(reply);
@@ -284,9 +333,11 @@ public class AbaReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
-     * @return *description missing*
+     * Sets the email for this object and returns the instance of
+     * AbaReasonerResponse.
+     *
+     * @param email The email to be set.
+     * @return This AbaReasonerResponse instance.
      */
     public AbaReasonerResponse email(String email) {
         setEmail(email);
@@ -294,59 +345,11 @@ public class AbaReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param kb *description missing*
-     * @return *description missing*
-     */
-    public AbaReasonerResponse kb(String kb) {
-        setKb(kb);
-        return this;
-    }
-
-    /**
-     * *description missing*
-     * @param kb_format *description missing*
-     * @return *description missing*
-     */
-    public AbaReasonerResponse kb_format(String kb_format) {
-        setKb_format(kb_format);
-        return this;
-    }
-
-    /**
-     * *description missing*
-     * @param query_assumption *description missing*
-     * @return *description missing*
-     */
-    public AbaReasonerResponse query_assumption(String query_assumption) {
-        setQuery_assumption(query_assumption);
-        return this;
-    }
-
-    /**
-     * *description missing*
-     * @param semantics *description missing*
-     * @return *description missing*
-     */
-    public AbaReasonerResponse semantics(String semantics) {
-        setSemantics(semantics);
-        return this;
-    }
-
-    /**
-     * *description missing*
-     * @param timeout *description missing*
-     * @return *description missing*
-     */
-    public AbaReasonerResponse timeout(int timeout) {
-        setTimeout(timeout);
-        return this;
-    }
-
-    /**
-     * *description missing*
-     * @param answer *description missing*
-     * @return *description missing*
+     * Sets the answer for this object and returns the instance of
+     * AbaReasonerResponse.
+     *
+     * @param answer The answer to be set.
+     * @return This AbaReasonerResponse instance.
      */
     public AbaReasonerResponse answer(String answer) {
         setAnswer(answer);
@@ -354,9 +357,11 @@ public class AbaReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param time *description missing*
-     * @return *description missing*
+     * Sets the time for this object and returns the instance of
+     * AbaReasonerResponse.
+     *
+     * @param time The time value to be set.
+     * @return This AbaReasonerResponse instance.
      */
     public AbaReasonerResponse time(double time) {
         setTime(time);
@@ -364,15 +369,25 @@ public class AbaReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param unit_time *description missing*
-     * @return *description missing*
+     * Sets the unit time for this object and returns the instance of
+     * AbaReasonerResponse.
+     *
+     * @param unit_time The unit time to be set.
+     * @return This AbaReasonerResponse instance.
      */
     public AbaReasonerResponse unit_time(String unit_time) {
         setUnit_time(unit_time);
         return this;
     }
 
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * This method compares the fields of two AbaReasonerResponse objects for
+     * equality.
+     *
+     * @param o The reference object with which to compare.
+     * @return True if this object is the same as the o argument; false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -381,28 +396,47 @@ public class AbaReasonerResponse extends Response {
             return false;
         }
         AbaReasonerResponse abaReasonerResponse = (AbaReasonerResponse) o;
-        return Objects.equals(reply, abaReasonerResponse.reply) && Objects.equals(email, abaReasonerResponse.email) && Objects.equals(kb, abaReasonerResponse.kb) && Objects.equals(kb_format, abaReasonerResponse.kb_format) && Objects.equals(query_assumption, abaReasonerResponse.query_assumption) && Objects.equals(semantics, abaReasonerResponse.semantics) && timeout == abaReasonerResponse.timeout && Objects.equals(answer, abaReasonerResponse.answer) && time == abaReasonerResponse.time && Objects.equals(unit_time, abaReasonerResponse.unit_time);
+        return Objects.equals(reply, abaReasonerResponse.reply) && Objects.equals(email, abaReasonerResponse.email)
+                && Objects.equals(kb, abaReasonerResponse.kb)
+                && Objects.equals(kb_format, abaReasonerResponse.kb_format)
+                && Objects.equals(query_assumption, abaReasonerResponse.query_assumption)
+                && Objects.equals(semantics, abaReasonerResponse.semantics) && timeout == abaReasonerResponse.timeout
+                && Objects.equals(answer, abaReasonerResponse.answer) && time == abaReasonerResponse.time
+                && Objects.equals(unit_time, abaReasonerResponse.unit_time);
     }
 
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return A hash code value for this object.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(reply, email, kb, kb_format, query_assumption, semantics, timeout, answer, time, unit_time);
     }
 
+    /**
+     * Returns a string representation of the object.
+     * This method constructs a string representation of the AbaReasonerResponse
+     * object
+     * including all its fields.
+     *
+     * @return A string representation of the object.
+     */
     @Override
     public String toString() {
         return "{" +
-            " reply='" + getReply() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", kb='" + getKb() + "'" +
-            ", kb_format='" + getKb_format() + "'" +
-            ", query_assumption='" + getQuery_assumption() + "'" +
-            ", semantics='" + getSemantics() + "'" +
-            ", timeout='" + getTimeout() + "'" +
-            ", answer='" + getAnswer() + "'" +
-            ", time='" + getTime() + "'" +
-            ", unit_time='" + getUnit_time() + "'" +
-            "}";
+                " reply='" + getReply() + "'" +
+                ", email='" + getEmail() + "'" +
+                ", kb='" + getKb() + "'" +
+                ", kb_format='" + getKb_format() + "'" +
+                ", query_assumption='" + getQuery_assumption() + "'" +
+                ", semantics='" + getSemantics() + "'" +
+                ", timeout='" + getTimeout() + "'" +
+                ", answer='" + getAnswer() + "'" +
+                ", time='" + getTime() + "'" +
+                ", unit_time='" + getUnit_time() + "'" +
+                "}";
     }
 
 }

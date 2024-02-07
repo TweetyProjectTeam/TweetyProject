@@ -82,7 +82,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return the arguments
      */
     public Set<BArgument> getArguments() {
@@ -90,7 +90,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return the supports
      */
     public Set<Support> getSupports() {
@@ -98,7 +98,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return new arguments
      */
     public Set<BArgument> getNewArguments() {
@@ -106,7 +106,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return pINside
      */
     public double getpInside() {
@@ -114,7 +114,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return InducePro
      */
     public double getInducePro() {
@@ -122,7 +122,7 @@ public class InducibleEAF {
     }
 
     /**
-     * 
+     *
      * @return a new EAFTheory
      */
     public EAFTheory toNewEAFTheory() {
@@ -172,7 +172,7 @@ public class InducibleEAF {
 
         List<Support> sortedSupports = new ArrayList<Support>();
         sortedSupports.addAll(this.supports);
-       
+
 
         for (Support support : sortedSupports) {
             builder.append(support.toString());
@@ -247,7 +247,7 @@ public class InducibleEAF {
             	if(attack.contains(arg)) {
 	                BipolarEntity froms = attack.getAttacker();
 	                BipolarEntity tos = attack.getAttacked();
-	
+
 	                if (args.containsAll((HashSet<BArgument>) froms) && args.contains(tos)) {
 	                    this.attacks.add((EAttack) attack);
 	                }

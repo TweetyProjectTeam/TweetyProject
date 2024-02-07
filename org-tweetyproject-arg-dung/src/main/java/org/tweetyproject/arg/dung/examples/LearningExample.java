@@ -33,7 +33,7 @@ import java.util.*;
  */
 public class LearningExample {
 	/**
-	 * 
+	 *
 	 * @param args string
 	 */
     public static void main(String[] args) {
@@ -54,7 +54,7 @@ public class LearningExample {
         ArrayList<Labeling> labelings = new ArrayList<>();
         for (Collection<Argument> subset: new SetTools<Argument>().subsets(dt)) {
             DungTheory restrictedTheory = new DungTheory(dt.getRestriction(subset));
-            Extension ext = new SimpleGroundedReasoner().getModel(restrictedTheory);
+            Extension<?> ext = new SimpleGroundedReasoner().getModel(restrictedTheory);
             Labeling labeling = new Labeling(restrictedTheory, ext);
             labelings.add(labeling);
         }

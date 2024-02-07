@@ -59,16 +59,14 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
      */
     @Deprecated
     public void induce(Consumer<InducibleEAF> consumer) {
-        InducibleEAF f = new InducibleEAF(new HashSet(),
-                new HashSet(),
-                new HashSet(),
-                new HashSet(), Math.log(1.0), Math.log(1.0));
+        InducibleEAF f = new InducibleEAF(new HashSet<>(),
+                new HashSet<>(),
+                new HashSet<>(),
+                new HashSet<>(), Math.log(1.0), Math.log(1.0));
 
         // Store inducible that need to expand
         List<InducibleEAF> expansion = new ArrayList<>();
         expansion.add(f);
-        int z = 0;
-
         while (!expansion.isEmpty()) {
 
             InducibleEAF toExpand = expansion.remove(0);
@@ -136,7 +134,6 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
                 InducibleEAF indu = new InducibleEAF(new HashSet(args), new HashSet(supports), new HashSet(), new HashSet(newArgs), pInside, induceP);
 
                 expansion.add(indu);
-                z++;
             }
 
         }

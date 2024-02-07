@@ -22,9 +22,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.tweetyproject.logics.bpm.syntax.BpmnElement;
-import org.tweetyproject.logics.bpm.syntax.BpmnModel;
-
 /**
  * @author Benedikt Knopp
  *
@@ -48,7 +45,7 @@ public abstract class AbstractElementParser<T> {
 	public AbstractElementParser (RootParser rootParser) {
 		this.rootParser = rootParser;
 	}
-	
+
 	/**
 	 * @param documentNode the XML representation of the element to parse
 	 * @return the parsed element
@@ -72,19 +69,19 @@ public abstract class AbstractElementParser<T> {
 		}
 		return this.parsedElement;
 	};
-	
-		
+
+
 	/**
 	 * handle tag attributes and assign to the parsed element
 	 * @param attribute the attribute
 	 */
 	protected abstract void handleAttribute(Node attribute);
-	
+
 	/**
 	 * handle child nodes of the XML element and assign to the parsed element
 	 * @param childNode the XML child element
 	 */
 	protected abstract void handleChildNode(Node childNode);
 
-	
+
 }

@@ -21,7 +21,6 @@ package org.tweetyproject.arg.bipolar.examples;
 import org.tweetyproject.arg.bipolar.inducers.ExactPEAFInducer;
 import org.tweetyproject.arg.bipolar.inducers.LiExactPEAFInducer;
 import org.tweetyproject.arg.bipolar.syntax.BArgument;
-import org.tweetyproject.arg.bipolar.syntax.BipolarEntity;
 import org.tweetyproject.arg.bipolar.syntax.PEAFTheory;
 
 import java.util.HashSet;
@@ -54,7 +53,7 @@ public class MeetingPEAFExample {
         arg5.add(peafTheory.getArguments().get(5));
         HashSet<BArgument> arg6 = new HashSet<BArgument>();
         arg6.add(peafTheory.getArguments().get(6));
-        
+
         peafTheory.addSupport(new HashSet<BArgument>(), arg0 , 1.0);
         peafTheory.addSupport(arg0, arg2, 1.0);
         peafTheory.addSupport(arg0, arg1, 1.0);

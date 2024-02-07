@@ -25,7 +25,6 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 /**
@@ -73,7 +72,7 @@ public class SimpleStageSetAfReasoner extends AbstractExtensionSetAfReasoner {
 		// just return the first one
 		return this.getModels(bbase).iterator().next();
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;

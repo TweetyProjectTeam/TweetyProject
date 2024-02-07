@@ -22,7 +22,6 @@ package org.tweetyproject.arg.dung.reasoner;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -34,7 +33,7 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 public class SimpleClPreferredReaonser  extends AbstractClaimBasedReasoner{
 
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
@@ -52,14 +51,14 @@ public class SimpleClPreferredReaonser  extends AbstractClaimBasedReasoner{
 					break;
 				}
 			if(maximal)
-				result.add(e1);			
-		}		
+				result.add(e1);
+		}
 		return result;
 	}
 
 
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return an extensions of the semantics
 	 */
@@ -77,8 +76,8 @@ public class SimpleClPreferredReaonser  extends AbstractClaimBasedReasoner{
 					break;
 				}
 			if(maximal)
-				return e1;			
-		}		
+				return e1;
+		}
 		// this should not happen
 		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
 	}

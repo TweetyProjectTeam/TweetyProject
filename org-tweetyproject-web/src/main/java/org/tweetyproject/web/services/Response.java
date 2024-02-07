@@ -19,7 +19,7 @@
 package org.tweetyproject.web.services;
 
 /**
- * *description missing*
+ * Response placeholder class
  */
 public class Response {
 

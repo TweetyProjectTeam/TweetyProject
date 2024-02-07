@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.logics.petri.syntax.reachability_graph;
 
-import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.Term;
@@ -48,7 +47,7 @@ public class MarkovWalk {
 	/**
 	 * the |1|x|T| normalized control vector of that graph
 	 */
-	private Matrix normalizedControlVector;	
+	private Matrix normalizedControlVector;
 	/**
 	 * the current state (probability distribution) during the stochastic walk
 	 */
@@ -65,7 +64,7 @@ public class MarkovWalk {
 	 * a lower limit to specify when a walk should be canceled due to minimal change in the state
 	 */
 	private final double TOLERANCE = 0.0001;
-	
+
 	/**
 	 * Create a new instance
 	 * @param graph the graph to walk
@@ -73,7 +72,7 @@ public class MarkovWalk {
 	public MarkovWalk(ReachabilityGraph graph) {
 		this.graph = graph;
 	}
-	
+
 	/**
 	 * Initialize the walk by setting up an initial state that assigns equal probabilities
 	 * to each of the graph's initial markings
@@ -83,9 +82,9 @@ public class MarkovWalk {
 		this.controlMatrix = graph.getControlMatrix();
 		setupInitialState();
 	}
-	
+
 	/**
-	 * Set up relevant vectors for the conduction and evaluation of the Markov walk, 
+	 * Set up relevant vectors for the conduction and evaluation of the Markov walk,
 	 * i.e. (mean) states and control vectors
 	 */
 	private void setupInitialState() {
@@ -113,10 +112,10 @@ public class MarkovWalk {
 			controlVector.setEntry(i, 0, new FloatConstant(0));
 		}
 	}
-	
+
 	/**
 	 * Walk the network until a stationary distribution is figured out
-	 * This neglects control vectors 
+	 * This neglects control vectors
 	 */
 	public void performWalk() {
 		Matrix newState;
@@ -133,15 +132,15 @@ public class MarkovWalk {
 			currentMeanState = newMean;
 		}
 	}
-	
+
 	/**
-	 * Walk the network until a stationary distribution is figured out 
+	 * Walk the network until a stationary distribution is figured out
 	 * This also yields control vectors
 	 */
 	public void performShortCircuitWalk() {
 		Matrix newState;
 		Matrix newMean;
-		Matrix controlVectorDelta;	
+		Matrix controlVectorDelta;
 		long iteration = 0;
 		double delta = TOLERANCE + 1d;
 		while(iteration < MAX_ITERATIONS &&  delta > TOLERANCE) {
@@ -157,8 +156,8 @@ public class MarkovWalk {
 			normalizedControlVector = controlVector.mult(1/(iteration+0d)).simplify();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Calculate the distance between two vectors
 	 * @param stateA the first vector
@@ -175,7 +174,7 @@ public class MarkovWalk {
 	public Matrix getCurrentState() {
 		return currentState;
 	}
-	
+
 	/**
 	 * @return the mean state
 	 */
@@ -197,5 +196,5 @@ public class MarkovWalk {
 		return normalizedControlVector;
 	}
 
-	
+
 }

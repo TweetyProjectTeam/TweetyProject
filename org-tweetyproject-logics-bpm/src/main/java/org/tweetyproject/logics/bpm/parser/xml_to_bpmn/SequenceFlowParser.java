@@ -18,13 +18,7 @@
  */
 package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
-import java.util.Set;
-
 import org.w3c.dom.Node;
-
-import org.tweetyproject.logics.bpm.syntax.Lane;
-import org.tweetyproject.logics.bpm.syntax.SequenceFlow;
-import org.tweetyproject.logics.bpm.syntax.Task;
 
 /**
  * Parse an edge of the sequence flow in a BPMN model
@@ -76,6 +70,6 @@ public class SequenceFlowParser extends AbstractElementParser<BufferedBpmnEdge> 
 				String targetRef = childNode.getTextContent();
 				this.parsedElement.setTargetRef(targetRef);
 				break;
-		}	
+		}
 	}
 }

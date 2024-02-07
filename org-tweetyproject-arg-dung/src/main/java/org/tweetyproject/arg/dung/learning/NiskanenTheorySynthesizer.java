@@ -187,6 +187,7 @@ public class NiskanenTheorySynthesizer {
      * @return formula representing the stability of ext
      * @throws IOException *description missing*
      */
+    @SuppressWarnings("unused")
     private PlFormula getStableClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         formulas.add(this.getConflictFreeClause(theory, ext));
@@ -210,6 +211,7 @@ public class NiskanenTheorySynthesizer {
      * @return formula representing the completeness of ext
      * @throws IOException *description missing*
      */
+    @SuppressWarnings("unused")
     private PlFormula getCompleteClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         formulas.add(this.getAdmissibleClause(theory, ext));

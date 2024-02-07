@@ -28,21 +28,20 @@ import org.tweetyproject.preferences.PreferenceOrder;
 
 /**
  * An abstract class as superclass for two different ranking/leveling functions used to rank elements from preference orders
- * 
+ *
  * @author Bastian Wolf
  *
  * @param <T> generic preference order type
  */
 
-public abstract class Functions<T> extends HashMap<T, Integer> implements
-Map<T, Integer> {
+public abstract class Functions<T> extends HashMap<T, Integer> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	/**
 	 * returns a string representation for this ranking function
 	 */
@@ -64,21 +63,21 @@ Map<T, Integer> {
 
 	/**
 	 * returns the ranking function
-	 * 
+	 *
 	 * @return ranking function
 	 */
 	public Map<T, Integer> getLevelingFunction() {
 		return this;
 	}
-	
+
 	/**
 	 * this method returns a preference order made out of an ranking function
-	 * 
+	 *
 	 * @return a preference order out of a given ranking function
 	 */
 	public abstract PreferenceOrder<T> generatePreferenceOrder();
-	
-	
+
+
 
 	/**
 	 * checks whether the key is present in the entry-set of the map
@@ -111,7 +110,7 @@ Map<T, Integer> {
 
 	/**
 	 * returns the value to a given key
-	 * 
+	 *
 	 * @return the value if present, null otherwise (but value.equals(null) is
 	 *         possible)
 	 */
@@ -129,7 +128,7 @@ Map<T, Integer> {
 		return null;
 	}
 
-	
+
 	/**
 	 * returns a collection containing all values of the map
 	 */
@@ -162,21 +161,21 @@ Map<T, Integer> {
 		}
 		return temp;
 	}
-	
-	
+
+
 	/**
 	 * returns a set of predecessor elements for the given entry
-	 * @param element the given entry 
+	 * @param element the given entry
 	 * @return a set of predecessor elements for the given entry
 	 */
 	public Set<Entry<T, Integer>> getPredecessors(Entry<T, Integer> element){
 		return getElementsByValue(element.getValue()-1);
 	}
-	
-	
+
+
 	/**
 	 * returns a set of successor elements for the given entry
-	 * @param element the given entry 
+	 * @param element the given entry
 	 * @return a set of successor elements for the given entry
 	 */
 	public Set<Entry<T, Integer>> getSuccessors(Entry<T, Integer> element){
@@ -188,11 +187,11 @@ Map<T, Integer> {
 	 * @param element the element being weakened
 	 */
 	public abstract void weakenElement(T element);
-	
+
 	/**
 	 * strengthens the given element in the function
-	 * @param element the element being strengthened 
+	 * @param element the element being strengthened
 	 */
 	public abstract void strengthenElement(T element);
-	
+
 }

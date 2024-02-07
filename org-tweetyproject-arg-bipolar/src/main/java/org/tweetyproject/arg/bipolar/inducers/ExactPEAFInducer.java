@@ -22,7 +22,6 @@ import org.tweetyproject.arg.bipolar.syntax.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +60,7 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
     public void induce(Consumer<InducibleEAF> consumer) {
         Stack<EAF_F> stack = new Stack<>();
 
-        stack.push(new EAF_F(new HashSet(), new HashSet<Support>( peafTheory.getSupports()), new HashSet(new ArrayList(Arrays.asList(peafTheory.getEta()))), 1.0));
+        stack.push(new EAF_F(new HashSet<>(), new HashSet<Support>(peafTheory.getSupports()), new HashSet<>(new ArrayList<>(Arrays.asList(peafTheory.getEta()))), 1.0));
 
         while (!stack.isEmpty()) {
             EAF_F eaf = stack.pop();
@@ -217,10 +216,10 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
             }
 
 
-            InducibleEAF inducibleEAF = new InducibleEAF(new HashSet(eArguments),
-                    new HashSet(supportList),
-                    new HashSet(),
-                    new HashSet(),
+            InducibleEAF inducibleEAF = new InducibleEAF(new HashSet<>(eArguments),
+                    new HashSet<>(supportList),
+                    new HashSet<>(),
+                    new HashSet<>(),
                     0, Math.log(this.pi));
 
 
@@ -235,7 +234,7 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
          * @return a copied EAF_F
          */
         public EAF_F copy() {
-            EAF_F i = new EAF_F(new HashSet(this.eArguments), new HashSet(this.eSupports), new HashSet(this.newEArguments), this.pi);
+            EAF_F i = new EAF_F(new HashSet<>(this.eArguments), new HashSet<>(this.eSupports), new HashSet<>(this.newEArguments), this.pi);
             i.createdFrom.add(this);
             return i;
         }

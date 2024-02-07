@@ -21,9 +21,7 @@ package org.tweetyproject.arg.bipolar;
 
 import static org.junit.Assert.*;
 
-import org.tweetyproject.arg.bipolar.reasoner.evidential.*;
 import org.tweetyproject.arg.bipolar.syntax.*;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

@@ -1,8 +1,5 @@
 package org.tweetyproject.arg.bipolar.analysis;
 
-import org.tweetyproject.arg.bipolar.analysis.extensions.GroundedAnalysis;
-import org.tweetyproject.arg.bipolar.analysis.extensions.PreferredAnalysis;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

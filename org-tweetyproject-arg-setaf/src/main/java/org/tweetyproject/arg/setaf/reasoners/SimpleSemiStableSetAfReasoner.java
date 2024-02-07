@@ -25,7 +25,6 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 
@@ -35,7 +34,7 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  *
  */
 public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
@@ -55,9 +54,9 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 						exts.remove(ext);
 						b = true;
 					}
-				}			
+				}
 				if(b) break;
-			}			
+			}
 		}
 		return exts;
 	}
@@ -70,7 +69,7 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;

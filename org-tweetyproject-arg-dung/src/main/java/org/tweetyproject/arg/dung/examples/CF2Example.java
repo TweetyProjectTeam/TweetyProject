@@ -26,12 +26,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for CF2 semantics. Shows how to construct an abstract argumentation framework programmatically and how to reason with it using CF2 semantics.
- * 
+ *
  * @author Matthias Thimm
  */
 public class CF2Example {
 	/**
-	 * 
+	 *
 	 * @param args string
 	 */
 	public static void main(String[] args){
@@ -55,11 +55,11 @@ public class CF2Example {
 		theory.add(new Attack(d,e));
 		theory.add(new Attack(e,a));
 		theory.add(new Attack(e,f));
-		
+
 		SccCF2Reasoner reasoner = new SccCF2Reasoner();
-		
-		for(Extension ext: reasoner.getModels(theory)){
-			System.out.println(ext);			
+
+		for(Extension<?> ext: reasoner.getModels(theory)){
+			System.out.println(ext);
 		}
 	}
 }

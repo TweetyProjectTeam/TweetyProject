@@ -60,10 +60,10 @@ public class ArgumentSet implements BipolarEntity, Collection<BArgument>, Compar
     public String toString() {
         String s = "{";
         boolean first = true;
-        Iterator var3 = this.iterator();
+        Iterator<BArgument> var3 = this.iterator();
 
         while(var3.hasNext()) {
-            BArgument a = (BArgument)var3.next();
+            BArgument a = var3.next();
             if (first) {
                 s = s + a;
                 first = false;
@@ -76,7 +76,6 @@ public class ArgumentSet implements BipolarEntity, Collection<BArgument>, Compar
     }
 
     public int hashCode() {
-        int prime = 1;
         int result = 1;
         result = 31 * result + (this.arguments == null ? 0 : this.arguments.hashCode());
         return result;

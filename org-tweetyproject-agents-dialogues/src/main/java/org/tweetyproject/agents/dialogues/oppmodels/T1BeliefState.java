@@ -31,18 +31,18 @@ import org.tweetyproject.commons.util.Pair;
 
 /**
  * This belief state consists of a simple recursive opponent model.
- * 
+ *
  * @author Matthias Thimm, Tjitze Rienstra
  */
 public class T1BeliefState extends BeliefState {
-	
+
 	/** The opponent model of the agent (as there are only
-	 * two agents in the system the model always refers to 
+	 * two agents in the system the model always refers to
 	 * the other agent. */
 	private T1BeliefState oppModel = null;
-	
+
 	/**
-	 * Creates a new T1-belief-state with the given parameters. 
+	 * Creates a new T1-belief-state with the given parameters.
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.
 	 * @param oppModel the opponent model of the agent (null if no further model is given).
@@ -51,16 +51,16 @@ public class T1BeliefState extends BeliefState {
 		super(knownArguments, utilityFunction);
 		this.oppModel = oppModel;
 	}
-	
+
 	/**
-	 * Creates a new T1-belief-state with the given parameters and without nesting. 
+	 * Creates a new T1-belief-state with the given parameters and without nesting.
 	 * @param knownArguments the set of arguments known by the agent.
-	 * @param utilityFunction the utility function of the agent.	 
+	 * @param utilityFunction the utility function of the agent.
 	 */
 	public T1BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction){
 		this(knownArguments, utilityFunction, null);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#update(org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
@@ -78,24 +78,24 @@ public class T1BeliefState extends BeliefState {
 	public Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		double maxUtility = this.getUtilityFunction().getUtility(trace);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
-		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);		
+		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);
 		bestMoves.add(new ExecutableExtension());
 		for(ExecutableExtension move: ee){
 			double eu = 0;
 			if(this.oppModel == null)
 				eu = this.getUtilityFunction().getUtility(trace.addAndCopy(move));
-			else{			
+			else{
 				Pair<Double,Set<ExecutableExtension>> opponentMoves = this.oppModel.doMove(env,trace.addAndCopy(move));
 				for(ExecutableExtension move2: opponentMoves.getSecond()){
 					// this avoids infinite loops
 					// (if there are two consecutive noops the game is over anyway)
 					if(move.isNoOperation() && move2.isNoOperation()){
 						eu += this.getUtilityFunction().getUtility(trace.addAndCopy(move)) * 1f/opponentMoves.getSecond().size();
-						continue;						
+						continue;
 					}
 					Pair<Double,Set<ExecutableExtension>> myMoves = this.doMove(env, trace.addAndCopy(move).addAndCopy(move2));
 					eu += myMoves.getFirst() * 1f/opponentMoves.getSecond().size();
-				}				
+				}
 			}
 			if(eu > maxUtility){
 				maxUtility = eu;
@@ -103,7 +103,7 @@ public class T1BeliefState extends BeliefState {
 				bestMoves.add(move);
 			}else if(eu == maxUtility)
 				bestMoves.add(move);
-		}		
+		}
 		return new Pair<Double,Set<ExecutableExtension>>(maxUtility,bestMoves);
 	}
 
@@ -115,7 +115,7 @@ public class T1BeliefState extends BeliefState {
 			return new T1BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction(), (T1BeliefState) this.oppModel.clone());
 		return new T1BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#display()
 	 */
@@ -123,14 +123,14 @@ public class T1BeliefState extends BeliefState {
 	public String display(){
 		return this.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
 		return "<" + this.getKnownArguments() + ", " + this.getUtilityFunction() + ", " + this.oppModel + ">";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

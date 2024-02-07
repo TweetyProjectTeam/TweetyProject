@@ -21,26 +21,22 @@
 import java.util.Collection;
 import java.util.Comparator;
 
-import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
-import org.tweetyproject.commons.Formula;
-import org.tweetyproject.comparator.GeneralComparator;
-
 /**
  * @author Nils Geilen
- * 
+ *
  * A comparator for sets of T according to def.3.19 in Mogdil and Prakken
- * 
+ *
  * @param <T>	type of the compared sets' elements
  */
 public class SetComparator<T> implements Comparator<Collection<T>> {
 
 	/**
-	 * A comparator for single elements of type T 
+	 * A comparator for single elements of type T
 	 */
 	private Comparator<T> comp;
 
 	/**
-	 * When this is true the comparision will be elitist according to 
+	 * When this is true the comparision will be elitist according to
 	 * def.3.19 in Mogdil and Prakken
 	 */
 	private boolean elitist;
@@ -87,7 +83,7 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -98,15 +94,15 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 			return -1;
 		if (gamma2.isEmpty() && !gamma1.isEmpty())
 			return 1;
-		
+
 		boolean soe = isStrictlyLessOrEquallyAcceptableThan(gamma1, gamma2);
 		boolean goe = isStrictlyLessOrEquallyAcceptableThan(gamma2, gamma1);
-		
+
 		if(soe && goe)
 			return 0;
 		if(soe)
 			return -1;
-		return 1;		
+		return 1;
 	}
 
 

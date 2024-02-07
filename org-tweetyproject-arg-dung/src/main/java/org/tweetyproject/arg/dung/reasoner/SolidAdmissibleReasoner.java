@@ -19,13 +19,12 @@
 
 package org.tweetyproject.arg.dung.reasoner;
 
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * Reasoner for solid admissibility
@@ -57,7 +56,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     /**
-     * 
+     *
      * @param arg arg
      * @param ext ext
      * @param theory theory
@@ -72,7 +71,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     /**
-     * 
+     *
      * @param ext ext
      * @param theory theory
      * @return DungTheory
@@ -86,7 +85,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
         }
         return defended;
     }
-    
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

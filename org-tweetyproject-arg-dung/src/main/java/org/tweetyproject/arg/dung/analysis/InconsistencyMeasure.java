@@ -21,20 +21,19 @@ package org.tweetyproject.arg.dung.analysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * *description missing*
- * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
+ * This interface represents a measure of inconsistency for a Dungian argumentation framework.
+ * It provides a method to calculate the inconsistency measure of a given argumentation framework.
+  * @author Timothy Gillespie
+ * @param <T> the type of DungTheory
  */
 public interface InconsistencyMeasure<T extends DungTheory> {
-	
-	// Tolerance as in logic.commons.analysis.InconsistencyMeasure?
-	
-	
+
 	/**
-	 * This method measures the inconsistency of a given Dungian argumentation framework.
-	 * @param argumentationFramework an argumentation framework
-	 * @return a Double indicating the degree of inconsistency
+	 * Calculates the inconsistency measure of a given Dungian argumentation framework.
+	 *
+	 * @param argumentationFramework the argumentation framework to measure
+	 * @return the inconsistency measure as a Double value
 	 */
 	public Double inconsistencyMeasure(T argumentationFramework);
-	
+
 }

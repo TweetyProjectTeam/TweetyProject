@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
 
@@ -33,21 +32,21 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 /**
  * This class models a labeling of an abstract argumentation framework, i.e.
  * a function mapping arguments to values "in", "out", "undec".
- * 
+ *
  * @author Matthias Thimm
  */
 public class Labeling extends AbstractArgumentationInterpretation implements Map<Argument,ArgumentStatus> {
 
 	/** The actual labeling. */
 	private Map<Argument,ArgumentStatus> labeling;
-	
+
 	/**
 	 * Creates a new labeling.
 	 */
 	public Labeling(){
 		this.labeling = new HashMap<Argument,ArgumentStatus>();
 	}
-	
+
 	/**
 	 * Creates a new labeling from the given extension wrt. the given theory (this only gives
 	 * a valid labeling wrt. some semantics if the semantics is admissibility-based).
@@ -70,14 +69,14 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 			this.labeling.put(a, ArgumentStatus.OUT);
 		for(Argument a: theory.getNodes())
 			if(!this.labeling.containsKey(a))
-				this.labeling.put(a, ArgumentStatus.UNDECIDED);	
+				this.labeling.put(a, ArgumentStatus.UNDECIDED);
 	}
-	
-
-	
 
 
-	
+
+
+
+
 	/* (non-Javadoc)
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */

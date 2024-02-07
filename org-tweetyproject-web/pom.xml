@@ -8,7 +8,7 @@
     <parent>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>parent-pom</artifactId>
-  		<version>1.25-SNAPSHOT</version>  		
+  		<version>1.25-SNAPSHOT</version>
         <relativePath>..</relativePath>
   	</parent>
 
@@ -24,7 +24,7 @@
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-dependencies</artifactId>
-            <version>2.7.11</version>
+            <version>2.7.18</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

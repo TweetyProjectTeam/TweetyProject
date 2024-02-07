@@ -19,15 +19,14 @@
 
 package org.tweetyproject.arg.setaf.reasoners;
 
-import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.setaf.syntax.SetAf;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 /**
  * simple reasoner for eager semantics
@@ -86,7 +85,7 @@ public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
         // this should not happen as there is always an eager extension;
         throw new RuntimeException("Eager extension seems to be undefined.");
     }
-    
+
 	@Override
 	public boolean isInstalled() {
 		return true;
