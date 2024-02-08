@@ -171,7 +171,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true, if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given Dung theory.
 	 */
-	public boolean IsAdmissible(Extension<DungTheory> ext){
+	public boolean isAdmissible(Extension<DungTheory> ext){
 		if(!this.isConflictFree(ext)) return false;
 		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
 		while(it.hasNext()){			

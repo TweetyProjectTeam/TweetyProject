@@ -42,7 +42,7 @@ public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		// Check all subsets
 		for(Set<Argument> ext: new SetTools<Argument>().subsets(((DungTheory) bbase)))
-			if(((DungTheory) bbase).IsAdmissible(new Extension<DungTheory>(ext)))
+			if(((DungTheory) bbase).isAdmissible(new Extension<DungTheory>(ext)))
 				extensions.add(new Extension<DungTheory>(ext));
 		return extensions;
 	}
