@@ -164,7 +164,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 				if(this.isAttackedBy(a, b))
 					return false;
-		return true;
+  		return true;
 	}
 	
 	/**
@@ -336,6 +336,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is stable.
 	 */
 	public boolean isStable(Extension<DungTheory> e) {
+		if(!this.isAdmissable(e)) return false;
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))

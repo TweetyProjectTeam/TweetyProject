@@ -365,9 +365,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		extUnionattacked.addAll(attacked);
 		T strengthAttack = this.getSemiring().getOneElement();
 		T strengthDefence = this.getSemiring().getOneElement();
-		
+
 		//get strength of attack
 		for(Argument attacker:attackers) {
+			strengthAttack = this.getSemiring().getOneElement();
+			strengthDefence = this.getSemiring().getOneElement();
 			Set<Argument> attacksToE = new HashSet<Argument>();
 			attacksToE.addAll(this.getAttacked(attacker));
 			attacksToE.retainAll(extUnionattacked);
@@ -384,12 +386,20 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					strengthDefence = semiring.multiply(strengthDefence, this.getWeight(new Attack(defender,attacker)));
 				}
 			}
-		}
-		if (strengthDefence == this.getSemiring().getOneElement() && gamma != this.getSemiring().getOneElement()) {
-		    throw new IllegalStateException("Extension does not attack.");
+			
+			//if argument attacks extension, extension has to attack back
+			if (strengthDefence.equals(this.getSemiring().getOneElement()) && !strengthAttack.equals(this.getSemiring().getOneElement()) && !gamma.equals(this.getSemiring().getOneElement())) {
+			    //throw new IllegalStateException("Extension does not attack.");
+				return false;
+			}
+			
+			//check if extension is able to defend
+			if (!semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma)) {
+				return false;
+			}
 		}
 		
-		return semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma);
+		return true;
 	}
 	
 	/**
@@ -419,15 +429,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> is attacked by argument.
 	 */
-	public boolean isAttackedBy(Argument argument, Collection<Argument> ext){
-		if (getAttacked(argument) == null)
+	public boolean isAttackedBy(Argument attacker, Collection<Argument> ext){
+		if (getAttacked(attacker) == null)
 			return false;
-		
-	    // Create a set for the attacker
-	    Set<Argument> attacker = new HashSet<>();
-	    attacker.add(argument);
 	    
-	    return !wDefence(new Extension<DungTheory>(ext), attacker);
+	    return !wDefence(new Extension<DungTheory>(ext), Set.of(attacker));
 
 	}
 	
@@ -443,7 +449,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isAttacked(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
 		    Set<Argument> attackers = new HashSet<>();
 		    attackers.addAll(ext2);
-			return wDefence(ext1, attackers);
+			return !wDefence(ext1, attackers);
 	}
 	
 	
@@ -454,16 +460,100 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return "true" if arg1 is attacked by arg2
 	 */
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
-		if(!this.getAttacked(arg2).contains(arg1))
-			return false;
 		
-		Attack attack = new Attack(arg2, arg1);
-		Attack defence = new Attack(arg1, arg2);
-		if(!semiring.betterOrSame(this.getWeight(attack), this.getWeight(defence))) 
-			return false;
-		return true;
+		if(!this.getAttacked(arg2).contains(arg1))return false;
+		
+		Extension<DungTheory> attacked = new Extension<>();
+		attacked.add(arg1);
+		return !wDefence(attacked, Set.of(arg2));
+
 	}
 	
+	public boolean isAlphaConflictFree(T alpha, Extension<DungTheory> ext) {
+		T internalAttackWeight = this.getSemiring().getOneElement();
+		//get weight of internal attacks
+		for(Argument a:ext) {
+			Set<Argument> attacksFromA = new HashSet<Argument>();
+			attacksFromA.addAll(this.getAttacked(a));
+			attacksFromA.retainAll(ext);
+			if(!attacksFromA.isEmpty()) {
+				for(Argument att:attacksFromA) {
+					internalAttackWeight = semiring.multiply(internalAttackWeight, this.getWeight(new Attack(a,att)));
+				}
+			}
+		}
+		
+		return semiring.betterOrSame(internalAttackWeight, alpha);
+		
+	}
+	
+	public boolean isAlphaGammaAdmissible(T alpha, T gamma, Extension<DungTheory> ext) {
+		if (!isAlphaConflictFree(alpha,ext)) return false;
+		//get Arguments not in ext
+		Set<Argument> outsideExt = new HashSet<>(this);
+		outsideExt.removeAll(ext);
+		return (this.gDefence(gamma, ext,outsideExt));	
+	}
+	
+	public boolean isAlphaGammaComplete(T alpha, T gamma, Extension<DungTheory> ext) {
+		if (!isAlphaGammaAdmissible(alpha,gamma,ext)) return false;
+		for(Argument a: this)
+			if(!ext.contains(a))
+				if(this.gDefence(gamma, a, ext))
+					return false;
+		return true;	
+	}
+	
+	public boolean isAlphaGammaPreferred(T alpha, T gamma, Extension<DungTheory> ext) {
+	    if (!isAlphaGammaAdmissible(alpha, gamma, ext)) {
+	        return false;
+	    }
+
+	    Extension<DungTheory> extUa = new Extension<>(ext);
+
+	    for (Argument a : this) {
+	        if (!ext.contains(a)) {
+	            extUa.add(a);
+	            if (this.isAlphaGammaAdmissible(alpha, gamma, extUa)) {
+	                return false;
+	            }
+	            extUa.remove(a); // Remove the added Argument for the next iteration
+	        }
+	    }
+
+	    return true;
+	}
+
+	
+	public boolean isAlphaGammaStable(T alpha, T gamma, Extension<DungTheory> ext) {
+		if (!isAlphaGammaAdmissible(alpha,gamma,ext)) return false;
+		Extension<DungTheory> extUa = new Extension<>(ext);
+		
+		for (Argument a : this) {
+			boolean attackedAtLeastOnce = false;
+			if (!ext.contains(a)) {
+				//get attacks from ext
+				Collection<Argument> attacked = this.getAttacked(ext);
+				//get attackers of a
+				Collection<Argument> attackers = this.getAttackers(a);
+				if(!attacked.contains(a)) return false;
+				
+				for (Argument attacker : ext) {
+					if(attackers.contains(attacker)) {
+						if (!this.getWeight(new Attack(attacker,a)).equals(this.getSemiring().getOneElement())) attackedAtLeastOnce = true;
+					}
+				}
+				
+				//check if there is at least one attack
+				if (!attackedAtLeastOnce) return false;
+				//check that ext union a is not alphaGammaAdmissible
+				extUa.add(a);
+				if (this.isAlphaGammaAdmissible(alpha,gamma,extUa)) return false;
+				extUa.remove(a);
+			}
+		}
+		return true;
+	}
 	
 
 	// sets the weight of a given attack
