@@ -3,8 +3,6 @@
  */
 package org.tweetyproject.math.algebra;
 
-import java.util.function.BinaryOperator;
-
 /**
  * This class represents a Bottleneck Semiring.
  * 
@@ -54,12 +52,26 @@ public class BottleneckSemiring extends Semiring<Double>{
         return value;
     }
 	
-	@Override
+    /**
+     * Generates a random Double element within the specified maximum value.
+     *
+     * @return A random Double element.
+     */
+    @Override    
 	public Double getRandomElement() {
 		return random.nextDouble(maxValue);
 	}
 
-	@Override
+    /**
+     * Performs a custom division operation on two Double values within the context of a Bottleneck Semiring.
+     * If the divisor is greater than or equal to the dividend, returns the dividend.
+     * Otherwise, returns the divisor.
+     *
+     * @param dividend The Double dividend.
+     * @param divisor  The Double divisor.
+     * @return The result of the custom division operation.
+     */
+    @Override
 	public Double divide(Double dividend, Double divisor) {
 		if (divisor >= dividend) {
 			return dividend;

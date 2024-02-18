@@ -21,12 +21,9 @@ package org.tweetyproject.arg.weighted.writer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.writer.AbstractDungWriter;
 import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
 
 /**
@@ -45,6 +42,7 @@ public class WeightedApxWriter {
 	 * @param f   The File where the framework should be written.
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void write(WeightedArgumentationFramework waf, File f) throws IOException {
 	    write(waf, f, -1, false);
 	}
@@ -57,6 +55,7 @@ public class WeightedApxWriter {
 	 * @param precision The precision for formatting floating-point numbers. Use -1 to retain the original value.
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void write(WeightedArgumentationFramework waf, File f, int precision) throws IOException {
 	    write(waf, f, precision, false);
 	}
@@ -69,6 +68,7 @@ public class WeightedApxWriter {
 	 * @param convertToNumericWeight Convert non numeric values to their assigned double values.
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void write(WeightedArgumentationFramework waf, File f, Boolean convertToNumericWeight) throws IOException {
 	    write(waf, f, -1, convertToNumericWeight);
 	}
@@ -82,6 +82,7 @@ public class WeightedApxWriter {
 	 * @param convertToNumericWeight Convert non numeric values to their assigned double values.
 	 * @throws IOException If an I/O error occurs while writing to the file.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void write(WeightedArgumentationFramework waf, File f, int precision, Boolean convertToNumericWeight) throws IOException {
 	    PrintWriter writer = new PrintWriter(f, "UTF-8");
 	    Object weight;

@@ -22,8 +22,6 @@ package org.tweetyproject.math.algebra;
 import java.util.Random;
 import java.util.function.BinaryOperator;
 
-import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
-
 /**
  * This class represents a generic Semiring, an algebraic structure with two binary operations
  * (addition and multiplication), and two corresponding identity elements (zeroElement and oneElement).

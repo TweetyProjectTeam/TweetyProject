@@ -19,8 +19,6 @@
 
 package org.tweetyproject.math.algebra;
 
-import java.util.function.BinaryOperator;
-
 /**
  * This class represents a probabilistic (Viterbi) Semiring, where elements range between [0.0, 1.0].The addition operation corresponds to finding the maximum, 0.0 represents the
  * additive identity, and 1.0 represents the multiplicative identity.
@@ -52,12 +50,26 @@ public class ProbabilisticSemiring extends Semiring<Double>{
         return value;
     }
 
-	@Override
+    /**
+     * Generates a random Double element within the specified maximum value.
+     *
+     * @return A random Double element.
+     */
+    @Override
 	public Double getRandomElement() {
 		return random.nextDouble();
 	}
 
-	@Override
+    /**
+     * Performs a custom division operation on two Double values within the context of a Probabilistic Semiring.
+     * If the divisor is greater than or equal to the dividend, returns the multiplicative identity (oneElement).
+     * Otherwise, returns the result of dividing the dividend by the divisor.
+     *
+     * @param dividend The Double dividend.
+     * @param divisor  The Double divisor.
+     * @return The result of the custom division operation.
+     */
+    @Override
 	public Double divide(Double dividend, Double divisor) {
 		if (divisor >= dividend) {
 			return this.oneElement;

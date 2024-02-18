@@ -23,10 +23,8 @@ import java.io.IOException;
 
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
-import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.KwtDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.PodlaszewskiCaminadaDungTheoryGenerator;
-import org.tweetyproject.arg.dung.writer.ApxWriter;
 import org.tweetyproject.arg.weighted.util.WeightedSemiringDungTheoryGenerator;
 import org.tweetyproject.arg.weighted.writer.WeightedApxWriter;
 import org.tweetyproject.math.algebra.BooleanSemiring;

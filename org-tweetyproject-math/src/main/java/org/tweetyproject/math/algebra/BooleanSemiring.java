@@ -19,8 +19,6 @@
 
 package org.tweetyproject.math.algebra;
 
-import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
-
 /**
  * This class represents a Boolean semiring. In this semiring, the addition operation corresponds to logical OR (||),
  * the multiplication operation corresponds to logical AND (&&), the additive identity is false,
@@ -30,23 +28,46 @@ import org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement;
  */
 
 public class BooleanSemiring extends Semiring<Boolean> {
+
+    /**
+     * Constructs a BooleanSemiring with logical OR, logical AND as addition and multiplication operations, respectively.
+     * The additive identity is false, and the multiplicative identity is true.
+     */
     public BooleanSemiring() {
-        super((a, b) -> a || b, (a, b) -> a && b, false,true);
+        super((a, b) -> a || b, (a, b) -> a && b, false, true);
     }
 
-	@Override
-	public Boolean getRandomElement() {
-		return random.nextBoolean();
-	}
-	
+    /**
+     * Generates a random Boolean element.
+     *
+     * @return A random Boolean element.
+     */
+    @Override
+    public Boolean getRandomElement() {
+        return random.nextBoolean();
+    }
+
+    /**
+     * Converts a Boolean weight to its numerical representation.
+     *
+     * @param weight The Boolean weight to be converted.
+     * @return 1.0 if the weight is true, 0.0 otherwise.
+     */
     @Override
     public double toNumericalValue(Boolean weight) {
-        // Convert weight to 1 if weight == true and 0 otherwise.
         return weight ? 1.0 : 0.0;
     }
 
-	@Override
-	public Boolean divide(Boolean dividend, Boolean divisor) {
-		return this.multiply(dividend, divisor);
-	}
+    /**
+     * Implements the division operation in this semiring.
+     *
+     * @param dividend The Boolean dividend.
+     * @param divisor  The Boolean divisor.
+     * @return The result of the division operation (logical AND).
+     */
+    @Override
+    public Boolean divide(Boolean dividend, Boolean divisor) {
+        return this.multiply(dividend, divisor);
+    }
 }
+

@@ -50,12 +50,26 @@ public class FuzzySemiring extends Semiring<Double> {
         return value;
     }
 
-	@Override
+    /**
+     * Generates a random Double element within the specified maximum value.
+     *
+     * @return A random Double element.
+     */
+    @Override
 	public Double getRandomElement() {
 		return random.nextDouble();
 	}
 
-	@Override
+    /**
+     * Performs a custom division operation on two Double values within the context of a Fuzzy Semiring.
+     * If the divisor is less than or equal to the dividend, returns the additive identity (zeroElement).
+     * Otherwise, returns the dividend.
+     *
+     * @param dividend The Double dividend.
+     * @param divisor  The Double divisor.
+     * @return The result of the custom division operation.
+     */
+    @Override
 	public Double divide(Double dividend, Double divisor) {
 		if (divisor <= dividend) {
 			return this.zeroElement;

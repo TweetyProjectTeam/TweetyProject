@@ -29,7 +29,9 @@ import java.util.function.BinaryOperator;
 
 public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement> {
 
-	// Enum for the elements in the semiring
+    /**
+     * Enum representing the elements in the non-numeric semiring: BAD, FAIR, and GOOD.
+     */
 	public enum SemiringElement {
 	    BAD, FAIR, GOOD
 	}
@@ -48,11 +50,19 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
         return b;
     };
     
+    /**
+     * Constructs a NonNumericSemiring with the specified total ordering, multiplication, and identity elements.
+     */
     public NonNumericSemiring() {
         super(TOTAL_ORDERING, MULTIPLICATION, SemiringElement.GOOD, SemiringElement.BAD);
     }
     
     
+    /**
+     * Generates a random element from the semiring.
+     *
+     * @return A randomly chosen SemiringElement.
+     */
     @Override
     public SemiringElement getRandomElement() {
         // Concrete implementation for generating a random element in the semiring
@@ -61,6 +71,13 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
         return values[randomIndex];
     }
     
+
+    /**
+     * Converts a non-numeric weight to its numerical representation.
+     *
+     * @param weight The SemiringElement to be converted.
+     * @return The numerical value associated with the SemiringElement.
+     */
     @Override
     public double toNumericalValue(SemiringElement weight) {
         // Convert non-numeric weight to numeric value
@@ -77,7 +94,16 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
     }
 
 
-	@Override
+    /**
+     * Performs a custom division operation on two SemiringElements.
+     * If the divisor has a greater or equal numerical value, returns the dividend.
+     * Otherwise, returns the divisor.
+     *
+     * @param dividend The SemiringElement dividend.
+     * @param divisor  The SemiringElement divisor.
+     * @return The result of the custom division operation.
+     */
+    @Override
 	public SemiringElement divide(SemiringElement dividend, SemiringElement divisor) {
 		double numDivisor = toNumericalValue(divisor);
 		double numDividend = toNumericalValue(dividend);
