@@ -18,17 +18,23 @@
  */
 package org.tweetyproject.arg.weighted.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.math.algebra.*;
 
@@ -668,7 +674,112 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return true;
 	}
 	
+	/**
+	 * Determines whether the given attacker Extension is a set-maximal attack on the attacked Extension.
+	 *
+	 * @param attacker The set to be checked for set-maximal attack.
+	 * @param attacked The set that is potentially being attacked.
+	 * @return true if the attacker is a set-maximal attack on the attacked set, false otherwise.
+	 */
+	public boolean isSMA(Extension<DungTheory> attacker, Extension<DungTheory>attacked) {
+		if(!isConflictFree(attacker)) return false;
+		//check that each arg in attacker attacks an arg in attacked
+		for(Argument arg:attacker) {
+			Set<Argument> attacks = this.getAttacked(arg);
+			attacks.retainAll(attacked);
+			if (attacks.isEmpty()) return false;
+		}
+		//try to build larger attacker Set
+		Set<Argument> largerAttacker = new HashSet<>(attacker);
+		for(Argument arg:attacked) {
+			Collection<Argument> possibleAdditions = this.getAttackers(arg);
+			possibleAdditions.removeAll(attacker);
+			for(Argument add:possibleAdditions) {
+				largerAttacker.add(add);
+				if(!new Extension<DungTheory>(largerAttacker).equals(attacker)) {
+					if(isConflictFree(new Extension<DungTheory>(largerAttacker))) return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 
+	//returns all conflict free sets which are a set maximal attack for attackedSet. Helper method to determine if the theory is well-founded
+	private Set<Extension<DungTheory>> getSMAAttackers(Extension<DungTheory> attackedSet){
+		Set<Extension<DungTheory>> smaAttackers = new HashSet<>();
+		
+		Extension<DungTheory> attackers = new Extension<>();
+		for(Argument attacked:attackedSet) {
+			attackers.addAll(this.getAttackers(attacked));
+		}		
+		Set<Set<Argument>> subSets =  new SetTools<Argument>().subsets(attackers);
+		
+		for(Set<Argument> subSet : subSets) {
+			if(super.isConflictFree(new Extension<DungTheory>(subSet))) {
+				if(this.isSMA(new Extension<DungTheory>(subSet), attackedSet)) smaAttackers.add(new Extension<DungTheory>(subSet));
+			}
+		}
+		return smaAttackers;
+	}
+	
+	
+	/**
+	 * returns true iff the theory is well-founded, i.e., there is no infinite sequence A1,A2,... of SMAs with 
+	 * Ai+1 w-defending Ai
+	 * @return true iff the theory is well-founded
+	 */
+	public boolean isWellFounded(){
+		// get all conflict free Sets
+		
+		SimpleConflictFreeReasoner cfReasoner = new SimpleConflictFreeReasoner();
+		ArrayList<Extension<DungTheory>> conflictFreeSets = new ArrayList<>(cfReasoner.getModels(this));
+		conflictFreeSets.remove(new Extension<>());
+
+		boolean[] dfn = new boolean[conflictFreeSets.size()];
+		boolean[] inProgress = new boolean[conflictFreeSets.size()];
+		for(int i = 0; i < conflictFreeSets.size(); i++){
+			dfn[i] = false;
+			inProgress[i] = false;			
+		}
+		for(int i = 0; i < conflictFreeSets.size(); i++)
+			if(!dfn[i])
+				if(dfs(i,conflictFreeSets,dfn,inProgress))
+					return false;		
+		return true;
+	}
+	
+	
+	/**
+	 * Depth-First-Search to find a SMA cycle in the theory. Auxiliary method to determine if the theory is well-founded
+	 * @param i current Set
+	 * @param conflictFreeSets list of all conflictFreeSets of the theory
+	 * @param dfn array which keeps track whether a Set has been visited
+	 * @param inProgress array which keeps track which Sets are currently being processed
+	 * @return true iff the theory contains an SMA cycle
+	 */
+	private boolean dfs(int i, ArrayList<Extension<DungTheory>> conflictFreeSets, boolean[] dfn, boolean[] inProgress){
+		dfn[i] = true;
+		
+		Set<Extension<DungTheory>> attackerSMAs = this.getSMAAttackers(conflictFreeSets.get(i));
+			for(Extension<DungTheory> attackerSMA : attackerSMAs) {
+				if(!attackerSMA.equals(new Extension<DungTheory>())) {
+					//check if attack is successful
+					if(!this.wDefence(conflictFreeSets.get(i), new HashSet<>(attackerSMA))) {
+						inProgress[i] = true;
+					}
+					if(inProgress[conflictFreeSets.indexOf(attackerSMA)]) {
+						return true;
+					} else if (!dfn[conflictFreeSets.indexOf(attackerSMA)]) {
+						if(dfs(conflictFreeSets.indexOf(attackerSMA),conflictFreeSets,dfn,inProgress)) return true;
+					}
+				}
+		}
+		inProgress[i] = false;
+		return false;
+	}
+	
+	
     /**
      * Sets the weight of a given attack in the framework.
      *
