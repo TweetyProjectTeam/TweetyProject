@@ -16,7 +16,7 @@
 *
 * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
 */
-package reasoner;
+package org.tweetyproject.arg.weighted.reasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,7 +36,16 @@ import org.tweetyproject.commons.util.SetTools;
  */
 public class SimpleWeightedAdmissibleReasoner<T> {
 	
-
+	/**
+	 * Computes all alpha-gamma-admissible extensions for the given weighted argumentation framework. 
+	 * Admissible extensions are subsets of the set of arguments that satisfy the alpha-gamma admissibility
+	 * condition. This method uses a simple approach by checking all possible subsets of the arguments.
+	 *
+	 * @param bbase The weighted argumentation framework.
+	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the aggregated weights of attack and defense.
+	 * @return A collection of admissible extensions.
+	 */
 	public Collection<Extension<DungTheory>> getModels(WeightedArgumentationFramework<T> bbase, T alpha, T gamma) {
 		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		// Check all subsets
@@ -46,8 +55,15 @@ public class SimpleWeightedAdmissibleReasoner<T> {
 		return extensions;
 	}
 
-
-	public Extension<DungTheory> getModel(DungTheory bbase) {
+	/**
+	 * Returns the empty set as it is always admissible. 
+	 *
+	 * @param bbase The base argumentation theory.
+	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the aggregated weights of attack and defense.
+	 * @return An empty admissible extension.
+	 */
+	public Extension<DungTheory> getModel(DungTheory bbase, T alpha, T gamma) {
 		// As the empty set is always admissible, we just return that one
 		return new Extension<DungTheory>();
 	}
