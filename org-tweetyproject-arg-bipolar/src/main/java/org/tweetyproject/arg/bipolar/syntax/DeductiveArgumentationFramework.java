@@ -478,7 +478,6 @@ public class DeductiveArgumentationFramework extends AbstractBipolarFramework im
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        int prime = 1;
         int result = super.hashCode();
         result = 31 * result + (this.attackParents == null ? 0 : this.attackParents.hashCode());
         result = 43 * result + (this.supportParents == null ? 0 : this.supportParents.hashCode());

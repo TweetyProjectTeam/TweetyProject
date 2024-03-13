@@ -18,10 +18,8 @@
  */
 package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
-import org.w3c.dom.Node;
-
-import org.tweetyproject.logics.bpm.syntax.ExclusiveGateway;
 import org.tweetyproject.logics.bpm.syntax.InclusiveGateway;
+import org.w3c.dom.Node;
 
 /**
  * Parse inclusive gateways in a BPMN model
@@ -54,7 +52,7 @@ public class InclusiveGatewayParser extends AbstractElementParser<InclusiveGatew
 			return;
 		}
 	}
-	
+
 	@Override
 	protected void handleChildNode(Node childNode) {
 		String tagName = rootParser.getNormalizedTagName(childNode);

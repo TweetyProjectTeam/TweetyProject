@@ -48,7 +48,8 @@ public class ExtensionInconsistencyMeasure {
 	static DungTheory hunterExample15 = new DungTheory();
 	
 	/**
-	 * @throws java.lang.Exception
+	 * *description missing*
+	 * @throws java.lang.Exception *description missing*
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -73,6 +74,9 @@ public class ExtensionInconsistencyMeasure {
 		
 	}
 
+	/**
+	 * *description missing*
+	 */
 	@Test
 	public void preferredCountInconsistencyMeasure() {
 		Double preferredCount = new PreferredCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
@@ -80,12 +84,18 @@ public class ExtensionInconsistencyMeasure {
 		assertEquals(1d, preferredCount, 0.0);
 	}
 	
+	/**
+	 * *description missing*
+	 */
 	@Test
 	public void nonGroundedCountInconsistencyMeasure() {
 		Double nonGroundedCount = new NonGroundedCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
 		assertEquals(5d, nonGroundedCount, 0.0);
 	}
 	
+	/**
+	 * *description missing*
+	 */
 	@Test
 	public void unstableCountInconsistencyMeasure() {
 		Double unstableCount = new UnstableCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);

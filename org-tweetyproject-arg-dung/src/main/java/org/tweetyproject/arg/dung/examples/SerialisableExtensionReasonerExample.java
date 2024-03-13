@@ -31,7 +31,7 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.*;
  * <br> See
  * <br>
  * <br> Matthias Thimm. Revisiting initial sets in abstract argumentation.
- * <br> Argument & Computation 13 (2022) 325–360 
+ * <br> Argument and Computation 13 (2022) 325–360 
  * <br> DOI 10.3233/AAC-210018
  * <br>
  * <br> and
@@ -143,11 +143,11 @@ public class SerialisableExtensionReasonerExample {
 		System.out.println(description + ":");
 		for (int i = 0; i < examples.length-1; i++) {
 			examineFrameworkInUniformLayout(examples[i], reasoner);
-			System.out.println("");
+			System.out.println();
 		}
 		examineFrameworkInUniformLayout(examples[examples.length-1], reasoner);
 		System.out.println("======================================================================================================");
-		System.out.println("");
+		System.out.println();
 	}
 	
 	/**
@@ -174,36 +174,36 @@ public class SerialisableExtensionReasonerExample {
 		System.out.println(description + ":");
 		for (int i = 0; i < examples.length-1; i++) {
 			examineGraphInUniformLayout(examples[i], reasoner);
-			System.out.println("");
+			System.out.println();
 		}
 		examineGraphInUniformLayout(examples[examples.length-1], reasoner);
 		System.out.println("======================================================================================================");
-		System.out.println("");
+		System.out.println();
 	}
 	
 	/**
 	 * Uses the specified reasoner to derive all serialisation graphs of the specified framework, regarding the semantics of the reasoner.
 	 * 
-	 * @param frameWork Problem instance, for which all extensions of the semantic, specified by the choice of reasoner, shall be found.
+	 * @param theory Problem instance, for which all extensions of the semantic, specified by the choice of reasoner, shall be found.
 	 * @param reasoner Reasoner of a specific semantic, to generate all extension, using the concept of serialisability.
 	 */
-	protected static void examineGraphInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
-		System.out.println(reasoner.getModelsGraph(frameWork));
+	protected static void examineGraphInUniformLayout(DungTheory theory, SerialisableExtensionReasoner reasoner) {
+		System.out.println(reasoner.getSerialisationGraph(theory));
 	}
 	
 	protected static void executeExamplesSequences(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
 		System.out.println(description + ":");
 		for (int i = 0; i < examples.length-1; i++) {
 			examineSequencesInUniformLayout(examples[i], reasoner);
-			System.out.println("");
+			System.out.println();
 		}
 		examineSequencesInUniformLayout(examples[examples.length-1], reasoner);
 		System.out.println("======================================================================================================");
-		System.out.println("");
+		System.out.println();
 	}
 	
-	protected static void examineSequencesInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
-		System.out.println(reasoner.getModelsSequences(frameWork));
+	protected static void examineSequencesInUniformLayout(DungTheory theory, SerialisableExtensionReasoner reasoner) {
+		System.out.println(reasoner.getSequences(theory));
 	}
 	
 	/**

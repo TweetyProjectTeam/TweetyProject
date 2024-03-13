@@ -37,6 +37,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public abstract class AbstractDungWriter {
 	
 	/**
+	 * Default constructor
+	 */
+	public AbstractDungWriter() {
+		super();
+	}
+	
+	/**
 	 * Retrieves the writer for the given file format.
 	 * @param f some file format
 	 * @return a writer or null if the format is not supported.

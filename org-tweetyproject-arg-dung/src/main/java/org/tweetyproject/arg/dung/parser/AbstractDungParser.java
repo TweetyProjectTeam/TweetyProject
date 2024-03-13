@@ -42,14 +42,21 @@ import org.tweetyproject.commons.ParserException;
  * This abstract class gives a template for parsers of files representing
  * abstract argumentation frameworks. The file is parsed into the TweetyProject format
  * for abstract argumentation frameworks.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
+	 * Default constructor
+	 */
+	public AbstractDungParser() {
+		super();
+	}
+
+	/**
 	 * Retrieves the parser for the given file format.
-	 * 
+	 *
 	 * @param f
 	 *            some file format
 	 * @return a parser or null if the format is not supported.
@@ -77,7 +84,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
 	 * Returns a collection view of the given set of arguments
-	 * 
+	 *
 	 * @param s
 	 *            some string in the format "[arg1,...,argn]".
 	 * @return a collection view of the given arguments
@@ -97,7 +104,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 	/**
 	 * Returns a collection view of the given set of extensions (=sets of
 	 * arguments)
-	 * 
+	 *
 	 * @param s
 	 *            some string in the format
 	 *            "[[arg1,...,argn],...,[arg1,...,argn]]".
@@ -119,7 +126,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
 	 * Returns a collection view of the given set of labelings
-	 * 
+	 *
 	 * @param s
 	 *            some string in the format
 	 *            "[[IN1,...,INM],[OUT1,...,OUTN],[UNDEC1,...,UNDECM]]\n...[[IN1,...,INM],[OUT1,...,OUTN],[UNDEC1,...,UNDECM]]".
@@ -136,7 +143,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
 	 * Parses the given string (either "YES" or "NO") to a boolean value.
-	 * 
+	 *
 	 * @param s
 	 *            some string (either "YES" or "NO")
 	 * @return a boolean representing the string.
@@ -150,7 +157,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
 	 * Returns a labeling parsed from the given string
-	 * 
+	 *
 	 * @param s
 	 *            some string in the format
 	 *            [[IN1,...,INM],[OUT1,...,OUTN],[UNDEC1,...,UNDECM]]
@@ -176,9 +183,9 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 			lab.put(arg, ArgumentStatus.UNDECIDED);
 		return lab;
 	}
-	
+
 	/**
-	 * Parses a representation of the form "\lt; {a,b,c},[(a,b),(b,c)]\gt;" which is 
+	 * Parses a representation of the form "\lt; {a,b,c},[(a,b),(b,c)]\gt;" which is
 	 * given by DungTheory.toString();
 	 * @param str some String
 	 * @return the Dung theory represented by str
@@ -190,7 +197,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 		StringTokenizer st = new StringTokenizer(argumentlist, ",");
 		while(st.hasMoreTokens()) {
 			String t = st.nextToken().trim();
-			Argument a = new Argument(t); 
+			Argument a = new Argument(t);
 			args.put(t, a);
 			af.add(a);
 		}
@@ -200,18 +207,18 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 			String first = attacklist.substring(1, attacklist.indexOf(",")).trim();
 			attacklist = attacklist.substring(attacklist.indexOf(",")+1).trim();
 			String second = attacklist.substring(0,attacklist.indexOf(")")).trim();
-			attacklist = attacklist.substring(attacklist.indexOf(")")+1).trim();	
+			attacklist = attacklist.substring(attacklist.indexOf(")")+1).trim();
 			af.add(new Attack(args.get(first),args.get(second)));
 			if(!attacklist.equals(""))
 				attacklist = attacklist.substring(1).trim();
 			else break;
-		}		
+		}
 		return af;
 	}
 
 	/**
 	 * Parses the given file into an abstract argumentation framework
-	 * 
+	 *
 	 * @param reader some reader
 	 * @return an abstract argumentation framework
 	 * @throws IOException

@@ -29,11 +29,12 @@ import java.util.HashSet;
 
 /**
  * Irrelevance of Necessarily Rejected Arguments (INRA) Principle
+ * <p>
  * A semantics s satisfies INRA if for every AF F it holds that:
  * for every argument a in F, if every s-extension attacks a, then s(F) = s(F\{a})
- * i.e if an argument is attacked by every extension, then it does not influence the computation of extensions and can be ignored
+ * i.e., if an argument is attacked by every extension, then it does not influence the computation of extensions and can be ignored
  *
- * see: Cramer, M., and van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
+ * @see "Cramer, M., and van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability."
  *
  * @author Lars Bengel
  */

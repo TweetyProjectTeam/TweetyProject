@@ -18,16 +18,16 @@
  */
 package org.tweetyproject.logics.rpcl.examples;
 
-import org.tweetyproject.commons.TweetyConfiguration;
 import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.Predicate;
-import org.tweetyproject.logics.fol.syntax.*;
+import org.tweetyproject.logics.fol.syntax.FolSignature;
 import org.tweetyproject.logics.rpcl.reasoner.RpclMeReasoner;
-import org.tweetyproject.logics.rpcl.semantics.*;
-import org.tweetyproject.logics.rpcl.syntax.*;
-import org.tweetyproject.math.opt.solver.Solver;
+import org.tweetyproject.logics.rpcl.semantics.AggregatingSemantics;
+import org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional;
+import org.tweetyproject.logics.rpcl.syntax.RpclBeliefSet;
 import org.tweetyproject.math.opt.solver.OctaveSqpSolver;
-import org.tweetyproject.math.probability.*;
+import org.tweetyproject.math.opt.solver.Solver;
+import org.tweetyproject.math.probability.Probability;
 
 /**
  *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
@@ -38,39 +38,39 @@ public class RpclMeReasonerExample {
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());
 		Predicate a = new Predicate("a", 1);
 		Predicate b = new Predicate("b", 1);
-		Constant c1 = new Constant("c1");		
+		Constant c1 = new Constant("c1");
 		Constant c2 = new Constant("c2");
 		org.tweetyproject.logics.commons.syntax.Variable x = new org.tweetyproject.logics.commons.syntax.Variable("X");
 		org.tweetyproject.logics.fol.syntax.FolAtom atomA = new org.tweetyproject.logics.fol.syntax.FolAtom(a);
-		atomA.addArgument(x);		
+		atomA.addArgument(x);
 		org.tweetyproject.logics.fol.syntax.FolAtom atomB = new org.tweetyproject.logics.fol.syntax.FolAtom(b);
 		atomB.addArgument(x);
 		RelationalProbabilisticConditional pc = new RelationalProbabilisticConditional(atomA,atomB,new Probability(0.3));
-				
+
 		RpclBeliefSet bs = new RpclBeliefSet();
 		bs.add(pc);
-		
+
 		FolSignature sig = new FolSignature();
 		sig.add(a);
 		sig.add(b);
 		sig.add(c1);
 		sig.add(c2);
-		
+
 		System.out.println(bs);
-				
+
 		RpclMeReasoner reasoner = new RpclMeReasoner(new AggregatingSemantics());
-		
-		
+
+
 		System.out.println(reasoner.getModel(bs,sig));
-		
+
 		org.tweetyproject.logics.fol.syntax.FolAtom atomAC = new org.tweetyproject.logics.fol.syntax.FolAtom(a);
 		atomAC.addArgument(c1);
 		org.tweetyproject.logics.fol.syntax.FolAtom atomBC = new org.tweetyproject.logics.fol.syntax.FolAtom(b);
 		atomBC.addArgument(c1);
-		
+
 		System.out.println(reasoner.query(bs,atomAC));
 		System.out.println(reasoner.query(bs,atomBC));
-		
-		
+
+
 	}
 }

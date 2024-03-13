@@ -25,7 +25,6 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
@@ -35,9 +34,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  */
 public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
-	
+
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
@@ -57,15 +56,15 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 						exts.remove(ext);
 						b = true;
 					}
-				}			
+				}
 				if(b) break;
-			}			
+			}
 		}
 		return exts;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return an extensions of the semantics
 	 */

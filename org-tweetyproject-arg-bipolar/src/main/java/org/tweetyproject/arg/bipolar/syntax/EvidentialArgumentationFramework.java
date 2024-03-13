@@ -545,7 +545,6 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        int prime = 1;
         int result = super.hashCode();
         result = 31 * result + (this.attackParents == null ? 0 : this.attackParents.hashCode());
         result = 41 * result + (this.supportParents == null ? 0 : this.supportParents.hashCode());

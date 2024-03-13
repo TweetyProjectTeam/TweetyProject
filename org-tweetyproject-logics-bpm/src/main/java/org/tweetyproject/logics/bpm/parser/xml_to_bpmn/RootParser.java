@@ -29,21 +29,20 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.graphs.Edge;
-import org.tweetyproject.logics.bpm.syntax.*;
+import org.tweetyproject.logics.bpm.syntax.BpmnModel;
+import org.tweetyproject.logics.bpm.syntax.BpmnNode;
+import org.tweetyproject.logics.bpm.syntax.MessageFlow;
+import org.tweetyproject.logics.bpm.syntax.SequenceFlow;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Instances of this class serve as the root of a parsing process for a BPMN XML file.
@@ -71,14 +70,14 @@ public class RootParser extends Parser {
 	 * The edges buffered in the parsing process by their id
 	 */
 	private Map<String, BufferedBpmnEdge> edgeBuffer = new HashMap<>();
-	
+
 	/**
 	 * Create a new instance
 	 */
 	public RootParser() {
 	}
-	
-	
+
+
 	/**
 	 * @param node the node to retrieve the name for
 	 * @return the node name free of possible namespace prefixes
@@ -88,16 +87,16 @@ public class RootParser extends Parser {
 		tagName = tagName.replace("bpmn:", "");
 		return tagName;
 	}
-	
+
 	/**
 	 * @return the parsed BpmnModel
 	 */
 	public BpmnModel getBpmnModel() {
 		return this.bpmnModel;
 	}
-	
+
 	/**
-	 * create the actual edge objects from the buffered edges, 
+	 * create the actual edge objects from the buffered edges,
 	 * after the parsed nodes are available
 	 */
 	private void handleEdgeBuffer() {
@@ -123,7 +122,7 @@ public class RootParser extends Parser {
 			this.edgeMap.put(edgeId, parsedEdge);
 		}
 	}
-	
+
 	/**
 	 * put a reference to incoming and outgoing edges into the node objects,
 	 * after the parsed edges are available
@@ -146,14 +145,14 @@ public class RootParser extends Parser {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param node a parsed node
 	 */
 	public void putNode(BpmnNode node) {
 		this.nodeMap.put(node.getId(), node);
 	}
-	
+
 	/**
 	 * @param edge a prepared buffered edge
 	 */
@@ -171,12 +170,12 @@ public class RootParser extends Parser {
 	 */
 	public BeliefBase parseFile(File xmlFile) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder(); 
+		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document xmlDocument = db.parse(xmlFile);
 		this.parse(xmlDocument);
 		return this.bpmnModel;
 	}
-	
+
 	  /*
 	   * (non-Javadoc)
 	   * @see org.tweetyproject.Parser#parseBeliefBase(java.io.Reader)
@@ -201,7 +200,7 @@ public class RootParser extends Parser {
 			throw new ParserException( e );
 		}
 	}
-	
+
 	/**
 	 * Parse the XML Document object to an instance of the BpmnModel class
 	 * @param xmlDocument the document object to parse to a BPMN model
@@ -213,9 +212,9 @@ public class RootParser extends Parser {
 		this.bpmnModel = bpmnModelParser.get();
 		// defer edge instantiation until node objects available after parsing
 		handleEdgeBuffer();
-		handleNodeBuffer();		
+		handleNodeBuffer();
 	}
-	
+
 	  /*
 	   * (non-Javadoc)
 	   * @see org.tweetyproject.Parser#parseFormula(java.io.Reader)
@@ -224,5 +223,5 @@ public class RootParser extends Parser {
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

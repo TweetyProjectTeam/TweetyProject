@@ -5,7 +5,7 @@ import org.tweetyproject.sat.SatSolver;
 public final class LingelingSatSolver implements SatSolver {
 
 	private final long handle;
-	
+
 	private int currentVar = 1;
 
 	public LingelingSatSolver() {
@@ -37,7 +37,7 @@ public final class LingelingSatSolver implements SatSolver {
 		}
 		Binding.add(handle, 0); // 0 indicates end of clause
 	}
-	
+
 	@Override
 	public int newVar() {
 		return currentVar++;

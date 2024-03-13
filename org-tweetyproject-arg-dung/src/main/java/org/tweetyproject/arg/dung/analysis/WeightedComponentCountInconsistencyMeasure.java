@@ -26,6 +26,7 @@ import java.util.Collection;
 
 
 /**
+ * *description missing*
  * @author Timothy Gillespie
  * @param <T> the type of Dung theories used
  */

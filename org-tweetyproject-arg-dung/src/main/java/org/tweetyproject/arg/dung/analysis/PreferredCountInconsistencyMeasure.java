@@ -25,11 +25,25 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
+ * This class represents an inconsistency measure based on the count of preferred extensions in a Dung theory.
+ * Preferred count inconsistency measure is the count of preferred extensions of the argumentation framework minus one.
+ * It implements the InconsistencyMeasure interface.
+ *
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
+ * @param <T> the type of Dung theory
  */
 public class PreferredCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
+	/**
+ * Calculates the inconsistency measure of the given argumentation framework based on preferred extensions.
+ * Preferred count inconsistency measure is computed by determining the count of preferred extensions
+ * and subtracting one from it.
+ *
+ * @param argumentationFramework The argumentation framework for which to calculate the inconsistency measure.
+ * @return The preferred count inconsistency measure of the argumentation framework.
+ *         Returns the count of preferred extensions minus one.
+ *         If there are no preferred extensions, returns -1.0.
+ */
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		Collection<Extension<DungTheory>> preferredExtensions = new SimplePreferredReasoner().getModels(argumentationFramework);
@@ -37,6 +51,6 @@ public class PreferredCountInconsistencyMeasure<T extends DungTheory> implements
 		return preferredCount - 1.0;
 	}
 
-	
-	
+
+
 }

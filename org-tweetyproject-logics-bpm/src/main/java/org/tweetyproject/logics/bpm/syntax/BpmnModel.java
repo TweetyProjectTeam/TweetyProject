@@ -36,7 +36,7 @@ import org.tweetyproject.math.matrix.Matrix;
 
 /**
  * A class to represent a BPMN Model 
- * @author Benedikt Knopp
+ * @author Benedikt Knopp, Matthias Thimm
  */
 public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 
@@ -82,7 +82,12 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 
 	@Override
 	public int getNumberOfNodes() {
-		return 0;
+		return this.nodes.size();
+	}
+	
+	@Override
+	public int getNumberOfEdges() {
+		return this.edges.size();
 	}
 
 	@Override

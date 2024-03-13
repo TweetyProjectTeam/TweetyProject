@@ -41,8 +41,16 @@ import org.tweetyproject.logics.pl.sat.OpenWboSolver;
  * @author Matthias Thimm
  */
 public class AcceptabilityReasonerExample {
+	
 	/**
-	 * 
+	 * Default constructor 
+	 */
+	public AcceptabilityReasonerExample() {
+		super();
+	}
+	
+	/**
+	 * *description missing*
 	 * @param args string
 	 * @throws FileNotFoundException Exception
 	 * @throws ParserException Exception

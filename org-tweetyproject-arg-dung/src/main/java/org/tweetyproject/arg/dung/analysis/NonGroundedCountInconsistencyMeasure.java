@@ -28,8 +28,13 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
+ * Calculates the non-grounded count inconsistency measure of the given argumentation framework.
+ * Non-grounded count inconsistency measure is the count of arguments in the argumentation framework
+ * that are neither in any grounded extension nor attacked by any argument in grounded extensions.
+ *
+ * @param argumentationFramework The argumentation framework for which to calculate the non-grounded count inconsistency measure.
+ * @return The non-grounded count inconsistency measure of the argumentation framework.
+ *         Returns the count of arguments that are not part of any grounded extension or attacked by any argument in grounded extensions.
  */
 public class NonGroundedCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
@@ -37,27 +42,29 @@ public class NonGroundedCountInconsistencyMeasure<T extends DungTheory> implemen
 	public Double inconsistencyMeasure(T argumentationFramework) {
 	 Collection<Extension<DungTheory>> groundedExtensions = new SimpleGroundedReasoner().getModels(argumentationFramework);
 	 Set<Argument> groundedArguments = new HashSet<Argument>();
-	 
+
+	 // Collecting all arguments from grounded extensions
 	 for(Extension<DungTheory> singleExtension : groundedExtensions)
 		 for(Argument singleArgument : singleExtension)
 			 groundedArguments.add(singleArgument);
-	 
+
+	// Collecting all arguments attacked by arguments in grounded extensions
 	 Set<Argument> attackees = new HashSet<Argument>();
 	 for(Argument singleArgument : groundedArguments)
 		 attackees.addAll(argumentationFramework.getAttacked(singleArgument));
-	 
+
 	 // Union of the both above
 	 Set<Argument> nonGroundedArguments = new HashSet<Argument>();
-	 
+
 	 // All arguments of the argumentation framework without grounded arguments and attackees of grounded arguments
 	 for(Argument singleArgument : argumentationFramework)
 		 if(!groundedArguments.contains(singleArgument) && !attackees.contains(singleArgument))
 			 nonGroundedArguments.add(singleArgument);
-	 
+
 	 Double nonGroundedCount = (Double) ((double) nonGroundedArguments.size());
-	 
+
 	 return nonGroundedCount;
-	 
+
 	}
 
 }

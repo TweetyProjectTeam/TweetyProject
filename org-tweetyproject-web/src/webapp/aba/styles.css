@@ -1,0 +1,77 @@
+li{
+	margin-bottom: 4px;
+}
+
+a{
+	color: black;
+}
+
+a:hover{
+	text-decoration: none;
+}
+
+#overlay {
+	position: fixed;
+	z-index:199;
+	top: 0px;
+	left: 0px;
+	height:100%;
+	width:100%;
+}
+
+* html #overlay { /* ie6 */
+	position: absolute;
+	height: expression(document.body.scrollHeight > document.body.
+		offsetHeight ? document.body.scrollHeight : document.body.
+		offsetHeight + 'px');
+}
+
+.overlayBG {
+  	background-color:#000;
+	-ms-filter: "Alpha(Opacity=60)"; /* IE 8 */
+	filter:alpha(opacity=60); /* IE5-7 */
+	-moz-opacity: 0.6; /* Mozilla */
+	opacity: 0.6;
+}
+
+#lightBox {
+	position:fixed;
+	left:50%;
+	top:200px;
+	margin-left:-375px;
+	z-index:200;
+	width:750px;
+	background-color:#fff;
+	visibility:hidden;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	border: 1px solid black;
+	padding:5px;
+	text-align: left;
+}
+
+* html #lightBox { /* ie6 */
+	position: absolute;
+	margin-top: expression(0 - parseInt(this.offsetHeight / 2) +
+		(TBWindowMargin = document.documentElement &&
+		document.documentElement.scrollTop ||
+		document.body.scrollTop) + 'px');
+}
+
+span .latex{
+	vertical-align: middle;
+}
+
+p .latex{
+	vertical-align: middle;
+}
+
+li .latex{
+	vertical-align: middle;
+}
+
+
+.measure_div{
+	font-size: 10pt;
+}

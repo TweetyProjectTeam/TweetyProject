@@ -30,11 +30,18 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.AbstractDungWriter;
 import org.tweetyproject.commons.util.Shell;
 
+/**
+ * *description missing*
+ */
 public class ProboTest {
 
 	static Shell shell = Shell.getNativeShell();//Shell.getCygwinShell("C:\\Windows\\System32\\bash.exe");
 	
 
+	/**
+	 * *description missing*
+	 * @throws Exception *description missing*
+	 */
 	@Test
 	public void ParserTest() throws Exception {
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);
@@ -51,6 +58,10 @@ public class ProboTest {
 
 	}
 
+	/**
+	 * *description missing*
+	 * @throws Exception *description missing*
+	 */
 	@Test
 	public void WriterTest() throws Exception {
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);

@@ -19,10 +19,8 @@
  package org.tweetyproject.arg.aspic.order;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import org.tweetyproject.arg.aspic.syntax.AspicArgument;
 import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
 import org.tweetyproject.arg.aspic.syntax.InferenceRule;
 import org.tweetyproject.comparator.GeneralComparator;
@@ -30,10 +28,10 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
- * 
+ *
  * A simple comparator, that compares inference rules
- * 
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ *
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over
  */
 public class RuleComparator <T extends Invertable> extends GeneralComparator<InferenceRule<T>, AspicArgumentationTheory<T>> {
 
@@ -41,8 +39,8 @@ public class RuleComparator <T extends Invertable> extends GeneralComparator<Inf
 	 * The name of the rules ordered by size ascending
 	 */
 	private List<String> rules = new ArrayList<>();
-	
-	
+
+
 
 	/**
 	 * Constructs a new comparator for rules
@@ -70,11 +68,11 @@ public class RuleComparator <T extends Invertable> extends GeneralComparator<Inf
 		if(val_a == NULL || val_b == NULL) {
 			return 0;
 		}
-		
+
 		int result = val_a - val_b;
-		
+
 		//System.out.println(a +" - "+b+" = "+result);
-		
+
 		return result;
 	}
 

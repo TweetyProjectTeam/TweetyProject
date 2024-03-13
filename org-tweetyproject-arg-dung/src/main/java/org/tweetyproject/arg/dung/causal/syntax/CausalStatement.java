@@ -24,7 +24,7 @@ import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * This class is describes a causal statement, such as an interventional or counterfactual statement.
+ * This class describes a causal statement, such as an interventional or counterfactual statement.
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -38,7 +38,6 @@ public abstract class CausalStatement {
 	/**
 	 * Creates a new causal statement.
 	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
-	 * @param interventions Maps explainable atoms to boolean values.
 	 * @param premises PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
 	public CausalStatement(HashSet<PlFormula> conclusions, HashSet<PlFormula> premises) {
@@ -47,10 +46,18 @@ public abstract class CausalStatement {
 		this.premises = premises;
 	}
 
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<PlFormula> getConclusions(){
 		return new HashSet<PlFormula>(this.conclusions);
 	}
 	
+	/**
+	 * *description missing*
+	 * @return *description missing*
+	 */
 	public HashSet<PlFormula> getPremises(){
 		return new HashSet<PlFormula>(this.premises);
 	}	
@@ -70,6 +77,10 @@ public abstract class CausalStatement {
 		return true;
 	}
 	
+	/**
+	 * *description missing*
+	 * @param cKbase Causal knowledge base
+	 */
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
 	{
 		var causalKnowledgeBaseCopy = cKbase.clone();

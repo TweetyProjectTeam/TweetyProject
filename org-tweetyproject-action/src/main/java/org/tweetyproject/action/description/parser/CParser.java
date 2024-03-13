@@ -29,10 +29,10 @@ import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
 
 /**
- * This class implements a parser for an Action Description in the 
- * Action Description Language C from [Gelfond, Michael and Lifschitz, Vladimir: 
+ * This class implements a parser for an Action Description in the
+ * Action Description Language C from [Gelfond, Michael and Lifschitz, Vladimir:
  * Action Languages. ETAI: Electronic Transactions on AI, 1998.]
- * 
+ *
  * The BNF is given by: (starting symbol is DESC) <br>
  * <br> DESC ::== ":- signature" "\n" SIGNATURE "\n" ":- laws" "\n" LAWS
  * <br>
@@ -42,11 +42,19 @@ import org.tweetyproject.commons.ParserException;
 public class CParser extends Parser<CActionDescription, Formula> {
 	protected ActionSignature signature;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.commons.Parser#parseBeliefBase(java.io.Reader)
-	 */
+	/**
+ * Parses a belief base from the provided reader.
+ * The method reads from the reader and separates formulas by "\n".
+ * It follows a state-based approach where:
+ * - State 0 is for initialization
+ * - State 1 is for reading the signature
+ * - State 2 is for reading the lawbase
+ *
+ * @param reader the Reader object from which the belief base is read
+ * @return a CActionDescription object representing the parsed belief base
+ * @throws IOException if an I/O error occurs
+ * @throws ParserException if a parsing error occurs
+ */
 	@Override
 	public CActionDescription parseBeliefBase(Reader reader) throws IOException, ParserException {
 		// State 0 : initialize
@@ -87,10 +95,14 @@ public class CParser extends Parser<CActionDescription, Formula> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.commons.Parser#parseFormula(java.io.Reader)
+
+	/**
+	 * Parses a formula from the given reader.
+	 *
+	 * @param reader the reader to read the formula from
+	 * @return the parsed formula
+	 * @throws IOException     if an I/O error occurs while reading from the reader
+	 * @throws ParserException if the formula cannot be parsed
 	 */
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
@@ -103,20 +115,35 @@ public class CParser extends Parser<CActionDescription, Formula> {
 		return parseFormula(s);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.commons.Parser#parseFormula(java.lang.String)
-	 */
+
+	/**
+		 * Parses the given formula string and returns the corresponding Formula object.
+		 *
+		 * @param formula the formula string to be parsed
+		 * @return the parsed Formula object
+		 * @throws ParserException if there is an error during parsing
+		 * @throws IOException if there is an error reading the formula string
+		 */
 	@Override
 	public Formula parseFormula(String formula) throws ParserException, IOException {
 		return new CLawParser(signature).parseFormula(formula);
 	}
 
+
+	/**
+	 * Sets the action signature for this parser.
+	 *
+	 * @param signature the action signature to be set
+	 */
 	public void setSignature(ActionSignature signature) {
 		this.signature = signature;
 	}
 
+	/**
+	 * Returns the signature of the action.
+	 *
+	 * @return the signature of the action
+	 */
 	public ActionSignature getSignature() {
 		return this.signature;
 	}

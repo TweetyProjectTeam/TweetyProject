@@ -28,11 +28,11 @@ import java.util.Collection;
 
 /**
  * Conflict-free Principle
+ * <p>
  * A semantics satisfies conflict-freeness if for all extensions E it holds that:
  * E is conflict-free
- * trivial property satisfied by practically all semantics
  *
- * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Lars Bengel
  */
@@ -40,7 +40,7 @@ public class ConflictFreePrinciple extends Principle {
 
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "Conflict-Freeness";
     }
 
     @Override

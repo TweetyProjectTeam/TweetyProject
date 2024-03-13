@@ -21,10 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
-
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -41,22 +38,22 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 	 *  choose a member of family of the resolution-based semantics
 	 */
 	/**
-	 * 
+	 *
 	 * @param semantics semantics
 	 */
 	public SimpleResolutionBasedReasoner(AbstractExtensionReasoner semantics) {
 		this.semantic = semantics;
 	}
-	
 
-	
+
+
 	/**
 	 * helper function
-	 * computes all permutations of the DungTheory 
+	 * computes all permutations of the DungTheory
 	 * @param start, where birdirectional attacks have been resolved to unidirectonal ones
 	 */
 	/**
-	 * 
+	 *
 	 * @param start start
 	 * @return DungTheory
 	 */
@@ -67,7 +64,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 		//structure the bidirectional attacks in a set of tuples containing both ways of attack
 		//also delete the bidirectional attacks from the AF to only add the permutations later on
 		for(Attack a : bidir) {
-			
+
 			Attack b = new Attack(a.getAttacked(), a.getAttacker());
 			Set<Attack> temp = new HashSet<Attack>();
 			temp.add(a);
@@ -75,7 +72,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 			permutations.add(temp);
 			start.removeAll(temp);
 		}
-		
+
 		SetTools<Attack> s = new SetTools<Attack>();
 		//compute the permutations of the bidirectional attacks
 		permutations = s.permutations(permutations);
@@ -86,15 +83,15 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 			start1.addAllAttacks(i);
 			result.add(start1);
 		}
-		
 
-		
+
+
 		return result;
 	}
 
 
 
-	
+
 	/**
 	 * compute the extension with the base semantics of this.semantic
 	 */
@@ -105,7 +102,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 		Set<Extension<DungTheory>> exts = new HashSet<Extension<DungTheory>>();
 		AbstractExtensionReasoner reasoner = this.semantic;
 		//add all extensions of the new DungTheories
-		for(DungTheory i : fraf) {	
+		for(DungTheory i : fraf) {
 			exts.addAll(reasoner.getModels(i));
 		}
         HashSet<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
@@ -113,7 +110,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 		for(Extension<DungTheory> i : exts) {
 			boolean addable = true;
 			for(Extension<DungTheory> j : exts) {
-				if(i != j) {	
+				if(i != j) {
 					if(j.containsAll(i) && !j.equals(i)) {
 						addable= false;
 
@@ -124,13 +121,13 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 			if(addable == true)
 				result.add(i);
 		}
-		
+
 		return result;
 	}
 
 	@Override
 	public Extension<DungTheory> getModel(DungTheory bbase) {
-		
+
 		for(Extension<DungTheory> e : this.getModels(bbase))
 			return e;
 		return null;

@@ -26,7 +26,6 @@ import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.fol.syntax.FolAtom;
 import org.tweetyproject.logics.fol.syntax.ForallQuantifiedFormula;
 import org.tweetyproject.lp.nlp.error.NestedLogicProgramException;
-import org.tweetyproject.lp.nlp.syntax.NLPRule;
 
 public class NLPRuleTest {
 	@Test(expected=NestedLogicProgramException.class)

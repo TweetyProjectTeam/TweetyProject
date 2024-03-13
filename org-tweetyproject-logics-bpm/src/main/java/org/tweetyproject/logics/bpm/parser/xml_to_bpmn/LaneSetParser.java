@@ -21,10 +21,8 @@ package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.w3c.dom.Node;
-
 import org.tweetyproject.logics.bpm.syntax.Lane;
-import org.tweetyproject.logics.bpm.syntax.Task;
+import org.w3c.dom.Node;
 
 /**
  * Parse a set of lanes in a BPMN model

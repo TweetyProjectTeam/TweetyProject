@@ -38,7 +38,7 @@ import org.tweetyproject.logics.fol.syntax.Tautology;
  * The action description language C consists of two distinct expressions:
  * static laws and dynamic laws. Both share some common functionalities which
  * are implemented in this base class.
- * 
+ *
  * @author Sebastian Homann
  */
 public abstract class CLaw implements CausalLaw {
@@ -48,7 +48,7 @@ public abstract class CLaw implements CausalLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.Formula#getSignature()
 	 */
 	public abstract Signature getSignature();
@@ -57,7 +57,7 @@ public abstract class CLaw implements CausalLaw {
 	 * Returns true iff this law is definite. A causal law is definite if it's head
 	 * is a literal or a contradiction and all formulas are conjunctions of
 	 * literals.
-	 * 
+	 *
 	 * @return true, if this law is definite, false otherwise.
 	 */
 	public abstract boolean isDefinite();
@@ -66,7 +66,7 @@ public abstract class CLaw implements CausalLaw {
 	 * Returns an equivalent definite causal law. A causal law is definite if it's
 	 * head is a literal or a contradiction and all formulas are conjunctions of
 	 * literals.
-	 * 
+	 *
 	 * @return the equivalent definite causal law if one exists.
 	 * @throws IllegalStateException when there is no equivalent definite causal
 	 *                               law.
@@ -81,7 +81,7 @@ public abstract class CLaw implements CausalLaw {
 	/**
 	 * Returns the set of formulas contained in this causal law, e.g. in a static
 	 * law, this contains the head formula and the if formula.
-	 * 
+	 *
 	 * @return the set of formulas contained in this causal law.
 	 */
 	public abstract Set<FolFormula> getFormulas();
@@ -94,7 +94,7 @@ public abstract class CLaw implements CausalLaw {
 
 	/**
 	 * Creates a causal law of the form "caused headFormula if True"
-	 * 
+	 *
 	 * @param headFormula some FOL formula
 	 */
 	public CLaw(FolFormula headFormula) {
@@ -104,7 +104,7 @@ public abstract class CLaw implements CausalLaw {
 	/**
 	 * Creates a causal law of the form "caused headFormula if True requires
 	 * requirements"
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param requirements a set of requirements
 	 */
@@ -116,7 +116,7 @@ public abstract class CLaw implements CausalLaw {
 	/**
 	 * Creates a causal law of the form "caused headFormula if ifFormula requires
 	 * requirements"
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param ifFormula    some FOL formula
 	 * @param requirements a set of requirements
@@ -129,7 +129,7 @@ public abstract class CLaw implements CausalLaw {
 
 	/**
 	 * Creates a causal law of the form "caused headFormula if ifFormula"
-	 * 
+	 *
 	 * @param headFormula some FOL formula
 	 * @param ifFormula   some FOL formula
 	 */
@@ -145,7 +145,7 @@ public abstract class CLaw implements CausalLaw {
 
 	/**
 	 * Sets the headFormula of this causal law
-	 * 
+	 *
 	 * @param headFormula The new headFormula of this causal law.
 	 */
 	private void setHeadFormula(FolFormula headFormula) {
@@ -162,7 +162,7 @@ public abstract class CLaw implements CausalLaw {
 
 	/**
 	 * Sets the IfFormula of this causal law
-	 * 
+	 *
 	 * @param ifFormula The new IfFormula of this causal law.
 	 */
 	private void setIfFormula(FolFormula ifFormula) {
@@ -176,6 +176,11 @@ public abstract class CLaw implements CausalLaw {
 		this.ifFormula = (FolFormula) ifFormula.collapseAssociativeFormulas();
 	}
 
+	/**
+	 * Adds a grounding requirement to this CLaw.
+	 *
+	 * @param c the grounding requirement to be added
+	 */
 	public void addGroundingRequirement(GroundingRequirement c) {
 		requirements.add(c);
 	}
@@ -194,6 +199,12 @@ public abstract class CLaw implements CausalLaw {
 		return ifFormula;
 	}
 
+
+	/**
+	 * Checks if the CLaw is ground, i.e., if all the atoms in the CLaw are ground.
+	 *
+	 * @return true if the CLaw is ground, false otherwise.
+	 */
 	public boolean isGround() {
 		for (FolAtom a : getAtoms())
 			if (!a.isGround())
@@ -210,7 +221,7 @@ public abstract class CLaw implements CausalLaw {
 	 * Checks if a propositional formula is a valid head formula for a definite
 	 * causal law, which means either a contradiction, a fluent or the negation of a
 	 * fluent.
-	 * 
+	 *
 	 * @param pl a propositional formula
 	 * @return true, if pl is a valid definite head formula
 	 */
@@ -228,7 +239,7 @@ public abstract class CLaw implements CausalLaw {
 	/**
 	 * Checks if the given formula is a conjunctive clause, meaning
 	 * either a literal or a conjunction of literals.
-	 * 
+	 *
 	 * @param pl a propositional formula
 	 * @return true, if pl is a conjunctive clause
 	 */
@@ -238,7 +249,7 @@ public abstract class CLaw implements CausalLaw {
 				if (!((FolFormula) p).isLiteral())
 					return false;
 			}
-		} else if (pl instanceof Disjunction) 
+		} else if (pl instanceof Disjunction)
 			return false;
 		return true;
 	}

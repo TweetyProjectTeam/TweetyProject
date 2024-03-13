@@ -347,6 +347,15 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
     public int getNumberOfNodes() {
         return this.size();
     }
+    
+    public int getNumberOfEdges() {
+    	int num = 0;
+		for(Argument a: this.supportParents.keySet())
+			num += this.supportParents.get(a).size();
+		for(Argument a: this.attackParents.keySet())
+			num += this.attackParents.get(a).size();
+		return num;
+    }
 
     @Override
     public boolean areAdjacent(BArgument a, BArgument b) {

@@ -29,10 +29,9 @@ import java.util.Collection;
 
 /**
  * Naivety Principle
+ * <p>
  * A semantics satisfies naivety if for all extensions E it holds that:
  * E is conflict-free and maximal w.r.t set inclusion
- *
- * see: TODO
  *
  * @author Lars Bengel
  */

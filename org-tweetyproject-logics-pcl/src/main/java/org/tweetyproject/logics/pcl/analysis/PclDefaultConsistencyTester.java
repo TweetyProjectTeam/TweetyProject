@@ -18,32 +18,41 @@
  */
 package org.tweetyproject.logics.pcl.analysis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.tweetyproject.logics.pcl.syntax.*;
-import org.tweetyproject.logics.pl.semantics.*;
-import org.tweetyproject.logics.pl.syntax.*;
-import org.tweetyproject.math.*;
-import org.tweetyproject.math.opt.rootFinder.*;
-import org.tweetyproject.math.opt.problem.*;
-import org.tweetyproject.math.opt.solver.*;
-import org.tweetyproject.math.term.*;
-import org.tweetyproject.logics.commons.analysis.*;
+import org.tweetyproject.logics.commons.analysis.AbstractBeliefSetConsistencyTester;
+import org.tweetyproject.logics.pcl.syntax.PclBeliefSet;
+import org.tweetyproject.logics.pcl.syntax.ProbabilisticConditional;
+import org.tweetyproject.logics.pl.semantics.PossibleWorld;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.logics.pl.syntax.PlSignature;
+import org.tweetyproject.math.GeneralMathException;
+import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
+import org.tweetyproject.math.term.FloatConstant;
+import org.tweetyproject.math.term.FloatVariable;
+import org.tweetyproject.math.term.IntegerConstant;
+import org.tweetyproject.math.term.Term;
+import org.tweetyproject.math.term.Variable;
 
 /**
  * This class is capable of checking whether a given conditional knowledge base
  * is consistent by searching for the root of some equivalent multi-dimensional function.
- * 
+ *
  * @author Matthias Thimm
  */
 public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<ProbabilisticConditional> {
-	
+
 	private OptimizationRootFinder rootFinder;
-	
+
 	public PclDefaultConsistencyTester(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.AbstractBeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
@@ -79,7 +88,7 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue());
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -92,7 +101,7 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -102,7 +111,7 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			functions.add(leftSide.minus(rightSide));			
+			functions.add(leftSide.minus(rightSide));
 		}
 		// Search for a root of "functions" using OpenOpt
 		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();

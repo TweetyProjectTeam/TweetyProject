@@ -18,17 +18,15 @@
  */
 package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
-import org.w3c.dom.Node;
-
 import org.tweetyproject.logics.bpm.syntax.EndEvent;
-import org.tweetyproject.logics.bpm.syntax.StartEvent;
+import org.w3c.dom.Node;
 
 /**
  * Parse end events of a BPMN model
  * @author Benedikt Knopp
  */
 public class EndEventParser extends AbstractElementParser<EndEvent> {
-		
+
 		/**
 		 * Create a new instance
 		 * @param rootParser the root parser of the BPMN model
@@ -65,6 +63,6 @@ public class EndEventParser extends AbstractElementParser<EndEvent> {
 				break;
 			}
 		}
-		
+
 
 	}

@@ -28,7 +28,7 @@ import org.tweetyproject.arg.dung.learning.syntax.Entity;
 import org.tweetyproject.arg.dung.learning.syntax.Input;
 
 /**
- * Showcasing how to use the implementation of the learning algorithm
+ * Showcasing how to use the implementation of the {@link AFLearner} for learning argumentation frameworks from labelings
  *
  * @author Lars Bengel
  */

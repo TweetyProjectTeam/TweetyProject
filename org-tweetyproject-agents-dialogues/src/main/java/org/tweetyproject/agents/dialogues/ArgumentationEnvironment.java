@@ -57,6 +57,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.Environment#execute(org.tweetyproject.agents.Executable)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Perceivable> execute(Executable action) {
 		if(!(action instanceof ExecutableExtension))
@@ -68,6 +69,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.Environment#execute(java.util.Collection)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Perceivable> execute(Collection<? extends Executable> actions) {
 		for(Executable exec: actions){

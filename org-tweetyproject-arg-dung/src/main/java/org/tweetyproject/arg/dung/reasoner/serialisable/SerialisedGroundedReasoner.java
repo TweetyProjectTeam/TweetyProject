@@ -32,31 +32,23 @@ import java.util.HashSet;
  */
 public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
     
+	/**
+	 * Initializes a {@link SerialisableExtensionReasoner} for the grounded semantics
+	 */
 	public SerialisedGroundedReasoner() {
 		super();
-		setSemantic(Semantics.GR);
+		this.semantics = Semantics.GR;
 	}
 
 	/**
-     * select all unattacked inital singleton-sets
+     * Select a subset of the initial sets of the AF, i.e. the possible successor states
      * @param unattacked the set of unattacked initial sets
      * @param unchallenged the set of unchallenged initial sets
      * @param challenged the set of challenged initial sets
-     * @return the selected initial sets
+     * @return the unattacked initial sets
      */
     @Override
     public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
-        return select(unattacked);
+        return new HashSet<>(unattacked);
     }
-
-	public static Collection<Extension<DungTheory>> select(Collection<Extension<DungTheory>> unattacked) {
-		Collection<Extension<DungTheory>> result = new HashSet<>();
-
-        for (Extension<DungTheory> ext: unattacked) {
-            if (ext.size() == 1) {
-                result.add(ext);
-            }
-        }
-        return result;
-	}
 }

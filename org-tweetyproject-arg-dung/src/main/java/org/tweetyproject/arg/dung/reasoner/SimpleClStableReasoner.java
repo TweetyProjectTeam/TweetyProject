@@ -25,7 +25,6 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
@@ -39,7 +38,7 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 
 
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
@@ -56,12 +55,12 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 					defeatedByExtension.add((ClaimArgument) arg);
 				}
 		}
-				
-		return result;	
+
+		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param bbase the claim based thory
 	 * @return an extensions of the semantics
 	 */
@@ -79,9 +78,9 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 					return result;
 				}
 			}
-					
+
 		}
-		return null;	
+		return null;
 	}
 
 	@Override
@@ -89,5 +88,5 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 		return true;
 	}
 
-	
+
 }
