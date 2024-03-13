@@ -107,6 +107,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.semiring = semiring;
 	}
 	
+	public WeightedArgumentationFramework<T> clone() {
+		WeightedArgumentationFramework<T>  result = new WeightedArgumentationFramework<>(this.getSemiring(),this, this.getWeights());
+		return result;
+	}
+	
+	
 	/**
 	 * Adds the given attack to this weighted Dung theory. The weight will be set to the strongest Attack (zeroElement) of the Semiring.
 	 * 
@@ -138,11 +144,13 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
 	public boolean add(Attack... attacks){
-		Map<String,T> weightList = new HashMap<>();
+		boolean result = true; 
         for (Attack att:attacks) {
-        	weightList.put(att.toString(),semiring.getZeroElement());
+			  //add attack to AF
+			  boolean sub = this.add(att, semiring.getZeroElement());
+			  result = result && sub; 
         }
-		return this.add(weightList, attacks);
+		return result;
 	}
 
 
@@ -150,14 +158,17 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * Adds the given attacks to this dung theory.
 	 * 
 	 * @param weights a map containing the attacks as key and the weights as values.
-	 * @param attacks some attacks
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
-	public boolean add(Map<String, T> weights, Attack... attacks) {
+	public boolean add(Map<String, T> weights) {
 		  boolean result = true; 
-		  for (Attack f : attacks) {
-			  T weight = weights.get(f.toString());
-			  boolean sub = this.add(f, weight);
+		  
+		  for (String key : weights.keySet()) {
+			  //get attacks from Map keys
+			  String[] args = key.split(",");
+			  Attack attack = new Attack(new Argument(args[0]),new Argument(args[1]));
+			  //add attack to AF
+			  boolean sub = this.add(attack, weights.get(key));
 			  result = result && sub; 
 		  }
 		return result;
@@ -171,10 +182,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 */
 	public boolean add(DungTheory theory){
 		T weight = this.semiring.getZeroElement();
-		boolean result = super.add(theory);
-
-		 Set<Attack> attacks = theory.getAttacks(); for (Attack f : attacks) { boolean
-		 sub = this.add(f, weight); result = result && sub; }
+		boolean result = this.addAll(theory.getNodes());
+		Set<Attack> attacks = theory.getAttacks();
+		 for (Attack f : attacks) { 
+			 boolean sub = this.add(f, weight); 
+			 result = result && sub; 
+		 }
 		 
 		return result;
 	}
@@ -197,7 +210,6 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * 
 	 * @param attacker some argument
 	 * @param attacked some argument
-	 * @param weight
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
 	public boolean addAttack(Argument attacker, Argument attacked) {
@@ -233,7 +245,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
         for (Attack att:c) {
         	weightList.put(att.toString(),semiring.getZeroElement());
         }
-        return addAllAttacks(c,weightList);
+        return addAllAttacks(weightList);
 	}
 	
 	/**
@@ -241,13 +253,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param c a collection of attacks
 	 * @return {@code true} if this Dung theory has been modified.
 	 */
-	public boolean addAllAttacks(Collection<? extends Attack> c, Map<String,T> weights){
-		boolean result = false;
-		for(Attack att: c) {
-			T weight = weights.get(att.toString());
-			result |= this.add(att, weight);
-		}
-		return result;
+	public boolean addAllAttacks(Map<String,T> weights){
+		return add(weights);
 	}
 
 
@@ -303,7 +310,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	}
 
 	/**
-	 * Compares the weights of two attacks and returns their combined result based on the semiring addition.
+	 * Compares the weights of two attacks and returns the weight of the stronger attack.
 	 *
 	 * @param attackA The first attack for comparison.
 	 * @param attackB The second attack for comparison.
@@ -841,6 +848,17 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
      */
 	public Semiring<T> getSemiring() {
 		return this.semiring;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((this.weightMap == null) ? 0 : this.weightMap.hashCode());
+		return result;
 	}
 	
     /**

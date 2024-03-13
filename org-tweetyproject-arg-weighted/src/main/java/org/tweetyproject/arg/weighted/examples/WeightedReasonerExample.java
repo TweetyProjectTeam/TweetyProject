@@ -48,9 +48,7 @@ import org.tweetyproject.math.algebra.WeightedSemiring;
  */
 public class WeightedReasonerExample {
 
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 	
 		Argument a = new Argument("a");
@@ -75,6 +73,7 @@ public class WeightedReasonerExample {
 		weightedDungAF.add(new Attack(d,e),5.0);
 		weightedDungAF.add(new Attack(e,e),6.0);
 
+	
 		
 		//Conflict Free Reasoner
 		SimpleWeightedConflictFreeReasoner<Double> weightedCfReasoner = new SimpleWeightedConflictFreeReasoner<>();

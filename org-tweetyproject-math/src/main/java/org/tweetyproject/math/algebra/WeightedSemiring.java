@@ -36,7 +36,8 @@ public class WeightedSemiring extends Semiring<Double> {
      */
     public WeightedSemiring() {
         super((a, b) -> Math.min(a, b), (a, b) -> a + b, Double.POSITIVE_INFINITY, 0.0);
-        maxValue = Double.MAX_VALUE - 1;
+        maxValue = Double.POSITIVE_INFINITY;
+        //maxValue = Double.MAX_VALUE - 1;
     }
     
     /**

@@ -44,3 +44,2158 @@ Binding(ALT+COMMAND+R,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.ui.contexts.window,,cocoa,system)
+!SESSION 2024-03-13 09:44:21.209 -----------------------------------------------
+eclipse.buildId=4.24.0.I20220607-0700
+java.version=17.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=aarch64, WS=cocoa, NL=en_GB
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch aarch64 -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+
+!ENTRY org.eclipse.core.resources 4 567 2024-03-13 09:44:37.746
+!MESSAGE Workspace restored, but some problems occurred.
+!SUBENTRY 1 org.eclipse.core.resources 4 567 2024-03-13 09:44:37.746
+!MESSAGE Could not read metadata for '.org.eclipse.egit.core.cmp'.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException(/.org.eclipse.egit.core.cmp)[567]: java.lang.Exception: The project description file (.project) for '.org.eclipse.egit.core.cmp' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:908)
+	at org.eclipse.core.internal.resources.SaveManager.restoreMetaInfo(SaveManager.java:895)
+	at org.eclipse.core.internal.resources.SaveManager.restoreMetaInfo(SaveManager.java:875)
+	at org.eclipse.core.internal.resources.SaveManager.restore(SaveManager.java:731)
+	at org.eclipse.core.internal.resources.SaveManager.startup(SaveManager.java:1587)
+	at org.eclipse.core.internal.resources.Workspace.startup(Workspace.java:2547)
+	at org.eclipse.core.internal.resources.Workspace.open(Workspace.java:2252)
+	at org.eclipse.core.resources.ResourcesPlugin$WorkspaceInitCustomizer.addingService(ResourcesPlugin.java:525)
+	at org.eclipse.core.resources.ResourcesPlugin$WorkspaceInitCustomizer.addingService(ResourcesPlugin.java:1)
+	at org.osgi.util.tracker.ServiceTracker$Tracked.customizerAdding(ServiceTracker.java:943)
+	at org.osgi.util.tracker.ServiceTracker$Tracked.customizerAdding(ServiceTracker.java:1)
+	at org.osgi.util.tracker.AbstractTracked.trackAdding(AbstractTracked.java:256)
+	at org.osgi.util.tracker.AbstractTracked.trackInitial(AbstractTracked.java:183)
+	at org.osgi.util.tracker.ServiceTracker.open(ServiceTracker.java:321)
+	at org.osgi.util.tracker.ServiceTracker.open(ServiceTracker.java:264)
+	at org.eclipse.core.resources.ResourcesPlugin.start(ResourcesPlugin.java:499)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$2.run(BundleContextImpl.java:818)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$2.run(BundleContextImpl.java:1)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:569)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.startActivator(BundleContextImpl.java:810)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.start(BundleContextImpl.java:767)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle.startWorker0(EquinoxBundle.java:1032)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.startWorker(EquinoxBundle.java:371)
+	at org.eclipse.osgi.container.Module.doStart(Module.java:605)
+	at org.eclipse.osgi.container.Module.start(Module.java:468)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:513)
+	at org.eclipse.osgi.internal.hooks.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:117)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:570)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:496)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:153)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+!SUBENTRY 2 org.eclipse.core.resources 4 567 2024-03-13 09:44:37.747
+!MESSAGE The project description file (.project) for '.org.eclipse.egit.core.cmp' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!STACK 0
+java.lang.Exception: The project description file (.project) for '.org.eclipse.egit.core.cmp' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:908)
+	at org.eclipse.core.internal.resources.SaveManager.restoreMetaInfo(SaveManager.java:895)
+	at org.eclipse.core.internal.resources.SaveManager.restoreMetaInfo(SaveManager.java:875)
+	at org.eclipse.core.internal.resources.SaveManager.restore(SaveManager.java:731)
+	at org.eclipse.core.internal.resources.SaveManager.startup(SaveManager.java:1587)
+	at org.eclipse.core.internal.resources.Workspace.startup(Workspace.java:2547)
+	at org.eclipse.core.internal.resources.Workspace.open(Workspace.java:2252)
+	at org.eclipse.core.resources.ResourcesPlugin$WorkspaceInitCustomizer.addingService(ResourcesPlugin.java:525)
+	at org.eclipse.core.resources.ResourcesPlugin$WorkspaceInitCustomizer.addingService(ResourcesPlugin.java:1)
+	at org.osgi.util.tracker.ServiceTracker$Tracked.customizerAdding(ServiceTracker.java:943)
+	at org.osgi.util.tracker.ServiceTracker$Tracked.customizerAdding(ServiceTracker.java:1)
+	at org.osgi.util.tracker.AbstractTracked.trackAdding(AbstractTracked.java:256)
+	at org.osgi.util.tracker.AbstractTracked.trackInitial(AbstractTracked.java:183)
+	at org.osgi.util.tracker.ServiceTracker.open(ServiceTracker.java:321)
+	at org.osgi.util.tracker.ServiceTracker.open(ServiceTracker.java:264)
+	at org.eclipse.core.resources.ResourcesPlugin.start(ResourcesPlugin.java:499)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$2.run(BundleContextImpl.java:818)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$2.run(BundleContextImpl.java:1)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:569)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.startActivator(BundleContextImpl.java:810)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.start(BundleContextImpl.java:767)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle.startWorker0(EquinoxBundle.java:1032)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.startWorker(EquinoxBundle.java:371)
+	at org.eclipse.osgi.container.Module.doStart(Module.java:605)
+	at org.eclipse.osgi.container.Module.start(Module.java:468)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:513)
+	at org.eclipse.osgi.internal.hooks.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:117)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:570)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:496)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:153)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.jface 2 0 2024-03-13 09:44:38.551
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:44:38.551
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@2dd2ff87,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6a38e3d1,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:44:38.551
+!MESSAGE A conflict occurred for ALT+COMMAND+R:
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.rename,Rename,
+		Rename the selected item,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@28cf179c,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@bdda8a7,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+!SESSION 2024-03-13 09:46:39.088 -----------------------------------------------
+eclipse.buildId=4.24.0.I20220607-0700
+java.version=17.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=aarch64, WS=cocoa, NL=en_GB
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch aarch64 -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2024-03-13 09:46:47.550
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:46:47.550
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@73958426,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@23933031,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:46:47.550
+!MESSAGE A conflict occurred for ALT+COMMAND+R:
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.rename,Rename,
+		Rename the selected item,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4d0b7fd5,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1ce2029b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+
+!ENTRY org.eclipse.egit.ui 4 0 2024-03-13 09:48:12.535
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:175)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:59)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:269)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:255)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:179)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:104)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2380)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2400)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:138)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:62)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:254)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+Contains: OK
+Contains: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject overlaps the workspace location: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-03-13 09:48:12.536
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2024-03-13 09:48:12.536
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2024-03-13 09:48:12.536
+!MESSAGE /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject overlaps the workspace location: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.072
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.073
+!MESSAGE The POM for org.tweetyproject.logics:fol:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.074
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.075
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.874
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.875
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.876
+!MESSAGE The POM for org.tweetyproject.arg:dung:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:14.877
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.685
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.686
+!MESSAGE The POM for org.tweetyproject.logics:fol:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.687
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.688
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.929
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.929
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:15.930
+!MESSAGE The POM for org.tweetyproject.arg:dung:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:16.154
+!MESSAGE Could not download javadoc for org.tweetyproject.logics:commons:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.logics:commons:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.logics:commons:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.154
+!MESSAGE Could not resolve artifact org.tweetyproject.logics:commons:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.154
+!MESSAGE Missing org.tweetyproject.logics:commons:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.176
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.198
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.220
+!MESSAGE The POM for org.tweetyproject.arg:dung:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.239
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:16.642
+!MESSAGE Could not download javadoc for org.tweetyproject:graphs:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject:graphs:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject:graphs:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.643
+!MESSAGE Could not resolve artifact org.tweetyproject:graphs:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.643
+!MESSAGE Missing org.tweetyproject:graphs:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:16.748
+!MESSAGE Could not download javadoc for org.tweetyproject.arg:dung:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.arg:dung:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.arg:dung:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.748
+!MESSAGE Could not resolve artifact org.tweetyproject.arg:dung:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.748
+!MESSAGE Missing org.tweetyproject.arg:dung:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:16.873
+!MESSAGE Could not download javadoc for org.tweetyproject.arg:aspic:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.arg:aspic:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.arg:aspic:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.873
+!MESSAGE Could not resolve artifact org.tweetyproject.arg:aspic:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.873
+!MESSAGE Missing org.tweetyproject.arg:aspic:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.879
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.880
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.880
+!MESSAGE The POM for org.tweetyproject.arg:dung:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.943
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.943
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.944
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.945
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.963
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:16.984
+!MESSAGE Could not download javadoc for org.tweetyproject.logics:pl:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.logics:pl:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.logics:pl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.984
+!MESSAGE Could not resolve artifact org.tweetyproject.logics:pl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:16.984
+!MESSAGE Missing org.tweetyproject.logics:pl:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.990
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.991
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.992
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:16.993
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.472
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.egit.ui 4 0 2024-03-13 09:48:18.692
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:175)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:59)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:269)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:255)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:179)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:104)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2380)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2400)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:138)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:62)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:254)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+Contains: OK
+Contains: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject overlaps the workspace location: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-03-13 09:48:18.692
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2024-03-13 09:48:18.692
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2024-03-13 09:48:18.692
+!MESSAGE /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject overlaps the workspace location: /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.773
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.773
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.774
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.775
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:18.775
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.201
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.201
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.202
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.203
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.204
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.419
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.438
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.474
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.493
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:19.609
+!MESSAGE Could not download javadoc for org.tweetyproject:math:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject:math:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject:math:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:19.609
+!MESSAGE Could not resolve artifact org.tweetyproject:math:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:19.609
+!MESSAGE Missing org.tweetyproject:math:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.616
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.616
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.617
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.618
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.625
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.625
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.626
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.626
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.627
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.632
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.633
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.634
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.634
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.634
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.713
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.714
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.714
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.715
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.717
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.721
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:19.722
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.195
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.196
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.196
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.196
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.644
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.662
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.663
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.684
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.685
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.688
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.689
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.726
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.727
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.727
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:20.727
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:20.835
+!MESSAGE Could not download javadoc for org.tweetyproject.arg:social:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.arg:social:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.arg:social:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:20.835
+!MESSAGE Could not resolve artifact org.tweetyproject.arg:social:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:20.835
+!MESSAGE Missing org.tweetyproject.arg:social:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:21.228
+!MESSAGE Could not download javadoc for org.tweetyproject:comparator:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject:comparator:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject:comparator:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:21.228
+!MESSAGE Could not resolve artifact org.tweetyproject:comparator:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:21.228
+!MESSAGE Missing org.tweetyproject:comparator:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.383
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.383
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.384
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.384
+!MESSAGE The POM for org.tweetyproject:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.385
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.385
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.778
+!MESSAGE The POM for org.tweetyproject.logics:rpcl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:21.778
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.131
+!MESSAGE The POM for org.tweetyproject.logics:fol:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.132
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.132
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.148
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.148
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.148
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.162
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.238
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.239
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.301
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.754
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.774
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.792
+!MESSAGE The POM for org.tweetyproject:graphs:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.811
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:22.830
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:23.018
+!MESSAGE Could not download javadoc for org.tweetyproject:agents:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject:agents:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject:agents:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:23.018
+!MESSAGE Could not resolve artifact org.tweetyproject:agents:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:23.018
+!MESSAGE Missing org.tweetyproject:agents:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:23.037
+!MESSAGE The POM for org.tweetyproject.logics:rpcl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:23.056
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:23.379
+!MESSAGE Could not download javadoc for org.tweetyproject.logics:rpcl:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.logics:rpcl:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.logics:rpcl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:23.379
+!MESSAGE Could not resolve artifact org.tweetyproject.logics:rpcl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:23.379
+!MESSAGE Missing org.tweetyproject.logics:rpcl:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.378
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.391
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.401
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.424
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.433
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.434
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:25.461
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.113
+!MESSAGE The POM for org.tweetyproject.logics:commons:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.113
+!MESSAGE The POM for org.tweetyproject.logics:petri:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.114
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.254
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.262
+!MESSAGE The POM for org.tweetyproject.logics:fol:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.263
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.272
+!MESSAGE The POM for org.tweetyproject.logics:pl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.282
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.283
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:28.293
+!MESSAGE The POM for org.tweetyproject.logics:petri:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.004
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.005
+!MESSAGE The POM for org.tweetyproject.logics:fol:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.127
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.128
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.137
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.192
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:29.211
+!MESSAGE The POM for org.tweetyproject.logics:petri:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:29.401
+!MESSAGE Could not download javadoc for org.tweetyproject.logics:petri:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.logics:petri:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.logics:petri:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:29.401
+!MESSAGE Could not resolve artifact org.tweetyproject.logics:petri:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:29.401
+!MESSAGE Missing org.tweetyproject.logics:petri:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:30.418
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:30.419
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:30.782
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:30.782
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:30.783
+!MESSAGE The POM for org.tweetyproject.logics:pcl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.209
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.211
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.220
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.343
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.344
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.363
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:31.521
+!MESSAGE Could not download javadoc for org.tweetyproject:plugin:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject:plugin:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject:plugin:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:31.521
+!MESSAGE Could not resolve artifact org.tweetyproject:plugin:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:31.521
+!MESSAGE Missing org.tweetyproject:plugin:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.524
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.545
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.583
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.602
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.643
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.662
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.702
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.703
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:31.741
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.011
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:32.155
+!MESSAGE Could not download javadoc for org.tweetyproject.logics:pcl:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.logics:pcl:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.logics:pcl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:32.155
+!MESSAGE Could not resolve artifact org.tweetyproject.logics:pcl:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:32.155
+!MESSAGE Missing org.tweetyproject.logics:pcl:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.441
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.441
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.458
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.491
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.492
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:32.509
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:34.728
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:34.729
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.261
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.351
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.351
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.548
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.552
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:35.565
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.301
+!MESSAGE The POM for org.tweetyproject.lp:asp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.302
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.303
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.753
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.755
+!MESSAGE The POM for org.tweetyproject:math:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.756
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.757
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.782
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:36.782
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.701
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.702
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.724
+!MESSAGE The POM for org.tweetyproject:plugin:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.781
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.863
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.891
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.891
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.906
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.947
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:37.983
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.038
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.042
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.042
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.073
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.101
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.130
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.131
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.149
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:44.202
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:50.927
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:50.928
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:50.928
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:51.379
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:51.379
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:51.383
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:51.385
+!MESSAGE The POM for org.tweetyproject.arg:delp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:51.387
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.023
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.027
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.028
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.030
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.031
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.097
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.098
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.099
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.100
+!MESSAGE The POM for org.tweetyproject.arg:delp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.101
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.156
+!MESSAGE The POM for org.tweetyproject.arg:delp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.157
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.210
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2024-03-13 09:48:53.234
+!MESSAGE Could not download javadoc for org.tweetyproject.arg:delp:1.24-SNAPSHOT
+!STACK 1
+org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetyproject.arg:delp:jar:javadoc:1.24-SNAPSHOT
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.lambda$4(MavenImpl.java:828)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:117)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:796)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.resolve(MavenImpl.java:773)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.download(DownloadSourcesJob.java:311)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadAttachments(DownloadSourcesJob.java:297)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadMaven(DownloadSourcesJob.java:255)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.downloadFilesAndPopulateToUpdate(DownloadSourcesJob.java:223)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.lambda$0(DownloadSourcesJob.java:152)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:182)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:156)
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:103)
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.execute(MavenImpl.java:1416)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Missing org.tweetyproject.arg:delp:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 1 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:53.234
+!MESSAGE Could not resolve artifact org.tweetyproject.arg:delp:jar:javadoc:1.24-SNAPSHOT
+!SUBENTRY 2 org.eclipse.m2e.core 4 -1 2024-03-13 09:48:53.234
+!MESSAGE Missing org.tweetyproject.arg:delp:jar:javadoc:1.24-SNAPSHOT
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.287
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:48:53.308
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.192
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.192
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.193
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.193
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.196
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.229
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.230
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.232
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.232
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.259
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.259
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.259
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.533
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.533
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.535
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.549
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.553
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.553
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.554
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.555
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.569
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.569
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.570
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.582
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.582
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.584
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.584
+!MESSAGE The POM for org.tweetyproject.arg:social:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.585
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.610
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.611
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.613
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.645
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.645
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.647
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.654
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.657
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.658
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.658
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.659
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.666
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.670
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.670
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.670
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.777
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.778
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.836
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.837
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.909
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.909
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.955
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.955
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:08.956
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.030
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.030
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.031
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.083
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.083
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.084
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.096
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.097
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.097
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.097
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.107
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.111
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.111
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.146
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.146
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.282
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.282
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.282
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.344
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.345
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.345
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.354
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.386
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.386
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.387
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.397
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.400
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.400
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.409
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.412
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.413
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.413
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.414
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.414
+!MESSAGE The POM for org.tweetyproject.lp:nlp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.415
+!MESSAGE The POM for org.tweetyproject.logics:cl:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.425
+!MESSAGE The POM for org.tweetyproject:agents:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.428
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.428
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.428
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.430
+!MESSAGE The POM for org.tweetyproject:comparator:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.571
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.572
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.588
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.591
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.592
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.646
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.646
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.647
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.740
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.740
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.742
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.742
+!MESSAGE The POM for org.tweetyproject.arg:delp:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:09.744
+!MESSAGE The POM for org.tweetyproject.arg:aspic:jar:1.24-SNAPSHOT is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:10.837
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:10.837
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:10.837
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.006
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.006
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.008
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.064
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.065
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.065
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.094
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.094
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.096
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.186
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.186
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.232
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.232
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.233
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.299
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.299
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:49:11.300
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+!SESSION 2024-03-13 09:51:21.207 -----------------------------------------------
+eclipse.buildId=4.24.0.I20220607-0700
+java.version=17.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=aarch64, WS=cocoa, NL=en_GB
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch aarch64 -product org.eclipse.epp.package.java.product -keyring /Users/sandra/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2024-03-13 09:51:39.516
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:51:39.516
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@70ed902a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@22f80e36,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2024-03-13 09:51:39.516
+!MESSAGE A conflict occurred for ALT+COMMAND+R:
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.rename,Rename,
+		Rename the selected item,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@3c98981e,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6dcee890,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:12.527
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:12.528
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:12.529
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:36.833
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:36.834
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.022
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.023
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.058
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.058
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.268
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.269
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.351
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.352
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.518
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.518
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.622
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.623
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.664
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.671
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:37.672
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:38.331
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:38.332
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:54:38.333
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.340
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.340
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.420
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.421
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.454
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.454
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.597
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.598
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.641
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.641
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.744
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.745
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.890
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.890
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.929
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.934
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:00.934
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.060
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.061
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.062
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.137
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.137
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.140
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.214
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.216
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.217
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.470
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.470
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.472
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.888
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.888
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:01.893
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.003
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.003
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.007
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.259
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.259
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.281
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.818
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.818
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.835
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.996
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.997
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:02.998
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.222
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.222
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.222
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.342
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.343
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.344
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.378
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.379
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.387
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.533
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.533
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.536
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.606
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.606
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.610
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.669
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.669
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.672
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.938
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.939
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:03.952
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.062
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.108
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.175
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.757
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.757
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.758
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.815
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.816
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:04.822
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.020
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.021
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.021
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.071
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.072
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.072
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.153
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.154
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.154
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.193
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.194
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.195
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.253
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.253
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.254
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.440
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.441
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.442
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.491
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.491
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.492
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.719
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.720
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.721
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.925
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.926
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.926
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.986
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.987
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:05.989
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.092
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.092
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.092
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.125
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.125
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.126
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.223
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.224
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.225
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.328
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.328
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.328
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.511
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.511
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.514
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.534
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.535
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 09:55:06.535
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 10:03:40.719
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 10:03:40.720
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 10:03:40.726
+!MESSAGE The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 10:17:15.890
+!MESSAGE The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2024-03-13 10:17:15.891
+!MESSAGE The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
