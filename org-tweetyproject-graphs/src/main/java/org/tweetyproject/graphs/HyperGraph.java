@@ -33,7 +33,7 @@ import org.tweetyproject.math.matrix.Matrix;
 /**
  * This class implements a simple directed hypergraph
  *  
- * @author Sebastian Franke
+ * @author Sebastian Franke, Matthias Thimm
  *
  */
 
@@ -80,6 +80,11 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	@Override
 	public int getNumberOfNodes() {
 		return this.nodes.size();
+	}
+	
+	@Override
+	public int getNumberOfEdges() {
+		return this.edges.size();
 	}
 
 	@Override

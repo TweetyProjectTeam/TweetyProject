@@ -34,6 +34,7 @@ import java.util.*;
  *
  * @author Lars Bengel
  * @author Julian Sander
+ * @author Matthias Thimm
  */
 public class SerialisationGraph implements Graph<SerialisationNode> {
 
@@ -172,7 +173,15 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     public int getNumberOfNodes() {
         return this.parents.keySet().size();
     }
-
+    
+    @Override
+	public int getNumberOfEdges() {
+    	int num = 0;
+		for(SerialisationNode a: this.parents.keySet())
+			num += this.parents.get(a).size();
+		return num;
+	}
+    
     @Override
     public boolean areAdjacent(SerialisationNode a, SerialisationNode b) {
         return this.parents.get(a).contains(b) || this.parents.get(b).contains(a);

@@ -538,6 +538,31 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return false;
 	}
 	
+	/**
+	 * Returns the set of attacks (b,a) such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 * @param ext some set of arguments.
+	 * @return the set of attacks (b,a) such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 */
+	public Collection<Attack> getUndefendedAttacks(Collection<Argument> ext){
+		Collection<Attack> undef = new HashSet<Attack>();
+		for(Argument a: ext) {
+			for(Argument b: this.parents.get(a)) {
+				boolean isDefended = false;
+				for(Argument c: this.parents.get(b)) {
+					if(ext.contains(c)) {
+						isDefended = true;
+						break;
+					}
+				}
+				if(!isDefended)
+					undef.add(new Attack(b,a));
+			}
+		}		
+		return undef;
+	}
+	
 	// Misc methods
 
 	
@@ -1072,10 +1097,11 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		}
 	}
 
-
-
-
-
-
-	
+	@Override
+	public int getNumberOfEdges() {
+		int num = 0;
+		for(Argument a: this.parents.keySet())
+			num += this.parents.get(a).size();
+		return num;
+	}	
 }

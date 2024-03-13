@@ -70,6 +70,12 @@ public interface Graph<T extends Node> extends GeneralGraph<T>{
 	public int getNumberOfNodes();
 	
 	/**
+	 * Returns the number of edges in this graph.
+	 * @return the number of edges in this graph.
+	 */
+	public int getNumberOfEdges();
+	
+	/**
 	 * Returns "true" iff the two nodes are connected by a directed edge
 	 * from a to b or an undirected edge.
 	 * @param a some node
