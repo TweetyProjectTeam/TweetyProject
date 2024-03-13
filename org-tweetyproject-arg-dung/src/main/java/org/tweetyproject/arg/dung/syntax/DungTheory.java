@@ -548,12 +548,16 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public Collection<Attack> getUndefendedAttacks(Collection<Argument> ext){
 		Collection<Attack> undef = new HashSet<Attack>();
 		for(Argument a: ext) {
+			if(!this.parents.containsKey(a))
+				continue;
 			for(Argument b: this.parents.get(a)) {
 				boolean isDefended = false;
-				for(Argument c: this.parents.get(b)) {
-					if(ext.contains(c)) {
-						isDefended = true;
-						break;
+				if(this.parents.containsKey(b)) {
+					for(Argument c: this.parents.get(b)) {
+						if(ext.contains(c)) {
+							isDefended = true;
+							break;
+						}
 					}
 				}
 				if(!isDefended)
