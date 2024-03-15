@@ -63,7 +63,7 @@ public class RestServiceCorsApplication {
 				registry.addMapping("/delp").allowedOrigins(allowedOrigins);
 				registry.addMapping("/ping").allowedOrigins(allowedOrigins);
 				registry.addMapping("/incmes").allowedOrigins(allowedOrigins);
-				registry.addMapping("/aba").allowedOrigins(debug_allowedOrigins);
+				registry.addMapping("/aba").allowedOrigins(allowedOrigins);
 			}
 		};
 	}

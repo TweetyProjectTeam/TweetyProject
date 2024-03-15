@@ -127,6 +127,7 @@
 		<maven.compiler.release>7</maven.compiler.release>
         <jersey.version>2.35</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>org.tweetyproject.web.services.RestServiceCorsApplication</start-class>
     </properties>
 
 	<build>
