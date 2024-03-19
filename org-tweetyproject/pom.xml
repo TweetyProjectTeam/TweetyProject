@@ -237,7 +237,7 @@
     <dependency>
     	<groupId>org.tweetyproject.arg</groupId>
     	<artifactId>weighted</artifactId>
-    	<version>1.24-SNAPSHOT</version>
+    	<version>1.25-SNAPSHOT</version>
     </dependency>
 </dependencies>
 </project>

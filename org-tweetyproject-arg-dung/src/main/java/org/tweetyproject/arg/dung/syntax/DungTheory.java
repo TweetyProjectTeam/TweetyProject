@@ -358,7 +358,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is stable.
 	 */
 	public boolean isStable(Extension<DungTheory> e) {
-		if(!this.isAdmissable(e)) return false;
+		if(!this.isAdmissible(e)) return false;
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -377,7 +377,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is complete.
 	 */
 	public boolean isComplete(Extension<DungTheory> e) {
-		if(!this.isAdmissable(e)) return false;
+		if(!this.isAdmissible(e)) return false;
 		for(Argument a: this)
 			if(!e.contains(a))
 				if(this.isAcceptable(a, e))
@@ -523,6 +523,23 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	
+//	/**
+//	 * If this graph is acyclic, this method checks if the given
+//	 * argument has a defense branch, i.e. if it is supported
+//	 * by a non-attacked argument.
+//	 * @param a an Argument
+//	 * @return true iff this graph is acyclic and a has a defense branch, false otherwise
+//	 */
+//	public boolean hasDefenseBranch(Argument a) {
+//		if (this.containsCycle())
+//			return false;
+//		for (Argument b : this.getNodes()) {
+//			if (isDefenseBranch(b,a))
+//				return true;
+//		}
+//		return false;
+//	}
+	
 	/**
 	 * If this graph is acyclic, this method checks if the given
 	 * argument has a defense branch, i.e. if it is supported
@@ -534,7 +551,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		if (this.containsCycle())
 			return false;
 		for (Argument b : this.getNodes()) {
-			if (isDefenseBranch(b,a))
+			if (isDefenseBranch(a,b))
 				return true;
 		}
 		return false;

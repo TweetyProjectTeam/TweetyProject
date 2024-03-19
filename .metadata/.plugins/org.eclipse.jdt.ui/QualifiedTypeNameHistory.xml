@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.graphs.Edge"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.graphs.DirectedEdge"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.arg.dung.semantics.Extension"/>
+    <fullyQualifiedTypeName name="java.util.HashSet"/>
+    <fullyQualifiedTypeName name="java.util.Set"/>
+</qualifiedTypeNameHistroy>

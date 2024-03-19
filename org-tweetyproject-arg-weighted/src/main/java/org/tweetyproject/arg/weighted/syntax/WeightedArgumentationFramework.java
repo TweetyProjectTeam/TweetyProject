@@ -28,11 +28,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedGroundedReasoner;
+import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedPreferredReasoner;
+import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedStableReasoner;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.graphs.Graph;
@@ -446,6 +452,24 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend itself and the specified arguments from the attackers within the specified threshold.
 	 */
 	public boolean gDefence(T gamma, Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
+		
+		//check that no arguments are both attacker and attacked
+		Set<Argument> unionAtt = new HashSet<>(attackers);
+		unionAtt.retainAll(attacked);
+		if(!unionAtt.isEmpty()) return false;
+		
+		//keep only relevant attackers
+		Set<Argument> relevantAttackers = new HashSet<>(attackers);
+		for(Argument attacker:attackers) {
+			Set<Argument> argsAttacked = this.getAttacked(attacker);
+			argsAttacked.retainAll(attacked);
+			if(argsAttacked.isEmpty()) relevantAttackers.remove(attacker);
+		}
+		
+		//if there are no attacks, there is no need for defence
+		if(relevantAttackers.isEmpty()) return false;
+		
+		
 		//add attacked arguments to extension, if they are not included yet
 		Extension<DungTheory> extUnionattacked = new Extension<>();
 		extUnionattacked.addAll(e);
@@ -454,7 +478,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		T strengthDefence = this.getSemiring().getOneElement();
 
 		//get strength of attack
-		for(Argument attacker:attackers) {
+		for(Argument attacker:relevantAttackers) {
 			strengthAttack = this.getSemiring().getOneElement();
 			strengthDefence = this.getSemiring().getOneElement();
 			Set<Argument> attacksToE = new HashSet<Argument>();
@@ -465,6 +489,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
 				}
 			}
+			
+			
 			//get strength of defence
 			Set<Argument> attacksFromE = this.getAttackers(attacker);
 			attacksFromE.retainAll(e);
@@ -479,6 +505,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			    //throw new IllegalStateException("Extension does not attack.");
 				return false;
 			}
+			
+			
 			
 			//check if extension is able to defend
 			if (!semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma)) {
@@ -786,6 +814,38 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return false;
 	}
 	
+	public boolean isCoherent(){
+	 return this.isCoherent(semiring.getOneElement(), semiring.getOneElement());
+	}
+	
+	/**
+	 * Determines if the theory is coherent, i.e., if each preferred extension is stable
+	 * @return true if the theory is coherent
+	 */
+	public boolean isCoherent(T alpha, T gamma){
+		Collection<Extension<DungTheory>> preferredExtensions = new SimpleWeightedPreferredReasoner<T>().getModels(this,alpha, gamma);
+		Collection<Extension<DungTheory>> stableExtensions = new SimpleWeightedStableReasoner<T>().getModels(this,alpha, gamma);
+		stableExtensions.retainAll(preferredExtensions);
+		return preferredExtensions.size() == stableExtensions.size();
+	}
+	
+	public boolean isRelativelyCoherent(){
+		return isRelativelyCoherent(semiring.getOneElement(), semiring.getOneElement());
+	}
+
+	/**
+	 * Determines if the theory is relatively coherent, i.e., if the grounded extension coincides with the intersection of all preferred extensions
+	 * @return true if the theory is relatively coherent
+	 */
+	public boolean isRelativelyCoherent(T alpha, T gamma){
+		Extension<DungTheory> groundedExtension = new SimpleWeightedGroundedReasoner().getModel(this,alpha, gamma);
+		Collection<Extension<DungTheory>> preferredExtensions = new SimpleWeightedPreferredReasoner<T>().getModels(this,alpha, gamma);
+		Extension<DungTheory> cut = new Extension<DungTheory>(preferredExtensions.iterator().next());
+		for(Extension<DungTheory> e: preferredExtensions)
+			cut.retainAll(e);
+		return groundedExtension.equals(cut);
+	}
+	
 	
     /**
      * Sets the weight of a given attack in the framework.
@@ -864,13 +924,83 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
     /**
      * Indicates whether the framework is weighted.
      *
-     * @return {@code true} if the framework is weighted; {@code false} otherwise.
+     * @return true
      */
     @Override
 	public boolean isWeightedGraph() {
 		return true;
 	}
+    
+	/**
+	 * Checks whether "arg1" supports "arg2", i.e. whether there
+	 * is a path of supporting arguments between "arg1" and "arg2".
+	 * @param arg1 an AbstractArgument.
+	 * @param arg2 an AbstractArgument.
+	 * @return "true" iff "arg1" supports "arg2".
+	 */
+	public boolean isSupport(Argument arg1, Argument arg2){
+		return this.isSupport(arg1, arg2, new HashSet<Argument>());
+	}
 	
+
+	/**
+	 * Retrieves the set of arguments defended by the given argument. In order for b to be defended by a, all attackers of b that
+	 * are also attacked by a have to be defeated by a. E.g if (c,b) and (d,b) as well as (a,c) and (a,d) are attacks, then 
+	 * w(a,c) + w(a,d) >= w(c,b) + w(d,b) is required for b to be defended by a.
+	 * 
+	 *
+	 * @param arg The argument for which defended arguments are to be retrieved.
+	 * @return A set of arguments defended by the given argument.
+	 */
+
+	public Set<Argument> getDefendedArguments(Argument arg) {
+		Set<Argument> defendedArguments = new HashSet<>();
+		Set<Argument> attacked = this.getAttacked(arg);
+		for(Argument attackedArg : attacked) {
+			Set<Argument> potentialDefended = this.getAttacked(attackedArg);
+				potentialDefended.removeAll(attacked);
+				potentialDefended.removeAll(defendedArguments);
+				for(Argument defendedArg: potentialDefended) {
+					//get all attackers of defendedArg, that are attacked by arg
+					Set<Argument> allAttackers = this.getAttackers(defendedArg);
+					allAttackers.retainAll(attacked);
+					if(this.wDefence(new Extension<DungTheory>(Set.of(arg)), allAttackers, Set.of(defendedArg))) {
+						defendedArguments.add(defendedArg);
+				}
+			}
+		}
+		return defendedArguments;
+	}
+	
+	
+	/**
+	 * Checks whether "arg1" supports "arg2", i.e. whether there
+	 * is a path of supporting arguments between "arg1" and "arg2".
+	 * @param arg1 an AbstractArgument.
+	 * @param arg2 an AbstractArgument.
+	 * @param visited already visited arguments.
+	 * @return "true" iff "arg1" supports "arg2".
+	 */
+	private boolean isSupport(Argument arg1, Argument arg2, Set<Argument> visited) {
+	    Set<Argument> supported = this.getDefendedArguments(arg1);
+	    visited.add(arg1);
+
+	    if (supported.contains(arg2)) {
+	        return true;
+	    } else {
+	        supported.removeAll(visited);
+	        for (Argument supporter : supported) {
+	            if (!visited.contains(supporter)) { 
+	                if (isSupport(supporter, arg2, visited)) {
+	                    return true; 
+	                }
+	            }
+	        }
+	    }
+	    return false;
+	}
+
+
 	
 	/** Pretty print of the theory.
 	 * @return the pretty print of the theory.
