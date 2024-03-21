@@ -7,4 +7,7 @@
     <fullyQualifiedTypeName name="org.tweetyproject.arg.dung.semantics.Extension"/>
     <fullyQualifiedTypeName name="java.util.HashSet"/>
     <fullyQualifiedTypeName name="java.util.Set"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.arg.weighted.reasoner.SimpleWeightedPreferredReasoner"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.arg.weighted.reasoner.SimpleWeightedStableReasoner"/>
+    <fullyQualifiedTypeName name="org.tweetyproject.arg.weighted.reasoner.SimpleWeightedGroundedReasoner"/>
 </qualifiedTypeNameHistroy>

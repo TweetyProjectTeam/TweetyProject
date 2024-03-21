@@ -149,6 +149,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param attacks some attacks
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
+	@Override
 	public boolean add(Attack... attacks){
 		boolean result = true; 
         for (Attack att:attacks) {
@@ -186,6 +187,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param theory some Dung theory
 	 * @return {@code true} if this Weighted Dung Theory has been modified 
 	 */
+	@Override
 	public boolean add(DungTheory theory){
 		T weight = this.semiring.getZeroElement();
 		boolean result = this.addAll(theory.getNodes());
@@ -218,6 +220,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param attacked some argument
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
+	@Override
 	public boolean addAttack(Argument attacker, Argument attacked) {
 		T weight = this.semiring.getZeroElement();
 		boolean result = super.addAttack(attacker, attacked);
@@ -246,6 +249,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param c a collection of attacks
 	 * @return {@code true} if this Dung theory has been modified.
 	 */
+	@Override
 	public boolean addAllAttacks(Collection<? extends Attack> c){
 		Map<String,T> weightList = new HashMap<>();
         for (Attack att:c) {
@@ -270,6 +274,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param attack an attack
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
+	@Override
 	public boolean remove(Attack attack) {
 		  this.weightMap.remove(attack.toString());
 		  boolean result = super.remove(attack);
@@ -282,6 +287,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param a some argument
 	 * @return {@code true} if this structure has been changed
 	 */
+	@Override
 	public boolean remove(Argument a) {
 		Collection<Argument> attackers = super.getAttackers(a);
 		Collection<Argument> attacked = super.getAttacked(a);
@@ -489,8 +495,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
 				}
 			}
-			
-			
+		
 			//get strength of defence
 			Set<Argument> attacksFromE = this.getAttackers(attacker);
 			attacksFromE.retainAll(e);
@@ -505,8 +510,6 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			    //throw new IllegalStateException("Extension does not attack.");
 				return false;
 			}
-			
-			
 			
 			//check if extension is able to defend
 			if (!semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma)) {
@@ -523,6 +526,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param ext an extension, ie. a set of arguments
 	 * @return {@code true} if some argument of <code>ext</code> successfully attacks argument.
 	 */
+	@Override
 	public boolean isAttacked(Argument argument, @SuppressWarnings("rawtypes") Extension<? extends ArgumentationFramework> ext){
 		if (getAttackers(argument) == null)
 			return false;
@@ -544,6 +548,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param ext an extension, ie. a set of arguments
 	 * @return {@code true} if some argument of <code>ext</code> is attacked by argument.
 	 */
+	@Override
 	public boolean isAttackedBy(Argument attacker, Collection<Argument> ext){
 		if (getAttacked(attacker) == null)
 			return false;
@@ -561,6 +566,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
+	@Override
 	public boolean isAttacked(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
 		    Set<Argument> attackers = new HashSet<>();
 		    attackers.addAll(ext2);
@@ -574,6 +580,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param arg2 an argument.
 	 * @return {@code true} if arg1 is attacked by arg2
 	 */
+	@Override
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
 		
 		if(!this.getAttacked(arg2).contains(arg1))return false;
@@ -764,6 +771,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * Ai+1 w-defending Ai
 	 * @return true iff the theory is well-founded
 	 */
+	@Override
 	public boolean isWellFounded(){
 		// get all conflict free Sets
 		
@@ -814,12 +822,17 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return false;
 	}
 	
+	/**
+	 * Determines if the theory is coherent, i.e., if each preferred extension is stable
+	 * @return true if the theory is coherent
+	 */
+	@Override
 	public boolean isCoherent(){
 	 return this.isCoherent(semiring.getOneElement(), semiring.getOneElement());
 	}
 	
 	/**
-	 * Determines if the theory is coherent, i.e., if each preferred extension is stable
+	 * Determines if the theory is coherent, i.e., if each alpha gamma preferred extension is stable
 	 * @return true if the theory is coherent
 	 */
 	public boolean isCoherent(T alpha, T gamma){
@@ -829,16 +842,21 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		return preferredExtensions.size() == stableExtensions.size();
 	}
 	
+	/**
+	 * Determines if the theory is relatively coherent, i.e., if the grounded extension coincides with the intersection of all preferred extensions
+	 * @return true if the theory is relatively coherent
+	 */
+	@Override
 	public boolean isRelativelyCoherent(){
 		return isRelativelyCoherent(semiring.getOneElement(), semiring.getOneElement());
 	}
 
 	/**
-	 * Determines if the theory is relatively coherent, i.e., if the grounded extension coincides with the intersection of all preferred extensions
+	 * Determines if the theory is relatively coherent, i.e., if the alpha gamma grounded extension coincides with the intersection of all alpha gamma preferred extensions
 	 * @return true if the theory is relatively coherent
 	 */
 	public boolean isRelativelyCoherent(T alpha, T gamma){
-		Extension<DungTheory> groundedExtension = new SimpleWeightedGroundedReasoner().getModel(this,alpha, gamma);
+		Extension<DungTheory> groundedExtension = new SimpleWeightedGroundedReasoner<T>().getModel(this,alpha, gamma);
 		Collection<Extension<DungTheory>> preferredExtensions = new SimpleWeightedPreferredReasoner<T>().getModels(this,alpha, gamma);
 		Extension<DungTheory> cut = new Extension<DungTheory>(preferredExtensions.iterator().next());
 		for(Extension<DungTheory> e: preferredExtensions)
@@ -938,6 +956,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @param arg2 an AbstractArgument.
 	 * @return "true" iff "arg1" supports "arg2".
 	 */
+	@Override
 	public boolean isSupport(Argument arg1, Argument arg2){
 		return this.isSupport(arg1, arg2, new HashSet<Argument>());
 	}
@@ -1000,11 +1019,20 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	    return false;
 	}
 
+	@Override
+	public boolean isStronglyDefendedBy(Argument arg, Collection<Argument> ext) {
+		throw new UnsupportedOperationException();
+	}
 
+	@Override
+	public Collection<Attack> getUndefendedAttacks(Collection<Argument> ext){
+		throw new UnsupportedOperationException();
+	}
 	
 	/** Pretty print of the theory.
 	 * @return the pretty print of the theory.
 	 */
+	@Override
 	public String prettyPrint(){
 		String output = new String();
 		Iterator<Argument> it = this.iterator();

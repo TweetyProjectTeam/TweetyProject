@@ -14676,3 +14676,37 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.tweetypro
 2024-03-19 11:12:50,628 [Worker-545: Launching TestMethods] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-fol: org.tweetyproject.logics:fol:1.25-SNAPSHOT with classifier null to /org-tweetyproject-logics-fol/target/classes
 2024-03-19 11:12:50,628 [Worker-545: Launching TestMethods] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-commons: org.tweetyproject.logics:commons:1.25-SNAPSHOT with classifier null to /org-tweetyproject-logics-commons/target/classes
 2024-03-19 11:12:50,628 [Worker-545: Launching TestMethods] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-plugin: org.tweetyproject:plugin:1.25-SNAPSHOT with classifier null to /org-tweetyproject-plugin/target/classes
+2024-03-19 12:16:57,088 [Worker-556: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-19 12:16:57,088 [Worker-556: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2024-03-19 12:16:57,088 [Worker-556: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-19 12:16:57,088 [Worker-556: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2024-03-21 15:00:44,460 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2024-03-21 15:08:10,039 [Worker-4: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+2024-03-21 15:08:10,041 [Worker-4: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+2024-03-21 15:08:10,048 [Worker-4: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+2024-03-21 15:08:10,050 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-arg-dung: org.tweetyproject.arg:dung:1.25-SNAPSHOT with classifier  to /org-tweetyproject-arg-dung/target/classes
+2024-03-21 15:08:10,051 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-commons: org.tweetyproject:commons:1.25-SNAPSHOT with classifier  to /org-tweetyproject-commons/target/classes
+2024-03-21 15:08:10,051 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-graphs: org.tweetyproject:graphs:1.25-SNAPSHOT with classifier  to /org-tweetyproject-graphs/target/classes
+2024-03-21 15:08:10,051 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-math: org.tweetyproject:math:1.25-SNAPSHOT with classifier  to /org-tweetyproject-math/target/classes
+2024-03-21 15:08:10,052 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-pl: org.tweetyproject.logics:pl:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-pl/target/classes
+2024-03-21 15:08:10,052 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-fol: org.tweetyproject.logics:fol:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-fol/target/classes
+2024-03-21 15:08:10,052 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-commons: org.tweetyproject.logics:commons:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-commons/target/classes
+2024-03-21 15:08:10,052 [Worker-4: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-plugin: org.tweetyproject:plugin:1.25-SNAPSHOT with classifier  to /org-tweetyproject-plugin/target/classes
+2024-03-21 15:08:10,137 [Worker-4: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-21 15:08:10,141 [Worker-4: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2024-03-21 15:08:10,142 [Worker-4: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-21 15:08:10,142 [Worker-4: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2024-03-21 15:08:23,231 [Worker-15: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for isula:isula:jar:1.1.1 is missing, no dependency information available
+2024-03-21 15:08:23,232 [Worker-15: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for gurobi:gurobi:jar:9.1.0 is missing, no dependency information available
+2024-03-21 15:08:23,240 [Worker-15: Building] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for jspf:core:jar:1.0.2 is missing, no dependency information available
+2024-03-21 15:08:23,241 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-commons: org.tweetyproject:commons:1.25-SNAPSHOT with classifier  to /org-tweetyproject-commons/target/classes
+2024-03-21 15:08:23,241 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-graphs: org.tweetyproject:graphs:1.25-SNAPSHOT with classifier  to /org-tweetyproject-graphs/target/classes
+2024-03-21 15:08:23,241 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-math: org.tweetyproject:math:1.25-SNAPSHOT with classifier  to /org-tweetyproject-math/target/classes
+2024-03-21 15:08:23,242 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-pl: org.tweetyproject.logics:pl:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-pl/target/classes
+2024-03-21 15:08:23,242 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-fol: org.tweetyproject.logics:fol:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-fol/target/classes
+2024-03-21 15:08:23,242 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-logics-commons: org.tweetyproject.logics:commons:1.25-SNAPSHOT with classifier  to /org-tweetyproject-logics-commons/target/classes
+2024-03-21 15:08:23,242 [Worker-15: Building] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/org-tweetyproject-plugin: org.tweetyproject:plugin:1.25-SNAPSHOT with classifier  to /org-tweetyproject-plugin/target/classes
+2024-03-21 15:08:23,244 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-21 15:08:23,245 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 6 resources
+2024-03-21 15:08:23,247 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2024-03-21 15:08:23,248 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sandra/Documents/_Projekte/052_HIWI/Tweety_Project/TweetyProject/org-tweetyproject-arg-dung/src/test/resources
