@@ -523,23 +523,6 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	
-//	/**
-//	 * If this graph is acyclic, this method checks if the given
-//	 * argument has a defense branch, i.e. if it is supported
-//	 * by a non-attacked argument.
-//	 * @param a an Argument
-//	 * @return true iff this graph is acyclic and a has a defense branch, false otherwise
-//	 */
-//	public boolean hasDefenseBranch(Argument a) {
-//		if (this.containsCycle())
-//			return false;
-//		for (Argument b : this.getNodes()) {
-//			if (isDefenseBranch(b,a))
-//				return true;
-//		}
-//		return false;
-//	}
-	
 	/**
 	 * If this graph is acyclic, this method checks if the given
 	 * argument has a defense branch, i.e. if it is supported
