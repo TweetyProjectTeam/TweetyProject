@@ -165,6 +165,17 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
+	 * returns true if no accepted argument attacks another one in
+	 * the set
+	 * @param ext a set of arguments
+	 * @return true if no accepted argument attacks another one in
+	 * the set
+	 */
+	public boolean isConflictFree(Collection<Argument> ext){
+		return this.isConflictFree(new Extension<>(ext));
+	}
+	
+	/**
 	 * returns true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given Dung theory.
 	 * @param ext an extension
@@ -550,12 +561,16 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public Collection<Attack> getUndefendedAttacks(Collection<Argument> ext){
 		Collection<Attack> undef = new HashSet<Attack>();
 		for(Argument a: ext) {
+			if(!this.parents.containsKey(a))
+				continue;
 			for(Argument b: this.parents.get(a)) {
 				boolean isDefended = false;
-				for(Argument c: this.parents.get(b)) {
-					if(ext.contains(c)) {
-						isDefended = true;
-						break;
+				if(this.parents.containsKey(b)) {
+					for(Argument c: this.parents.get(b)) {
+						if(ext.contains(c)) {
+							isDefended = true;
+							break;
+						}
 					}
 				}
 				if(!isDefended)
@@ -564,6 +579,35 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		}		
 		return undef;
 	}
+	
+	/**
+	 * Returns the set of arguments b such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 * @param ext some set of arguments.
+	 * @return the set of arguments b such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 */
+	public Collection<Argument> getUnattackedAttackers(Collection<Argument> ext){
+		Collection<Argument> undef = new HashSet<Argument>();
+		for(Argument a: ext) {
+			if(!this.parents.containsKey(a))
+				continue;
+			for(Argument b: this.parents.get(a)) {
+				boolean isDefended = false;
+				if(this.parents.containsKey(b)) {
+					for(Argument c: this.parents.get(b)) {
+						if(ext.contains(c)) {
+							isDefended = true;
+							break;
+						}
+					}
+				}
+				if(!isDefended)
+					undef.add(b);
+			}
+		}		
+		return undef;
+	}	
 	
 	// Misc methods
 
