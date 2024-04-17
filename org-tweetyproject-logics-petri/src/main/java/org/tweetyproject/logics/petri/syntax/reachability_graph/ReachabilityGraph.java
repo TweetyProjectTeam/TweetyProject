@@ -33,7 +33,6 @@ import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
-import org.tweetyproject.logics.petri.syntax.Place;
 import org.tweetyproject.logics.petri.syntax.Transition;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.probability.Probability;
@@ -50,22 +49,22 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	 * remember the underlying Petri net
 	 */
 	private PetriNet petriNet;
-	
+
 	/**
 	 * the markings of the Petri net described by this graph
 	 */
 	private List<Marking> markings = new ArrayList<>();
-	
+
 	/**
 	 * the direct reachabilities between markings
 	 */
 	private List<MarkingEdge> edges = new ArrayList<>();
-	
+
 	/**
 	 * some user-specified function that describes how likely switches between markings are to happen
 	 */
 	ProbabilityFunction<MarkingEdge> probabilityFunction;
-	
+
 	/**
 	 * Create a new instance
 	 * @param petriNet the underlying Petri net
@@ -82,7 +81,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 		}
 		return markings.add(node);
 	}
-	
+
 	/**
 	 * fetch a unique identifier for a newly created marking
 	 * @return
@@ -99,7 +98,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public boolean add(MarkingEdge edge) {
 		return edges.add(edge);
 	}
-	
+
 	@Override
 	public boolean add(GeneralEdge<Marking> edge) {
 		return false;
@@ -114,7 +113,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public int getNumberOfNodes() {
 		return markings.size();
 	}
-	
+
 	/**
 	 * the number of edges in this graph
 	 * @return the number of edges in this graph
@@ -134,7 +133,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			return e.getNodeA().equals(a) && e.getNodeB().equals(b);
 		}).findAny();
 		if(edge_o.isPresent() == false) {
-			
+
 			return null;
 		}
 		return edge_o.get();
@@ -174,11 +173,11 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public void setProbabilityFunction(ProbabilityFunction<MarkingEdge> probabilityFunction) {
 		this.probabilityFunction = probabilityFunction;
 	}
-	
+
 	/**
-	 * initializes a probability function over the edges of this graph according to 
-	 * Random Walk, i.e. all outgoing edges of one particular node are assigned to 
-	 * the same probability and the sum of these probabilities equals to 1.	
+	 * initializes a probability function over the edges of this graph according to
+	 * Random Walk, i.e. all outgoing edges of one particular node are assigned to
+	 * the same probability and the sum of these probabilities equals to 1.
 	 */
 	public void initializeDefaultProbabilityFunction() {
 		probabilityFunction = new ProbabilityFunction<MarkingEdge>();
@@ -192,11 +191,11 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			});
 		}
 	}
-	
+
 	/**
-	 * Initialize a probability function over the edges of this graph according to 
-	 * a stochastic walk. The sum of probabilities of outgoing edges at each node  
-	 * equals to 1, and for multiple outgoing edges, probabilities are randomized.	
+	 * Initialize a probability function over the edges of this graph according to
+	 * a stochastic walk. The sum of probabilities of outgoing edges at each node
+	 * equals to 1, and for multiple outgoing edges, probabilities are randomized.
 	 */
 	public void initializeRandomProbabilityFunction() {
 		probabilityFunction = new ProbabilityFunction<MarkingEdge>();
@@ -220,11 +219,11 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			probabilityFunction.put(edge, new Probability(remaining));
 		}
 	}
-	
+
 	/**
-	 * Initialize a probability function over the edges of this graph according to 
+	 * Initialize a probability function over the edges of this graph according to
 	 * a stochastic walk. For multiple outgoing edges, exactly one edge receives a probability of 1
-	 * and all other edges a probability of 0. This may turn some transitions dead.	
+	 * and all other edges a probability of 0. This may turn some transitions dead.
 	 */
 	public void initializeIrregularProbabilityFunction() {
 		probabilityFunction = new ProbabilityFunction<MarkingEdge>();
@@ -244,10 +243,10 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			}
 		}
 	}
-	
+
 	/**
-	 * specifies if the probability function of this graph is 
-	 * 1. initialized, and 2. assigns for each marking a total 
+	 * specifies if the probability function of this graph is
+	 * 1. initialized, and 2. assigns for each marking a total
 	 * (summed up) probability of 1 for all successor edges.
 	 * This implies that each marking needs to have at least one successor marking.
 	 * @return true iff the probability function is valid
@@ -270,7 +269,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 		}
 		return true;
 	};
-	
+
 	/**
 	 * fix the sorting to prepare linear algebra analysis
 	 * in particular, assert a fixed ordering for index-based matrix/vector-access
@@ -278,7 +277,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public void sortMarkings() {
 		this.markings.sort(Marking::compareTo);
 	}
-	
+
 	/**
 	 * Retrieve a matrix that specifies for each pair of markings how likely a transition between these
 	 * markings is going to happen, based on the probability function that describes this graph.
@@ -306,11 +305,11 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 				}
 			}
 		}
-		return transitionMatrix;		
+		return transitionMatrix;
 	}
-	
+
 	/**
-	 * Retrieve a matrix that specifies for each pair of marking and transition how likely that transition 
+	 * Retrieve a matrix that specifies for each pair of marking and transition how likely that transition
 	 * is going to occur at that marking, based on the probability function that describes this graph.
 	 * @return the control matrix
 	 * @throws IllegalStateException iff the probability function of this graph is invalid
@@ -337,10 +336,10 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 					controlMatrix.setEntry(j, i, new FloatConstant(0));
 				}
 			}
-		}		
+		}
 		return controlMatrix;
 	}
-	
+
 
 	@Override
 	public Iterator<Marking> iterator() {
@@ -418,7 +417,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public boolean isWeightedGraph() {
 		return false;
 	}
-	
+
 	/**
 	 * Determine if the specified marking is present as a node in the graph
 	 * @param marking the marking
@@ -429,15 +428,15 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 
 	/**
-	 * Retrieve, if present, the marking in this graph that equals the query marking 
-	 * in the sense that both markings describe the same token distribution over places 
+	 * Retrieve, if present, the marking in this graph that equals the query marking
+	 * in the sense that both markings describe the same token distribution over places
 	 * @param marking the query marking
 	 * @return the marking that equals the query marking, or null if not present
 	 */
 	public Optional<Marking> getMarking(Marking marking) {
 		return markings.stream().filter(m -> m.equals(marking)).findAny();
 	}
-	
+
 	/**
 	 * For one particular marking, retrieve all outgoing edges
 	 * @param marking the marking of interest
@@ -448,7 +447,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 				.filter(edge -> edge.getNodeA() != null && edge.getNodeA().equals(marking))
 				.collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * check if all nodes (markings) of this graph describe the same Petri net, i.e. the same set of places
 	 * @return true iff all markings describe the same set of places
@@ -467,7 +466,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			}
 		}
 		return true;
-		
+
 	}
 
 	@Override
@@ -475,7 +474,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	/**
 	 * Retrieve the designated initial markings
 	 * @return getInitialMarkings
@@ -483,7 +482,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	public Set<Marking> getInitialMarkings() {
 		return this.petriNet.getInitialMarkings();
 	}
-	
+
 	/**
 	 * Check whether a marking is a designated initial marking
 	 * @param marking the marking to check
@@ -501,5 +500,5 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 		return this.markings;
 	}
 
-	
+
 }

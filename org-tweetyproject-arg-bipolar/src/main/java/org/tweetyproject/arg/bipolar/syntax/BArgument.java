@@ -20,8 +20,6 @@
 package org.tweetyproject.arg.bipolar.syntax;
 
 import java.util.Iterator;
-import java.util.Set;
-
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
@@ -47,7 +45,7 @@ public class BArgument extends org.tweetyproject.arg.dung.syntax.Argument implem
 	public Iterator<BArgument> iterator() {
 		return null;
 	}
-	
+
 	public boolean isSupportedBy(EAFTheory theory, BipolarEntity x) {
 		for(Support support : theory.supports) {
 			BipolarEntity froms = support.getSupporter();
@@ -56,7 +54,7 @@ public class BArgument extends org.tweetyproject.arg.dung.syntax.Argument implem
                 return true;
             }
 		}
-		
+
 		return false;
 	}
 }

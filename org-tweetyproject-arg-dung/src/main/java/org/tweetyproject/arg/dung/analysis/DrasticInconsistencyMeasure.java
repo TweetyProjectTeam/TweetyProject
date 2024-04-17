@@ -21,18 +21,26 @@ package org.tweetyproject.arg.dung.analysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * *description missing*
+ * Calculates the drastic inconsistency measure of the given argumentation framework.It implements the
+ * InconsistencyMeasure interface.
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
- *
+ * @param <T> the type of DungTheory
  */
 public class DrasticInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.analysis.InconsistencyMeasure#inconsistencyMeasure
+	/**
+	 * Calculates the inconsistency measure based on the drastic inconsistency
+	 * measure.
+	 *
+	 * @param argumentationFramework the argumentation framework to calculate the
+	 *                               inconsistency measure for
+	 * @return The inconsistency measure of the argumentation framework.
+	 *         Returns 0.0 if the argumentation framework has no attacks,
+	 *         otherwise returns 1.0 indicating inconsistency.
 	 */
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
-		if(argumentationFramework.getAttacks().size() == 0) return 0d;
+		if (argumentationFramework.getAttacks().size() == 0)
+			return 0d;
 		return 1d;
 	}
 }

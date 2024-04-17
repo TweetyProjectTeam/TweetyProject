@@ -28,10 +28,11 @@ import java.util.Collection;
 
 /**
  * Admissibility Principle
+ * <p>
  * A semantics satisfies admissibility if for all extensions E it holds that:
  * every argument in E is defended by E
  *
- * see Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Lars Bengel
  */
@@ -53,7 +54,7 @@ public class AdmissibilityPrinciple extends Principle {
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         for (Extension<DungTheory> ext: exts) {
-            if (!theory.isAdmissable(ext)) {
+            if (!theory.isAdmissible(ext)) {
                 return false;
             }
         }

@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.logics.fol.reasoner;
 
-import java.io.File;
 import java.util.Set;
 
 import org.tweetyproject.logics.fol.semantics.HerbrandBase;
@@ -30,7 +29,7 @@ import org.tweetyproject.logics.fol.syntax.ForallQuantifiedFormula;
 
 /**
  * Uses a naive brute force search procedure for theorem proving.
- * 
+ *
  * @author Matthias Thimm
  */
 public class SimpleFolReasoner extends FolReasoner {
@@ -43,16 +42,16 @@ public class SimpleFolReasoner extends FolReasoner {
 		if(!formula.isWellFormed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not well-formed.");
 		if(!formula.isClosed())
-			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");		
+			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");
 		FolSignature sig = new FolSignature();
 		sig.addSignature(kb.getMinimalSignature());
-		sig.addSignature(formula.getSignature());		
+		sig.addSignature(formula.getSignature());
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.getAllHerbrandInterpretations();
 		for(HerbrandInterpretation i: interpretations)
 			if(i.satisfies(kb))
 				if(!i.satisfies(formula))
-					return false;				
+					return false;
 		return true;
 	}
 
@@ -73,7 +72,7 @@ public class SimpleFolReasoner extends FolReasoner {
 				if(!i.satisfies(f))
 					return false;
 		return true;
-	}	
+	}
 	@Override
 	public boolean isInstalled() {
 		return true;

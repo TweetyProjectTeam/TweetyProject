@@ -92,6 +92,11 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		return this.nodes.size();
 	}
 
+	@Override
+	public int getNumberOfEdges() {
+		return this.edges.size();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -45,16 +45,15 @@ import org.tweetyproject.agents.sim.SimulationResult;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
-import org.tweetyproject.commons.TweetyConfiguration;
 
 /**
- * 
+ *
  * Shows how a simulation of a multi-agent system can be set up. It defines a
  * dialogue game between different agents with varying complexity of their
  * opponent models.
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  */
 public class GroundedTest {
 
@@ -76,7 +75,7 @@ public class GroundedTest {
 	 * This method shows that with increasing complexity of the T1-belief state of
 	 * the CONTRA agent (and constant model of the PRO agent), the average utility
 	 * of the CONTRA agent increases. NOTE: the simulation might take a while.
-	 * 
+	 *
 	 * @throws ProtocolTerminatedException if the protocol already terminated
 	 */
 	public static void runSimulationT1() throws ProtocolTerminatedException {
@@ -147,7 +146,7 @@ public class GroundedTest {
 //T1;T1;10;0.3;tree;T1-3;PRO;58;CONTRA;42;PRO;(0.14080000000000006, 0.9995124848484855);CONTRA;(-0.17920000000000003, 0.9693225858585856);
 	/**
 	 * Same as runSimulationT1()
-	 * 
+	 *
 	 * @throws ProtocolTerminatedException if the protocol already terminated
 	 */
 	public static void runSimulationT2() throws ProtocolTerminatedException {
@@ -232,7 +231,7 @@ public class GroundedTest {
 
 	/**
 	 * Same as runSimulationT1()
-	 * 
+	 *
 	 * @throws ProtocolTerminatedException if the protocol already terminated
 	 */
 	public static void runSimulationT3() throws ProtocolTerminatedException {

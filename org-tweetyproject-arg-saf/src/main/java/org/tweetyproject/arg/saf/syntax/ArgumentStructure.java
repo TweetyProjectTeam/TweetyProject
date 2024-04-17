@@ -29,16 +29,16 @@ import org.tweetyproject.logics.pl.syntax.*;
  * This class models an argument structure, i.e. a minimal (with respect to set
  * inclusion) conflict-free sequence of basic arguments AS = [A1, ... ,An] such that for any
  * Ai and for any p in supp(Ai) there is an Aj with j &gt; i and claim(Aj) = p.
- * 
+ *
  * @author Matthias Thimm
  */
 public class ArgumentStructure extends Argument implements Collection<BasicArgument> {
-	
+
 	/**
 	 * The derivation of this argument structure
 	 */
 	private Derivation<BasicArgument> derivation;
-	
+
 	/**
 	 * Deprecated for argument structures.
 	 * @param name a string
@@ -48,23 +48,23 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 		super(name);
 		throw new IllegalArgumentException("Illegal constructor call for an argument structure");
 	}
-	
+
 	/**
-	 * Creates a new empty argument structure. 
+	 * Creates a new empty argument structure.
 	 */
 	public ArgumentStructure(){
-		this(new ArrayList<BasicArgument>());		
+		this(new ArrayList<BasicArgument>());
 	}
-	
+
 	/**
 	 * Creates a new argument structure with the given list of arguments.
 	 * @param arguments a list of basic arguments.
 	 */
 	public ArgumentStructure(List<BasicArgument> arguments){
 		super("ARG_STRUCTURE");
-		this.derivation = new Derivation<BasicArgument>(arguments);		
+		this.derivation = new Derivation<BasicArgument>(arguments);
 	}
-	
+
 	/**
 	 * Checks whether this argument structure is valid wrt. to the given
 	 * structured argumentation framework, i.e. whether
@@ -74,13 +74,13 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 	 * @param saf a structured argumentation framework.
 	 * @return "true" iff this argument structure is valid.
 	 */
-	public boolean isValid(StructuredArgumentationFramework saf){		
+	public boolean isValid(StructuredArgumentationFramework saf){
 		boolean isConflictFree = saf.isConflictFree(new Extension(this));
 		boolean isFounded = this.derivation.isFounded();
 		boolean isMinimal = this.derivation.isMinimal();
 		return  isConflictFree && isFounded && isMinimal;
 	}
-	
+
 	/**
 	 * Checks whether this argument structure attacks
 	 * the other argument structure, i.e. whether getTop(this)
@@ -96,7 +96,7 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * Returns the claim of this argument structure, i.e.
 	 * the claim of its first basic argument.
@@ -108,7 +108,7 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 			return null;
 		return this.getTop().getConclusion();
 	}
-	
+
 	/**
 	 * Returns the first basic arguments of
 	 * this argument structure
@@ -224,7 +224,7 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 	public <T> T[] toArray(T[] a) {
 		return this.derivation.toArray(a);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.dung.syntax.Argument#toString()
 	 */
@@ -263,6 +263,6 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 			return false;
 		return true;
 	}
-	
-	
+
+
 }

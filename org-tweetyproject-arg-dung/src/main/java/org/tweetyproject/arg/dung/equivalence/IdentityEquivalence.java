@@ -23,12 +23,10 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 argumentation frameworks are equivalent,
- * by comparing if they are equal.
+ * This class defines 'syntactic' equivalence of {@link DungTheory Argumentation Frameworks},
+ * i.e., it checks whether two AFs have exactly the same arguments and attacks.
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public class IdentityEquivalence implements Equivalence<DungTheory>  {
 
@@ -52,8 +50,8 @@ public class IdentityEquivalence implements Equivalence<DungTheory>  {
 	}
 
 	@Override
-	public String getDescription() {
-		return "identityEQ";
+	public String getName() {
+		return "Syntactic Equivalence";
 	}
 
 }

@@ -37,7 +37,7 @@ import java.util.*;
 public class EAFToDAFConverter {
 
 	/**
-	 * 
+	 *
 	 * @param eafTheory a theory
 	 * @return a dungtheory version of the input
 	 */
@@ -58,26 +58,26 @@ public class EAFToDAFConverter {
             for (org.tweetyproject.arg.bipolar.syntax.Attack attack : eafTheory.getAttacks()) {
             	if(attack.contains(from)) {
 	                Set<BArgument> edgeArguments = new HashSet<BArgument>();
-	
+
 	                findEdgeNodes(attack.getAttacked(), edgeArguments, eafTheory);
-	
+
 	                Set<Argument> dafAttackers = mapping.get(from);
-	
-	
+
+
 	                System.out.println("Edge arguments: " + edgeArguments);
 	                if (dafAttackers == null) {
 	                    System.err.println("dafAttackers is null: " + from);
 	                }
-	
+
 	                if (edgeArguments.isEmpty()) {
 	                    System.err.println("dafAttackeds is null: " + edgeArguments);
 	                }
-	
+
 	                if (edgeArguments.isEmpty() || dafAttackers == null) {
 	                    return null;
 	                }
-	
-	
+
+
 	                for (Argument dafAttacker : dafAttackers) {
 	                    for (BArgument attacked : edgeArguments) {
 	                        if (mapping.get(attacked) == null) {
@@ -97,7 +97,7 @@ public class EAFToDAFConverter {
     }
 
     /**
-     * 
+     *
      * @param bipolarEntity an argument
      * @param edgeArguments an edge argument
      * @param eafTheory the eafTheory
@@ -110,14 +110,14 @@ public class EAFToDAFConverter {
         		if(s.contains(a)) {
         			if(supportsToArgs.get(a) != null) {
         				supportsToArgs.get(a).add(s);
-        				
+
         			}
         			else {
         				supportsToArgs.put(a, new HashSet<Support>(new ArrayList<Support>(Arrays.asList(s))));
         			}
         		}
         	}
-        	
+
         }
     	for (BArgument child : bipolarEntity) {
             if (supportsToArgs.get(child).size() == 0) {
@@ -132,7 +132,7 @@ public class EAFToDAFConverter {
     }
 
     /**
-     * 
+     *
      * @param dungTheory a dungtheory
      * @param startingPoint an argument to start at
      * @param discovered a set of arguments
@@ -143,13 +143,13 @@ public class EAFToDAFConverter {
         Map<BArgument, Set<Support>> supportsToArgs = new HashMap<BArgument, Set<Support>>();
         Map<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>> attacksToArgs = new HashMap<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>>();
         Map<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>> incomingAttacksToArgs = new HashMap<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>>();
-        
+
     	for(BArgument a : eafTheory.getArguments()) {
     		for(Support s : eafTheory.getSupports()) {
         		if(s.contains(a)) {
         			if(supportsToArgs.get(a) != null) {
         				supportsToArgs.get(a).add(s);
-        				
+
         			}
         			else {
         				supportsToArgs.put(a, new HashSet<Support>(new ArrayList<Support>(Arrays.asList(s))));
@@ -160,7 +160,7 @@ public class EAFToDAFConverter {
         		if(s.contains(a)) {
         			if(attacksToArgs.get(a) != null) {
         				attacksToArgs.get(a).add( s);
-        				
+
         			}
         			else {
         				attacksToArgs.put(a, new HashSet<org.tweetyproject.arg.bipolar.syntax.Attack>(new ArrayList<org.tweetyproject.arg.bipolar.syntax.Attack>(Arrays.asList(s))));
@@ -169,14 +169,14 @@ public class EAFToDAFConverter {
         		if(s.getAttacked().contains(a)) {
         			if(incomingAttacksToArgs.get(a) != null) {
         				incomingAttacksToArgs.get(a).add( s);
-        				
+
         			}
         			else {
         				incomingAttacksToArgs.put(a, new HashSet<org.tweetyproject.arg.bipolar.syntax.Attack>(new ArrayList<org.tweetyproject.arg.bipolar.syntax.Attack>(Arrays.asList(s))));
         			}
         		}
         	}
-        	
+
         }
     	Queue<Pair<BArgument, List<BArgument>>> queue = new LinkedList<>();
 
@@ -185,7 +185,7 @@ public class EAFToDAFConverter {
         }
         discovered.add(startingPoint);
         queue.add(new Pair<>(startingPoint, new ArrayList<BArgument>(Arrays.asList(startingPoint))));
-        
+
 
         while (!queue.isEmpty()) {
             Pair<BArgument, List<BArgument>> pair = queue.poll();
@@ -222,9 +222,9 @@ public class EAFToDAFConverter {
         }
 
     }
-    
+
     /**
-     * 
+     *
      * @param dungTheory a theory
      * @param mapping a mapping of argument to sets of arguments
      * @param pair argument and lis of arguments
@@ -240,7 +240,7 @@ public class EAFToDAFConverter {
 
         BArgument eArgument = pair.getSecond().get(pair.getSecond().size() - 1);
         if (!mapping.containsKey(eArgument)) {
-            mapping.put(eArgument, new HashSet());
+            mapping.put(eArgument, new HashSet<>());
         }
         mapping.get(eArgument).add(dafArgument);
 

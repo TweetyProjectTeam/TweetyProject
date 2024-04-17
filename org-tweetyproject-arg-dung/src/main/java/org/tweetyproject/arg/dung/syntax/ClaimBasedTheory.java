@@ -18,16 +18,18 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.ojalgo.matrix.store.SuperimposedStore;
-import org.tweetyproject.arg.dung.semantics.*;
+import org.tweetyproject.arg.dung.semantics.ClaimSet;
+import org.tweetyproject.arg.dung.semantics.Extension;
 
 
 /**
  *implements claim based theory
  *see: The Complexity Landscape of Claim-Augmented
-Argumentation Frameworks (Wolfgang Dvoˇr´ak  Alexander Greßler 
+Argumentation Frameworks (Wolfgang Dvoˇr´ak  Alexander Greßler
 Anna Rapberger  StefanWoltran )
  *
  * @author Sebastian Franke
@@ -39,7 +41,7 @@ public class ClaimBasedTheory extends DungTheory {
 	/**all claims*/
 	private HashSet<Claim> claims;
 	/**
-	 * 
+	 *
 	 * @param arg argument
 	 */
 	public void add(ClaimArgument arg) {
@@ -50,21 +52,21 @@ public class ClaimBasedTheory extends DungTheory {
 
 
 	/**
-	 * 
+	 *
 	 * @return the claims
 	 */
 	public HashSet<Claim> getClaims() {
 		return claims;
 	}
 	/**
-	 * 
+	 *
 	 * @param claims the claims to e set
 	 */
 	public void setClaims(HashSet<Claim> claims) {
 		this.claims = claims;
 	}
 
-	
+
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
 	 */
@@ -97,10 +99,10 @@ public class ClaimBasedTheory extends DungTheory {
 		}
 		return cl;
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @param ext the extension
 	 * @return all claims defeated by the extension (extension defeat all arguments of a claim => claim defeated)
 	 */
@@ -118,17 +120,17 @@ public class ClaimBasedTheory extends DungTheory {
 			for(ClaimArgument arg : argsWithClaim) {
 				if(this.isAttacked(arg, ext))
 					argsWithClaimAttackedByExt.add(arg);
-					
+
 			}
 			if(argsWithClaimAttackedByExt.equals(argsWithClaim))
 				defeated.addAll(argsWithClaimAttackedByExt);
 		}
 		return defeated;
 	}
-	
-	
 
 
 
-	
+
+
+
 }

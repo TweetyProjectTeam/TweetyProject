@@ -43,16 +43,15 @@ import org.tweetyproject.agents.sim.SimulationParameters;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
-import org.tweetyproject.commons.TweetyConfiguration;
 
 /**
- * 
+ *
  * Shows how a simulation of a multi-agent system can be set up. It defines a
  * dialogue game between different agents with varying complexity of their
  * opponent models.
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  */
 public class GroundedTest2 {
 

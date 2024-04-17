@@ -24,7 +24,7 @@ import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * This class is describes a causal statement, such as an interventional or counterfactual statement.
+ * This class describes a causal statement, such as an interventional or counterfactual statement.
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23

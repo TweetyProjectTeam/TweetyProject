@@ -18,10 +18,8 @@
  */
 package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
-import org.w3c.dom.Node;
-
-import org.tweetyproject.logics.bpm.syntax.BpmnModel;
 import org.tweetyproject.logics.bpm.syntax.Task;
+import org.w3c.dom.Node;
 
 /**
  * Parse a task of a BPMN model
@@ -37,7 +35,7 @@ public class TaskParser extends AbstractElementParser<Task>{
 		super(rootParser);
 		this.parsedElement = new Task();
 	}
-	
+
 	@Override
 	protected void handleAttribute(Node attribute) {
 		String attributeName = attribute.getNodeName();

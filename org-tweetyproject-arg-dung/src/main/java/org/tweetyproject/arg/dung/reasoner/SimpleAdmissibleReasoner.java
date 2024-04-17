@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -43,7 +42,7 @@ public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		// Check all subsets
 		for(Set<Argument> ext: new SetTools<Argument>().subsets(((DungTheory) bbase)))
-			if(((DungTheory) bbase).isAdmissable(new Extension<DungTheory>(ext)))
+			if(((DungTheory) bbase).isAdmissible(new Extension<DungTheory>(ext)))
 				extensions.add(new Extension<DungTheory>(ext));
 		return extensions;
 	}

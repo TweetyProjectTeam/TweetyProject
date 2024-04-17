@@ -20,8 +20,6 @@
 package org.tweetyproject.arg.bipolar.syntax;
 
 import org.tweetyproject.commons.util.SetTools;
-import org.apache.commons.math.random.AbstractRandomGenerator;
-
 import java.util.*;
 
 /**

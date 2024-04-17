@@ -35,7 +35,7 @@ import org.tweetyproject.math.matrix.Matrix;
 
 /**
  * A class to represent a Petri net
- * @author Benedikt Knopp
+ * @author Benedikt Knopp, Matthias Thimm
  */
 public class PetriNet implements Graph<PetriNetNode>{
 
@@ -102,9 +102,13 @@ public class PetriNet implements Graph<PetriNetNode>{
 
 	@Override
 	public int getNumberOfNodes() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.places.size() + this.transitions.size();
 	}
+	
+	@Override
+	public int getNumberOfEdges() {
+		return this.edges.size();
+	}	
 
 	@Override
 	public boolean areAdjacent(PetriNetNode a, PetriNetNode b) {

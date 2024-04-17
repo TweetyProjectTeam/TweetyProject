@@ -47,8 +47,8 @@ public class ConcurrentExactAnalysis extends AbstractAnalysis implements Probabi
         this.executorService = Executors.newFixedThreadPool(noThreads);
     }
 
-    public Double total = new Double(0.0);
-    public Double p = new Double(0.0);
+    public Double total = Double.valueOf(0.0);
+    public Double p = Double.valueOf(0.0);
     /**
      * Computes exactly what is probabilistic justification of the given set of arguments in the PEAF.
      * <p>
@@ -64,8 +64,8 @@ public class ConcurrentExactAnalysis extends AbstractAnalysis implements Probabi
         this.total = 0.0;
         this.p = 0.0;
         AtomicLong i = new AtomicLong(0);
-        
-        
+
+
 
         exactPEAFInducer.induce(iEAF ->
                 executorService.submit((Callable<Void>) () -> {

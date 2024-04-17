@@ -23,7 +23,6 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
@@ -85,7 +84,7 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 			case ID: return new SimpleIdealSetAfReasoner();
 			case EA: return new SimpleEagerSetAfReasoner();
 			case STG: return new SimpleStageSetAfReasoner();
-			case N: return new SimpleNaiveSetAfReasoner();
+			case NA: return new SimpleNaiveSetAfReasoner();
 		default:
 			throw new IllegalArgumentException("Unknown semantics.");			
 		}		

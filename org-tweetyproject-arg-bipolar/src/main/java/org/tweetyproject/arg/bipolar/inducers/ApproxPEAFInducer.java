@@ -81,10 +81,10 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
             HashSet<BArgument> args = new HashSet<>();
             HashSet<List<Support>> lists = new HashSet<List<Support>>();
             args.addAll(eArguments);
-            lists.add( supportList);
+            lists.add(supportList);
 
             InducibleEAF inducibleEAF = new InducibleEAF(args,
-                    new HashSet(supportList),
+                    new HashSet<>(supportList),
                     new HashSet<>(),
                     new HashSet<>(),
                     0, 0);
@@ -123,7 +123,7 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
         Stack<EAF_F> stack = new Stack<>();
 
         // eta is added, Algorithm 8 Line 2 EAF_F <- {eta}, {}, {}
-        stack.push(new EAF_F(new HashSet(), new HashSet<Support>(new ArrayList<Support>(Arrays.asList(peafTheory.getSupports().iterator().next()))), new HashSet<BArgument>(new ArrayList<BArgument>(Arrays.asList(peafTheory.getArguments().get(0))))));
+        stack.push(new EAF_F(new HashSet<>(), new HashSet<Support>(new ArrayList<Support>(Arrays.asList(peafTheory.getSupports().iterator().next()))), new HashSet<BArgument>(new ArrayList<BArgument>(Arrays.asList(peafTheory.getArguments().get(0))))));
 
         // Turn recursive random induce to sequential
         while (!stack.isEmpty()) {

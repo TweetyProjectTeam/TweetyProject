@@ -84,7 +84,7 @@ public class TheoryLearner {
      * @param positiveExamples a map of positive examples and their weights
      * @param negativeExamples a map of negative examples and their weights
      * @return a argumentation framework inferred from the given examples
-     * @throws IOException if an error occurs     
+     * @throws IOException if an error occurs
      * @throws InvocationTargetException if an error occurs
      * @throws IllegalAccessException if an error occurs
      */
@@ -153,7 +153,7 @@ public class TheoryLearner {
      */
     private PlFormula getConflictFreeClause(DungTheory theory, Labeling labeling) throws IOException {
         Collection<Argument> ext = labeling.getArgumentsOfStatus(ArgumentStatus.IN);
-        Collection<Argument> all = labeling.keySet();
+        // Collection<Argument> all = labeling.keySet();
 
         Collection<PlFormula> formulas = new HashSet<>();
         for (Argument a: ext) {
@@ -198,6 +198,7 @@ public class TheoryLearner {
      * @return formula representing the stability of ext
      * @throws IOException *description missing*
      */
+    @SuppressWarnings("unused")
     private PlFormula getStableClause(DungTheory theory, Labeling labeling) throws IOException {
         Collection<Argument> ext = labeling.getArgumentsOfStatus(ArgumentStatus.IN);
         Collection<Argument> all = labeling.keySet();
@@ -223,6 +224,7 @@ public class TheoryLearner {
      * @return formula representing the completeness of ext
      * @throws IOException *description missing*
      */
+    @SuppressWarnings("unused")
     private PlFormula getCompleteClause(DungTheory theory, Labeling labeling) throws IOException {
         Collection<Argument> ext = labeling.getArgumentsOfStatus(ArgumentStatus.IN);
         Collection<Argument> all = labeling.keySet();

@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
@@ -134,6 +133,6 @@ public class SccCF2Reasoner extends AbstractExtensionReasoner {
 	public boolean isInstalled() {
 		return true;
 	}
-    
-    
+
+
 }

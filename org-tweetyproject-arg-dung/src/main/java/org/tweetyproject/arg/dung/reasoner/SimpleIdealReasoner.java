@@ -25,7 +25,6 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -54,7 +53,7 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 		Collection<Extension<DungTheory>> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
 		Collection<Extension<DungTheory>> prefExt = new SimplePreferredReasoner().getModels(bbase);
 		Set<Labeling> potResult = new HashSet<Labeling>();
-		boolean potIdeal; 
+		boolean potIdeal;
 		for(Extension<DungTheory> ext: admExt){
 			Labeling extLab = new Labeling(bbase,ext);
 			// ext is ideal if
@@ -71,9 +70,9 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 					break;
 				}
 			}
-			if(potIdeal)				
-				potResult.add(extLab);			
-		}		
+			if(potIdeal)
+				potResult.add(extLab);
+		}
 		// get the one which maximizes in and out
 		// Note that there is only one ideal extension
 		boolean ideal;
@@ -88,8 +87,8 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 						}
 			}
 			if(ideal)
-				return (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);			
-		}		
+				return (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
+		}
 		// this should not happen as there is always an ideal extension;
 		throw new RuntimeException("Ideal extension seems to be undefined.");
 	}

@@ -26,7 +26,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * This class describes an counterfactual causal statement like:
+ * This class describes a counterfactual causal statement like:
  * given phi, if v had been x then rho would be true
  * 
  * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by

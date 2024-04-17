@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
 
@@ -79,7 +78,7 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
         Collection<Extension<DungTheory>> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
-    
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

@@ -26,23 +26,29 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
 
+
 /**
- * *description missing*
+ * This class represents an inconsistency measure based on the count of cycles in an argumentation framework.
+ * It implements the InconsistencyMeasure interface.
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
- *
+ * @param <T> the type of DungTheory used in the argumentation framework
  */
 public class CycleCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
+	/**
+	 * Calculates the inconsistency measure based on the count of cycles in the argumentation framework.
+	 *
+	 * @param argumentationFramework the argumentation framework to calculate the inconsistency measure for
+	 * @return the inconsistency measure as a Double value
+	 */
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops(argumentationFramework);
-		// Distinct cycles are defined as a distinct set of it's nodes
+		// Distinct cycles are defined as a distinct set of its nodes
 		Set<Set<Argument>> filteredCycles = new HashSet<Set<Argument>>();
-		for(Stack<Argument> stack : cycles) 
+		for (Stack<Argument> stack : cycles)
 			filteredCycles.add(new HashSet<Argument>(stack));
-		
+
 		double cycleCount = (double) filteredCycles.size();
-		
+
 		return (Double) cycleCount;
 	}
-	
 }

@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.bipolar.syntax;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -92,7 +91,7 @@ public class EAttack implements Attack{
                 '}';
     }
 
-    
+
 
     @Override
     public boolean equals(Object o) {

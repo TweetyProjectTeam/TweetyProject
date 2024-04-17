@@ -41,29 +41,29 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class LdoAssociativeFormula extends LdoFormula implements AssociativeFormula<LdoFormula>, AssociativeSupportBridge, Collection<LdoFormula> {
+public abstract class LdoAssociativeFormula extends LdoFormula implements AssociativeFormula<LdoFormula>, AssociativeSupportBridge {
 
 	/**
-	 * The inner formulas of this formula 
+	 * The inner formulas of this formula
 	 */
 	protected AssociativeFormulaSupport<LdoFormula> support;
-	
+
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
 	public LdoAssociativeFormula(){
 		support = new AssociativeFormulaSupport<LdoFormula>(this);
 	}
-	
+
 	/**
-	 * Creates a new associative formula with the given inner formulas. 
+	 * Creates a new associative formula with the given inner formulas.
 	 * @param formulas a collection of formulas.
 	 */
 	public LdoAssociativeFormula(Collection<? extends LdoFormula> formulas){
 		this();
 		this.support.addAll(formulas);
 	}
-	
+
 	/**
 	 * Creates a new associative formula with the two given formulae
 	 * @param first a propositional formula.
@@ -74,13 +74,13 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 		this.add(first);
 		this.add(second);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<PlPredicate> getPredicates() {
 		return (Set<PlPredicate>) support.getPredicates();
 	}
-	
+
 	@Override
 	public List<LdoFormula> getFormulas() {
 		return support.getFormulas();
@@ -89,16 +89,16 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	@Override
 	public <C extends SimpleLogicalFormula> Set<C> getFormulas(Class<C> cls) {
 		return support.getFormulas(cls);
-	
+
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Set<LdoArgument> getAtoms() {
 		return (Set<LdoArgument>) support.getAtoms();
 	}
-	
-		
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
@@ -110,26 +110,26 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return support.toString();
 	}
-	
+
 	@Override
 	public DungSignature getSignature() {
 		return (DungSignature)support.getSignature();
 	}
-	
+
 	@Override
 	public Signature createEmptySignature() {
 		return new PlSignature();
 	}
-	
+
 	//-------------------------------------------------------------------------
 	//	UTILITY METHODS
 	//-------------------------------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -161,16 +161,16 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 			return false;
 		return true;
 	}
-	
+
 	//-------------------------------------------------------------------------
 	//	COLLECTION INTERFACE
 	//-------------------------------------------------------------------------
-	
+
 	@Override
 	public boolean add(LdoFormula f){
 		return this.support.add(f);
 	}
-	
+
 	/**
 	 * Adds the specified elements to the end of this collection (optional operation).
 	 * @param formulas to be appended to collection
@@ -179,32 +179,32 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	public boolean add(LdoFormula ... formulas) {
 		return this.support.add(formulas);
 	}
-	
+
 	@Override
 	public boolean addAll(Collection<? extends LdoFormula> c){
 		return this.support.addAll(c);
 	}
-	
+
 	@Override
 	public void clear(){
 		this.support.clear();
 	}
-	
+
 	@Override
 	public boolean contains(Object o){
 		return this.support.contains(o);
 	}
-	
+
 	@Override
 	public boolean containsAll(Collection<?> c){
 		return this.support.containsAll(c);
 	}
-	
+
 	@Override
 	public boolean isEmpty(){
 		return this.support.isEmpty();
 	}
-	
+
 	@Override
 	public Iterator<LdoFormula> iterator(){
 		return this.support.iterator();
@@ -214,33 +214,33 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	public boolean remove(Object o){
 		return this.support.remove(o);
 	}
-	
+
 	@Override
 	public boolean removeAll(Collection<?> c){
 		return this.support.removeAll(c);
 	}
-	
+
 	@Override
 	public boolean retainAll(Collection<?> c){
 		return this.support.retainAll(c);
 	}
-	
+
 	@Override
 	public int size(){
 		return this.support.size();
 	}
-	
+
 	@Override
 	public Object[] toArray(){
 		return this.support.toArray();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] toArray(Object[] a){
 		return this.support.toArray(a);
 	}
-	
+
 	@Override
 	public void add(int index, LdoFormula element) {
 		this.support.add(index, element);
@@ -290,5 +290,5 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	public List<LdoFormula> subList(int fromIndex, int toIndex) {
 		return this.support.subList(fromIndex, toIndex);
 	}
-	
+
 }
