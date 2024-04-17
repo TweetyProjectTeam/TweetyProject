@@ -103,6 +103,8 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 import javafx.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * *description missing*
@@ -113,6 +115,9 @@ public class RequestController {
 	private final int SERVICES_TIMEOUT_DUNG = 600;
 	private final int SERVICES_TIMEOUT_DELP = 600;
 	private final int SERVICES_TIMEOUT_INCMES = 300;
+	private final int SERVICES_TIMEOUT_ABA = 300;
+	private static final Logger logger 
+	= LoggerFactory.getLogger(RequestController.class);
 
 	/**
 	 * *description missing*
@@ -310,7 +315,7 @@ public class RequestController {
 	@PostMapping(value = "/ping", produces = "application/json")
 	@ResponseBody
 	public Ping ping(@RequestBody Ping ping_Greeting) {
-		System.out.println("==== PING ====");
+		logger.info("Server pinged");
 		return ping_Greeting;
 	}
 
