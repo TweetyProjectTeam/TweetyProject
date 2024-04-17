@@ -22,9 +22,11 @@ import java.util.Set;
 
 
 /**
- * *description missing*
+ * Represents the graph diamond modality in the logic of dialectical outcomes (LDO). This modality extends the basic
+ * diamond modality by incorporating reference to specific sets of arguments, termed upper and lower reference arguments,
+ * which are used to define the context or scope of the possibility within the argumentation graph.
+ * 
  * @author Matthias Thimm
- *
  */
 public class LdoGraphDiamondModality extends AbstractGraphLdoModality{
 	

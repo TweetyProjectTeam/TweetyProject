@@ -86,10 +86,11 @@ public class CausalKnowledgeBase extends KnowledgeBase {
 		return output;
 	}
 	
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves all propositional formulas of this knowledge base excluding the structural equations.
+     * 
+     * @return a set of beliefs without structural equations
+     */
 	public HashSet<PlFormula> getBeliefsWithoutStructuralEquations(){
 		return new HashSet<PlFormula>(this.formulas);
 	}

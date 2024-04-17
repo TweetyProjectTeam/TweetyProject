@@ -21,9 +21,11 @@ package org.tweetyproject.arg.dung.ldo.syntax;
 import java.util.Set;
 
 /**
- * *description missing*
- * @author Matthias Thimm
+ * Represents the graph box modality in the logic of dialectical outcomes (LDO). This modality extends the basic
+ * box modality by incorporating references to specific sets of arguments, termed upper and lower reference arguments,
+ * which are used to define the context or scope of necessity within the argumentation graph.
  *
+ * @author Matthias Thimm
  */
 public class LdoGraphBoxModality extends AbstractGraphLdoModality {
 

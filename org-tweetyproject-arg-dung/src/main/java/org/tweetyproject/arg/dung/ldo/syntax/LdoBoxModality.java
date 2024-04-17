@@ -19,9 +19,14 @@
 package org.tweetyproject.arg.dung.ldo.syntax;
 
 /**
- * *description missing*
- * @author Matthias Thimm
+ * Represents the box modality in the logic of dialectical outcomes (LDO). The box modality (often denoted as "[]" or "box")
+ * is used to express necessity within the context of argumentation frameworks in LDO. This class encapsulates an LDO formula
+ * and defines the semantic interpretation that the enclosed formula is necessarily true given the dialectical framework.
  *
+ * This class provides an implementation for handling the box modality specifically, allowing the representation and manipulation
+ * of such modal statements within LDO theories.
+ * 
+ * @author Matthias Thimm
  */
 public class LdoBoxModality extends AbstractLdoModality {
 

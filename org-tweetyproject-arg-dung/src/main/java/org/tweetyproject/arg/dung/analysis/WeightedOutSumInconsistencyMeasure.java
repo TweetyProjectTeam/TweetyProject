@@ -24,15 +24,24 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * *description missing*
+ * This class implements an inconsistency measure for Dung's argumentation frameworks
+ * based on the weighted sum of outgoing attacks from each argument. The measure calculates
+ * inconsistency by evaluating how each argument contributes to conflicts within the framework.
+ *
+ * @param <T> the type of Dung theories used, extending DungTheory
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
  */
 public class WeightedOutSumInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.analysis.InconsistencyMeasure#inconsistencyMeasure
-	 */
+    /**
+     * Calculates the inconsistency measure of a given Dung theory argumentation framework by evaluating
+     * the weighted sum of outgoing attacks for each argument. This measure computes the sum of 1 divided
+     * by the number of attackees for each argument, suggesting that arguments with many targets contribute
+     * less to overall inconsistency due to the dispersion of their influence.
+     *
+     * @param argumentationFramework the Dung theory argumentation framework to measure for inconsistency
+     * @return Double the calculated inconsistency measure
+     */
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		
 		Double weightedOutSum = 0d;
