@@ -50,7 +50,7 @@ class SerialisableExtensionReasonerTest {
 	 * This test, verifies that the method "getModels" works correctly, 
 	 * by comparing its results with those of verified reasoners of the specified semantics.
 	 * The verified reasoners are given by the class {@link AbstractExtensionReasoner}.
-	 * @param semantics *description missing*
+	 * @param semantics to test
 	 */
 	@ParameterizedTest
 	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) // , "SA" 
@@ -100,7 +100,7 @@ class SerialisableExtensionReasonerTest {
 	/**
 	 * This test, verifies that the method "getModelsSequences" works correctly, 
 	 * by comparing its results with verified examples for complete semantics.
-	 * @param semantics *description missing*
+	 * @param semantics to test
 	 */
 	@ParameterizedTest
 	@EnumSource(names = {"CO"}) 

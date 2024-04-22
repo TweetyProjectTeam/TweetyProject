@@ -31,18 +31,21 @@ import org.tweetyproject.arg.dung.writer.AbstractDungWriter;
 import org.tweetyproject.commons.util.Shell;
 
 /**
- * *description missing*
+ * Tests parsing and writing functionalities for different formats of Dung's argumentation frameworks
+ * using the AbstractDungParser and AbstractDungWriter within the TweetyProject framework.
  */
 public class ProboTest {
 
 	static Shell shell = Shell.getNativeShell();//Shell.getCygwinShell("C:\\Windows\\System32\\bash.exe");
 	
 
-	/**
-	 * *description missing*
-	 * @throws Exception *description missing*
-	 */
-	@Test
+    /**
+     * Prepares and parses argumentation frameworks from files in different formats (TGF and APX),
+     * then asserts correct parsing by checking the number of attacks and nodes.
+     * 
+     * @throws Exception if the file paths are incorrect or files are not readable.
+     */
+    @Test
 	public void ParserTest() throws Exception {
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);
 		DungTheory af = parser.parse(new FileReader(ProboTest.class.getResource("/ex1.tgf").getFile()));
@@ -58,10 +61,12 @@ public class ProboTest {
 
 	}
 
-	/**
-	 * *description missing*
-	 * @throws Exception *description missing*
-	 */
+    /**
+     * Tests the functionality of the AbstractDungWriter to ensure it correctly formats
+     * arguments into a string based on a DungTheory object.
+     * 
+     * @throws Exception if there are issues creating the writer or writing the data.
+     */
 	@Test
 	public void WriterTest() throws Exception {
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);

@@ -47,10 +47,12 @@ public class ExtensionInconsistencyMeasure {
 	// Example used by A. Hunter in "Measuring Inconsistency in Argument Graphs" (2017)
 	static DungTheory hunterExample15 = new DungTheory();
 	
-	/**
-	 * *description missing*
-	 * @throws java.lang.Exception *description missing*
-	 */
+    /**
+     * Sets up the argumentation framework used in the tests before all tests are executed. 
+     * This method initializes the framework with arguments and attacks.
+     *
+     * @throws java.lang.Exception if there is an error during the setup process.
+     */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		hunterExample15.add(a1);
@@ -74,9 +76,10 @@ public class ExtensionInconsistencyMeasure {
 		
 	}
 
-	/**
-	 * *description missing*
-	 */
+    /**
+     * Tests the preferred count inconsistency measure. According to A. Hunter's paper,
+     * the expected value is derived from the count of preferred extensions minus one.
+     */
 	@Test
 	public void preferredCountInconsistencyMeasure() {
 		Double preferredCount = new PreferredCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
@@ -84,18 +87,20 @@ public class ExtensionInconsistencyMeasure {
 		assertEquals(1d, preferredCount, 0.0);
 	}
 	
-	/**
-	 * *description missing*
-	 */
+    /**
+     * Tests the non-grounded count inconsistency measure. This measure is supposed to reflect the count of 
+     * non-grounded extensions present in the framework.
+     */
 	@Test
 	public void nonGroundedCountInconsistencyMeasure() {
 		Double nonGroundedCount = new NonGroundedCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
 		assertEquals(5d, nonGroundedCount, 0.0);
 	}
 	
-	/**
-	 * *description missing*
-	 */
+    /**
+     * Tests the unstable count inconsistency measure. This test checks for the count of 
+     * stable extensions that can be achieved by minimally modifying the original framework.
+     */
 	@Test
 	public void unstableCountInconsistencyMeasure() {
 		Double unstableCount = new UnstableCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);

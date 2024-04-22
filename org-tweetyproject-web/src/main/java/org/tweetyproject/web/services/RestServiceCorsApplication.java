@@ -35,21 +35,18 @@ public class RestServiceCorsApplication {
 	// Allowed origins for production and debug environments
     static String allowedOrigins = "http://tweetyproject.org";
 	String debug_allowedOrigins = "http://127.0.0.1:5500/";
-	/**
-	 * *description missing*
-	 * @param args *description missing*
-	 */
+    /**
+     * Main method that starts the Spring Boot application and logs the allowed origins.
+     * It also sets up necessary configurations and initializes the Spring context.
+     *
+     * @param args Command line arguments passed during the start of the application.
+     */
 	public static void main(String[] args) {
 		LoggerUtil.logger.info("Server started.");
 		LoggerUtil.logger.info("Allowed Origins: "+ allowedOrigins);
 
 		SpringApplication.run(RestServiceCorsApplication.class, args);
 	}
-
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
 	@Bean
 	/**
      * Configuration method for CORS support in the application.
