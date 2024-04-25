@@ -39,22 +39,28 @@ import org.tweetyproject.web.services.Response;
  * @see Objects
  */
 
+/**
+ * Represents a response object that contains a list of measures related to identified inconsistencies.
+ * This class extends {@link Response} to inherit base response functionality.
+ */
 public class InconsistencyGetMeasuresResponse extends Response {
     private List<HashMap<String, String>> measures;
     private String reply;
     private String email;
 
     /**
-     * *description missing*
+     * Constructs an empty {@code InconsistencyGetMeasuresResponse} with uninitialized fields.
+     * This default constructor is useful when the object needs to be populated manually.
      */
     public InconsistencyGetMeasuresResponse() {
     }
 
     /**
-     * *description missing*
-     * @param measures *description missing*
-     * @param reply *description missing*
-     * @param email *description missing*
+     * Constructs a {@code InconsistencyGetMeasuresResponse} initialized with measures, a reply message, and an email.
+     *
+     * @param measures A list of hashmaps, each representing a measure and its related data.
+     * @param reply A string containing a response or feedback related to the request.
+     * @param email The email address associated with the request for tracking or response purposes.
      */
     public InconsistencyGetMeasuresResponse(List<HashMap<String,String>> measures, String reply, String email) {
         this.measures = measures;
@@ -63,57 +69,64 @@ public class InconsistencyGetMeasuresResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Retrieves the list of measures related to the inconsistency analysis.
+     *
+     * @return A list of hashmaps where each hashmap contains key-value pairs representing measure attributes.
      */
     public List<HashMap<String,String>> getMeasures() {
         return this.measures;
     }
 
     /**
-     * *description missing*
-     * @param measures *description missing*
+     * Sets the list of measures associated with the inconsistency analysis.
+     *
+     * @param measures A list of hashmaps where each hashmap includes measure-specific data.
      */
     public void setMeasures(List<HashMap<String,String>> measures) {
         this.measures = measures;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Retrieves the reply message associated with this response.
+     *
+     * @return A string containing the reply message.
      */
     public String getReply() {
         return this.reply;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
+     * Sets the reply message for this response.
+     *
+     * @param reply A string that will be used as the reply or feedback.
      */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Retrieves the email address associated with this response.
+     *
+     * @return A string containing the email address.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
+     * Sets the email address for this response.
+     *
+     * @param email A string containing the email address to be associated with this response.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * *description missing*
-     * @param measures *description missing*
-     * @return *description missing*
+     * Method to set the measures and return the modified response object.
+     *
+     * @param measures A list of hashmaps with measure-related data to set.
+     * @return This {@code InconsistencyGetMeasuresResponse} instance to facilitate further modifications.
      */
     public InconsistencyGetMeasuresResponse measures(List<HashMap<String,String>> measures) {
         setMeasures(measures);
@@ -121,9 +134,10 @@ public class InconsistencyGetMeasuresResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
-     * @return *description missing*
+     * Method to set the reply and return the modified response object.
+     *
+     * @param reply A string to set as the reply or feedback.
+     * @return This {@code InconsistencyGetMeasuresResponse} instance to facilitate further modifications.
      */
     public InconsistencyGetMeasuresResponse reply(String reply) {
         setReply(reply);
@@ -131,14 +145,16 @@ public class InconsistencyGetMeasuresResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
-     * @return *description missing*
+     * Method to set the email and return the modified response object.
+     *
+     * @param email A string to set as the email address.
+     * @return This {@code InconsistencyGetMeasuresResponse} instance to facilitate further modifications.
      */
     public InconsistencyGetMeasuresResponse email(String email) {
         setEmail(email);
         return this;
     }
+
 
     @Override
     public boolean equals(Object o) {

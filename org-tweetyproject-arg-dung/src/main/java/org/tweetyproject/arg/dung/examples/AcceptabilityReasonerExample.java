@@ -50,11 +50,14 @@ public class AcceptabilityReasonerExample {
 	}
 	
 	/**
-	 * *description missing*
-	 * @param args string
-	 * @throws FileNotFoundException Exception
-	 * @throws ParserException Exception
-	 * @throws IOException Exception
+	 * The main method that demonstrates the usage of various acceptability reasoners.
+	 * It loads an argumentation framework from a TGF file, configures several reasoners with different semantics,
+	 * and prints the results of these reasoners.
+	 * 
+	 * @param args Command-line arguments, not used here.
+	 * @throws FileNotFoundException if the file containing the argumentation framework could not be found.
+	 * @throws ParserException if there is a problem parsing the TGF file.
+	 * @throws IOException if an I/O error occurs while reading the file.
 	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		// load some example AF

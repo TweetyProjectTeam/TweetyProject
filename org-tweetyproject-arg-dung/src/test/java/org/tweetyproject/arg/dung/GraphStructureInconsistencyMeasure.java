@@ -59,11 +59,12 @@ public class GraphStructureInconsistencyMeasure {
 	static DungTheory hunterExample14G1 = new DungTheory();
 	static DungTheory hunterExample14G2 = new DungTheory();
 	
-	
-	/**
-	 * *description missing*
-	 * @throws java.lang.Exception *description missing*
-	 */
+    /**
+     * Sets up test frameworks before all tests are executed. This includes initializing frameworks with various
+     * arguments and attacks to represent different scenarios.
+     * 
+     * @throws java.lang.Exception if there is an error during setup, such as an argument being incorrectly added.
+     */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
@@ -147,9 +148,10 @@ public class GraphStructureInconsistencyMeasure {
 		
 	}
 
-	/**
-	 * *description missing*
-	 */
+    /**
+     * Tests the drastic inconsistency measure on a framework where attacks are directed towards a single node,
+     * expecting a measure of 1 due to the presence of an attack.
+     */
 	@Test
 	public void drasticWithAttackReturnsOne() {
 		

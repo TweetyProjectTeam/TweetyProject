@@ -45,21 +45,22 @@ public class KnowledgeBase extends PlBeliefSet{
 	 */
 	private HashSet<PlFormula> assumptions;
 	
-	/**
-	 * *description missing*
-	 * @param assumptions *description missing*
-	 */
+    /**
+     * Constructs a knowledge base with a specified set of background assumptions.
+     * 
+     * @param assumptions A set of propositional logic formulas representing the background assumptions.
+     */
 	public KnowledgeBase(Set<PlFormula> assumptions) {
 		super();
 		this.assumptions = new HashSet<>(assumptions);
 	}
 
-	/**
-	 * *description missing*
-	 * @param assumption *description missing*
-	 * @return *description missing*
-	 */
-	public boolean addAssumption(PlFormula assumption) {
+    /**
+     * Adds a background assumption to this knowledge base.
+     * 
+     * @param assumption The PlFormula representing the assumption to be added.
+     * @return true if the assumption was successfully added, false if it already exists in the set.
+     */ic boolean addAssumption(PlFormula assumption) {
 		return this.assumptions.add(assumption);
 	}
 	
@@ -83,18 +84,21 @@ public class KnowledgeBase extends PlBeliefSet{
 		return new HashSet<>(this.assumptions);
 	}
 	
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves all beliefs (propositional formulas) stored in this knowledge base.
+     * 
+     * @return A set of PlFormulas representing the beliefs held in this knowledge base.
+     */
 	public HashSet<PlFormula> getBeliefs(){
 		return new HashSet<PlFormula>(this.formulas);
 	}
 
-	/** *description missing*
-	 * @param assumption *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Removes a background assumption from this knowledge base.
+     * 
+     * @param assumption The assumption to be removed.
+     * @return true if the assumption was successfully removed, false if it was not found in the set.
+     */
 	public boolean removeAssumption(PlFormula assumption) {
 		return this.assumptions.remove(assumption);
 	}

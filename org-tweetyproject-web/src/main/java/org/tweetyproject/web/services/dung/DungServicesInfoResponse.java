@@ -68,90 +68,103 @@ public class DungServicesInfoResponse extends Response {
         this.commands = commands;
     }
 
-    /**
-     * *description missing*
-     * @return *description missing*
+    /** 
+     * Gets the reply message associated with this response.
+     *
+     * @return The current reply message as a string.
      */
     public String getReply() {
         return this.reply;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
+     * Sets the reply message for this response.
+     *
+     * @param reply The reply message to set.
      */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the email address associated with this response.
+     *
+     * @return The email address as a string.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
+     * Sets the email address for this response.
+     *
+     * @param email The email address to set.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the backend timeout setting for the service.
+     *
+     * @return The backend timeout in integer form.
      */
     public int getBackend_timeout() {
         return this.backend_timeout;
     }
 
     /**
-     * *description missing*
-     * @param backend_timeout *description missing*
+     * Sets the backend timeout for the service.
+     *
+     * @param backend_timeout The backend timeout value in seconds.
      */
     public void setBackend_timeout(int backend_timeout) {
         this.backend_timeout = backend_timeout;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the list of semantic elements associated with the service.
+     *
+     * @return A list of semantics as strings.
      */
     public List<String> getSemantics() {
         return this.semantics;
     }
 
     /**
-     * *description missing*
-     * @param semantics *description missing*
+     * Sets the list of semantic elements for the service.
+     *
+     * @param semantics A list of semantic strings to be used or defined by the service.
      */
     public void setSemantics(List<String> semantics) {
         this.semantics = semantics;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the list of commands associated with the service.
+     *
+     * @return A list of commands as strings.
      */
     public List<String> getCommands() {
         return this.commands;
     }
 
     /**
-     * *description missing*
-     * @param commands *description missing*
+     * Sets the list of commands for the service.
+     *
+     * @param commands A list of command strings to be utilized by the service.
      */
     public void setCommands(List<String> commands) {
         this.commands = commands;
     }
 
+    // Fluent setters
+
     /**
-     * *description missing*
-     * @param reply *description missing*
-     * @return *description missing*
+     * Sets the reply message and returns this instance for method chaining.
+     *
+     * @param reply The reply message to set.
+     * @return This instance to facilitate further modifications.
      */
     public DungServicesInfoResponse reply(String reply) {
         setReply(reply);
@@ -159,9 +172,10 @@ public class DungServicesInfoResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
-     * @return *description missing*
+     * Sets the email address and returns this instance for method chaining.
+     *
+     * @param email The email address to set.
+     * @return This instance to facilitate further modifications.
      */
     public DungServicesInfoResponse email(String email) {
         setEmail(email);
@@ -169,9 +183,10 @@ public class DungServicesInfoResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param backend_timeout *description missing*
-     * @return *description missing*
+     * Sets the backend timeout and returns this instance for method chaining.
+     *
+     * @param backend_timeout The backend timeout in seconds to set.
+     * @return This instance to facilitate further modifications.
      */
     public DungServicesInfoResponse backend_timeout(int backend_timeout) {
         setBackend_timeout(backend_timeout);
@@ -179,9 +194,10 @@ public class DungServicesInfoResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param semantics *description missing*
-     * @return *description missing*
+     * Sets the semantics and returns this instance for method chaining.
+     *
+     * @param semantics A list of semantic strings to set.
+     * @return This instance to facilitate further modifications.
      */
     public DungServicesInfoResponse semantics(List<String> semantics) {
         setSemantics(semantics);
@@ -189,9 +205,10 @@ public class DungServicesInfoResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param commands *description missing*
-     * @return *description missing*
+     * Sets the commands and returns this instance for method chaining.
+     *
+     * @param commands A list of command strings to set.
+     * @return This instance to facilitate further modifications.
      */
     public DungServicesInfoResponse commands(List<String> commands) {
         setCommands(commands);

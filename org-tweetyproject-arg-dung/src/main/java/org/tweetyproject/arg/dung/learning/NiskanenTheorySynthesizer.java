@@ -140,10 +140,10 @@ public class NiskanenTheorySynthesizer {
 
     /**
      * create the formula encoding the conflict-free restriction on the extension
-     * @param theory *description missing*
+     * @param theory a dung theory
      * @param ext an extension
      * @return a formula encoding the conflict-freeness of the extension
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     private PlFormula getConflictFreeClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
@@ -160,7 +160,7 @@ public class NiskanenTheorySynthesizer {
      * @param theory a dung theory
      * @param ext an extension
      * @return formula representing the admissibility of ext
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     private PlFormula getAdmissibleClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
@@ -185,7 +185,7 @@ public class NiskanenTheorySynthesizer {
      * @param theory a dung theory
      * @param ext an extension
      * @return formula representing the stability of ext
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     @SuppressWarnings("unused")
     private PlFormula getStableClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
@@ -209,7 +209,7 @@ public class NiskanenTheorySynthesizer {
      * @param theory a dung theory
      * @param ext an extension
      * @return formula representing the completeness of ext
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     @SuppressWarnings("unused")
     private PlFormula getCompleteClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {

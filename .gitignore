@@ -9,4 +9,6 @@ bin/
 *.iml
 /org-tweetyproject-web/tweetyserver.log
 .vscode
-/.metadata/
+
+*.log
+/.metadata

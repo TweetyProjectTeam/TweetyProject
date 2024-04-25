@@ -43,12 +43,17 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  */
 public class CausalModel extends PlBeliefSet {
 
-	/**
-	 * Builds the necessary elements of a causal model, from a specified set of equivalences, used as structural equations	 
-	 * @param structuralEquations *description missing*
-	 * @param out_ExplainableAtoms *description missing*
-	 * @param out_BackGroundAtoms *description missing*
-	 */
+/**
+ * Constructs a causal model from a specified set of equivalences used as structural equations. 
+ * This method populates two sets: one for explainable atoms and another for background atoms based on the provided structural equations.
+ * Explainable atoms are derived from the left-hand side of the equations if they consist solely of propositions.
+ * Atoms not explained by the left-hand side and appearing on the right-hand side of any equation are considered background atoms.
+ *
+ * @param structuralEquations A set of equivalences representing the structural equations of the causal model. Each equivalence must have a proposition on its left side.
+ * @param out_ExplainableAtoms An initially empty set that will be populated with propositions derived from the left-hand side of the structural equations. These atoms are considered explainable within the model.
+ * @param out_BackGroundAtoms An initially empty set that will be populated with atoms found in the right-hand side of the equations but not in the explainable atoms set, indicating these atoms are background conditions or factors.
+ * @throws IllegalArgumentException if any left-hand side of the equations does not consist of a proposition, indicating an invalid structural equation format.
+ */
 	private static void buildModel(Set<Equivalence> structuralEquations, HashSet<Proposition> out_ExplainableAtoms,
 			HashSet<Proposition> out_BackGroundAtoms) {
 		for(var eq : structuralEquations) {
@@ -77,7 +82,7 @@ public class CausalModel extends PlBeliefSet {
 	 * @param explainableAtoms set of explainable atoms
 	 * @param structuralEquations boolean structural equations; one equation for each explainable atom,
 	 * which is the only literal on exactly one side of the equation
-	 * @return *description missing*
+	 * @return status of form 
 	 */
 	private static boolean checkCorrectForm(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
 		for(var atom : explainableAtoms) {
@@ -108,12 +113,14 @@ public class CausalModel extends PlBeliefSet {
 
 		return true;
 	}
+
 	/**
-	 * Checks that the specified structural equations only use background or explainable atoms
-	 * @param backGroundAtoms *description missing*
-	 * @param explainableAtoms *description missing*
-	 * @param formula *description missing*
-	 */
+	* Checks that the specified structural equations only use background or explainable atoms
+ 	* @param backGroundAtoms A set of propositions identified as background atoms. These are not directly explainable by the model but are necessary for defining the conditions under which other atoms are explained.
+ 	* @param explainableAtoms A set of propositions identified as explainable atoms. These atoms are those that the model can directly explain through its structural equations.
+ 	* @param formula The formula being checked. This formula should ideally be a structural equation that needs validation to ensure it uses only known atoms.
+ 	* @throws IllegalArgumentException if the formula uses atoms that are neither explainable nor background atoms, which violates the model's constraints.
+ 	*/
 	private static void checkIfOnlyExplainableBackgroundAtoms(Set<Proposition> backGroundAtoms,
 			Set<Proposition> explainableAtoms, PlFormula formula) {
 		for( var atom : formula.getAtoms()) {
@@ -298,35 +305,46 @@ public class CausalModel extends PlBeliefSet {
 		}
 	}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
-	public HashSet<Proposition> getBackGroundAtoms() {
-		return new HashSet<>(this.backGroundAtoms);
-	}
+/**
+ * Retrieves a copy of the set of background atoms currently defined in the causal model.
+ * Background atoms are those elements that are used in the model's equations but are not directly explainable.
+ * Returning a copy of the set ensures that the internal state of the causal model cannot be altered directly.
+ *
+ * @return A new {@link HashSet} containing all the background atoms.
+ */
+public HashSet<Proposition> getBackGroundAtoms() {
+    return new HashSet<>(this.backGroundAtoms);
+}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
-	public HashSet<Proposition> getExplainableAtoms() {
-		return new HashSet<>(this.explainableAtoms);
-	}
+/**
+ * Retrieves a copy of the set of explainable atoms currently defined in the causal model.
+ * Explainable atoms are those elements that the model explains directly through its structural equations.
+ * Returning a copy of the set helps maintain encapsulation and prevents external modifications to the model's state.
+ *
+ * @return A new {@link HashSet} containing all the explainable atoms.
+ */
+public HashSet<Proposition> getExplainableAtoms() {
+    return new HashSet<>(this.explainableAtoms);
+}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
-	public HashSet<Equivalence> getStructuralEquations(){
-		var output = new HashSet<Equivalence>();
-		for(var formula : this.formulas) {
-			if(formula instanceof Equivalence) {
-				output.add((Equivalence) formula);
-			}
-		}
-		return output;
-	}
+/**
+ * Retrieves a copy of the set of structural equations currently defined in the causal model.
+ * Structural equations are representations of equivalences that define how certain propositions (explainable atoms)
+ * depend on other atoms (background or explainable). Each equation must be an instance of {@link Equivalence}.
+ * This method filters the model's formulas to return only those that are instances of {@link Equivalence}.
+ *
+ * @return A new {@link HashSet} containing all the structural equations.
+ */
+public HashSet<Equivalence> getStructuralEquations() {
+    var output = new HashSet<Equivalence>();
+    for (var formula : this.formulas) {
+        if (formula instanceof Equivalence) {
+            output.add((Equivalence) formula);
+        }
+    }
+    return output;
+}
+
 
 	/**
 	 * @return A twin model to this instance.

@@ -139,10 +139,11 @@ public class InducedTheory extends DungTheory {
 		return allExtContainConclusion;
 	}
 
-	/**
-	 * *description missing*	 
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves all InducedArguments from the theory.
+     * 
+     * @return A set of all InducedArguments within this theory.
+     */
 	public Set<InducedArgument> getArguments(){
 		var output = new HashSet<InducedArgument>();
 		for(var argument : this.getNodes()) {
@@ -151,20 +152,22 @@ public class InducedTheory extends DungTheory {
 		return output;
 	}
 
-	/**
-	 * *description missing*	 
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves the causal knowledge base associated with this theory.
+     * 
+     * @return The causal knowledge base from which this theory is induced.
+     */
 	public CausalKnowledgeBase getKnowledgeBase() {
 		return this.knowledgeBase;
 	}
 
-	/**
-	 * *description missing*
-	 * @param attacker *description missing*
-	 * @param victim *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Checks if one argument undercuts another based on the conclusions and premises.
+     * 
+     * @param attacker The argument that potentially undercuts.
+     * @param victim The argument that is potentially undercut.
+     * @return true if the attacker undercuts the victim, otherwise false.
+     */
 	private boolean checkUndercut(InducedArgument attacker, InducedArgument victim) {
 		for(var premise : victim.getPremises()) {
 			if(attacker.getConclusion().complement().equals(premise)) {

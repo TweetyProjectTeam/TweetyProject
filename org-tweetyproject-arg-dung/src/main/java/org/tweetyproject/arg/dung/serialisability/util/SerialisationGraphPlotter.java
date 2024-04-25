@@ -100,16 +100,20 @@ public class SerialisationGraphPlotter extends GraphPlotter<SerialisationNode, E
 
 	private SerialisationGraph graph;
 
-	/**
-	 * *description missing*
-	 * @param plotter *description missing*
-	 * @param graph *description missing*
-	 */
-	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
-		super(plotter, graph);
+/**
+ * Constructs a SerialisationGraphPlotter with the specified plotter and serialisation graph.
+ * This constructor initializes the plotter and associates it with a specific serialisation graph,
+ * which represents the graph of a generation process of serialisable extensions.
+ * 
+ *
+ * @param plotter The plotter to be used for visualizing the graph. This component handles the graphical rendering.
+ * @param graph The serialisation graph that represents the structure and data of a serialisable extension generation process.
+ */
+public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
+    super(plotter, graph); // Call to the superclass constructor to initialize the plotter and graph
 
-		this.graph = graph;
-	}
+    this.graph = graph; // Storing the graph in an instance variable for further use
+}
 
 	@Override
 	public void createGraph(boolean isVertical) {

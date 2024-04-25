@@ -41,7 +41,7 @@ import javafx.util.Pair;
 public final class Utils {
 
     /**
-     * *description missing*
+     * Default constructor
      */
     private Utils(){}
 

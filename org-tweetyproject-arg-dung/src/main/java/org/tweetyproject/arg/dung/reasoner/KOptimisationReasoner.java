@@ -16,11 +16,21 @@
  *
  *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.web.util;
+package org.tweetyproject.arg.dung.reasoner;
+
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.Reasoner;
 
 /**
- * Generic JSON Object
+ * Interface for reasoner capable of optimising k extensions.
+ * [Thimm. Optimisation and Approximation in Abstract Argumentation: The Case of Stable Semantics. IJCAI 2024]
+ * 
+ * @author Matthias Thimm
+ *
  */
-public class JSONObject {
+public interface KOptimisationReasoner extends Reasoner<Integer,DungTheory,Argument>{
 
+	@Override
+	public Integer query(DungTheory aaf, Argument arg);
 }

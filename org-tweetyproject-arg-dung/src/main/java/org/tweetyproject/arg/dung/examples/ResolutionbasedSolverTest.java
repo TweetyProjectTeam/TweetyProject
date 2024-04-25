@@ -23,17 +23,24 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * *description missing*
+ * Demonstrates the use of resolution-based solvers on Dung argumentation frameworks.
+ * This class provides an example setup of a simple Dung theory and illustrates how to apply
+ * resolution-based reasoning to determine acceptable arguments under various semantics.
+ * The main focus is on testing the functionality of resolution-based solvers such as preferred
+ * and admissible semantics reasoners.
+ * 
  * @author Sebastian Franke
- *
  */
 
 public class ResolutionbasedSolverTest {
 
-	/**
-	 * 
-	 * @param args arguments
-	 */
+    /**
+     * Main method to run the resolution-based solver test. It constructs a simple Dung theory with
+     * arguments and attacks and applies resolution-based reasoners to determine the sets of acceptable arguments.
+     * Uncomment the reasoner lines and add appropriate reasoners to see the output.
+     * 
+     * @param args Command-line arguments, not used in this example.
+     */
 	public static void main(String[] args) {
         DungTheory ex1 = new DungTheory();
 
