@@ -101,7 +101,7 @@ import java.util.logging.Level;
 
 
 /**
- * *description missing*
+ * andles HTTP POST requests at the provided endpoints
  */
 @RestController
 public class RequestController {
@@ -353,9 +353,15 @@ public class RequestController {
 	}
 
 	/**
-	 * *description missing*
-	 * @param dungPost *description missing*
-	 * @return *description missing*
+	 * Handles a POST request to retrieve information about the Dung reasoner services. This method constructs a response
+	 * with general information about the services available, such as available semantics and commands. The input data
+	 * includes email and other user-specific details, which are used to tailor the response.
+	 *
+	 * @param dungPost A {@link DungReasonerPost} object containing the data sent by the client in the POST request body.
+	 *                 This typically includes identifiers like email that can be used to personalize or secure the response.
+	 * @return A {@link DungServicesInfoResponse} object containing a variety of information about the services,
+	 *         including available semantics and commands supported by the Dung reasoner. The response is structured
+	 *         for JSON representation suitable for client-side consumption.
 	 */
 	@PostMapping(value = "/info", produces = "application/json")
 	@ResponseBody
@@ -643,7 +649,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException *description missing*
+	 * @throws org.codehaus.jettison.json.JSONException  if some JSON issue occurs.
 	 */
 	private InconsistencyGetMeasuresResponse handleGetMeasures(InconsistencyPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {
@@ -669,7 +675,7 @@ public class RequestController {
 	 * @param query some query
 	 * @return the reply
 	 * @throws JSONException                            if some JSON issue occurs.
-	 * @throws org.codehaus.jettison.json.JSONException *description missing*
+	 * @throws org.codehaus.jettison.json.JSONException  if some JSON issue occurs.
 	 */
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
 			throws JSONException, org.codehaus.jettison.json.JSONException {

@@ -22,11 +22,10 @@ import java.util.Objects;
  * Represents a simple data structure for handling "ping" messages. Each Ping object
  * has an identifier (id) and content. This class is commonly used for testing the
  * connectivity or response of a service.
- */
-
-/**
- *
- * *description missing*
+ * 
+ * The Ping class provides mechanisms to initialize ping objects with or without specific
+ * values, compare them, and generate consistent representations for logging or debugging.
+ * @author Jonas Klein
  */
 public class Ping {
 

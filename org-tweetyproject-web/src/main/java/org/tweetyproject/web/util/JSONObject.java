@@ -19,7 +19,7 @@
 package org.tweetyproject.web.util;
 
 /**
- * *description missing*
+ * Generic JSON Object
  */
 public class JSONObject {
 

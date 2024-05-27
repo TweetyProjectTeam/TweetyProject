@@ -424,7 +424,7 @@ public class ExtensionRankingReasoner {
      * @param semantics an ordering semantic
      * @return the corresponding method
      * @throws NoSuchMethodException should never happen
-     * @throws IllegalArgumentException *description missing* 
+     * @throws IllegalArgumentException encountering a unknown semantics
      */
     private LinkedList<Method> getCompareMethods(ExtensionRankingSemantics semantics) throws IllegalArgumentException, NoSuchMethodException {
 

@@ -62,26 +62,29 @@ public class InducedArgument extends Argument{
 		this.conclusion = conclusion;
 	}
 
-	/**
-	 * *description missing*	 
-	 * @return *description missing*
-	 */
+    /**
+     * Returns the conclusion of this induced argument.
+     * 
+     * @return The conclusion that can be drawn from the knowledge base given the premises.
+     */
 	public PlFormula getConclusion() {
 		return this.conclusion;
 	}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */	
+    /**
+     * Returns the causal knowledge base associated with this argument.
+     * 
+     * @return The causal knowledge base from which this argument is derived.
+     */
 	public CausalKnowledgeBase getKnowledgeBase() {
 		return this.knowledgeBase;
 	}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */	
+    /**
+     * Returns the premises of this induced argument.
+     * 
+     * @return A set containing all the premises required for deriving the conclusion in this argument.
+     */
 	public HashSet<PlFormula> getPremises() {
 		return new HashSet<>(this.premises);
 	}

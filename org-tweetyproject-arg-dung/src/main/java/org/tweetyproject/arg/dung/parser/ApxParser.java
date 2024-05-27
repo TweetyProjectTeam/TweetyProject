@@ -50,13 +50,15 @@ public class ApxParser extends AbstractDungParser {
 	 return parse(reader, false, false);
 	}
 	
-	/**
-	 * *description missing*
-	 * @param reader *description missing*
-	 * @param printCommands *description missing*
-	 * @return *description missing*
-	 * @throws IOException *description missing*
-	 */
+    /**
+     * Parses an argumentation framework from a reader source with options to ignore comments and optionally print commands.
+     * This method is useful when you want to preprocess the data or when debug outputs are needed.
+     *
+     * @param reader The reader to parse the argumentation framework from.
+     * @param printCommands A boolean flag that when set to true, prints each row of the input to standard output.
+     * @return A {@code DungTheory} representing the parsed argumentation framework.
+     * @throws IOException If an I/O error occurs during reading or parsing the input.
+     */
 	public DungTheory parseIgnoreComments(Reader reader, boolean printCommands) throws IOException{
 		 return parse(reader, true, printCommands);
 		}

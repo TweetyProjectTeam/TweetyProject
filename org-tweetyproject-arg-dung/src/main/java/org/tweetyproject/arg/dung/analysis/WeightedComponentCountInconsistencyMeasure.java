@@ -26,12 +26,26 @@ import java.util.Collection;
 
 
 /**
- * *description missing*
+ * Implements an inconsistency measure for Dung's argumentation frameworks based on the weighted count
+ * of connected components within the framework. This measure calculates inconsistency by evaluating
+ * the size of each component, assuming that larger isolated groups (components) in the argumentation
+ * framework contribute more significantly to its inconsistency. The inconsistency score is the sum
+ * of the squares of the sizes of the components, minus one for each component.
+ * 
+ * @param <T> the type of Dung theories used, extending DungTheory
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
  */
 public class WeightedComponentCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
-
+	
+	/**
+     * Calculates the inconsistency measure of the given Dung theory argumentation framework based on
+     * the weighted count of its components. Each component contributes to the inconsistency score
+     * based on the square of its size minus one. This method aggregates the scores from all components
+     * to produce a final measure of inconsistency.
+     *
+     * @param argumentationFramework the Dung theory argumentation framework to measure for inconsistency
+     * @return Double the calculated inconsistency measure, where larger numbers indicate greater inconsistency
+     */
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		

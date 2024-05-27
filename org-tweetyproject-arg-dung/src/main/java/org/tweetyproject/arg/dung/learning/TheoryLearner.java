@@ -146,7 +146,7 @@ public class TheoryLearner {
 
     /**
      * create the formula encoding the conflict-free restriction on the extension
-     * @param theory *description missing*
+     * @param theory a dung theory
      * @param labeling an extension
      * @return a formula encoding the conflict-freeness of the extension
      * @throws IOException Exception
@@ -196,7 +196,7 @@ public class TheoryLearner {
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the stability of ext
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     @SuppressWarnings("unused")
     private PlFormula getStableClause(DungTheory theory, Labeling labeling) throws IOException {
@@ -222,7 +222,7 @@ public class TheoryLearner {
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the completeness of ext
-     * @throws IOException *description missing*
+     * @throws IOException if an input/output operation fails
      */
     @SuppressWarnings("unused")
     private PlFormula getCompleteClause(DungTheory theory, Labeling labeling) throws IOException {

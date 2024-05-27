@@ -33,10 +33,12 @@ import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
  */
 public class DungTheoryPlotterExample {
 	
-	/**
-	 * Creates example no.1	 
-	 * @return *description missing*
-	 */
+    /**
+     * Generates the first example of an argumentation framework.
+     * This framework includes four arguments and several attacks forming a simple directed graph.
+     * 
+     * @return DungTheory representing the argumentation framework of example 1.
+     */
 	public static DungTheory example1() {
 		// AF: ({a,b,c,d},{(a,b),(a,c),(c,d)})
 		DungTheory af = new DungTheory();
@@ -57,10 +59,12 @@ public class DungTheoryPlotterExample {
 		return af;
 	}
 	
-	/**
-	 * Creates example no.2	 
-	 * @return *description missing*
-	 */
+    /**
+     * Generates the second example of an argumentation framework.
+     * This framework forms a cycle with three arguments, illustrating cyclic attack relations.
+     * 
+     * @return DungTheory representing the argumentation framework of example 2.
+     */
 	public static DungTheory example2() {
 		// AF: ({a,b,c},{(a,b),(b,c),(c,a)})
 		DungTheory af = new DungTheory();
@@ -79,10 +83,12 @@ public class DungTheoryPlotterExample {
 		return af;
 	}
 	
-	/**
-	 * Creates example no.3	 
-	 * @return *description missing*
-	 */
+    /**
+     * Generates the third example of an argumentation framework.
+     * This framework includes more complex interactions among six arguments, featuring self-attacks and bi-directional attacks.
+     * 
+     * @return DungTheory representing the argumentation framework of example 3.
+     */
 	public static DungTheory example3() {
 		// AF: ({a,b,c,d,e,f},{(a,a),(a,b),(b,a),(b,d),(d,c),(e,c),(e,f),(f,e)})
 		DungTheory af = new DungTheory();
@@ -113,10 +119,13 @@ public class DungTheoryPlotterExample {
 	}
 	
 		
-	/**
-	 * *description missing*
-	 * @param args *description missing*
-	 */
+    
+    /**
+     * Main method to visualize the examples of Dung theories created in this class.
+     * It collects all examples into a set and visualizes them together using the DungTheoryPlotter.
+     * 
+     * @param args Command-line arguments, not used in this example.
+     */
 	public static void main(String[] args) {
 		HashSet<DungTheory> examples = new HashSet<DungTheory>();
 		examples.add(example1());

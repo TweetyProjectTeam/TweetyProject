@@ -59,54 +59,65 @@ public class AbaGetSemanticsResponse extends Response {
         this.email = email;
     }
 
+    /**
+     * Returns the list of semantics.
+     *
+     * @return A list of HashMaps, each representing a semantic with key-value pairs.
+     */
     public List<HashMap<String,String>> getSemantics() {
         return this.semantics;
     }
 
     /**
-     * *description missing*
-     * @param measures *description missing*
+     * Sets the list of semantics for this response.
+     *
+     * @param semantics A list of HashMaps representing semantics.
      */
-    public void setSemantics(List<HashMap<String,String>> measures) {
-        this.semantics = measures;
+    public void setSemantics(List<HashMap<String,String>> semantics) {
+        this.semantics = semantics;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Retrieves the reply message associated with this response.
+     *
+     * @return The reply message as a String.
      */
     public String getReply() {
         return this.reply;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
+     * Sets the reply message for this response.
+     *
+     * @param reply The reply message to be set.
      */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Retrieves the email address associated with this response.
+     *
+     * @return The email address as a String.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
+     * Sets the email address for this response.
+     *
+     * @param email The email address to be associated with this response.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * *description missing*
-     * @param measures *description missing*
-     * @return *description missing*
+     * Method to set the semantics of this response and return the modified object.
+     *
+     * @param measures A list of HashMaps representing new semantics.
+     * @return This AbaGetSemanticsResponse instance for method chaining.
      */
     public AbaGetSemanticsResponse measures(List<HashMap<String,String>> measures) {
         setSemantics(measures);
@@ -114,9 +125,10 @@ public class AbaGetSemanticsResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
-     * @return *description missing*
+     * Method to set the reply message for this response and return the modified object.
+     *
+     * @param reply The new reply message.
+     * @return This AbaGetSemanticsResponse instance for method chaining.
      */
     public AbaGetSemanticsResponse reply(String reply) {
         setReply(reply);
@@ -124,9 +136,10 @@ public class AbaGetSemanticsResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
-     * @return *description missing*
+     * Method to set the email for this response and return the modified object.
+     *
+     * @param email The new email address.
+     * @return This AbaGetSemanticsResponse instance for method chaining.
      */
     public AbaGetSemanticsResponse email(String email) {
         setEmail(email);

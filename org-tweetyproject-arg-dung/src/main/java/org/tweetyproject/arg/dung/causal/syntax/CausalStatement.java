@@ -46,18 +46,20 @@ public abstract class CausalStatement {
 		this.premises = premises;
 	}
 
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves the conclusions of this causal statement.
+     * 
+     * @return A new HashSet containing all the conclusions of this causal statement.
+     */
 	public HashSet<PlFormula> getConclusions(){
 		return new HashSet<PlFormula>(this.conclusions);
 	}
 	
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves the premises of this causal statement.
+     * 
+     * @return A new HashSet containing all the premises required for the conclusions to hold.
+     */
 	public HashSet<PlFormula> getPremises(){
 		return new HashSet<PlFormula>(this.premises);
 	}	
@@ -77,10 +79,13 @@ public abstract class CausalStatement {
 		return true;
 	}
 	
-	/**
-	 * *description missing*
-	 * @param cKbase Causal knowledge base
-	 */
+    /**
+     * Visualizes this causal statement within a given causal knowledge base. This method generates a visual representation
+     * of the argument framework induced by adding the premises of this statement to the causal knowledge base, highlighting
+     * the conclusions.
+     * 
+     * @param cKbase The causal knowledge base used for visualization.
+     */
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
 	{
 		var causalKnowledgeBaseCopy = cKbase.clone();
@@ -89,6 +94,13 @@ public abstract class CausalStatement {
 		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getPremises().toString() + " \n Conclusions: " + this.getConclusions().toString());
 	}
 	
+	    /**
+     * Helper method to check if a single conclusion is entailed by the premises in the given causal knowledge base.
+     * 
+     * @param cKbase The causal knowledge base in which the conclusion is to be checked.
+     * @param conclusion The conclusion to check against the premises.
+     * @return true if the causal knowledge base entails the conclusion given the premises, otherwise false.
+     */
 	private boolean checkStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
 		return cKbase.entails(this.getPremises(), conclusion);
 	}

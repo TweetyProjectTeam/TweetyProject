@@ -53,10 +53,11 @@ public class InterventionalStatement extends CausalStatement{
 		this.interventions = interventions;
 	}
 	
-	/**
-	 * *description missing*
-	 * @return *description missing*
-	 */
+    /**
+     * Retrieves the interventions of this causal statement.
+     * 
+     * @return A HashMap containing the interventions mapped from explainable atoms to their respective boolean values.
+     */
 	public HashMap<Proposition, Boolean> getInterventions(){
 		return new HashMap<Proposition, Boolean>(this.interventions);
 	}

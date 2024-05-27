@@ -161,7 +161,18 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 				if(this.isAttackedBy(a, b))
 					return false;
-		return true;
+  		return true;
+	}
+	
+	/**
+	 * returns true if no accepted argument attacks another one in
+	 * the set
+	 * @param ext a set of arguments
+	 * @return true if no accepted argument attacks another one in
+	 * the set
+	 */
+	public boolean isConflictFree(Collection<Argument> ext){
+		return this.isConflictFree(new Extension<>(ext));
 	}
 	
 	/**
@@ -358,6 +369,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is stable.
 	 */
 	public boolean isStable(Extension<DungTheory> e) {
+		if(!this.isAdmissible(e)) return false;
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -376,6 +388,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return "true" iff the extension is complete.
 	 */
 	public boolean isComplete(Extension<DungTheory> e) {
+		if(!this.isAdmissible(e)) return false;
 		for(Argument a: this)
 			if(!e.contains(a))
 				if(this.isAcceptable(a, e))
@@ -532,7 +545,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		if (this.containsCycle())
 			return false;
 		for (Argument b : this.getNodes()) {
-			if (isDefenseBranch(b,a))
+			if (isDefenseBranch(a,b))
 				return true;
 		}
 		return false;
@@ -566,6 +579,35 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		}		
 		return undef;
 	}
+	
+	/**
+	 * Returns the set of arguments b such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 * @param ext some set of arguments.
+	 * @return the set of arguments b such that a is in ext and there
+	 * is no c in ext such that (c,b) is an attack.
+	 */
+	public Collection<Argument> getUnattackedAttackers(Collection<Argument> ext){
+		Collection<Argument> undef = new HashSet<Argument>();
+		for(Argument a: ext) {
+			if(!this.parents.containsKey(a))
+				continue;
+			for(Argument b: this.parents.get(a)) {
+				boolean isDefended = false;
+				if(this.parents.containsKey(b)) {
+					for(Argument c: this.parents.get(b)) {
+						if(ext.contains(c)) {
+							isDefended = true;
+							break;
+						}
+					}
+				}
+				if(!isDefended)
+					undef.add(b);
+			}
+		}		
+		return undef;
+	}	
 	
 	// Misc methods
 

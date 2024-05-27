@@ -21,15 +21,25 @@ package org.tweetyproject.arg.dung.analysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * *description missing*
+ * This class implements an inconsistency measure for Dung's argumentation frameworks
+ * based on the number of attacks within the framework. The inconsistency measure quantifies
+ * how much conflict is present within the argumentation framework, assuming that more attacks
+ * indicate higher inconsistency. It extends the generic InconsistencyMeasure interface to
+ * provide this functionality for any Dung theory.
+ * 
+ * @param <T> the type of Dung theories used, extending the DungTheory class
  * @author Timothy Gillespie
- * @param <T> the type of Dung theories used
  */
 public class InSumInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.analysis.InconsistencyMeasure#inconsistencyMeasure
-	 */
+	/**
+     * Calculates the inconsistency measure of the given Dung theory argumentation framework.
+     * The measure is calculated as the number of attack relations present in the framework,
+     * under the assumption that more attacks indicate a higher level of inconsistency.
+     *
+     * @param argumentationFramework the Dung theory argumentation framework to measure for inconsistency
+     * @return Double the calculated inconsistency measure based on the number of attacks
+     */
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		// Correct since the attack class extends the directed edge class
 		return (double) argumentationFramework.getAttacks().size();

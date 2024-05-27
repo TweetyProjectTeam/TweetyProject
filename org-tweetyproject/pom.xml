@@ -234,5 +234,10 @@
   		<artifactId>sat</artifactId>
   		<version>1.25-SNAPSHOT</version>
   	</dependency>
-  </dependencies>
+    <dependency>
+    	<groupId>org.tweetyproject.arg</groupId>
+    	<artifactId>weighted</artifactId>
+    	<version>1.25-SNAPSHOT</version>
+    </dependency>
+</dependencies>
 </project>
