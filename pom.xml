@@ -214,6 +214,7 @@
     <module>org-tweetyproject-arg-aba</module>
     <module>org-tweetyproject-arg-bipolar</module>
     <module>org-tweetyproject-arg-deductive</module>
+	<module>org-tweetyproject-arg-extended</module>
     <module>org-tweetyproject-arg-lp</module>
     <module>org-tweetyproject-arg-delp</module>
     <module>org-tweetyproject-arg-setaf</module>
