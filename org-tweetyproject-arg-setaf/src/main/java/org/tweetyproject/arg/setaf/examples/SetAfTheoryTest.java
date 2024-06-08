@@ -29,7 +29,7 @@ import org.tweetyproject.arg.setaf.reasoners.*;
 
 
 /**
- * Examples of SetAf Theorys and their semantics
+ * Examples of SetAf Theories and their semantics
  * 
  * @author Sebastian Franke
  *
