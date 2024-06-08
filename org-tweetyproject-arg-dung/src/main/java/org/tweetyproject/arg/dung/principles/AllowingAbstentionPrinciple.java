@@ -33,7 +33,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * if there is some extension S with 'a' in S and some extension S' with 'a' in S'^+, then there is some extension
  * S'' with 'a' not in S'' or S''^+.
  *
- * @see "Baroni P, Caminada M, Giacomin M. An introduction to argumentation semantics. The knowledge engineering review. 2011;26(4):365-410."
+ * @see "Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics."
  *
  * @author Julian Sander
  * @author Lars Bengel
@@ -42,7 +42,7 @@ public class AllowingAbstentionPrinciple extends Principle {
 
 	@Override
 	public String getName() {
-		return "Allowing Abstention";
+		return "AllowingAbstention";
 	}
 
 	@Override
