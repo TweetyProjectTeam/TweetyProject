@@ -16,24 +16,7 @@
  *
  *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-/*
- *  This file is part of "TweetyProject", a collection of Java libraries for
- *  logical aspects of artificial intelligence and knowledge representation.
- *
- *  TweetyProject is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License version 3 as
- *  published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
- */
+
 package org.tweetyproject.arg.dung.reasoner;
 
 import java.util.Collection;
@@ -46,163 +29,251 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
+import org.tweetyproject.commons.InferenceMode;
 
 /**
- * incomlete argumentation framework class
+ * Reasoner for incomplete argumentation frameworks
  * @author Sebastian Franke
- *
+ * @author Lars Bengel
  */
 public class IncompleteReasoner{
-	/**
-	 * the underlying Dung reasoner
-	 */
-	private static AbstractExtensionReasoner reasoner;
-	
-	/**
-	 * constructor for direct initialization of semantics
-	 * @param semantics the Dung semantics
-	 */
-	public IncompleteReasoner(Semantics semantics) {
-		setSemantics(semantics);
-		
-	}
-	/**
-	 * 
-	 * @param theory incomplete theory
-	 * @return all possible models
-	 */
-	public Collection<Collection<Extension<DungTheory>>> getAllModels(IncompleteTheory theory){
-		
-		Collection<Collection<Extension<DungTheory>>> models = new HashSet<Collection<Extension<DungTheory>>>();
-		Set<Set<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
-		for(Set<Argument> instance : powerSet) {
-			Collection<Extension<DungTheory>> instanceModels = new HashSet<Extension<DungTheory>>();
-			//uncertain attacks that can occur in this instance
-			HashSet<Attack> uncertainAttacksInInstance = new HashSet<Attack>();
-			for(Attack att : theory.uncertainAttacks) {
-				//only add attack to possible attacks if both parties appear in instance
-				if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
-						(theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
-					uncertainAttacksInInstance.add(att);
-				}				
-			}
-			Set<Set<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
-			//create new instance for each member of the power set and evaluate it
-			for(Set<Attack> j : powerSetAttacks) {
-				theory.instantiate(instance, j);
-				instanceModels.addAll(this.reasoner.getModels(theory));
-			}
+    /**
+     * the underlying Dung reasoner
+     */
+    private AbstractExtensionReasoner reasoner;
 
-			models.add(instanceModels);
-		}
-		return models;
-	}
+    /**
+     * constructor for direct initialization of reasoner
+     * @param reasoner some extension reasoner
+     */
+    public IncompleteReasoner(AbstractExtensionReasoner reasoner) {
+        this.reasoner = reasoner;
+    }
 
-	/**
-	 * 
-	 * @param theory incomplete theory
-	 * @param arg argument to be checked
-	 * @return if the argument is part of all extensions of all instances 
-	 */
-	public boolean VerificationNecessary(IncompleteTheory theory, Set<Argument> arg) {
-		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
-		for(Collection<Extension<DungTheory>> instanceModels : models) {
-			boolean isArgExtensionForInstance = false;
-			for(Extension<DungTheory> ext : instanceModels) {
-				if((ext.containsAll(arg) && arg.containsAll(ext))){
-					isArgExtensionForInstance = true;
-					break;
-				}
-			}
-			if(isArgExtensionForInstance == false)
-				return false;
-		}
-		return true;
-	}
-	/**
-	 * 
-	 * @param theory incomplete theory
-	 * @param arg argument to be checked
-	 * @return if the argument is part of any extensions of all instances 
-	 */
-	public boolean VerificationPossible(IncompleteTheory theory, Set<Argument> arg) {
-		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
-		for(Collection<Extension<DungTheory>> instanceModels : models) {
-			for(Extension<DungTheory> ext : instanceModels) {
-				if(ext.containsAll(arg) && arg.containsAll(ext)){
-					return true;
-				}
-			}
-		}
-		return false;	
-	}
-	/**
-	 * 
-	 * @param theory the theory
-	 * @param arg an argument
-	 * @return whether arg is credulously accepted
-	 */
-	public boolean credulousAcceptance(IncompleteTheory theory, Argument arg) {
-		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
-		for(Collection<Extension<DungTheory>> i : models) {
-			for(Extension<DungTheory> j : i) {
-				if(j.contains(arg)) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	/**
-	 * 
-	 * @param theory the theory
-	 * @param arg an argument
-	 * @return whether arg is skeptically accepted
-	 */
-	public boolean skepticalAcceptance(IncompleteTheory theory, Argument arg) {
-		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
-		for(Collection<Extension<DungTheory>> i : models) {
-			for(Extension<DungTheory> j : i) {
-				if(!j.contains(arg)) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	/**
-	 * 
-	 * @param theory the theory
-	 * @return if an extension exists
-	 */
-	public boolean existence(IncompleteTheory theory) {
-		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
-		if(models.isEmpty()) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
+    /**
+     * constructor for direct initialization of semantics
+     * @param semantics the Dung semantics
+     */
+    public IncompleteReasoner(Semantics semantics) {
+        reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+    }
 
+    /**
+     *
+     * @param theory incomplete theory
+     * @return all possible models
+     */
+    public Collection<Collection<Extension<DungTheory>>> getAllModels(IncompleteTheory theory){
+        Collection<Collection<Extension<DungTheory>>> models = new HashSet<Collection<Extension<DungTheory>>>();
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<Extension<DungTheory>>();
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<Attack>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                instanceModels.addAll(this.reasoner.getModels(theory));
+            }
 
-	/**
-	 * manually sets the semantics
-	 * @param semantics the Dung semantics
-	 */
-	public static void setSemantics(Semantics semantics){
-		reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
-		
-	}
+            models.add(instanceModels);
+        }
+        return models;
+    }
 
-	/**
-	 * 
-	 * @return wether the solver is installed
-	 */
-	public boolean isInstalled() {
-		return true;
-	}
+    /**
+     * Computes the set of possible extensions
+     * @param theory incomplete theory
+     * @return all possible models
+     */
+    public Collection<Extension<DungTheory>> getPossibleModels(IncompleteTheory theory){
+        Collection<Extension<DungTheory>> models = new HashSet<>();
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                models.addAll(this.reasoner.getModels(theory));
+            }
+        }
+        return models;
+    }
+
+    /**
+     * Computes the set of necessary extensions
+     * @param theory incomplete theory
+     * @return all necessary models
+     */
+    public Collection<Extension<DungTheory>> getNecessaryModels(IncompleteTheory theory){
+        boolean first = true;
+        Collection<Extension<DungTheory>> models = new HashSet<>();
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                if (first) {
+                    first = false;
+                    models.addAll(this.reasoner.getModels(theory));
+                }
+                models.retainAll(this.reasoner.getModels(theory));
+            }
+        }
+        return models;
+    }
+
+    /**
+     * Decides whether the given argument is a possible credulous conclusion of the incomplete theory
+     * @param theory some incomplete theory
+     * @param arg some argument
+     * @return "true" iff the argument is a possible credulous conclusion
+     */
+    public boolean isPossibleCredulous(IncompleteTheory theory, Argument arg) {
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                if (this.reasoner.query(theory, arg, InferenceMode.CREDULOUS)) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Decides whether the given argument is a necessary credulous conclusion of the incomplete theory
+     * @param theory some incomplete theory
+     * @param arg some argument
+     * @return "true" iff the argument is a necessary credulous conclusion
+     */
+    public boolean isNecessaryCredulous(IncompleteTheory theory, Argument arg) {
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                if (!this.reasoner.query(theory, arg, InferenceMode.CREDULOUS)) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Decides whether the given argument is a possible skeptical conclusion of the incomplete theory
+     * @param theory some incomplete theory
+     * @param arg some argument
+     * @return "true" iff the argument is a skeptical credulous conclusion
+     */
+    public boolean isPossibleSkeptical(IncompleteTheory theory, Argument arg) {
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                if (this.reasoner.query(theory, arg, InferenceMode.SKEPTICAL)) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Decides whether the given argument is a necessary skeptical conclusion of the incomplete theory
+     * @param theory some incomplete theory
+     * @param arg some argument
+     * @return "true" iff the argument is a necessary skeptical conclusion
+     */
+    public boolean isNecessarySkeptical(IncompleteTheory theory, Argument arg) {
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            //uncertain attacks that can occur in this instance
+            Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                if (!this.reasoner.query(theory, arg, InferenceMode.SKEPTICAL)) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @return whether the solver is installed
+     */
+    public boolean isInstalled() {
+        return true;
+    }
 
 }
