@@ -44,7 +44,7 @@ public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasone
 		// Check all subsets
 		
 		for(Set<Argument> ext: new SetTools<Argument>().subsets((SetAf)bbase)) {
-			if(((SetAf)bbase).isAdmissable(new Extension<SetAf>(ext)))
+			if(((SetAf)bbase).isAdmissible(new Extension<SetAf>(ext)))
 				extensions.add(new Extension<SetAf>(ext));
 		}
 		return extensions;
