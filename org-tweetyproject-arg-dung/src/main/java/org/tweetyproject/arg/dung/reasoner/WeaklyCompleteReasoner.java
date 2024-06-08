@@ -17,119 +17,117 @@
  *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-package org.tweetyproject.arg.dung.reasoner;
+ package org.tweetyproject.arg.dung.reasoner;
 
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-/**
- * Reasoner for weakly complete semantics as described in:
- *
- * see: Baumann, Brewka, Ulbricht:  Revisiting  the  foundations  of  abstract argumentation-semantics based on weak admissibility and weak defense.
- *
- * a set of arguments E is w-complete iff it is w-admissible and there exists no superset of E that is w-defended by E
- *
- * @author Lars Bengel
- */
-public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
-
-    @Override
-    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
-
-        Collection<Extension<DungTheory>> result = new HashSet<>();
-
-        // check all w-admissible extensions of bbase
-        for (Extension<DungTheory> ext: wad_exts) {
-            boolean w_complete = true;
-            for (Set<Argument> S : new SetTools<Argument>().subsets((DungTheory) bbase)) {
-                // S is a superset of ext
-                if (!ext.equals(new Extension<DungTheory>(S)) && S.containsAll(ext)) {
-                    // S is w-defended by ext
-                    System.out.println("Ext:" + ext);
-                    System.out.println("Superset:" + S);
-                    System.out.println("DEFENDS: " + isWeaklyDefendedBy(S, ext, (DungTheory) bbase));
-                    if (this.isWeaklyDefendedBy(S, ext, (DungTheory) bbase)) {
-                        w_complete = false;
-                        break;
-                    }
-                }
-            }
-            if (w_complete) {
-                result.add(ext);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public Extension<DungTheory> getModel(DungTheory bbase) {
-        return this.getModels(bbase).iterator().next();
-    }
-
-    /**
-     * Computes whether E w-defends X
-     * i.e. for every attacker y of X: 1.
-     * E attacks y or
-     * 2. y is not in any w-admissible set of the E-reduct of theory, y is not in E and there exists
-     * a superset of X that is w-admissible in theory
-     * @param X a set of arguments
-     * @param E a set of arguments
-     * @param theory a dung theory
-     * @return true, if E w-defends X
-     */
-    public boolean isWeaklyDefendedBy(Collection<Argument> X, Collection<Argument> E, DungTheory theory) {
-
-        // compute the set of arguments that are in a w-ad extension of the E-reduct of F
-        DungTheory e_reduct = theory.getReduct(E);
-        Collection<Extension<DungTheory>> reduct_exts = new WeaklyAdmissibleReasoner().getModels(e_reduct);
-        Collection<Argument> wad_arguments = new HashSet<>();
-        for (Extension<DungTheory> ext: reduct_exts) {
-            wad_arguments.addAll(ext);
-        }
-
-        Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(theory);
-        Collection<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
-
-        boolean superset_wad = false;
-        for (Set<Argument> S: subsets) {
-            // S is a superset of X
-            if (S.containsAll(X)) {
-                // S is w-admissible in F
-                if (wad_exts.contains(new Extension<DungTheory>(S))) {
-                    superset_wad = true;
-                    break;
-                }
-            }
-        }
-        // there exists no superset of X that is w-ad in F
-        if (!superset_wad)
-            return false;
-
-        for (Argument y: new WeaklyAdmissibleReasoner().getAttackers(theory, X)) {
-            // E attacks y
-            if (theory.isAttacked(y, new Extension<DungTheory>(E))) {
-                continue;
-            }
-
-            // y is not in E
-            if (E.contains(y)) {
-                return false;
-            }
-
-            // y is in no w-ad extension of the E-reduct of F
-            if (wad_arguments.contains(y)) {
-                return false;
-            }
-
-        }
-        return true;
-
-    }
-}
+ import org.tweetyproject.arg.dung.semantics.Extension;
+ import org.tweetyproject.arg.dung.syntax.Argument;
+ import org.tweetyproject.arg.dung.syntax.DungTheory;
+ import org.tweetyproject.commons.util.SetTools;
+ 
+ import java.util.Collection;
+ import java.util.HashSet;
+ import java.util.Set;
+ 
+ /**
+  * Reasoner for weakly complete semantics as described in:
+  *
+  * see: Baumann, Brewka, Ulbricht:  Revisiting  the  foundations  of  abstract argumentation-semantics based on weak admissibility and weak defense.
+  *
+  * a set of arguments E is w-complete iff it is w-admissible and there exists no superset of E that is w-defended by E
+  *
+  * @author Lars Bengel
+  */
+ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
+ 
+     @Override
+     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+         Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
+ 
+         Collection<Extension<DungTheory>> result = new HashSet<>();
+ 
+         // check all w-admissible extensions of bbase
+         for (Extension<DungTheory> ext: wad_exts) {
+             boolean w_complete = true;
+             for (Set<Argument> S : new SetTools<Argument>().subsets((DungTheory) bbase)) {
+                 // S is a superset of ext
+                 if (!ext.equals(new Extension<DungTheory>(S)) && S.containsAll(ext)) {
+                     // S is w-defended by ext
+                     if (this.isWeaklyDefendedBy(S, ext, (DungTheory) bbase)) {
+                         w_complete = false;
+                         break;
+                     }
+                 }
+             }
+             if (w_complete) {
+                 result.add(ext);
+             }
+         }
+         return result;
+     }
+ 
+     @Override
+     public Extension<DungTheory> getModel(DungTheory bbase) {
+         return this.getModels(bbase).iterator().next();
+     }
+ 
+     /**
+      * Computes whether E w-defends X
+      * i.e. for every attacker y of X: 1.
+      * E attacks y or
+      * 2. y is not in any w-admissible set of the E-reduct of theory, y is not in E and there exists
+      * a superset of X that is w-admissible in theory
+      * @param X a set of arguments
+      * @param E a set of arguments
+      * @param theory a dung theory
+      * @return true, if E w-defends X
+      */
+     public boolean isWeaklyDefendedBy(Collection<Argument> X, Collection<Argument> E, DungTheory theory) {
+ 
+         // compute the set of arguments that are in a w-ad extension of the E-reduct of F
+         DungTheory e_reduct = theory.getReduct(E);
+         Collection<Extension<DungTheory>> reduct_exts = new WeaklyAdmissibleReasoner().getModels(e_reduct);
+         Collection<Argument> wad_arguments = new HashSet<>();
+         for (Extension<DungTheory> ext: reduct_exts) {
+             wad_arguments.addAll(ext);
+         }
+ 
+         Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(theory);
+         Collection<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
+ 
+         boolean superset_wad = false;
+         for (Set<Argument> S: subsets) {
+             // S is a superset of X
+             if (S.containsAll(X)) {
+                 // S is w-admissible in F
+                 if (wad_exts.contains(new Extension<DungTheory>(S))) {
+                     superset_wad = true;
+                     break;
+                 }
+             }
+         }
+         // there exists no superset of X that is w-ad in F
+         if (!superset_wad)
+             return false;
+ 
+         for (Argument y: new WeaklyAdmissibleReasoner().getAttackers(theory, X)) {
+             // E attacks y
+             if (theory.isAttacked(y, new Extension<DungTheory>(E))) {
+                 continue;
+             }
+ 
+             // y is not in E
+             if (E.contains(y)) {
+                 return false;
+             }
+ 
+             // y is in no w-ad extension of the E-reduct of F
+             if (wad_arguments.contains(y)) {
+                 return false;
+             }
+ 
+         }
+         return true;
+ 
+     }
+ }
+ 
