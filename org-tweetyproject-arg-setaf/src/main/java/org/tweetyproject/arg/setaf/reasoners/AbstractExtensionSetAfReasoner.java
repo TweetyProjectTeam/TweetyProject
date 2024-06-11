@@ -84,7 +84,6 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 			case ID: return new SimpleIdealSetAfReasoner();
 			case EA: return new SimpleEagerSetAfReasoner();
 			case STG: return new SimpleStageSetAfReasoner();
-			case NA: return new SimpleNaiveSetAfReasoner();
 		default:
 			throw new IllegalArgumentException("Unknown semantics.");			
 		}		

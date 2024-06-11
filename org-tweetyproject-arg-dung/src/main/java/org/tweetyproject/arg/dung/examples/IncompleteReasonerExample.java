@@ -19,6 +19,7 @@
 
 package org.tweetyproject.arg.dung.examples;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,13 +69,17 @@ public class IncompleteReasonerExample {
 	        ex.addPossibleAttack(d, e);
 	        ex.addPossibleAttack(e, a);
 
-	        HashSet<Argument> argSet = new HashSet<Argument>();
+	        Collection<Argument> argSet = new HashSet<Argument>();
 	        argSet.add(d);
 	        IncompleteReasoner re2 = new IncompleteReasoner(Semantics.CO);
 	        
-	        Set<Argument> arg = new HashSet<Argument>();
-	        arg.add(d);
-	        System.out.println("necessary for {d}: "  + re2.VerificationNecessary(ex, arg));
+
+			System.out.println("Possible Credulous Conclusion 'd': " + re2.isPossibleCredulous(ex, d));
+			System.out.println("Necessary Credulous Conclusion 'c': " + re2.isNecessaryCredulous(ex, d));
+			System.out.println("Possible Skeptical Conclusion 'a': " + re2.isPossibleSkeptical(ex, d));
+			System.out.println("Necessary Skeptical Conclusion 'b': " + re2.isNecessarySkeptical(ex, d));
+
+
 	        SimpleCompleteReasoner re = new SimpleCompleteReasoner();
 	        ex.optimisticCompletion(argSet);
 	        
