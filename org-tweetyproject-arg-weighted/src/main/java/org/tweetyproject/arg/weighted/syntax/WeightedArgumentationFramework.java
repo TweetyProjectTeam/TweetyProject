@@ -527,7 +527,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if some argument of <code>ext</code> successfully attacks argument.
 	 */
 	@Override
-	public boolean isAttacked(Argument argument, @SuppressWarnings("rawtypes") Extension<? extends ArgumentationFramework> ext){
+	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework<?>> ext){
 		if (getAttackers(argument) == null)
 			return false;
 	    // Create extension with single argument

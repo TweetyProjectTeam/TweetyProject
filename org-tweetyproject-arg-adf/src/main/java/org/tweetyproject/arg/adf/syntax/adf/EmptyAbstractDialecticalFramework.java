@@ -147,7 +147,7 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
     }
 
     @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
+    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
         return false;
     }
 

@@ -18,13 +18,6 @@
  */
 package org.tweetyproject.arg.adf.syntax.adf;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
@@ -36,13 +29,18 @@ import org.tweetyproject.arg.adf.util.AbstractUnmodifiableCollection;
 import org.tweetyproject.arg.adf.util.LazyMap;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.GeneralGraph;
 import org.tweetyproject.graphs.Graph;
-import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Internally represented as a graph-like structure. This allows for efficient

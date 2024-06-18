@@ -137,7 +137,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
         Collection<Argument> attackers = getAttackers(new Attack(a, b));
         int size_W;
         do {
-            size_W = W_min.size();;
+            size_W = W_min.size();
             for (Attack att : W) {
                 if (attackers.contains(att.getAttacked())) {
                     W_min.add(att);
@@ -390,7 +390,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
     }
 
     @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
+    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
         return getAttacked(ext).contains(a);
     }
 

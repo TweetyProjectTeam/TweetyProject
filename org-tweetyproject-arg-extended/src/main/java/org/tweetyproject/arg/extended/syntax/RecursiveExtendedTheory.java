@@ -274,7 +274,7 @@ public class RecursiveExtendedTheory extends BeliefSet<Argument, DungSignature> 
     }
 
     @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
+    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
         return getAttacked(ext).contains(a);
     }
 
