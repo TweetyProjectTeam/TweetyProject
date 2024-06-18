@@ -416,7 +416,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
 
     @Override
     public Collection<Argument> getNodes() {
-        return new HashSet<>(children.keySet());
+        return this;
     }
 
     /**

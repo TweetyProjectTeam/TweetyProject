@@ -288,12 +288,17 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 
     @Override
     public Collection<Argument> getNodes() {
-        return new HashSet<>(this.index.keySet());
+        return this;
     }
 
     @Override
     public int getNumberOfNodes() {
         return this.index.keySet().size();
+    }
+
+    @Override
+    public int getNumberOfEdges() {
+        return this.getEdges().size();
     }
 
     @Override

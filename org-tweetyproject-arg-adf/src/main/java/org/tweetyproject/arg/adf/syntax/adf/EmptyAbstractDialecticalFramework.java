@@ -192,6 +192,11 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
     }
 
     @Override
+    public int getNumberOfEdges() {
+        return 0;
+    }
+
+    @Override
     public boolean areAdjacent(Argument a, Argument b) {
         return false;
     }

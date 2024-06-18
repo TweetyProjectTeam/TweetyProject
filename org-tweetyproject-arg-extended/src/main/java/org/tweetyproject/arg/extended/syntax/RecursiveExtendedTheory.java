@@ -300,7 +300,7 @@ public class RecursiveExtendedTheory extends BeliefSet<Argument, DungSignature> 
 
     @Override
     public Collection<Argument> getNodes() {
-        return new HashSet<>(children.keySet());
+        return this;
     }
 
     /**
