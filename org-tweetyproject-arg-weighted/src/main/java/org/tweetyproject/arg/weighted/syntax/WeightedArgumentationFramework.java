@@ -18,19 +18,7 @@
  */
 package org.tweetyproject.arg.weighted.syntax;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
@@ -39,10 +27,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedGroundedReasoner;
 import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedPreferredReasoner;
 import org.tweetyproject.arg.weighted.reasoner.SimpleWeightedStableReasoner;
-import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.graphs.Graph;
-import org.tweetyproject.math.algebra.*;
+import org.tweetyproject.math.algebra.BooleanSemiring;
+import org.tweetyproject.math.algebra.Semiring;
+
+import java.util.*;
 
 /**
  * This class implements a weighted abstract argumentation theory (WAF) using a C-Semiring.
@@ -260,7 +250,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	
 	/**
 	 * Adds the set of attacks to this Weighted Dung theory. 
-	 * @param c a collection of attacks
+	 * @param weights a map containing the attacks as key and the weights as values.
 	 * @return {@code true} if this Dung theory has been modified.
 	 */
 	public boolean addAllAttacks(Map<String,T> weights){
@@ -544,7 +534,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	
 	/**
 	 * returns true if some argument of <code>ext</code> is attacked by argument and cannot be w-defended by ext.
-	 * @param argument an argument
+	 * @param attacker an argument
 	 * @param ext an extension, ie. a set of arguments
 	 * @return {@code true} if some argument of <code>ext</code> is attacked by argument.
 	 */
