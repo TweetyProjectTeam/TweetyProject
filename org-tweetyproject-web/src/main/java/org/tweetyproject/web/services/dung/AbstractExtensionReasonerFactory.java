@@ -59,126 +59,149 @@ import org.tweetyproject.arg.dung.reasoner.WeaklyPreferredReasoner;
  */
 /**
  * Main factory for retrieving abstract extension reasoners.
+ * 
  * @author Jonas Klein
  */
 public abstract class AbstractExtensionReasonerFactory {
 
 	/** An enumeration of all available semantics. */
-	public enum Semantics{
+	public enum Semantics {
 		/**
-		 * *description missing*
+		 * Weakly Admissible semantics
 		 */
-		WAD ("wad", "Weakly Admissable "),
+		WAD("wad", "Weakly Admissable"),
+
 		/**
-		 * *description missing*
+		 * Weakly Complete semantics
 		 */
-		WCO ("wco", "Weakly Complete "),
+		WCO("wco", "Weakly Complete"),
+
 		/**
-		 * *description missing*
+		 * Weakly Grounded semantics
 		 */
-		WGR ("wgr", "Weakly Grounded"),
+		WGR("wgr", "Weakly Grounded"),
+
 		/**
-		 * *description missing*
+		 * Weakly Preferred semantics
 		 */
-		WPR ("wgr", "Weakly Preffered"),
+		WPR("wpr", "Weakly Preferred"),
+
 		/**
-		 * *description missing*
+		 * Solid Admissible semantics
 		 */
-		SOAD ("soad", "Solid Admissible"),
+		SOAD("soad", "Solid Admissible"),
+
 		/**
-		 * *description missing*
+		 * Strongly Admissible semantics
 		 */
-		SAD ("sad", "Strongly Admissable "),
+		SAD("sad", "Strongly Admissable"),
+
 		/**
-		 * *description missing*
+		 * Stage semantics
 		 */
-		STAGE ("stage", "Stage"),
+		STAGE("stage", "Stage"),
+
 		/**
-		 * *description missing*
+		 * Stage2 semantics
 		 */
-		STAGE2 ("stage2", "Stage2"),
+		STAGE2("stage2", "Stage2"),
+
 		/**
-		 * *description missing*
+		 * Semi Stable semantics
 		 */
-		SST ("SST", "Semi Stable"),
+		SST("SST", "Semi Stable"),
+
 		/**
-		 * *description missing*
+		 * Conflict-free semantics
 		 */
-		CF ("cf", "Conflict-free"),
+		CF("cf", "Conflict-free"),
+
 		/**
-		 * *description missing*
+		 * Ideal semantics
 		 */
-		ID ("id", "Ideal"),
+		ID("id", "Ideal"),
+
 		/**
-		 * *description missing*
+		 * Grounded semantics
 		 */
-		GR ("gr", "Grounded"),
+		GR("gr", "Grounded"),
+
 		/**
-		 * *description missing*
+		 * Preferred semantics
 		 */
-		PR ("pr", "Preffered"),
+		PR("pr", "Preferred"),
+
 		/**
-		 * *description missing*
+		 * Complete semantics
 		 */
-		CO ("co", "Complete"),
+		CO("co", "Complete"),
+
 		/**
-		 * *description missing*
+		 * Stable semantics
 		 */
-		ST ("st", "Stable"),
+		ST("st", "Stable"),
+
 		/**
-		 * *description missing*
+		 * Eager semantics
 		 */
-		EA ("ea", "Eager"),
+		EA("ea", "Eager"),
+
 		/**
-		 * *description missing*
+		 * Initial semantics
 		 */
-		IN ("in", "Initial"),
+		IN("in", "Initial"),
+
 		/**
-		 * *description missing*
+		 * Admissible semantics
 		 */
-		AD ("ad", "Admissible"),
+		AD("ad", "Admissible"),
+
 		/**
-		 * *description missing*
+		 * Naive semantics
 		 */
-		NA ("na", "Naive");
-		/**id*/
+		NA("na", "Naive");
+
+		/** id */
 		public String id;
-		/**label*/
+		/** label */
 		public String label;
 
-		Semantics(String id, String label){
+		Semantics(String id, String label) {
 			this.id = id;
 			this.label = label;
 		}
+
 		/**
 		 *
 		 * @param id ID
 		 * @return the semantics
 		 */
-		public static Semantics getSemantics(String id){
-			for(Semantics m: Semantics.values())
-				if(m.id.equals(id))
+		public static Semantics getSemantics(String id) {
+			for (Semantics m : Semantics.values())
+				if (m.id.equals(id))
 					return m;
 			return null;
 		}
 	}
 
 	/**
-	 * *description missing*
-	 * @return *description missing*
+	 * Returns an array of all available semantics.
+	 *
+	 * @return An array of all available semantics.
 	 */
-	public static Semantics [] getSemantics(){
+	public static Semantics[] getSemantics() {
 		return Semantics.values();
 	}
 
 	/**
 	 * Creates a new reasoner measure of the given semantics with default
 	 * settings.
+	 * 
 	 * @param sem some identifier of an semantics.
 	 * @return the requested reasoner.
 	 */
-	public static AbstractExtensionReasoner getReasoner(Semantics sem){
-		switch(sem){
+	public static AbstractExtensionReasoner getReasoner(Semantics sem) {
+		switch (sem) {
 			case WAD:
 				return new WeaklyAdmissibleReasoner();
 			case WCO:
