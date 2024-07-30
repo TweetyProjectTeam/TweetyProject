@@ -4,7 +4,6 @@ import org.tweetyproject.arg.deductive.syntax.DeductiveKnowledgeBase;
 import org.tweetyproject.commons.BeliefSetIterator;
 import org.tweetyproject.logics.pl.syntax.*;
 
-import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -90,8 +89,15 @@ public class RandomDeductiveKnowledgeBaseGenerator implements BeliefSetIterator<
         return kb;
     }
 
-    /** Description missing */
-    private static <C> C randomChoice(@NotNull Collection<C> c) throws IndexOutOfBoundsException {
+    
+    /**
+     * Description missing
+     * @param <C> Description missing
+     * @param c Description missing
+     * @return Description missing
+     * @throws IndexOutOfBoundsException Description missing
+     */
+    private static <C> C randomChoice(Collection<C> c) throws IndexOutOfBoundsException {
         try {
             int num = random.nextInt(c.size());
             for(C e: c) if (--num < 0) return e;

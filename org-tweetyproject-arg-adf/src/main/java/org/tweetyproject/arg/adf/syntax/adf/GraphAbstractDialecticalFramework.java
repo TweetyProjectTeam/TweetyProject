@@ -249,10 +249,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
         return this.index.keySet().containsAll(c);
     }
 
-    @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
 
     @Override
     public boolean addAll(Collection<? extends Argument> c) {
@@ -586,5 +582,10 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
             return new GraphAbstractDialecticalFramework(this);
         }
     }
+
+	@Override
+	public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
+		throw new UnsupportedOperationException("Not supported");
+	}
 
 }
