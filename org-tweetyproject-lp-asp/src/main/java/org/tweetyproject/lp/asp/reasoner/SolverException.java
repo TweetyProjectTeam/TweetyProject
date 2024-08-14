@@ -19,39 +19,67 @@
 package org.tweetyproject.lp.asp.reasoner;
 
 /**
- * This class models a generic exception for ASP solvers.
- * 
- * @author Thomas Vengels
- * @author Tim Janus
+ * This class models a generic exception for ASP (Answer Set Programming) solvers.
+ *
+ * <p>
+ * The `SolverException` is thrown when an error occurs in the context of an ASP solver.
+ * It contains both a textual message and a corresponding error code to indicate the
+ * specific type of error.
+ * </p>
+ *
+ * <p><b>Authors:</b> Thomas Vengels, Tim Janus</p>
  */
 public class SolverException extends Exception {
 
-	private static final long serialVersionUID = 1L;
-	
-	public static int	SE_ERROR = 1;
-	public static int	SE_IO_FAILED = 2;
-	public static int	SE_NO_BINARY = 3;
-	public static int	SE_SYNTAX_ERROR = 4;
-	public static int	SE_CANNOT_OPEN_INPUT = 5;
-	public static int 	SE_CANNOT_FIND_SOLVER = 6;
-	public static int 	SE_PERMISSIONS = 7;
-	
-	public final String solverErrorText;
-	public final int solverErrorCode;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a new SolverException with the given message.
-	 * @param text the text for the exception
-	 * @param exceptionCode the exception code
-	 */
-	public SolverException(String text, int exceptionCode) {		
-		super(text);		
-		solverErrorText = text;
-		solverErrorCode = exceptionCode;
-	}
-	
-	@Override
-	public String toString() {
-		return solverErrorText;
-	}
+    /** Error code indicating a general error. */
+    public static final int SE_ERROR = 1;
+
+    /** Error code indicating an I/O failure. */
+    public static final int SE_IO_FAILED = 2;
+
+    /** Error code indicating that the binary could not be found. */
+    public static final int SE_NO_BINARY = 3;
+
+    /** Error code indicating a syntax error. */
+    public static final int SE_SYNTAX_ERROR = 4;
+
+    /** Error code indicating that the input file could not be opened. */
+    public static final int SE_CANNOT_OPEN_INPUT = 5;
+
+    /** Error code indicating that the solver could not be found. */
+    public static final int SE_CANNOT_FIND_SOLVER = 6;
+
+    /** Error code indicating insufficient permissions to execute the solver. */
+    public static final int SE_PERMISSIONS = 7;
+
+    /** The textual message associated with the exception. */
+    public final String solverErrorText;
+
+    /** The error code associated with the exception. */
+    public final int solverErrorCode;
+
+    /**
+     * Creates a new `SolverException` with the specified message and error code.
+     *
+     * @param text the text message describing the exception.
+     * @param exceptionCode the error code indicating the type of error.
+     */
+    public SolverException(String text, int exceptionCode) {
+        super(text);
+        this.solverErrorText = text;
+        this.solverErrorCode = exceptionCode;
+    }
+
+    /**
+     * Returns a string representation of the exception, which is the textual
+     * message provided when the exception was created.
+     *
+     * @return the textual message associated with the exception.
+     */
+    @Override
+    public String toString() {
+        return solverErrorText;
+    }
 }

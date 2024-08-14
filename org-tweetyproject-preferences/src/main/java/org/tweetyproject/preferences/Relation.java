@@ -20,11 +20,14 @@ package org.tweetyproject.preferences;
 
 /**
  * This enumeration lists the possible relations between two elements
- * in preference orders
- * 
- * @author Bastian Wolf
- * 
+ * in preference orders.
+ *
+ * <p><b>Authors:</b> Bastian Wolf</p>
  */
 public enum Relation {
- LESS, LESS_EQUAL
+    /** Indicates that one element is strictly less preferred than another. */
+    LESS,
+
+    /** Indicates that one element is less than or equally preferred to another. */
+    LESS_EQUAL
 }

@@ -21,6 +21,22 @@ package org.tweetyproject.arg.bipolar.analysis.extensions;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The `ExtensionAnalysis` interface provides a contract for analyzing and retrieving extensions
+ * in the context of argumentation frameworks, particularly within the domain of bipolar argumentation.
+ */
 public interface ExtensionAnalysis {
+
+    /**
+     * Computes and returns a list of extensions.
+     *
+     * <p>
+     * Each extension is represented as a set of strings, where each string corresponds to an argument
+     * in the argumentation framework. The method returns all extensions that are found according to
+     * the specific analysis performed by the implementing class.
+     * </p>
+     *
+     * @return a list of sets, where each set contains strings representing an extension of the argumentation framework.
+     */
     List<Set<String>> getExtensions();
 }
