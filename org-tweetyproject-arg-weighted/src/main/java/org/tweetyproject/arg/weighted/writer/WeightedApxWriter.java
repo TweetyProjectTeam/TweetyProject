@@ -86,8 +86,8 @@ public class WeightedApxWriter {
 	public void write(WeightedArgumentationFramework waf, File f, int precision, Boolean convertToNumericWeight) throws IOException {
 	    PrintWriter writer = new PrintWriter(f, "UTF-8");
 	    Object weight;
-	    for (Argument a : waf)
-	        writer.println("arg(" + a.getName() + ").");
+	    for (Object a : waf)
+	        writer.println("arg(" + a + ").");
 
 	    for (Attack att : waf.getAttacks()) {
 	        String formattedWeight;
