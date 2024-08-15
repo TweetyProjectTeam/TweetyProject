@@ -23,11 +23,20 @@ import java.util.Hashtable;
 /**
  * Objects of this class store additional simulation parameters that
  * should be shared among the generating components of a simulation.
- * 
+ *
  * @author Matthias Thimm
  */
 public class SimulationParameters extends Hashtable<Object, Object> {
 
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
+
+
+	/**
+     * Default constructor for creating an instance of SimulationParameters.
+     * This constructor initializes a new instance of the Hashtable.
+     */
+    public SimulationParameters() {
+        super();
+    }
 }

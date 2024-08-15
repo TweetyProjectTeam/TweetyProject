@@ -29,13 +29,20 @@ import org.tweetyproject.logics.rdl.semantics.Extension;
 import org.tweetyproject.logics.rdl.syntax.DefaultTheory;
 
 /**
- * Implements a naive reasoner for default logic based on exhaustive 
+ * Implements a naive reasoner for default logic based on exhaustive
  * application of defaults in process trees.
- * 
+ *
  * @author Matthias Thimm, Nils Geilen
  */
 public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,FolFormula>, ModelProvider<FolFormula,DefaultTheory,Extension>{
-	
+
+	/**
+	 * Defaul Constructor
+	 */
+	public SimpleDefaultReasoner(){
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
@@ -60,9 +67,9 @@ public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,
 	public Boolean query(DefaultTheory theory, FolFormula query) {
 		return this.query(theory, query, InferenceMode.SKEPTICAL);
 	}
-	
+
 	/**
-	 * Queries the given default theory for the given query using the given 
+	 * Queries the given default theory for the given query using the given
 	 * inference mode.
 	 * @param theory a default theory
 	 * @param query a formula
@@ -73,22 +80,22 @@ public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,
 		if(!query.isGround())
 			throw new IllegalArgumentException("Query is not grounded.");
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL)) {
-			for (Extension extension: this.getModels(theory)){			
+			for (Extension extension: this.getModels(theory)){
 				if(!extension.satisfies(query))
 					return false;
 			}
 			return true;
 		}
-		for (Extension extension: this.getModels(theory)){			
+		for (Extension extension: this.getModels(theory)){
 			if(extension.satisfies(query))
 				return true;
 		}
-		return false;		
+		return false;
 	}
 
 	@Override
 	public boolean isInstalled() {
 		return true;
 	}
-	
+
 }

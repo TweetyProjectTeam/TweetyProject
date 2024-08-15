@@ -91,7 +91,7 @@ public interface SatSolver extends AutoCloseable {
 	 * variables before they can be used in clauses. Hence, using integers not
 	 * returned by this method may work for some solvers, but not for others.
 	 *
-	 * @return
+	 * @return  the integer representation
 	 */
 	int newVar();
 

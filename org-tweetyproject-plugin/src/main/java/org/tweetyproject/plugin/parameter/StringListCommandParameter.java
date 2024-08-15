@@ -21,9 +21,9 @@ package org.tweetyproject.plugin.parameter;
 import java.util.ArrayList;
 
 /**
- * This class models a string list command parameter for 
+ * This class models a string list command parameter for
  *  Work-in-Progress, do not use!
- * 
+ *
  * @author bwolf
  *
  */
@@ -34,7 +34,7 @@ public class StringListCommandParameter extends CommandParameter {
 	 * this parameters given values
 	 */
 	private String[] value;
-	
+
 	/**
 	 * constructor with identifier and description
 	 * @param id the identifier used to call this parameter
@@ -43,22 +43,28 @@ public class StringListCommandParameter extends CommandParameter {
 	public StringListCommandParameter(String id, String des) {
 		super(id, des);
 	}
-
-	// getter
-	public String[] getValue(){
+	/**
+	 * Retrieves the value of this object.
+	 *
+	 * @return a `String[]` representing the current value of this object, or `null` if no value has been set.
+	 */
+	public String[] getValue() {
 		return value;
 	}
-	// setter
-	public void setValue(String[] value){
+
+	/**
+	 * Sets the value of this object.
+	 * @param value a `String[]` representing the new value to be stored in this object.
+	 */
+	public void setValue(String[] value) {
 		this.value = value;
 	}
-	
 	/**
 	 * checks each input string for validity
 	 */
 	@Override
 	public boolean isValid(String s) {
-		
+
 		return true;
 	}
 
@@ -75,14 +81,14 @@ public class StringListCommandParameter extends CommandParameter {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * instantiates a list of arguments if valid 
+	 * instantiates a list of arguments if valid
 	 * @param s an array of strings
 	 * @return the command parameter
 	 */
 	public CommandParameter instantiate(String[] s){
-		
+
 		ArrayList<String> als = new ArrayList<String>();
 		for(int i = 0; i < s.length; i++){
 			if(isValid(s[i])){
@@ -93,7 +99,7 @@ public class StringListCommandParameter extends CommandParameter {
 		newParam.setValue((String[]) als.toArray());
 		return newParam;
 	}
-	
+
 	/**
 	 * method to clone this object for instantiation
 	 */

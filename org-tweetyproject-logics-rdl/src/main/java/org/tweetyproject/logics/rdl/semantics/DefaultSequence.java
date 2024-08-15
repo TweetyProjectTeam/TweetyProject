@@ -43,17 +43,17 @@ public class DefaultSequence {
 	 * the sequence of defaults
 	 */
 	private List<DefaultRule> defaults = new ArrayList<>();
-	
+
 	/**
 	 * the out set
 	 */
 	private Set<FolFormula> out = new HashSet<>();
-	
+
 	/**
 	 * the in set
 	 */
 	private FolBeliefSet in = new FolBeliefSet();
-	
+
 	/**
 	 * true if the sequence is a process
 	 */
@@ -68,7 +68,7 @@ public class DefaultSequence {
 	}
 
 	/**
-	 * constructs a sequence by appending d to ds 
+	 * constructs a sequence by appending d to ds
 	 * @param ds a default sequence
 	 * @param d a default rule
 	 */
@@ -85,7 +85,7 @@ public class DefaultSequence {
 		for(FolFormula f: d.getJustification())
 			out.add(new Negation(f));
 	}
-	
+
 	/**
 	 * Constructs a new DefaultSequence
 	 * @param d a default rule
@@ -94,9 +94,9 @@ public class DefaultSequence {
 	public DefaultSequence app(DefaultRule d){
 		return new DefaultSequence(this,d);
 	}
-	
+
 	/**
-	 * applicable ^= pre in In and (not jus_i) not in In forall i 
+	 * applicable ^= pre in In and (not jus_i) not in In forall i
 	 * @param d a default rule
 	 * @return true iff d is applicable to In
 	 */
@@ -106,18 +106,20 @@ public class DefaultSequence {
 			if(prover.query(in, new Negation(f)))
 				return false;
 		return prover.query(in, d.getPrerequisite());
-		
+
 	}
-	
+
 	/**
+	 * 	Return the sequence's in set
 	 * 	@return the sequence's in set
 	 */
 	public Collection<FolFormula> getIn() {
 		return in;
 	}
 
-	
+
 	/**
+	 * Return the sequence's out set
 	 * @return the sequence's out set
 	 */
 	public Collection<FolFormula> getOut() {
@@ -156,7 +158,7 @@ public class DefaultSequence {
 		return true;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -167,6 +169,6 @@ public class DefaultSequence {
 				+ (isSuccessful()?" is successfull":"")
 				+" [\n\tdefaults = " + defaults + ", \n\tout = " + out + ", \n\tin = " + in + "\n]";
 	}
-	
+
 
 }

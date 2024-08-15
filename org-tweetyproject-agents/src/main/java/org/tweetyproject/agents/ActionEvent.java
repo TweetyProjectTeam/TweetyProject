@@ -21,15 +21,15 @@ package org.tweetyproject.agents;
 /**
  * An action event encapsulates a multi agent system, an agent in this system, and
  * an action (which was performed by the agent).
- * 
+ *
  * @author Matthias Thimm
  */
 public class ActionEvent {
-	
+
 	private Agent agent;
 	private MultiAgentSystem<? extends Agent> multiAgentSystem;
 	private Executable action;
-	
+
 	/**
 	 * Creates a new ActionEvent.
 	 * @param agent an agent.
@@ -43,6 +43,7 @@ public class ActionEvent {
 	}
 
 	/**
+	 * Return the agent.
 	 * @return the agent
 	 */
 	public Agent getAgent() {
@@ -50,6 +51,7 @@ public class ActionEvent {
 	}
 
 	/**
+	 * Return the  multiAgentSystem
 	 * @return the multiAgentSystem
 	 */
 	public MultiAgentSystem<? extends Agent> getMultiAgentSystem() {
@@ -57,6 +59,7 @@ public class ActionEvent {
 	}
 
 	/**
+	 * Return the action
 	 * @return the action
 	 */
 	public Executable getAction() {

@@ -36,7 +36,7 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
  * Such queries have the following form: "necessarily F after A_1 ; A_2 ; ... ;
  * A_n" where F is a state formula, and each A_i (0 &lt; i &lt; n+1) is an
  * action.
- * 
+ *
  * @author Sebastian Homann
  */
 public class NecessarilyQuery extends QueryProposition {
@@ -47,7 +47,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/**
 	 * Creates a new necessarily query with an empty action sequence.
-	 * 
+	 *
 	 * @param formula the inner formula of this query.
 	 */
 	public NecessarilyQuery(FolFormula formula) {
@@ -59,7 +59,7 @@ public class NecessarilyQuery extends QueryProposition {
 	/**
 	 * Creates a new necessarily query with the given inner formula and list of
 	 * actions.
-	 * 
+	 *
 	 * @param formula the inner formula of this necessarily query.
 	 * @param actions the action sequence of this necessarily query.
 	 */
@@ -74,7 +74,7 @@ public class NecessarilyQuery extends QueryProposition {
 	/**
 	 * Creates a new necessarily query with the given inner formula and a single
 	 * action.
-	 * 
+	 *
 	 * @param formula the inner formula of this necessarily query.
 	 * @param action  a single action.
 	 */
@@ -87,7 +87,10 @@ public class NecessarilyQuery extends QueryProposition {
 	}
 
 	/**
-	 * @return the list of actions of this necessarily query in the correct order.
+	 * Retrieves the list of actions associated with this necessarily query in the correct order.
+	 *
+	 *
+	 * @return a `List` of `FolAction` objects representing the actions of this necessarily query in the correct order.
 	 */
 	public List<FolAction> getActions() {
 		List<FolAction> result = new LinkedList<FolAction>();
@@ -97,7 +100,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.action.query.syntax.QueryProposition#getActionSignature()
 	 */
@@ -112,7 +115,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.action.query.syntax.QueryProposition#substitute(java.util
 	 * .Map)
@@ -128,7 +131,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.query.syntax.QueryProposition#getInnerActions()
 	 */
 	@Override
@@ -138,7 +141,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.query.syntax.QueryProposition#getVariables()
 	 */
 	@Override
@@ -155,7 +158,7 @@ public class NecessarilyQuery extends QueryProposition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.query.syntax.QueryProposition#toString()
 	 */
 	@Override

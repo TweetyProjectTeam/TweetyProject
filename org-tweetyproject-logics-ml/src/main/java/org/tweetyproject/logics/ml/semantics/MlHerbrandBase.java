@@ -26,13 +26,13 @@ import org.tweetyproject.logics.fol.syntax.*;
 
 /**
  * Modified version of HerbrandBase that allows for modal formulas.
- * 
+ *
  * The Herbrand base is the set of all possible ground atoms of some
  * given first-order logic.
  * <br>
  * NOTE: We only allow to define a Herbrand base for signatures without
  * function symbols.
- * 
+ *
  * @author Matthias Thimm
  * @author Anna Gessler
  * @see org.tweetyproject.logics.fol.semantics.HerbrandBase
@@ -53,9 +53,10 @@ public class MlHerbrandBase {
 	public MlHerbrandBase(FolSignature sig) throws IllegalArgumentException{
 		this.hBase = new HerbrandBase(sig);
 	}
-	
+
 
 	/**
+	 * Returns all possible Herbrand interpretations.
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
@@ -63,11 +64,12 @@ public class MlHerbrandBase {
 		Set<MlHerbrandInterpretation> interpretations = new HashSet<MlHerbrandInterpretation>();
 		Set<Set<FolAtom>> subsets = new SetTools<FolAtom>().subsets(this.getAtoms());
 		for(Set<FolAtom> atoms: subsets)
-			interpretations.add(new MlHerbrandInterpretation(atoms));		
+			interpretations.add(new MlHerbrandInterpretation(atoms));
 		return interpretations;
 	}
-	
+
 	/**
+	 * Return all atoms of this Herbrand base.
 	 * @return all atoms of this Herbrand base.
 	 * @see org.tweetyproject.logics.fol.semantics.HerbrandBase#getAtoms()
 	 */

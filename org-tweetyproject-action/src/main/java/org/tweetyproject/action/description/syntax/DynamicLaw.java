@@ -38,11 +38,14 @@ import org.tweetyproject.logics.fol.syntax.*;
  * a propositional formula over the set of fluent names (called ifFormula) U is
  * a propositional formula over the set of fluent names and the set of action
  * names (called afterFormula)
- * 
+ *
  * @author wutsch
  */
 public class DynamicLaw extends CLaw {
 
+	/**
+ 	* The after formula of this dynamic law.
+ 	*/
 	protected FolFormula afterFormula = new Tautology();
 
 	/**
@@ -55,7 +58,7 @@ public class DynamicLaw extends CLaw {
 	/**
 	 * Creates a new dynamic law of the form: "caused headFormula if ifFormula after
 	 * afterFormula"
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param ifFormula    some FOL formula
 	 * @param afterFormula some FOL formula
@@ -68,7 +71,7 @@ public class DynamicLaw extends CLaw {
 	/**
 	 * Creates a new dynamic law of the form: "caused headFormula if ifFormula after
 	 * afterFormula requires requirements"
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param ifFormula    some FOL formula
 	 * @param afterFormula some FOL formula
@@ -82,7 +85,7 @@ public class DynamicLaw extends CLaw {
 
 	/**
 	 * Creates a new dynamic law of the form "caused headFormula after afterFormula"
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param afterFormula some FOL formula
 	 */
@@ -94,7 +97,7 @@ public class DynamicLaw extends CLaw {
 	/**
 	 * Creates a new dynamic law of the form "caused headFormula after afterFormula"
 	 * requires requirements
-	 * 
+	 *
 	 * @param headFormula  some FOL formula
 	 * @param afterFormula some FOL formula
 	 * @param requirements a set of requirements
@@ -106,7 +109,7 @@ public class DynamicLaw extends CLaw {
 
 	/**
 	 * Sets the afterFormula of this causal law
-	 * 
+	 *
 	 * @param afterFormula the new afterFormula of this causal law.
 	 */
 	private void setAfterFormula(FolFormula afterFormula) {
@@ -120,16 +123,19 @@ public class DynamicLaw extends CLaw {
 		this.afterFormula = (FolFormula) afterFormula.collapseAssociativeFormulas();
 	}
 
-	/**
-	 * @return the afterFormula of this causal law.
-	 */
-	public FolFormula getAfterFormula() {
-		return afterFormula;
-	}
+/**
+ * Retrieves the after formula of this causal law.
+ *
+ * @return the `FolFormula` that constitutes the after formula of this causal law.
+ */
+public FolFormula getAfterFormula() {
+    return afterFormula;
+}
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.desc.c.syntax.CausalRule#isDefinite()
 	 */
 	@Override
@@ -148,7 +154,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -166,7 +172,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.desc.c.syntax.CausalRule#getSignature()
 	 */
 	@Override
@@ -179,7 +185,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.desc.c.syntax.CausalRule#getAtoms()
 	 */
 	@SuppressWarnings("unchecked")
@@ -194,7 +200,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.desc.c.syntax.CausalRule#toDefinite()
 	 */
 	@Override
@@ -235,7 +241,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.desc.c.syntax.CausalRule#getAllGroundings()
 	 */
 	@Override
@@ -259,7 +265,7 @@ public class DynamicLaw extends CLaw {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.action.description.c.syntax.CRule#getFormulas()
 	 */
 	@Override

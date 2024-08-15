@@ -30,18 +30,27 @@ import org.tweetyproject.lp.asp.syntax.*;
 
 /**
  * Instances of this class represent the set of minimal arguments from
- * a extended logic program 
+ * a extended logic program
  * @author Sebastian Homann
  *
  */
 public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature> {
 	private Program program;
 //	private Set<Argument> arguments = new HashSet<Argument>();
-	
+	/**
+	 * Constructs an `ArgumentationKnowledgeBase` object initialized with a given  program.
+	 *
+	 *
+	 * @param program the `Program` object representing the  program to be used for initializing
+	 *                the argumentation knowledge base. The program is cloned internally to avoid
+	 *                modifying the original program.
+	 * @throws IllegalArgumentException if any rule in the program has an `AggregateHead` as its conclusion.
+	 */
+
 	public ArgumentationKnowledgeBase(Program program) {
 		// program will be modified internally
 		this.program = (Program)program.clone();
-		
+
 		// preprocessing: remove unnecessary rules, i.e. a <- a.
 		for(ASPRule r : program) {
 			if (r.getConclusion() instanceof AggregateHead)
@@ -52,41 +61,41 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns all minimal arguments constructible from the extended logic program 
+	 * Returns all minimal arguments constructible from the extended logic program
 	 * @return all minimal arguments constructible from the extended logic program
 	 */
 	public Set<Argument> getArguments() {
 		Set<Argument> result = new HashSet<Argument>();
-		
-		for(ASPRule r : program) {			
+
+		for(ASPRule r : program) {
 			LinkedList<ASPRule> rules = new LinkedList<ASPRule>();
 			rules.add(r);
 			result.addAll(getArguments(rules));
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Recursively constructions minimal arguments in a bottom-up fashion.
-	 * 
+	 *
 	 * @param rules A set of rules already part of the argument
 	 * @return a set of minimal arguments containing the given set of rules
 	 */
 	@SuppressWarnings("unchecked")
 	private Set<Argument> getArguments(LinkedList<ASPRule> rules) {
 		Set<Argument> result = new HashSet<Argument>();
-		
+
 		Set<ASPLiteral> openLiterals = getOpenLiterals(rules);
-		
+
 		if(openLiterals.isEmpty()) {
 			// argument is complete
 			result.add(new Argument(rules));
 			return result;
 		}
-		
+
 		// there is at least one unaccounted literal l, find a rule with head l
 		for(ASPRule r : program) {
 			if (r.getConclusion() instanceof AggregateHead)
@@ -98,10 +107,10 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 				result.addAll(getArguments(newRules));
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Returns the set of non-default-negated literals that are part of the premise
 	 * of some rule but not the conclusion of some other rule
@@ -127,12 +136,12 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method returns the set of conclusions of all rules in the collection
 	 * of rules given.
 	 * @param rules a collection of rules
-	 * @return the set of conclusions of said rules 
+	 * @return the set of conclusions of said rules
 	 */
 	@SuppressWarnings("unused")
 	private Set<ASPLiteral> getDerivableLiterals(Collection<ASPRule> rules) {
@@ -152,7 +161,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns true iff each non-default-negated literal in the premise
 	 * of rule is contained in the set of literals
@@ -186,5 +195,5 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		return new FolSignature();
 	}
 
-	
+
 }

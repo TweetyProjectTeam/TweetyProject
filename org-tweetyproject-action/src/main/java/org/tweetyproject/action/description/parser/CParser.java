@@ -40,6 +40,7 @@ import org.tweetyproject.commons.ParserException;
  * @author Sebastian Homann
  */
 public class CParser extends Parser<CActionDescription, Formula> {
+	/** The signature attribute  */
 	protected ActionSignature signature;
 
 	/**
