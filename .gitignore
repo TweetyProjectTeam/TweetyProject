@@ -10,5 +10,6 @@ bin/
 /org-tweetyproject-web/tweetyserver.log
 .vscode
 
+*.py
 *.log
 /.metadata
