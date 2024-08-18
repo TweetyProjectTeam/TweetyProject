@@ -32,14 +32,21 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 /**
- * 
+ *
  * Generates an overview of example classes and resources in the workspace with
  * HTML formatting.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class ExamplesHTMLGenerator {
+
+	/**
+	 * Default
+	 */
+	public ExamplesHTMLGenerator(){
+		//default
+	}
 
 	private static String git_path = "https://github.com/TweetyProjectTeam/TweetyProject/tree/main/";
 
@@ -93,7 +100,7 @@ public class ExamplesHTMLGenerator {
 	/**
 	 * Generates an overview of example classes and resources in the workspace with
 	 * HTML formatting.
-	 * 
+	 *
 	 * @param tweety_libraries_dir path of the TweetyProject 'libraries' folder (can be
 	 *                             detected automatically if left empty)
 	 * @return String containing an overview of examples and resources with HTML
@@ -301,7 +308,7 @@ public class ExamplesHTMLGenerator {
 	/**
 	 * Generates an overview of example classes and resources in the workspace with
 	 * HTML formatting and writes it to a HTML file.
-	 * 
+	 *
 	 * @param path where the generated file will be saved
 	 * @throws IOException if an IO error occurs
 	 */
@@ -314,7 +321,7 @@ public class ExamplesHTMLGenerator {
 		writer.close();
 	}
 
-	/** 
+	/** Print Examples to test file
 	 * @param args String
 	 * @throws IOException throws
 	 */

@@ -30,6 +30,36 @@ import org.tweetyproject.arg.extended.syntax.ExtendedTheory;
  * @author Lars Bengel
  */
 public class ExtendedTheoryExample {
+
+    /** Default */
+    public ExtendedTheoryExample() {
+    }
+
+    /**
+     * Demonstrates the construction of an extended Dung argumentation theory and
+     * the use of an extended reasoner.
+     *
+     * The following steps are performed:
+     * 1. Constructs an extended argumentation theory with arguments (a, b, c, d,
+     * e).
+     * 2. Adds standard attacks between arguments.
+     * 3. Adds extended attacks where arguments can attack other attacks.
+     * 4. Prints the argumentation theory in a readable format.
+     * 5. Computes and prints the complete extensions using the
+     * {@link SimpleExtendedCompleteReasoner}.
+     *
+     * This example illustrates how to create both standard and extended attacks
+     * within a Dung argumentation framework,
+     * and how to use reasoning to compute extensions.
+     *
+     * @param args Command-line arguments (not used in this example).
+     */
+
+
+     /**
+      *  Example theory
+      * @param args cl arg
+      */
     public static void main(String[] args) {
         ExtendedTheory theory = new ExtendedTheory();
         Argument a = new Argument("a");
@@ -37,7 +67,7 @@ public class ExtendedTheoryExample {
         Argument c = new Argument("c");
         Argument d = new Argument("d");
         Argument e = new Argument("e");
-        theory.add(a,b,c,d,e);
+        theory.add(a, b, c, d, e);
 
         // standard attacks
         theory.addAttack(a, b);

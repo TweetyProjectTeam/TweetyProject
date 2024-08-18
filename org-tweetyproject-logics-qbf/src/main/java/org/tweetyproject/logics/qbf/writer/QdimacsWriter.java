@@ -48,7 +48,7 @@ import org.tweetyproject.logics.qbf.syntax.ForallQuantifiedFormula;
  * portion of each formula. <br>
  * - The right portion of the formulas does not need to be in any special form
  * (it will be converted to cnf).
- * 
+ *
  * @author Anna Gessler
  */
 public class QdimacsWriter {
@@ -59,12 +59,13 @@ public class QdimacsWriter {
 
 	/**
 	 * Creates a new QDIMACS writer.
-	 * 
-	 * @param writer
+	 *
+	 * @param writer a writer
 	 */
 	public QdimacsWriter(Writer writer) {
 		this.writer = writer;
 	}
+
 	/**
 	 * Creates a new QDIMACS writer.
 	 */
@@ -76,21 +77,31 @@ public class QdimacsWriter {
 	 * Removes zero at the end of the problem line (workaround for some solvers).
 	 */
 	public boolean DISABLE_PREAMBLE_ZERO = false;
-	
+
 	/**
-	 * Will be set to true/false if the input can be simplified to a tautology/contradiction.
-	 * Used in some of the solver wrappers to immediately return true/false instead of calling the solver
+	 * Will be set to true/false if the input can be simplified to a
+	 * tautology/contradiction.
+	 * Used in some of the solver wrappers to immediately return true/false instead
+	 * of calling the solver
 	 * in case of a tautology/contradiction.
 	 */
 	public Boolean special_formula_flag = null;
 
+	/**
+	 *
+	 * Return Kb in string format
+	 *
+	 * @param kb a kb
+	 * @return kb in string format
+	 * @throws IOException
+	 */
 	public String printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers (indices of the list)
-		Map<Proposition,Integer> mappings = new HashMap<Proposition,Integer>();
+		Map<Proposition, Integer> mappings = new HashMap<Proposition, Integer>();
 		int index = 1;
 		for (PlFormula f : kb) {
-			for(Proposition p: f.getAtoms())
-				if(!mappings.containsKey(p))
+			for (Proposition p : f.getAtoms())
+				if (!mappings.containsKey(p))
 					mappings.put(p, index++);
 		}
 
@@ -140,83 +151,84 @@ public class QdimacsWriter {
 			clauses_only.add(f.toCnf());
 		}
 
-		//check for tautologies and contradictions 
-		//because they can't be directly represented in QDIMACS format
+		// check for tautologies and contradictions
+		// because they can't be directly represented in QDIMACS format
 		Conjunction cnf = new Conjunction();
 		cnf.addAll(clauses_only);
 		Conjunction simplified_cnf = simplify_special_formulas(cnf);
 		if (simplified_cnf.size() == 1 && simplified_cnf.iterator().next() instanceof Tautology) {
 			this.special_formula_flag = true;
-			return "TRUE"; 
-		}
-		else if (simplified_cnf.size() == 1 && simplified_cnf.iterator().next() instanceof Contradiction) {
+			return "TRUE";
+		} else if (simplified_cnf.size() == 1 && simplified_cnf.iterator().next() instanceof Contradiction) {
 			this.special_formula_flag = false;
-			return "FALSE"; 
+			return "FALSE";
 		}
-		
+
 		// Collect clauses with standard dimacs converter
-		List<String> dimacs_clauses = DimacsSatSolver.convertToDimacs(simplified_cnf, mappings, new LinkedList<String>());
+		List<String> dimacs_clauses = DimacsSatSolver.convertToDimacs(simplified_cnf, mappings,
+				new LinkedList<String>());
 		String preamble = dimacs_clauses.get(0);
 		if (!DISABLE_PREAMBLE_ZERO)
 			preamble += " 0";
-		
+
 		writer.write(preamble + "\n");
 		writer.write(quantifiers);
-		
-		boolean first = true;
-		for(String s: dimacs_clauses)
-			if(first)
-				first = false;
-			else writer.write(s + "\n");
 
-		String result =preamble + quantifiers.strip();
-		first = true;
-		for(String s: dimacs_clauses)
-			if(first)
+		boolean first = true;
+		for (String s : dimacs_clauses)
+			if (first)
 				first = false;
-			else result += s + "\n";
+			else
+				writer.write(s + "\n");
+
+		String result = preamble + quantifiers.strip();
+		first = true;
+		for (String s : dimacs_clauses)
+			if (first)
+				first = false;
+			else
+				result += s + "\n";
 		return result;
 	}
 
 	/**
 	 * Simplify clauses that contain tautologies or contradictions.
-	 * 
+	 *
 	 * @param a formula in cnf (if it is not in cnf already, it will be converted
 	 *          to cnf)
 	 * @return simplified belief set
 	 */
 	private Conjunction simplify_special_formulas(PlFormula f) {
-			Conjunction c = f.toCnf();
-			Conjunction c_simplified = new Conjunction();
-			boolean found_contradiction = false;
-			for (PlFormula fd : c) {
-				Disjunction d = (Disjunction) fd;
-				Disjunction d_simplified = new Disjunction();
-				for (PlFormula l : d) {
-					// (+ || x || ...)  <=> +
-					if (l instanceof Tautology) {
-						d_simplified = new Disjunction();
-						break;
-					} 
-					// (- || x || ...) <=> (x ...)
-					else if (l instanceof Contradiction) 
-						found_contradiction = true;
-					else 
-						d_simplified.add(l);
+		Conjunction c = f.toCnf();
+		Conjunction c_simplified = new Conjunction();
+		boolean found_contradiction = false;
+		for (PlFormula fd : c) {
+			Disjunction d = (Disjunction) fd;
+			Disjunction d_simplified = new Disjunction();
+			for (PlFormula l : d) {
+				// (+ || x || ...) <=> +
+				if (l instanceof Tautology) {
+					d_simplified = new Disjunction();
+					break;
 				}
-				// border case: disjunct consists only of "-"
-				// the whole conjunction is false
-				if (d_simplified.isEmpty() && found_contradiction) {
-					c_simplified = new Conjunction();
-					c_simplified.add(new Contradiction()); 
-					return c_simplified;
-				}
-				else if (!d_simplified.isEmpty())
-					c_simplified.add(d_simplified);
+				// (- || x || ...) <=> (x ...)
+				else if (l instanceof Contradiction)
+					found_contradiction = true;
+				else
+					d_simplified.add(l);
 			}
-			// border case: all disjuncts are tautologies
-			if (c_simplified.isEmpty()) 
-				c_simplified.add(new Tautology());
+			// border case: disjunct consists only of "-"
+			// the whole conjunction is false
+			if (d_simplified.isEmpty() && found_contradiction) {
+				c_simplified = new Conjunction();
+				c_simplified.add(new Contradiction());
+				return c_simplified;
+			} else if (!d_simplified.isEmpty())
+				c_simplified.add(d_simplified);
+		}
+		// border case: all disjuncts are tautologies
+		if (c_simplified.isEmpty())
+			c_simplified.add(new Tautology());
 		return c_simplified;
 	}
 
@@ -225,7 +237,7 @@ public class QdimacsWriter {
 	 * in QDimacs format) and eliminates it if needed. An innermost universal
 	 * quantifier can be eliminated by removing all occurrences of the bound
 	 * variables (e.g. "forall a: (a || b)" is true iff "b" is true).
-	 * 
+	 *
 	 * @param f a PlFormula
 	 * @return the forall-reduct of f
 	 */
@@ -251,7 +263,7 @@ public class QdimacsWriter {
 
 	/**
 	 * Get the innermost quantification of the given formula.
-	 * 
+	 *
 	 * @param f PlFormula
 	 * @return the innermost quantification of f, including the quantifier
 	 *         variables, i.e. an instance of ExistsQuantifiedFormula or
@@ -271,13 +283,32 @@ public class QdimacsWriter {
 		return finalFormula;
 	}
 
-	public String printVariables(Set<Proposition> vars, Map<Proposition,Integer> mappings) {
+	/**
+	 * Prints the variable mappings for a given set of propositions.
+	 * The method generates a string containing the corresponding integer mappings
+	 * for each proposition in the provided set, using the mappings from the
+	 * provided map.
+	 *
+	 * @param vars     The set of propositions whose mappings are to be printed.
+	 * @param mappings A map that associates each proposition with an integer value.
+	 * @return A string containing the integer mappings of the propositions,
+	 *         separated by spaces.
+	 */
+	public String printVariables(Set<Proposition> vars, Map<Proposition, Integer> mappings) {
 		String result = "";
-		for (Proposition v : vars)
+		for (Proposition v : vars) {
 			result += " " + (mappings.get(v));
+		}
 		return result;
 	}
 
+	/**
+	 * Closes the underlying writer resource.
+	 * This method should be called when all writing operations are complete
+	 * to ensure that all resources are properly released.
+	 *
+	 * @throws IOException If an I/O error occurs during closing the writer.
+	 */
 	public void close() throws IOException {
 		writer.close();
 	}

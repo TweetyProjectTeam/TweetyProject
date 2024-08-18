@@ -37,7 +37,12 @@ import org.tweetyproject.math.term.Term;
  * @author Matthias Thimm
  */
 public class SemiOptimisticPASemantics extends AbstractPASemantics{
-	
+
+
+	/** Default */
+	public SemiOptimisticPASemantics(){
+		super();
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */

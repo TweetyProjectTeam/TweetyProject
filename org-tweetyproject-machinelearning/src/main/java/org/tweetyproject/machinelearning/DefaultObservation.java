@@ -21,29 +21,57 @@ package org.tweetyproject.machinelearning;
 import java.util.Vector;
 
 import libsvm.svm_node;
-
 /**
- * A default observation is a vector of double values.
- * 
+ * A default observation is a vector of double values, representing
+ * an observation for machine learning tasks. This class extends `Vector<Double>`
+ * and implements the `Observation` interface.
+ *
+ * <p>
+ * The class includes a method for converting the observation into an array of
+ * `svm_node` objects, which can be used for SVM-based machine learning algorithms.
+ * </p>
+ *
  * @author Matthias Thimm
  */
 public class DefaultObservation extends Vector<Double> implements Observation {
 
-	/** For serialization */
-	private static final long serialVersionUID = -6600763202428596342L;
+    /** For serialization */
+    private static final long serialVersionUID = -6600763202428596342L;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.machinelearning.Observation#toSvmNode()
-	 */
-	public svm_node[] toSvmNode(){
-		svm_node[] obs = new svm_node[this.size()];
-		int idx = 0;
-		for(Double d: this){
-			obs[idx] = new svm_node();
-			obs[idx].index = idx+1;
-			obs[idx].value = d;
-			idx++;
-		}
-		return obs;
-	}	
+    /**
+     * Default constructor for the `DefaultObservation` class.
+     *
+     * <p>
+     * This constructor initializes an empty `DefaultObservation` object
+     * that can be populated with double values representing an observation.
+     * </p>
+     */
+    public DefaultObservation() {
+        // Default constructor with no implementation needed.
+    }
+
+    /**
+     * Converts this observation into an array of `svm_node` objects.
+     *
+     * <p>
+     * The conversion is intended for use in SVM-based machine learning
+     * algorithms. Each value in the observation is transformed into an
+     * `svm_node` where the index corresponds to the position of the value
+     * in the vector, and the value is the actual double value.
+     * </p>
+     *
+     * @return an array of `svm_node` objects representing this observation.
+     */
+    @Override
+    public svm_node[] toSvmNode() {
+        svm_node[] obs = new svm_node[this.size()];
+        int idx = 0;
+        for (Double d : this) {
+            obs[idx] = new svm_node();
+            obs[idx].index = idx + 1;
+            obs[idx].value = d;
+            idx++;
+        }
+        return obs;
+    }
 }

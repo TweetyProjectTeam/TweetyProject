@@ -26,15 +26,18 @@ import org.tweetyproject.machinelearning.rl.mdp.Policy;
 import org.tweetyproject.machinelearning.rl.mdp.State;
 
 /**
- * @author Matthias Thimm
+ * The `PolicyEvaluation` interface provides methods to evaluate the utility of states
+ * in a Markov Decision Process (MDP) with respect to a given policy.
  *
- * @param <S> The type of states 
- * @param <A> The type of actions 
+ * @param <S> The type of states in the MDP.
+ * @param <A> The type of actions in the MDP.
+ *
+ * @author Matthias Thimm
  */
 public interface PolicyEvaluation<S extends State, A extends Action> {
-	
+
 	/**
-	 * Determines the utilities of the states in the MDP wrt. the 
+	 * Determines the utilities of the states in the MDP wrt. the
 	 * given policy.
 	 * @param mdp some MDP
 	 * @param pi some policy

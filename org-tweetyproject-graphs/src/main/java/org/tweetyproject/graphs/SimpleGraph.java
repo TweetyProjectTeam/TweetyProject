@@ -49,7 +49,7 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
         super();
     }
 
-    
+
     /**
      * add all nodes to the graph
      * @param c a collection of nodes
@@ -134,15 +134,16 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
 
         return undirectedGraph;
     }
-    
+
     /**
 	 *  Adds a graph as a subgraph
-	 * 
+	 *
 	 * @param superExit Node of the this graph, under which the new graph will be anchored
 	 * @param subGraph Graph, which will be added to the super-graph
 	 * @param subEntry Node of the subgraph, which will be connected to the super-graph
 	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
      * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
+     * @retun status of function
 	 */
     public boolean addSubGraph(T superExit,
 			SimpleGraph<T> subGraph, T subEntry, String label ) throws NoSuchObjectException {

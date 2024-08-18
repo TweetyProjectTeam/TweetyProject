@@ -26,87 +26,118 @@ import org.tweetyproject.commons.util.rules.Derivation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * 
+ * Represents a simple propositional logic argument in deductive argumentation.
+ * The argument consists of a set of supporting rules and a claim, which is a
+ * propositional logic formula (PlFormula). This class follows the structure
+ * defined in the paper "A Comparison of Formal Argumentation Systems" by Hunter and
+ * Caminada (2013).
+ *
+ * This class extends {@link Argument} and stores a set of supporting rules
+ * and a single claim derived from the support.
+ *
  * @author Federico Cerutti (federico.cerutti(at)acm.org)
- *
- * Argument structure as defined in 
- * http://www0.cs.ucl.ac.uk/staff/a.hunter/papers/ac13t.pdf
- *
  */
-public class SimplePlLogicArgument extends Argument{
+public class SimplePlLogicArgument extends Argument {
 
-	/**
-	 * support
-	 */
-	private Collection<SimplePlRule> support = null;
-	/**claim*/
-	private PlFormula claim = null;
-	/**constructor*/
-	public SimplePlLogicArgument(Collection<SimplePlRule> _support,
-			PlFormula _claim) {
-		super(null);
-		this.support = _support;
-		this.claim = _claim;
-	}
+    /** The support set of rules for this argument */
+    private Collection<SimplePlRule> support = null;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param 	derivation some derivation
-	 */
-	public SimplePlLogicArgument(Derivation<SimplePlRule> derivation) {
-		super(null);
-		this.support = new HashSet<SimplePlRule>(derivation);
-		this.claim = (PlFormula) derivation.getConclusion();
-	}
-	/**
-	 * 
-	 * @return support
-	 */
-	public Collection<? extends SimplePlRule> getSupport() {
-		return this.support;
-	}
+    /** The claim of this argument, represented as a propositional logic formula */
+    private PlFormula claim = null;
 
-	/**
-	 * 
-	 * @return claim
-	 */
-	public PlFormula getClaim() {
-		return this.claim;
-	}
+    /**
+     * Constructs a simple propositional logic argument with the given support
+     * and claim.
+     *
+     * @param _support The collection of supporting rules for this argument.
+     * @param _claim The propositional logic formula representing the claim.
+     */
+    public SimplePlLogicArgument(Collection<SimplePlRule> _support, PlFormula _claim) {
+        super(null);
+        this.support = _support;
+        this.claim = _claim;
+    }
 
-	/**
-	 * prints String representation
-	 */
-	public String toString() {
-		return "<" + this.support.toString() + "," + this.claim.toString()
-				+ ">";
-	}
+    /**
+     * Constructs a simple propositional logic argument from a derivation.
+     * The derivation consists of a set of rules (support) and a conclusion
+     * (claim).
+     *
+     * @param derivation The derivation from which the argument is created.
+     */
+    public SimplePlLogicArgument(Derivation<SimplePlRule> derivation) {
+        super(null);
+        this.support = new HashSet<SimplePlRule>(derivation);
+        this.claim = (PlFormula) derivation.getConclusion();
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((support == null) ? 0 : support.hashCode());
-		return result;
-	}
+    /**
+     * Returns the support of this argument, i.e., the set of rules that
+     * provide the basis for the claim.
+     *
+     * @return The collection of supporting rules.
+     */
+    public Collection<? extends SimplePlRule> getSupport() {
+        return this.support;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SimplePlLogicArgument other = (SimplePlLogicArgument) obj;
-		if (!this.claim.equals(other.claim))
-			return false;
-		if (support == null) {
-			if (other.support != null)
-				return false;
-		} else if (!support.equals(other.support))
-			return false;
-		return true;
-	}
+    /**
+     * Returns the claim of this argument, which is a propositional logic formula.
+     *
+     * @return The propositional logic formula representing the claim.
+     */
+    public PlFormula getClaim() {
+        return this.claim;
+    }
+
+    /**
+     * Returns a string representation of this argument in the form
+     * "<support, claim>".
+     *
+     * @return The string representation of this argument.
+     */
+    @Override
+    public String toString() {
+        return "<" + this.support.toString() + "," + this.claim.toString() + ">";
+    }
+
+    /**
+     * Computes the hash code for this argument based on the support.
+     *
+     * @return The hash code of this argument.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((support == null) ? 0 : support.hashCode());
+        return result;
+    }
+
+    /**
+     * Checks for equality between this argument and another object.
+     * Two arguments are considered equal if their claims are equal and their
+     * support sets are equal.
+     *
+     * @param obj The object to compare this argument to.
+     * @return True if the objects are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SimplePlLogicArgument other = (SimplePlLogicArgument) obj;
+        if (!this.claim.equals(other.claim))
+            return false;
+        if (support == null) {
+            if (other.support != null)
+                return false;
+        } else if (!support.equals(other.support))
+            return false;
+        return true;
+    }
 }

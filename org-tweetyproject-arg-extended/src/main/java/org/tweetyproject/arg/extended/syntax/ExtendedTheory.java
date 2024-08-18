@@ -35,7 +35,9 @@ import java.util.*;
  */
 public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implements ArgumentationFramework<Argument>, Collection<Argument> {
 
+    /** Children */
     protected Map<Argument, Collection<DungEntity>> children;
+    /** parents */
     protected Map<DungEntity, Collection<Argument>> parents;
 
     /**

@@ -23,32 +23,56 @@ import java.util.*;
 import org.tweetyproject.machinelearning.assoc.AprioriMiner;
 import org.tweetyproject.machinelearning.assoc.FpGrowthMiner;
 /**
- * An example for the FP-Growth algorithm
- * 
- * @author Matthias Thimm
+ * An example demonstrating the use of the FP-Growth algorithm for mining frequent patterns
+ * from a dataset of transactions.
  *
+ * <p>
+ * This example uses the FP-Growth algorithm to mine frequent itemsets from a small dataset,
+ * as described in the paper:
+ * <ul>
+ * <li>Jiawei Han, Jian Pei, Yiwen Yin. "Mining frequent patterns without candidate generation."
+ * ACM SIGMOD Record, Volume 29, Issue 2, June 2000, pp. 1–12.</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * The example also includes a comparison with the Apriori algorithm, showing that both
+ * algorithms generate the same frequent itemsets for the given dataset.
+ * </p>
+ *
+ * @author Matthias Thimm
  */
 public class FpGrowthExample {
 	/**
-	 * 
-	 * @param args arguments
+	 * Default Constructor
 	 */
-	public static void main(String[] args) {
-		// this is the example from
-		// [Jiawei Han, Jian Pei, Yiwen Yin. Mining frequent patterns without candidate generation.
-		//  ACM SIGMOD Record, Volume 29, Issue 2, June 2000 pp 1–12]
-		Collection<Collection<String>> database = new LinkedList<Collection<String>>();
-		database.add(List.of("f","a","c","d","g","i","m","p"));
-		database.add(List.of("a","b","c","f","l","m","o"));
-		database.add(List.of("b","f","h","j","o"));
-		database.add(List.of("b","c","k","s","p"));
-		database.add(List.of("a","f","c","e","l","p","m","n"));
-		
-		FpGrowthMiner<String> miner = new FpGrowthMiner<>(3d/5);
-		System.out.println(miner.mineFrequentSets(database));
-		// Apriori miner gives the same result
-		AprioriMiner<String> miner2 = new AprioriMiner<>(3d/5,1);
-		System.out.println(miner2.mineFrequentSets(database));
+	public FpGrowthExample(){
+		//default
 	}
 
+    /**
+     * The main method demonstrates the FP-Growth algorithm and the Apriori algorithm
+     * for mining frequent itemsets from a transaction dataset.
+     *
+     * @param args command-line arguments (not used in this example).
+     */
+    public static void main(String[] args) {
+        // Example dataset from the paper:
+        // [Jiawei Han, Jian Pei, Yiwen Yin. Mining frequent patterns without candidate generation.
+        // ACM SIGMOD Record, Volume 29, Issue 2, June 2000 pp 1–12]
+        Collection<Collection<String>> database = new LinkedList<>();
+        database.add(List.of("f", "a", "c", "d", "g", "i", "m", "p"));
+        database.add(List.of("a", "b", "c", "f", "l", "m", "o"));
+        database.add(List.of("b", "f", "h", "j", "o"));
+        database.add(List.of("b", "c", "k", "s", "p"));
+        database.add(List.of("a", "f", "c", "e", "l", "p", "m", "n"));
+
+        // FP-Growth miner with a minimum support threshold of 3/5
+        FpGrowthMiner<String> miner = new FpGrowthMiner<>(3d / 5);
+        System.out.println(miner.mineFrequentSets(database));
+
+        // Apriori miner with the same minimum support threshold for comparison
+        AprioriMiner<String> miner2 = new AprioriMiner<>(3d / 5, 1);
+        System.out.println(miner2.mineFrequentSets(database));
+    }
 }

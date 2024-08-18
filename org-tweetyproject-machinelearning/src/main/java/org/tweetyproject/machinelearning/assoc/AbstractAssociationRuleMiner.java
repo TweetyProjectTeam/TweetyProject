@@ -21,14 +21,39 @@ package org.tweetyproject.machinelearning.assoc;
 import java.util.Collection;
 
 /**
- * Abstract layer for association rule miners, bundles common methods.
- * 
- * @author Matthias Thimm
+ * Abstract layer for association rule miners, bundling common methods for mining association rules.
  *
- * @param <T> the type of items
+ * <p>
+ * This abstract class implements the `AssociationRuleMiner` interface and provides
+ * common functionality for mining association rules from a database of itemsets.
+ * It offers overloaded methods for mining rules with varying levels of constraints
+ * on the conclusions and overall limits.
+ * </p>
+ *
+ * <p>
+ * Subclasses should implement specific rule mining algorithms by extending this class
+ * and providing their own implementations of the abstract methods.
+ * </p>
+ *
+ * @param <T> the type of items contained in the itemsets used for mining association rules.
+ *
+ * @author Matthias Thimm
  */
-public abstract class AbstractAssociationRuleMiner<T> implements AssociationRuleMiner<T>{
-	
+public abstract class AbstractAssociationRuleMiner<T> implements AssociationRuleMiner<T> {
+
+    /**
+     * Default constructor for the `AbstractAssociationRuleMiner` class.
+     *
+     * <p>
+     * This constructor is used to create an instance of the abstract class.
+     * Since this is an abstract class, this constructor will be called by
+     * subclasses when they are instantiated.
+     * </p>
+     */
+    public AbstractAssociationRuleMiner() {
+        // Default constructor with no implementation.
+    }
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.machinelearning.assoc.AssociationRuleMiner#mineRules(java.util.Collection)
 	 */
@@ -36,7 +61,7 @@ public abstract class AbstractAssociationRuleMiner<T> implements AssociationRule
 	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database) {
 		return this.mineRules(database, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.machinelearning.assoc.AssociationRuleMiner#mineRules(java.util.Collection, int)
 	 */

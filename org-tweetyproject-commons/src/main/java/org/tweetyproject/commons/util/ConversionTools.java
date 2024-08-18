@@ -24,14 +24,21 @@ import java.util.BitSet;
 /**
  * This class provides some utility methods for converting different
  * data types.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class ConversionTools {
-	
+
 	/**
-	 * Provides a string representation of the bits in the given BigInteger. 
+	 * Default Constructor
+	 */
+	public ConversionTools(){
+
+	}
+
+	/**
+	 * Provides a string representation of the bits in the given BigInteger.
 	 * @param value some BigInteger
 	 * @return a string representation of the bits in the given BigInteger.
 	 */
@@ -41,27 +48,27 @@ public class ConversionTools {
 			str += value.testBit(j) ? "1" : "0";
 		return str;
 	}
-	
-	/**Creates a bit set from the given BigInteger. 
+
+	/**Creates a bit set from the given BigInteger.
 	 * @param value value some BigInteger
 	 * @return a bitset representing the BigInteger.
 	 */
 	public static BitSet bigInteger2BitSet(BigInteger value){
 		return ConversionTools.binaryString2BitSet(ConversionTools.bigInteger2BinaryString(value));
 	}
-	
+
 	/**
-	 * Provides a string representation of the bits in the given BitSet. 
+	 * Provides a string representation of the bits in the given BitSet.
 	 * @param s some BitSet
 	 * @return a string representation of the bits in the given BitSet.
 	 */
 	public static String bitSet2BinaryString(BitSet s){
 		String str = "";
 		for(int i = 0; i < s.size(); i++)
-			str += s.get(i) ? "1" : "0";		
+			str += s.get(i) ? "1" : "0";
 		return str;
 	}
-	
+
 	/**
 	 * Creates a bit set from the given string of zeros and
 	 * ones. Additional zeros are added to the prefix in, so

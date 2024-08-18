@@ -417,6 +417,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return whether the attack was added or not
      * @param edge attack
      * @return whether the attack was added or not
      */
@@ -460,6 +461,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return all attacks
      * @return all attacks
      */
     public Set<SetAttack> getAttacks() {
@@ -468,6 +470,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return the edge between the two
      * @param node1 an attacking set
      * @param b an argument
      * @return the edge between the two
@@ -497,6 +500,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return the children of the node
      * @param node the node
      * @return the children of the node
      */
@@ -519,6 +523,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return the arguments' parents
      * @param node an argument
      * @return the arguments' parents
      */
@@ -534,6 +539,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return whether the path exists
      * @param <S> a node
      * @param hyperGraph a setAf
      * @param node1 an argument
@@ -587,6 +593,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return the powerset of
      * @param originalSet original set
      * @return the powerset of
      */
@@ -702,6 +709,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
     /**
      *
+     * Return the subgraphs of the SetAf
      * @param g the SetAf
      * @return the subgraphs of the SetAf
      */

@@ -28,6 +28,13 @@ import java.util.*;
 public class SetTools<E> {
 
 	/**
+	 * Default Constructor
+	 */
+	public SetTools(){
+
+	}
+
+	/**
 	 * For randomisation
 	 */
 	private static Random rand = new Random();
