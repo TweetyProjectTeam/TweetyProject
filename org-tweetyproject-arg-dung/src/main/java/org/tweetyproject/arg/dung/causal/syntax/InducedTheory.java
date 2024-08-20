@@ -31,9 +31,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 /**
  * This class describes an {@link DungTheory abstract argumentation framework} that was induced by a {@link CausalKnowledgeBase}
  *
- * Reference "Argumentation-based Causal and Counterfactual Reasoning" by
- * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
- * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
+ * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, 'Argumentation-based Causal and Counterfactual Reasoning', 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), 2022"
  *
  * @see DungTheory
  *
@@ -52,7 +50,7 @@ public class InducedTheory extends DungTheory {
 		this.knowledgeBase = knowledgeBase;
 
 		for(var subSetAssumptions : new SetTools<PlFormula>().subsets(knowledgeBase.getAssumptions())) {
-			for(var conclusion : knowledgeBase.getSingelAtomConclusions(subSetAssumptions)) {
+			for(var conclusion : knowledgeBase.getSingleAtomConclusions(subSetAssumptions)) {
 				try {
 					var argument = new InducedArgument(knowledgeBase, subSetAssumptions, conclusion);
 					this.add(argument);

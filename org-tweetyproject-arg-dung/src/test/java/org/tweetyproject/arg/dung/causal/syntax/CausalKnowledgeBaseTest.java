@@ -38,7 +38,7 @@ class CausalKnowledgeBaseTest {
 
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#CausalKnowledgeBase(org.tweetyproject.arg.dung.causal.syntax.CausalModel, java.util.Set)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#CausalKnowledgeBase(CausalModel, java.util.Set)}.
 	 */
 	@Test
 	void testCausalKnowledgeBase() {
@@ -96,7 +96,7 @@ class CausalKnowledgeBaseTest {
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#getSingelAtomConclusions(java.util.Set)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#getSingleAtomConclusions(java.util.Set)}.
 	 */
 	@Test
 	void testGetConclusions() {
@@ -114,7 +114,7 @@ class CausalKnowledgeBaseTest {
 		//Act
 		var premises = new HashSet<PlFormula>();
 		premises.add(new Conjunction(new Negation(corona), fever));
-		Assertions.assertTrue(causalKnowledgeBase.getSingelAtomConclusions(premises).contains(influenza));
+		Assertions.assertTrue(causalKnowledgeBase.getSingleAtomConclusions(premises).contains(influenza));
 	}
 
 	private CausalModel setupModel(Proposition covid, Proposition corona, Proposition shortOfBreath, Proposition atRisk, Proposition influenza, Proposition fever) {

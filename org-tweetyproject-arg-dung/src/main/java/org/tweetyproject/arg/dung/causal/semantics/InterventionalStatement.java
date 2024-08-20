@@ -16,18 +16,21 @@
 *
 * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
 */
-package org.tweetyproject.arg.dung.causal.syntax;
+package org.tweetyproject.arg.dung.causal.semantics;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.causal.semantics.CausalStatement;
+import org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.arg.dung.causal.syntax.InducedTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * This class describes a counterfactual causal statement like:
- * given phi, if v had been x then rho would be true
+ * This class describes an interventional causal statement like:
+ * given phi, if v would be x then rho would be true
  * 
  * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
@@ -37,23 +40,35 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @version TweetyProject 1.23
  *
  */
-public class CounterfactualStatement extends InterventionalStatement {
+public class InterventionalStatement extends CausalStatement {
 
+	private HashMap<Proposition, Boolean> interventions;
 	/**
-	 * Creates a new counterfactual causal statement.
+	 * Creates a new interventional causal statement.
 	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param interventions Maps explainable atoms to boolean values.
 	 * @param premises PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
-	public CounterfactualStatement(HashSet<PlFormula> conclusions, HashMap<Proposition, Boolean> interventions,
+	public InterventionalStatement(HashSet<PlFormula> conclusions, HashMap<Proposition, Boolean> interventions,
 			HashSet<PlFormula> premises) {
-		super(conclusions, interventions, premises);
+		super(conclusions, premises);
+		
+		this.interventions = interventions;
+	}
+	
+    /**
+     * Retrieves the interventions of this causal statement.
+     * 
+     * @return A HashMap containing the interventions mapped from explainable atoms to their respective boolean values.
+     */
+	public HashMap<Proposition, Boolean> getInterventions(){
+		return new HashMap<Proposition, Boolean>(this.interventions);
 	}
 
 	@Override
 	public boolean holds(CausalKnowledgeBase cKbase) {
 		for(var conclusion : this.getConclusions()) {
-			if(!checkCounterFactualStatement(cKbase, conclusion)) {
+			if(!checkInterventionalStatement(cKbase, conclusion)) {
 				return false;
 			}
 		}
@@ -64,7 +79,7 @@ public class CounterfactualStatement extends InterventionalStatement {
 	@Override
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
 	{
-		var causalKnowledgeBaseCopy = getIntervenedTwinModel(cKbase);
+		var causalKnowledgeBaseCopy = getIntervenedCopy(cKbase);
 		causalKnowledgeBaseCopy.addAll(this.getPremises());
 		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
 		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
@@ -73,20 +88,20 @@ public class CounterfactualStatement extends InterventionalStatement {
 				+ " \n Conclusions: " + this.getConclusions().toString());
 	}
 	
-	private boolean checkCounterFactualStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
-		var newKnowledgeBase = getIntervenedTwinModel(cKbase);
+	private boolean checkInterventionalStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
+		var newKnowledgeBase = getIntervenedCopy(cKbase);
 		return newKnowledgeBase.entails(this.getPremises(), conclusion);
 	}
 
-	protected CausalKnowledgeBase getIntervenedTwinModel(CausalKnowledgeBase cKbase) {
-		var twin = cKbase.getCausalModel().getTwinModel();
+	protected CausalKnowledgeBase getIntervenedCopy(CausalKnowledgeBase cKbase) {
 		var interventions = this.getInterventions();
+		var causalModel = cKbase.getCausalModel().clone();
 		for(var expAtom : interventions.keySet()) {
-			twin.intervene( new Proposition(expAtom.getName() + "*"), interventions.get(expAtom).booleanValue());
+			causalModel.intervene(expAtom, interventions.get(expAtom).booleanValue());
 		}
 		
-		var newKnowledgeBase = new CausalKnowledgeBase(twin, cKbase.getAssumptions());
-		newKnowledgeBase.addAll(cKbase.getBeliefsWithoutStructuralEquations());
+		var newKnowledgeBase = new CausalKnowledgeBase(causalModel, cKbase.getAssumptions());
+		newKnowledgeBase.addAll(cKbase.getObservations());
 		return newKnowledgeBase;
 	}
 }

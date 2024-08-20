@@ -16,10 +16,12 @@
 *
 * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
 */
-package org.tweetyproject.arg.dung.causal.syntax;
+package org.tweetyproject.arg.dung.causal.semantics;
 
 import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.arg.dung.causal.syntax.InducedTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 

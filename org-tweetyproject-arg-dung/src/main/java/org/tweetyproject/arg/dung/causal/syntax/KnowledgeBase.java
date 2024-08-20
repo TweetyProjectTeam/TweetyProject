@@ -18,6 +18,7 @@
 */
 package org.tweetyproject.arg.dung.causal.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,50 +27,45 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * This class describes a knowledge base.
- *
- * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
- * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
- * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
+ * This class describes a knowledge base consisting of a set of formulas (knowledge) and a set of assumptions.
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
+ * @author Lars Bengel
  */
-public class KnowledgeBase extends PlBeliefSet{
+public class KnowledgeBase extends PlBeliefSet {
 
 	/**
-	 * set of background assumptions <br/> - <br/>
-	 * There is at least one background assumption for each background atom (in K).
-	 * A background assumption for an atom u is a literal l \in {u, \neg{u}}.
+	 * set of background assumptions
 	 */
-	private HashSet<PlFormula> assumptions;
+	private Collection<PlFormula> assumptions;
 	
     /**
-     * Constructs a knowledge base with a specified set of background assumptions.
+     * Constructs a knowledge base with a specified set of formulas and assumptions.
      * 
      * @param assumptions A set of propositional logic formulas representing the background assumptions.
      */
-	public KnowledgeBase(Set<PlFormula> assumptions) {
-		super();
+	public KnowledgeBase(Collection<PlFormula> formulas, Collection<PlFormula> assumptions) {
+		super(formulas);
 		this.assumptions = new HashSet<>(assumptions);
 	}
 
     /**
-     * Adds a background assumption to this knowledge base.
+     * Adds an assumption to this knowledge base.
      * 
-     * @param assumption The PlFormula representing the assumption to be added.
-     * @return true if the assumption was successfully added, false if it already exists in the set.
+     * @param assumption The PlFormula representing the assumption to be added
+     * @return "True" iff the assumption was successfully added
      */
 	public boolean addAssumption(PlFormula assumption) {
+		if (!assumption.isLiteral()) throw new IllegalArgumentException("Assumption must be literal");
 		return this.assumptions.add(assumption);
 	}
 	
 	/**
-	 * Computes if a specified conclusion could be drawn from adding the specified premises to this instance.
-	 * @param premises Set of formulas, which will be added to this knowledge base.
-	 * @param conclusion Formula, which is checked to be a conclusion of the combination of this instance and the specified premises or not.
-	 * @return TRUE iff the specified formula is a conclusion of this knowledge base and the specified set of premises.
+	 * Determines whether the specified conclusion can be inferred from the given premises via this knowledge base.
+	 *
+	 * @param premises Set of formulas, which will be added to this knowledge base
+	 * @param conclusion Formula, which is checked to be a conclusion of the combination of this instance and the specified premises or not
+	 * @return "True" iff the specified formula is a conclusion of this knowledge base and the specified set of premises.
 	 */
 	public boolean entails(Set<PlFormula> premises, PlFormula conclusion) {
 		var beliefs = this.getBeliefs();
@@ -91,11 +87,11 @@ public class KnowledgeBase extends PlBeliefSet{
      * @return A set of PlFormulas representing the beliefs held in this knowledge base.
      */
 	public HashSet<PlFormula> getBeliefs(){
-		return new HashSet<PlFormula>(this.formulas);
+		return new HashSet<>(this.formulas);
 	}
 
     /**
-     * Removes a background assumption from this knowledge base.
+     * Removes an assumption from this knowledge base.
      * 
      * @param assumption The assumption to be removed.
      * @return true if the assumption was successfully removed, false if it was not found in the set.
@@ -106,8 +102,6 @@ public class KnowledgeBase extends PlBeliefSet{
 	
 	@Override
 	public KnowledgeBase clone() {
-		var output = new KnowledgeBase(this.assumptions);
-		output.addAll(this.formulas);
-		return output;
+        return new KnowledgeBase(formulas, this.assumptions);
 	}
 }

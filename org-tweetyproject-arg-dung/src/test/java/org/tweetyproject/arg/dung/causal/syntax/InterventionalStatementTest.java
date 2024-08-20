@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.tweetyproject.arg.dung.causal.semantics.InterventionalStatement;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Equivalence;
@@ -37,7 +38,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 class InterventionalStatementTest {
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.InterventionalStatement#holds(org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase)}.
+	 * Test method for {@link InterventionalStatement#holds(org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase)}.
 	 */
 	@Test
 	void testHolds() {

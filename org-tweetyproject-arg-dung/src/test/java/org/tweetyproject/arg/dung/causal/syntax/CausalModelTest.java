@@ -130,8 +130,8 @@ class CausalModelTest {
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalModel#CausalModel(java.util.Set, java.util.Set, java.util.Set)}.
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalModel#CausalModel(java.util.Set)}.
+	 * Test method for {@link CausalModel#CausalModel(java.util.Set, java.util.Set, java.util.Set)}.
+	 * Test method for {@link CausalModel#CausalModel(java.util.Set)}.
 	 */
 	@Test
 	void testCausalModel() {
@@ -172,9 +172,9 @@ class CausalModelTest {
 		//		Assertions.assertEquals(model1, model2);
 	}
 
-	private CausalModel BuildFirstOption(Proposition corona, Proposition influenza, Proposition atRisk, Proposition covid, 
-			Proposition flu, Proposition shortOfBreath, Proposition fever, Proposition chills,
-			Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4, Equivalence eq5) {
+	private CausalModel BuildFirstOption(Proposition corona, Proposition influenza, Proposition atRisk, Proposition covid,
+										 Proposition flu, Proposition shortOfBreath, Proposition fever, Proposition chills,
+										 Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4, Equivalence eq5) {
 
 		var u = new HashSet<Proposition>();
 		u.add(corona);

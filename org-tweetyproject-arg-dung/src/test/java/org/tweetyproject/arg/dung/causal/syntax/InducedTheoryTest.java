@@ -145,7 +145,7 @@ class InducedTheoryTest {
 		var premises2 = new HashSet<PlFormula>();
 		var formula = new Conjunction(new Negation(corona), fever);
 		premises2.add(formula);
-		Assertions.assertTrue(causalKnowledgeBase2.getSingelAtomConclusions(premises2).contains(influenza));
+		Assertions.assertTrue(causalKnowledgeBase2.getSingleAtomConclusions(premises2).contains(influenza));
 		
 		//Act
 		causalKnowledgeBase2.add(formula);

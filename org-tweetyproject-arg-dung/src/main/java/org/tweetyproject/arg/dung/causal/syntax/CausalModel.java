@@ -33,13 +33,9 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 /**
  * This class describes a causal model.
  *
- * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
- * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
- * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
+ * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, 'Argumentation-based Causal and Counterfactual Reasoning', 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), 2022"
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public class CausalModel extends PlBeliefSet {
 
@@ -222,7 +218,7 @@ public class CausalModel extends PlBeliefSet {
 		var newBackgroundAtoms = new HashSet<>(this.backGroundAtoms);
 		newBackgroundAtoms.add(atom);
 
-		CausalModel.checkCorrectForm(newBackgroundAtoms, this.explainableAtoms, this.getStructuralEquations());
+		//CausalModel.checkCorrectForm(newBackgroundAtoms, this.explainableAtoms, this.getStructuralEquations());
 		return this.backGroundAtoms.add(atom);
 	}
 
@@ -244,7 +240,7 @@ public class CausalModel extends PlBeliefSet {
 		var newEquations = this.getStructuralEquations();
 		newEquations.add(structuralEquation);
 
-		CausalModel.checkCorrectForm(this.backGroundAtoms, newExplainableAtoms, newEquations);
+		//CausalModel.checkCorrectForm(this.backGroundAtoms, newExplainableAtoms, newEquations);
 		this.explainableAtoms.add(atom);
 		this.add(structuralEquation);
 		return true;
@@ -280,7 +276,7 @@ public class CausalModel extends PlBeliefSet {
 			}
 		}
 
-		CausalModel.checkCorrectForm(newBackGround, newExplainable, newEquations);
+		//CausalModel.checkCorrectForm(newBackGround, newExplainable, newEquations);
 		this.add(equation);
 		this.explainableAtoms.addAll(this.explainableAtoms);
 		this.backGroundAtoms.addAll(this.backGroundAtoms);
@@ -335,14 +331,14 @@ public HashSet<Proposition> getExplainableAtoms() {
  *
  * @return A new {@link HashSet} containing all the structural equations.
  */
-public HashSet<Equivalence> getStructuralEquations() {
+public Collection<PlFormula> getStructuralEquations() {
     var output = new HashSet<Equivalence>();
     for (var formula : this.formulas) {
         if (formula instanceof Equivalence) {
             output.add((Equivalence) formula);
         }
     }
-    return output;
+    return null;
 }
 
 
@@ -372,8 +368,8 @@ public HashSet<Equivalence> getStructuralEquations() {
 				for(int i = 0; i < occ; i++) {
 					eqReplaced = (Equivalence) eq.replace(originalExpAtom, counterfactualCopy, i + 1);
 				}
-				eqsToRemove.add(eq);
-				eqsToAdd.add(eqReplaced);
+				//eqsToRemove.add(eq);
+				//eqsToAdd.add(eqReplaced);
 			}
 
 			counterFactualEquations.removeAll(eqsToRemove);
@@ -381,7 +377,7 @@ public HashSet<Equivalence> getStructuralEquations() {
 		}
 
 		structuralEquations.addAll(counterFactualEquations);
-		return new CausalModel(structuralEquations);
+		return null;//return new CausalModel(structuralEquations);
 	}
 
 	@Override
@@ -406,12 +402,12 @@ public HashSet<Equivalence> getStructuralEquations() {
 		}
 
 		var eqToRemove = new HashSet<PlFormula>();
-		for(var eq : this.getStructuralEquations()) {
-			var leftHandSide = eq.getFormulas().getFirst();
-			if(leftHandSide.getAtoms().contains(v)) {
-				eqToRemove.add(eq);
-			}
-		}
+		//for(var eq : this.getStructuralEquations()) {
+		//	var leftHandSide = eq.getFormulas().getFirst();
+		//	if(leftHandSide.getAtoms().contains(v)) {
+		//		eqToRemove.add(eq);
+		//	}
+		//}
 		if(eqToRemove.isEmpty()) {
 			throw new NoSuchElementException("There is a explainable atom, without any structural equation");
 		}
@@ -426,7 +422,7 @@ public HashSet<Equivalence> getStructuralEquations() {
 	
 	@Override
 	public CausalModel clone() {
-		return new CausalModel(this.getStructuralEquations());
+		return null;//new CausalModel(this.getStructuralEquations());
 	}
 
 	private void commonConstructor(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
