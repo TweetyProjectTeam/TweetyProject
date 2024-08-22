@@ -187,4 +187,7 @@ public class GroundedTest2 {
 		}
 
 	}
+
+    /** Default Constructor */
+    public GroundedTest2(){}
 }

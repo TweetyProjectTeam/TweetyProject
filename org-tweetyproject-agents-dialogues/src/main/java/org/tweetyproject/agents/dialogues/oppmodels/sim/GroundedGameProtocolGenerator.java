@@ -38,4 +38,7 @@ public class GroundedGameProtocolGenerator implements ProtocolGenerator<Grounded
 		return new GroundedGameProtocol(mas);
 	}
 
+
+    /** Default Constructor */
+    public GroundedGameProtocolGenerator(){}
 }

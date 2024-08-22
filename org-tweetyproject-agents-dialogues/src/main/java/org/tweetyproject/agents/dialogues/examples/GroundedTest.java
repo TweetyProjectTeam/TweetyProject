@@ -349,4 +349,7 @@ public class GroundedTest {
 		// GroundedTest.runSimulationT2();
 		// GroundedTest.runSimulationT3();
 	}
+
+    /** Default Constructor */
+    public GroundedTest(){}
 }

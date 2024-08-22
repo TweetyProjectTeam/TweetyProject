@@ -55,4 +55,5 @@ public abstract class UtilityFunction<S,T extends Collection<S>> {
 
     /** Default Constructor */
     public UtilityFunction(){}
+
 }

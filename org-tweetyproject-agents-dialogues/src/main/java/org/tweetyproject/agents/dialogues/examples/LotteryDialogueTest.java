@@ -132,5 +132,8 @@ public class LotteryDialogueTest {
 		// actual agent
 		LotteryDialogueTest.runSimulation(false);
 	}
+
+    /** Default Constructor */
+    public LotteryDialogueTest(){}
 }
 
