@@ -42,17 +42,17 @@ public class FolAtom extends FolFormula implements Atom {
 	 * The predicate of this atom
 	 */
 	private Predicate predicate;
-	
+
 	/**
 	 * The arguments of the atom
 	 */
 	private List<Term<?>> arguments = new ArrayList<Term<?>>();
-	
+
 	/** Default-Ctor: Creates new empty FOL-Atom */
 	public FolAtom() {
-		
+
 	}
-	
+
 	/**
 	 * Creates a new atom with the given predicate and initializes
 	 * an empty argument list.
@@ -69,7 +69,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public FolAtom(Predicate predicate, Term<?>... terms) {
 		this(predicate, Arrays.asList(terms));
 	}
-	
+
 	/**
 	 * Creates a new atom with the given predicate and list of
 	 * terms
@@ -79,10 +79,10 @@ public class FolAtom extends FolFormula implements Atom {
 	public FolAtom(Predicate predicate, List<? extends Term<?>> arguments){
 		this.predicate = predicate;
 		for(Term<?> t: arguments)
-			this.addArgument(t);		
+			this.addArgument(t);
 	}
 	/**
-	 * 
+	 * Constructor
 	 * @param other another Atom
 	 */
 	public FolAtom(FolAtom other) {
@@ -91,7 +91,7 @@ public class FolAtom extends FolFormula implements Atom {
 			this.arguments.add(term.clone());
 		}
 	}
-	
+
 	/**
 	 * Appends the given argument to this atom's
 	 * arguments and returns itself.
@@ -105,9 +105,9 @@ public class FolAtom extends FolFormula implements Atom {
 			throw new IllegalArgumentException("No more arguments expected.");
 		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()))
 			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.predicate.getArgumentTypes().get(this.arguments.size()) + "\"." );
-		this.arguments.add(term);		
+		this.arguments.add(term);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.RelationalFormula#substitute(org.tweetyproject.logics.firstorderlogic.syntax.Term, org.tweetyproject.logics.firstorderlogic.syntax.Term)
 	 */
@@ -116,16 +116,16 @@ public class FolAtom extends FolFormula implements Atom {
 		FolAtom atom = new FolAtom(this.predicate);
 		for(Term<?> term: this.arguments)
 			atom.addArgument(term.substitute(v, t));
-		return atom;		
+		return atom;
 	}
-	
+
 	@Override
 	public Set<FolAtom> getAtoms(){
 		HashSet<FolAtom> atoms = new HashSet<FolAtom>();
 		atoms.add(this);
-		return atoms;		
+		return atoms;
 	}
-	
+
 	/**
 	 * Checks whether this atom is complete, i.e. whether
 	 * every argument is set.
@@ -135,7 +135,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isComplete(){
 		return this.arguments.size() == this.predicate.getArity();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
@@ -143,7 +143,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public Set<Variable> getUnboundVariables(){
 		return this.getTerms(Variable.class);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
@@ -153,7 +153,7 @@ public class FolAtom extends FolFormula implements Atom {
 		predicates.add(this.predicate);
 		return predicates;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.LogicStructure#getFunctors()
 	 */
@@ -167,9 +167,9 @@ public class FolAtom extends FolFormula implements Atom {
 		}
 		return functors;
 	}
-	
 
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
@@ -177,7 +177,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isClosed(){
 		return this.getTerms(Variable.class).isEmpty();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
 	 */
@@ -185,7 +185,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isClosed(Set<Variable> boundVariables){
 		return boundVariables.containsAll(this.getTerms(Variable.class));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isWellBound()
 	 */
@@ -193,7 +193,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isWellBound(){
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
 	 */
@@ -201,7 +201,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isWellBound(Set<Variable> boundVariables){
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
@@ -209,7 +209,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean containsQuantifier(){
 		return false;
 	}
-	
+
 	/**
 	 * Returns the predicate of this atom
 	 * @return the predicate of this atom
@@ -218,7 +218,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public Predicate getPredicate(){
 		return this.predicate;
 	}
-	
+
 	/**
 	 * @return the arguments of this atom.
 	 */
@@ -226,8 +226,8 @@ public class FolAtom extends FolFormula implements Atom {
 	public List<Term<?>> getArguments(){
 		return Collections.unmodifiableList(this.arguments);
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isDnf()
 	 */
@@ -235,7 +235,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isDnf(){
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
@@ -243,18 +243,18 @@ public class FolAtom extends FolFormula implements Atom {
 	public boolean isLiteral(){
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
 	@Override
 	public String toString(){
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
-		if (this.getPredicate() instanceof EqualityPredicate) 
+		if (this.getPredicate() instanceof EqualityPredicate)
 			return "(" + this.arguments.get(0) + "==" + this.arguments.get(1) + ")"; //Prints equality predicate as a==b instead of ==(a,b)
-		if (this.getPredicate() instanceof InequalityPredicate) 
-			return "(" + this.arguments.get(0) + "/==" + this.arguments.get(1) + ")"; 
-		
+		if (this.getPredicate() instanceof InequalityPredicate)
+			return "(" + this.arguments.get(0) + "/==" + this.arguments.get(1) + ")";
+
 		String output = this.predicate.getName();
 		if(this.arguments.size() == 0) return output;
 		output += "(";
@@ -264,7 +264,7 @@ public class FolAtom extends FolFormula implements Atom {
 		output += ")";
 		return output;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#toNnf()
@@ -273,7 +273,7 @@ public class FolAtom extends FolFormula implements Atom {
 	public FolFormula toNnf() {
 	  return this;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()
@@ -303,7 +303,7 @@ public class FolAtom extends FolFormula implements Atom {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
-			return true;		
+			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 		FolAtom other = (FolAtom) obj;

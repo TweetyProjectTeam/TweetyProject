@@ -42,25 +42,26 @@ import org.tweetyproject.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
  * This class implements a simple reasoner for MLNs.
- * 
- * @author Matthias Thimm
- */
-/**
- * @author mthimm
  *
+ * @author Matthias Thimm
  */
 public class SimpleMlnReasoner extends AbstractMlnReasoner {
 
+	/** Default */
+	public SimpleMlnReasoner(){
+		super();
+	}
+
 	/** Directory for temporary files. */
 	private String tempDirectory = null;
-	
+
 	/** Sets the path of the directory for temporary files.
 	 * @param str a file path
 	 */
 	public void setTempDirectory(String str){
 		this.tempDirectory = str;
 	}
-	
+
 	/** Computes the model of the given MLN.
 	 * @param mln The MLN
 	 * @param signature the signature
@@ -70,14 +71,14 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 		//1.) write all possible worlds of the signature into a text file
 		// (Note: we avoid doing this in memory due to exponential size)
 		try {
-			HerbrandBase hBase = new HerbrandBase(signature);			
+			HerbrandBase hBase = new HerbrandBase(signature);
 			FileWriter fstream;
-			FileInputStream inStream;	
+			FileInputStream inStream;
 			boolean isFirst = true;
 			File currentFile = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			currentFile.deleteOnExit();
 			for(FolAtom a: hBase.getAtoms()){
-				if(isFirst){					
+				if(isFirst){
 					fstream = new FileWriter(currentFile.getAbsoluteFile());
 					BufferedWriter out = new BufferedWriter(fstream);
 					out.append(a.toString());
@@ -105,7 +106,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 					in.close();
 					out.close();
 					currentFile = temp;
-				}				
+				}
 			}
 			// 2.) for each possible world compute its impact; also, sum up all impacts
 			double sum = 0;
@@ -133,7 +134,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 			in.close();
 			out.close();
 			currentFile = temp;
-			
+
 			// 3.) normalize by sum
 			temp = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			temp.deleteOnExit();
@@ -141,9 +142,9 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 			inStream = new FileInputStream(currentFile.getAbsoluteFile());
 			out = new BufferedWriter(fstream);
 			in = new DataInputStream(inStream);
-			br = new BufferedReader(new InputStreamReader(in));			
+			br = new BufferedReader(new InputStreamReader(in));
 			while((strLine = br.readLine()) != null){
-				if(strLine.equals("")) break;					
+				if(strLine.equals("")) break;
 				StringTokenizer tokenizer = new StringTokenizer(strLine,"#");
 				try{
 					if(tokenizer.countTokens() == 1)
@@ -152,8 +153,8 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 						out.append(tokenizer.nextToken() + "#" + (Double.parseDouble(tokenizer.nextToken())/sum));
 					out.newLine();
 				}catch(Exception e){
-					
-				}				
+
+				}
 			}
 			in.close();
 			out.close();
@@ -164,16 +165,16 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 		}
 		return null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.mln.AbstractMlnReasoner#doQuery(org.tweetyproject.logics.mln.MarkovLogicNetwork, org.tweetyproject.logics.fol.syntax.FolFormula, org.tweetyproject.logics.fol.syntax.FolSignature)
 	 */
 	@Override
-	public double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {		
+	public double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
 		FileInputStream inStream;
 		File model = this.computeModel(mln, signature);
 		try {
-			inStream = new FileInputStream(model.getAbsoluteFile());			
+			inStream = new FileInputStream(model.getAbsoluteFile());
 			DataInputStream in = new DataInputStream(inStream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			double prob = 0;
@@ -186,10 +187,10 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 						hInt = new HerbrandInterpretation();
 					else hInt = this.parseInterpretation(tokenizer.nextToken(),signature);
 					if(hInt.satisfies(query))
-						prob += Double.parseDouble(tokenizer.nextToken());					
+						prob += Double.parseDouble(tokenizer.nextToken());
 				}catch(Exception e){
 					e.printStackTrace();
-				}				
+				}
 			}
 			in.close();
 			return prob;
@@ -200,7 +201,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return -1;	
+		return -1;
 	}
 
 	/** Constructs a Herbrand interpretation from the given string

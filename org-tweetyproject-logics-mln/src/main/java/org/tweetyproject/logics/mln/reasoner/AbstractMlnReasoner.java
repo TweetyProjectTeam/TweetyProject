@@ -28,21 +28,27 @@ import org.tweetyproject.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class provides common methods for MLN reasoner.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class AbstractMlnReasoner implements QuantitativeReasoner<MarkovLogicNetwork,FolFormula> {
-	
+
+		/** Default */
+		public AbstractMlnReasoner(){
+			super();
+		}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.Reasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
 	@Override
-	public Double query(MarkovLogicNetwork mln, FolFormula query) {		
+	public Double query(MarkovLogicNetwork mln, FolFormula query) {
 		return this.query(mln, query, (FolSignature) mln.getMinimalSignature());
 	}
-	
+
 	/**
-	 * Queries the given MLN wrt. the given signature 
+	 * Queries the given MLN wrt. the given signature
 	 * @param mln some mln
 	 * @param query some query
 	 * @param signature some signature
@@ -53,9 +59,9 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");
 		if(!mln.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		return this.doQuery(mln,(FolFormula)query,signature);		
+		return this.doQuery(mln,(FolFormula)query,signature);
 	}
-	
+
 	/**
 	 * Computes the (unnormalized) weight of the given Herbrand interpretation
 	 * with respect to the formulas in this reasoner's MLN.
@@ -71,16 +77,16 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt, signature);
 			if(f.isStrict()){
 				if(num != f.getFormula().allGroundInstances(signature.getConstants()).size())
-					return 0;		
+					return 0;
 				else weight += 1;
-			}else 	
+			}else
 				weight += num * f.getWeight();
 		}
 		return Math.exp(weight);
 	}
-	
+
 	/** Computes the number of instantiations of the formula, wrt. the given
-	 * signature, that are satisfied in the given Herbrand interpretation. 
+	 * signature, that are satisfied in the given Herbrand interpretation.
 	 * @param formula some fol formula.
 	 * @param hInt a Herbrand interpretation.
 	 * @param signature the underlying signature
@@ -90,11 +96,11 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 	protected int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt, FolSignature signature){
 		int num = 0;
 		for(RelationalFormula f: formula.allGroundInstances(signature.getConstants()))
-			if(hInt.satisfies((FolFormula) f)) num++;		
+			if(hInt.satisfies((FolFormula) f)) num++;
 		return num;
 	}
-	
-	/** Performs the actual querying. 
+
+	/** Performs the actual querying.
 	 * @param mln an MLN
 	 * @param query a fol formula guaranteed to be ground.
 	 * @param signature the signature

@@ -13,3 +13,8 @@ bin/
 *.py
 *.log
 /.metadata
+constructor.json
+skipped_files.txt
+warnings.json
+
+*.txt

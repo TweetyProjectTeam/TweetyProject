@@ -34,6 +34,13 @@ import org.tweetyproject.commons.util.SetTools;
  */
 public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
+
+		/** Default */
+		public SimpleConflictFreeSetAfReasoner(){
+			// Default
+		}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.SetAfTheory)
 	 */
@@ -55,7 +62,7 @@ public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReaso
 		// as the empty set is always conflict-free we return that one.
 		return new Extension<SetAf>();
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;

@@ -29,21 +29,21 @@ import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 
 /**
- * For-All-quantified first-order logic formula. 
+ * For-All-quantified first-order logic formula.
  * Delegates to QuantifiedFormulaSupport for shared functionalities with other quantified formulas.
- * 
+ *
  * @author Matthias Thimm
  * @author Anna Gessler
  */
 public class ForallQuantifiedFormula extends FolFormula {
-	
+
 	/**
 	 * This helper class implements common functionalities of quantified
 	 * formulas, meaning the implementation can delegate the method calls to the support
-	 * class. 
+	 * class.
 	 */
 	protected QuantifiedFormulaSupport<FolFormula> support;
-	
+
 	/**
 	 * Creates a new quantified folFormula with the given folFormula and variables.
 	 * @param folFormula the folFormula this quantified folFormula ranges over.
@@ -55,7 +55,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 		support = new QuantifiedFormulaSupport<FolFormula>((FolFormula) folFormula, variables);
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
-	
+
 	/**
 	 * Creates a new quantified folFormula with the given folFormula and variable.
 	 * @param folFormula the folFormula this quantified folFormula ranges over.
@@ -70,7 +70,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
 	/**
-	 * 
+	 * Creates a new quantified folFormula
 	 * @param other another formula
 	 */
 	public ForallQuantifiedFormula(ForallQuantifiedFormula other) {
@@ -80,7 +80,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
 	/**
-	 * 
+	 * Return the quantified formulars
 	 * @return the FolFormulas
 	 */
 	public Set<FolFormula> getQuantifiedFormulas(){
@@ -93,7 +93,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 		qf.add(this);
 		return qf;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -167,7 +167,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 	public ForallQuantifiedFormula clone() {
 		return new ForallQuantifiedFormula(this);
 	}
-	
+
 	//-------------------------------------------------------------------------
 	//	METHODS IMPLEMENTED IN QuantifiedFormulaSupport:
 	//-------------------------------------------------------------------------
@@ -178,7 +178,7 @@ public class ForallQuantifiedFormula extends FolFormula {
 			return support.getFormula();
 		}
 		/**
-		 * returns variables 
+		 * returns variables
 		 */
 		public Set<Variable> getQuantifierVariables() {
 			return support.getQuantifierVariables();
@@ -192,12 +192,12 @@ public class ForallQuantifiedFormula extends FolFormula {
 		}
 		/**
 		 * sets vairables
-		 * @param variables variables 
+		 * @param variables variables
 		 */
 		public void setQuantifierVariables(Set<Variable> variables) {
 			support.setQuantifierVariables(variables);
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public Set<FolAtom> getAtoms() {
@@ -208,13 +208,13 @@ public class ForallQuantifiedFormula extends FolFormula {
 		public Set<Functor> getFunctors() {
 			return support.getFunctors();
 		}
-		
+
 
 		@Override
 		public boolean isDnf() {
 			return support.isDnf();
 		}
-		
+
 
 		@Override
 		public Set<? extends Predicate> getPredicates() {

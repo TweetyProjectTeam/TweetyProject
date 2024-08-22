@@ -31,18 +31,18 @@ import org.tweetyproject.logics.fol.syntax.*;
  * The Herbrand base is the set of all possible ground atoms of some
  * given first-order logic.
  * <br>
- * NOTE: We only allow to define a Herbrand base for signatures without 
+ * NOTE: We only allow to define a Herbrand base for signatures without
  * function symbols.
- * 
+ *
  * @author Matthias Thimm
  */
 public class HerbrandBase {
 
 	/**
-	 * The atoms of this Herbrand base. 
+	 * The atoms of this Herbrand base.
 	 */
 	private Set<FolAtom> atoms;
-	
+
 	/**
 	 * Creates a new Herbrand base for the given signature.
      * <br>
@@ -58,7 +58,7 @@ public class HerbrandBase {
 			this.atoms.addAll(this.getAllInstantiations(sig, p, new ArrayList<Term<?>>()));
 		}
 	}
-	
+
 	/**
 	 * Computes all instantiations of the predicate "p" relative to the signature "sig"
 	 * where "arguments" defines the first arguments of the atoms.
@@ -81,11 +81,12 @@ public class HerbrandBase {
 			List<Term<?>> newArguments = new ArrayList<Term<?>>(arguments);
 			newArguments.add(c);
 			atoms.addAll(this.getAllInstantiations(sig, p, newArguments));
-		}		
+		}
 		return atoms;
 	}
-		
+
 	/**
+	 * Return all possible Herbrand interpretations.
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
@@ -93,11 +94,12 @@ public class HerbrandBase {
 		Set<HerbrandInterpretation> interpretations = new HashSet<HerbrandInterpretation>();
 		Set<Set<FolAtom>> subsets = new SetTools<FolAtom>().subsets(this.getAtoms());
 		for(Set<FolAtom> atoms: subsets)
-			interpretations.add(new HerbrandInterpretation(atoms));		
+			interpretations.add(new HerbrandInterpretation(atoms));
 		return interpretations;
 	}
-	
+
 	/**
+	 * Return all atoms of this Herbrand base.
 	 * @return all atoms of this Herbrand base.
 	 */
 	public Set<FolAtom> getAtoms(){

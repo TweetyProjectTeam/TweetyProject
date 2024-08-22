@@ -50,23 +50,27 @@ import org.tweetyproject.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class implements a wrapper for Alchemy in order to
- * reason with MLNs. Note: implementation inspired by 
+ * reason with MLNs. Note: implementation inspired by
  * AlchemyWrapper of KReator (http://kreator-ide.sourceforge.net)
- * 
+ *
  * @author Matthias Thimm
  */
 public class AlchemyMlnReasoner extends AbstractMlnReasoner {
+	/** Default */
+	public AlchemyMlnReasoner(){
+		super();
+	}
 
 	/** The console command for Alchemy inference. */
 	private String inferCmd = "infer";
 
 	/** Sets the console command for Alchemy inference (default is 'infer').
-	 * @param inferCmd the console command for Alchemy inference. 
+	 * @param inferCmd the console command for Alchemy inference.
 	 */
 	public void setAlchemyInferenceCommand(String inferCmd){
 		this.inferCmd = inferCmd;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.mln.AbstractMlnReasoner#doQuery(org.tweetyproject.logics.mln.MarkovLogicNetwork, org.tweetyproject.logics.fol.syntax.FolFormula, org.tweetyproject.logics.fol.syntax.FolSignature)
 	 */
@@ -77,14 +81,14 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		// of atoms, we need to encode the query in the MLN
 		// by stating it to be equivalent to some new atom
 		try{
-			File mlnFile = this.writeAlchemyMlnFile(mln, signature, query);			
+			File mlnFile = this.writeAlchemyMlnFile(mln, signature, query);
 			//empty evidence file needed
 			File evidenceFile = File.createTempFile("alchemy_ev",null);
 			evidenceFile.deleteOnExit();
 			//result file
 			File resultFile = File.createTempFile("alchemy_res",null);
 			resultFile.deleteOnExit();
-			//execute Alchemy inference on problem and retrieve console output		
+			//execute Alchemy inference on problem and retrieve console output
 			//TODO parametrize parameters
 			List<String> processCommandsList = new ArrayList<String>();
 			processCommandsList.add(this.inferCmd);
@@ -131,7 +135,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	        String resultString = "";
             BufferedReader resultReader = new BufferedReader(new FileReader(resultFile));
             line = "";
-            while(line != null) {	        		
+            while(line != null) {
                 line = resultReader.readLine();
                 resultString += line != null ? line + "\n" : "";
             }
@@ -141,7 +145,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	        while(tokenizer.hasMoreTokens())
 	        	token = tokenizer.nextToken();
 	        if(token == null)
-	        	throw new RuntimeException();	        	       
+	        	throw new RuntimeException();
 			return Double.parseDouble(token);
 		}catch(Exception e) {
 			System.err.println("Could not find or missing rights to execute Alchemy binary 'infer'. "
@@ -154,20 +158,20 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 					+ "now terminate.");
 			System.exit(1);
 			return -1;
-		}		
+		}
 	}
-	
+
 	/** Writes the given MLN wrt. the given signature to a temporary file
 	 * in Alchemy syntax.
 	 * @param mln some MLN.
 	 * @param signature some fol signature.
 	 * @param formula the query formula that has to be encoded as well.
-	 * @return the file object of the Alchemy MLN file. 
+	 * @return the file object of the Alchemy MLN file.
 	 * @throws IOException if file writing fails.
 	 */
 	private File writeAlchemyMlnFile(MarkovLogicNetwork mln, FolSignature signature, FolFormula formula) throws IOException{
 		File mlnFile = File.createTempFile("alchemy_mln",null);
-		mlnFile.deleteOnExit();		
+		mlnFile.deleteOnExit();
 		FileWriter fstream = new FileWriter(mlnFile.getAbsoluteFile());
 		BufferedWriter out = new BufferedWriter(fstream);
 		// write sorts
@@ -200,13 +204,13 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 				}else{
 					out.append("," + s.getName().toLowerCase());
 				}
-			}				
+			}
 			if(p.getArgumentTypes().size()>0)
 				out.append(")\n");
 		}
 		// write query predicate
 		out.append("tweetyQueryFormula(tweetyqueryconstant)");
-		out.append("\n");	
+		out.append("\n");
 		// write query formula
 		out.append("tweetyQueryFormula(TWEETYQUERYCONSTANT) <=> " + this.alchemyStringForFormula(formula) + " .\n\n");
 		// write formulas
@@ -219,7 +223,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		out.close();
 		return mlnFile;
 	}
-	
+
 	/**
 	 * Returns the string in Alchemy syntax representing the given formula.
 	 * @param formula some FOL formula
@@ -230,7 +234,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			String result = "";
 			boolean isFirst = true;
 			for(RelationalFormula f: ((Conjunction)formula)){
-				if(isFirst){					
+				if(isFirst){
 					result += "(" + this.alchemyStringForFormula((FolFormula)f) + ")";
 					isFirst = false;
 				}else{
@@ -243,7 +247,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			String result = "";
 			boolean isFirst = true;
 			for(RelationalFormula f: ((Disjunction)formula)){
-				if(isFirst){					
+				if(isFirst){
 					result += "(" + this.alchemyStringForFormula((FolFormula)f) + ")";
 					isFirst = false;
 				}else{
@@ -306,7 +310,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		}
 		throw new IllegalArgumentException("Representation of tautologies and contradictions not supported in Alchemy.");
 	}
-	
+
 	/**
 	 * Returns the string in Alchemy syntax representing the given term.
 	 * @param t some FOL tern

@@ -32,7 +32,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 /**
  *  This class models an ABA attack.
  *
- * @param <T>	is the type of the language that the ABA theory's rules range over 
+ * @param <T>	is the type of the language that the ABA theory's rules range over
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  */
 public class AbaAttack<T extends Formula> extends Attack {
@@ -47,8 +47,10 @@ public class AbaAttack<T extends Formula> extends Attack {
 	}
 
 	/**
+	 * True iff attacker attacks attacked
 	 * @param attacker	the attacking argument
 	 * @param attacked	the attacked argument
+	 * @param <T> type
 	 * @return	true iff attacker attacks attacked
 	 */
 	public static <T extends Invertable> boolean attacks(Deduction<T> attacker, Assumption<T> attacked) {
@@ -57,7 +59,7 @@ public class AbaAttack<T extends Formula> extends Attack {
 
 	/**
 	 * Returns all attacks from the given attacking set to the given attacked set.
-	 * 
+	 *
 	 * @param from	the attacking set
 	 * @param to	the attacked set
 	 * @param abat	the ABA theory used to determine attacks
@@ -69,7 +71,7 @@ public class AbaAttack<T extends Formula> extends Attack {
 		Collection<AbaAttack<T>> result = new ArrayList<>();
 		for (Deduction<T> deduction : abat.getAllDeductions(from))
 			for (Assumption<T> assumption : to)
-				if (abat.attacks(deduction, assumption.getConclusion())) 
+				if (abat.attacks(deduction, assumption.getConclusion()))
 				{
 					Deduction<T> ass = new Deduction<>("");
 					ass.setRule(assumption);
@@ -80,7 +82,7 @@ public class AbaAttack<T extends Formula> extends Attack {
 
 	/**
 	 * Returns all attacks between arguments in the given AbaTheory.
-	 * 
+	 *
 	 * @param abat	the ABA theory used to determine attacks
 	 * @return	all attacks between arguments in abat
 	 * @param <T> the type of formulas

@@ -38,7 +38,7 @@ import org.tweetyproject.math.probability.Probability;
 
 /**
  * The common abstract class for formulas of first-order logic.
- * 
+ *
  * NOTE: "RelationalFormula" and "FolFormula" differ in their meaning as follows:
  * <ul>
  * 	<li>A relational formula is any formula over a first-order signature, i.e. even a conditional</li>
@@ -48,6 +48,10 @@ import org.tweetyproject.math.probability.Probability;
  * @author Tim Janus
  */
 public abstract class FolFormula extends RelationalFormula {
+	/** Default */
+	public FolFormula(){
+		// default
+	}
 
 	@Override
 	public Conjunction combineWithAnd(Conjunctable f){
@@ -55,14 +59,14 @@ public abstract class FolFormula extends RelationalFormula {
 			throw new IllegalArgumentException("The given formula " + f + " is not a first-order formula.");
 		return new Conjunction(this,(FolFormula)f);
 	}
-	
+
 	@Override
 	public Disjunction combineWithOr(Disjunctable f){
 		if(!(f instanceof FolFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a first-order formula.");
 		return new Disjunction(this,(FolFormula)f);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.ClassicalFormula#complement()
 	 */
@@ -70,13 +74,13 @@ public abstract class FolFormula extends RelationalFormula {
 	public RelationalFormula complement(){
 		if(this instanceof Negation) return ((Negation)this).getFormula();
 		return new Negation(this);
-	}	
-	
+	}
+
 	@Override
 	public Set<Variable> getQuantifierVariables() {
 		return new HashSet<Variable>();
 	}
-	
+
 	/**
 	 * Makes a disjunctive normal form of this formula.
 	 * @return the DNF of this formula
@@ -97,7 +101,7 @@ public abstract class FolFormula extends RelationalFormula {
       }
       return (FolFormula)dnf.collapseAssociativeFormulas();
     }
-    
+
     /* DNF( P_1 && P_2 && ... && P_k) is calculated as follows:
      * 1. DNF(P_1) = P_11 || P_12 || ... || P_1l
      *    DNF(P_2) = P_21 || P_22 || ... || P_2m
@@ -108,8 +112,8 @@ public abstract class FolFormula extends RelationalFormula {
      *    DNF(P) = p1 || p2 || p3
      *    DNF(Q) = q1 || q2
      *    DNF(R) = r1
-     *    DNF(P && Q && R) = (p1 && q1 && r1) || (p1 && q2 && r1) || 
-     *                       (p2 && q1 && r1) || (p2 && q2 && r1) || 
+     *    DNF(P && Q && R) = (p1 && q1 && r1) || (p1 && q2 && r1) ||
+     *                       (p2 && q1 && r1) || (p2 && q2 && r1) ||
      *                       (p3 && q1 && r1) || (p3 && q2 && r1)
      */
     if(nnf instanceof Conjunction) {
@@ -126,7 +130,7 @@ public abstract class FolFormula extends RelationalFormula {
         }
         disjunctions.add( elems );
       }
-      
+
      // the dnf is the disjunction of all possible combinations of distributed conjunctions
       Set<Set<RelationalFormula>> permutations = new SetTools< RelationalFormula >().permutations( disjunctions );
       Disjunction dnf = new Disjunction();
@@ -137,13 +141,13 @@ public abstract class FolFormula extends RelationalFormula {
     }
     return nnf;
 	}
-	
+
 	/**
 	 * Makes the negation normal form of this formula.
 	 * @return the NNF of this formula
 	 */
 	public abstract FolFormula toNnf();
-	 
+
 	/**
      * This method collapses all associative operations appearing
      * in this term, e.g. every a||(b||c) becomes a||b||c.
@@ -151,7 +155,7 @@ public abstract class FolFormula extends RelationalFormula {
      */
 	public abstract RelationalFormula collapseAssociativeFormulas();
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
 	 */
@@ -175,19 +179,19 @@ public abstract class FolFormula extends RelationalFormula {
 				cnt++;
 		return new Probability(((double)cnt)/((double)allWorlds.size()));
 	}
-	
+
 	/**
 	 * Checks whether this formula is in disjunctive normal form.
 	 * @return "true" iff this formula is in disjunctive normal form.
 	 */
 	public abstract boolean isDnf();
-	
+
 	@Override
 	public abstract FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
-	
+
 	@Override
 	public abstract FolFormula clone();
-	
+
 	@Override
 	public FolSignature getSignature() {
 		FolSignature sig = new FolSignature();
@@ -197,6 +201,6 @@ public abstract class FolFormula extends RelationalFormula {
 		return sig;
 	}
 
-	
+
 
 }

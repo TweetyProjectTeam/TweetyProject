@@ -29,11 +29,16 @@ import org.tweetyproject.commons.Formula;
 /**
  * This reasoner for ABA theories performs inference on the complete extensions.
  * @param <T>	the language of the underlying ABA theory
- * 
+ *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
 public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
+
+	/** Default */
+	public CompleteReasoner() {
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModels(org.tweetyproject.arg.aba.syntax.ABATheory)
@@ -52,7 +57,7 @@ public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

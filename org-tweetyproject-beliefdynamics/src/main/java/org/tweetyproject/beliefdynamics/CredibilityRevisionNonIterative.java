@@ -29,13 +29,18 @@ import org.tweetyproject.commons.Formula;
  * to the revision method bases on an ordered list of belief bases. It acts as base
  * class for revision approaches which support the revision of multiple belief bases
  * in one step.
- * 
+ *
  * @author Tim Janus
  *
  * @param <T> The type of the belief base
  */
-public abstract class CredibilityRevisionNonIterative<T extends Formula> 
+public abstract class CredibilityRevisionNonIterative<T extends Formula>
 	extends CredibilityRevision<T>{
+
+		/**Default */
+
+	public CredibilityRevisionNonIterative() {
+	}
 
 	@Override
 	public Collection<T> revise(Collection<T> beliefBase1, Collection<T> beliefBase2) {

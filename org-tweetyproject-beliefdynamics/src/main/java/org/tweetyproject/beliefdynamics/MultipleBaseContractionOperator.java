@@ -23,18 +23,27 @@ import java.util.*;
 import org.tweetyproject.commons.*;
 
 /**
- * This is the interface for a classic multiple belief base contraction operator, ie. an
- * operator that takes some set of formulas and another set of formulas and contracts
- * the former by the latter. 
- * 
+ * This is the interface for a classic multiple belief base contraction
+ * operator, ie. an
+ * operator that takes some set of formulas and another set of formulas and
+ * contracts
+ * the former by the latter.
+ *
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas that this operator works on.
  */
 public abstract class MultipleBaseContractionOperator<T extends Formula> implements BaseContractionOperator<T> {
+	/** Default */
+	public MultipleBaseContractionOperator() {
+	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.beliefdynamics.BaseContractionOperator#contract(java.util.Collection, org.tweetyproject.Formula)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.beliefdynamics.BaseContractionOperator#contract(java.util.
+	 * Collection, org.tweetyproject.Formula)
 	 */
 	@Override
 	public Collection<T> contract(Collection<T> base, T formula) {
@@ -44,11 +53,13 @@ public abstract class MultipleBaseContractionOperator<T extends Formula> impleme
 	}
 
 	/**
-	 * Contracts the first collection of formulas by the second collection of formulas.
-	 * @param base some collection of formulas.
+	 * Contracts the first collection of formulas by the second collection of
+	 * formulas.
+	 *
+	 * @param base     some collection of formulas.
 	 * @param formulas some formulas.
 	 * @return the contracted collection.
 	 */
 	public abstract Collection<T> contract(Collection<T> base, Collection<T> formulas);
-	
+
 }

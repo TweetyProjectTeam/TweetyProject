@@ -36,8 +36,32 @@ import org.tweetyproject.logics.commons.syntax.RelationalFormula;
  */
 public class ApproximationExample {
 
+		/**
+	 * Default constructor for {@code ApproximationExample}.
+	 * <p>
+	 * Initializes an example setup to illustrate the comparison between
+	 * a sampling-based reasoner and a naive reasoner for querying MLNs.
+	 * </p>
+	 */
+	public ApproximationExample() {
+		// Default constructor, no specific initialization required
+	}
+
+	/**
+	 * The main method to run the approximation example.
+	 * <p>
+	 * This method iterates through an MLN example, performs queries using both
+	 * a sampling-based MLN reasoner and a naive MLN reasoner, and prints the results.
+	 * The method also introduces a delay between queries for demonstration purposes.
+	 * </p>
+	 *
+	 * @param args command-line arguments (not used in this example)
+	 * @throws ParserException if there is an error during parsing
+	 * @throws IOException if there is an I/O error
+	 * @throws InterruptedException if the thread is interrupted while sleeping
+	 */
 	public static void main(String[] args) throws ParserException, IOException, InterruptedException{
-		
+
 		Pair<MarkovLogicNetwork,FolSignature> ex = MlnExample.iterateExamples(1, 3);
 		SimpleSamplingMlnReasoner appReasoner = new SimpleSamplingMlnReasoner(0.0001, 1000);
 		SimpleMlnReasoner naiReasoner = new SimpleMlnReasoner();
@@ -49,7 +73,7 @@ public class ApproximationExample {
 				//break;
 			}
 		}
-		
+
 //		Pair<MarkovLogicNetwork,FolSignature> ex = MlnTest.iterateExamples(1, 3);
 //		ApproximateNaiveMlnReasoner appReasoner = new ApproximateNaiveMlnReasoner(ex.getFirst(),ex.getSecond(), -1, 100000);
 //		for(MlnFormula f: ex.getFirst()){

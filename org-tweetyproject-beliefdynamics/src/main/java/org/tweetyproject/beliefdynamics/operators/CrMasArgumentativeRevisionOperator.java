@@ -34,10 +34,15 @@ import org.tweetyproject.logics.pl.syntax.*;
  * - the transformation function is credulous
  * - the accumulator used for deductive argumentation is the simple accumulator
  * - the categorizer used for deductive argumentation is the credibility categorizer
- * 
+ *
  * @author Matthias Thimm
  */
 public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PlFormula>>{
+
+	/** Default */
+
+	public CrMasArgumentativeRevisionOperator() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
@@ -46,7 +51,7 @@ public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOper
 	@Override
 	public Collection<InformationObject<PlFormula>> revise(Collection<InformationObject<PlFormula>> base,	Collection<InformationObject<PlFormula>> formulas) {
 		if(!(base instanceof CrMasBeliefSet))
-			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");		
+			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");
 		Collection<InformationObject<PlFormula>> allInformation = new HashSet<InformationObject<PlFormula>>(base);
 		allInformation.addAll(formulas);
 		Collection<PlFormula> plainFormulasFromBase = new HashSet<PlFormula>();
@@ -62,7 +67,7 @@ public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOper
 						new LeviMultipleBaseRevisionOperator<PlFormula>(
 								new RandomKernelContractionOperator(),
 								new DefaultMultipleBaseExpansionOperator<PlFormula>()
-				)));		
+				)));
 		return rev.revise(base, formulas);
 	}
 }

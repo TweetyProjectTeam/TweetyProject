@@ -39,10 +39,10 @@ import java.util.*;
  * <br>
  * <br>See
  * <br>
- * <br>Bistarelli et al. "A novel weighted defence and its relaxation in abstract argumentation." 
+ * <br>Bistarelli et al. "A novel weighted defence and its relaxation in abstract argumentation."
  * International Journal of Approximate Reasoning 92 (2018): 66-86.
  *
- *
+ * @param <T> Type
  * @author Sandra Hoffmann
  *
  */
@@ -102,16 +102,16 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.weightMap = weightMap;
 		this.semiring = semiring;
 	}
-	
+
 	public WeightedArgumentationFramework<T> clone() {
 		WeightedArgumentationFramework<T>  result = new WeightedArgumentationFramework<>(this.getSemiring(),this, this.getWeights());
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Adds the given attack to this weighted Dung theory. The weight will be set to the strongest Attack (zeroElement) of the Semiring.
-	 * 
+	 *
 	 * @param attack an attack
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
@@ -120,11 +120,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		T weight = this.semiring.getZeroElement();
 		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
 	}
-	
+
 
 	/**
 	 * Adds the given attack to this weighted Dung theory.
-	 * 
+	 *
 	 * @param attack an attack
 	 * @param weight the weight for this attack
 	 * @return {@code true} if the set of attacks has been modified.
@@ -132,8 +132,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean add(Attack attack, T weight) {
 		return this.addAttack(attack.getAttacker(), attack.getAttacked(), weight);
 	}
-	
-	
+
+
 	/**
 	 * Adds the given attacks to this dung theory. The weights will be set to the strongest Attack (zeroElement) of the Semiring.
 	 * @param attacks some attacks
@@ -141,11 +141,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 */
 	@Override
 	public boolean add(Attack... attacks){
-		boolean result = true; 
+		boolean result = true;
         for (Attack att:attacks) {
 			  //add attack to AF
 			  boolean sub = this.add(att, semiring.getZeroElement());
-			  result = result && sub; 
+			  result = result && sub;
         }
 		return result;
 	}
@@ -153,47 +153,47 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 
 	/**
 	 * Adds the given attacks to this dung theory.
-	 * 
+	 *
 	 * @param weights a map containing the attacks as key and the weights as values.
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
 	public boolean add(Map<String, T> weights) {
-		  boolean result = true; 
-		  
+		  boolean result = true;
+
 		  for (String key : weights.keySet()) {
 			  //get attacks from Map keys
 			  String[] args = key.split(",");
 			  Attack attack = new Attack(new Argument(args[0]),new Argument(args[1]));
 			  //add attack to AF
 			  boolean sub = this.add(attack, weights.get(key));
-			  result = result && sub; 
+			  result = result && sub;
 		  }
 		return result;
 	}
-	
+
 	/**
 	 * Adds all arguments and attacks of the given theory to
 	 * this theory. The weights will be set to the strongest Attack (zeroElement) of the Semiring.
 	 * @param theory some Dung theory
-	 * @return {@code true} if this Weighted Dung Theory has been modified 
+	 * @return {@code true} if this Weighted Dung Theory has been modified
 	 */
 	@Override
 	public boolean add(DungTheory theory){
 		T weight = this.semiring.getZeroElement();
 		boolean result = this.addAll(theory.getNodes());
 		Set<Attack> attacks = theory.getAttacks();
-		 for (Attack f : attacks) { 
-			 boolean sub = this.add(f, weight); 
-			 result = result && sub; 
+		 for (Attack f : attacks) {
+			 boolean sub = this.add(f, weight);
+			 result = result && sub;
 		 }
-		 
+
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Adds the given attack to this weighted Dung theory. The weight will be set to the strongest Attack (zeroElement) of the Semiring.
-	 * 
+	 *
 	 * @param attack an attack
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
@@ -205,7 +205,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	/**
 	 * Adds an attack from the first argument to the second to this weighted Dung
 	 * theory. The weight will be set to the strongest Attack (zeroElement) of the Semiring.
-	 * 
+	 *
 	 * @param attacker some argument
 	 * @param attacked some argument
 	 * @return {@code true} if the set of attacks has been modified.
@@ -217,15 +217,15 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.setWeight(attacker, attacked, weight);
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Adds an attack from the first argument to the second to this weighted Dung
 	 * theory.
-	 * 
+	 *
 	 * @param attacker some argument
 	 * @param attacked some argument
-	 * @param weight
+	 * @param weight the weight
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
 	public boolean addAttack(Argument attacker, Argument attacked, T weight) {
@@ -233,7 +233,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		this.setWeight(attacker, attacked, weight);
 		return result;
 	}
-	
+
 	/**
 	 * Adds the set of attacks to this Weighted Dung theory. The weights will be set to the strongest Attack (zeroElement) of the Semiring.
 	 * @param c a collection of attacks
@@ -247,9 +247,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
         }
         return addAllAttacks(weightList);
 	}
-	
+
 	/**
-	 * Adds the set of attacks to this Weighted Dung theory. 
+	 * Adds the set of attacks to this Weighted Dung theory.
 	 * @param weights a map containing the attacks as key and the weights as values.
 	 * @return {@code true} if this Dung theory has been modified.
 	 */
@@ -260,7 +260,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 
 	/**
 	 * Removes the given attack from this weighted Dung theory.
-	 * 
+	 *
 	 * @param attack an attack
 	 * @return {@code true} if the set of attacks has been modified.
 	 */
@@ -268,12 +268,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean remove(Attack attack) {
 		  this.weightMap.remove(attack.toString());
 		  boolean result = super.remove(attack);
-		  return result; 
+		  return result;
 	}
 
 	/**
 	 * Removes the argument and all its attacks and the corresponding weights
-	 * 
+	 *
 	 * @param a some argument
 	 * @return {@code true} if this structure has been changed
 	 */
@@ -281,7 +281,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean remove(Argument a) {
 		Collection<Argument> attackers = super.getAttackers(a);
 		Collection<Argument> attacked = super.getAttacked(a);
-		
+
 		//delete weights for a
 		for(Argument att:attackers) {
 			Attack attack = new Attack(att, a);
@@ -323,21 +323,21 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		T weigthAttackB = this.getWeight(attackB);
 		return (semiring.add(weigthAttackA, weigthAttackB));
 	}
-	
+
 	/**
-	 * returns true if every attacker on <code>argument</code> is successfully attacked by some 
+	 * returns true if every attacker on <code>argument</code> is successfully attacked by some
 	 * accepted argument wrt. the given theory. This corresponds to the wDefence of <code>argument</code>.
 	 * @param argument an argument
 	 * @param ext an extension (the knowledge base)
-	 * @return {@code true} if every attacker on <code>argument</code> is attacked by some 
+	 * @return {@code true} if every attacker on <code>argument</code> is attacked by some
 	 * accepted argument wrt. the given theory.
 	 */
 	@Override
-	public boolean isAcceptable(Argument argument, Extension<DungTheory> ext){	
+	public boolean isAcceptable(Argument argument, Extension<DungTheory> ext){
 		return wDefence(argument, ext);
 	}
-	
-	
+
+
 	/**
 	 * Determines if the given extension can defend itself from all attacks.
 	 *
@@ -345,16 +345,16 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend itself from all attacks.
 	 */
 	public boolean wDefence(Extension<DungTheory> e) {
-		
+
 		//Argument attacker = att.getAttacker();
 		Set<Argument> attackers = new HashSet<Argument>();
 		for(Argument arg:e) {
 			attackers.addAll(this.getAttackers(arg));
 		}
-		
-		return wDefence(e, attackers, new HashSet<Argument>());				
+
+		return wDefence(e, attackers, new HashSet<Argument>());
 	}
-	
+
 	/**
 	 * Determines if the given extension can defend a specific argument from all attacks.
 	 *
@@ -363,13 +363,13 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend the argument from all attacks.
 	 */
 	public boolean wDefence(Argument a, Extension<DungTheory> e) {
-	
+
 		Set<Argument> attackers = this.getAttackers(a);
 		Set<Argument> attacked = new HashSet<>();
 		attacked.add(a);
-		return wDefence(e, attackers, attacked);				
+		return wDefence(e, attackers, attacked);
 	}
-	
+
 	/**
 	 * Determines if the given extension can defend itself from a set of attackers.
 	 *
@@ -378,10 +378,10 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend itself from the specified attackers.
 	 */
 	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers) {
-		return wDefence(e, attackers, new HashSet<Argument>());				
+		return wDefence(e, attackers, new HashSet<Argument>());
 	}
-	
-	
+
+
 	/**
 	 * Determines if the given extension can defend itself and specific arguments from a set of attackers.
 	 *
@@ -392,9 +392,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 */
 	public boolean wDefence(Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
 		return gDefence(this.getSemiring().getOneElement(), e, attackers, attacked);
-		
+
 	}
-	
+
 	/**
 	 * Determines if the given extension can defend itself from all attacks up to a specified threshold gamma.
 	 *
@@ -407,9 +407,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		for(Argument arg:e) {
 			attackers.addAll(this.getAttackers(arg));
 		}
-		return gDefence(gamma, e, attackers, new HashSet<Argument>());				
+		return gDefence(gamma, e, attackers, new HashSet<Argument>());
 	}
-	
+
 	/**
 	 * Determines if the given extension can defend itself and argument a from all attacks up to a specified threshold gamma.
 	 *
@@ -422,9 +422,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		Set<Argument> attackers = this.getAttackers(a);
 		Set<Argument> attacked = new HashSet<>();
 		attacked.add(a);
-		return gDefence(gamma, e, attackers, attacked);				
+		return gDefence(gamma, e, attackers, attacked);
 	}
-	
+
 	/**
 	 * Determines if the given extension can defend itself from a set of attackers up to a specified threshold gamma.
 	 *
@@ -434,10 +434,10 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend itself from the specified attackers within the specified threshold.
 	 */
 	public boolean gDefence(T gamma, Extension<DungTheory> e, Set<Argument> attackers) {
-		return gDefence(gamma,e, attackers, new HashSet<Argument>());				
+		return gDefence(gamma,e, attackers, new HashSet<Argument>());
 	}
-	
-	
+
+
 	/**
 	 * Determines if the given extension can defend itself and specific arguments from a set of attackers up to a specified threshold gamma.
 	 *
@@ -448,12 +448,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 * @return {@code true} if the extension can defend itself and the specified arguments from the attackers within the specified threshold.
 	 */
 	public boolean gDefence(T gamma, Extension<DungTheory> e, Set<Argument> attackers, Set<Argument> attacked) {
-		
+
 		//check that no arguments are both attacker and attacked
 		Set<Argument> unionAtt = new HashSet<>(attackers);
 		unionAtt.retainAll(attacked);
 		if(!unionAtt.isEmpty()) return false;
-		
+
 		//keep only relevant attackers
 		Set<Argument> relevantAttackers = new HashSet<>(attackers);
 		for(Argument attacker:attackers) {
@@ -461,11 +461,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			argsAttacked.retainAll(attacked);
 			if(argsAttacked.isEmpty()) relevantAttackers.remove(attacker);
 		}
-		
+
 		//if there are no attacks, there is no need for defence
 		if(relevantAttackers.isEmpty()) return false;
-		
-		
+
+
 		//add attacked arguments to extension, if they are not included yet
 		Extension<DungTheory> extUnionattacked = new Extension<>();
 		extUnionattacked.addAll(e);
@@ -485,7 +485,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					strengthAttack = semiring.multiply(strengthAttack, this.getWeight(new Attack(attacker,att)));
 				}
 			}
-		
+
 			//get strength of defence
 			Set<Argument> attacksFromE = this.getAttackers(attacker);
 			attacksFromE.retainAll(e);
@@ -494,22 +494,22 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 					strengthDefence = semiring.multiply(strengthDefence, this.getWeight(new Attack(defender,attacker)));
 				}
 			}
-			
+
 			//if argument attacks extension, extension has to attack back
 			if (strengthDefence.equals(this.getSemiring().getOneElement()) && !strengthAttack.equals(this.getSemiring().getOneElement()) && !gamma.equals(this.getSemiring().getOneElement())) {
 			    //throw new IllegalStateException("Extension does not attack.");
 				return false;
 			}
-			
+
 			//check if extension is able to defend
 			if (!semiring.betterOrSame(semiring.divide(strengthAttack, strengthDefence), gamma)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * returns true if some argument of <code>ext</code> attacks argument and argument cannot w-defend itself.
 	 * @param argument an argument
@@ -531,7 +531,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	    // Check if the argument cannot defend itself
 	    return !wDefence(singleArgumentExtension, attackers);
 	}
-	
+
 	/**
 	 * returns true if some argument of <code>ext</code> is attacked by argument and cannot be w-defended by ext.
 	 * @param attacker an argument
@@ -542,12 +542,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isAttackedBy(Argument attacker, Collection<Argument> ext){
 		if (getAttacked(attacker) == null)
 			return false;
-	    
+
 	    return !wDefence(new Extension<DungTheory>(ext), Set.of(attacker));
 
 	}
-	
-	
+
+
 	/**
 	 * returns true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code> and ext1 cannot w-defend itself
@@ -562,8 +562,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		    attackers.addAll(ext2);
 			return !wDefence(ext1, attackers);
 	}
-	
-	
+
+
 	/**
 	 * Checks whether arg1 is attacked by arg2 and cannot w-defend itself.
 	 * @param arg1 an argument.
@@ -572,15 +572,15 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 */
 	@Override
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
-		
+
 		if(!this.getAttacked(arg2).contains(arg1))return false;
-		
+
 		Extension<DungTheory> attacked = new Extension<>();
 		attacked.add(arg1);
 		return !wDefence(attacked, Set.of(arg2));
 
 	}
-	
+
 	/**
 	 * Determines if the given extension is alpha-conflict-free.
 	 *
@@ -601,11 +601,11 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 				}
 			}
 		}
-		
+
 		return semiring.betterOrSame(internalAttackWeight, alpha);
 	}
-	
-	
+
+
 	/**
 	 * Determines if the given extension is both alpha-conflict-free and gamma-defensible.
 	 *
@@ -619,9 +619,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		//get Arguments not in ext
 		Set<Argument> outsideExt = new HashSet<>(this);
 		outsideExt.removeAll(ext);
-		return (this.gDefence(gamma, ext,outsideExt));	
+		return (this.gDefence(gamma, ext,outsideExt));
 	}
-	
+
 	/**
 	 * Determines if the given extension is both alpha-gamma-complete.
 	 *
@@ -636,10 +636,10 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			if(!ext.contains(a))
 				if(this.gDefence(gamma, a, ext))
 					return false;
-		return true;	
+		return true;
 	}
-	
-	
+
+
 	/**
 	 * Determines if the given extension is alpha-gamma-preferred.
 	 *
@@ -679,7 +679,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isAlphaGammaStable(T alpha, T gamma, Extension<DungTheory> ext) {
 		if (!isAlphaGammaAdmissible(alpha,gamma,ext)) return false;
 		Extension<DungTheory> extUa = new Extension<>(ext);
-		
+
 		for (Argument a : this) {
 			boolean attackedAtLeastOnce = false;
 			if (!ext.contains(a)) {
@@ -688,13 +688,13 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 				//get attackers of a
 				Collection<Argument> attackers = this.getAttackers(a);
 				if(!attacked.contains(a)) return false;
-				
+
 				for (Argument attacker : ext) {
 					if(attackers.contains(attacker)) {
 						if (!this.getWeight(new Attack(attacker,a)).equals(this.getSemiring().getOneElement())) attackedAtLeastOnce = true;
 					}
 				}
-				
+
 				//check if there is at least one attack
 				if (!attackedAtLeastOnce) return false;
 				//check that ext union a is not alphaGammaAdmissible
@@ -705,7 +705,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Determines whether the given attacker Extension is a set-maximal attack on the attacked Extension.
 	 *
@@ -735,18 +735,18 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		}
 		return true;
 	}
-	
+
 
 	//returns all conflict free sets which are a set maximal attack for attackedSet. Helper method to determine if the theory is well-founded
 	private Set<Extension<DungTheory>> getSMAAttackers(Extension<DungTheory> attackedSet){
 		Set<Extension<DungTheory>> smaAttackers = new HashSet<>();
-		
+
 		Extension<DungTheory> attackers = new Extension<>();
 		for(Argument attacked:attackedSet) {
 			attackers.addAll(this.getAttackers(attacked));
-		}		
+		}
 		Set<Set<Argument>> subSets =  new SetTools<Argument>().subsets(attackers);
-		
+
 		for(Set<Argument> subSet : subSets) {
 			if(super.isConflictFree(new Extension<DungTheory>(subSet))) {
 				if(this.isSMA(new Extension<DungTheory>(subSet), attackedSet)) smaAttackers.add(new Extension<DungTheory>(subSet));
@@ -754,17 +754,17 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		}
 		return smaAttackers;
 	}
-	
-	
+
+
 	/**
-	 * returns true iff the theory is well-founded, i.e., there is no infinite sequence A1,A2,... of SMAs with 
+	 * returns true iff the theory is well-founded, i.e., there is no infinite sequence A1,A2,... of SMAs with
 	 * Ai+1 w-defending Ai
 	 * @return true iff the theory is well-founded
 	 */
 	@Override
 	public boolean isWellFounded(){
 		// get all conflict free Sets
-		
+
 		SimpleConflictFreeReasoner cfReasoner = new SimpleConflictFreeReasoner();
 		ArrayList<Extension<DungTheory>> conflictFreeSets = new ArrayList<>(cfReasoner.getModels(this));
 		conflictFreeSets.remove(new Extension<>());
@@ -773,16 +773,16 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		boolean[] inProgress = new boolean[conflictFreeSets.size()];
 		for(int i = 0; i < conflictFreeSets.size(); i++){
 			dfn[i] = false;
-			inProgress[i] = false;			
+			inProgress[i] = false;
 		}
 		for(int i = 0; i < conflictFreeSets.size(); i++)
 			if(!dfn[i])
 				if(dfs(i,conflictFreeSets,dfn,inProgress))
-					return false;		
+					return false;
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Depth-First-Search to find a SMA cycle in the theory. Auxiliary method to determine if the theory is well-founded
 	 * @param i current Set
@@ -793,7 +793,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	 */
 	private boolean dfs(int i, ArrayList<Extension<DungTheory>> conflictFreeSets, boolean[] dfn, boolean[] inProgress){
 		dfn[i] = true;
-		
+
 		Set<Extension<DungTheory>> attackerSMAs = this.getSMAAttackers(conflictFreeSets.get(i));
 			for(Extension<DungTheory> attackerSMA : attackerSMAs) {
 				if(!attackerSMA.equals(new Extension<DungTheory>())) {
@@ -811,7 +811,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		inProgress[i] = false;
 		return false;
 	}
-	
+
 	/**
 	 * Determines if the theory is coherent, i.e., if each preferred extension is stable
 	 * @return true if the theory is coherent
@@ -820,9 +820,12 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isCoherent(){
 	 return this.isCoherent(semiring.getOneElement(), semiring.getOneElement());
 	}
-	
+
 	/**
 	 * Determines if the theory is coherent, i.e., if each alpha gamma preferred extension is stable
+	 *
+	 * @param alpha the alpha value
+	 * @param gamma the gammavalue
 	 * @return true if the theory is coherent
 	 */
 	public boolean isCoherent(T alpha, T gamma){
@@ -831,7 +834,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		stableExtensions.retainAll(preferredExtensions);
 		return preferredExtensions.size() == stableExtensions.size();
 	}
-	
+
 	/**
 	 * Determines if the theory is relatively coherent, i.e., if the grounded extension coincides with the intersection of all preferred extensions
 	 * @return true if the theory is relatively coherent
@@ -843,6 +846,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 
 	/**
 	 * Determines if the theory is relatively coherent, i.e., if the alpha gamma grounded extension coincides with the intersection of all alpha gamma preferred extensions
+	 *
+	 * @param alpha the alpha value
+	 * @param gamma the gammavalue
 	 * @return true if the theory is relatively coherent
 	 */
 	public boolean isRelativelyCoherent(T alpha, T gamma){
@@ -853,8 +859,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 			cut.retainAll(e);
 		return groundedExtension.equals(cut);
 	}
-	
-	
+
+
     /**
      * Sets the weight of a given attack in the framework.
      *
@@ -865,7 +871,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		weightMap.put(attack.toString(), semiring.validateAndReturn(weight));
 	}
 
-	
+
     /**
      * Sets the weight of an attack between the specified attacker and attacked arguments in the framework.
      *
@@ -878,7 +884,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		weightMap.put(attack, semiring.validateAndReturn(weight));
 	}
 
-	
+
     /**
      * Retrieves the weight of a given attack in the framework.
      *
@@ -888,7 +894,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public T getWeight(Attack attack) {
 		return weightMap.get(attack.toString());
 	}
-	
+
     /**
      * Retrieves all weights in the framework.
      *
@@ -917,7 +923,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public Semiring<T> getSemiring() {
 		return this.semiring;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -928,7 +934,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		result = prime * result + ((this.weightMap == null) ? 0 : this.weightMap.hashCode());
 		return result;
 	}
-	
+
     /**
      * Indicates whether the framework is weighted.
      *
@@ -938,7 +944,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isWeightedGraph() {
 		return true;
 	}
-    
+
 	/**
 	 * Checks whether "arg1" supports "arg2", i.e. whether there
 	 * is a path of supporting arguments between "arg1" and "arg2".
@@ -950,13 +956,13 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public boolean isSupport(Argument arg1, Argument arg2){
 		return this.isSupport(arg1, arg2, new HashSet<Argument>());
 	}
-	
+
 
 	/**
 	 * Retrieves the set of arguments defended by the given argument. In order for b to be defended by a, all attackers of b that
-	 * are also attacked by a have to be defeated by a. E.g if (c,b) and (d,b) as well as (a,c) and (a,d) are attacks, then 
+	 * are also attacked by a have to be defeated by a. E.g if (c,b) and (d,b) as well as (a,c) and (a,d) are attacks, then
 	 * w(a,c) + w(a,d) >= w(c,b) + w(d,b) is required for b to be defended by a.
-	 * 
+	 *
 	 *
 	 * @param arg The argument for which defended arguments are to be retrieved.
 	 * @return A set of arguments defended by the given argument.
@@ -980,8 +986,8 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 		}
 		return defendedArguments;
 	}
-	
-	
+
+
 	/**
 	 * Checks whether "arg1" supports "arg2", i.e. whether there
 	 * is a path of supporting arguments between "arg1" and "arg2".
@@ -999,9 +1005,9 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	    } else {
 	        supported.removeAll(visited);
 	        for (Argument supporter : supported) {
-	            if (!visited.contains(supporter)) { 
+	            if (!visited.contains(supporter)) {
 	                if (isSupport(supporter, arg2, visited)) {
-	                    return true; 
+	                    return true;
 	                }
 	            }
 	        }
@@ -1018,7 +1024,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 	public Collection<Attack> getUndefendedAttacks(Collection<Argument> ext){
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/** Pretty print of the theory.
 	 * @return the pretty print of the theory.
 	 */
@@ -1037,7 +1043,7 @@ public class WeightedArgumentationFramework<T> extends DungTheory {
 
 		return output;
 	}
-	
+
 
     /**
      * Generates a string representation of the framework.

@@ -23,29 +23,48 @@ import org.tweetyproject.logics.cl.syntax.*;
 import org.tweetyproject.logics.pl.syntax.*;
 
 /**
- * Shows how to construct a conditional logic knowledge base programmatically and how to query it using the C-reasoner.
- * 
+ * Demonstrates how to construct a conditional logic knowledge base programmatically
+ * and query it using the Simple C-reasoner.
+ * <p>
+ * This example creates a belief set of conditional statements and then uses the SimpleCReasoner
+ * to compute and print a model for that belief set.
+ * </p>
  */
 public class CReasonerExample {
+
+	//* Constructor */
+	public CReasonerExample(){
+		// default
+	}
+
+	/**
+     * The main method where the example is executed.
+     * <p>
+     * This method creates propositions and conditional statements, adds them to a belief set,
+     * and uses a simple C-reasoner to compute and display the model of the belief set.
+     * </p>
+     *
+     * @param args command-line arguments (not used in this example)
+     */
 	public static void main(String[] args){
 		Proposition f = new Proposition("f");
 		Proposition b = new Proposition("b");
 		Proposition p = new Proposition("p");
-		
+
 		Conditional c1 = new Conditional(b,f);
 		Conditional c2 = new Conditional(p,b);
 		Conditional c3 = new Conditional(p,new Negation(f));
-		
+
 		ClBeliefSet bs = new ClBeliefSet();
 		bs.add(c1);
 		bs.add(c2);
 		bs.add(c3);
-		
+
 		System.out.println(bs);
-		
+
 		SimpleCReasoner reasoner = new SimpleCReasoner();
-		
+
 		System.out.println(reasoner.getModel(bs));
-		
+
 	}
 }

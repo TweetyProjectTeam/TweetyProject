@@ -33,6 +33,10 @@ import org.tweetyproject.logics.fol.syntax.ForallQuantifiedFormula;
  * @author Matthias Thimm
  */
 public class SimpleFolReasoner extends FolReasoner {
+	/** Default */
+	public SimpleFolReasoner(){
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.fol.reasoner.FolReasoner#query(org.tweetyproject.logics.fol.syntax.FolBeliefSet, org.tweetyproject.logics.fol.syntax.FolFormula)

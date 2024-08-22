@@ -34,32 +34,38 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * Compares reasoning with different reasoners.
  */
 public class ReasonerExample {
+	/** Constructor */
+	public ReasonerExample(){
+		// default
+	}
 
+	/**  Indicates if the program should continue running  */
 	private static boolean run = true;
-	
+
+	/**  Indicates if the comparison between rule-based and brute-force reasoners should be performed  */
 	private static boolean compare = true;
-	
+
 	private static final String [] entries = {
-		"Beispiel 'Simpel'", "Beispiel 'Drowning Problem'", "Beispiel 'Komplex (Kiwis)'", 
+		"Beispiel 'Simpel'", "Beispiel 'Drowning Problem'", "Beispiel 'Komplex (Kiwis)'",
 		"Beispiel-Beschreibungen", "Toggle Bruteforce Reasoner", "Beenden"
 	};
-	
+
 	private static ClBeliefSet [] beliefSets;
-	
+
 	private static final String [] descriptions = {
 		"Einfaches Beispiel enthaelt 3 Konditionale und 4 Symbole jedoch keine Spezialfaelle.",
 		"Enthaelt das Drowning-Problem enkodiert als 'Pinguine sind Voegel die keine Fluegel haben'.",
 		"Erhoeht die Komplexitaet des Beispiels, so dass 6 Konditionale und 5 Symbole verwendet werden."
 	};
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		init();
 		while(run) {
 			System.out.println("Status:");
 			printStatus();
-			
+
 			System.out.println();
 			System.out.println("Menu:");
 			for(int i=0; i<entries.length; ++i) {
@@ -69,7 +75,7 @@ public class ReasonerExample {
 				}
 				System.out.println();
 			}
-			
+
 			Integer selection = -1;
 			String str = in.readLine();
 			try {
@@ -77,7 +83,7 @@ public class ReasonerExample {
 			} catch (NumberFormatException nfe) {
 				System.out.println(nfe.getMessage());
 			}
-			
+
 			if(selection >= 1 && selection < entries.length-2) {
 				test(beliefSets[selection-1]);
 			} else if(selection == (entries.length-2)) {
@@ -87,11 +93,11 @@ public class ReasonerExample {
 			} else if(selection == entries.length) {
 				run = false;
 			}
-			
-			
+
+
 		}
 	}
-	
+
 	private static void init() {
 		beliefSets = new ClBeliefSet[3];
 		Proposition b = new Proposition("b");
@@ -99,27 +105,27 @@ public class ReasonerExample {
 		Proposition k = new Proposition("k");
 		Proposition p = new Proposition("p");
 		Proposition w = new Proposition("w");
-		
+
 		beliefSets[0] = new ClBeliefSet();
 		beliefSets[0].add(new Conditional(b, f));
 		beliefSets[0].add(new Conditional(b, w));
 		beliefSets[0].add(new Conditional(p, b));
-		
+
 		beliefSets[1] = new ClBeliefSet();
 		beliefSets[1].addAll(beliefSets[0]);
 		beliefSets[1].add(new Conditional(p, new Negation(f)));
-		
+
 		beliefSets[2] = new ClBeliefSet();
 		beliefSets[2].addAll(beliefSets[1]);
 		beliefSets[2].add(new Conditional(k, b));
 		beliefSets[2].add(new Conditional(k, new Negation(w)));
 	}
-	
+
 	private static void printStatus() {
-		System.out.println("Comparision with Bruteforce Reasoner: " + 
+		System.out.println("Comparision with Bruteforce Reasoner: " +
 				(compare ? "On" : "Off"));
 	}
-	
+
 	private static void printDescription() {
 		System.out.println("Bespiel-Beschreibungen:");
 		for(int i=0; i<descriptions.length; ++i) {
@@ -128,7 +134,7 @@ public class ReasonerExample {
 			System.out.println(descriptions[i]);
 		}
 	}
-	
+
 	private static void test(ClBeliefSet beliefset) {
 		System.out.println("Start Calculation RuleBased:");
 		long begin = System.nanoTime();
@@ -138,15 +144,15 @@ public class ReasonerExample {
 		long duration = (end-begin) / (1000*1000);
 		System.out.println("Finished RuleBased in '" + String.valueOf(duration) + "' ms");
 		System.out.println();
-		
+
 		System.out.println("Ranking Function:");
 		System.out.println(cReprRuleBased);
-		
-		
+
+
 		if(compare) {
 			System.out.println();
 			System.out.println();
-			
+
 			System.out.println("Start Calculation BruteForce:");
 			begin = System.nanoTime();
 			SimpleCReasoner reasoner = new SimpleCReasoner();
@@ -155,10 +161,10 @@ public class ReasonerExample {
 			duration = (end-begin) / (1000*1000);
 			System.out.println("Finished Bruteforce in '" + String.valueOf(duration) + "' ms");
 			System.out.println();
-			
+
 			System.out.println("Ranking Function:");
 			System.out.println(cReprBruteForce);
-			
+
 			boolean equal = cReprBruteForce.equals(cReprRuleBased);
 			System.out.println();
 			System.out.println("The results of the two reasoner are " + (equal ? "EQUAL" : "NOT EQUAL"));

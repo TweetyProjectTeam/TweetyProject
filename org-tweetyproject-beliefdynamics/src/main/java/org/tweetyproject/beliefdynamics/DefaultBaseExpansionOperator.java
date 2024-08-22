@@ -25,12 +25,15 @@ import org.tweetyproject.commons.*;
 /**
  * This class implements the default base expansion operator, ie. an operator
  * that returns the union of a set of formulas and a formula.
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas that this operator works on.
  */
 public class DefaultBaseExpansionOperator<T extends Formula> implements BaseExpansionOperator<T> {
+	/**Default */
+	public DefaultBaseExpansionOperator() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.beliefdynamics.BaseExpansionOperator#expand(java.util.Collection, org.tweetyproject.Formula)

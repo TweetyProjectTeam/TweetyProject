@@ -26,12 +26,17 @@ import org.tweetyproject.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
  * This class represents an abstract coherence measure, i.e. a function
- * that measures the coherence of an MLN by comparing the probabilities for 
+ * that measures the coherence of an MLN by comparing the probabilities for
  * the MLN's formulas with the intended ones.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class AbstractCoherenceMeasure implements Serializable{
+
+	/** Default */
+	public AbstractCoherenceMeasure(){
+		super();
+	}
 
 	private static final long serialVersionUID = 8888349459869328287L;
 
@@ -42,7 +47,7 @@ public abstract class AbstractCoherenceMeasure implements Serializable{
 	 * @return the coherence measure of the MLN.
 	 */
 	public abstract double coherence(MarkovLogicNetwork mln, AbstractMlnReasoner reasoner, FolSignature signature);
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

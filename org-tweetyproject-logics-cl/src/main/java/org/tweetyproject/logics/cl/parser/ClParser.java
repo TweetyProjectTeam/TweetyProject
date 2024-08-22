@@ -31,13 +31,17 @@ import org.tweetyproject.logics.pl.syntax.*;
  * knowledge base is given by (starting symbol is KB)
  * <br>
  * <br> KB 			::== CONDITIONAL ( "\n" CONDITIONAL )*
- * <br> CONDITIONAL ::== "(" FORMULA ")" | "(" FORMULA "|" FORMULA ")" 
+ * <br> CONDITIONAL ::== "(" FORMULA ")" | "(" FORMULA "|" FORMULA ")"
  * <br>
  * <br>FORMULA is a propositional formula (@see org.tweetyproject.kr.l.parser.PlParser).
- * 
+ *
  *  @author Matthias Thimm
  */
 public class ClParser extends Parser<ClBeliefSet,Conditional> {
+	/** Default */
+	public ClParser(){
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.Parser#parseBeliefBase(java.io.Reader)
@@ -55,7 +59,7 @@ public class ClParser extends Parser<ClBeliefSet,Conditional> {
 				}else{
 					s += (char) c;
 				}
-			}		
+			}
 			if(!s.equals("")) beliefSet.add(this.parseFormula(new StringReader(s)));
 		}catch(Exception e){
 			throw new ParserException(e);
@@ -79,7 +83,7 @@ public class ClParser extends Parser<ClBeliefSet,Conditional> {
 		if(!(s.startsWith("(") && s.endsWith(")")))
 			throw new ParserException("Conditionals must be enclosed by parantheses.");
 		//check for a single "|" (note, that "||" denotes disjunction)
-		int idx = 0;		
+		int idx = 0;
 		while(idx != -1){
 			idx = s.indexOf("|", idx + 1);
 			 if (s.charAt(idx + 1) != '|')
@@ -90,12 +94,12 @@ public class ClParser extends Parser<ClBeliefSet,Conditional> {
 			   * The current idx is the first of the two OR-'|'s and the next
 			   * one must be skipped
 			   */
-			  idx++;		
+			  idx++;
 		}
 		PlParser plParser = new PlParser();
 		if(idx == -1)
 			return new Conditional((PlFormula)plParser.parseFormula(s.substring(1, s.length()-1)));
-		return new Conditional((PlFormula)plParser.parseFormula(s.substring(idx+1, s.length()-1)),(PlFormula)plParser.parseFormula(s.substring(1, idx)));		
+		return new Conditional((PlFormula)plParser.parseFormula(s.substring(idx+1, s.length()-1)),(PlFormula)plParser.parseFormula(s.substring(1, idx)));
 	}
 
 }

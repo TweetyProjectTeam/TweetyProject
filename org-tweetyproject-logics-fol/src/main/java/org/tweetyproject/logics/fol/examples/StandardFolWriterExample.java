@@ -35,20 +35,24 @@ import org.tweetyproject.logics.fol.writer.StandardFolWriter;
 
 /**
  * Shows how to use the StandardFolWriter.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class StandardFolWriterExample {
+	/**Default */
+	public StandardFolWriterExample(){
+
+	}
 	/**
-	 * 
+	 * Example
 	 * @param args arguments
 	 * @throws ParserException ParserException
 	 * @throws IOException IOException
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		String filename = "/Users/mthimm/Desktop/test.fol";
-				
+
 		FolSignature sig = new FolSignature();
 		Sort animal = new Sort("animal");
 		sig.add(animal);
@@ -60,7 +64,7 @@ public class StandardFolWriterExample {
 		sig.add(plant);
 		Constant emma = new Constant("emma",plant);
 		sig.add(emma);
-		
+
 		List<Sort> l = new ArrayList<Sort>();
 		l.add(animal);
 		Predicate flies = new Predicate("flies", l);
@@ -71,28 +75,28 @@ public class StandardFolWriterExample {
 		Predicate eats = new Predicate("eats", l);
 		sig.add(eats);
 		l = new ArrayList<Sort>();
-		l.add(animal);		
+		l.add(animal);
 		Functor fatherOf = new Functor("fatherOf",l,animal);
 		sig.add(fatherOf);
-						
+
 		FolBeliefSet b = new FolBeliefSet();
 		b.setSignature(sig);
 		FolParser parser = new FolParser();
 		parser.setSignature(sig);
-		
+
 		b.add(parser.parseFormula("forall X:(flies(X) => (exists Y:(eats(X,Y))))"));
 		b.add(parser.parseFormula("forall X:(flies(X) => flies(fatherOf(X)))"));
 		b.add(parser.parseFormula("flies(anna)"));
 		b.add(parser.parseFormula("eats(bob,emma)"));
-		
+
 		//print to console
 		System.out.println(b);
-		
+
 		//print to file
 		StandardFolWriter writer = new StandardFolWriter(new FileWriter(filename));
 		writer.printBase(b);
 		writer.close();
-		
+
 		//parser file again and print tp console
 		parser = new FolParser();
 		System.out.println(parser.parseBeliefBaseFromFile(filename));

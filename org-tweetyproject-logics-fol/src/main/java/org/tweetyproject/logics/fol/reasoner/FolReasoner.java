@@ -24,19 +24,23 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
 
 /**
  * Abstract FOL Prover to be implemented by concrete solvers.
- * 
+ *
  * @author Bastian Wolf
  * @author Nils Geilen
  * @author Matthias Thimm
  *
  */
 public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,FolFormula> {
+	/** Deafult */
+	public FolReasoner(){
+		super();
+	}
 
 	/**
 	 * Empty default reasoner
 	 */
 	public static FolReasoner defaultReasoner = null;
-	
+
 	/**
 	 * Set default reasoner with given
 	 * @param reasoner a FolReasoner
@@ -44,7 +48,7 @@ public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,Fo
 	public static void setDefaultReasoner(FolReasoner reasoner){
 		FolReasoner.defaultReasoner = reasoner;
 	}
-	
+
 	/**
 	 * Returns the default theorem prover
 	 * @return the default theorem prover
@@ -57,11 +61,11 @@ public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,Fo
 					+ "'NaiveReasoner' with default settings as fallback. "
 					+ "It is strongly advised that a default FOL Reasoner is manually configured, see "
 					+ "'http://tweetyproject.org/doc/fol-provers.html' "
-					+ "for more information.");			
+					+ "for more information.");
 			return new SimpleFolReasoner();
 		}
 	}
-	
+
 	/**
 	 * This method determines whether two formulas are
 	 * equivalent wrt. to the given knowledge base.
@@ -76,5 +80,5 @@ public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,Fo
 	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
 	@Override
-	public abstract Boolean query(FolBeliefSet beliefbase, FolFormula formula);	
+	public abstract Boolean query(FolBeliefSet beliefbase, FolFormula formula);
 }

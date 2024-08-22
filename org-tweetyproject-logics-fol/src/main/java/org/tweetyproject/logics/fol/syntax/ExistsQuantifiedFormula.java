@@ -71,6 +71,7 @@ public class ExistsQuantifiedFormula extends FolFormula {
 	}
 	/**
 	 *
+	 * Formula to be constructed
 	 * @param other formula to be constructed
 	 */
 	public ExistsQuantifiedFormula(ExistsQuantifiedFormula other) {

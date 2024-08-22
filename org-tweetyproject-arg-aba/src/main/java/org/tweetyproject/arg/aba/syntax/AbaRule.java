@@ -23,17 +23,22 @@ import org.tweetyproject.commons.util.rules.Rule;
 
 /**
  * A common interface for assumptions and inference rules.
- * 
- * @param <T>	is the type of the language that the ABA theory's rules range over 
+ *
+ * @param <T>	is the type of the language that the ABA theory's rules range over
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  */
 public abstract class AbaRule<T extends Formula> extends AbaElement<T> implements Rule<T, T> {
 
+	/** Default */
+	public AbaRule() {
+	}
+
 	/**
+	 * Return whether this rule is an assumption
 	 * @return whether this rule is an assumption
 	 */
 	public abstract boolean isAssumption();
-	
+
 
 
 

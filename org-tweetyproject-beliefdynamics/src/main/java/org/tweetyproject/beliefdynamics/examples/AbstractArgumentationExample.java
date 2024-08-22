@@ -37,50 +37,65 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
 
 /**
  * Example code for applying belief dynamics on abstract argumentation frameworks.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class AbstractArgumentationExample {
+	    /**
+     * Default constructor for the {@code AbstractArgumentationExample} class.
+     * This constructor initializes the class and provides an example of
+     * reasoning with an argumentation framework and belief revision.
+     */
+    public AbstractArgumentationExample() {
+        // Default constructor
+    }
+
+    /**
+     * Main method that demonstrates the usage of argumentation frameworks
+     * and belief revision techniques.
+     *
+     * @param args command line arguments (not used)
+     */
 	public static void main(String[] args){
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
-		Argument c = new Argument("c");		
+		Argument c = new Argument("c");
 		theory.add(a);
 		theory.add(b);
-		theory.add(c);		
+		theory.add(c);
 		theory.add(new Attack(a,b));
 		theory.add(new Attack(b,c));
 		theory.add(new Attack(c,b));
 		theory.add(new Attack(c,a));
-		
+
 		SatCompleteReasoner reasoner = new SatCompleteReasoner(SatSolver.getDefaultSolver());
-		
+
 		System.out.println(reasoner.getModels(theory));
 		System.out.println();
-				
-		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory); 
+
+		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory);
 		System.out.println(beliefSet);
 		System.out.println();
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature())){
 			if(w.satisfies(beliefSet))
 				System.out.println(w);
 		}
-		
+
 		MultipleBaseRevisionOperator<PlFormula> revise = new LeviMultipleBaseRevisionOperator<PlFormula>(
 				new KernelContractionOperator<PlFormula>(new RandomIncisionFunction<PlFormula>(), new SimplePlReasoner()),
 				new DefaultMultipleBaseExpansionOperator<PlFormula>());
-		
+
 		PlBeliefSet beliefSet2 = new PlBeliefSet(revise.revise(beliefSet, new Proposition("in_a")));
-		
+
 		System.out.println(beliefSet2);
 		System.out.println();
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet2.getMinimalSignature())){
 			if(w.satisfies(beliefSet2))
 				System.out.println(w);
 		}
-	
-				
+
+
 	}
 }
