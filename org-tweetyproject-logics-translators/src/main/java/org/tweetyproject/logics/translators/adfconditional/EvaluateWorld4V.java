@@ -48,4 +48,7 @@ public class EvaluateWorld4V {
 		System.out.println("Formula " + phi1 + " evaluates to: " + exampleWorld.satisfies4VL(phi1));
 		System.out.println("Formula " + phi2 + " evaluates to: " + exampleWorld.satisfies4VL(phi2));
 	}
+
+    /** Default Constructor */
+    public EvaluateWorld4V(){}
 }

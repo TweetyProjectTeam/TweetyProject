@@ -33,6 +33,13 @@ import org.tweetyproject.math.probability.Probability;
  *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
  */
 public class RpclMeReasonerExample {
+
+	/** Default */
+	public RpclMeReasonerExample() {
+	}
+
+
+
 	public static void main(String[] args){
 		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());

@@ -65,4 +65,7 @@ public class DalalDistanceThreeValued {
 		}
 		return n;
 	}
+
+    /** Default Constructor */
+    public DalalDistanceThreeValued(){}
 }

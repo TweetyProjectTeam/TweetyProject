@@ -31,18 +31,24 @@ import org.tweetyproject.logics.rpcl.semantics.AggregatingSemantics;
 import org.tweetyproject.logics.rpcl.syntax.RpclBeliefSet;
 
 /**
- *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
+ * Example code illustrating relational probabilistic conditional logic and
+ * reasoning with it.
  */
 public class RpclMeReasonerExample2 {
 
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
+	/** Default */
+	public RpclMeReasonerExample2() {
+	}
+
+	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		RpclParser parser = new RpclParser();
-		RpclBeliefSet bs = parser.parseBeliefBaseFromFile(RpclMeReasonerExample2.class.getResource("/cold.rpcl").getFile());
+		RpclBeliefSet bs = parser
+				.parseBeliefBaseFromFile(RpclMeReasonerExample2.class.getResource("/cold.rpcl").getFile());
 		System.out.println(bs);
 		FolParser folParser = new FolParser();
-		folParser.setSignature((FolSignature)bs.getMinimalSignature());
-		FolFormula query = (FolFormula)folParser.parseFormula("cold(anna)");
+		folParser.setSignature((FolSignature) bs.getMinimalSignature());
+		FolFormula query = (FolFormula) folParser.parseFormula("cold(anna)");
 		RpclMeReasoner reasoner = new RpclMeReasoner(new AggregatingSemantics(), RpclMeReasoner.STANDARD_INFERENCE);
-		System.out.println(reasoner.query(bs,query));		
+		System.out.println(reasoner.query(bs, query));
 	}
 }
