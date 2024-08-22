@@ -151,4 +151,7 @@ public abstract class InconsistencyMeasureFactory {
 				throw new RuntimeException("No measure found for " + im.toString());
 		}
 	}
+
+    /** Default Constructor */
+    public InconsistencyMeasureFactory(){}
 }

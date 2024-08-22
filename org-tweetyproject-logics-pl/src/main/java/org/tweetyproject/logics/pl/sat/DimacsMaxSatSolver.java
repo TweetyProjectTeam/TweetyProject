@@ -189,4 +189,7 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	 */
 	public abstract Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index);
 	
+
+    /** Default Constructor */
+    public DimacsMaxSatSolver(){}
 }

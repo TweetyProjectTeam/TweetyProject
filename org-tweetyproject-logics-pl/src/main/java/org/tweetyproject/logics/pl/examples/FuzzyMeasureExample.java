@@ -61,4 +61,7 @@ public class FuzzyMeasureExample {
 		System.out.println(mes.getOptimalInterpretation(bs));
 		
 	}
+
+    /** Default Constructor */
+    public FuzzyMeasureExample(){}
 }

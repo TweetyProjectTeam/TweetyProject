@@ -234,4 +234,7 @@ public abstract class DimacsSatSolver extends SatSolver{
 	@Override
 	public abstract boolean isInstalled();
 
+
+    /** Default Constructor */
+    public DimacsSatSolver(){}
 }

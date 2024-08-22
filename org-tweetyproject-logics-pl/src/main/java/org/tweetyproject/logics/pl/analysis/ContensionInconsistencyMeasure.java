@@ -79,4 +79,7 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 		return "contension";
 	}
 
+
+    /** Default Constructor */
+    public ContensionInconsistencyMeasure(){}
 }

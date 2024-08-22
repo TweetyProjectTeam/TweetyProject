@@ -44,4 +44,7 @@ public class SyntacticEnumeratingPlBeliefSetSamplerExample {
 			System.out.println(i++ + "\t" + s.next());			
 		}
 	}
+
+    /** Default Constructor */
+    public SyntacticEnumeratingPlBeliefSetSamplerExample(){}
 }

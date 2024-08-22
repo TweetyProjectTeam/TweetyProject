@@ -61,4 +61,7 @@ public class PrimeImplicantTest {
 		System.out.println("inconsistency: " + incons.inconsistencyMeasure(beliefSet));
 		
 	}
+
+    /** Default Constructor */
+    public PrimeImplicantTest(){}
 }

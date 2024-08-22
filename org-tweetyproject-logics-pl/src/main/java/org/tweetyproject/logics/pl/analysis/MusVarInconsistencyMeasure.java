@@ -56,4 +56,7 @@ public class MusVarInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pl
 				musSig.add(f.getSignature());
 		return ((double)musSig.size())/((double)allSig.size());
 	}
+
+    /** Default Constructor */
+    public MusVarInconsistencyMeasure(){}
 }

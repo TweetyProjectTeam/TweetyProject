@@ -163,4 +163,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * @return whether the solve ris installed
 	 */
 	public abstract boolean isInstalled();
+
+    /** Default Constructor */
+    public SatSolver(){}
 }

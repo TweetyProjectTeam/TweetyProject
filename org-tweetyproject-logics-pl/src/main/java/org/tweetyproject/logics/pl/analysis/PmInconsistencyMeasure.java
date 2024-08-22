@@ -81,4 +81,7 @@ public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlForm
 		return result;
 	}
 
+
+    /** Default Constructor */
+    public PmInconsistencyMeasure(){}
 }

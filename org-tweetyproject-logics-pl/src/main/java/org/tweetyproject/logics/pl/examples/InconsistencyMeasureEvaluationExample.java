@@ -92,4 +92,7 @@ public class InconsistencyMeasureEvaluationExample {
 		result = report.getIthResult(im2.toString(), i);
 		System.out.println(report.getIthInstanceName(i) + i + ", " + im2.toString() + ": " + result.getValue() + ", " + result.getElapsedTime()/1000.0 + " s" );
 	}
+
+    /** Default Constructor */
+    public InconsistencyMeasureEvaluationExample(){}
 }

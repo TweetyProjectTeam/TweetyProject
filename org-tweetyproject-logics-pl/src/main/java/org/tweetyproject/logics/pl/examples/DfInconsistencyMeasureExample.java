@@ -55,4 +55,7 @@ public class DfInconsistencyMeasureExample {
 		System.out.println("Df: " + df.inconsistencyMeasure(kb));
 		
 	}
+
+    /** Default Constructor */
+    public DfInconsistencyMeasureExample(){}
 }

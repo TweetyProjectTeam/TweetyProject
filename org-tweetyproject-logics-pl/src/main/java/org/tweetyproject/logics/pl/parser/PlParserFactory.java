@@ -64,4 +64,7 @@ public class PlParserFactory {
 			return new PlParser();
 		return null;
 	}
+
+    /** Default Constructor */
+    public PlParserFactory(){}
 }

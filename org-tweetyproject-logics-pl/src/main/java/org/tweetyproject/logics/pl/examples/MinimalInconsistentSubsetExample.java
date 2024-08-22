@@ -56,4 +56,7 @@ public class MinimalInconsistentSubsetExample {
 		System.out.println(enumerator.minimalInconsistentSubsets(kb));
 		System.out.println(System.currentTimeMillis()-millis);		
 	}
+
+    /** Default Constructor */
+    public MinimalInconsistentSubsetExample(){}
 }

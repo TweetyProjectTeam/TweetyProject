@@ -62,4 +62,7 @@ public class ContensionExample {
 		BeliefSetInconsistencyMeasure<PlFormula> cont = new ContensionInconsistencyMeasure();
 		System.out.println("Cont: " + cont.inconsistencyMeasure(kb));
 	}
+
+    /** Default Constructor */
+    public ContensionExample(){}
 }

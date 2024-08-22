@@ -111,4 +111,7 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlForm
 		result.add(0, maxElem);		
 		return result;
 	}
+
+    /** Default Constructor */
+    public FbInconsistencyMeasure(){}
 }

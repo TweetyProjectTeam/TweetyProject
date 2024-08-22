@@ -69,4 +69,7 @@ public abstract class MaxSatSolver extends SatSolver{
 				costs += softConstraints.get(f);
 		return costs;
 	}
+
+    /** Default Constructor */
+    public MaxSatSolver(){}
 }

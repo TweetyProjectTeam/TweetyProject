@@ -153,4 +153,7 @@ public class SimpleDpllSolver extends SatSolver {
 	public boolean isInstalled() {
 		return true;
 	}
+
+    /** Default Constructor */
+    public SimpleDpllSolver(){}
 }

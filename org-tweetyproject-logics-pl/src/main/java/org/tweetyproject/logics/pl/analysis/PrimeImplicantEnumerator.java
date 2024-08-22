@@ -38,4 +38,7 @@ public abstract class PrimeImplicantEnumerator {
 	 */
 	public abstract List<Set<PlFormula>> getPrimeImplicants(PlBeliefSet forms);
 
+
+    /** Default Constructor */
+    public PrimeImplicantEnumerator(){}
 }

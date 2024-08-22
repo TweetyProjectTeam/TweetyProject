@@ -38,33 +38,38 @@ import org.tweetyproject.math.matrix.Matrix;
  * @author Benedikt Knopp, Matthias Thimm
  */
 public class PetriNet implements Graph<PetriNetNode>{
+	/** Default */
+	public PetriNet() {
+	}
+
+
 
 	/**
 	 * the places in this Petri net
 	 */
 	private List<Place> places = new ArrayList<>();
-	
+
 	/**
 	 * the places in this Petri net
 	 */
 	private List<Transition> transitions = new ArrayList<>();
-	
+
 	/**
 	 * the edges in this Petri net
 	 */
 	private Set <Edge<PetriNetNode>> edges = new HashSet<>();
-	
+
 	/**
 	 * (optional) some designated initial markings (usually one)
 	 */
 	private Set <Marking> initialMarkings = new HashSet<>();
 
-	
+
 	@Override
 	public boolean add(PetriNetNode node) {
 		throw new UnsupportedOperationException("Method not implemented.");
 	}
-	
+
 	/**
 	 * Add a place to the Petri net
 	 * @param place the place
@@ -73,7 +78,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	public boolean add(Place place) {
 		return places.add(place);
 	}
-	
+
 	/**
 	 * Add a transition to the Petri net
 	 * @param transition the transition
@@ -84,7 +89,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
-	 * 
+	 *
 	 * @param edge add
 	 * @return add
 	 */
@@ -104,11 +109,11 @@ public class PetriNet implements Graph<PetriNetNode>{
 	public int getNumberOfNodes() {
 		return this.places.size() + this.transitions.size();
 	}
-	
+
 	@Override
 	public int getNumberOfEdges() {
 		return this.edges.size();
-	}	
+	}
 
 	@Override
 	public boolean areAdjacent(PetriNetNode a, PetriNetNode b) {
@@ -133,7 +138,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	public List<Place> getPlaces() {
 		return places;
 	}
-	
+
 	/**
 	 * @return the transitions
 	 */
@@ -233,13 +238,13 @@ public class PetriNet implements Graph<PetriNetNode>{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param transition fire
 	 */
 	public void fire(Transition transition) {
-		
+
 	}
 
 	/**
@@ -255,7 +260,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
-	 * Retrieve the transitions that are enabled in the current state (token distribution) of the net 
+	 * Retrieve the transitions that are enabled in the current state (token distribution) of the net
 	 * @return the enabled transitions
 	 */
 	public Set<Transition> getEnabledTransitions() {
@@ -322,7 +327,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
-	 * Transform the Petri net to the short-circuited version, where the final place and initial place are linked via 
+	 * Transform the Petri net to the short-circuited version, where the final place and initial place are linked via
 	 * a transition
 	 * @throws IllegalStateException if the transformation is not possible due to violations of syntactical requirements
 	 */
@@ -378,7 +383,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	 * @return true if this Petri net is short-circuited
 	 * @throws IllegalStateException if the number of initial and final places in this net is not equal to 1
 	 */
-	public boolean checkShortCircuit() throws IllegalStateException {	
+	public boolean checkShortCircuit() throws IllegalStateException {
 		int numberOfInitialPlaces = 0;
 		int numberOfFinalPlaces = 0;
 		for(Place place: places) {
@@ -407,8 +412,8 @@ public class PetriNet implements Graph<PetriNetNode>{
 				finalPlaceOutgoingTransition = (Transition) nodeB;
 			}
 		}
-		return initialPlaceIncomingArks == 1 
-				&& finalPlaceOutgoingArks == 1  
+		return initialPlaceIncomingArks == 1
+				&& finalPlaceOutgoingArks == 1
 				&& initialPlaceIncomingTransition.equals(finalPlaceOutgoingTransition);
 	}
 

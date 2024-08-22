@@ -108,4 +108,7 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 			return mus1.hashCode() - mus2.hashCode();
 		}
 	}
+
+    /** Default Constructor */
+    public SimpleMUSComparator(){}
 }

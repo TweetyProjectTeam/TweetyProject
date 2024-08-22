@@ -105,4 +105,7 @@ public class SimpleModelEnumerator implements ModelProvider<PlFormula, PlBeliefS
 		return this.getModels(form).iterator().next();
 	}
 
+
+    /** Default Constructor */
+    public SimpleModelEnumerator(){}
 }
