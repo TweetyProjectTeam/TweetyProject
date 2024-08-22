@@ -25,17 +25,17 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 /**
  * This class collects some common operators used in ASP terms as well as the
  * possible function names for aggregates.
- * 
+ *
  * @author Anna Gessler
  */
 public class ASPOperator {
 
 	/**
 	 * The arithmetic operators that are supported by the ASP-Core-2 standard: PLUS
-	 * (+), MINUS (-), TIMES (*), DIV (/) 
+	 * (+), MINUS (-), TIMES (*), DIV (/)
 	 * <br> In addition, the following operators from
 	 * Clingo and DLV are supported: MODULO (\)
-	 * 
+	 *
 	 * @author Anna Gessler
 	 */
 	public enum ArithmeticOperator {
@@ -56,14 +56,14 @@ public class ASPOperator {
 			else
 				throw new IllegalArgumentException("Unknown arithmetic operator");
 		}
-		
+
 	}
 
 	/**
 	 * The binary comparative operators that are supported by the ASP-Core-2
 	 * standard and by Tweety: LT (&lt;), LEQ (&lt;=), EQ (==), NEQ (!=), GT (&gt;),
 	 * GEQ (&gt;=)
-	 * 
+	 *
 	 * @author Anna Gessler
 	 */
 	public enum BinaryOperator {
@@ -90,19 +90,19 @@ public class ASPOperator {
 	 * The following aggregate functions are supported by the ASP-Core-2 standard
 	 * and by Tweety. 'weight' in this context is the first element of an aggregate
 	 * element (term tuple).
-	 * 
+	 *
 	 * <br>
 	 * - #count: Number of elements, used to represent cardinality constraints. <br>
 	 * - #sum: Sum of weights, used to represent weight constraints. <br>
 	 * - #max: Maximum weight <br>
 	 * - #min: Minimum weight
-	 * 
+	 *
 	 * <br> Clingo additionally includes the #sum+ aggregate function, which represents
-	 * the sum of positive weights. 
+	 * the sum of positive weights.
 	 * <br> DLV additionally includes the #times aggregate
-	 * function. #times is similar to #sum, but computes the product of the first local variable to be aggregated over 
-	 * in the symbolic set. For the empty set, #times returns 1. 
-	 * 
+	 * function. #times is similar to #sum, but computes the product of the first local variable to be aggregated over
+	 * in the symbolic set. For the empty set, #times returns 1.
+	 *
 	 * @author Anna Gessler
 	 */
 	public enum AggregateFunction {
@@ -141,12 +141,12 @@ public class ASPOperator {
 		}
 
 	}
-	
+
 
 	/**
-	 * Additional special predicates of the DLV syntax that have no direct 
+	 * Additional special predicates of the DLV syntax that have no direct
 	 * representation in the Clingo or ASP-Core-2 format.
-	 * 
+	 *
 	 * @author Anna Gessler
 	 */
 	public static class DLVPredicate extends Predicate {
@@ -161,16 +161,16 @@ public class ASPOperator {
 				throw new IllegalArgumentException("Arity for DLVPredicates is expected to be between 1 and 3, given arity is " + arity);
 		}
 	}
-	
+
 	/**
-	 * Additional special predicates of the clingo syntax that have no direct 
+	 * Additional special predicates of the clingo syntax that have no direct
 	 * representation in the DLV or ASP-Core-2 format.
-	 * 
+	 *
 	 * @author Anna Gessler
 	 */
 	public static class ClingoPredicate extends Predicate {
 		final Set<String> NAMES = Set.of("#true", "#false");
-		
+
 		public ClingoPredicate(String name, int arity) {
 			super(name,arity);
 			if (!NAMES.contains(name))
@@ -186,4 +186,7 @@ public class ASPOperator {
 		}
 	}
 
+
+    /** Default Constructor */
+    public ASPOperator(){}
 }

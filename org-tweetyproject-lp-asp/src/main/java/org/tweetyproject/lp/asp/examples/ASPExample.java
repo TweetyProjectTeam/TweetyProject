@@ -119,4 +119,7 @@ public class ASPExample {
 		r2.setBody(new AggregateAtom(literals, 1, 2));
 	}
 
+
+    /** Default Constructor */
+    public ASPExample(){}
 }

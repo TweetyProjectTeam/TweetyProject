@@ -111,4 +111,7 @@ public class AggregateExample {
 		System.out.println("Clingo output:\n" + as + "\n");
 	}
 
+
+    /** Default Constructor */
+    public AggregateExample(){}
 }

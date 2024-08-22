@@ -55,4 +55,7 @@ public abstract class ASPLiteral extends ASPBodyElement implements Atom, Inverta
 	
 	@Override
 	public abstract ASPLiteral complement();
+
+    /** Default Constructor */
+    public ASPLiteral(){}
 }

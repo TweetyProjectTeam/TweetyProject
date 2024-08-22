@@ -39,4 +39,7 @@ public abstract class ASPHead extends ASPElement {
 	 */
 	public abstract Collection<? extends ASPLiteral> getLiterals();
 
+
+    /** Default Constructor */
+    public ASPHead(){}
 }

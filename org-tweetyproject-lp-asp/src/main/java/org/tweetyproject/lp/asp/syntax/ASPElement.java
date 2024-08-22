@@ -111,4 +111,7 @@ public abstract class ASPElement implements ComplexLogicalFormula {
 		return this.printToClingo();
 	}
 
+
+    /** Default Constructor */
+    public ASPElement(){}
 }
