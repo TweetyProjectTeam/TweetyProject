@@ -118,4 +118,7 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 	
 	
 	
+
+    /** Default Constructor */
+    public UnlivenessMeasure(){}
 }

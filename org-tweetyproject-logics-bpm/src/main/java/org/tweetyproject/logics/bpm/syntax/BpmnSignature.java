@@ -82,4 +82,7 @@ public class BpmnSignature implements Signature{
 		
 	}
 
+
+    /** Default Constructor */
+    public BpmnSignature(){}
 }

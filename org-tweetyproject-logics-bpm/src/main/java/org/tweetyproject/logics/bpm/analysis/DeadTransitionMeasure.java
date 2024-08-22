@@ -121,5 +121,8 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 		return infoStrings;
 	}
 
+
+    /** Default Constructor */
+    public DeadTransitionMeasure(){}
 }
 

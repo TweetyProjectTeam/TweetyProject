@@ -104,4 +104,7 @@ public class UnfairnessEntropyMeasure implements BpmnInconsistencyMeasure {
 		return infoStrings;
 	}
 
+
+    /** Default Constructor */
+    public UnfairnessEntropyMeasure(){}
 }

@@ -117,4 +117,7 @@ public class UnfairnessMeasure implements BpmnInconsistencyMeasure {
 		return infoStrings;
 	}
 
+
+    /** Default Constructor */
+    public UnfairnessMeasure(){}
 }
