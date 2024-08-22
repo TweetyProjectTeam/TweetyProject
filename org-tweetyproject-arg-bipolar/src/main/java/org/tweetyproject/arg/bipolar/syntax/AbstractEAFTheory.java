@@ -202,7 +202,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public Set<Support> getSupports() {
         return new HashSet<Support>(supports);
     }
-    
+
     /**
      * Get all supports invloving argument arg
      * @param arg an argument
@@ -234,16 +234,16 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
         }
         List<T> list = new ArrayList<T>(originalSet);
         T head = list.get(0);
-        Set<T> rest = new HashSet<T>(list.subList(1, list.size())); 
+        Set<T> rest = new HashSet<T>(list.subList(1, list.size()));
         for (Set<T> set : powerSet(rest)) {
             Set<T> newSet = new HashSet<T>();
             newSet.add(head);
             newSet.addAll(set);
             sets.add(newSet);
             sets.add(set);
-        }       
+        }
         return sets;
-    } 
+    }
     /**
      * Pretty print of the EAFTheory
      */
@@ -294,5 +294,5 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     }
 
     /** Default Constructor */
-    public AbstractEAFTheory<S(){}
+    public AbstractEAFTheory(){}
 }
