@@ -76,4 +76,7 @@ public class CounterTransitivityReasonerExample {
 		System.out.println("dominance: " +r.simpleDominance(theory, lat).toString());
 		System.out.println("call by getModel (quality): " +r.getModel(theory).toString());
 	}
+
+    /** Default Constructor */
+    public CounterTransitivityReasonerExample(){}
 }

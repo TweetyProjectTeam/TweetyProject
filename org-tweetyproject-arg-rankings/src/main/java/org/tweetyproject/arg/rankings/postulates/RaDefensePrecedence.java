@@ -33,7 +33,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks.
  * 2013]: For two arguments with the same number of direct attackers, a defended
  * argument is ranked higher than a non-defended argument.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -55,7 +55,7 @@ public class RaDefensePrecedence extends RankingPostulate {
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
 			return true;
-		
+
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
@@ -73,4 +73,7 @@ public class RaDefensePrecedence extends RankingPostulate {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public RaDefensePrecedence(){}
 }

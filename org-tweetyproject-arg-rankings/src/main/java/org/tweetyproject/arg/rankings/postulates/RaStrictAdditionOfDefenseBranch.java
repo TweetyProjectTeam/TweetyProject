@@ -91,4 +91,7 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		return ranking.isStrictlyMoreAcceptableThan(argClone, argOld);
 	}
 
+
+    /** Default Constructor */
+    public RaStrictAdditionOfDefenseBranch(){}
 }

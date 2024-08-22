@@ -142,4 +142,7 @@ public class RankingPostulatesExample {
 		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
 	}
 
+
+    /** Default Constructor */
+    public RankingPostulatesExample(){}
 }

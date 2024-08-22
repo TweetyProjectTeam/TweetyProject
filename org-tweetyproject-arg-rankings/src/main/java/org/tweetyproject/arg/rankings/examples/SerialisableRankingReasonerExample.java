@@ -61,4 +61,7 @@ public class SerialisableRankingReasonerExample {
 		
 		System.out.println(reasoner.getModel(aaf));
 	}
+
+    /** Default Constructor */
+    public SerialisableRankingReasonerExample(){}
 }

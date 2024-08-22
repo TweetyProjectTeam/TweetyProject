@@ -30,11 +30,14 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * <br> - Numerical Ranking: Arguments are assigned numerical values. Acceptability follows from some order
  * that is opposed on those values.
  * <br> - Lattice Ranking: The acceptability of the arguments is represented by a graph-based structure.
- * 
+ *
  * @author Anna Gessler
  *
- * @param <R> the type of ranking 
+ * @param <R> the type of ranking
  */
 public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argument, DungTheory>> implements ModelProvider<Argument,DungTheory,R>,  PostulateEvaluatable<Argument>  {
 	public abstract boolean isInstalled();
+
+    /** Default Constructor */
+    public AbstractRankingReasoner(){}
 }

@@ -209,4 +209,7 @@ public class RankingSemanticsExample {
 	}
 
 
+
+    /** Default Constructor */
+    public RankingSemanticsExample(){}
 }

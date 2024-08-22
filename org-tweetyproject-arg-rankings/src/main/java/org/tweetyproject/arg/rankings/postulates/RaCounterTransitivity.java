@@ -86,4 +86,7 @@ public class RaCounterTransitivity extends RankingPostulate {
 		return ranking.isStrictlyMoreOrEquallyAcceptableThan(a, b);
 	}
 
+
+    /** Default Constructor */
+    public RaCounterTransitivity(){}
 }

@@ -107,4 +107,7 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 
+
+    /** Default Constructor */
+    public RaDistDefensePrecedence(){}
 }

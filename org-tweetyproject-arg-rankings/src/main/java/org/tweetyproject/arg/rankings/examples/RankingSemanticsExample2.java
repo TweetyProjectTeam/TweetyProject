@@ -111,4 +111,7 @@ public class RankingSemanticsExample2 {
 		System.out.println("M:" + propagation_reasoner_2.getModel(example3));
 	}
 
+
+    /** Default Constructor */
+    public RankingSemanticsExample2(){}
 }

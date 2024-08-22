@@ -202,4 +202,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public TuplesRankingReasoner(){}
 }

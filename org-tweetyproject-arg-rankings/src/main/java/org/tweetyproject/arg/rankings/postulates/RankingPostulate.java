@@ -95,4 +95,7 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 	 */
 	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev);
 	
+
+    /** Default Constructor */
+    public RankingPostulate(){}
 }

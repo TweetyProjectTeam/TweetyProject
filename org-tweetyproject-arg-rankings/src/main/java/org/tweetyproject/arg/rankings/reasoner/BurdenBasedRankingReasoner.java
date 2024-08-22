@@ -102,4 +102,7 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeP
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public BurdenBasedRankingReasoner(){}
 }

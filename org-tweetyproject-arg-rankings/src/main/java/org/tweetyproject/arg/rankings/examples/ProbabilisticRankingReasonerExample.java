@@ -56,4 +56,7 @@ public class ProbabilisticRankingReasonerExample {
 		
 		System.out.println(reasoner.getModel(theory));		
 	}
+
+    /** Default Constructor */
+    public ProbabilisticRankingReasonerExample(){}
 }
