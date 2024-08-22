@@ -26,23 +26,38 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * 
- * @author Mathias Hofer
+ * This class implements a reasoner for the model semantics in Abstract Dialectical Frameworks (ADFs).
+ * It utilizes a SAT solver to compute model interpretations.
+ * <p>
+ * This class is deprecated and is planned for removal in future versions.
+ * Users should transition to newer reasoner implementations.
+ * </p>
  *
+ * @author Mathias Hofer
+ * @deprecated since 1.19, for removal in future versions
  */
-@Deprecated( forRemoval = true, since = "1.19" )
+@Deprecated(forRemoval = true, since = "1.19")
 public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
-	
-	/**
-	 * 
-	 * @param solver solver
-	 */
-	public ModelReasoner(IncrementalSatSolver solver) {
-		super(solver);
-	}
-	
-	@Override
-	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
-		return adf.query().model().interpretations();
-	}
+
+    /**
+     * Constructs a ModelReasoner with the specified SAT solver.
+     *
+     * @param solver the SAT solver to be used for computing model interpretations
+     */
+    public ModelReasoner(IncrementalSatSolver solver) {
+        super(solver);
+    }
+
+    /**
+     * Queries the given Abstract Dialectical Framework (ADF) for model interpretations.
+     * This method retrieves the query that computes the model interpretations for the ADF.
+     *
+     * @param adf the Abstract Dialectical Framework to query for model interpretations
+     * @return a query that streams the model interpretations of the ADF
+     */
+    @Override
+    Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+        return adf.query().model().interpretations();
+    }
 }
+

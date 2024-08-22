@@ -21,64 +21,74 @@ package org.tweetyproject.arg.adf.reasoner.query;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 
 /**
+ * SemanticsStep class
  * @author Mathias Hofer
  *
  */
 public interface SemanticsStep {
 
 	/**
-	 * 
+	 *
+	 * Return conflictFree
 	 * @return conflictFree
 	 */
 	ConditionlessTaskStep conflictFree();
-	
+
 	/**
-	 * 
+	 *
+	 * Return naive
 	 * @return naive
 	 */
 	ConditionlessTaskStep naive();
-	
+
 	/**
-	 * 
+	 *
+	 * Return admissible
 	 * @return admissible
 	 */
 	ConditionlessTaskStep admissible();
-	
+
 	/**
-	 * 
+	 *
+	 * Return preferred
 	 * @return preferred
 	 */
 	ConditionlessTaskStep preferred();
-	
+
 	/**
-	 * 
+	 *
+	 * Return stable
 	 * @return stable
 	 */
 	ConditionlessTaskStep stable();
-	
+
 	/**
-	 * 
+	 *
+	 * return complete
 	 * @return complete
 	 */
 	ConditionlessTaskStep complete();
-	
+
 	/**
-	 * 
+	 *
+	 * Return model
 	 * @return model
 	 */
 	ConditionlessTaskStep model();
-	
+
 	/**
-	 * 
+	 *
+	 * Return ground
 	 * @return ground
 	 */
 	ConditionlessTaskStep ground();
 
 	/**
-	 * 
+	 *
+	 * Return custom
 	 * @param semantics semantics
 	 * @return custom
 	 */
 	ConditionlessTaskStep custom(Semantics semantics);
-	
+
 }

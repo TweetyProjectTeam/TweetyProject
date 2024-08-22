@@ -26,23 +26,38 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * @author Mathias Hofer
+ * This class implements a reasoner for the grounded semantics in Abstract Dialectical Frameworks (ADFs).
+ * It uses a SAT solver to compute grounded interpretations of the ADF.
+ * <p>
+ * This class is deprecated and is planned for removal in future versions.
+ * Users are encouraged to transition to newer reasoner implementations.
+ * </p>
  *
+ * @author Mathias Hofer
+ * @deprecated since 1.19, for removal in future versions
  */
-@Deprecated( forRemoval = true, since = "1.19" )
+@Deprecated(forRemoval = true, since = "1.19")
 public class GroundReasoner extends AbstractDialecticalFrameworkReasoner {
 
-	/**
-	 * @param solver
-	 *            the underlying sat solver
-	 */
-	public GroundReasoner(IncrementalSatSolver solver) {
-		super(solver);
-	}
+    /**
+     * Constructs a GroundReasoner with the specified SAT solver.
+     *
+     * @param solver the SAT solver to be used for computing grounded interpretations
+     */
+    public GroundReasoner(IncrementalSatSolver solver) {
+        super(solver);
+    }
 
-	@Override
-	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
-		return adf.query().ground().interpretations();
-	}
-
+    /**
+     * Queries the given Abstract Dialectical Framework (ADF) for grounded interpretations.
+     * This method retrieves the query that computes the grounded interpretations for the ADF.
+     *
+     * @param adf the Abstract Dialectical Framework to query for grounded interpretations
+     * @return a query that streams the grounded interpretations of the ADF
+     */
+    @Override
+    Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+        return adf.query().ground().interpretations();
+    }
 }
+

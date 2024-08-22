@@ -21,8 +21,10 @@ package org.tweetyproject.arg.adf.util;
 import java.util.Objects;
 
 /**
+ * Pair class
  * @author Mathias Hofer
- *
+ *@param <T1> type
+ *@param <T2> type
  */
 public final class Pair<T1, T2> {
 
@@ -45,7 +47,7 @@ public final class Pair<T1, T2> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -59,7 +61,7 @@ public final class Pair<T1, T2> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

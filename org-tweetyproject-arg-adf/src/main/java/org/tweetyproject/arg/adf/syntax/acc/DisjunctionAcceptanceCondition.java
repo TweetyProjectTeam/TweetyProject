@@ -18,14 +18,14 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 /**
- * 
+ * DisjunctionAcceptanceCondition class
  * @author Sebastian
  *
  */
 public final class DisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
-	
+
 	/**
-	 * 
+	 *
 	 * @param left the left side of the disjunction
 	 * @param right the right side of the disjunction
 	 */
@@ -37,7 +37,7 @@ public final class DisjunctionAcceptanceCondition extends BinaryAcceptanceCondit
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
 	}
-	
+
 	@Override
 	protected String getName() {
 		return "or";

@@ -26,22 +26,38 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * @author Mathias Hofer
+ * This class implements a reasoner for the complete semantics in Abstract Dialectical Frameworks (ADFs).
+ * It utilizes a SAT solver to compute complete interpretations.
+ * <p>
+ * This class is deprecated and is planned for removal in future versions.
+ * Users are encouraged to transition to newer reasoner implementations.
+ * </p>
  *
+ * @author Mathias Hofer
+ * @deprecated since 1.19, for removal in future versions
  */
-@Deprecated( forRemoval = true, since = "1.19" )
+@Deprecated(forRemoval = true, since = "1.19")
 public class CompleteReasoner extends AbstractDialecticalFrameworkReasoner {
 
-	/**
-	 * @param solver the solver to use
-	 */
-	public CompleteReasoner(IncrementalSatSolver solver) {
-		super(solver);
-	}
-	
-	@Override
-	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
-		return adf.query().complete().interpretations();
-	}
-		
+    /**
+     * Constructs a CompleteReasoner with the specified SAT solver.
+     *
+     * @param solver the SAT solver to be used for computing complete interpretations
+     */
+    public CompleteReasoner(IncrementalSatSolver solver) {
+        super(solver);
+    }
+
+    /**
+     * Queries the given Abstract Dialectical Framework (ADF) for complete interpretations.
+     * This method retrieves the query that computes the complete interpretations for the ADF.
+     *
+     * @param adf the Abstract Dialectical Framework to query for complete interpretations
+     * @return a query that streams the complete interpretations of the ADF
+     */
+    @Override
+    Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+        return adf.query().complete().interpretations();
+    }
 }
+

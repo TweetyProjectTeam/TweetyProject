@@ -23,16 +23,23 @@ import java.util.function.Consumer;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
- * 
+ * The {@code SatEncoding} interface represents a generic SAT encoding mechanism.
+ * Implementations of this interface are responsible for encoding specific structures
+ * into SAT clauses and providing them to a given consumer.
+ *
  * @author Mathias Hofer
  *
  */
 public interface SatEncoding {
 
-	/**
-	 * 
-	 * @param consumer consumer
-	 */
-	void encode(Consumer<Clause> consumer);
+    /**
+     * Encodes the structure into a set of SAT clauses and provides them to the given consumer.
+     * The consumer is expected to accept the generated clauses, which represent the
+     * logical encoding of the structure.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     */
+    void encode(Consumer<Clause> consumer);
 
 }
+

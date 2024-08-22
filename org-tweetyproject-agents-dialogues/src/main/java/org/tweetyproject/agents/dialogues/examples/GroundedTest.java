@@ -57,19 +57,35 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
  */
 public class GroundedTest {
 
-	// Global parameters for simulation
-	public static int frameworkSize;
-	public static double attackProbability;
-	public static boolean enforceTreeShape;
-	public static int timeout = 60 * 60 * 6; // timeout of six hours
+    /** The size of the argumentation framework in the simulation. */
+    public static int frameworkSize;
 
-	public static int numberOfRunsEach = 100;
+    /** The probability of an attack between arguments in the framework (0.0 to 1.0). */
+    public static double attackProbability;
 
-	// to ensure comparability
-	public static long RANDOM_SEED1 = 43589744589l;
-	public static long RANDOM_SEED2 = 96498321389l;
-	public static long RANDOM_SEED3 = 647597568l;
-	public static long RANDOM_SEED4 = 213596455579l;
+    /**
+     * Flag indicating whether the framework should enforce a tree-like structure.
+     * If true, the argumentation framework will be forced to have a tree shape.
+     */
+    public static boolean enforceTreeShape;
+
+    /** The timeout for the simulation in seconds (default: six hours). */
+    public static int timeout = 60 * 60 * 6;
+
+    /** The number of simulation runs to be executed for each experiment. */
+    public static int numberOfRunsEach = 100;
+
+    /** Random seed for ensuring reproducibility in the first configuration. */
+    public static long RANDOM_SEED1 = 43589744589L;
+
+    /** Random seed for ensuring reproducibility in the second configuration. */
+    public static long RANDOM_SEED2 = 96498321389L;
+
+    /** Random seed for ensuring reproducibility in the third configuration. */
+    public static long RANDOM_SEED3 = 647597568L;
+
+    /** Random seed for ensuring reproducibility in the fourth configuration. */
+    public static long RANDOM_SEED4 = 213596455579L;
 
 	/**
 	 * This method shows that with increasing complexity of the T1-belief state of
@@ -331,6 +347,11 @@ public class GroundedTest {
 		}
 	}
 
+	/**
+	 * Grounded test method
+	 * @param args the args
+	 * @throws ProtocolTerminatedException
+	 */
 	public static void main(String[] args) throws ProtocolTerminatedException {
 		// set logging level to "TRACE" to get detailed descriptions
 

@@ -35,12 +35,16 @@ public class DummyAgentGenerator implements AgentGenerator<AbstractLotteryAgent,
 
 	/** The name of the agents generator by this generator. */
 	private String name;
-	
-	
+
+
+	/**
+	 * Create DummyAgentGenerator
+	 * @param name the name
+	 */
 	public DummyAgentGenerator(String name){
 		this.name = name;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.sim.AgentGenerator#generate(org.tweetyproject.agents.MultiAgentSystem, org.tweetyproject.agents.sim.SimulationParameters)
 	 */
@@ -54,7 +58,7 @@ public class DummyAgentGenerator implements AgentGenerator<AbstractLotteryAgent,
 	 */
 	@Override
 	public void setSeed(long seed) { }
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

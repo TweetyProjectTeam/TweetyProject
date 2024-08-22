@@ -31,7 +31,8 @@ import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.Visitor;
 
 /**
- * 
+ * AbstractTransformer class
+ *
  * @author Mathias Hofer
  *
  * @param <U> the information that is passed bottom-up during the transformation
@@ -44,7 +45,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.arg.adf.transform.Transformer#transform(org.tweetyproject.arg.
 	 * adf.syntax.acc.AcceptanceCondition)
@@ -55,18 +56,18 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 		U bottomUpData = transform(acc, userObject);
 		return finish(bottomUpData, userObject);
 	}
-	
+
 	protected U transform(AcceptanceCondition acc, D userObject) {
 		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity(), userObject));
 	}
-	
+
 	protected int topLevelPolarity() {
 		return 1;
 	}
 
 	/**
 	 * Provides the initial top-down data.
-	 * 
+	 *
 	 * @return the initial top-down data
 	 */
 	protected abstract D initialize();
@@ -99,7 +100,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.TautologyAcceptanceCondition, java.lang.Object)
@@ -111,7 +112,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ContradictionAcceptanceCondition, java.lang.Object)
@@ -123,7 +124,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ConjunctionAcceptanceCondition, java.lang.Object)
@@ -137,7 +138,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.DisjunctionAcceptanceCondition, java.lang.Object)
@@ -151,7 +152,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.EquivalenceAcceptanceCondition, java.lang.Object)
@@ -165,7 +166,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ExclusiveDisjunctionAcceptanceCondition, java.lang.Object)
@@ -179,7 +180,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ImplicationAcceptanceCondition, java.lang.Object)
@@ -194,7 +195,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.NegationAcceptanceCondition, java.lang.Object)
@@ -207,7 +208,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.Argument, java.lang.Object)

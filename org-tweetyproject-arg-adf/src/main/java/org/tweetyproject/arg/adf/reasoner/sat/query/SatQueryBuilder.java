@@ -32,28 +32,31 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * SatQueryBuilder class
  * @author Mathias Hofer
  *
  */
 public final class SatQueryBuilder {
-	
+
 	private final AbstractDialecticalFramework adf;
 	/**
-	 * 
+	 * Constructor with AbstractDialecticalFramework
 	 * @param adf adf
 	 */
 	public SatQueryBuilder(AbstractDialecticalFramework adf) {
 		this.adf = Objects.requireNonNull(adf);
 	}
 	/**
-	 * 
+	 *
+	 * Return SemanticsStep defaultConfiguration()
 	 * @return SemanticsStep defaultConfiguration()
 	 */
 	public SemanticsStep defaultConfiguration() {
 		return configure(Configuration.builder().build());
 	}
 	/**
-	 * 
+	 *
+	 * Return SemanticsStep configure
 	 * @param configuration configuration
 	 * @return SemanticsStep configure
 	 */
@@ -62,7 +65,7 @@ public final class SatQueryBuilder {
 	}
 
 	private final class SatSemanticsStep implements SemanticsStep {
-		
+
 		private final Configuration configuration;
 
 		SatSemanticsStep(Configuration configuration) {
@@ -113,7 +116,7 @@ public final class SatQueryBuilder {
 		public ConditionlessTaskStep custom(Semantics semantics) {
 			return new DefaultConditionlessSatTask(semantics);
 		}
-			
+
 		private final class DefaultConditionlessSatTask implements ConditionlessTaskStep {
 
 			private final Semantics semantics;
@@ -141,13 +144,13 @@ public final class SatQueryBuilder {
 			public ConditionalTaskStep where(Argument condition) {
 				return new DefaultConditionalSatTask(semantics, condition);
 			}
-	
+
 		}
-		
+
 		private final class DefaultConditionalSatTask implements ConditionalTaskStep {
 
 			private final Semantics semantics;
-			
+
 			private final Argument condition;
 
 			public DefaultConditionalSatTask(Semantics semantics, Argument condition) {
@@ -174,8 +177,8 @@ public final class SatQueryBuilder {
 			public Query<Boolean> forAll() {
 				return new ForAllSatQuery(semantics, configuration, condition);
 			}
-			
+
 		}
 	}
-	
+
 }

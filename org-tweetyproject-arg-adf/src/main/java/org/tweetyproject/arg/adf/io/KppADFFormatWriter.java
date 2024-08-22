@@ -38,6 +38,7 @@ import org.tweetyproject.arg.adf.syntax.acc.Visitor;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * KppADFFormatWriter class
  * @author Mathias Hofer
  * @author Lars Bengel
  */

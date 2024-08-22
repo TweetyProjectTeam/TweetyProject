@@ -23,27 +23,31 @@ import java.util.stream.Stream;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
+ * TaskStep class
  * @author Mathias Hofer
  *
  */
 public interface TaskStep {
 
 	/**
-	 * 
+	 *
+	 * Return interpretations
 	 * @return interpretations
 	 */
 	Query<Stream<Interpretation>> interpretations();
-	
+
 	/**
-	 * 
+	 *
+	 * Return interpretation
 	 * @return interpretation
 	 */
 	Query<Interpretation> interpretation();
 
 	/**
-	 * 
+	 *
+	 * Return exists
 	 * @return exists
 	 */
 	Query<Boolean> exists();
-	
+
 }

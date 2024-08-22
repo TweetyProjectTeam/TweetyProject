@@ -30,36 +30,36 @@ import java.io.Writer;
 import java.util.Iterator;
 
 /**
- * 
- * 
+ *
+ *
  * @author Bastian Wolf
  * @param <T> generic preference order type
  */
 public class POWriter<T> {
-	
+
 	public void writeToFile(String filename, PreferenceOrder<T> po){
-		
+
 		PrintWriter pw = null;
 		try {
 		Writer fw = new FileWriter(filename);
 		Writer bw = new BufferedWriter(fw);
 		pw = new PrintWriter(bw);
-		
+
 		String s = "{";
 		int count = 1;
 		for (T e : po.getDomainElements()){
-			
+
 			if (count < po.getDomainElements().size())
 				s += e.toString() + ", ";
 			else
 				s += e.toString();
 		count++;
 		}
-		
+
 		s += "}";
-		
+
 		pw.println(s);
-		
+
 		Iterator<Triple<T, T, Relation>> it = po.iterator();
 		while (it.hasNext()){
 			Triple<T, T, Relation> temp = it.next();
@@ -77,4 +77,7 @@ public class POWriter<T> {
 				pw.close();
 		}
 	}
+
+    /** Default Constructor */
+    public POWriter(){}
 }

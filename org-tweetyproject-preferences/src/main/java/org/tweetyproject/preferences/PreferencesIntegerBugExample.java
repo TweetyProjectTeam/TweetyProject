@@ -74,4 +74,7 @@ public class PreferencesIntegerBugExample {
 	System.out.println(po.getLevelingFunction().getRankingFunction());
 	
 	}
+
+    /** Default Constructor */
+    public PreferencesIntegerBugExample(){}
 }

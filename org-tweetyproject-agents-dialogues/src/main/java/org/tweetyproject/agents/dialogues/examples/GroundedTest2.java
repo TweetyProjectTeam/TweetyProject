@@ -55,9 +55,25 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
  */
 public class GroundedTest2 {
 
-	public static int timeout = 60 * 10; // 10 minutes
-	public static int numberOfRunsEach = 5000;
+    /**
+     * Timeout duration for each simulation run in seconds.
+     * Default is set to 10 minutes (600 seconds).
+     */
+    public static int timeout = 60 * 10; // 10 minutes
 
+    /**
+     * Number of simulation runs to be executed for each experiment.
+     * Default is set to 5000 runs.
+     */
+    public static int numberOfRunsEach = 5000;
+
+    /**
+     * The main method of the simulation. This sets up and runs the
+     * multi-agent dialogue game simulation.
+     *
+     * @param args Command line arguments (not used in this simulation).
+     * @throws ProtocolTerminatedException if the protocol terminates unexpectedly.
+     */
 	public static void main(String[] args) throws ProtocolTerminatedException {
 
 

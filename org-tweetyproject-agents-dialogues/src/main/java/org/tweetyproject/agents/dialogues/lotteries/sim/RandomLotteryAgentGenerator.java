@@ -32,15 +32,18 @@ import org.tweetyproject.arg.prob.lotteries.UtilityFunction;
  * @author Matthias Thimm
  */
 public class RandomLotteryAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
-	
+
 	/** The name of the agents generator by this generator. */
 	private String name;
-	
-	
+
+	/**
+	 * Create RandomLotteryAgentGenerator with name
+	 * @param name the name of the generator
+	 */
 	public RandomLotteryAgentGenerator(String name){
 		this.name = name;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.sim.AgentGenerator#generate(org.tweetyproject.agents.MultiAgentSystem, org.tweetyproject.agents.sim.SimulationParameters)
 	 */
@@ -54,7 +57,7 @@ public class RandomLotteryAgentGenerator implements AgentGenerator<AbstractLotte
 	 */
 	@Override
 	public void setSeed(long seed) { }
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

@@ -25,10 +25,17 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * 
- * @author Mathias Hofer
+ * A view that provides the union of two disjoint sets as a single set.
+ * This class does not copy the elements from the sets but merely wraps them.
+ * It is expected that the two sets are disjoint, as methods like {@link #size()}
+ * assume that there is no overlap between the elements.
+ * <p>
+ * This class provides an unmodifiable view and all modification operations
+ * will throw {@link UnsupportedOperationException}.
  *
- * @param <E> the elements
+ * @param <E> the type of elements in this set
+ *
+ * @author Mathias Hofer
  */
 public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> implements Set<E> {
 
@@ -42,7 +49,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 	 * <p>
 	 * It is up to the caller to ensure this property, this class performs
 	 * no additional checks.
-	 * 
+	 *
 	 * @param set1 the first set
 	 * @param set2 the second set
 	 */
@@ -50,14 +57,14 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 		this.set1 = Set.copyOf(set1);
 		this.set2 = Set.copyOf(set2);
 	}
-		
+
 	public static <E> Set<E> of(Set<? extends E> set1, Set<? extends E> set2, Set<? extends E> set3) {
 		return new UnionSetView<E>(set1, new UnionSetView<E>(set2, set3));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#size()
 	 */
 	@Override
@@ -67,7 +74,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#isEmpty()
 	 */
 	@Override
@@ -77,7 +84,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#contains(java.lang.Object)
 	 */
 	@Override
@@ -87,7 +94,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#iterator()
 	 */
 	@Override
@@ -97,7 +104,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#toArray()
 	 */
 	@Override
@@ -107,7 +114,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#toArray(java.lang.Object[])
 	 */
 	@SuppressWarnings("unchecked")
@@ -129,7 +136,7 @@ public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#containsAll(java.util.Collection)
 	 */
 	@Override

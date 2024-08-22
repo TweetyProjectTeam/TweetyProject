@@ -25,20 +25,21 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
+ * UnionCollectionView class
  * @author Mathias Hofer
- *
+ * @param <E> type
  */
 public final class UnionCollectionView<E> extends AbstractUnmodifiableCollection<E>{
 
 	private final Collection<? extends E> c1;
-	
+
 	private final Collection<? extends E> c2;
-	
+
 	public UnionCollectionView(Collection<? extends E> c1, Collection<? extends E> c2) {
 		this.c1 = Objects.requireNonNull(c1);
 		this.c2 = Objects.requireNonNull(c2);
 	}
-	
+
 	public static <E, T extends E> Collection<E> of(Collection<? extends E> c, T elem) {
 		return new UnionCollectionView<>(c, Collections.singleton(elem));
 	}
@@ -58,7 +59,7 @@ public final class UnionCollectionView<E> extends AbstractUnmodifiableCollection
 	public int size() {
 		return c1.size() + c2.size();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.util.AbstractCollection#isEmpty()
 	 */
@@ -66,7 +67,7 @@ public final class UnionCollectionView<E> extends AbstractUnmodifiableCollection
 	public boolean isEmpty() {
 		return c1.isEmpty() && c2.isEmpty();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.util.AbstractCollection#contains(java.lang.Object)
 	 */
