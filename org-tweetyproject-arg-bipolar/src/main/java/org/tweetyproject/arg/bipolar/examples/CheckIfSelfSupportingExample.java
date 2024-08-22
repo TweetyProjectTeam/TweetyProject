@@ -78,4 +78,7 @@ public class CheckIfSelfSupportingExample {
         System.out.println("{eta, c} is " + eafTheory.checkIsSelfSupporting(selfSupported) + ", but must be false");
 
     }
+
+    /** Default Constructor */
+    public CheckIfSelfSupportingExample(){}
 }

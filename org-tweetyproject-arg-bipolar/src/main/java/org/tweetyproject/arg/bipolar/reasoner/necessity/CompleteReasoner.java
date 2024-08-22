@@ -65,4 +65,7 @@ public class CompleteReasoner {
         ArgumentSet ext = new ArgumentSet();
         return ext;
     }
+
+    /** Default Constructor */
+    public CompleteReasoner(){}
 }

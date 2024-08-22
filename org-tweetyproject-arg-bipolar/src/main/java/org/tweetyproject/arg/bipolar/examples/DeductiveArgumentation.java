@@ -70,4 +70,7 @@ public class DeductiveArgumentation {
         System.out.println("Complete extensions mt: " + new SimpleCompleteReasoner().getModels(mt));
 
     }
+
+    /** Default Constructor */
+    public DeductiveArgumentation(){}
 }

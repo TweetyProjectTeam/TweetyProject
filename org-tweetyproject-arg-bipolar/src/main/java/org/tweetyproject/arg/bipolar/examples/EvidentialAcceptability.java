@@ -78,4 +78,7 @@ public class EvidentialAcceptability {
         System.out.println("Argument f is acceptable wrt. " + s1 + ": " + et.isAcceptable(f, s1));
 
     }
+
+    /** Default Constructor */
+    public EvidentialAcceptability(){}
 }

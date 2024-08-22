@@ -66,4 +66,7 @@ public class AdmissibleReasoner {
         // as the empty set is always admissible we return that one.
         return new ArgumentSet();
     }
+
+    /** Default Constructor */
+    public AdmissibleReasoner(){}
 }

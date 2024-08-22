@@ -72,4 +72,7 @@ public class EvidentialArgumentation {
         System.out.println("Preferred extensions: " + new PreferredReasoner().getModels(et));
         System.out.println("Stable extensions: " + new StableReasoner().getModels(et));
     }
+
+    /** Default Constructor */
+    public EvidentialArgumentation(){}
 }

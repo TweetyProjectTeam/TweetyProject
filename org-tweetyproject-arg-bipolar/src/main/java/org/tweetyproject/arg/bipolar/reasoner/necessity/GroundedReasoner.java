@@ -55,4 +55,7 @@ public class GroundedReasoner {
         }while(size!=ext.size());
         return ext;
     }
+
+    /** Default Constructor */
+    public GroundedReasoner(){}
 }

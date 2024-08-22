@@ -46,4 +46,7 @@ public class admissibleExample {
         System.out.print("c-admissible extensions: ");
         System.out.println(new CAdmissibleReasoner().getModels(theory));
     }
+
+    /** Default Constructor */
+    public admissibleExample(){}
 }

@@ -71,4 +71,7 @@ public class ApproximateJustificationAnalysisExample {
     }
 
 
+
+    /** Default Constructor */
+    public ApproximateJustificationAnalysisExample(){}
 }

@@ -43,4 +43,7 @@ public class CAdmissibleReasoner {
         }
         return extensions;
     }
+
+    /** Default Constructor */
+    public CAdmissibleReasoner(){}
 }

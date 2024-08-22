@@ -248,4 +248,7 @@ public class EAFToDAFConverter {
     }
 
 
+
+    /** Default Constructor */
+    public EAFToDAFConverter(){}
 }

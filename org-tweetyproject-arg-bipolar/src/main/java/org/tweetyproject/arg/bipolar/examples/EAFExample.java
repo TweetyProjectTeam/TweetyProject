@@ -59,4 +59,7 @@ public class EAFExample {
 
         EdgeListWriter.write("eaf.txt", eafTheory);
     }
+
+    /** Default Constructor */
+    public EAFExample(){}
 }

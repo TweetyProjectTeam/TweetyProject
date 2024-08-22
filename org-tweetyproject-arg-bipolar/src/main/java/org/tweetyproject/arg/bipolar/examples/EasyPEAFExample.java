@@ -46,4 +46,7 @@ public class EasyPEAFExample {
 
         });
     }
+
+    /** Default Constructor */
+    public EasyPEAFExample(){}
 }

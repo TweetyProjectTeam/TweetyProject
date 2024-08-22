@@ -292,4 +292,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public BArgument getEta() {
         return eta;
     }
+
+    /** Default Constructor */
+    public AbstractEAFTheory<S(){}
 }

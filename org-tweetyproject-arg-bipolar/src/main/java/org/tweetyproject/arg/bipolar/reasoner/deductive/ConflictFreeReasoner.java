@@ -47,4 +47,7 @@ public class ConflictFreeReasoner {
         }
         return result;
     }
+
+    /** Default Constructor */
+    public ConflictFreeReasoner(){}
 }

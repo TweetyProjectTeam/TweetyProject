@@ -64,4 +64,7 @@ public class ExpandMCExample {
 
         System.out.println("The result is: " + p[0]);
     }
+
+    /** Default Constructor */
+    public ExpandMCExample(){}
 }

@@ -63,4 +63,7 @@ public class CompleteReasoner {
         ext.add(bbase.getEta());
         return ext;
     }
+
+    /** Default Constructor */
+    public CompleteReasoner(){}
 }

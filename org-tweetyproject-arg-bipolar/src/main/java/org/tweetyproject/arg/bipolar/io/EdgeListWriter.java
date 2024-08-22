@@ -184,4 +184,7 @@ public class EdgeListWriter {
             }
         }
     }
+
+    /** Default Constructor */
+    public EdgeListWriter(){}
 }

@@ -51,4 +51,7 @@ public class DAdmissibleReasoner {
         }
         return extensions;
     }
+
+    /** Default Constructor */
+    public DAdmissibleReasoner(){}
 }

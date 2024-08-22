@@ -69,4 +69,7 @@ public class AllPEAFInducerExample {
         });
 
     }
+
+    /** Default Constructor */
+    public AllPEAFInducerExample(){}
 }

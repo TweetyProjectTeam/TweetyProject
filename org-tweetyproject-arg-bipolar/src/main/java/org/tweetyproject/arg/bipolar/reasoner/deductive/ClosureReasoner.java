@@ -49,4 +49,7 @@ public class ClosureReasoner {
         // as the empty set is always closed we return that one.
         return new ArgumentSet();
     }
+
+    /** Default Constructor */
+    public ClosureReasoner(){}
 }

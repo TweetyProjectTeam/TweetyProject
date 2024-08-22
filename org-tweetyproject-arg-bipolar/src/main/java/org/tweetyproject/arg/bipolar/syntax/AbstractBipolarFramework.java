@@ -439,4 +439,7 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
     public boolean isWeightedGraph() {
         return false;
     }
+
+    /** Default Constructor */
+    public AbstractBipolarFramework(){}
 }
