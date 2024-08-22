@@ -46,4 +46,7 @@ public class DeLPExample {
 		query = (FolFormula) parser.parseFormula("Fly(tweety)");
 		System.out.println(query + "\t" + reasoner.query(delp,query));
 	}
+
+    /** Default Constructor */
+    public DeLPExample(){}
 }

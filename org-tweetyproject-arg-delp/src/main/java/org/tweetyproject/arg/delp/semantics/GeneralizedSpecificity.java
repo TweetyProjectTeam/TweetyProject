@@ -147,4 +147,7 @@ public final class GeneralizedSpecificity extends ComparisonCriterion {
 	private boolean isActivated(DelpArgument arg, Set<FolFormula> activationSet, DefeasibleLogicProgram delp){
 		return delp.getStrictClosure(activationSet, arg.getSupport(),false).contains(arg.getConclusion());
 	}
+
+    /** Default Constructor */
+    public GeneralizedSpecificity(){}
 }

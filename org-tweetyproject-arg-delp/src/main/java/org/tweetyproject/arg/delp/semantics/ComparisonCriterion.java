@@ -61,4 +61,7 @@ public abstract class ComparisonCriterion {
     public abstract Result compare(DelpArgument argument1,
                                    DelpArgument argument2,
                                    DefeasibleLogicProgram context);
+
+    /** Default Constructor */
+    public ComparisonCriterion(){}
 }

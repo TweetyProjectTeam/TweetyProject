@@ -132,5 +132,8 @@ public class DelpAnswer {
             }
         }
     }
+
+    /** Default Constructor */
+    public DelpAnswer(){}
 }
 
