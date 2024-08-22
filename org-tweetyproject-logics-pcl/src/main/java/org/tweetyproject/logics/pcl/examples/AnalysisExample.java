@@ -50,4 +50,7 @@ public class AnalysisExample {
 		System.out.print(ms.repair(beliefSet));
 		System.out.print(ms2.repair(beliefSet));
 	}
+
+    /** Default Constructor */
+    public AnalysisExample(){}
 }

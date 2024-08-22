@@ -70,4 +70,7 @@ public class MaxEntExample {
 		System.out.println("P(g)" + prob.probability(new Proposition("g")));
 		System.out.println("P(s)" + prob.probability(new Proposition("s")));
 	}
+
+    /** Default Constructor */
+    public MaxEntExample(){}
 }

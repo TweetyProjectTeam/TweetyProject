@@ -117,4 +117,7 @@ public class PclParser extends Parser<PclBeliefSet,ProbabilisticConditional>{
 		return new ProbabilisticConditional((PlFormula)parser.parseFormula(condString.substring(idx+1, condString.length())),(PlFormula)parser.parseFormula(condString.substring(0, idx)),prob);		
 	}
 	
+
+    /** Default Constructor */
+    public PclParser(){}
 }

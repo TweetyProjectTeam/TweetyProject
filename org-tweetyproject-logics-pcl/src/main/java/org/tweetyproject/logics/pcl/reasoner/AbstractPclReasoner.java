@@ -50,4 +50,7 @@ public abstract class AbstractPclReasoner implements QuantitativeReasoner<PclBel
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	public abstract ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase);
+
+    /** Default Constructor */
+    public AbstractPclReasoner(){}
 }

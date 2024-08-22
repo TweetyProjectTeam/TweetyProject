@@ -305,4 +305,7 @@ public class MatlabUtils {
 	}
 	
 	
+
+    /** Default Constructor */
+    public MatlabUtils(){}
 }

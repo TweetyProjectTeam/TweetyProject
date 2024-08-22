@@ -53,4 +53,7 @@ public class RepairExample {
 		GeneralizedMeMachineShop gm = new GeneralizedMeMachineShop(2);
 		System.out.println(gm.repair(kb));
 	}
+
+    /** Default Constructor */
+    public RepairExample(){}
 }

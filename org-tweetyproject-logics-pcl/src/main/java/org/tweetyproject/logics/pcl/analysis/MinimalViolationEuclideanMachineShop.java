@@ -57,4 +57,7 @@ public abstract class MinimalViolationEuclideanMachineShop implements BeliefBase
 
 	
 
+
+    /** Default Constructor */
+    public MinimalViolationEuclideanMachineShop(){}
 }

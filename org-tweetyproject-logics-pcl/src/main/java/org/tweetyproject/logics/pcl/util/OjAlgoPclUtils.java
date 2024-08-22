@@ -34,43 +34,43 @@ import org.ojalgo.optimisation.Variable;
 
 /**
  * Provides some utility functions for solving Pcl specific reasoning problems with ojAlgo.
- * 
+ *
  * @author NicoPotyka
  *
  */
 public class OjAlgoPclUtils {
 
-	
+
 	/**
-	 * Add probability normalization constraint to model 
-	 * (all probabilities have to sum to 1). 
+	 * Add probability normalization constraint to model
+	 * (all probabilities have to sum to 1).
 	 * @param model the model
 	 */
 	public static void addProbabilityNormalizationConstraint(ExpressionsBasedModel model) {
-		
+
 		Expression tmpExpr = model.addExpression("Normalization").level(BigMath.ONE);
 		for(int i=0; i<model.countVariables(); i++) {
 			tmpExpr.setLinearFactor(i, BigMath.ONE);
 		}
-		
+
 	}
-	
+
 
 	/**
-	 * Create (non-negative) variables for the probabilities of possible worlds. 
+	 * Create (non-negative) variables for the probabilities of possible worlds.
 	 * @param noWorlds the number of worlds
 	 * @return the variables
 	 */
 	public static Variable[] createVariables(int noWorlds) {
-	
-		Variable[] tmpVariables = new Variable[noWorlds];		
+
+		Variable[] tmpVariables = new Variable[noWorlds];
 		for(int i=0; i<noWorlds; i++) {
 			tmpVariables[i] = new Variable(""+i).lower(BigMath.ZERO);
 		}
-		
+
 		return tmpVariables;
 	}
-	
+
 
 
 	/**
@@ -80,19 +80,19 @@ public class OjAlgoPclUtils {
 	 * @return the constraint matrix
 	 */
 	public static PrimitiveMatrix createConstraintMatrix(PclBeliefSet beliefSet, Set<PossibleWorld> worlds) {
-		
+
 		int i = 0;
-		
+
 		Access2D.Builder<PrimitiveMatrix> aBuilder = PrimitiveMatrix.FACTORY.getBuilder(beliefSet.size(), worlds.size());
-		
+
 		for(ProbabilisticConditional c: beliefSet) {
-			
-			int j = 0; 
+
+			int j = 0;
 			double p = c.getProbability().doubleValue();
 			PlFormula conclusion = c.getConclusion();
-			
+
 			if(c.isFact()) {
-				
+
 				for(PossibleWorld w: worlds) {
 					if(w.satisfies(conclusion)) {
 						aBuilder.set(i, j, 1-p);
@@ -100,38 +100,41 @@ public class OjAlgoPclUtils {
 					else {
 						aBuilder.set(i, j, -p);
 					}
-					
+
 					j++;
 				}
-				
+
 			}
 			else {
-				
+
 				PlFormula premise = c.getPremise().iterator().next();
-				
+
 				for(PossibleWorld w: worlds) {
-					
+
 					if(w.satisfies(premise)) {
-						
+
 						if(w.satisfies(conclusion)) {
 							aBuilder.set(i, j, 1-p);
 						}
 						else {
 							aBuilder.set(i, j, -p);
 						}
-						
+
 					}
 
 					j++;
 				}
 			}
-			
+
 			i++;
 		}
-		
+
 		return aBuilder.build();
 	}
-	
 
-	
+
+
+
+    /** Default Constructor */
+    public OjAlgoPclUtils(){}
 }
