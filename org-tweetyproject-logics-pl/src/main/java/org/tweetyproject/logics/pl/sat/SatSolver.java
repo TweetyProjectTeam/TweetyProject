@@ -29,9 +29,9 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * Abstract class for specifying SAT solvers. Also includes methods to convert 
+ * Abstract class for specifying SAT solvers. Also includes methods to convert
  * knowledge bases into the Dimacs format.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>, ConsistencyWitnessProvider<PlBeliefSet, PlFormula> {
@@ -41,7 +41,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/**
 	 * Sets the default SAT solver.
-	 * 
+	 *
 	 * @param solver some SAT solver
 	 */
 	public static void setDefaultSolver(SatSolver solver) {
@@ -50,7 +50,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/**
 	 * Returns "true" if a default SAT solver is configured.
-	 * 
+	 *
 	 * @return "true" if a default SAT solver is configured.
 	 */
 	public static boolean hasDefaultSolver() {
@@ -65,7 +65,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * (<code>org.tweetyproject.pl.sat.Sat4jSolver</code>) is returned as a fallback and
 	 * a message is printed to stderr pointing out that no default SAT solver is
 	 * configured.
-	 * 
+	 *
 	 * @return the default SAT solver.
 	 */
 	public static SatSolver getDefaultSolver() {
@@ -81,22 +81,22 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	/**
 	 * If the collection of formulas is consistent this method returns some model of
 	 * it or, if it is inconsistent, null.
-	 * 
+	 *
 	 * @return some model of the formulas or null.
 	 */
 	public abstract Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas);
-	
+
 	/**
 	 * Checks whether the given set of formulas is satisfiable.
-	 * 
+	 *
 	 * @param formulas a set of formulas.
 	 * @return "true" if the set is consistent.
 	 */
 	public abstract boolean isSatisfiable(Collection<PlFormula> formulas);
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent
 	 * (org.tweetyproject.commons.BeliefSet)
@@ -108,7 +108,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent
 	 * (java.util.Collection)
@@ -120,7 +120,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent
 	 * (org.tweetyproject.commons.Formula)
@@ -134,7 +134,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(
 	 * org.tweetyproject.commons.Formula)
@@ -148,7 +148,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(
 	 * org.tweetyproject.commons.BeliefSet)
@@ -159,7 +159,8 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	}
 
 	/**
-	 * 
+	 *
+	 * Return whether the solve ris installed
 	 * @return whether the solve ris installed
 	 */
 	public abstract boolean isInstalled();

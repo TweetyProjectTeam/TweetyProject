@@ -16,9 +16,9 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class models a weak negation for 3-valued propositional logic as proposed in [Heyninck 2020]
- * 
+ *
  * Adapted from the class "Negation"
- * 
+ *
  * @author Jonas Schumacher
  */
 public class WeakNegation extends PlFormula {
@@ -27,15 +27,15 @@ public class WeakNegation extends PlFormula {
 	 * The formula within this negation.
 	 */
 	private PlFormula formula;
-	
+
 	/**
 	 * Creates a new negation with the given formula.
 	 * @param formula the formula within the negation.
 	 */
 	public WeakNegation(PlFormula formula){
-		this.formula = formula;	
+		this.formula = formula;
 	}
-	
+
 	/**
 	 * Returns the formula within this negation.
 	 * @return the formula within this negation.
@@ -43,7 +43,7 @@ public class WeakNegation extends PlFormula {
 	public PlFormula getFormula(){
 		return this.formula;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
@@ -52,7 +52,8 @@ public class WeakNegation extends PlFormula {
 		return new WeakNegation(this.formula.collapseAssociativeFormulas());
 	}
 	/**
-	 * 
+	 *
+	 * Return hasLowerBindingPriority
 	 * @param other other
 	 * @return hasLowerBindingPriority
 	 */
@@ -63,24 +64,24 @@ public class WeakNegation extends PlFormula {
 		// negations have the highest binding priority
 		return false;
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString(){
-		if(this.formula instanceof AssociativePlFormula || this.formula instanceof WeakNegation)			
+		if(this.formula instanceof AssociativePlFormula || this.formula instanceof WeakNegation)
 			return "~" + "(" + this.formula + ")";
 		return "~" + this.formula;
 	}
-	
+
   /* (non-Javadoc)
    * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
 	public PlFormula toNnf() {
-    // remove double negation    
+    // remove double negation
     if(formula instanceof WeakNegation)
       return ((WeakNegation)formula).formula.toNnf();
 
@@ -90,17 +91,17 @@ public class WeakNegation extends PlFormula {
     if(formula instanceof Conjunction) {
       Conjunction c = (Conjunction)formula;
       Disjunction d = new Disjunction();
-      
+
       for(PlFormula p : c) {
         d.add( new WeakNegation( p ).toNnf() );
       }
       return d;
     }
-    
+
     if(formula instanceof Disjunction) {
        Disjunction d = (Disjunction)formula;
        Conjunction c = new Conjunction();
-       
+
        for(PlFormula p : d) {
          c.add( new WeakNegation( p ).toNnf() );
        }
@@ -118,7 +119,7 @@ public class WeakNegation extends PlFormula {
 			return ((WeakNegation)f).formula;
 		return new WeakNegation(f);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -169,29 +170,29 @@ public class WeakNegation extends PlFormula {
 	public boolean isLiteral() {
 		return (formula instanceof Proposition);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
 	public Set<PlFormula> getLiterals(){
 		Set<PlFormula> result = new HashSet<PlFormula>();
-		if(this.isLiteral())			
+		if(this.isLiteral())
 			result.add(this);
 		else result.addAll(this.formula.getLiterals());
 		return result;
 	}
-	
+
 	@Override
 	public PlSignature getSignature() {
 		return formula.getSignature();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
 	@Override
-	public Conjunction toCnf() {	
+	public Conjunction toCnf() {
 		if(this.formula instanceof WeakNegation){
 			return ((WeakNegation)this.formula).getFormula().toCnf();
 		}else if(this.formula instanceof Conjunction){
@@ -223,7 +224,7 @@ public class WeakNegation extends PlFormula {
 		conj.add(disj);
 		return conj;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getModels(org.tweetyproject.logics.pl.syntax.PropositionalSignature)
 	 */
@@ -234,14 +235,14 @@ public class WeakNegation extends PlFormula {
 			models.remove(w);
 		return models;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(org.tweetyproject.logics.pl.syntax.Proposition)
 	 */
 	public int numberOfOccurrences(Proposition p){
 		return this.formula.numberOfOccurrences(p);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#replace(org.tweetyproject.logics.pl.syntax.Proposition, org.tweetyproject.logics.pl.syntax.PropositionalFormula, int)
 	 */

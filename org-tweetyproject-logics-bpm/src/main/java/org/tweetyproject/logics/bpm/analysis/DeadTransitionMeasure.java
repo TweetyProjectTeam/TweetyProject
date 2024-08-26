@@ -31,6 +31,7 @@ import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGrap
 import org.tweetyproject.math.matrix.Matrix;
 
 /**
+ * The DeadTransitionMeasure
  * @author Benedikt Knopp
  */
 public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
@@ -51,7 +52,7 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 	 * the responsibilities of individual transitions for the global inconsistency value, calculated after performing the Markov walk
 	 */
 	private Map<Transition, Double> transitionCulpabilities = new HashMap<>();
-	
+
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
 		if(!reachabilityGraph.getPetriNet().checkShortCircuit()) {
@@ -63,7 +64,7 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 		markovWalk.performShortCircuitWalk();
 		return calculateInconsistencyValue(markovWalk);
 	}
-	
+
 	/**
 	 * calculates the inconsistency and culpabilities after performing the Markov walk
 	 * @param markovWalk the exhaustively performed Markov walk
@@ -91,7 +92,7 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 
 	@Override
 	/**
-	 * Build and return some strings that describe the graph and its inconsistency and culpability values 
+	 * Build and return some strings that describe the graph and its inconsistency and culpability values
 	 * This comprises 1) an ordered list of transitions with their control vector entries after exhaustively performing the Markov walk
 	 * up to convergence of the mean state, as well as the transition's culpability
 	 * and 2) the calculated global inconsistency value
@@ -101,7 +102,7 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 		List<String> infoStrings = new ArrayList<String>();
 		List<Transition> transitions = reachabilityGraph.getPetriNet().getTransitions();
 		String infoString = "";
-		
+
 		Matrix controlVector = markovWalk.getControlVector();
 		int dimension = transitions.size();
 		infoString += "<br>Transitions/ Control Vector Entries / Culpabilities: ";
@@ -111,11 +112,11 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 			infoString = "";
 			infoString += transition.getName() + " / ";
 			infoString += Math.round(controlVector.getEntry(j, 0).doubleValue() * 100.0) / 100.0 + " / ";
-			infoString += transitionCulpabilities.keySet().contains(transition) ? 
+			infoString += transitionCulpabilities.keySet().contains(transition) ?
 					Math.round(transitionCulpabilities.get(transition) * 100.0) / 100.0 : "0.0";
 			infoStrings.add(infoString);
 		}
-		
+
 		double roundOff = Math.round(inconsistencyValue * 100.0) / 100.0;
 		infoStrings.add("<br><i>---Dead Transition Inconsistency: " + roundOff + "---</i>");
 		return infoStrings;

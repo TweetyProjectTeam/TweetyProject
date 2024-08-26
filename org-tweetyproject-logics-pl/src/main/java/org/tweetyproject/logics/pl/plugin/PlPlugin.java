@@ -43,32 +43,33 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * This class provides the JSPF-Plugin for the propositional logic library
  * Currently plugin is loadable but not executed
  * @author Bastian Wolf
- *	
+ *
  */
 
 @PluginImplementation
 public class PlPlugin extends AbstractTweetyPlugin {
 
-	// <---- STATIC DELCARATION ----->	
-	
-	
-	
+	// <---- STATIC DELCARATION ----->
+
+
+
 	// this plugins call parameter
 	private static final String PROPLOGIC__CALL_PARAMETER = "pl";
 	// this plugins description
 	// private static final String PROPLOGIC__PLUGIN_DESCRIPTION = "";
 
-	
+
 	// option capabilities
 //	private static final OptionCapabilities PROPLOGIC__OPTIONS = new OptionCapabilities("TweetyProject Plugin", PROPLOGIC__CALL_PARAMETER);
 	/**
-	 * 
+	 *
+	 * Return capabilities representation
 	 * @return capabilities representation
 	 */
 	@Capabilities
 	public String[] capabilities() { return new String[] {"TweetyProject Plugin", PROPLOGIC__CALL_PARAMETER}; }
-	
-	
+
+
 	// parameter for the used solver
 	private static final String PROPLOGIC__REASONER_IDENTIFIER = "-reasoner";
 
@@ -84,8 +85,8 @@ public class PlPlugin extends AbstractTweetyPlugin {
 			"check whether result satisfies query. Please note: " +
 			"with multiple queries EACH MUST be surrounded by \" \" and separated with a single blank between.";
 
-// <---- STATIC DELCARATION ----->	
-	
+// <---- STATIC DELCARATION ----->
+
 	/**
 	 * returns the parameter used to call this plugin from the tweety cli
 	 */
@@ -101,7 +102,7 @@ public class PlPlugin extends AbstractTweetyPlugin {
 	public PlPlugin(String[] args) {
 		this();
 	}
-	
+
 	/**
 	 * actually used constructor, initializing start parameters for this plugin
 	 */
@@ -117,7 +118,7 @@ public class PlPlugin extends AbstractTweetyPlugin {
 	/**
 	 * Method to be executed with input files and parameters from tweety cli
 	 * @return an output written into a file or the console
-	 */	
+	 */
 	@Override
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 		// new belief set
@@ -129,7 +130,7 @@ public class PlPlugin extends AbstractTweetyPlugin {
 		// queries
 		PlFormula[] queries = new PlFormula[1];
 		// try to parse all given input files
-		
+
 		// TODO: check for multiple input files (kb is overwritten)!
 		for (int i = 0; i < input.length; i++) {
 			if (input[i].getAbsolutePath().endsWith(".proplogic")) {
@@ -154,7 +155,7 @@ public class PlPlugin extends AbstractTweetyPlugin {
 					reasoner = new SatReasoner();
 				} else if(tmp.getValue().equalsIgnoreCase("lingeling")){
 				// TODO: implement lingeling call
-				
+
 				} else {
 					throw new IllegalArgumentException("Illegal argument: "+ tempComParam.getIdentifier());
 				}
@@ -169,21 +170,21 @@ public class PlPlugin extends AbstractTweetyPlugin {
 					try {
 						queries[i] = (PlFormula) parser.parseFormula(tmp.getValue()[i]);
 					} catch (ParserException e) {
-						
+
 						e.printStackTrace();
 					} catch (IOException e) {
-						
+
 						e.printStackTrace();
 					}
 				}
-				
+
 			}
 		}
 
 		for(PlFormula pf : queries){
 			System.out.println(reasoner.query(plbs,pf));
 		}
-		
+
 		// TODO: handle output and return appropriate representation
 		PluginOutput out = new PluginOutput();
 		return out;

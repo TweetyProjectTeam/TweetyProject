@@ -90,6 +90,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 
 	/**
 	 *
+	 * Return add
 	 * @param edge add
 	 * @return add
 	 */
@@ -133,6 +134,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
+	 * Return the places
 	 * @return the places
 	 */
 	public List<Place> getPlaces() {
@@ -140,6 +142,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
+	 * Return the transitions
 	 * @return the transitions
 	 */
 	public List<Transition> getTransitions() {
@@ -148,6 +151,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 
 
 	/**
+	 * Setter places
 	 * @param places the places to set
 	 */
 	public void setPlaces(List<Place> places) {
@@ -155,6 +159,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
+	 * Return the initialMarkings
 	 * @return the initialMarkings
 	 */
 	public Set<Marking> getInitialMarkings() {
@@ -240,7 +245,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
-	 *
+	 * Fire
 	 * @param transition fire
 	 */
 	public void fire(Transition transition) {
@@ -309,6 +314,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	/**
 	 * Add a transition which is enabled at the specified marking and does not change the marking
 	 * @param marking the marking
+	 * @return a empty transition
 	 */
 	public Transition createEmptyTransition(Marking marking) {
 		Transition transition = new Transition(marking.getId(), "eps" );
@@ -365,6 +371,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
+	 * Setter Edges
 	 * @param edges the arks (edges)
 	 */
 	public void setEdges(Set<Edge<PetriNetNode>> edges) {
@@ -372,6 +379,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	/**
+	 * Setter transitions
 	 * @param transitions the transitions
 	 */
 	public void setTransitions(List<Transition> transitions) {

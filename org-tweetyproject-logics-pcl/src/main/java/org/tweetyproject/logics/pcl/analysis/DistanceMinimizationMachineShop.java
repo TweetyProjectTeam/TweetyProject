@@ -25,31 +25,36 @@ import org.tweetyproject.math.probability.*;
 
 /**
  * This consistency restorer uses the distance minimization inconsistency measure
- * to restore consistency. 
- * 
+ * to restore consistency.
+ *
  * @author Matthias Thimm
  *
  */
 public class DistanceMinimizationMachineShop implements BeliefBaseMachineShop  {
 
+	/** The rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootfinder
+	 */
 	public DistanceMinimizationMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/**
 	 * The p-norm parameter.
 	 */
 	private int p = 1;
-	
+
 	/**
 	 * Creates a new restorer for p=1.
 	 */
 	public DistanceMinimizationMachineShop(){
 		this(1);
 	}
-	
+
 	/**
 	 * Creates a new restorer for the given p.
 	 * @param p some parameter for the p-norm.
@@ -57,7 +62,7 @@ public class DistanceMinimizationMachineShop implements BeliefBaseMachineShop  {
 	public DistanceMinimizationMachineShop(int p){
 		this.p = p;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -72,7 +77,7 @@ public class DistanceMinimizationMachineShop implements BeliefBaseMachineShop  {
 		PclBeliefSet newBeliefSet = new PclBeliefSet();
 		DistanceMinimizationInconsistencyMeasure m = new DistanceMinimizationInconsistencyMeasure(this.rootFinder,this.p);
 		for(ProbabilisticConditional pc: beliefSet)
-			newBeliefSet.add(new ProbabilisticConditional(pc, new Probability(pc.getProbability().doubleValue()+m.getDeviation(beliefSet, pc))));		
+			newBeliefSet.add(new ProbabilisticConditional(pc, new Probability(pc.getProbability().doubleValue()+m.getDeviation(beliefSet, pc))));
 		return newBeliefSet;
 	}
 

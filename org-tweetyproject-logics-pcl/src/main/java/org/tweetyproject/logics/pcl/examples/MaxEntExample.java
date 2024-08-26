@@ -18,7 +18,6 @@
 */
 package org.tweetyproject.logics.pcl.examples;
 
-
 import java.io.IOException;
 
 import org.tweetyproject.commons.ParserException;
@@ -33,32 +32,43 @@ import org.tweetyproject.math.opt.solver.OctaveSqpSolver;
 import org.tweetyproject.math.opt.solver.Solver;
 
 /**
- * 
- * Implementation of example Grippe (flu) 
+ *
+ * Implementation of example Grippe (flu)
  * from lecture Commonsense Reasoning in summer term 2020, chapter 4, slide 204
+ *
  * @author Jonas Schumacher
  *
  */
 public class MaxEntExample {
-	public static void main(String[] args) throws ParserException, IOException{
+	/**
+	 * Main method that demonstrates MaxEnt reasoning on a probabilistic conditional
+	 * logic belief set.
+	 *
+	 * @param args Command line arguments (not used)
+	 * @throws ParserException If an error occurs while parsing the probabilistic
+	 *                         conditionals
+	 * @throws IOException     If an I/O error occurs while setting up the solver
+	 */
+	public static void main(String[] args) throws ParserException, IOException {
 		/**
 		 * @TODO: change your path to Octave
 		 */
-		OctaveSqpSolver.setPathToOctave("/Users/Jonas/Desktop/TU/Hiwi/octave-5.2.0-w64/mingw64/bin/octave-cli-5.2.0.exe");
-		// Check if solver is installed: 
+		OctaveSqpSolver
+				.setPathToOctave("/Users/Jonas/Desktop/TU/Hiwi/octave-5.2.0-w64/mingw64/bin/octave-cli-5.2.0.exe");
+		// Check if solver is installed:
 		// System.out.println(OctaveSqpSolver.isInstalled());
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());
-		
+
 		PclBeliefSet kb = new PclBeliefSet();
 		PclParser parser = new PclParser();
-		kb.add((ProbabilisticConditional)parser.parseFormula("(k|g)[1.0]"));
-		kb.add((ProbabilisticConditional)parser.parseFormula("(s|g)[0.9]"));
-		kb.add((ProbabilisticConditional)parser.parseFormula("(k|s)[0.8]"));
+		kb.add((ProbabilisticConditional) parser.parseFormula("(k|g)[1.0]"));
+		kb.add((ProbabilisticConditional) parser.parseFormula("(s|g)[0.9]"));
+		kb.add((ProbabilisticConditional) parser.parseFormula("(k|s)[0.8]"));
 
 		System.out.println("Given knowledge base: ");
 		System.out.println(kb);
 		System.out.println(kb.getMinimalSignature());
-		
+
 		DefaultMeReasoner reasoner_me_default = new DefaultMeReasoner(new GradientDescentRootFinder());
 
 		ProbabilityDistribution prob = reasoner_me_default.getModel(kb);
@@ -71,6 +81,7 @@ public class MaxEntExample {
 		System.out.println("P(s)" + prob.probability(new Proposition("s")));
 	}
 
-    /** Default Constructor */
-    public MaxEntExample(){}
+	/** Default Constructor */
+	public MaxEntExample() {
+	}
 }

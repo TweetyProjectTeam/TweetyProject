@@ -37,112 +37,142 @@ import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
 import org.tweetyproject.commons.postulates.PostulateEvaluator;
 
 /**
- * Example code for evaluating ranking semantics in regard
- * to postulates. Each postulate represents a single property
- * that characterizes how the semantics ranks arguments.
- * 
+ * Example code for evaluating ranking semantics in regard to postulates.
+ * Each postulate represents a single property that characterizes how the semantics ranks arguments.
+ *
  * @author Anna Gessler
  */
 public class RankingPostulatesExample {
-	private static Collection<RankingPostulate> all_postulates;
 
-	public static void main(String[] args) {
-		all_postulates = new HashSet<RankingPostulate>();
-		all_postulates.add(RankingPostulate.ABSTRACTION);
-		all_postulates.add(RankingPostulate.ADDITIONOFATTACKBRANCH);
-		all_postulates.add(RankingPostulate.ADDITIONOFDEFENSEBRANCH);
-		all_postulates.add(RankingPostulate.ATTACKVSFULLDEFENSE);
-		all_postulates.add(RankingPostulate.CARDINALITYPRECEDENCE);
-		all_postulates.add(RankingPostulate.COUNTERTRANSITIVITY);
-		all_postulates.add(RankingPostulate.DEFENSEPRECEDENCE);
-		all_postulates.add(RankingPostulate.DISTDEFENSEPRECEDENCE);
-		all_postulates.add(RankingPostulate.INCREASEOFATTACKBRANCH);
-		all_postulates.add(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		all_postulates.add(RankingPostulate.INDEPENDENCE);
-		all_postulates.add(RankingPostulate.NONATTACKEDEQUIVALENCE);
-		all_postulates.add(RankingPostulate.QUALITYPRECEDENCE);
-		all_postulates.add(RankingPostulate.SELFCONTRADICTION);
-		all_postulates.add(RankingPostulate.STRICTADDITIONOFDEFENSEBRANCH);
-		all_postulates.add(RankingPostulate.STRICTCOUNTERTRANSITIVITY);
-		all_postulates.add(RankingPostulate.TOTAL);
-		all_postulates.add(RankingPostulate.VOIDPRECEDENCE);
+    private static Collection<RankingPostulate> all_postulates;
 
-		CategorizerExample();
-		BurdenExample();
-		DiscussionExample();
-		TuplesExample();
-		StrategyBasedExample();
-		SAFExample();
-		CountingExample();
-		PropagationExample();
-	}
+    /**
+     * Main method that initializes the postulates and runs the different ranking reasoner examples.
+     *
+     * @param args Command line arguments (not used)
+     */
+    public static void main(String[] args) {
+        all_postulates = new HashSet<RankingPostulate>();
+        all_postulates.add(RankingPostulate.ABSTRACTION);
+        all_postulates.add(RankingPostulate.ADDITIONOFATTACKBRANCH);
+        all_postulates.add(RankingPostulate.ADDITIONOFDEFENSEBRANCH);
+        all_postulates.add(RankingPostulate.ATTACKVSFULLDEFENSE);
+        all_postulates.add(RankingPostulate.CARDINALITYPRECEDENCE);
+        all_postulates.add(RankingPostulate.COUNTERTRANSITIVITY);
+        all_postulates.add(RankingPostulate.DEFENSEPRECEDENCE);
+        all_postulates.add(RankingPostulate.DISTDEFENSEPRECEDENCE);
+        all_postulates.add(RankingPostulate.INCREASEOFATTACKBRANCH);
+        all_postulates.add(RankingPostulate.INCREASEOFDEFENSEBRANCH);
+        all_postulates.add(RankingPostulate.INDEPENDENCE);
+        all_postulates.add(RankingPostulate.NONATTACKEDEQUIVALENCE);
+        all_postulates.add(RankingPostulate.QUALITYPRECEDENCE);
+        all_postulates.add(RankingPostulate.SELFCONTRADICTION);
+        all_postulates.add(RankingPostulate.STRICTADDITIONOFDEFENSEBRANCH);
+        all_postulates.add(RankingPostulate.STRICTCOUNTERTRANSITIVITY);
+        all_postulates.add(RankingPostulate.TOTAL);
+        all_postulates.add(RankingPostulate.VOIDPRECEDENCE);
 
-	public static void CategorizerExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new CategorizerRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-	}
+        CategorizerExample();
+        BurdenExample();
+        DiscussionExample();
+        TuplesExample();
+        StrategyBasedExample();
+        SAFExample();
+        CountingExample();
+        PropagationExample();
+    }
 
-	public static void BurdenExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new BurdenBasedRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(100, false).prettyPrint());
-	}
+    /**
+     * Evaluates the CategorizerRankingReasoner against all postulates and prints the results.
+     */
+    public static void CategorizerExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new CategorizerRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
+    }
 
-	public static void DiscussionExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new DiscussionBasedRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
-	}
+    /**
+     * Evaluates the BurdenBasedRankingReasoner against all postulates and prints the results.
+     */
+    public static void BurdenExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new BurdenBasedRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(100, false).prettyPrint());
+    }
 
-	public static void TuplesExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new TuplesRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-	}
+    /**
+     * Evaluates the DiscussionBasedRankingReasoner against all postulates and prints the results.
+     */
+    public static void DiscussionExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new DiscussionBasedRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(2000, false).prettyPrint());
+    }
 
-	public static void StrategyBasedExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new StrategyBasedRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(10, false).prettyPrint());
-	}
+    /**
+     * Evaluates the TuplesRankingReasoner against all postulates and prints the results.
+     */
+    public static void TuplesExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new TuplesRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
+    }
 
-	public static void SAFExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new SAFRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
-	}
+    /**
+     * Evaluates the StrategyBasedRankingReasoner against all postulates and prints the results.
+     */
+    public static void StrategyBasedExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new StrategyBasedRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(10, false).prettyPrint());
+    }
 
-	public static void CountingExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new CountingRankingReasoner());
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
-	}
-	
-	public static void PropagationExample() {
-		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-		PropagationRankingReasoner propagation_reasoner = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
-		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				propagation_reasoner);
-		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
-	}
+    /**
+     * Evaluates the SAFRankingReasoner against all postulates and prints the results.
+     */
+    public static void SAFExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new SAFRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(2000, false).prettyPrint());
+    }
 
+    /**
+     * Evaluates the CountingRankingReasoner against all postulates and prints the results.
+     */
+    public static void CountingExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
+                new CountingRankingReasoner());
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(2000, false).prettyPrint());
+    }
+
+    /**
+     * Evaluates the PropagationRankingReasoner against all postulates and prints the results.
+     */
+    public static void PropagationExample() {
+        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+        PropagationRankingReasoner propagation_reasoner = new PropagationRankingReasoner(0.75, false,
+                PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg, propagation_reasoner);
+        evaluator.addAllPostulates(all_postulates);
+        System.out.println(evaluator.evaluate(2000, false).prettyPrint());
+    }
 
     /** Default Constructor */
-    public RankingPostulatesExample(){}
+    public RankingPostulatesExample() {
+    }
 }
+

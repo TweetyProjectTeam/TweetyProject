@@ -36,7 +36,12 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * @param <R> the type of ranking
  */
 public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argument, DungTheory>> implements ModelProvider<Argument,DungTheory,R>,  PostulateEvaluatable<Argument>  {
-	public abstract boolean isInstalled();
+
+    /**
+     * Is installed
+     * @return is installed status
+     */
+    public abstract boolean isInstalled();
 
     /** Default Constructor */
     public AbstractRankingReasoner(){}

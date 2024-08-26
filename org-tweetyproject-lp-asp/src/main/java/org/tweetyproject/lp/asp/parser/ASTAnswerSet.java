@@ -20,20 +20,20 @@
  */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * ASTAnswerSet
  * @author Anna Gessler
  *
  */
 public class ASTAnswerSet extends SimpleNode {
 	/**
-	 * 
+	 * Constructor
 	 * @param id ID
 	 */
 	public ASTAnswerSet(int id) {
 		super(id);
 	}
 /**
- * 
+ * Constructor
  * @param p parser
  * @param id ID
  */

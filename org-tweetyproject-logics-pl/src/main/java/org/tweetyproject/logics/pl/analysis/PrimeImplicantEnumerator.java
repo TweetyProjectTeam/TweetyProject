@@ -32,7 +32,8 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 public abstract class PrimeImplicantEnumerator {
 
 	/**
-	 * 
+	 *
+	 * Return the prime implicants
 	 * @param forms formulas
 	 * @return the prime implicants
 	 */

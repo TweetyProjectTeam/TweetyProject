@@ -9,16 +9,16 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 /**
  * This class represents an implementation of example 4, 5 and 6 from the paper
  * [Heyninck et al. 2021] Conditional Abstract Dialectical Frameworks
- * 
+ *
  * @author Jonas Schumacher
  */
 public class EvaluateWorld4V {
 /**
- * 
+ * Test method
  * @param args arguments
  */
-	public static void main(String[] args) {
-		
+public static void main(String[] args) {
+
 		/*
 		 * Create 4-valued world "abc" with v("abc") = TUI
 		 */
@@ -31,7 +31,7 @@ public class EvaluateWorld4V {
 		exampleWorld.set(c, FourValuedWorld.TruthValue.INCONSISTENT);
 		System.out.println("Example World: " + exampleWorld);
 		System.out.println("----------------------------------------------");
-		
+
 		/*
 		 * Example 4 & 5: calculate the set of sets of 2-valued worlds from the given 4-valued world
 		 */
@@ -39,7 +39,7 @@ public class EvaluateWorld4V {
 		System.out.println("Set of 3-valued worlds: " + coll3V);
 		System.out.println("Set of sets of 2-valued worlds: " + exampleWorld.getTwoValuedSetOfSets(coll3V));
 		System.out.println("----------------------------------------------");
-		
+
 		/*
 		 * Example 6: evaluate the given formulas directly:
 		 */

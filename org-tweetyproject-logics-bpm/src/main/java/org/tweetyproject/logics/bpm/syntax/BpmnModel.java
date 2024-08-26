@@ -71,6 +71,11 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return this.edges.add((Edge) edge);
 	}
 
+	/**
+	 * Add a process
+	 * @param process the proces to add
+	 * @return status
+	 */
 	public boolean add(Process process) {
 		return this.processes.add(process);
 	}
@@ -240,16 +245,22 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	 */
 	public enum BpmnNodeType {
 		/** START_EVENT */
+		START_EVENT,
 		/** END_EVENT */
+		END_EVENT,
 		/** EVENT */
+		EVENT,
 		/** ACTIVITY */
+		ACTIVITY,
 		/** EXCLUSIVE_GATEWAY */
+		EXCLUSIVE_GATEWAY,
 		/** INCLUSIVE_GATEWAY */
-		START_EVENT, END_EVENT, EVENT, ACTIVITY, EXCLUSIVE_GATEWAY, INCLUSIVE_GATEWAY
+		 INCLUSIVE_GATEWAY
 	}
 
 	/**
 	 *
+	 * Return getSortedNodes
 	 * @return getSortedNodes
 	 */
 	public Map<BpmnNodeType, Set<BpmnNode>> getSortedNodes() {

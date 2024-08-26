@@ -27,18 +27,19 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
  * meaning atoms or strictly negated atoms. In the ASP-Core-2
  * standard, the formulas represented by this class are
  * referred to as 'classical atoms'.
- * 
+ *
  * @author Anna Gessler
  * @author Tim Janus
  *
  */
 public abstract class ASPLiteral extends ASPBodyElement implements Atom, Invertable, Comparable<ASPLiteral> {
-	
+
 	/**
+	 * Return The atom representing the literal.
 	 * @return The atom representing the literal.
 	 */
 	public abstract ASPAtom getAtom();
-	
+
 	/**
 	 * Creates a copy of the literal and adds the
 	 * given term as argument to the end of the argument
@@ -47,12 +48,12 @@ public abstract class ASPLiteral extends ASPBodyElement implements Atom, Inverta
 	 * @return A copy of the literal containing the given term as new argument.
 	 */
 	public abstract ASPLiteral cloneWithAddedTerm(Term<?> term);
-	
+
 	@Override
 	public boolean isLiteral() {
 		return true;
 	}
-	
+
 	@Override
 	public abstract ASPLiteral complement();
 

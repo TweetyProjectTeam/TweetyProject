@@ -79,6 +79,7 @@ public class RootParser extends Parser {
 
 
 	/**
+	 * Return the node name free of possible namespace prefixes
 	 * @param node the node to retrieve the name for
 	 * @return the node name free of possible namespace prefixes
 	 */
@@ -89,6 +90,7 @@ public class RootParser extends Parser {
 	}
 
 	/**
+	 * Return the parsed BpmnModel
 	 * @return the parsed BpmnModel
 	 */
 	public BpmnModel getBpmnModel() {
@@ -147,6 +149,7 @@ public class RootParser extends Parser {
 	}
 
 	/**
+	 * Put node
 	 * @param node a parsed node
 	 */
 	public void putNode(BpmnNode node) {
@@ -154,6 +157,7 @@ public class RootParser extends Parser {
 	}
 
 	/**
+	 * Buffer Edge
 	 * @param edge a prepared buffered edge
 	 */
 	public void putBufferedEdge(BufferedBpmnEdge edge) {

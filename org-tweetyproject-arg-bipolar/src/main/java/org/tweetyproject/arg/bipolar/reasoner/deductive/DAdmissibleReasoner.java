@@ -29,7 +29,8 @@ import java.util.*;
  */
 public class DAdmissibleReasoner {
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */

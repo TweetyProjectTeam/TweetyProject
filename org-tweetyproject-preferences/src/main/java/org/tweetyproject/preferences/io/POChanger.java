@@ -23,7 +23,7 @@ import org.tweetyproject.preferences.PreferenceOrder;
 
 /**
  * This class is meant to provide a structure to change preference orders and compare the results between changes
- * 
+ *
  * @author Bastian Wolf
  * @param <T> generic type of elements
  *
@@ -38,15 +38,19 @@ public class POChanger<T> {
 	 * The Triple t(x,y,z) contains the element y whose value in the po x' ranking function should be overwritten with parameter z
 	 */
 	Triple<PreferenceOrder<T>,T, Integer> operation;
-	
+
+	/**
+	 * Constructor
+	 * @param op the operation
+	 */
 	public POChanger(Triple<PreferenceOrder<T>,T, Integer> op){
 		this.operation = op;
 	}
-	
+
 	/**
-	 * 
+	 * Change the order
 	 */
 	public void changeOrder(){
-		
+
 	}
 }

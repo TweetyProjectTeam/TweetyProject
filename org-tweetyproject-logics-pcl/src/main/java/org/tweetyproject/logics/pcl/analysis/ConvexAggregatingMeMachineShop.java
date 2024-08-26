@@ -30,18 +30,23 @@ import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
  * This consistency restorer determines the new probabilities of conditionals
  * by computing the ME-distribution of each single conditional, then convex
  * combining those yielding a distribution P, and extracting the new probabilities
- * from P. 
- * 
+ * from P.
+ *
  * @author Matthias Thimm
  */
 public class ConvexAggregatingMeMachineShop implements BeliefBaseMachineShop {
 
+	/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 *Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public ConvexAggregatingMeMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -61,8 +66,8 @@ public class ConvexAggregatingMeMachineShop implements BeliefBaseMachineShop {
 			PclBeliefSet bs = new PclBeliefSet();
 			bs.add(pc);
 			// name the signature explicitly in order to ensure that the distributions
-			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner(this.rootFinder).getModel(bs,(PlSignature) beliefSet.getMinimalSignature());			
+			// are defined on the same set.
+			distributions[cnt] = new DefaultMeReasoner(this.rootFinder).getModel(bs,(PlSignature) beliefSet.getMinimalSignature());
 			cnt++;
 		}
 		double[] factors = new double[beliefSet.size()];

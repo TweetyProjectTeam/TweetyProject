@@ -25,8 +25,12 @@ import org.tweetyproject.commons.util.Triple;
 import org.tweetyproject.preferences.*;
 
 @SuppressWarnings("all")
+/**
+ * POParser class
+ */
 public class POParser implements POParserConstants {
-public POParser()
+/** Constructor */
+  public POParser()
 {
 }
 
@@ -125,29 +129,40 @@ public POParser()
     throw new Error("Missing return statement in function");
   }
 
-  /* Generated Token Manager. */
+  /** Generated Token Manager. */
   public POParserTokenManager token_source;
+  /** jj input stream */
   SimpleCharStream jj_input_stream;
-  /* Current token. */
+  /** Current token. */
   public Token token;
-  /* Next token. */
+  /** Next token. */
   public Token jj_nt;
+  /** jj_ntk */
   private int jj_ntk;
+  /** jj_gen */
   private int jj_gen;
+  /** jj_la1 */
   final private int[] jj_la1 = new int[3];
+  /** jj_la1_0 */
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
+
    private static void jj_la1_init_0() {
       jj_la1_0 = new int[] {0x80,0x10,0x10,};
    }
 
-  /* Constructor with InputStream. */
+  /** Constructor with InputStream.
+   * @param stream inputstream
+  */
   public POParser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /* Constructor with InputStream and supplied encoding */
+  /** Constructor with InputStream and supplied encoding
+   *  @param stream inputstream
+   *  @param encoding the encoding
+  */
   public POParser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new POParserTokenManager(jj_input_stream);
@@ -157,11 +172,11 @@ public POParser()
     for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -171,7 +186,9 @@ public POParser()
     for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /* Constructor. */
+  /** Constructor with reader stream.
+   * @param stream reader
+  */
   public POParser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new POParserTokenManager(jj_input_stream);
@@ -181,7 +198,7 @@ public POParser()
     for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -191,7 +208,9 @@ public POParser()
     for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /* Constructor with generated Token Manager. */
+  /** Constructor with generated Token Manager.
+   * @param tm token manager
+  */
   public POParser(POParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -200,7 +219,7 @@ public POParser()
     for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(POParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -224,7 +243,7 @@ public POParser()
   }
 
 
-/* Get the next Token. */
+/** Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -233,7 +252,7 @@ public POParser()
     return token;
   }
 
-/* Get the specific Token. */
+/** Get the specific Token. */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -254,7 +273,7 @@ public POParser()
   private int[] jj_expentry;
   private int jj_kind = -1;
 
-  /* Generate ParseException. */
+  /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[8];
@@ -285,11 +304,11 @@ public POParser()
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /* Enable tracing. */
+  /** Enable tracing. */
   final public void enable_tracing() {
   }
 
-  /* Disable tracing. */
+  /** Disable tracing. */
   final public void disable_tracing() {
   }
 

@@ -45,12 +45,18 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
      * explicit listing of direct supporters and supported (for efficiency reasons)
      */
     protected Map<BArgument, Set<BipolarEntity>> supportParents = new HashMap<>();
+
+    /** explicit listing of direct supporters and supported (for efficiency reasons) */
     protected Map<BipolarEntity, Set<BArgument>> supportChildren = new HashMap<>();
 
     /**
      * explicit listing of direct attackers and attackees (for efficiency reasons)
      */
     protected Map<BArgument,Set<BipolarEntity>> attackParents = new HashMap<>();
+
+    /**
+     * explicit listing of direct attackers and attackees (for efficiency reasons)
+     */
     protected Map<BipolarEntity,Set<BArgument>> attackChildren = new HashMap<>();
 
     /**
@@ -347,7 +353,7 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
     public int getNumberOfNodes() {
         return this.size();
     }
-    
+
     public int getNumberOfEdges() {
     	int num = 0;
 		for(Argument a: this.supportParents.keySet())

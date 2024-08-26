@@ -32,6 +32,10 @@ import org.tweetyproject.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
  */
 public class IteratedGradedDefenseReasonerExample {
 
+	/**
+	 * Main method to show example
+	 * @param args cmd line args
+	 */
 	public static void main(String[] args){
 		// Taken from Figure 3 in
 		// [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]

@@ -29,7 +29,8 @@ import java.util.*;
  */
 public class CompleteReasoner {
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -53,7 +54,8 @@ public class CompleteReasoner {
         return extensions;
     }
 	/**
-	 * 
+	 *
+	 * Return model
 	 * @param bbase argumentation framework
 	 * @return model
 	 */

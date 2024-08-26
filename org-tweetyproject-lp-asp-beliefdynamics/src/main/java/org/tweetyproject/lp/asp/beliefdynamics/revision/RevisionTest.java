@@ -47,6 +47,11 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * @author Tim Janus
  */
 public class RevisionTest {
+
+	/**
+	 * Test method
+	 * @param args the args
+	 */
 	public static void main(final String [] args) {
 		RevisionCompareModel model = new RevisionCompareModel();
 		RevisionCompareView view = new RevisionCompareView();

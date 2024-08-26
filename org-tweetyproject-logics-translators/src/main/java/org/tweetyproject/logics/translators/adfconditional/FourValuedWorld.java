@@ -37,9 +37,8 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		INCONSISTENT;
 
 
-		/**
-		 *
-		 * Return Return "TRUE" iff 4-valued TruthValue is also "TRUE"
+		/**		 *
+		 * Return "TRUE" iff 4-valued TruthValue is also "TRUE"
 		 * @return Return "TRUE" iff 4-valued TruthValue is also "TRUE"
 		 */
 		public boolean getClassical(){
@@ -374,6 +373,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	}
 	/**
 	 *
+	 * Return values as string
 	 * @return values as string
 	 */
 	public String printValues() {
@@ -385,6 +385,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	}
 	/**
 	 *
+	 * Return the string representation
 	 * @param coll worlds
 	 * @return the string representation
 	 */

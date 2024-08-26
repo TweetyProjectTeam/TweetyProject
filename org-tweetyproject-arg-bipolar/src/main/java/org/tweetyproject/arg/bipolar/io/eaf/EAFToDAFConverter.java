@@ -38,6 +38,7 @@ public class EAFToDAFConverter {
 
 	/**
 	 *
+	 * Return a dungtheory version of the input
 	 * @param eafTheory a theory
 	 * @return a dungtheory version of the input
 	 */

@@ -25,8 +25,31 @@ import java.util.HashSet;
 import org.tweetyproject.arg.bipolar.inducers.LiExactPEAFInducer;
 import org.tweetyproject.arg.bipolar.syntax.BArgument;
 import org.tweetyproject.arg.bipolar.syntax.PEAFTheory;
-
+/**
+ * Provides an example of constructing a Probabilistic Argumentation Framework (PEAFTheory), adding support relationships,
+ * and inducing extensions using a specific inducer.
+ * <p>
+ * This example demonstrates the creation of a PEAFTheory instance with two arguments, setting up support relationships
+ * with specified probabilities, and then inducing extensions of the framework using the {@link LiExactPEAFInducer}.
+ */
 public class EasyPEAFExample {
+
+    /**
+     * The entry point of the example program. Constructs a {@link PEAFTheory} instance, adds arguments, defines support
+     * relationships with associated probabilities, prints the framework, and induces extensions using the
+     * {@link LiExactPEAFInducer}.
+     * <p>
+     * The following steps are performed in the main method:
+     * <ol>
+     *  <li>Create an instance of {@link PEAFTheory}.</li>
+     *  <li>Add two arguments to the framework.</li>
+     *  <li>Define support relationships between the arguments with specified probabilities.</li>
+     *  <li>Print the framework in a human-readable format using {@link PEAFTheory#prettyPrint()}.</li>
+     *  <li>Induce extensions of the framework using {@link LiExactPEAFInducer} and print each induced extension.</li>
+     * </ol>
+     *
+     * @param args command-line arguments (not used in this example)
+     */
     public static void main(String[] args) {
         PEAFTheory peafTheory = new PEAFTheory();
         peafTheory.addArgument(0);

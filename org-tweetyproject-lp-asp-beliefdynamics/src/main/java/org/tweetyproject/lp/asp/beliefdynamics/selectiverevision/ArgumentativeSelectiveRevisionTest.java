@@ -49,6 +49,13 @@ import org.tweetyproject.lp.asp.reasoner.DLVSolver;
  * @author Sebastian Homann
  */
 public class ArgumentativeSelectiveRevisionTest {
+
+
+
+	/**
+	 * Main method
+	 * @param args args
+	 */
 	public static void main(final String [] args) {
 		SimpleRevisionCompareModel model = new SimpleRevisionCompareModel();
 		SimpleRevisionCompareView view = new SimpleRevisionCompareView();

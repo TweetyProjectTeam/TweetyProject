@@ -24,10 +24,15 @@ import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGraph;
 
 /**
- * 
+ * BpmnInconsistencyMeasure class
  * @author Matthias Thimm
- *
  */
 public interface BpmnInconsistencyMeasure extends InconsistencyMeasure<ReachabilityGraph>{
+
+	/**
+	 *
+	 * Return info strings
+	 * @return info strings
+	 */
 	public List<String> getInfoStrings();
 }

@@ -43,15 +43,20 @@ import org.tweetyproject.math.probability.Probability;
  * <br> - Tuples [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]
  * <br> - Strategy-Based [Matt, Toni. A
  * game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
- * <br> - Social Abstract Argumentation with simple product semantics [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
+ * <br> - Social Abstract Argumentation with simple product semantics [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based
  * Semantics for Abstract Argumentation. AAAI 2016]
  * <br> - Iterated Graded Defense [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
  * <br> - Probabilistic Graded Semantics [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
- * 
+ *
  * @author Anna Gessler
  */
 public class RankingSemanticsExample {
-	public static void main(String[] args) {	
+
+	/**
+	 * Example
+	 * @param args cmd args
+	 */
+	public static void main(String[] args) {
 		// Example 1, taken from [Bonzon, Delobelle, Konieczny, Maudet. A Comparative
 		// Study of Ranking-Based Semantics for Abstract Argumentation. AAAI 2016]
 		DungTheory example1 = new DungTheory();
@@ -110,29 +115,29 @@ public class RankingSemanticsExample {
 		example3.add(new Attack(d2, c2));
 		example3.add(new Attack(d3, c3));
 		example3.add(new Attack(e1, d1));
-		
+
 		// Example 4a, taken from Figure 2 in
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4a = new DungTheory();
 		Argument g = new Argument("g");
 		example4a.add(a,b,c,d,e,f,g);
-		example4a.add(new Attack(b, a));	
-		example4a.add(new Attack(c, a));	
-		example4a.add(new Attack(d, a));	
-		example4a.add(new Attack(f, a));	
-		example4a.add(new Attack(e, d));	
-		example4a.add(new Attack(g, f));	
-		
+		example4a.add(new Attack(b, a));
+		example4a.add(new Attack(c, a));
+		example4a.add(new Attack(d, a));
+		example4a.add(new Attack(f, a));
+		example4a.add(new Attack(e, d));
+		example4a.add(new Attack(g, f));
+
 		// Example 4b, taken from Figure 4 in
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4b = new DungTheory();
 		example4b.add(a,b,c,d,e,f);
-		example4b.add(new Attack(a, b));	
-		example4b.add(new Attack(c, b));	
+		example4b.add(new Attack(a, b));
+		example4b.add(new Attack(c, b));
 		example4b.add(new Attack(d, e));
-		example4b.add(new Attack(e, f),new Attack(e, b));	
-		example4b.add(new Attack(f, e));		
-		
+		example4b.add(new Attack(e, f),new Attack(e, b));
+		example4b.add(new Attack(f, e));
+
 		// Example 4c, taken from Figure 4 in
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4c = new DungTheory();
@@ -142,8 +147,8 @@ public class RankingSemanticsExample {
 		example4c.add(new Attack(d, e));
 		example4c.add(new Attack(e, f), new Attack(e, e), new Attack(e, b));
 		example4c.add(new Attack(f, e), new Attack(f, b));
-		
-		// Example 5, taken from taken from Figure 2.4 in 
+
+		// Example 5, taken from taken from Figure 2.4 in
 		// [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
 		DungTheory example5 = new DungTheory();
 		Argument h = new Argument("h");
@@ -156,13 +161,13 @@ public class RankingSemanticsExample {
 		example5.add(new Attack(e,h), new Attack(e,d), new Attack(e,i));
 		example5.add(new Attack(h,g));
 		example5.add(new Attack(j,i));
-		
+
 		// Categorizer ranking semantics
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
 		System.out.println(reasoner.getClass().getSimpleName());
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example1), 2));
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example2), 3));
-		
+
 		// Burden-based ranking semantics
 		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
 		System.out.println(reasoner2.getClass().getSimpleName());
@@ -183,7 +188,7 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner4.prettyPrintTupledValues());
 		System.out.println(reasoner4.getModel(example3));
 		System.out.println(reasoner4.prettyPrintTupledValues());
-		
+
 		// Strategy based ranking semantics (Matt & Toni)
 		StrategyBasedRankingReasoner reasoner5 = new StrategyBasedRankingReasoner();
 		System.out.println(reasoner5.getClass().getSimpleName());

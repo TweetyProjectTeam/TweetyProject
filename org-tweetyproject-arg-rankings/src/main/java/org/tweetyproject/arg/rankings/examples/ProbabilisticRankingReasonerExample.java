@@ -26,12 +26,16 @@ import org.tweetyproject.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Example code for using the probabilistic ranking reasoner based on the ideas from 
+ * Example code for using the probabilistic ranking reasoner based on the ideas from
  * [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
- * 
+ *
  * @author Matthias Thimm
  */
 public class ProbabilisticRankingReasonerExample {
+	/**
+	 * Example
+	 * @param args cmd args
+	 */
 	public static void main(String[] args){
 		//Construct AAF
 		DungTheory theory = new DungTheory();
@@ -39,22 +43,22 @@ public class ProbabilisticRankingReasonerExample {
 		Argument a2 = new Argument("a2");
 		Argument a3 = new Argument("a3");
 		Argument a4 = new Argument("a4");
-		
+
 		theory.add(a1);
 		theory.add(a2);
 		theory.add(a3);
 		theory.add(a4);
-		
+
 		theory.add(new Attack(a1,a2));
 		theory.add(new Attack(a2,a3));
 		theory.add(new Attack(a3,a4));
-		
+
 		System.out.println(theory);
-		
+
 		// Compute probabilistic ranking wrt. grounded semantics, credoulous reasoning, and p=0.5
 		ProbabilisticRankingReasoner reasoner = new ProbabilisticRankingReasoner(Semantics.GROUNDED_SEMANTICS,new Probability(0.5),true);
-		
-		System.out.println(reasoner.getModel(theory));		
+
+		System.out.println(reasoner.getModel(theory));
 	}
 
     /** Default Constructor */

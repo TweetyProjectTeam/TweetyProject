@@ -27,30 +27,43 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This class demonstrates the use of the {@link EAFTheory} class to check for self-supporting sets of arguments.
+ * <p>
+ * In this example, an extended argumentation framework (EAF) is created with a set of arguments and supports/attacks between them.
+ * The goal is to check whether certain sets of arguments are self-supporting using the {@code checkIsSelfSupporting} method
+ * of the {@link EAFTheory} class.
+ * <p>
+ * @author Your Name
+ */
 public class CheckIfSelfSupportingExample {
 
+    /**
+     * The entry point of the example program that sets up an {@link EAFTheory} instance,
+     * adds arguments, defines supports and attacks, and checks whether various sets of arguments
+     * are self-supporting.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         EAFTheory eafTheory = new EAFTheory();
-        for (int i = 0; i<4; i++) {
-        	eafTheory.addArgument(i);
+        for (int i = 0; i < 4; i++) {
+            eafTheory.addArgument(i);
         }
 
-        // eta = 0
-        // a = 1
-        // b = 2
-        // c = 3
+        // Arguments:
+        // eta = 0, a = 1, b = 2, c = 3
 
         eafTheory.addSupport(new HashSet<BArgument>(new ArrayList<BArgument>(Arrays.asList(eafTheory.getArguments().get(0)))), new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(1))));
         eafTheory.addSupport(new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(0))), new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(2))));
         eafTheory.addAttack(new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(2))), new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(1))));
         eafTheory.addSupport(new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(1))), new HashSet<BArgument>(Arrays.asList(eafTheory.getArguments().get(3))));
 
-
         List<BArgument> eArguments = eafTheory.getArguments();
-
         Set<BArgument> selfSupported = new HashSet<>();
-        selfSupported.add(eArguments.get(0));
 
+        // Various checks for self-supporting sets of arguments
+        selfSupported.add(eArguments.get(0));
         System.out.println("{eta} is " + eafTheory.checkIsSelfSupporting(selfSupported) + ", but must be true");
         selfSupported.clear();
 
@@ -76,9 +89,12 @@ public class CheckIfSelfSupportingExample {
         selfSupported.add(eArguments.get(0));
         selfSupported.add(eArguments.get(3));
         System.out.println("{eta, c} is " + eafTheory.checkIsSelfSupporting(selfSupported) + ", but must be false");
-
     }
 
-    /** Default Constructor */
-    public CheckIfSelfSupportingExample(){}
+    /**
+     * Default constructor for the {@code CheckIfSelfSupportingExample} class.
+     * Initializes an instance of this class, though it currently has no specific initialization logic.
+     */
+    public CheckIfSelfSupportingExample() {}
 }
+

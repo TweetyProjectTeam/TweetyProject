@@ -27,25 +27,25 @@ import org.tweetyproject.lp.asp.syntax.ASPOperator.ArithmeticOperator;
 
 /**
  * This class represents an arithmetic term in the ASP-Core-2 format.
- * An arithmetic term is either '-(t)' or 't x u', where t and u 
+ * An arithmetic term is either '-(t)' or 't x u', where t and u
  * are terms and x is one of the operators {+,-,*,/,\}.
- * 
+ *
  * @author Anna Gessler
  */
 public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?>,Term<?>>> {
 
 	/**
-	 * The arithmetic operator used in the arithmetic term. 
+	 * The arithmetic operator used in the arithmetic term.
 	 * Possible operators are +,-,*,/,\
-	 * 
+	 *
 	 * @see org.tweetyproject.lp.asp.syntax.ASPOperator.ArithmeticOperator
 	 */
 	private ASPOperator.ArithmeticOperator op;
-	
+
 	/**
 	 * Create a new arithmetic term with the given operator and left
 	 * and right term.
-	 * 
+	 *
 	 * @param op an arithmetic operator
 	 * @param left term
 	 * @param right term
@@ -54,19 +54,19 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 		super(new Triple<ArithmeticOperator,Term<?>,Term<?>>(op,left,right));
 		this.op = op;
 	}
-	
+
 	/**
 	 * Creates an arithmetic term of the form '-(t)'
-	 * 
+	 *
 	 * @param t a term
 	 */
 	public ArithmeticTerm(Term<?> t) {
 		this(ArithmeticOperator.MINUS,t);
 	}
-	
+
 	/**
 	 * Creates an arithmetic term of the form '-(t)'
-	 * 
+	 *
 	 * @param op an operator, either '+' or '-'
 	 * @param t a term
 	 */
@@ -76,11 +76,11 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 			throw new IllegalArgumentException("Illegal Operator. Arithmetic terms with operators * and / need to have two arguments.");
 		this.op = op;
 	}
-	
+
 	/**
 	 * Create a new arithmetic term based on the given triple of an
 	 * arithmetic operator and two terms.
-	 * 
+	 *
 	 * @param triple of arithmetic term and two terms
 	 */
 	public ArithmeticTerm(Triple<ArithmeticOperator,Term<?>,Term<?>> triple) {
@@ -111,8 +111,9 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	public TermAdapter<?> clone() {
 		return new ArithmeticTerm(this);
 	}
-	
+
 	/**
+	 * Return the arithmetic operator of this arithmetic term.
 	 * @return the arithmetic operator of this arithmetic term.
 	 */
 	public ASPOperator.ArithmeticOperator getOperator() {
@@ -127,21 +128,23 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 		this.set(new Triple<ArithmeticOperator, Term<?>, Term<?>>(op,this.getLeft(),this.getRight()));
 		this.op = op;
 	}
-	
+
 	/**
+	 * Return the left subterm of this arithmetic term.
 	 * @return the left subterm of this arithmetic term.
 	 */
 	public Term<?> getLeft() {
 		return this.get().getSecond();
 	}
-	
+
 	/**
+	 * Return the right subterm of this arithmetic term.
 	 * @return the right subterm of this arithmetic term.
 	 */
 	public Term<?> getRight() {
 		return this.get().getThird();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -43,15 +43,16 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 	 */
 	public MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider;
 	/**
-	 * 
-	 * @param minModelProvider a minimal model rpovider
+	 * Constructor
+ 	 * @param minModelProvider a minimal model rpovider
 	 */
 	public SimplePrimeImplicantEnumerator(MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider) {
 		this.minModelProvider = minModelProvider;
 	}
 	/**
-	 * 
-	 * @param primeImplicants
+	 *
+	 * Return the compressed prime implicants
+	 * @param primeImplicants the primeImplicants
 	 * @return the compressed prime implicants
 	 */
 	public Set<PlFormula> compressPrimeImplicants(Set<Set<PlFormula>> primeImplicants){
@@ -66,7 +67,7 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 						addToDisjunction = true;
 						disjunction = new Disjunction(disjunction, form);
 					}
-						
+
 				}
 				if(addToDisjunction == false) {
 					result.add(form);
@@ -78,19 +79,19 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 		return result;
 	}
 	/**
-	 * 
+	 *
 	 * @param forms the formulas to be based upon
 	 * @return the prime implicants of forms
 	 */
 	@Override
 	public List<Set<PlFormula>> getPrimeImplicants( PlBeliefSet forms){
-		
+
 		ArrayList<Set<PlFormula>> primeImplicants = new ArrayList<Set<PlFormula>>();
 		//check prime implicats for each formula individually
 		for(PlFormula curr: forms) {
 			Set<Set<PlFormula>> primeImplicantOfCurr = new  HashSet<Set<PlFormula>>();
 			Set<PossibleWorld> modelsOfCurrInterpretationSet = curr.toCnf().getModels();
-						
+
 			//iterate through all possible models f the formula
 			for(PossibleWorld model : modelsOfCurrInterpretationSet) {
 				Set<PlFormula> newModel = new HashSet<PlFormula>();
@@ -114,16 +115,16 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 					if(!newWorld.satisfies(curr)) {
 						newModel.addAll(toDelete.getLiterals());
 					}
-					
+
 				}
 				primeImplicantOfCurr.add(newModel);
 			}
 			//compress all prime implicants that only appear in some models to a disjunction
 			primeImplicants.add(this.compressPrimeImplicants(primeImplicantOfCurr));
 		}
-		
+
 		return primeImplicants;
 	}
-	
+
 
 }

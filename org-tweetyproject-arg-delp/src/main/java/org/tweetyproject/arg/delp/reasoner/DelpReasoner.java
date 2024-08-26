@@ -53,7 +53,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 	private ComparisonCriterion comparisonCriterion = new EmptyCriterion();
 
 	/**
-	 * Creates a new DelpReasoner for the given delp.	 * 
+	 * Creates a new DelpReasoner for the given delp.	 *
 	 * @param comparisonCriterion a comparison criterion used for inference
 	 */
 	public DelpReasoner(ComparisonCriterion comparisonCriterion) {
@@ -85,7 +85,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 	 * Checks whether the given argument is a warrant regarding a given set of arguments
 	 * @param groundDelp a grounded DeLP
 	 * @param argument a DeLP argument
-	 * 
+	 *
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DefeasibleLogicProgram groundDelp, DelpArgument argument){
@@ -98,7 +98,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 		}
 		return dtree.getMarking().equals(DialecticalTree.Mark.UNDEFEATED);
 	}
-	
+
 	/**
 	 * Returns all arguments with the given conclusion from the delp.
 	 * @param delp some delp.
@@ -139,7 +139,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 	 */
 	@Override
 	public Type query(DefeasibleLogicProgram delp, FolFormula f) {
-		// check query:		
+		// check query:
 		if(!f.isLiteral())
 			throw new IllegalArgumentException("Formula is expected to be a literal: "+f);
 		if(!f.isGround())
@@ -147,9 +147,9 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 
 		DefeasibleLogicProgram groundDelp = delp.ground();
 		// get all arguments for f
-		boolean warrant = false;		
+		boolean warrant = false;
 		Set<DelpArgument> args = getArgumentsWithConclusion(groundDelp, f);
-		for(DelpArgument arg: args){			
+		for(DelpArgument arg: args){
 			DialecticalTree dtree = new DialecticalTree(arg);
 			Deque<DialecticalTree> stack = new ArrayDeque<>();
 			stack.add(dtree);
@@ -164,7 +164,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 		}
 		// get all arguments for ~f (if f is not already warranted)
 		boolean comp_warrant = false;
-		if(!warrant){		
+		if(!warrant){
 			args = getArgumentsWithConclusion(groundDelp, (FolFormula) f.complement());
 			for(DelpArgument arg: args){
 				DialecticalTree dtree = new DialecticalTree(arg);
@@ -179,16 +179,21 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 					break;
 				}
 			}
-		}		
+		}
 		if(warrant){
 			return Type.YES;
 		}else if(comp_warrant){
 			return Type.NO;
 		}else{
 			return Type.UNDECIDED;
-		}		
-	}	
-	
+		}
+	}
+
+	/**
+	 *
+	 * Return is installed
+	 * @return is installed
+	 */
 	public boolean isInstalled() {
 		return true;
 	}

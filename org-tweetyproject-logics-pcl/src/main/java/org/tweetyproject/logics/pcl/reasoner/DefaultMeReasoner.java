@@ -38,18 +38,22 @@ import org.tweetyproject.math.probability.*;
  * conditional logic. This means, it computes the ME-distribution
  * for the given belief set and answers queries with respect to
  * this ME-distribution.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class DefaultMeReasoner extends AbstractPclReasoner {
-		
+	/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootfinder
+	 */
 	public DefaultMeReasoner(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pcl.reasoner.AbstractPclReasoner#query(org.tweetyproject.logics.pcl.syntax.PclBeliefSet, org.tweetyproject.logics.pl.syntax.PropositionalFormula)
 	 */
@@ -74,8 +78,8 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
 		return this.getModel(beliefbase, (PlSignature) beliefbase.getMinimalSignature());
-	}	
-	
+	}
+
 	/**
 	 * Computes the ME-distribution this reasoner bases on.
 	 * @param bs the belief set
@@ -89,7 +93,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
 		if(!bs.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-				
+
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) signature);
@@ -108,7 +112,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 		// add constraint imposed by conditionals
 		for(ProbabilisticConditional pc: bs){
 			Term leftSide = null;
-			Term rightSide = null;			
+			Term rightSide = null;
 			if(pc.isFact()){
 				for(PossibleWorld w: worlds)
 					if(w.satisfies(pc.getConclusion())){
@@ -117,7 +121,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 						else leftSide = leftSide.add(vars.get(w));
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
-			}else{				
+			}else{
 				PlFormula body = pc.getPremise().iterator().next();
 				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -130,7 +134,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 						if(rightSide == null)
 							rightSide = vars.get(w);
 						else rightSide = rightSide.add(vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -147,20 +151,20 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 		for(PossibleWorld w: worlds){
 			if(targetFunction == null)
 				targetFunction = vars.get(w).mult(new Logarithm(vars.get(w)));
-			else targetFunction = targetFunction.add(vars.get(w).mult(new Logarithm(vars.get(w))));			
+			else targetFunction = targetFunction.add(vars.get(w).mult(new Logarithm(vars.get(w))));
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(signature);
 			for(PossibleWorld w: worlds)
 				p.put(w, new Probability(solution.get(vars.get(w)).doubleValue()));
-			return p;					
+			return p;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible (the knowledge base is consistent)
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible although the knowledge base seems to be consistent.");
-		}		
+		}
 	}
 
 	@Override

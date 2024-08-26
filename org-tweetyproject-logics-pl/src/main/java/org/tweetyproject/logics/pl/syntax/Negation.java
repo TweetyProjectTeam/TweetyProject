@@ -26,7 +26,7 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 
 /**
  * This class models classical negation of propositional logic.
- * 
+ *
  * @author Matthias Thimm
  * @author Tim Janus
  */
@@ -39,7 +39,7 @@ public class Negation extends PlFormula {
 
 	/**
 	 * Creates a new negation with the given formula.
-	 * 
+	 *
 	 * @param formula the formula within the negation.
 	 */
 	public Negation(PlFormula formula) {
@@ -48,7 +48,7 @@ public class Negation extends PlFormula {
 
 	/**
 	 * Returns the formula within this negation.
-	 * 
+	 *
 	 * @return the formula within this negation.
 	 */
 	public PlFormula getFormula() {
@@ -57,7 +57,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#
 	 * collapseAssociativeFormulas()
 	 */
@@ -68,13 +68,14 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#
 	 * hasLowerBindingPriority(org.tweetyproject.logics.propositionallogic.syntax.
 	 * PropositionalFormula)
 	 */
 	/**
-	 * 
+	 *
+	 * Return whether the formula has a lower binding priority
 	 * @param other another formula
 	 * @return whether the formula has a lower binding priority
 	 */
@@ -85,7 +86,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -97,7 +98,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
 	 */
@@ -116,7 +117,7 @@ public class Negation extends PlFormula {
 		if (formula instanceof Conjunction) {
 			Conjunction c = (Conjunction) formula;
 			Disjunction d = new Disjunction();
-			for (PlFormula p : c) 
+			for (PlFormula p : c)
 				d.add(new Negation(p).toNnf());
 			return d;
 		}
@@ -124,7 +125,7 @@ public class Negation extends PlFormula {
 		if (formula instanceof Disjunction) {
 			Disjunction d = (Disjunction) formula;
 			Conjunction c = new Conjunction();
-			for (PlFormula p : d) 
+			for (PlFormula p : d)
 				c.add(new Negation(p).toNnf());
 			return c;
 		}
@@ -133,7 +134,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#trim()
 	 */
 	public PlFormula trim() {
@@ -145,7 +146,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -158,7 +159,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -200,7 +201,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
@@ -220,7 +221,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
@@ -261,7 +262,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.pl.syntax.PropositionalFormula#getModels(org.tweetyproject.
 	 * logics.pl.syntax.PropositionalSignature)
@@ -276,7 +277,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.
 	 * sf.tweety.logics.pl.syntax.Proposition)
@@ -287,7 +288,7 @@ public class Negation extends PlFormula {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.pl.syntax.PropositionalFormula#replace(org.tweetyproject.
 	 * logics.pl.syntax.Proposition,

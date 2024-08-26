@@ -39,7 +39,10 @@ public class RpclMeReasonerExample {
 	}
 
 
-
+	/**
+	 * Example
+	 * @param args cmd args
+	 */
 	public static void main(String[] args){
 		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());

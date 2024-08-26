@@ -28,15 +28,15 @@ import org.tweetyproject.commons.postulates.Postulate;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
- * An abstract postulate for ranking-based semantics in abstract argumentation; 
+ * An abstract postulate for ranking-based semantics in abstract argumentation;
  * the ancestor of all concrete postulates.
- * 
+ *
  * @author Anna Gessler
  * @author Matthias Thimm
  *
  */
 public abstract class RankingPostulate implements Postulate<Argument> {
-	
+
 	/** The ABSTRACTION postulate **/
 	public static final RankingPostulate ABSTRACTION = new RaAbstraction();
 	/** The ADDITIONOFATTACKBRANCH postulate **/
@@ -73,14 +73,14 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 	public static final RankingPostulate TOTAL = new RaTotal();
 	/** The VOIDPRECEDENCE postulate **/
 	public static final RankingPostulate VOIDPRECEDENCE = new RaVoidPrecedence();
-	
-	/* (non-Javadoc)
+
+	/** (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */
 	@Override
 	public abstract boolean isApplicable(Collection<Argument> kb);
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
 	 */
 	@Override
@@ -89,12 +89,12 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 			return this.isSatisfied(kb, (AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>>) ev);
 		throw new RuntimeException("PostulateEvaluatable of type AbstractRankingReasoner expected.");
 	}
-	
-	/* (non-Javadoc)
+
+	/** (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
 	 */
 	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev);
-	
+
 
     /** Default Constructor */
     public RankingPostulate(){}

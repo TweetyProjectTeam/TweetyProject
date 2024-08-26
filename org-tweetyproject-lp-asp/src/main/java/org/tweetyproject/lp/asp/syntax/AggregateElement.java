@@ -37,14 +37,14 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * This class models an aggregate element, meaning a set of terms and a set of
  * naf literals (= literals or default negated literals). One or more aggregate
  * elements form an aggregate atom.
- * 
+ *
  * @see org.tweetyproject.lp.asp.syntax.AggregateAtom
- * 
+ *
  * @author Anna Gessler
  */
 public class AggregateElement extends ASPElement {
 	/**
-	 * The term tuple of the aggregate element. 
+	 * The term tuple of the aggregate element.
 	 * The first element of this tuple is also known as the "weight"
 	 * of the aggregate element.
 	 */
@@ -58,7 +58,7 @@ public class AggregateElement extends ASPElement {
 	/**
 	 * Creates a new Aggregate Element with the given list of terms and the given
 	 * list of naf literals.
-	 * 
+	 *
 	 * @param terms a list of terms
 	 * @param literals a list of body elements
 	 */
@@ -70,13 +70,13 @@ public class AggregateElement extends ASPElement {
 		}
 		this.right = literals;
 	}
-	
+
 	/**
 	 * Creates a new Aggregate Element with the given single term and the given
 	 * single literal.
-	 * 
-	 * @param term 
-	 * @param literal
+	 *
+	 * @param term the term
+	 * @param literal the literal
 	 */
 	public AggregateElement(Term<?> term, ASPBodyElement literal) {
 		List<Term<?>> terms = new ArrayList<Term<?>>();
@@ -88,12 +88,12 @@ public class AggregateElement extends ASPElement {
 		elements.add(literal);
 		this.right = elements;
 	}
-	
+
 	/**
 	 * Creates a new Aggregate Element with the given single term and the given
 	 * list of naf literals.
-	 * 
-	 * @param term 
+	 *
+	 * @param term the term
 	 * @param literals a list of body elements
 	 */
 	public AggregateElement(Term<?> term, List<ASPBodyElement> literals) {
@@ -106,13 +106,13 @@ public class AggregateElement extends ASPElement {
 		}
 		this.right = literals;
 	}
-	
+
 	/**
 	 * Creates a new Aggregate Element with the given single term and the given
 	 * naf literals.
-	 * 
-	 * @param term
-	 * @param literals 
+	 *
+	 * @param term the term
+	 * @param literals the literals
 	 */
 	public AggregateElement(Term<?> term, ASPBodyElement ... literals) {
 		List<Term<?>> terms = new ArrayList<Term<?>>();
@@ -129,7 +129,7 @@ public class AggregateElement extends ASPElement {
 
 	/**
 	 * Copy-Constructor
-	 * 
+	 *
 	 * @param other another AggregateElement
 	 */
 	public AggregateElement(AggregateElement other) {
@@ -208,6 +208,7 @@ public class AggregateElement extends ASPElement {
 	}
 
 	/**
+	 * Return the left part (the term tuple) of the Aggregate element.
 	 * @return the left part (the term tuple) of the Aggregate element.
 	 */
 	public List<Term<?>> getLeft() {
@@ -216,7 +217,7 @@ public class AggregateElement extends ASPElement {
 
 	/**
 	 * Returns the right part (the literals tuple) of the Aggregate element.
-	 * 
+	 *
 	 * @return list of naf literals (= literals or default negated literals)
 	 */
 	public List<ASPBodyElement> getRight() {
@@ -225,7 +226,7 @@ public class AggregateElement extends ASPElement {
 
 	/**
 	 * Sets the term tuple of the aggregate element.
-	 * 
+	 *
 	 * @param terms the term tuple to set
 	 */
 	public void setLeft(List<Term<?>> terms) {
@@ -234,7 +235,7 @@ public class AggregateElement extends ASPElement {
 
 	/**
 	 * Sets the literal tuple of this aggregate element.
-	 * 
+	 *
 	 * @param literals the literal tuple to set
 	 */
 	public void setRight(List<ASPBodyElement> literals) {
@@ -266,12 +267,24 @@ public class AggregateElement extends ASPElement {
 		return rf;
 	}
 
-	public SortedSet<ASPLiteral> getLiterals() {
-		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		for (ASPBodyElement t : right)
-			literals.addAll(t.getLiterals());
-		return literals;
-	}
+/**
+ * Retrieves a sorted set of all the ASP literals present in the body elements of this rule.
+ *
+ * <p>
+ * This method iterates through each {@link ASPBodyElement} in the right-hand side of the rule,
+ * collects the literals from each body element, and returns them in a {@link SortedSet}.
+ * The literals are sorted according to their natural ordering.
+ * </p>
+ *
+ * @return A sorted set of {@link ASPLiteral} objects found in the body elements of the rule.
+ */
+public SortedSet<ASPLiteral> getLiterals() {
+    SortedSet<ASPLiteral> literals = new TreeSet<>();
+    for (ASPBodyElement t : right) {
+        literals.addAll(t.getLiterals());
+    }
+    return literals;
+}
 
 	@Override
 	public String toString() {
@@ -308,7 +321,7 @@ public class AggregateElement extends ASPElement {
 		}
 		return r;
 	}
-	
+
 	@Override
 	public String printToDLV() {
 		String r = "";

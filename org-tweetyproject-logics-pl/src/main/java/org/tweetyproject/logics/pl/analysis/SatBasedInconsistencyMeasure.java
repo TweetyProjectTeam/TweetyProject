@@ -37,7 +37,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 /**
  * A common base class for inconsistency measure implementations based on SAT
  * encodings.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -52,15 +52,15 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 	 * inconsistency value is found in the range of possible values.
 	 */
 	protected boolean maxIsInfinity = false;
-	
+
 	/**
 	 * An optional value that is subtracted from the calculated inconsistency value.
 	 */
 	protected int offset = 0;
-	
+
 	/**
 	 * Create a new SAT-based inconsistency measure with the given SAT solver.
-	 * 
+	 *
 	 * @param solver some SAT solver
 	 */
 	public SatBasedInconsistencyMeasure(SatSolver solver) {
@@ -73,16 +73,16 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 	public SatBasedInconsistencyMeasure() {
 		this.solver = SatSolver.getDefaultSolver();
 	}
-	
+
 	/**
 	 * Use binary search to search the space of possible inconsistency values, making
 	 * calls to the SAT encoding of "is x an upper bound for the inconsistency value
 	 * of kb".
-	 * 
+	 *
 	 * @param kb input knowledge base
 	 * @param min minimum of current search interval
 	 * @param max maximum of current search interval
-	 * 
+	 *
 	 * @return the inconsistency value, if found, infinity or an Exception otherwise
 	 */
 	protected double binarySearchValue(Collection<PlFormula> kb, int min, int max) {
@@ -100,7 +100,7 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 				// if the current value is an upper bound != 0, and the
 				// value below is not an upper bound, then
 				// the current value is exactly the inconsistency value
-				if (unsatisfiable) 
+				if (unsatisfiable)
 					return mid - offset;
 				else
 					return binarySearchValue(kb, min, mid - 1);
@@ -113,12 +113,12 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 			throw new IllegalArgumentException(
 					"No inconsistency value found in range of possible values for " + kb + ".");
 	}
-	
+
 	/**
-	 * Returns a SAT encoding of the problem 
+	 * Returns a SAT encoding of the problem
 	 * "is upper_bound an upper_bound for the inconsistency value of this
 	 * knowledge base?"
-	 * 
+	 *
 	 * @param kb belief set
 	 * @param upper_bound the upper bound to encode
 	 * @return SAT encoding based on the specific inconsistency measure
@@ -127,7 +127,7 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 
 	/**
 	 * Returns the given formula in conjunctive normal form.
-	 * 
+	 *
 	 * @param f formula
 	 * @return formula in CNF
 	 */
@@ -152,25 +152,26 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 			equivalences = new PlBeliefSet();
 		}
 		/**
-		 * 
+		 *
+		 * Return conjunction
 		 * @param kb belief set
 		 * @return conjunction
 		 */
-		public Conjunction transformFormula(PlBeliefSet kb) { 
+		public Conjunction transformFormula(PlBeliefSet kb) {
 			Conjunction res = new Conjunction();
-			for (PlFormula f : kb) 
+			for (PlFormula f : kb)
 				res.add( transformSubformula(f));
 			res.addAll(this.equivalences);
 			return res;
 		}
 		/**
-		 * 
+		 *
 		 * @param f Pl formula
 		 * @return Pl formula
 		 */
-		private PlFormula transformSubformula(PlFormula f) { 
-			if (f instanceof Proposition) 
-				return f; 
+		private PlFormula transformSubformula(PlFormula f) {
+			if (f instanceof Proposition)
+				return f;
 			else if (f instanceof Negation) {
 				PlFormula alias = generateFormulaAlias(f);
 				PlFormula innerFormula = ((Negation)f).getFormula();
@@ -249,14 +250,14 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 				transformSubformula(c);
 				return alias;
 			}
-			else 
-				throw new IllegalArgumentException("Unknown formula type " + f.getClass()); 
+			else
+				throw new IllegalArgumentException("Unknown formula type " + f.getClass());
 		}
-		
+
 		/**
 		 * Generates a new auxiliary variable that represents a subformula, if
 		 * applicable.
-		 * 
+		 *
 		 * @param input formula
 		 * @return alias variable
 		 */

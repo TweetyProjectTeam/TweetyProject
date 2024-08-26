@@ -41,9 +41,9 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * Some more examples on how aggregates work. Note that you can
  * also parse aggregates using ASPParser, which is
  * easier than manually creating them for bigger examples.
- * 
+ *
  * <br> Tested with clingo 5.4.0
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -52,7 +52,7 @@ public class AggregateExample {
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	/**
-	 * 
+	 *  Example method
 	 * @param args IOException
 	 * @throws IOException IOException
 	 * @throws ParseException ParseException
@@ -70,7 +70,7 @@ public class AggregateExample {
 		ASPAtom courseProject = new ASPAtom(course,new Constant("project"));
 		ASPAtom courseXml = new ASPAtom(course,new Constant("xml"));
 		coursesExample.add(new ASPRule(courseDb));
-		
+
 		//representing "you need to take at least one and at most two out of the courses databases, ai and networks"
 		List<ASPBodyElement> courses = new ArrayList<ASPBodyElement>();
 		courses.add(courseAi);
@@ -80,7 +80,7 @@ public class AggregateExample {
 		AggregateAtom count = new AggregateAtom(courses, 1, 2);
 		ASPRule countRule = new ASPRule(new AggregateHead(count));
 		coursesExample.add(countRule);
-		
+
 		//representing "the sum of a semester's course credits must be at least 18"
 		//the credits are represented by the weights (the term of the aggregate elements)
 		AggregateElement c1 = new AggregateElement(new NumberTerm(6), courseAi);
@@ -98,13 +98,13 @@ public class AggregateExample {
 		sum.setLeft(new NumberTerm(18), ASPOperator.BinaryOperator.LEQ);
 		ASPRule sumRule = new ASPRule(new AggregateHead(sum));
 		coursesExample.add(sumRule);
-		
+
 		//representing "you don't want to take any courses with less than 4 credits"
 		AggregateAtom min = new AggregateAtom(ASPOperator.AggregateFunction.MIN, aggregateElements);
 		min.setLeft(new NumberTerm(4), ASPOperator.BinaryOperator.LEQ);
 		ASPRule minRule = new ASPRule(new AggregateHead(min));
 		coursesExample.add(minRule);
-		
+
 		System.out.println("Full example:\n" + coursesExample);
 		ClingoSolver solver = new ClingoSolver(CLINGO_PATH);
 		List<AnswerSet> as = solver.getModels(coursesExample);

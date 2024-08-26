@@ -32,7 +32,8 @@ import java.util.*;
  */
 public class AdmissibleReasoner {
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -58,7 +59,8 @@ public class AdmissibleReasoner {
         return extensions;
     }
 	/**
-	 * 
+	 *
+	 * Return model
 	 * @param bbase argumentation framework
 	 * @return model
 	 */

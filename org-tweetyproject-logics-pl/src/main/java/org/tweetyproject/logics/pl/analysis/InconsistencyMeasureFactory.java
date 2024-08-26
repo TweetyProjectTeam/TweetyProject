@@ -81,13 +81,13 @@ public abstract class InconsistencyMeasureFactory {
 		public String id;
 		/**label*/
 		public String label;
-		
+
 		Measure(String id, String label){
 			this.id = id;
-			this.label = label;			
+			this.label = label;
 		}
 		/**
-		 * 
+		 * Getter
 		 * @param id ID
 		 * @return the measure
 		 */
@@ -98,7 +98,7 @@ public abstract class InconsistencyMeasureFactory {
 			return null;
 		}
 	}
-		
+
 	/**
 	 * Creates a new inconsistency measure of the given type with default
 	 * settings.
@@ -121,7 +121,7 @@ public abstract class InconsistencyMeasureFactory {
 				return new HsInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
 			case PR:
 				return new PrInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
-			case ETA:			
+			case ETA:
 				return new EtaInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
 			case DALALSUM:
 				return new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator());

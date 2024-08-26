@@ -31,6 +31,7 @@ import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGrap
 import org.tweetyproject.math.matrix.Matrix;
 
 /**
+ *  The UnlivenessMeasure
  * @author Benedikt Knopp
  */
 public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
@@ -50,7 +51,7 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 	/**
 	 * the responsibilities of individual transitions for the global inconsistency value, calculated after performing the Markov walk
 	 */
-	private Map<Transition, Double> transitionCulpabilities = new HashMap<>();	
+	private Map<Transition, Double> transitionCulpabilities = new HashMap<>();
 
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
@@ -64,7 +65,7 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 		calculateInconsistencyValue(markovWalk);
 		return inconsistencyValue;
 	}
-	
+
 	/**
 	 * calculates the inconsistency and culpabilities after performing the Markov walk
 	 * @param markovWalk the exhaustively performed Markov walk
@@ -75,7 +76,7 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 		double entry;
 		int dimension = normalizedControlVector.getXDimension();
 		List<Transition> transitions = reachabilityGraph.getPetriNet().getTransitions();
-		Set<Transition> unliveTransitions = new HashSet<>();		
+		Set<Transition> unliveTransitions = new HashSet<>();
 		for(int j = 0; j < dimension; j++) {
 			entry = normalizedControlVector.getEntry(j,0).simplify().doubleValue();
 			if(Math.abs(entry) < MEASURE_TOLERANCE) {
@@ -91,8 +92,8 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 
 	@Override
 	/**
-	 * Build and return some strings that describe the graph and its inconsistency and culpability values 
-	 * This comprises 1) an ordered list of transitions with their normalized control vector entries after exhaustively performing 
+	 * Build and return some strings that describe the graph and its inconsistency and culpability values
+	 * This comprises 1) an ordered list of transitions with their normalized control vector entries after exhaustively performing
 	 * the Markov walk up to convergence of the mean state, as well as the transition's culpability
 	 * and 2) the calculated global inconsistency value
 	 * @return the info strings
@@ -115,9 +116,9 @@ public class UnlivenessMeasure implements BpmnInconsistencyMeasure {
 		infoStrings.add("<br><i>---Unliveness inconsistency: " + roundOff + "---</i>");
 		return infoStrings;
 	}
-	
-	
-	
+
+
+
 
     /** Default Constructor */
     public UnlivenessMeasure(){}

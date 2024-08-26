@@ -44,8 +44,9 @@ public class MarkingEdge extends Edge<Marking> implements Comparable<MarkingEdge
 		super(from, to);
 		this.setTransition(transition);
 	}
-	
+
 	/**
+	 * Return the transition
 	 * @return the transition
 	 */
 	public Transition getTransition() {
@@ -53,6 +54,7 @@ public class MarkingEdge extends Edge<Marking> implements Comparable<MarkingEdge
 	}
 
 	/**
+	 * Setter Transition
 	 * @param transition the transition to set
 	 */
 	public void setTransition(Transition transition) {
@@ -61,7 +63,7 @@ public class MarkingEdge extends Edge<Marking> implements Comparable<MarkingEdge
 
 	@Override
 	public int compareTo(MarkingEdge that) {
-		// MarkingEdge implements Comparable in order to 
+		// MarkingEdge implements Comparable in order to
 		// have a fixed (but arbitrary) order among all edges
 		// for that purpose we just use the hash code.
 		return this.hashCode() - that.hashCode();

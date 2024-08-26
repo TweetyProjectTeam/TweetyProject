@@ -188,6 +188,8 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     }
 
     /**
+     *
+     * Return a list of arguments
      * @return a list of arguments
      */
     public ArrayList<BArgument> getArguments() {

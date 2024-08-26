@@ -26,7 +26,7 @@ import org.tweetyproject.logics.pcl.syntax.PclBeliefSet;
 /**
  * Repairs a probabilistic belief base by taking the probabilities from the probability function
  * that minimizes the "minimal violation inconsistency measure" with respect to the euclidean norm.
- * 
+ *
  * @author Nico Potyka
  */
 public abstract class MinimalViolationEuclideanMachineShop implements BeliefBaseMachineShop {
@@ -34,28 +34,34 @@ public abstract class MinimalViolationEuclideanMachineShop implements BeliefBase
 
 
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
 	@Override
 	public BeliefBase repair(BeliefBase beliefBase) {
 
-		
+
 		if(!(beliefBase instanceof PclBeliefSet)) {
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		}
-		
-		
+
+
 		return repair((PclBeliefSet) beliefBase);
-	
+
 	}
 
-	
-	protected abstract BeliefBase repair(PclBeliefSet beliefSet);
-	
 
-	
+	/**
+	 *
+	 * Return repaired belief base
+	 * @param beliefSet
+	 * @return repaired belief base
+	 */
+	protected abstract BeliefBase repair(PclBeliefSet beliefSet);
+
+
+
 
 
     /** Default Constructor */

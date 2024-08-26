@@ -31,12 +31,17 @@ import java.util.Iterator;
 
 /**
  *
- *
+ * POWriter class
  * @author Bastian Wolf
  * @param <T> generic preference order type
  */
 public class POWriter<T> {
 
+	/**
+	 * Write to file
+	 * @param filename the filename
+	 * @param po preference order
+	 */
 	public void writeToFile(String filename, PreferenceOrder<T> po){
 
 		PrintWriter pw = null;

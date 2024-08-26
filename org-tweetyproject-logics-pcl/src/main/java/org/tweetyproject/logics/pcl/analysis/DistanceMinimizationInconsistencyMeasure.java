@@ -46,15 +46,15 @@ import org.tweetyproject.math.term.Variable;
 /**
  * This class models the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], extended
  * by the use of different p-norms.
- * 
+ *
  * @author Matthias Thimm
  */
 public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	private OptimizationRootFinder rootFinder;
-		
 
-	
+
+
 	/**
 	 * The p-norm parameter.
 	 */
@@ -64,30 +64,32 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 	 * For archiving inconsistency values.
 	 */
 	private Map<PclBeliefSet,Double> archive = new HashMap<PclBeliefSet,Double>();
-		
+
 	/**
-	 * For archiving eta/tau values. 
+	 * For archiving eta/tau values.
 	 */
 	private Map<PclBeliefSet,Map<ProbabilisticConditional,Double>> archiveDevs = new HashMap<PclBeliefSet,Map<ProbabilisticConditional,Double>>();
-	
+
 	/**
 	 * Creates a new measure for p=1.
+	 * @param rootFinder the rootFinder
 	 */
 	public DistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder){
 		this(rootFinder,1);
 	}
-	
+
 	/**
 	 * Creates a new measure for the given p.
+	 * @param rootFinder the rootFinder
 	 * @param p some parameter for the p-norm.
 	 */
 	public DistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder, int p){
 		this.p = p;
 		this.rootFinder = rootFinder;
 	}
-	
-	/** 
-	 * Returns the deviation of the given conditional in the 
+
+	/**
+	 * Returns the deviation of the given conditional in the
 	 * nearest consistent belief set.
 	 * @param beliefSet some belief set.
 	 * @param pc a probabilistic conditional.
@@ -98,17 +100,17 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 			this.inconsistencyMeasure(beliefSet);
 		return this.archiveDevs.get(beliefSet).get(pc);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
+	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
-		// first check whether the belief set is consistent		
+		// first check whether the belief set is consistent
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
@@ -128,14 +130,14 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 			if(normConstraint == null)
 				normConstraint = var;
 			else normConstraint = normConstraint.add(var);
-		}		
+		}
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
 		// For each conditional add variables eta and tau and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> etas = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> taus = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
-		i = 0;		
+		i = 0;
 		for(ProbabilisticConditional c: beliefSet){
 			FloatVariable eta = new FloatVariable("e" + i,0,1);
 			FloatVariable tau = new FloatVariable("t" + i++,0,1);
@@ -154,7 +156,7 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau);
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -167,7 +169,7 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -177,10 +179,10 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			problem.add(new Equation(leftSide,rightSide));			
+			problem.add(new Equation(leftSide,rightSide));
 		}
-		problem.setTargetFunction(targetFunction);		
-		try{			
+		problem.setTargetFunction(targetFunction);
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			if(this.p > 1)
@@ -198,6 +200,6 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
-		}		
+		}
 	}
 }

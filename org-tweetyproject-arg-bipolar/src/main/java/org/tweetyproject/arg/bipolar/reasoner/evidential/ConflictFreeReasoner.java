@@ -39,7 +39,8 @@ public class ConflictFreeReasoner {
     public ConflictFreeReasoner() {
     }
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -67,7 +68,8 @@ public class ConflictFreeReasoner {
         return extensions;
     }
 	/**
-	 * 
+	 *
+	 * Return model
 	 * @param bbase argumentation framework
 	 * @return model
 	 */

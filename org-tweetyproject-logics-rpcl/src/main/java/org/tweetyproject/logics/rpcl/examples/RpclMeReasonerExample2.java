@@ -40,6 +40,13 @@ public class RpclMeReasonerExample2 {
 	public RpclMeReasonerExample2() {
 	}
 
+	/**
+	 * Example
+	 * @param args cmd args
+	 * @throws FileNotFoundException error
+	 * @throws ParserException error
+	 * @throws IOException error
+	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		RpclParser parser = new RpclParser();
 		RpclBeliefSet bs = parser

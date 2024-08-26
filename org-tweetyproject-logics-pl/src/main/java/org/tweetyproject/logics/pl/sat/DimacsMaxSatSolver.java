@@ -39,15 +39,15 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
  * Generic class for Dimacs-based MaxSAT solvers.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public abstract class DimacsMaxSatSolver extends MaxSatSolver{
-	
+
 	/** For temporary files. */
 	private static File tempFolder = null;
-	
+
 	/**
 	 * Set the folder for temporary files created by a MaxSAT solver.
 	 * @param tempFolder some temp folder.
@@ -55,13 +55,13 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	public static void setTempFolder(File tempFolder){
 		DimacsMaxSatSolver.tempFolder = tempFolder;
 	}
-	
+
 	/**
 	 * Converts the given MaxSAT instance (i.e. hard and soft constraints, the
-	 * latter can only be clauses) to their string representation in 
+	 * latter can only be clauses) to their string representation in
 	 * Dimacs WCNF. Note that a single formula may be represented as multiple
 	 * clauses, so there is no simple correspondence between the formulas of the
-	 * set and the Dimacs representation. 
+	 * set and the Dimacs representation.
 	 * @param hardConstraints a collection of formulas
 	 * @param softConstraints a map mapping clauses to weights
 	 * @param prop_index a map of propositions (=signature) to the indices that are used for writing the clauses.
@@ -71,7 +71,7 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	protected static List<String> convertToDimacsWcnf(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index) throws IllegalArgumentException{
 		List<String> result = new LinkedList<>();
 		String s;
-		int num_clauses = 0;		
+		int num_clauses = 0;
 		int sum_weight = 0;
 		for(PlFormula f: softConstraints.keySet()) {
 			sum_weight += softConstraints.get(f);
@@ -88,19 +88,19 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 						s += prop_index.get(p2) + " ";
 					else if(p2.isLiteral()){
 						s += "-" + prop_index.get((Proposition)((Negation)p2).getFormula()) + " ";
-					}else throw new IllegalArgumentException("Clause expected.");				
+					}else throw new IllegalArgumentException("Clause expected.");
 				}
 				s += "0";
 				result.add(s);
-			}					
-		}		
+			}
+		}
 		sum_weight++;
 		for(PlFormula p: hardConstraints){
 			Conjunction conj;
 			if (p.isClause()) {
 				conj = new Conjunction();
 				conj.add(p);
-			} else 
+			} else
 				conj = p.toCnf();
 			for(PlFormula p1: conj){
 				num_clauses++;
@@ -113,8 +113,8 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 						s += prop_index.get(p2) + " ";
 					else if(p2.isLiteral()){
 						s += "-" + prop_index.get((Proposition)((Negation)p2).getFormula()) + " ";
-					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
-				}			
+					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");
+				}
 				s += "0";
 				result.add(s);
 			}
@@ -126,10 +126,10 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 
 	/**
 	 * Converts the given MaxSAT instance (i.e. hard and soft constraints, the
-	 * latter can only be clauses) to their string representation in 
+	 * latter can only be clauses) to their string representation in
 	 * Dimacs WCNF and writes it to a temporary file. Note that a single formula may be represented as multiple
 	 * clauses, so there is no simple correspondence between the formulas of the
-	 * set and the Dimacs representation. 
+	 * set and the Dimacs representation.
 	 * @param hardConstraints a collection of formulas
 	 * @param softConstraints a map mapping clauses to weights
 	 * @param prop_index a map of propositions (=signature) to the indices that are used for writing the clauses.
@@ -138,31 +138,32 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	 */
 	protected static File createTmpDimacsWcnfFile(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index) throws IOException{
 		List<String> r = DimacsMaxSatSolver.convertToDimacsWcnf(hardConstraints, softConstraints, prop_index);
-		File f = File.createTempFile("tweety-sat", ".wcnf", DimacsMaxSatSolver.tempFolder);		
+		File f = File.createTempFile("tweety-sat", ".wcnf", DimacsMaxSatSolver.tempFolder);
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		for(String s: r)
 			writer.println(s);
-		writer.close();		
+		writer.close();
 		return f;
 	}
-	
+
 	@Override
 	public boolean isSatisfiable(Collection<PlFormula> formulas) {
 		Pair<Map<Proposition,Integer>,Map<Integer,Proposition>> i = DimacsSatSolver.getDefaultIndices(formulas);
 		return this.isSatisfiable(formulas, i.getFirst());
 	}
-	
+
 
 	/**
-	 * 
+	 *
+	 * Return "true" if the set is consistent.
 	 * @param formulas  a set of formulas.
 	 * @param prop_index maps propositions to the number that shall be used to
 	 * 		represent it (a natural number > 0).
 	 * @return "true" if the set is consistent.
 	 */
 	public abstract boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index);
-	
+
 	/**
 	 * interpretation of formulas
 	 */
@@ -172,15 +173,16 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 		set.addAll(softConstraints.keySet());
 		Pair<Map<Proposition,Integer>,Map<Integer,Proposition>> i = DimacsSatSolver.getDefaultIndices(set);
 		return this.getWitness(hardConstraints, softConstraints,i.getFirst(),i.getSecond());
-		
+
 	}
-	
+
 	@Override
 	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas) {
 		return this.getWitness(formulas, new HashMap<>());
 	}
 	/**
-	 * 
+	 *
+	 * Return the interpetation
 	 * @param hardConstraints hard constraints for interpretation
 	 * @param softConstraints  soft constraints for interpretation
 	 * @param prop_index the index
@@ -188,7 +190,7 @@ public abstract class DimacsMaxSatSolver extends MaxSatSolver{
 	 * @return the interpetation
 	 */
 	public abstract Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index);
-	
+
 
     /** Default Constructor */
     public DimacsMaxSatSolver(){}

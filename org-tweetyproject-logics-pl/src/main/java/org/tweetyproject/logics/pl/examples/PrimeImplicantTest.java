@@ -32,14 +32,14 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * 
+ * PrimeImplicantTest class
  * @author Sebastian Franke
  *
  */
 public class PrimeImplicantTest {
 
 	/**
-	 * 
+	 * Test method
 	 * @param args command line arguments
 	 * @throws ParserException a parser exception
 	 * @throws IOException io exception
@@ -53,13 +53,13 @@ public class PrimeImplicantTest {
 		beliefSet.add((PlFormula)parser.parseFormula("!p && (q || !r) "));
 		beliefSet.add((PlFormula)parser.parseFormula("!q"));
 		System.out.println("beliefSet: " + beliefSet.toString());
-		
+
 		List<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
 		System.out.println("prime implicants: " + aa.toString());
 		PrimeImplicantBasedInconsistencyMeasure incons = new PrimeImplicantBasedInconsistencyMeasure();
 		System.out.println("conflicts of prime implicants: " + incons.getConflicts(beliefSet));
 		System.out.println("inconsistency: " + incons.inconsistencyMeasure(beliefSet));
-		
+
 	}
 
     /** Default Constructor */

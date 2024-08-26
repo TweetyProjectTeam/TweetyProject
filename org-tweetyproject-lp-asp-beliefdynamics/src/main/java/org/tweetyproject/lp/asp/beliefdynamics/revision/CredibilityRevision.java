@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.beliefdynamics.CredibilityRevisionNonIterative;
@@ -162,24 +163,52 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		this(solver, 10);
 	}
 
-	public CredibilityRevision(ASPSolver solver, int maxInt) {
-		this.solver = solver;
-		this.maxInt = maxInt;
-	}
+	/**
+     * Constructs a {@code CredibilityRevision} instance with the specified ASP solver and maximum integer value.
+     *
+     * @param solver the ASP solver to be used for solving logic programs
+     * @param maxInt the maximum integer value used for processing or constraints
+     * @throws NullPointerException if {@code solver} is {@code null}
+     */
+    public CredibilityRevision(ASPSolver solver, int maxInt) {
+        this.solver = Objects.requireNonNull(solver, "Solver cannot be null");
+        this.maxInt = maxInt;
+    }
 
-	public Collection<AnswerSet> getLastAnswerset() {
-		return lastAnswersets;
-	}
+    /**
+     * Retrieves the collection of the last answer sets obtained from the solver.
+     *
+     * @return a {@code Collection} of {@link AnswerSet} representing the last answer sets
+     */
+    public Collection<AnswerSet> getLastAnswerset() {
+        return lastAnswersets;
+    }
 
-	public Collection<AnswerSet> getLastProjectedAnswerSet() {
-		return lastProjectedAnswersets;
-	}
+    /**
+     * Retrieves the collection of the last projected answer sets obtained from the solver.
+     *
+     * @return a {@code Collection} of {@link AnswerSet} representing the last projected answer sets
+     */
+    public Collection<AnswerSet> getLastProjectedAnswerSet() {
+        return lastProjectedAnswersets;
+    }
 
-	public void setAnswersetProcessing(AnswersetProcessing processing) {
-		if(processing == null)
-			throw new IllegalArgumentException("An answer set processing must be used.");
-		this.processing = processing;
-	}
+    /**
+     * Sets the processing strategy for answer sets.
+     * <p>
+     * The provided {@link AnswersetProcessing} instance is used to process answer sets after solving.
+     * If {@code processing} is {@code null}, an {@link IllegalArgumentException} is thrown.
+     * </p>
+     *
+     * @param processing the {@link AnswersetProcessing} strategy to be used
+     * @throws IllegalArgumentException if {@code processing} is {@code null}
+     */
+    public void setAnswersetProcessing(AnswersetProcessing processing) {
+        if (processing == null) {
+            throw new IllegalArgumentException("An answer set processing must be used.");
+        }
+        this.processing = processing;
+    }
 
 	@Override
 	public Program revise(List<Collection<ASPRule>> ol) {
@@ -374,6 +403,10 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		return litId;
 	}
 
+	/**
+	 * Test method
+	 * @param args the args
+	 */
 	public static void main(String [] args) {
 		Program p1 = new Program();
 		p1.addFact(new ASPAtom("b"));

@@ -21,7 +21,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * class ASTAggrFunc
  * @author Anna Gessler
  *
  */
@@ -29,14 +29,14 @@ public class ASTAggrFunc extends SimpleNode {
 	/**func*/
 	public String func;
 /**
- * 
+ *constructor
  * @param id ID
  */
 	public ASTAggrFunc(int id) {
 		super(id);
 	}
 /**
- * 
+ *constructor
  * @param p parser
  * @param id ID
  */
@@ -44,7 +44,7 @@ public class ASTAggrFunc extends SimpleNode {
 		super(p, id);
 	}
 /**
- * 
+ * setter func
  * @param f func
  */
 	public void func(String f) {
