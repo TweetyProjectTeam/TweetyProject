@@ -93,7 +93,7 @@ public class RevisionTest {
 			}
 
 			@Override
-			public File getCurrentDiretory() {
+			public File getCurrentDirectory() {
 				return args.length >= 2 ? new File(args[1]) : new File(".");
 			}
 		});

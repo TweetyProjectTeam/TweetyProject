@@ -154,7 +154,7 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 		if (ev.getSource() == view.btnAdd) {
 			final JFileChooser chooser = new JFileChooser();
 			chooser.setAcceptAllFileFilterUsed(false);
-			chooser.setCurrentDirectory(fileHandler.getCurrentDiretory());
+			chooser.setCurrentDirectory(fileHandler.getCurrentDirectory());
 			chooser.setFileFilter(fileHandler.getFilter());
 			chooser.setMultiSelectionEnabled(true);
 			chooser.showOpenDialog(view);
@@ -257,7 +257,7 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 		}
 
 		@Override
-		public File getCurrentDiretory() {
+		public File getCurrentDirectory() {
 			return new File(".");
 		}
 	}

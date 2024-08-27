@@ -621,6 +621,12 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
    * @return The kind of the next token in the input stream, represented as an
    *         integer.
    */
+  static private int jj_ntk() {
+	    if ((jj_nt=token.next) == null)
+	      return (jj_ntk = (token.next=RpclCondensedProbabilityDistributionParserTokenManager.getNextToken()).kind);
+	    else
+	      return (jj_ntk = jj_nt.kind);
+	  }
   /**
    * A list of entries representing expected token sequences during parsing.
    */

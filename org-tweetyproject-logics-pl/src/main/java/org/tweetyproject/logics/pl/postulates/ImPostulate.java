@@ -111,5 +111,5 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	}
 
     /** Default Constructor */
-    public SimpleMUSComparator(){}
+    public ImPostulate(){}
 }

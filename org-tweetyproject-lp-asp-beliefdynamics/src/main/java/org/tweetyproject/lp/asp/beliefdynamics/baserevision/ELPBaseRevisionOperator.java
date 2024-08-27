@@ -57,6 +57,7 @@ public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<ASPRul
     public ELPBaseRevisionOperator(ASPSolver solver, SelectionFunction<ASPRule> selection) {
         this.solver = Objects.requireNonNull(solver, "Solver cannot be null");
         this.selection = Objects.requireNonNull(selection, "Selection function cannot be null");
+    }
 
 	/*
 	 * (non-Javadoc)
