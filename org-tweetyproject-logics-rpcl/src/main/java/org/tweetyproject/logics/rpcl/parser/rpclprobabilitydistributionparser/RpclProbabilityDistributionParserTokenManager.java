@@ -189,9 +189,13 @@ static final long[] jjtoToken = {
 static final long[] jjtoSkip = {
    0x1eL,
 };
+/** input_stream */
 static protected SimpleCharStream input_stream;
+/** jjrounds */
 static private final int[] jjrounds = new int[5];
+/** jjstateSet */
 static private final int[] jjstateSet = new int[10];
+/** current char */
 static protected char curChar;
 /** Constructor.
  * @param stream the char stream
@@ -251,6 +255,16 @@ static public void SwitchTo(int lexState)
       curLexState = lexState;
 }
 
+/**
+ * Creates and returns a new {@link Token} object.
+ * <p>
+ * This method fills in the details of the {@link Token} such as its image (i.e., the string representation),
+ * the position in the input stream (beginning and ending line and column numbers), and the token kind (i.e., its type).
+ * It fetches the token image either from the pre-defined literal images or from the input stream itself, based on the matched kind.
+ * </p>
+ *
+ * @return A {@link Token} object representing the matched token in the input stream.
+ */
 static protected Token jjFillToken()
 {
    final Token t;
