@@ -24,13 +24,18 @@ import org.ojalgo.matrix.PrimitiveMatrix;
 
 /**
  * Provides some utility functions for solving quadratic problems with ojAlgo.
- * 
+ *
  * @author NicoPotyka
  *
  */
 public class OjAlgoMathUtils {
 
-	
+	/** Constructor */
+	public OjAlgoMathUtils() {
+	}
+
+
+
 	/**
 	 * Create (m,n)-matrix containing only ones.
 	 * @param m some int
@@ -45,14 +50,14 @@ public class OjAlgoMathUtils {
 				aBuilder.set(i, j, 1);
 			}
 		}
-		
+
 		return aBuilder.build();
 	}
-	
+
 
 	/**
 	 * Create unity matrix multiplied by scalar.
-	 *  
+	 *
 	 * @param n some int
 	 * @param scalar a double value
 	 * @return the unity matrix
@@ -60,16 +65,16 @@ public class OjAlgoMathUtils {
 	public static PrimitiveMatrix getUnityMultiple(int n, double scalar) {
 
 		Access2D.Builder<PrimitiveMatrix> aBuilder = PrimitiveMatrix.FACTORY.getBuilder(n, n);
-		
+
 		for(int i=0; i<n; i++) {
 			aBuilder.set(i, i, scalar);
 		}
-		
+
 		return aBuilder.build();
 	}
 
 
-	
 
-	
+
+
 }

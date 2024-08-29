@@ -54,6 +54,14 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class ApacheCommonsSimplexEx2 {
+
+	/** Constructor */
+	public ApacheCommonsSimplexEx2() {
+	}
+
+
+
+
 	/**
 	 * constructor
 	 * @return problem

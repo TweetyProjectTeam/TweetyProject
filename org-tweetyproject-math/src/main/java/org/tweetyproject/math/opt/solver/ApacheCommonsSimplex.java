@@ -49,22 +49,26 @@ import org.apache.commons.math.optimization.linear.SimplexSolver;
 
 /**
  * This class is a wrapper for the Apache Commons Math Simplex implementation.
- * See http://commons.apache.org/math.  
+ * See http://commons.apache.org/math.
  * Version used is 2.0
  * @author Matthias Thimm
  */
 public class ApacheCommonsSimplex extends Solver {
+	/** Constructor */
+	public ApacheCommonsSimplex() {
+	}
+
 
 	/**
 	 * Logger.
 	 */
 	//private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);
-	
+
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
 	 */
 	public int MAXITERATIONS = 50000;
-	
+
 	/**
 	 * Whether only positive solutions are allowed.
 	 */
@@ -77,7 +81,7 @@ public class ApacheCommonsSimplex extends Solver {
 	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) {
 		if(!((ConstraintSatisfactionProblem) problem).isLinear())
 			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
-		//this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");				
+		//this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(OptProbElement s: problem)
@@ -98,7 +102,7 @@ public class ApacheCommonsSimplex extends Solver {
 		double constTerm = 0;
 		if(problem instanceof OptimizationProblem){
 			// bring target function in linear form
-			Sum t = ((OptimizationProblem)problem).getTargetFunction().toLinearForm();			
+			Sum t = ((OptimizationProblem)problem).getTargetFunction().toLinearForm();
 			for(Term summand: t.getTerms()){
 				// as t is in linear form every summand is a product
 				Product p = (Product) summand;
@@ -116,10 +120,10 @@ public class ApacheCommonsSimplex extends Solver {
 					coefficientsTarget[origVars2Idx.get(v)] += coefficient;
 				}
 			}
-		}		
+		}
 		LinearObjectiveFunction target = new LinearObjectiveFunction(coefficientsTarget,constTerm);
 		// 5.) Represent the constraints
-		Set<LinearConstraint> finalConstraints = new HashSet<LinearConstraint>();			
+		Set<LinearConstraint> finalConstraints = new HashSet<LinearConstraint>();
 		for(Statement s: constraints){
 			double[] coefficientsConstraint = new double[numVariables];
 			for(i = 0; i< numVariables; i++)
@@ -171,7 +175,8 @@ public class ApacheCommonsSimplex extends Solver {
 	}
 
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

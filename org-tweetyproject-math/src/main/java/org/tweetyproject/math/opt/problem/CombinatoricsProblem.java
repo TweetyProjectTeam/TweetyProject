@@ -30,32 +30,32 @@ import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 
 
 /**
- * This class implements a combinatorial optimization problem 
+ * This class implements a combinatorial optimization problem
  * @author Sebastian Franke
  */
 
 public abstract class CombinatoricsProblem extends GeneralConstraintSatisfactionProblem{
-	
+
 	/**an adjacence matrix that is supposed to show which vertices are connected to each other in a graph represantation of the problem*/
-	protected int[][] graphRepresantation; 
-	
+	protected int[][] graphRepresantation;
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Static constant for the type "minimization"
 	 */
 	public static final int MINIMIZE = 0;
-	
+
 	/**
 	 * Static constant for the type "maximization"
 	 */
 	public static final int MAXIMIZE = 1;
-	
+
     /**elements*/
 	public List<ElementOfCombinatoricsProb> elements;
 	/**constraints*/
 	Collection<Statement> constraints = new ArrayList<Statement>();
-		
+
 	/**
 	 * constructor
 	 * @param elements elements
@@ -67,7 +67,8 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 		this.graphRepresantation = graphRepresantation;
 	}
 	/**
-	 * 
+	 *
+	 * Return the differnece of the lists
 	 * @param c the List to be subtracted from "this" List
 	 * @return the differnece of the lists
 	 */
@@ -78,17 +79,19 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 	    	if(!c.contains(i))
 	    			newColl.add(i);
 	    }
-	
+
 	    return newColl;
 	}
 	/**
+	 * Return if the solution sol is valid under the constraints of the problem
 	 * @param sol is the solution to be viewd
 	 * @return if the solution sol is valid under the constraints of the problem
 	 */
 	public abstract double sumOfWeights(ArrayList<ElementOfCombinatoricsProb> sol);
-	
+
 	/**
-	 * 
+	 *
+	 * Return neighborhood
 	 * @param currSol current solution
 	 * @param minIterations minimum iterations
 	 * @param maxIteration maximum iterations
@@ -117,49 +120,50 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 		return result;
 	}
 	/**
-	 * 
+	 *
+	 * Return Graph representation
 	 * @return Graph representation
 	 */
 	public int[][] getGraphrepresentation() {
 		return graphRepresantation;
 	}
-	
 
-	
-	/**create a solution that changes the solution currSol a little bit 
+
+
+	/**create a solution that changes the solution currSol a little bit
 	 * (i.e.: for TSP: swap 2 cities; for KnapSack: add a random element)
 	 * for currSol == null: create a random solution
 	 * @param currSol the current solution
 	 * @return the solution
 	 */
 	public abstract ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(ArrayList<ElementOfCombinatoricsProb> currSol);
-	
+
 	/**
 	 * evaluates the solution
 	 * @param sol some solution
-	 * @return the target function for sol 
+	 * @return the target function for sol
 	 */
 	public abstract double evaluate(ArrayList<ElementOfCombinatoricsProb> sol);
-	
-	/**checks if a given solution is valid under all constraints	 
+
+	/**checks if a given solution is valid under all constraints
 	 * @param sol some solution
 	 * @return true iff the solution is valid
 	 */
 	public abstract boolean isValid(ArrayList<ElementOfCombinatoricsProb> sol);
-	
-	/**for Ant optimization: give a chance between 0 and 1 for accepting solutionComponent to 
+
+	/**for Ant optimization: give a chance between 0 and 1 for accepting solutionComponent to
 	 * the solution sol
-	 * 
-	 * @param solutionComponent: Element to be checked	 * 
+	 *
+	 * @param solutionComponent: Element to be checked	 *
 	 * @param getCurrentIndex: the length of the solution
 	 * @param initialReference: default starting point for the solution (the first Element in the solution)
 	 * @param sol: array representation of a solution (needed for Ant optimization)
 	 * @return the heuristic value
 	 */
 	public abstract Double getHeuristicValue(ElementOfCombinatoricsProb solutionComponent,
-			Integer getCurrentIndex, ElementOfCombinatoricsProb initialReference, 
+			Integer getCurrentIndex, ElementOfCombinatoricsProb initialReference,
 			ElementOfCombinatoricsProb[] sol) ;
-	
+
 	/**
 	 * for Ant optimization: represent the problem as an adjacence matrix
 	 * @return representation

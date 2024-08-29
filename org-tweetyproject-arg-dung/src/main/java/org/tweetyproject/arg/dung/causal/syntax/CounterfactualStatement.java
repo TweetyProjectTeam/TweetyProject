@@ -28,11 +28,12 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 /**
  * This class describes a counterfactual causal statement like:
  * given phi, if v had been x then rho would be true
- * 
+ *
  * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
- * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
+ * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at
+ * 1st International Workshop on Argumentation
  * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
- * 
+ *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
@@ -41,9 +42,13 @@ public class CounterfactualStatement extends InterventionalStatement {
 
 	/**
 	 * Creates a new counterfactual causal statement.
-	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
+	 *
+	 * @param conclusions   Conclusions, which would be true, iff this statement is
+	 *                      true and the interventions were realized and the
+	 *                      premises are met.
 	 * @param interventions Maps explainable atoms to boolean values.
-	 * @param premises PlFormulas which have to be true, so that the conclusions can be drawn.
+	 * @param premises      PlFormulas which have to be true, so that the
+	 *                      conclusions can be drawn.
 	 */
 	public CounterfactualStatement(HashSet<PlFormula> conclusions, HashMap<Proposition, Boolean> interventions,
 			HashSet<PlFormula> premises) {
@@ -52,39 +57,56 @@ public class CounterfactualStatement extends InterventionalStatement {
 
 	@Override
 	public boolean holds(CausalKnowledgeBase cKbase) {
-		for(var conclusion : this.getConclusions()) {
-			if(!checkCounterFactualStatement(cKbase, conclusion)) {
+		for (var conclusion : this.getConclusions()) {
+			if (!checkCounterFactualStatement(cKbase, conclusion)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
-	public void VisualizeHolds(CausalKnowledgeBase cKbase)
-	{
+	public void VisualizeHolds(CausalKnowledgeBase cKbase) {
 		var causalKnowledgeBaseCopy = getIntervenedTwinModel(cKbase);
 		causalKnowledgeBaseCopy.addAll(this.getPremises());
 		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
-				"Premises: " + this.getPremises().toString() 
-				+ " \n Interventions: " + this.getInterventions().toString()
-				+ " \n Conclusions: " + this.getConclusions().toString());
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,
+				"Premises: " + this.getPremises().toString()
+						+ " \n Interventions: " + this.getInterventions().toString()
+						+ " \n Conclusions: " + this.getConclusions().toString());
 	}
-	
+
 	private boolean checkCounterFactualStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
 		var newKnowledgeBase = getIntervenedTwinModel(cKbase);
 		return newKnowledgeBase.entails(this.getPremises(), conclusion);
 	}
 
+	/**
+	 * Creates a new intervened twin model from the provided causal knowledge base.
+	 *
+	 * <p>
+	 * This method generates the twin model from the given causal knowledge base,
+	 * applies the specified
+	 * interventions to this twin model, and returns a new
+	 * {@code CausalKnowledgeBase} containing the
+	 * intervened twin model, assumptions, and beliefs from the original knowledge
+	 * base.
+	 *
+	 * @param cKbase The original {@code CausalKnowledgeBase} from which the twin
+	 *               model and interventions are derived.
+	 * @return A new {@code CausalKnowledgeBase} that represents the intervened twin
+	 *         model, including the original
+	 *         assumptions and beliefs (excluding structural equations) from the
+	 *         input knowledge base.
+	 */
 	protected CausalKnowledgeBase getIntervenedTwinModel(CausalKnowledgeBase cKbase) {
 		var twin = cKbase.getCausalModel().getTwinModel();
 		var interventions = this.getInterventions();
-		for(var expAtom : interventions.keySet()) {
-			twin.intervene( new Proposition(expAtom.getName() + "*"), interventions.get(expAtom).booleanValue());
+		for (var expAtom : interventions.keySet()) {
+			twin.intervene(new Proposition(expAtom.getName() + "*"), interventions.get(expAtom).booleanValue());
 		}
-		
+
 		var newKnowledgeBase = new CausalKnowledgeBase(twin, cKbase.getAssumptions());
 		newKnowledgeBase.addAll(cKbase.getBeliefsWithoutStructuralEquations());
 		return newKnowledgeBase;

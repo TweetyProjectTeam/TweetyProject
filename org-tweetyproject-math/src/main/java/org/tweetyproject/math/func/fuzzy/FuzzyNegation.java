@@ -22,11 +22,16 @@ import org.tweetyproject.math.func.SimpleFunction;
 
 /**
  * Represents a fuzzy negation, i.e., a generalization of a logical
- * negation on values in [0,1]. 
- * 
+ * negation on values in [0,1].
+ *
  * @author Matthias Thimm
  */
 public abstract class FuzzyNegation implements SimpleFunction<Double,Double>{
+
+
+	/** Constructor */
+	public FuzzyNegation() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.SimpleFunction#eval(java.lang.Object)

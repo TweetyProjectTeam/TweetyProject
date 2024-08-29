@@ -23,13 +23,7 @@ import java.util.Vector;
 import libsvm.svm_node;
 /**
  * A default observation is a vector of double values, representing
- * an observation for machine learning tasks. This class extends `Vector<Double>`
- * and implements the `Observation` interface.
- *
- * <p>
- * The class includes a method for converting the observation into an array of
- * `svm_node` objects, which can be used for SVM-based machine learning algorithms.
- * </p>
+ * an observation for machine learning tasks.
  *
  * @author Matthias Thimm
  */

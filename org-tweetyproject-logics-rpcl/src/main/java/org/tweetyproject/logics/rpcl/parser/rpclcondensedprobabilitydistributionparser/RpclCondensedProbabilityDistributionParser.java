@@ -540,7 +540,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   /**
    * Reinitialise.
    *
-   * @param the tokenmanager
+   * @param tm the tokenmanager
    */
   public void ReInit(RpclCondensedProbabilityDistributionParserTokenManager tm) {
     token_source = tm;

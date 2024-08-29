@@ -49,17 +49,6 @@ public class CounterTransitivityReasoner extends AbstractRankingReasoner<Lattice
 
     /**
      * The solver used to determine the ranking of arguments.
-     * <p>
-     * This enum defines different strategies for ranking arguments. The strategies include:
-     * <ul>
-     * <li>{@code quality}: A strategy based on the quality of arguments.</li>
-     * <li>{@code cardinality}: A strategy based on the number of arguments.</li>
-     * <li>{@code qualityFirst}: A strategy that prioritizes quality over cardinality.</li>
-     * <li>{@code cardinalityFirst}: A strategy that prioritizes cardinality over quality.</li>
-     * <li>{@code gfpCardinality}: A strategy using the greatest fixed-point cardinality.</li>
-     * <li>{@code simpleDominance}: A strategy based on simple dominance relationships.</li>
-     * </ul>
-     * </p>
      */
     public enum solver {
         /**
@@ -93,6 +82,11 @@ public class CounterTransitivityReasoner extends AbstractRankingReasoner<Lattice
         simpleDominance
     }
 
+	/**
+	 * Constructor
+	 * @param sol solver
+	 * @param rank the rank
+	 */
 	public CounterTransitivityReasoner(solver sol, LatticePartialOrder<Argument, DungTheory> rank) {
 		this.sol = sol;
 		this.rank = rank;

@@ -175,7 +175,6 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
 
     /**
      * Gets the symbol used to separate the head and body in rules.
-     * This is the arrow symbol used to define rules in the form of head <- body.
      *
      * @return the symbol separating the head and body in rules
      */

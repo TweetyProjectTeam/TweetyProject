@@ -25,7 +25,11 @@ import java.util.*;
  * @author Matthias Thimm
  */
 public abstract class Constant extends Term{
-	
+
+	/** Constructor */
+	public Constant() {
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#value()
 	 */
@@ -33,7 +37,7 @@ public abstract class Constant extends Term{
 	public Constant value(){
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getVariables()
 	 */
@@ -41,7 +45,7 @@ public abstract class Constant extends Term{
 	public Set<Variable> getVariables(){
 		return new HashSet<Variable>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getProducts()
 	 */
@@ -49,7 +53,7 @@ public abstract class Constant extends Term{
 	public Set<Product> getProducts(){
 		return new HashSet<Product>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getSums()
 	 */
@@ -57,7 +61,7 @@ public abstract class Constant extends Term{
 	public Set<Sum> getSums(){
 		return new HashSet<Sum>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getProducts()
 	 */
@@ -65,7 +69,7 @@ public abstract class Constant extends Term{
 	public Set<Minimum> getMinimums(){
 		return new HashSet<Minimum>();
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getMaximums()
@@ -74,7 +78,7 @@ public abstract class Constant extends Term{
 	public Set<Maximum> getMaximums(){
 		return new HashSet<Maximum>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getAbsoluteValues()
 	 */
@@ -82,7 +86,7 @@ public abstract class Constant extends Term{
 	public Set<AbsoluteValue> getAbsoluteValues(){
 		return new HashSet<AbsoluteValue>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#collapseAssociativeOperations()
 	 */
@@ -90,7 +94,7 @@ public abstract class Constant extends Term{
 	public void collapseAssociativeOperations(){
 		// do nothing
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#expandAssociativeOperations()
 	 */
@@ -98,7 +102,7 @@ public abstract class Constant extends Term{
 	public void expandAssociativeOperations(){
 		// do nothing
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#simplify()
 	 */
@@ -106,14 +110,14 @@ public abstract class Constant extends Term{
 	public Term simplify(){
 		return this;
 	}
-	
+
 	@Override
 	public List<Term> getTerms(){
 		ArrayList<Term> result = new ArrayList<Term>();
 		result.add(this);
 		return result;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#toLinearForm()
 	 */
@@ -125,7 +129,7 @@ public abstract class Constant extends Term{
 		sum.addTerm(p);
 		return sum;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#toQuadraticForm()
 	 */
@@ -137,15 +141,15 @@ public abstract class Constant extends Term{
 		sum.addTerm(p);
 		return sum;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#derive(org.tweetyproject.math.term.Variable)
 	 */
 	@Override
-	public Term derive(Variable v){		
+	public Term derive(Variable v){
 		return new IntegerConstant(0);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#isContinuous(org.tweetyproject.math.term.Variable)
 	 */
@@ -153,7 +157,7 @@ public abstract class Constant extends Term{
 	public boolean isContinuous(Variable v){
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#replaceTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */

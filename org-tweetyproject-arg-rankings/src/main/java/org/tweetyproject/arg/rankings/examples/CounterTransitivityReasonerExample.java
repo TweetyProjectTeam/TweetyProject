@@ -36,18 +36,6 @@ public class CounterTransitivityReasonerExample {
 
 	   /**
      * The main method that sets up an argumentation framework, applies various ranking strategies, and prints the results.
-     * <p>
-     * This method:
-     * <ul>
-     * <li>Constructs a {@link DungTheory} representing the argumentation framework.</li>
-     * <li>Adds arguments and attacks to the theory.</li>
-     * <li>Creates a {@link LatticePartialOrder} to define acceptability relations between arguments.</li>
-     * <li>Uses the {@link CounterTransitivityReasoner} to evaluate different ranking strategies based on the provided
-     *     {@link LatticePartialOrder}.</li>
-     * <li>Prints the results of the different strategies including cardinality, quality, quality first, cardinality first,
-     *     GFP (greatest fixed-point cardinality), and dominance.</li>
-     * </ul>
-     * </p>
      *
      * @param args Command-line arguments (not used in this example).
      */

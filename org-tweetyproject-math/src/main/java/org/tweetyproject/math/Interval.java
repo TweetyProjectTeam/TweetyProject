@@ -23,21 +23,21 @@ import java.util.Iterator;
 
 /**
  * This class contains a set of closed set (interval) of possible numbers
- * 
+ *
  * @author Bastian Wolf
  *
- * @param <S> the (number-)type of the elements in this interval 
+ * @param <S> the (number-)type of the elements in this interval
  */
 
 public class Interval<S extends Number> implements NumberSet<S> {
-	
+
 	private NumberSet<S> intervalset;
-	
+
 	private S lowerBound;
-	
+
 	private S upperBound;
-	
-	
+
+
 	/**
 	 * interval
 	 * @param interval the interval to be constructed
@@ -45,7 +45,7 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	public Interval(NumberSet<S> interval){
 		this.intervalset = interval;
 	}
-	
+
 	/**
 	 *  interval
 	 * @param lower lower bound
@@ -56,17 +56,17 @@ public class Interval<S extends Number> implements NumberSet<S> {
 		this.upperBound = upper;
 	}
 
-	
+
 	/**
 	 * Returns the lower bound
 	 * @return the lower bound
-	 * 
+	 *
 	 */
 	public S getLowerBound() {
 		return lowerBound;
 	}
 	/**
-	 * sets lower bound 
+	 * sets lower bound
 	 * @param lowerBound lower bound
 	 */
 
@@ -75,14 +75,15 @@ public class Interval<S extends Number> implements NumberSet<S> {
 		updateIntervallSetOnChange();
 	}
 	/**
-	 * 
+	 *
+	 * Return upperBound
 	 * @return upperBound
 	 */
 	public S getUpperBound() {
 		return upperBound;
 	}
 	/**
-	 * 
+	 * Set upper bound
 	 * @param upperBound the upper bound
 	 */
 	public void setUpperBound(S upperBound) {
@@ -91,7 +92,8 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	}
 
 	/**
-	 * 
+	 *
+	 * Return interval set
 	 * @return interval set
 	 */
 	public NumberSet<S> getIntervalset() {
@@ -99,21 +101,22 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	}
 
 	/**
-	 * 
+	 *
+	 * set interval
 	 * @param intervalset to be set
 	 */
 	public void setIntervalset(NumberSet<S> intervalset) {
 		this.intervalset = intervalset;
 	}
-	
-	
+
+
 	/**
-	 * updates interval on changes of its lower or upper bounds 
+	 * updates interval on changes of its lower or upper bounds
 	 */
 	private void updateIntervallSetOnChange(){
-		
+
 	}
-	
+
 	/**
 	 * checks, whether an element is within this interval
 	 * @param a some element
@@ -121,13 +124,13 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	 */
 	public boolean isElementOf(S a){
 		// TODO add
-		
+
 		return false;
-		
+
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public boolean add(S e) {
@@ -135,7 +138,7 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public boolean addAll(Collection<? extends S> c) {

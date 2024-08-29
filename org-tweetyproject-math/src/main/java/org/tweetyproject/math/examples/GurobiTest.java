@@ -42,6 +42,12 @@ import org.tweetyproject.math.term.Variable;
  *
  */
 public class GurobiTest {
+
+	/**Constructor */
+	public GurobiTest() {
+	}
+
+
 	/**
 	 * constructor
 	 * @return problem
@@ -49,10 +55,10 @@ public class GurobiTest {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1", -100 ,100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
-		
+
 		Inequation constr2 = new Inequation(m2, new IntegerConstant(12), 1);
 		Inequation constr3 = new Inequation(m1, new IntegerConstant(50), 1);
-	
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 
 		constraints.add(constr2);
@@ -66,9 +72,9 @@ public class GurobiTest {
 
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -90,8 +96,8 @@ public class GurobiTest {
 		GurobiOptimizer solver = new GurobiOptimizer();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 	/*
 	public static void main(String[] args) {
@@ -106,7 +112,7 @@ public class GurobiTest {
 			GRBLinExpr expr = new GRBLinExpr();
 			expr.addTerm(1.0, x); expr.addTerm(1.0, y); expr.addTerm(2.0, z);
 			model.setObjective(expr, GRB.MAXIMIZE);
-			
+
 			// Add constraint: x + 2 y + 3 z <= 4
 			GRBQuadExpr expr1 ;
 			expr1 = new GRBQuadExpr();
@@ -139,10 +145,10 @@ public class GurobiTest {
 
 			for(Sum s : sums) {
 				GRBExpr term = opt.parseTerm(s);
-			
+
 				System.out.println("phhh: " + term.toString());}
-			
-			
+
+
 		} catch (GRBException e) {
 			System.out.println("Error code: " + e.getErrorCode() + ". " +
 			e.getMessage());
@@ -154,11 +160,11 @@ public class GurobiTest {
 		//Target funcion = (m1+1)^2+m2^2
 //		Term opt = new Product(new Sum(m1,new FloatConstant(1)), new Sum(m1,new FloatConstant(1)));
 		Term opt = new Power(new Sum(m1,new FloatConstant(1)), new FloatConstant(2));
-		
-		
+
+
 		OptimizationProblem prob = new OptimizationProblem();
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}*/
 }

@@ -45,25 +45,25 @@ import org.tweetyproject.math.term.Variable;
  * This class implements a simple genetic optimization algorithm for solving
  * optimization problems with box or equality constraints on float variables.
  * Note that equality constraints are encoded in the target function!
- * 
+ *
  * @author Matthias Thimm
  */
 public class SimpleGeneticOptimizationSolver extends Solver{
 
-	
+
 	/** The probability of changing the value of a variable in the mutation step. */
-	private static final double VAR_MUTATE_PROB = 0.2; 
+	private static final double VAR_MUTATE_PROB = 0.2;
 	/** The magnitude of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
 	/** The probability of taking the average value of a variable in the crossover step. */
-	private static final double VAR_CROSSOVER_PROB = 0.2; 
-	
+	private static final double VAR_CROSSOVER_PROB = 0.2;
+
 	/** A very large number for encoding constraints in the target function. */
 	private static final IntegerConstant VERY_LARGE_NUMBER = new IntegerConstant(10000);
-	
+
 	/** For randomization */
 	private Random rand = new Random();
-	
+
 	/** The size of the population */
 	private int populationSize;
 	/** How many new individuals are created by mutation (per individual) */
@@ -74,11 +74,11 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	private double precision;
 	/** The minimal number of iterations. */
 	private int minIterations;
-	
+
 	/**
 	 * Compares individuals by the fitness (value of the target function)
 	 */
-	private class FitnessComparator implements Comparator<Map<FloatVariable,Term>>{		
+	private class FitnessComparator implements Comparator<Map<FloatVariable,Term>>{
 		private Term minT;
 		public FitnessComparator(Term t){
 			this.minT = t;
@@ -92,9 +92,9 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			if(val1 < val2)
 				return -1;
 			return 1;
-		}		
-	}	
-	
+		}
+	}
+
 	/**
 	 * Creates a new simple genetic optimization solver.
 	 * @param populationSize The size of the population
@@ -109,8 +109,8 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		this.populationIncreaseCrossOver = populationIncreaseCrossOver;
 		this.minIterations = minIterations;
 		this.precision = precision;
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -119,7 +119,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
-		OptimizationProblem p = (OptimizationProblem) problem; 
+		OptimizationProblem p = (OptimizationProblem) problem;
 		// only box constraints allowed
 		if(!p.isEmpty()){
 			for(OptProbElement s: p){
@@ -133,7 +133,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		}
 		return this.solve(p.getTargetFunction(), p.getType());
 	}
-	
+
 	/**
 	 * Mutates the given individual
 	 * @param ind some individual
@@ -145,7 +145,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			if(this.rand.nextDouble() < SimpleGeneticOptimizationSolver.VAR_MUTATE_PROB){
 				// positive or negative mutation
 				if(rand.nextBoolean()){
-					
+
 					double val = ind.get(v).doubleValue();
 					val = val + rand.nextDouble() * SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
 					//System.out.println(val);
@@ -160,7 +160,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		}
 		return mutant;
 	}
-	
+
 	/**
 	 * Makes a crossover of the two individuals
 	 * @param ind1 some individual
@@ -178,12 +178,12 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		}
 		return child;
 	}
-	
+
 	/**
 	 * Returns the variable assignment that maximizes/minimizes the given term
 	 * (which only contains variables with defined upper and lower bounds).
 	 * @param t the term to be evaluated
-	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
+	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE
 	 * @return the optimal variable assignment
 	 * @throws GeneralMathException if some issue occured during computation.
 	 */
@@ -221,14 +221,14 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		Map<FloatVariable,Term> currentBest = null;
 		PriorityQueue<Map<FloatVariable,Term>> p = new PriorityQueue<Map<FloatVariable,Term>>(this.populationSize,new FitnessComparator(minT));
 		int it = 0;
-		
+
 		do{
 			previous_val = current_val;
 			// create new population
 			p.clear();
 			//System.out.println("Pop: " +currentPopulation.size());
 			p.addAll(currentPopulation);
-			
+
 			// mutate
 			for(Map<FloatVariable,Term> ind: currentPopulation)
 				for(int i = 0; i < this.populationIncreaseMutation; i++)
@@ -241,9 +241,9 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 							p.add(this.crossover(ind1, ind2));
 			// select best individuals
 			currentBest = p.peek();
-			
-			current_val = minT.replaceAllTerms(p.peek()).doubleValue();			
-			currentPopulation.clear();			
+
+			current_val = minT.replaceAllTerms(p.peek()).doubleValue();
+			currentPopulation.clear();
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
 		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
@@ -255,9 +255,10 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			result.put(v, currentBest.get(v));
 		return result;
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

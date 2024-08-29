@@ -91,8 +91,7 @@ public class SimplePlLogicArgument extends Argument {
     }
 
     /**
-     * Returns a string representation of this argument in the form
-     * "<support, claim>".
+     * Returns a string representation
      *
      * @return The string representation of this argument.
      */

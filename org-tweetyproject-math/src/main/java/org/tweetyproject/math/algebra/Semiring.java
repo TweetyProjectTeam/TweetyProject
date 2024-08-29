@@ -153,13 +153,15 @@ public abstract class Semiring<T> {
      * Note: Concrete implementations in subclasses should provide the actual logic.
      *
      * @return The inverse of element.
+     * @param dividend the dividend
+     * @param divisor the divisor
      */
     public abstract T divide(T dividend, T divisor);
 
     /**
      * Converts a value in a semiring to a numerical representation.
      *
-     * @param weight The value in the semiring.
+     * @param value The value in the semiring.
      * @return The numerical representation of the semiring value.
      * @throws IllegalArgumentException If the provided semiring value is not a valid numeric representation.
      */

@@ -33,8 +33,6 @@ import org.kohsuke.args4j.spi.Setter;
  * in the command line and convert them into {@link ComparisonCriterion} instances.
  * </p>
  *
- * @param <ComparisonCriterion> the type of the comparison criterion handled by this option handler
- *
  * @author Linda Briesemeister
  */
 public final class CriterionOptionHandler extends OptionHandler<ComparisonCriterion> {

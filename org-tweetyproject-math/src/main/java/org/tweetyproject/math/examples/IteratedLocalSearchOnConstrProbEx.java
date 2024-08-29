@@ -38,12 +38,18 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class IteratedLocalSearchOnConstrProbEx {
+	/** Construcot */
+	public IteratedLocalSearchOnConstrProbEx() {
+	}
+
+
+
 	/**
 	 * constructor
 	 * @return problem
 	 */
 	public static OptimizationProblem  createConstraintSatProb1() {
-		
+
 		FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
 		Inequation constr1 = new Inequation(m1, new IntegerConstant(10), 3);
@@ -51,27 +57,27 @@ public class IteratedLocalSearchOnConstrProbEx {
 		Inequation constr3 = new Inequation(m1, new IntegerConstant(50), 1);
 		Inequation constr4 = new Inequation(m2, new IntegerConstant(0), 3);
 
-		
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 		constraints.add(constr1);
 		constraints.add(constr2);
 		constraints.add(constr3);
 		constraints.add(constr4);
-	
+
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
 
 		//Target funcion = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1, new IntegerConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
-		
-		
-		
+
+
+
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -87,7 +93,7 @@ public class IteratedLocalSearchOnConstrProbEx {
 		IteratedLocalSearchOnConstrProb solver = new IteratedLocalSearchOnConstrProb(0.5, 2, 2000);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

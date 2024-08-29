@@ -80,9 +80,6 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 	@Override
 	public abstract boolean isApplicable(Collection<Argument> kb);
 
-	/** (non-Javadoc)
-	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
-	 */
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, PostulateEvaluatable<Argument> ev) {
 		if(ev instanceof AbstractRankingReasoner<?>)
@@ -90,8 +87,13 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 		throw new RuntimeException("PostulateEvaluatable of type AbstractRankingReasoner expected.");
 	}
 
-	/** (non-Javadoc)
-	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
+
+	/**
+	 *
+	 * Return status
+	 * @param kb kb
+	 * @param ev ev
+	 * @return status
 	 */
 	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev);
 

@@ -58,7 +58,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	 * @param id       a `String` representing the unique identifier for this
 	 *                 parameter.
 	 * @param des      a `String` representing the description of this parameter.
-	 * @param interval an `Interval<Integer>` object specifying the range of valid
+	 * @param interval an object specifying the range of valid
 	 *                 integer values for this parameter.
 	 */
 	public IntegerCommandParameter(String id, String des, Interval<Integer> interval) {
@@ -76,8 +76,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	 * @param des      a `String` representing the description of this parameter.
 	 * @param interval a `String` representing the range of valid integer values for
 	 *                 this parameter.
-	 *                 The string should be in a format that can be parsed into an
-	 *                 `Interval<Integer>`.
+	 *                 The string should be in a format that can be parsed
 	 */
 	public IntegerCommandParameter(String id, String des, String interval) {
 		super(id, des);

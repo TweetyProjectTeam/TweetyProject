@@ -143,7 +143,7 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
 	 * @param subEntry Node of the subgraph, which will be connected to the super-graph
 	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
      * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
-     * @retun status of function
+     * @return status of function
 	 */
     public boolean addSubGraph(T superExit,
 			SimpleGraph<T> subGraph, T subEntry, String label ) throws NoSuchObjectException {

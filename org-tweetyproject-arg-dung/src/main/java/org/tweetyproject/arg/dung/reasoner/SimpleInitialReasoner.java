@@ -31,25 +31,55 @@ import java.util.Map;
  * Basic Implementation of a reasoner for initial sets
  * A set of arguments S is considered initial iff it is non-empty and minimal among the non-empty admissible sets
  *
- * @see: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
+ *  Ref: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
  *
  * @author Lars Bengel
  */
 public class SimpleInitialReasoner extends AbstractExtensionReasoner {
 
-    public enum Initial {
-        UA("unattacked", "ua"),
-        UC("unchallenged", "uc"),
-        C("challenged", "c");
+/**
+ * The {@code Initial} enum represents the initial status of arguments in a Dung theory.
+ * Each enum constant corresponds to a specific status, with a full description and an abbreviation.
+ */
+public enum Initial {
 
-        private final String description;
-        private final String abbreviation;
+    /**
+     * Indicates that the argument is unattacked.
+     */
+    UA("unattacked", "ua"),
 
-        Initial(String desc, String abbrev) {
-            this.description = desc;
-            this.abbreviation = abbrev;
-        }
+    /**
+     * Indicates that the argument is unchallenged.
+     */
+    UC("unchallenged", "uc"),
+
+    /**
+     * Indicates that the argument is challenged.
+     */
+    C("challenged", "c");
+
+    /**
+     * A full description of the argument's status.
+     */
+    private final String description;
+
+    /**
+     * An abbreviation of the argument's status.
+     */
+    private final String abbreviation;
+
+    /**
+     * Constructs an {@code Initial} enum constant with the specified description and abbreviation.
+     *
+     * @param desc   The full description of the argument's status.
+     * @param abbrev The abbreviation of the argument's status.
+     */
+    Initial(String desc, String abbrev) {
+        this.description = desc;
+        this.abbreviation = abbrev;
     }
+}
+
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Collection<Extension<DungTheory>> admExtensions = new SimpleAdmissibleReasoner().getModels(bbase);

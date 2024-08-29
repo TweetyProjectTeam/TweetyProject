@@ -40,6 +40,10 @@ import org.tweetyproject.math.term.Variable;
  */
 
 public class ApacheCommonsCMAESOptimizerEx {
+	/** Constructor */
+	public ApacheCommonsCMAESOptimizerEx() {
+	}
+
 /**
  * constructor
  * @return the problem
@@ -50,14 +54,14 @@ public class ApacheCommonsCMAESOptimizerEx {
 		//Target funcion = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(-1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
-		
-		
+
+
 		OptimizationProblem prob = new OptimizationProblem();
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -66,20 +70,20 @@ public class ApacheCommonsCMAESOptimizerEx {
 	 * @throws IOException IOException
 	 * @throws GeneralMathException GeneralMathException
 	 */
-	 
-	 
+
+
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();
 
 		//solve via CommonsCMAESOptimizer
 		ApacheCommonsCMAESOptimizer solver = new ApacheCommonsCMAESOptimizer(20, 2000000, 0.00001, false, 10, 1, 0.0001);
- 
+
 			Map<Variable, Term> solution = solver.solve(prob);
 
-		
+
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

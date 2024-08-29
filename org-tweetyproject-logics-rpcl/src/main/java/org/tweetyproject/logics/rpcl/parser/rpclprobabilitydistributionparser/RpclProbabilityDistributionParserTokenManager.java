@@ -208,7 +208,7 @@ public RpclProbabilityDistributionParserTokenManager(SimpleCharStream stream){
 
 /** Constructor.
  * @param stream the char stream
- * @param lexstate the state
+ * @param lexState the state
 */
 public RpclProbabilityDistributionParserTokenManager(SimpleCharStream stream, int lexState){
    this(stream);
@@ -236,7 +236,7 @@ static private void ReInitRounds()
 /** Reinitialise parser.
  *
  * @param stream the char stream
- * @param lexstate the state
+ * @param lexState the state
 */
 static public void ReInit(SimpleCharStream stream, int lexState)
 {
@@ -245,7 +245,7 @@ static public void ReInit(SimpleCharStream stream, int lexState)
 }
 
 /** Switch to specified lex state.
- * @param lexstate the state
+ * @param lexState the state
 */
 static public void SwitchTo(int lexState)
 {

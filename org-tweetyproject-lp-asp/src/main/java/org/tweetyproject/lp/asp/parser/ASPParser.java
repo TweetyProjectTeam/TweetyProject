@@ -8,7 +8,6 @@ import org.tweetyproject.lp.asp.semantics.*;
  *
  * Parser for ASP programs in the ASP-Core-2 syntax
  * (<a href="https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf">https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf</a>).
- * This parser also supports most of the <a href=" https://potassco.org/clingo/">Clingo</a>
  * and <a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">DLV</a>
  * input syntaxes and provides additional methods for parsing answer sets given by the DLV and Clingo solvers.
  * <br>See {@link org.tweetyproject.lp.asp.examples.ASPParserExample} for examples on how to use this parser.
@@ -45,7 +44,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
  * LITERAL ::== ("-")? (ID | DLV_ID | CLINGO_ID) ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM | DLV_ARITHMETIC_ID "(" Terms ")" | ARITHOP "(" TERM "," TERM "," TERM ")" <br>
- * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
+ * BINOP ::== "=" | "!=" |"&lt;&gt;" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
  * TERM ::== ID ("(" TERMS ")")? | NUMBER | STRING | VARIABLE | "_" | "(" TERM
  * ")" | "-" TERM | TERM ARITHOP TERM <br>

@@ -82,19 +82,19 @@ public class ASPOperator {
 	 * @author Anna Gessler
 	 */
 	public enum BinaryOperator {
-		    /** Represents the "less than" operator (<). */
+		    /** Represents the "less than" operator  */
 			LT,
 
-			/** Represents the "less than or equal to" operator (<=). */
+			/** Represents the "less than or equal to operator */
 			LEQ,
 
-			/** Represents the "equal to" operator (=). */
+			/** Represents the "equal to" operator  */
 			EQ,
 
-			/** Represents the "not equal to" operator (≠). */
+			/** Represents the "not equal to" operator  */
 			NEQ,
 
-			/** Represents the "greater than" operator (>). */
+			/** Represents the "greater than" operator */
 			GT,
 
 			/** Represents the "greater than or equal to" operator (>=). */

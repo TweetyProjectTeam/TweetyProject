@@ -143,6 +143,17 @@ public class MinMaxNumbering implements Map<Argument, Integer> {
         return sum;
     }
 
+    /**
+ * Retrieves a collection of arguments that have the specified rank value.
+ *
+ * <p>This method iterates through the internal ranking of arguments and collects all
+ * arguments that have a rank equal to the provided {@code value}. The resulting collection
+ * of arguments is returned as an {@code Extension} object, which is a specialized collection
+ * for handling sets of arguments.
+ *
+ * @param value The rank value to match against the arguments' ranks.
+ * @return A collection of {@code Argument} objects that have the specified rank value.
+ */
     public Collection<Argument> getArgumentsOfRank(Integer value) {
         Extension<ArgumentationFramework<Argument>> ext = new Extension<>();
         for (Argument a : this.numbering.keySet())

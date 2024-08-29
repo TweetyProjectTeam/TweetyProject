@@ -29,7 +29,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 /**
  * This class represents a default negated literal, i.e. "not a", where a is a
  * classical atom or an aggregate atom.
- * 
+ *
  * <p>
  * Note: In answer set programming, the body of a rule is usually composed of a
  * set of positive and negative literals, where this valuation
@@ -46,17 +46,22 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * flexibility, but comes at the cost that malformed constructs
  * like "not not a" are not intercepted by the library.
  * </p>
- * 
+ *
  * @author Tim Janus
  * @author Thomas Vengels
  * @author Anna Gessler
  */
 public class DefaultNegation extends ASPBodyElement {
-	
+
+	/** Constructor */
+	public DefaultNegation() {
+	}
+
+
 	/**
 	 * The default negated element.
 	 */
-	private ASPBodyElement literal; 
+	private ASPBodyElement literal;
 
 	/**
 	 * Creates new default negation with the given literal.
@@ -110,7 +115,7 @@ public class DefaultNegation extends ASPBodyElement {
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
 		return literal.getTerms(cls);
 	}
-	
+
 	@Override
 	public DefaultNegation clone() {
 		return new DefaultNegation(this);
@@ -132,17 +137,17 @@ public class DefaultNegation extends ASPBodyElement {
 
 	@Override
 	public String toString() {
-		return "not " + literal.toString(); 
+		return "not " + literal.toString();
 	}
-	
+
 	@Override
 	public String printToClingo() {
-		return "not " + literal.printToClingo(); 
+		return "not " + literal.printToClingo();
 	}
-	
+
 	@Override
 	public String printToDLV() {
-		return "not " + literal.printToDLV(); 
+		return "not " + literal.printToDLV();
 	}
 
 	@Override
@@ -161,5 +166,5 @@ public class DefaultNegation extends ASPBodyElement {
 		DefaultNegation other = (DefaultNegation) obj;
 		return Objects.equals(literal, other.literal);
 	}
-	
+
 }

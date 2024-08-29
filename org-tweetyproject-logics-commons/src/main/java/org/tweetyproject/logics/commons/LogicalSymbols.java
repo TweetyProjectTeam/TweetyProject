@@ -62,7 +62,7 @@ public class LogicalSymbols {
    /**
 	* Returns the symbol for disjunction.
 	*
-	* @return the symbol for disjunction, which is "||".
+	* @return the symbol for disjunction
 	*/
    public static String DISJUNCTION() {
 	   return "||";
@@ -71,7 +71,7 @@ public class LogicalSymbols {
    /**
 	* Returns the symbol for conjunction.
 	*
-	* @return the symbol for conjunction, which is "&&".
+	* @return the symbol for conjunction
 	*/
    public static String CONJUNCTION() {
 	   return "&&";
@@ -98,7 +98,7 @@ public class LogicalSymbols {
    /**
 	* Returns the symbol for implication.
 	*
-	* @return the symbol for implication, which is "=>".
+	* @return the symbol for implication
 	*/
    public static String IMPLICATION() {
 	   return "=>";
@@ -107,7 +107,7 @@ public class LogicalSymbols {
    /**
 	* Returns the symbol for equivalence.
 	*
-	* @return the symbol for equivalence, which is "<=>".
+	* @return the symbol for equivalence,
 	*/
    public static String EQUIVALENCE() {
 	   return "<=>";
@@ -161,7 +161,7 @@ public class LogicalSymbols {
    /**
 	* Returns the symbol for possibility.
 	*
-	* @return the symbol for possibility, which is "<>".
+	* @return the symbol for possibility
 	*/
    public static String POSSIBILITY() {
 	   return "<>";

@@ -35,7 +35,10 @@ public class InconsistencyMeasureResult {
      * </ul>
      */
     public enum Status {
-        OK, TIMEOUT
+        /** OK */
+        OK,
+        /** TIMEOUT */
+        TIMEOUT
     }
 
     /** The computed inconsistency value, if available. */

@@ -25,21 +25,7 @@ import org.tweetyproject.machinelearning.assoc.FpGrowthMiner;
 /**
  * An example demonstrating the use of the FP-Growth algorithm for mining frequent patterns
  * from a dataset of transactions.
- *
- * <p>
- * This example uses the FP-Growth algorithm to mine frequent itemsets from a small dataset,
- * as described in the paper:
- * <ul>
- * <li>Jiawei Han, Jian Pei, Yiwen Yin. "Mining frequent patterns without candidate generation."
- * ACM SIGMOD Record, Volume 29, Issue 2, June 2000, pp. 1–12.</li>
- * </ul>
- * </p>
- *
- * <p>
- * The example also includes a comparison with the Apriori algorithm, showing that both
- * algorithms generate the same frequent itemsets for the given dataset.
- * </p>
- *
+
  * @author Matthias Thimm
  */
 public class FpGrowthExample {

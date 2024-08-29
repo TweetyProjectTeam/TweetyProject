@@ -43,7 +43,6 @@ import java.util.Set;
  * @see Collection
  * @see Comparable
  *
- * @param <BArgument> the type of argument used in the argument set
  *
  * @author Lars Bengel
  */

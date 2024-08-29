@@ -25,10 +25,14 @@ import java.util.ArrayList;
  * This class implements an element for a combinatorial problem. It can be expanded later to implement more behavior
  * @author Sebastian Franke
  */
-
 public class ElementOfCombinatoricsProb extends OptProbElement{
+	/** the components */
 	public ArrayList<Term> components;
-	
+
+	/**
+	 * Constructor
+	 * @param elements
+	 */
 	public ElementOfCombinatoricsProb(ArrayList<Term> elements) {
 		this.components = elements;
 	}

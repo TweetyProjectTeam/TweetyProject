@@ -37,9 +37,9 @@ import org.tweetyproject.math.opt.problem.OptimizationProblem;
 import org.tweetyproject.math.term.*;
 
 /**
- * This class is a wrapper for the Gurobi optimizer 
+ * This class is a wrapper for the Gurobi optimizer
  * (<a href="https://www.gurobi.com">https://www.gurobi.com</a>). Works with Gurobi 9.1.0
- *   
+ *
  * @author Sebastian Franke, Matthias Thimm
  */
 public class GurobiOptimizer extends Solver{
@@ -57,36 +57,36 @@ public class GurobiOptimizer extends Solver{
 	 * @param diagonalOnly Number of initial iterations, where the covariance matrix remains diagonal.
 	 * @param checkFeasableCount Determines how often new random objective variables are generated in case they are out of bounds.
 	 * @param precision the precision of the optimization
-	 * @throws GRBException 
+	 * @throws GRBException
 	 */
-	
+
 	/**
-	 * 
+	 * Constructor
 	 * @throws GRBException GRBException
 	 */
 	public GurobiOptimizer() throws GRBException{
 
-		
+
 	}
-	
+
 	/**
 	 * takes all Variables from a tweety problem and maps them to GRB Varaibles
 	 * @param prob problem
 	 * @throws GRBException GRBException
 	 */
 	public void parseVars(OptimizationProblem prob) throws GRBException{
-		
+
 		HashMap<Variable, GRBVar> vars = new HashMap<Variable, GRBVar>();
-		
+
 		Integer name = 0;
 		for(Variable i : prob.getVariables()) {
 			double startingPoint = i.getLowerBound() + (i.getUpperBound() - i.getLowerBound()) / 2;
 			vars.put(i, this.model.addVar(i.getLowerBound(), i.getUpperBound(), startingPoint, GRB.BINARY, "Var" + name));
 			name++;
 		}
-		
+
 		this.vars = vars;
-		
+
 	}
 	/**
 	 * parses a term from tweety to GRB
@@ -105,12 +105,12 @@ public class GurobiOptimizer extends Solver{
 				Constant c = new FloatConstant(1);
 				Variable v = null;
 				for(Term s : t.getTerms()) {
-					
+
 					if(s instanceof Constant)
 						c = (Constant) s;
 					else if(s instanceof Variable)
 						v = (Variable) s;
-				} 
+				}
 				if(v != null)
 					((GRBLinExpr) result).addTerm(c.doubleValue(), vars.get(v));
 				else
@@ -127,7 +127,7 @@ public class GurobiOptimizer extends Solver{
 				Variable v1 = null;
 				Variable v2 = null;
 				for(Term s : t.getTerms().get(0).getTerms()) {
-					//check each part of the product	
+					//check each part of the product
 					if(s instanceof Constant)
 						c = (Constant) s;
 					else if(s instanceof Variable && v1 == null)
@@ -141,15 +141,15 @@ public class GurobiOptimizer extends Solver{
 					((GRBQuadExpr) result).addTerm(c.doubleValue(), vars.get(v1));
 				else if(v2 != null)
 					((GRBQuadExpr) result).addTerm(c.doubleValue(), vars.get(v1), vars.get(v2));
-				
+
 			}
 		}
-	    
+
 
 		return result;
-		
+
 	}
-	
+
 	/**
 	 * parses a statement into a gurobi constrant and adds it to the model
 	 * @param s statement to be added
@@ -179,9 +179,9 @@ public class GurobiOptimizer extends Solver{
 			model.addQConstr((GRBQuadExpr) left, type, (GRBLinExpr) right, "c" + i.toString());
 		else
 			model.addConstr((GRBLinExpr) left, type, (GRBLinExpr) right, "c" + i.toString());
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -197,7 +197,7 @@ public class GurobiOptimizer extends Solver{
 			this.env = new GRBEnv("mip1.log");
 			env.set(GRB.IntParam.LogToConsole, 0);
 			this.model = new GRBModel(env);
-			
+
 
 		} catch (GRBException e2) {
 			// TODO Auto-generated catch block
@@ -206,26 +206,26 @@ public class GurobiOptimizer extends Solver{
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
-		OptimizationProblem p = (OptimizationProblem) problem; 
+		OptimizationProblem p = (OptimizationProblem) problem;
 
 		try {
 			this.parseVars(p);
 
-		
+
 		Integer i = 0;
 		for(OptProbElement s: (ConstraintSatisfactionProblem) problem) {
 			this.addStatementToGurobi((Statement) s, i);
 			i++;
-			
+
 		}
 		//get type of optimization
 		int type = (p.getType() == 1 ? GRB.MAXIMIZE : GRB.MINIMIZE);
 
 
 		model.setObjective(parseTerm(p.getTargetFunction()), type);
-		
+
 		model.optimize();
-		
+
 
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 
@@ -234,20 +234,20 @@ public class GurobiOptimizer extends Solver{
 
 		model.dispose();
 		env.dispose();
-		
+
 		return result;
 		} catch (GRBException e1) {
-			
+
 			e1.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the variable assignment that maximizes/minimizes the given term
 	 * (which only contains variables with defined upper and lower bounds).
 	 * @param t the term to be evaluated
-	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
+	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE
 	 * @return the optimal variable assignment
 	 * @throws GeneralMathException if there is some issue in the computation
 	 * @throws GRBException  GRBException
@@ -257,14 +257,15 @@ public class GurobiOptimizer extends Solver{
 		p.setTargetFunction(t);
 		return this.solve(p);
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return a list of products from a quadratic term in normal form
 	 * @param sum a quadratic term in normal form
 	 * @return a list of products from a quadratic term in normal form
 	 */
 	public ArrayList<Sum> toQuadraticFormHelper(Term sum) {
-		
+
 		ArrayList<Sum> resultList = new ArrayList<Sum>();
 		//a Product is alreadyy in desired form
 		if(sum instanceof Product) {
@@ -285,51 +286,52 @@ public class GurobiOptimizer extends Solver{
 			if(t instanceof Product) {
 				for(Sum s : resultList)
 				{
-					if(s.getVariables() == (t.getVariables())) {						
-						isInList = true; 
+					if(s.getVariables() == (t.getVariables())) {
+						isInList = true;
 						s.addTerm(t);
-					}						
+					}
 				}
 				if(isInList == false) {
 					Sum s = new Sum();
 					s.addTerm(t);
 					resultList.add(s);
 				}
-				
+
 			}
 			//add Variable or Constant directly
 			if(t instanceof Variable || t instanceof Constant ) {
 				for(Sum s : resultList)
 				{
-					if(s.getVariables() == (t.getVariables())) {						
-						isInList = true; 
+					if(s.getVariables() == (t.getVariables())) {
+						isInList = true;
 						s.addTerm(t);
-					}						
+					}
 				}
 				if(isInList == false) {
 					Sum s = new Sum();
 					s.addTerm(t);
 					resultList.add(s);
 				}
-					
+
 			}
 			//take all parts of the sums and do the same to them
 			if(t instanceof Sum) {
 				for(Term s : t.getTerms()) {
 					resultList.addAll(toQuadraticFormHelper(s));}
 				}
-				
-	
-				
 
-				
-		}		
-		
+
+
+
+
+		}
+
 		return resultList;
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
@@ -341,10 +343,10 @@ public class GurobiOptimizer extends Solver{
 			proc = rt.exec(commands);
 
 
-		BufferedReader stdInput = new BufferedReader(new 
+		BufferedReader stdInput = new BufferedReader(new
 		     InputStreamReader(proc.getInputStream()));
 
-		BufferedReader stdError = new BufferedReader(new 
+		BufferedReader stdError = new BufferedReader(new
 		     InputStreamReader(proc.getErrorStream()));
 		if(stdError.readLine() != null)
 			return false;
@@ -356,10 +358,10 @@ public class GurobiOptimizer extends Solver{
 		    	System.out.println(s);
 		    	return false;
 		    }
-		    	
-		    
+
+
 		}
-		
+
 		} catch (IOException e) {
 			System.out.println("Something went wrong");
 			e.printStackTrace();

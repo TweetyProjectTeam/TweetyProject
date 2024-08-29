@@ -32,6 +32,12 @@ import org.tweetyproject.math.term.Term;
  */
 public class MaximumNorm extends AbstractRealVectorNorm{
 
+	/** Constructor */
+	public MaximumNorm() {
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.Norm#norm(java.lang.Object)
 	 */
@@ -64,7 +70,7 @@ public class MaximumNorm extends AbstractRealVectorNorm{
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#normTerm(java.util.Vector)
 	 */
 	@Override
-	public Term normTerm(Vector<Term> obj) {	
+	public Term normTerm(Vector<Term> obj) {
 		if(obj.size() == 1)
 			return obj.get(0);
 		return new Maximum(new ArrayList<Term>(obj));
@@ -80,7 +86,7 @@ public class MaximumNorm extends AbstractRealVectorNorm{
 		List<Term> terms = new ArrayList<Term>();
 		for(int i=0; i< obj1.size();i++){
 			terms.add(new AbsoluteValue(obj1.get(i).minus(obj2.get(i))));
-			
+
 		}
 		return new Maximum(terms);
 	}

@@ -41,15 +41,15 @@ import org.tweetyproject.math.term.Variable;
 public class BfgsSolver extends Solver {
 
 
-	
+
 	private static final double PRECISION = 0.000000000000000001;
-	
+
 	/**
 	 * The starting point for the solver.
 	 */
 	private Map<Variable,Term> startingPoint;
 	/**
-	 * 
+	 * Constructor
 	 * @param startingPoint startingPoint
 	 */
 	public BfgsSolver(Map<Variable,Term> startingPoint) {
@@ -65,13 +65,13 @@ public class BfgsSolver extends Solver {
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
 		Term func = ((OptimizationProblem)problem).getTargetFunction();
 		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
-			func = new IntegerConstant(-1).mult(func);	
+			func = new IntegerConstant(-1).mult(func);
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(func.getVariables());
 		Matrix gradient = new Matrix(1,variables.size());
 		int idx = 0;
 		for(Variable v: variables)
-			gradient.setEntry(0, idx++, func.derive(v).simplify());			
+			gradient.setEntry(0, idx++, func.derive(v).simplify());
 		Matrix approxInverseHessian = Matrix.getIdentityMatrix(variables.size());
 		Matrix currentGuess = new Matrix(1,variables.size());
 		idx = 0;
@@ -79,27 +79,27 @@ public class BfgsSolver extends Solver {
 			currentGuess.setEntry(0, idx++, this.startingPoint.get(v));
 		Matrix searchDirection, evaluatedGradient, s = null, y, ssT, bysT, syTb;
 		double sTy, yTby, distanceToZero, currentStep;
-		double actualPrecision = BfgsSolver.PRECISION * variables.size(); 
+		double actualPrecision = BfgsSolver.PRECISION * variables.size();
 		while(true){
 			evaluatedGradient = this.evaluate(gradient, currentGuess, variables);
 			distanceToZero = evaluatedGradient.distanceToZero();
 			if(distanceToZero < actualPrecision)
 				break;
-			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();			
+			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();
 			currentStep = this.nextBestStep(currentGuess, searchDirection, gradient, variables);
 			// we don't find a better guess
 			if(currentStep == -1)
-				break;			
+				break;
 			s = searchDirection.mult(currentStep);
-			currentGuess = currentGuess.add(s).simplify();	
+			currentGuess = currentGuess.add(s).simplify();
 			y = this.evaluate(gradient, currentGuess, variables).minus(evaluatedGradient).simplify();
 			// perform Hessian update
 			sTy = s.transpose().mult(y).getEntry(0, 0).doubleValue();
 			ssT = s.mult(s.transpose());
 			yTby = y.transpose().mult(approxInverseHessian.mult(y)).getEntry(0, 0).doubleValue();
 			bysT = approxInverseHessian.mult(y.mult(s.transpose())).simplify();
-			syTb = s.mult(y.transpose().mult(approxInverseHessian)).simplify();			
-			approxInverseHessian = approxInverseHessian.add(ssT.mult((sTy+yTby)/(sTy*sTy))).minus(bysT.add(syTb).mult(1/sTy)).simplify();			
+			syTb = s.mult(y.transpose().mult(approxInverseHessian)).simplify();
+			approxInverseHessian = approxInverseHessian.add(ssT.mult((sTy+yTby)/(sTy*sTy))).minus(bysT.add(syTb).mult(1/sTy)).simplify();
 		}
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		idx = 0;
@@ -108,7 +108,7 @@ public class BfgsSolver extends Solver {
 		return result;
 	}
 	/**
-	 * 
+	 *
 	 * @param currentGuess current guess
 	 * @param searchDirection search direction
 	 * @param gradient gradient
@@ -116,20 +116,20 @@ public class BfgsSolver extends Solver {
 	 * @return next best step
 	 */
 	private double nextBestStep(Matrix currentGuess, Matrix searchDirection, Matrix gradient, List<Variable> variables){
-		double currentStep = 0.001;		
+		double currentStep = 0.001;
 		Matrix s, newGuess, y;
 		do{
 			s = searchDirection.mult(currentStep);
 			newGuess = currentGuess.add(s).simplify();
-			y = this.evaluate(gradient, newGuess, variables);			
+			y = this.evaluate(gradient, newGuess, variables);
 			if(y.isFinite())
 				return currentStep;
-			currentStep *= 9d/10d;	
+			currentStep *= 9d/10d;
 			if(currentStep < BfgsSolver.PRECISION) return -1;
 		}while(true);
 	}
 	/**
-	 * 
+	 *
 	 * @param gradient gradient
 	 * @param currentGuess current guess
 	 * @param variables variables
@@ -143,11 +143,12 @@ public class BfgsSolver extends Solver {
 				t = t.replaceTerm(variables.get(j), currentGuess.getEntry(0, j));
 			result.setEntry(0, i, t.value());
 		}
-		return result;	
+		return result;
 	}
 
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

@@ -23,11 +23,17 @@ import org.tweetyproject.math.term.Maximum;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the Lukasiewicz-norm in fuzzy logic, i.e., T(x,y)=max(x+y-1,0) 
- * 
+ * Represents the Lukasiewicz-norm in fuzzy logic, i.e., T(x,y)=max(x+y-1,0)
+ *
  * @author Matthias Thimm
  */
 public class LukasiewiczNorm extends TNorm{
+
+
+	/** Constructor */
+	public LukasiewiczNorm() {
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#eval(java.lang.Double, java.lang.Double)
@@ -46,12 +52,12 @@ public class LukasiewiczNorm extends TNorm{
 	public TCoNorm getDualCoNorm(){
 		return new BoundedSum();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#evalTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */
 	@Override
-	public Term evalTerm(Term val1, Term val2) {		
+	public Term evalTerm(Term val1, Term val2) {
 		return new Maximum(val1.add(val2).minus(new FloatConstant(1)),new FloatConstant(0));
 	}
 
@@ -61,5 +67,5 @@ public class LukasiewiczNorm extends TNorm{
 	@Override
 	public boolean isNilpotent() {
 		return true;
-	}	
+	}
 }

@@ -21,11 +21,17 @@ package org.tweetyproject.math.func.fuzzy;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the product-norm in fuzzy logic, i.e., T(x,y)=xy 
- * 
+ * Represents the product-norm in fuzzy logic, i.e., T(x,y)=xy
+ *
  * @author Matthias Thimm
  */
 public class ProductNorm extends TNorm{
+
+	/** Constructor */
+	public ProductNorm() {
+	}
+
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#eval(java.lang.Double, java.lang.Double)
@@ -49,7 +55,7 @@ public class ProductNorm extends TNorm{
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#evalTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */
 	@Override
-	public Term evalTerm(Term val1, Term val2) {		
+	public Term evalTerm(Term val1, Term val2) {
 		return val1.mult(val2);
 	}
 

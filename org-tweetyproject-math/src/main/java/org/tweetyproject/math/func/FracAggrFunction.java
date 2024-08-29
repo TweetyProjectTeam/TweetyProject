@@ -19,13 +19,19 @@
 package org.tweetyproject.math.func;
 
 /**
- * This is the function 1-\sum_i (1-x_i/i) used e.g in 
+ * This is the function 1-\sum_i (1-x_i/i) used e.g in
  * [Mu,Liu,Jin, Bell. A syntax-based approach to measuring the degree of inconsistency for belief bases. IJAR 52(7), 2011.]
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class FracAggrFunction implements SimpleFunction<double[],Double>{
+
+	/** Constructor */
+	public FracAggrFunction() {
+	}
+
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.SimpleFunction#eval(java.lang.Object)

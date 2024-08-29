@@ -18,22 +18,27 @@
  */
 package org.tweetyproject.math.term;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
+/** AssociativeOperation class */
 public abstract class AssociativeOperation extends Term {
-	
+
 	/**
 	 * The terms of this operation.
 	 */
 	private List<Term> terms;
-	
+
 	/**
 	 * Creates a new (empty) operation.
 	 */
 	public AssociativeOperation(){
 		this.terms = new LinkedList<Term>();
 	}
-	
+
 	/**
 	 * Creates a new operation with the given terms.
 	 * @param first a term.
@@ -44,7 +49,7 @@ public abstract class AssociativeOperation extends Term {
 		this.terms.add(first);
 		this.terms.add(second);
 	}
-	
+
 	/**
 	 * Creates a new operation with the given list of terms.
 	 * @param terms a list of terms.
@@ -53,7 +58,7 @@ public abstract class AssociativeOperation extends Term {
 		this();
 		this.terms.addAll(terms);
 	}
-	
+
 
 	/**
 	 * Returns the number of the terms in this operation.
@@ -62,7 +67,7 @@ public abstract class AssociativeOperation extends Term {
 	public int size(){
 		return this.terms.size();
 	}
-	
+
 	/**
 	 * Returns the terms of this operation.
 	 * @return the terms of this operation.
@@ -70,7 +75,7 @@ public abstract class AssociativeOperation extends Term {
 	public List<Term> getTerms(){
 		return this.terms;
 	}
-	
+
 	/**
 	 * Adds the given term to this operation.
 	 * @param t a term.
@@ -78,7 +83,7 @@ public abstract class AssociativeOperation extends Term {
 	public void addTerm(Term t){
 		this.terms.add(t);
 	}
-	
+
 	/**
 	 * Adds all the given terms of this operation.
 	 * @param terms a collection of terms.
@@ -86,15 +91,15 @@ public abstract class AssociativeOperation extends Term {
 	public void addAllTerm(Collection<Term> terms){
 		this.terms.addAll(terms);
 	}
-	
+
 	/**
-	 * Removes the given term from this operation. 
+	 * Removes the given term from this operation.
 	 * @param t a term.
 	 */
 	public void removeTerm(Term t){
 		this.terms.remove(t);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#isInteger()
 	 */
@@ -105,7 +110,7 @@ public abstract class AssociativeOperation extends Term {
 				return false;
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getVariables()
 	 */
@@ -113,10 +118,10 @@ public abstract class AssociativeOperation extends Term {
 	public Set<Variable> getVariables(){
 		Set<Variable> variables = new HashSet<Variable>();
 		for(Term t: this.terms)
-			variables.addAll(t.getVariables());		
+			variables.addAll(t.getVariables());
 		return variables;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getProducts()
 	 */
@@ -126,8 +131,8 @@ public abstract class AssociativeOperation extends Term {
 		for(Term t: this.terms)
 			products.addAll(t.getProducts());
 		return products;
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getSums()
 	 */
@@ -138,7 +143,7 @@ public abstract class AssociativeOperation extends Term {
 			sums.addAll(t.getSums());
 		return sums;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getProducts()
 	 */
@@ -146,10 +151,10 @@ public abstract class AssociativeOperation extends Term {
 	public Set<Minimum> getMinimums(){
 		Set<Minimum> minimums = new HashSet<Minimum>();
 		for(Term t: this.terms)
-			minimums.addAll(t.getMinimums());		
+			minimums.addAll(t.getMinimums());
 		return minimums;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getMaximums()
 	 */
@@ -157,10 +162,10 @@ public abstract class AssociativeOperation extends Term {
 	public Set<Maximum> getMaximums(){
 		Set<Maximum> maximums = new HashSet<Maximum>();
 		for(Term t: this.terms)
-			maximums.addAll(t.getMaximums());		
+			maximums.addAll(t.getMaximums());
 		return maximums;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#getAbsoluteValues()
 	 */
@@ -168,10 +173,10 @@ public abstract class AssociativeOperation extends Term {
 	public Set<AbsoluteValue> getAbsoluteValues(){
 		Set<AbsoluteValue> avs = new HashSet<AbsoluteValue>();
 		for(Term t: this.terms)
-			avs.addAll(t.getAbsoluteValues());		
+			avs.addAll(t.getAbsoluteValues());
 		return avs;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.term.Term#collapseAssociativeOperations()
 	 */
@@ -183,8 +188,8 @@ public abstract class AssociativeOperation extends Term {
 			if(t.getClass().equals(this.getClass())){
 				this.removeTerm(t);
 				this.addAllTerm(((AssociativeOperation) t).getTerms());
-			}				
-		}		
+			}
+		}
 	}
-	
+
 }

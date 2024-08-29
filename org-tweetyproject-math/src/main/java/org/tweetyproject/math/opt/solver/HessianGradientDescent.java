@@ -46,14 +46,18 @@ import org.tweetyproject.math.term.Variable;
  */
 public class HessianGradientDescent extends Solver {
 
-	
+
 	private static final double PRECISION = 0.00001;
-	
+
 	/**
 	 * The starting point for the solver.
 	 */
 	private Map<Variable,Term> startingPoint;
-	
+
+	/**
+	 *  Constructor
+	 * @param startingPoint the starting ppint
+	 */
 	public HessianGradientDescent(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
 	}
@@ -66,13 +70,13 @@ public class HessianGradientDescent extends Solver {
 		System.out.println(problem.toString());
 		if(problem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
-		
+
 		Term func = ((OptimizationProblem)problem).getTargetFunction();
 		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
-			func = new IntegerConstant(-1).mult(func);	
+			func = new IntegerConstant(-1).mult(func);
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(func.getVariables());
-		List<Term> gradient = new LinkedList<Term>();		
+		List<Term> gradient = new LinkedList<Term>();
 		for(Variable v: variables)
 			gradient.add(func.derive(v).simplify());
 		List<List<Term>> hessian = new LinkedList<List<Term>>();
@@ -87,7 +91,7 @@ public class HessianGradientDescent extends Solver {
 		for(Variable v: variables){
 			currentGuess[idx] = this.startingPoint.get(v).doubleValue();
 			idx++;
-		}		
+		}
 		double[][] evaluatedHessian;
 		double[] dir = new double[variables.size()];
 		double[] evaluatedGradient = new double[variables.size()];
@@ -111,7 +115,7 @@ public class HessianGradientDescent extends Solver {
 	/**
 	 * Find the best guess.
 	 * @param currentGuess the current guess
-	 * @param dir the direction 
+	 * @param dir the direction
 	 * @param gradient the gradient
 	 * @param variables the variables.
 	 * @return the best guess
@@ -122,7 +126,7 @@ public class HessianGradientDescent extends Solver {
 		double newDistance;
 		double[] newGuess = new double[variables.size()];
 		double currentStep = upperBound;
-		int loop = 0; 
+		int loop = 0;
 		while(true){
 			for(int idx = 0; idx < variables.size(); idx++)
 				newGuess[idx] = currentGuess[idx] + currentStep * dir[idx];
@@ -134,7 +138,7 @@ public class HessianGradientDescent extends Solver {
 			if(loop == 1000) return newGuess;
 		}
 	}
-	
+
 	/**
 	 * Find the best direction.
 	 * @param approxHessian the approximated Hessian
@@ -162,15 +166,16 @@ public class HessianGradientDescent extends Solver {
 		double[] result = new double[variables.size()];
 		int idx = 0;
 		for(Variable v: variables)
-			result[idx++] = solution.get(v).doubleValue();	
+			result[idx++] = solution.get(v).doubleValue();
 		return result;
 		}catch(Exception e){
 			throw new RuntimeException();
 		}
 	}
-	
+
 	/**
-	 * 
+	 * Return if solver is installed
+	 *
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
