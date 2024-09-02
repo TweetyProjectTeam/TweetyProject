@@ -27,9 +27,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * MeetingPEAFExample class
+ */
 public class MeetingPEAFExample {
+
+    /** total */
     static double total = 0;
 
+    /**
+     * Example
+     * @param s args
+     */
     public static void main(String[] s) {
         int numOfArgs = 7;
 

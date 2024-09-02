@@ -55,7 +55,7 @@ public abstract class MinimalViolationEuclideanMachineShop implements BeliefBase
 	/**
 	 *
 	 * Return repaired belief base
-	 * @param beliefSet
+	 * @param beliefSet the belief set
 	 * @return repaired belief base
 	 */
 	protected abstract BeliefBase repair(PclBeliefSet beliefSet);

@@ -48,7 +48,14 @@ public final class SimpleLink extends DirectedEdge<Argument> implements Link {
         this.to = Objects.requireNonNull(to);
         this.type = Objects.requireNonNull(type);
     }
-
+/**
+     * Constructs a new {@code SimpleLink} with the specified source and target arguments.
+     * The link is of type {@code LinkType.DEPENDENT}.
+     *
+     * @param from The source argument from which the link originates.
+     * @param to   The target argument to which the link points.
+     * @throws NullPointerException if either {@code from} or {@code to} is {@code null}.
+     */
     public SimpleLink(Argument from, Argument to) {
         super(from, to);
         this.from = Objects.requireNonNull(from);
@@ -56,14 +63,30 @@ public final class SimpleLink extends DirectedEdge<Argument> implements Link {
         this.type = LinkType.DEPENDENT;
     }
 
+    /**
+     * Returns the source argument from which the link originates.
+     *
+     * @return The source argument.
+     */
     public Argument getFrom() {
         return from;
     }
 
+    /**
+     * Returns the target argument to which the link points.
+     *
+     * @return The target argument.
+     */
     public Argument getTo() {
         return to;
     }
 
+    /**
+     * Returns the type of the link, indicating the nature of the connection
+     * between the source and target arguments.
+     *
+     * @return The link type.
+     */
     public LinkType getType() {
         return type;
     }

@@ -27,6 +27,11 @@ import org.tweetyproject.arg.bipolar.syntax.*;
  * Examples for necessity argumentation frameworks.
  */
 public class NecessityArgumentation {
+
+    /**
+     * Example
+     * @param args args
+     */
     public static void main(String[] args) {
         // Example from Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014
         NecessityArgumentationFramework nt = new NecessityArgumentationFramework();

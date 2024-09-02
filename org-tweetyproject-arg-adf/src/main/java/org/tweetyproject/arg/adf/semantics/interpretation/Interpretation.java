@@ -76,8 +76,13 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
+
 	/**
 	 * 	Interpretation fromSets
+	 * @param satisfied satisfied
+	 * @param unsatisfied unsatisfied
+	 * @param adf adf
+	 * @return 	Interpretation fromSets
 	 */
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
 		Set<Argument> undecided = new HashSet<>();

@@ -30,7 +30,7 @@ import org.tweetyproject.logics.fol.syntax.*;
 import org.tweetyproject.logics.rpcl.semantics.*;
 import org.tweetyproject.math.probability.*;
 
-/*
+/**
  * This class implements a parser for condensed relational probability distributions. The BNF for
  * condensed relational probability distributions is given by (start symbol is DISTRIBUTION)
  * <br>
@@ -90,7 +90,10 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     this.semantics = semantics;
   }
 
-  /** setter signature */
+  /**
+   * setter signature
+   * @param signature the signature
+   */
   public void setSignature(FolSignature signature) {
     this.signature = signature;
   }
@@ -594,6 +597,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
    * Get the specific Token.
    *
    * @param index the index
+   * @return the token
    */
   static final public Token getToken(int index) {
     Token t = token;

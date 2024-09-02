@@ -461,86 +461,120 @@ public class DelpParser extends Parser<DefeasibleLogicProgram, Formula> implemen
     jj_la1_0 = new int[] { 0x1040, 0x400, 0x400, 0xb00, 0x1040, 0x400, 0x2000, 0xc0 };
   }
 
-  /** Constructor with InputStream. */
-  public DelpParser(java.io.InputStream stream) {
-    this(stream, null);
+/**
+     * Creates a new parser instance with the specified input stream.
+     *
+     * @param stream The input stream to be used by the parser.
+     */
+    public DelpParser(java.io.InputStream stream) {
+      this(stream, null);
   }
 
-  /** Constructor with InputStream and supplied encoding */
+  /**
+   * Creates a new parser instance with the specified input stream and character encoding.
+   *
+   * @param stream The input stream to be used by the parser.
+   * @param encoding The character encoding of the input stream. If {@code null}, the default encoding is used.
+   */
   public DelpParser(java.io.InputStream stream, String encoding) {
-    try {
-      jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
-    } catch (java.io.UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-    token_source = new DelpParserTokenManager(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      try {
+          jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
+      } catch (java.io.UnsupportedEncodingException e) {
+          throw new RuntimeException(e);
+      }
+      token_source = new DelpParserTokenManager(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new input stream.
+   *
+   * @param stream The new input stream to be used by the parser.
+   */
   public void ReInit(java.io.InputStream stream) {
-    ReInit(stream, null);
+      ReInit(stream, null);
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new input stream and character encoding.
+   *
+   * @param stream The new input stream to be used by the parser.
+   * @param encoding The character encoding of the new input stream. If {@code null}, the default encoding is used.
+   */
   public void ReInit(java.io.InputStream stream, String encoding) {
-    try {
-      jj_input_stream.ReInit(stream, encoding, 1, 1);
-    } catch (java.io.UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-    token_source.ReInit(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      try {
+          jj_input_stream.ReInit(stream, encoding, 1, 1);
+      } catch (java.io.UnsupportedEncodingException e) {
+          throw new RuntimeException(e);
+      }
+      token_source.ReInit(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
-  /** Constructor. */
+  /**
+   * Creates a new parser instance with the specified reader.
+   *
+   * @param stream The reader to be used by the parser.
+   */
   public DelpParser(java.io.Reader stream) {
-    jj_input_stream = new SimpleCharStream(stream, 1, 1);
-    token_source = new DelpParserTokenManager(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      jj_input_stream = new SimpleCharStream(stream, 1, 1);
+      token_source = new DelpParserTokenManager(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new reader.
+   *
+   * @param stream The new reader to be used by the parser.
+   */
   public void ReInit(java.io.Reader stream) {
-    jj_input_stream.ReInit(stream, 1, 1);
-    token_source.ReInit(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      jj_input_stream.ReInit(stream, 1, 1);
+      token_source.ReInit(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
-  /** Constructor with generated Token Manager. */
+  /**
+   * Creates a new parser instance with the specified token manager.
+   *
+   * @param tm The token manager to be used by the parser.
+   */
   public DelpParser(DelpParserTokenManager tm) {
-    token_source = tm;
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      token_source = tm;
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new token manager.
+   *
+   * @param tm The new token manager to be used by the parser.
+   */
   public void ReInit(DelpParserTokenManager tm) {
-    token_source = tm;
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 8; i++)
-      jj_la1[i] = -1;
+      token_source = tm;
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 8; i++)
+          jj_la1[i] = -1;
   }
 
   /**
@@ -576,28 +610,49 @@ public class DelpParser extends Parser<DefeasibleLogicProgram, Formula> implemen
     throw generateParseException();
   }
 
-  /** Get the next Token. */
-  final public Token getNextToken() {
-    if (token.next != null)
+/**
+ * Retrieves the next token in the input stream.
+ * <p>
+ * This method advances to the next token by either using the previously
+ * cached next token or fetching a new token from the token source if
+ * there is no cached next token. The token stream is updated and the
+ * token index and generation are incremented accordingly.
+ * </p>
+ *
+ * @return The next {@link Token} in the input stream.
+ */
+final public Token getNextToken() {
+  if (token.next != null)
       token = token.next;
-    else
+  else
       token = token.next = token_source.getNextToken();
-    jj_ntk = -1;
-    jj_gen++;
-    return token;
-  }
+  jj_ntk = -1;
+  jj_gen++;
+  return token;
+}
 
-  /** Get the specific Token. */
-  final public Token getToken(int index) {
-    Token t = token;
-    for (int i = 0; i < index; i++) {
+/**
+* Retrieves a specific token from the input stream by its index.
+* <p>
+* This method traverses the token stream to reach the token at the specified
+* index. If the token at the given index is not already available, it fetches
+* the necessary tokens from the token source until the desired token is reached.
+* </p>
+*
+* @param index The zero-based index of the token to retrieve.
+* @return The {@link Token} at the specified index in the input stream.
+*/
+final public Token getToken(int index) {
+  Token t = token;
+  for (int i = 0; i < index; i++) {
       if (t.next != null)
-        t = t.next;
+          t = t.next;
       else
-        t = t.next = token_source.getNextToken();
-    }
-    return t;
+          t = t.next = token_source.getNextToken();
   }
+  return t;
+}
+
 
   /**
    * Retrieves the kind of the next token without consuming it.
@@ -658,7 +713,9 @@ public class DelpParser extends Parser<DefeasibleLogicProgram, Formula> implemen
    */
   private int jj_kind = -1;
 
-  /** Generate ParseException. */
+  /** Generate ParseException.
+   * @return the ParseException
+  */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[15];

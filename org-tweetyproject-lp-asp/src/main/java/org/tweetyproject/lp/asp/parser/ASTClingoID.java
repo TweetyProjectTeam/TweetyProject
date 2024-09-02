@@ -2,27 +2,57 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
-public
-class ASTClingoID extends SimpleNode {
-	
+/**
+ * The {@code ASTClingoID} class represents a node in the abstract syntax tree (AST)
+ * corresponding to a Clingo identifier in the parsing process. This class extends
+ * {@code SimpleNode} and is used within the context of the ASP (Answer Set Programming) parser.
+ */
+public class ASTClingoID extends SimpleNode {
+
+  /**
+   * The name or identifier represented by this AST node.
+   */
   protected String name;
-	
+
+  /**
+   * Constructs a new {@code ASTClingoID} node with the specified identifier.
+   *
+   * @param id The node identifier.
+   */
   public ASTClingoID(int id) {
-    super(id);
+      super(id);
   }
 
+  /**
+   * Constructs a new {@code ASTClingoID} node with the specified parser and identifier.
+   *
+   * @param p  The {@code ASPParser} that is constructing this node.
+   * @param id The node identifier.
+   */
   public ASTClingoID(ASPParser p, int id) {
-    super(p, id);
+      super(p, id);
   }
 
-  /** Accept the visitor. **/
+  /**
+   * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+   * and allows it to process this node in the AST.
+   *
+   * @param visitor The visitor object that processes this node.
+   * @param data    Additional data that might be needed for the visitor's processing.
+   * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+   */
   public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+      return visitor.visit(this, data);
   }
-  
+
+  /**
+   * Sets the name or identifier represented by this AST node.
+   *
+   * @param image The string representing the name or identifier.
+   */
   public void name(String image) {
-	this.name = image;
+      this.name = image;
   }
-  
 }
+
 /* JavaCC - OriginalChecksum=2a889a25e37f092ba31f1f3d0664f142 (do not edit this line) */

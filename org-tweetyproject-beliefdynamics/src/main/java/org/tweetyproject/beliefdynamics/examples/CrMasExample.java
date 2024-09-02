@@ -45,8 +45,8 @@ public class CrMasExample {
 	/**
 	 * Example method
 	 * @param args the args
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws ParserException error
+	 * @throws IOException error
 	 */
 	public static void main(String[] args) throws ParserException, IOException{
 

@@ -33,7 +33,7 @@ import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 public class SimulatedAnnealing extends CombinatoricsSolver {
 
 
-	 
+
 	//the exact problem that is to  be solved
 	private CombinatoricsProblem prob;
 	/** starting temperature to be lowered*/
@@ -41,14 +41,20 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 	/**the factor to linearely reduce the temperature by every iteration*/
 	private double decreasePerIt;
 	private int maxStepsWithNoImprove;
-	
+
+	/**
+	 * Constructor
+	 * @param startTemp startTemp
+	 * @param decreasePerIt decreasePerIt
+	 * @param maxStepsWithNoImprove maxStepsWithNoImprove
+	 */
 	public SimulatedAnnealing(double startTemp, double decreasePerIt, int maxStepsWithNoImprove) {
 		this.startTemp = startTemp;
 		this.decreasePerIt = decreasePerIt;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
 	/**
-	 * 
+	 *
 	 * @param prob: the problem
 	 * @return the best solution encountered
 	 */
@@ -69,9 +75,9 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 			int randomNum = rand.nextInt((candidateNeighbors.size()));
 			//create a random new solution
 			ArrayList<ElementOfCombinatoricsProb> newSol = candidateNeighbors.get(randomNum);
-			//make a random number for deciding if we accept a possible worsening		
+			//make a random number for deciding if we accept a possible worsening
 			double randomDecider = rand.nextDouble();
-			
+
 			//decide if we accept the new solution
 			if(Math.exp(-(this.prob.evaluate(newSol) - this.prob.evaluate(currSol)) / temp) >= randomDecider)
 				currSol = newSol;
@@ -80,16 +86,16 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 
 			if(this.prob.evaluate(currSol) < this.prob.evaluate(bestSol)) {
 				smthHappened = -1;
-				bestSol = currSol;			
+				bestSol = currSol;
 			}
-			
+
 			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
 			temp -= this.decreasePerIt;
 		}
 		System.out.println("number of iterations: " +cnt);
-		
+
 		return bestSol;
 	}
 }

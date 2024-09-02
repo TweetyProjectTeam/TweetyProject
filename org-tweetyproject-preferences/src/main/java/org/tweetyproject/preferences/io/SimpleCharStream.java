@@ -371,22 +371,25 @@ public class SimpleCharStream {
     return c;
   }
 
-  @Deprecated
   /**
    * @deprecated
    * @see #getEndColumn
+   * getter
+   * @return column
    */
-
+  @Deprecated
   public int getColumn() {
     return bufcolumn[bufpos];
   }
 
-  @Deprecated
   /**
+   * getter
    * @deprecated
    * @see #getEndLine
+   * getter line
+   * @return line
    */
-
+  @Deprecated
   public int getLine() {
     return bufline[bufpos];
   }

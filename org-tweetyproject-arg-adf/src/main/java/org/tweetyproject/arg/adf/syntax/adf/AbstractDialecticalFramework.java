@@ -277,10 +277,25 @@ public interface AbstractDialecticalFramework extends Graph<Argument>, Collectio
      */
     interface Builder {
 
+        /**
+         *
+         * Return lazy builder instance
+         * @param linkStrategy linkStrategy
+         * @return lazy builder instance
+         */
         Builder lazy(LinkStrategy linkStrategy);
 
+        /**
+         * provided builder
+         * @return Builder instance
+         */
         Builder provided();
 
+        /**
+         *  Eager builder
+         * @param linkStrategy linkStrategy
+         * @return builder instance
+         */
         Builder eager(LinkStrategy linkStrategy);
 
         /**
@@ -300,6 +315,12 @@ public interface AbstractDialecticalFramework extends Graph<Argument>, Collectio
          */
         Builder add(Link link);
 
+        /**
+         * Removes arg
+         *
+         * @param arg arg to remove
+         * @return this Builder instance
+         */
         Builder remove(Argument arg);
 
         /**

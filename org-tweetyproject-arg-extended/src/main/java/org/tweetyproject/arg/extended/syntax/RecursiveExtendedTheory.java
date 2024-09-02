@@ -34,7 +34,10 @@
   * @author Lars Bengel
   */
  public class RecursiveExtendedTheory extends BeliefSet<Argument, DungSignature> implements ArgumentationFramework<Argument>, Collection<Argument> {
-     protected Map<Argument, Collection<DungEntity>> children;
+    /** children */
+    protected Map<Argument, Collection<DungEntity>> children;
+    /** parents
+     */
      protected Map<DungEntity, Collection<Argument>> parents;
 
      /**

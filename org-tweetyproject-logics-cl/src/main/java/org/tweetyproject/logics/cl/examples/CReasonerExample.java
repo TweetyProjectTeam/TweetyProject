@@ -32,7 +32,7 @@ import org.tweetyproject.logics.pl.syntax.*;
  */
 public class CReasonerExample {
 
-	//* Constructor */
+	/** Constructor */
 	public CReasonerExample(){
 		// default
 	}

@@ -172,7 +172,7 @@ public abstract class Term {
 	 *
 	 * Return a quadratic form
 	 * @return a quadratic form
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException error
 	 */
 	public abstract Sum toQuadraticForm() throws IllegalArgumentException;
 

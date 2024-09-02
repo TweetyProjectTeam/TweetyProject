@@ -38,12 +38,25 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * This constructor is used by the method "generateParseException"
-   * in the generated parser.  Calling this constructor generates
-   * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
-   */
+/**
+ * Constructs a new {@code ParseException} with the specified details.
+ * This constructor is used by the method {@code generateParseException}
+ * in the generated parser to create a {@code ParseException} with specific
+ * token information.
+ *
+ * <p>The constructor initializes the exception with the current token being parsed,
+ * the expected token sequences at the point of error, and the token image.
+ * This information helps to provide detailed and accurate error messages during parsing.
+ *
+ * @param currentTokenVal The token that caused the parse exception. This is the token
+ *                        that was being processed when the exception was thrown.
+ * @param expectedTokenSequencesVal A 2D array where each inner array represents a sequence
+ *                                  of expected tokens. These sequences are used to
+ *                                  determine what tokens were expected at the time of the error.
+ * @param tokenImageVal An array of strings representing the token images. These strings
+ *                      correspond to the textual representations of the tokens used in parsing.
+ * @throws NullPointerException if any of the provided parameters are {@code null}.
+ */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
@@ -68,7 +81,9 @@ public class ParseException extends Exception {
     super();
   }
 
-  /* Constructor with message. */
+  /** Constructor with message.
+   * @param message the message
+  */
   public ParseException(String message) {
     super(message);
   }
@@ -95,13 +110,35 @@ public class ParseException extends Exception {
    */
   public String[] tokenImage;
 
-  /*
-   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
-   * error message and returns it.  If this object has been created
-   * due to a parse error, and you do not catch it (it gets thrown
-   * from the parser) the correct error message
-   * gets displayed.
-   */
+/**
+ * Generates a detailed parse error message based on the current token and expected token sequences.
+ *
+ * This method constructs an error message that describes the nature of the parsing error. It uses the
+ * provided current token, expected token sequences, and token image array to build a message that shows
+ * what the parser encountered and what it was expecting. The message includes the line and column where
+ * the error occurred, as well as a list of expected token sequences.
+ *
+ * <p>
+ * The generated message will include:
+ * <ul>
+ *   <li>The token sequence encountered at the point of the error.</li>
+ *   <li>The line and column where the error occurred.</li>
+ *   <li>A description of what the parser was expecting.</li>
+ * </ul>
+ * If the parser throws an exception and this method is used to initialize the exception, the error message
+ * will be displayed to the user.
+ * </p>
+ *
+ * @param currentToken The token that was being processed when the error occurred. It provides context
+ *                     for the error, including the position in the input stream.
+ * @param expectedTokenSequences An array of arrays, where each inner array represents a sequence of tokens
+ *                               that the parser expected to encounter at the point of the error.
+ * @param tokenImage An array of strings representing the image of each token. Each index corresponds to
+ *                   a token kind.
+ * @return A string containing the formatted parse error message.
+ *
+ * @throws NullPointerException if any of the parameters are {@code null}.
+ */
   private static String initialise(Token currentToken,
                            int[][] expectedTokenSequences,
                            String[] tokenImage) {
@@ -150,10 +187,11 @@ public class ParseException extends Exception {
    */
   protected String eol = System.getProperty("line.separator", "\n");
 
-  /*
+  /**
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.
+   * @param str input
    */
   static String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();

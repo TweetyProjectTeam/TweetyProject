@@ -7,7 +7,9 @@ public class DelpParserTokenManager implements DelpParserConstants
 
   /** Debug output. */
   public  java.io.PrintStream debugStream = System.out;
-  /** Set debug output. */
+  /** Set debug output.
+   * @param ds printstream
+  */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
 private final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
@@ -218,60 +220,114 @@ public static final String[] jjstrLiteralImages = {
 public static final String[] lexStateNames = {
    "DEFAULT",
 };
+/** Lexer state names. */
 static final long[] jjtoToken = {
    0x7fc1L,
 };
+/** Lexer state names. */
 static final long[] jjtoSkip = {
    0x3eL,
 };
+/** input stream */
 protected SimpleCharStream input_stream;
+/** jjrounds */
 private final int[] jjrounds = new int[10];
+/** jjstateSet */
 private final int[] jjstateSet = new int[20];
+/** current char */
 protected char curChar;
-/** Constructor. */
-public DelpParserTokenManager(SimpleCharStream stream){
-   if (SimpleCharStream.staticFlag)
-      throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
-   input_stream = stream;
-}
+/**
+     * Constructor for initializing the token manager with the specified input stream.
+     * <p>
+     * This constructor sets up the token manager with the provided character stream.
+     * It also verifies that the static flag of the character stream is not set.
+     * </p>
+     *
+     * @param stream The {@link SimpleCharStream} to be used for token input.
+     * @throws Error if the static flag of the character stream is set.
+     */
+    public DelpParserTokenManager(SimpleCharStream stream) {
+      if (SimpleCharStream.staticFlag)
+          throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+      input_stream = stream;
+  }
 
-/** Constructor. */
-public DelpParserTokenManager(SimpleCharStream stream, int lexState){
-   this(stream);
-   SwitchTo(lexState);
-}
+  /**
+   * Constructor for initializing the token manager with the specified input stream and lexical state.
+   * <p>
+   * This constructor sets up the token manager with the provided character stream and
+   * switches to the specified lexical state.
+   * </p>
+   *
+   * @param stream The {@link SimpleCharStream} to be used for token input.
+   * @param lexState The initial lexical state to switch to.
+   */
+  public DelpParserTokenManager(SimpleCharStream stream, int lexState) {
+      this(stream);
+      SwitchTo(lexState);
+  }
 
-/** Reinitialise parser. */
-public void ReInit(SimpleCharStream stream)
-{
-   jjmatchedPos = jjnewStateCnt = 0;
-   curLexState = defaultLexState;
-   input_stream = stream;
-   ReInitRounds();
-}
-private void ReInitRounds()
-{
-   int i;
-   jjround = 0x80000001;
-   for (i = 10; i-- > 0;)
-      jjrounds[i] = 0x80000000;
-}
+  /**
+   * Reinitializes the token manager with a new input stream.
+   * <p>
+   * This method resets the token manager's state and prepares it to process tokens
+   * from the new input stream. It also resets the current lexical state to the default.
+   * </p>
+   *
+   * @param stream The new {@link SimpleCharStream} to be used for token input.
+   */
+  public void ReInit(SimpleCharStream stream) {
+      jjmatchedPos = jjnewStateCnt = 0;
+      curLexState = defaultLexState;
+      input_stream = stream;
+      ReInitRounds();
+  }
 
-/** Reinitialise parser. */
-public void ReInit(SimpleCharStream stream, int lexState)
-{
-   ReInit(stream);
-   SwitchTo(lexState);
-}
+  /**
+   * Reinitializes the rounds used for token matching.
+   * <p>
+   * This method sets up the initial round values used during token matching.
+   * It is invoked by the {@link #ReInit(SimpleCharStream)} method.
+   * </p>
+   */
+  private void ReInitRounds() {
+      int i;
+      jjround = 0x80000001;
+      for (i = 10; i-- > 0;)
+          jjrounds[i] = 0x80000000;
+  }
 
-/** Switch to specified lex state. */
-public void SwitchTo(int lexState)
-{
-   if (lexState >= 1 || lexState < 0)
-      throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
-   else
-      curLexState = lexState;
-}
+  /**
+   * Reinitializes the token manager with a new input stream and lexical state.
+   * <p>
+   * This method reinitializes the token manager to process tokens from a new input stream
+   * and switch to the specified lexical state.
+   * </p>
+   *
+   * @param stream The new {@link SimpleCharStream} to be used for token input.
+   * @param lexState The initial lexical state to switch to.
+   */
+  public void ReInit(SimpleCharStream stream, int lexState) {
+      ReInit(stream);
+      SwitchTo(lexState);
+  }
+
+  /**
+   * Switches to the specified lexical state.
+   * <p>
+   * This method changes the current lexical state of the token manager to the specified
+   * state. If the provided state is invalid, an error is thrown.
+   * </p>
+   *
+   * @param lexState The lexical state to switch to.
+   * @throws TokenMgrError if the specified lexical state is invalid.
+   */
+  public void SwitchTo(int lexState) {
+      if (lexState >= 1 || lexState < 0)
+          throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
+      else
+          curLexState = lexState;
+  }
 
 
 /**
@@ -315,7 +371,9 @@ int jjround;
 int jjmatchedPos;
 int jjmatchedKind;
 
-/** Get the next Token. */
+/** Get the next Token.
+ * @return the token
+*/
 public Token getNextToken()
 {
   Token matchedToken;

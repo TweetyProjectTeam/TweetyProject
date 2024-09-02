@@ -33,38 +33,38 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 /**
  * This class represents an element of a choice atom. Choice
  * elements consist of an atom (required) and a tuple of literals (optional).
- * 
+ *
  * {@link org.tweetyproject.lp.asp.syntax.ChoiceHead}
- * 
+ *
  * @author Anna Gessler
  */
 public class ChoiceElement extends ASPElement {
-	
+
 	/**
 	 * The atom of the choice element.
 	 */
 	private ASPLiteral atom;
-	
+
 	/**
 	 * The literals of the choice element.
 	 */
 	private List<ASPBodyElement> literals;
 
-	
+
 	/**
 	 * Create a new choice element with the given atom.
-	 * 
+	 *
 	 * @param atom an ASPLiteral
 	 */
 	public ChoiceElement(ASPLiteral atom) {
 		this.atom = atom;
 		literals = new ArrayList<ASPBodyElement>();
 	}
-	
+
 	/**
 	 * Create a new choice element with the given atom and list of literals.
-	 * 
-	 * @param atom
+	 *
+	 * @param atom the atom
 	 * @param elements list of either ASPAtom, DefaultNegation or ComparativeAtom
 	 */
 	public ChoiceElement(ASPLiteral atom, List<ASPBodyElement> elements) {
@@ -141,6 +141,10 @@ public class ChoiceElement extends ASPElement {
 		return new ChoiceElement(this.atom, this.literals);
 	}
 
+	/**
+	 * sorted literals
+	 * @return the literals
+	 */
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> atoms = new TreeSet<ASPLiteral>();
 		for (ASPBodyElement l : literals)
@@ -148,7 +152,7 @@ public class ChoiceElement extends ASPElement {
 		atoms.addAll(atom.getLiterals());
 		return atoms;
 	}
-	
+
 	@Override
 	public String toString() {
 		String result = this.atom.toString();
@@ -160,7 +164,7 @@ public class ChoiceElement extends ASPElement {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String printToDLV() {
 		throw new IllegalArgumentException("Choice Rules are not supported by DLV.");

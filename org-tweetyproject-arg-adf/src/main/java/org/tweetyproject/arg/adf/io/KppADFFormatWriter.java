@@ -44,6 +44,11 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public class KppADFFormatWriter {
 
+    /**
+     * Write acceptanceConditions
+     * @param acceptanceConditions condition
+     * @return written string
+     */
     public static String write(Map<Argument,AcceptanceCondition> acceptanceConditions) {
         StringBuilder s = new StringBuilder();
         Map<Argument, String> nameMap = new HashMap<>();
@@ -116,7 +121,7 @@ public class KppADFFormatWriter {
     }
 
     /**
-     *
+     * Write to file
      * @param adf adf
      * @param file file
      * @throws FileNotFoundException File Not Found Exception

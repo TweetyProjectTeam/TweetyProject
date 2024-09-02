@@ -40,6 +40,10 @@ import java.util.Set;
  */
 public class ApproximateJustificationAnalysisExample {
 
+    /**
+     * Example
+     * @param args the args
+     */
     public static void main(String[] args) {
         int numOfArgs = 7;  // Number of arguments to add to the PEAFTheory
         PEAFTheory peafTheory = new PEAFTheory();

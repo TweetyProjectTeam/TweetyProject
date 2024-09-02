@@ -95,7 +95,9 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 		this(true);
 	}
 
-	/** Constructor */
+	/** Constructor
+	 * @param humanFriendly is humanFriendly
+	*/
 	public RuleBasedCReasoner( boolean humanFriendly) {
 		this.humanFriendly = humanFriendly;
 	}

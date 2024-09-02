@@ -36,19 +36,30 @@ public class TabuSearch extends CombinatoricsSolver {
 	/**the forbidden solutions*/
 	private ArrayList<ArrayList<ElementOfCombinatoricsProb>> tabu = new ArrayList<ArrayList<ElementOfCombinatoricsProb>>();
 	//the exact problem that is to  be solved
+	/**prob*/
 	private CombinatoricsProblem prob;
+
+	/**maxiterations*/
 	private int maxIteration;
 	/**number of tabu solutions*/
 	private int tabuSize;
+	/**maxStepsWithNoImprove*/
 	private int maxStepsWithNoImprove;
-	
+
+	/**
+	 * Constructor
+	 * @param maxIteration maxIteration
+	 * @param tabuSize tabuSize
+	 * @param maxStepsWithNoImprove maxStepsWithNoImprove
+	 */
 	public TabuSearch(int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
 		this.maxIteration = maxIteration;
 		this.tabuSize = tabuSize;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
 	/**
-	 * 
+	 *
+	 * Return the best solution encountered
 	 * @param prob the problem
 	 * @return the best solution encountered
 	 */
@@ -67,36 +78,36 @@ public class TabuSearch extends CombinatoricsSolver {
 			ArrayList<ArrayList<ElementOfCombinatoricsProb>> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
 			ArrayList<ElementOfCombinatoricsProb> newSol = candidateNeighbors.get(0);
 			//check which one of the neighborhood is the best
-			
-			for(ArrayList<ElementOfCombinatoricsProb> i : candidateNeighbors) {	
+
+			for(ArrayList<ElementOfCombinatoricsProb> i : candidateNeighbors) {
 				if(!tabu.contains(i) && this.prob.evaluate(i) > this.prob.evaluate(newSol)) {
-					
+
 					newSol = i;
 				}
 			}
-			
-			
+
+
 			currSol = newSol;
 			ArrayList<ElementOfCombinatoricsProb> tabuSol = new ArrayList<ElementOfCombinatoricsProb>();
 			//update the tabu list
 
 			for(int i = 0; i < currSol.size(); i++)
-				tabuSol.add(currSol.get(i));				
+				tabuSol.add(currSol.get(i));
 			tabu.add(currSol);
 			if(tabu.size() > tabuSize)
 				tabu.remove(0);
 			if(this.prob.evaluate(currSol) < this.prob.evaluate(bestSol)) {
 				smthHappened = -1;
-				bestSol = currSol;			
+				bestSol = currSol;
 			}
-			
+
 			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
-			
+
 		}
 		System.out.println("number of iterations: " + cnt);
-		
+
 		return bestSol;
 	}
 }

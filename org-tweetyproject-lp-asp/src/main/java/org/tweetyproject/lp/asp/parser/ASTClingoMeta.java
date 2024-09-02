@@ -2,26 +2,59 @@
 package org.tweetyproject.lp.asp.parser;
 
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
+/**
+ * The {@code ASTClingoMeta} class represents a node in the abstract syntax tree (AST)
+ * for Clingo meta-statements in the parsing process. This class extends {@code SimpleNode}
+ * and is used within the context of the ASP (Answer Set Programming) parser.
+ */
 public class ASTClingoMeta extends SimpleNode {
-	String statement;
 
-	public ASTClingoMeta(int id) {
-		super(id);
-	}
+    /**
+     * The meta-statement associated with this AST node.
+     */
+    String statement;
 
-	public ASTClingoMeta(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTClingoMeta} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTClingoMeta(int id) {
+        super(id);
+    }
 
-	public void statement(String statement) {
-		this.statement = statement;
-	}
+    /**
+     * Constructs a new {@code ASTClingoMeta} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTClingoMeta(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Sets the meta-statement associated with this AST node.
+     *
+     * @param statement The string representing the meta-statement.
+     */
+    public void statement(String statement) {
+        this.statement = statement;
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=afc254be294547a7bef35925dc5f3f63 (do not edit this
  * line)

@@ -77,9 +77,19 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 		return finish(bottomUpData, collection);
 	}
 
-	protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
-		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity, userObject));
-	}
+/**
+ * Transforms the given acceptance condition using a visitor pattern and additional user-provided data.
+ *
+ *
+ * @param acc The {@code AcceptanceCondition} to be transformed.
+ * @param userObject A {@code Consumer<D>} that provides additional data or operations
+ *                   to be used during the transformation process.
+ * @return The result of the transformation, which is an instance of type {@code U}.
+ */
+protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
+    return acc.accept(visitor, new TopDownData<D>(topLevelPolarity, userObject));
+}
+
 
 	/*
 	 * (non-Javadoc)

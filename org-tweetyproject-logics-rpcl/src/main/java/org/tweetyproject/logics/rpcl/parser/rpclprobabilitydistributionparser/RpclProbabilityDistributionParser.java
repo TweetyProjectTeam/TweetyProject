@@ -143,6 +143,13 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     }
   }
 
+  /**
+   * Constructor
+   * @param semantics the semantic
+   * @param signature the signature
+   * @return a RpclProbabilityDistribution
+   * @throws ParseException error
+   */
   static final public RpclProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature)
       throws ParseException {
     Set<Pair<HerbrandInterpretation, Probability>> assignments = new HashSet<Pair<HerbrandInterpretation, Probability>>();
@@ -570,7 +577,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
    * Otherwise,
    * the next token is fetched from the token source.
    * </p>
-   *
+   * @param index the index
    * @return the next {@link Token} in the input stream.
    */
   static final public Token getToken(int index) {

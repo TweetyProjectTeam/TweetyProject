@@ -20,22 +20,27 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * This constructor is used by the method "generateParseException"
-   * in the generated parser.  Calling this constructor generates
-   * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
-   */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
-                        String[] tokenImageVal
-                       )
-  {
+/**
+ * Constructs a new {@code ParseException} with details about the parsing error.
+ * <p>
+ * This constructor is typically used by the {@code generateParseException} method
+ * in the generated parser. It initializes a {@code ParseException} with the current token,
+ * the expected token sequences, and the token images that help describe the parsing error.
+ * </p>
+ *
+ * @param currentTokenVal The {@link Token} object representing the current token at the time the exception was thrown.
+ * @param expectedTokenSequencesVal A 2D array of integers representing the sequences of tokens that were expected by the parser.
+ * @param tokenImageVal An array of {@code String} objects representing the images of the tokens involved in the parsing error.
+ */
+public ParseException(Token currentTokenVal,
+                      int[][] expectedTokenSequencesVal,
+                      String[] tokenImageVal) {
     super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
-    currentToken = currentTokenVal;
-    expectedTokenSequences = expectedTokenSequencesVal;
-    tokenImage = tokenImageVal;
-  }
+    this.currentToken = currentTokenVal;
+    this.expectedTokenSequences = expectedTokenSequencesVal;
+    this.tokenImage = tokenImageVal;
+}
+
 
   /**
    * The following constructors are for use by you for whatever
@@ -51,7 +56,16 @@ public class ParseException extends Exception {
     super();
   }
 
-  /** Constructor with message. */
+/**
+ * Constructs a new {@code ParseException} with a specified detail message.
+ * <p>
+ * This constructor is used to create a {@code ParseException} when a specific
+ * error message needs to be provided. The message can be used to give more
+ * context about the nature of the parsing error.
+ * </p>
+ *
+ * @param message The detail message for this exception.
+ */
   public ParseException(String message) {
     super(message);
   }

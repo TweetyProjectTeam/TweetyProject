@@ -31,7 +31,7 @@ public class ElementOfCombinatoricsProb extends OptProbElement{
 
 	/**
 	 * Constructor
-	 * @param elements
+	 * @param elements the elements
 	 */
 	public ElementOfCombinatoricsProb(ArrayList<Term> elements) {
 		this.components = elements;

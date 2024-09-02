@@ -21,20 +21,44 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * Represents a node in the abstract syntax tree (AST) for an optional element list in the ASP (Answer Set Programming) parser.
+ * This class extends {@link SimpleNode} and provides methods for accepting a visitor.
+ */
 public class ASTOptElementList extends SimpleNode {
-	public ASTOptElementList(int id) {
-		super(id);
-	}
 
-	public ASTOptElementList(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTOptElementList} with the specified node ID.
+     *
+     * @param id The node ID.
+     */
+    public ASTOptElementList(int id) {
+        super(id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTOptElementList} with the specified parser and node ID.
+     *
+     * @param p The parser instance used to create this node.
+     * @param id The node ID.
+     */
+    public ASTOptElementList(ASPParser p, int id) {
+        super(p, id);
+    }
+
+    /**
+     * Accepts a visitor and allows it to visit this node.
+     *
+     * @param visitor The visitor to accept.
+     * @param data Optional data to pass to the visitor.
+     * @return The result of the visitor's visit method.
+     */
+    @Override
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=e4534876b2131fca40fd082fc27fa69d (do not edit this
  * line)

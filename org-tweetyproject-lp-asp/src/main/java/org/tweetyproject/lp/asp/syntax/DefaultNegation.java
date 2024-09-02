@@ -122,6 +122,7 @@ public class DefaultNegation extends ASPBodyElement {
 	}
 
 	/**
+	 * Return the default negated literal
 	 * @return the default negated literal
 	 */
 	public ASPBodyElement getLiteral() {
@@ -129,7 +130,7 @@ public class DefaultNegation extends ASPBodyElement {
 	}
 	/**
 	 * Set the default negated literal.
-	 * @param literal
+	 * @param literal the literal
 	 */
 	public void setLiteral(ASPBodyElement literal) {
 		this.literal = literal;

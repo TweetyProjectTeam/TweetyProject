@@ -45,7 +45,7 @@ import org.tweetyproject.logics.cl.kappa.KappaValue;
  * @author Tim Janus
  */
 public class EvaluateRule extends RuleAdapter {
-	/* Default */
+	/** Default */
 	public EvaluateRule(){
 		super();
 	}

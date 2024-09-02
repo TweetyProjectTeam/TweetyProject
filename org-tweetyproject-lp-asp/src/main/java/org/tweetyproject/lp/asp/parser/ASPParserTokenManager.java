@@ -7,7 +7,9 @@ public class ASPParserTokenManager implements ASPParserConstants
 
   /** Debug output. */
   public  java.io.PrintStream debugStream = System.out;
-  /** Set debug output. */
+  /** Set debug output.
+   * @param ds print stream
+  */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
   /**
    *

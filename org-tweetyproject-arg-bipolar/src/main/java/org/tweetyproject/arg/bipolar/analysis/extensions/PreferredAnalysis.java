@@ -30,6 +30,10 @@ import org.tweetyproject.arg.bipolar.syntax.NamedPEAFTheory;
  * @author Taha Dogan Gunes
  */
 public class PreferredAnalysis extends AbstractExtensionAnalysis {
+    /**
+     * Constructor
+     * @param peaf NamedPEAFTheory
+     */
     public PreferredAnalysis(NamedPEAFTheory peaf) {
         super(peaf, new SimplePreferredReasoner(), AnalysisType.PREFERRED);
     }

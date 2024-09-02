@@ -48,7 +48,7 @@ public class WeightedDungTheoryGeneratorExample {
 
 	/**Example
 	 * @param args the args
-	 * @throws java.io.IOException
+	 * @throws java.io.IOException error
 	 */
 	public static void main(String[] args) throws IOException{
 		WeightedApxWriter writer = new WeightedApxWriter();

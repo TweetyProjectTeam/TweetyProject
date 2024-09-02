@@ -158,8 +158,8 @@ public class RdlExample {
 
 	/**
 	 *  Testing methods
-	 * @param args
-	 * @throws Exception
+	 * @param args the args
+	 * @throws Exception error
 	 */
 	public static void main(String[] args) throws Exception {
 		//parserTest();

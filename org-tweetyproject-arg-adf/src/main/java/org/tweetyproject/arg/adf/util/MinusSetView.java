@@ -62,6 +62,19 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 		this.subset = Set.copyOf(subset);
 	}
 
+
+	/**
+ * Returns a view of a set that excludes a specific element.
+ *
+ * <p>This method creates a new set view that represents the given {@code superset} with a specified
+ * element excluded. The resulting set is a view, meaning that it does not create a copy of the
+ * superset but instead excludes the specified element dynamically.
+ *
+ * @param <E>        The type of elements in the set.
+ * @param superset   The original set from which an element is to be excluded.
+ * @param subtrahend The element to be excluded from the {@code superset}.
+ * @return A set view that represents the {@code superset} with the {@code subtrahend} excluded.
+ */
 	public static <E> Set<E> of(Set<E> superset, E subtrahend) {
 		return new MinusSetView<E>(superset, Set.of(subtrahend));
 	}

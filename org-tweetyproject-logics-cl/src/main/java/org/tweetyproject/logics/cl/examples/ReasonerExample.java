@@ -58,6 +58,11 @@ public class ReasonerExample {
 		"Erhoeht die Komplexitaet des Beispiels, so dass 6 Konditionale und 5 Symbole verwendet werden."
 	};
 
+	/**
+	 *  Example
+	 * @param args the args
+	 * @throws IOException error
+	 */
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 

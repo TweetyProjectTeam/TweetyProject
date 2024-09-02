@@ -20,12 +20,21 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * This constructor is used by the method "generateParseException"
-   * in the generated parser.  Calling this constructor generates
-   * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
-   */
+/**
+ * Constructs a new {@code ParseException} with the specified details.
+ * <p>
+ * This constructor is used by the method {@code generateParseException} in the generated
+ * parser. It initializes a new {@code ParseException} object with the provided values for
+ * the current token, expected token sequences, and token image.
+ * </p>
+ *
+ * @param currentTokenVal The {@link Token} object representing the current token at the
+ *        time the exception was thrown.
+ * @param expectedTokenSequencesVal A 2D array of integers representing the sequences of
+ *        expected tokens that were anticipated by the parser.
+ * @param tokenImageVal An array of {@code String} objects representing the textual
+ *        representations of the tokens.
+ */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
@@ -51,7 +60,9 @@ public class ParseException extends Exception {
     super();
   }
 
-  /** Constructor with message. */
+  /** Constructor with message.
+   * @param message the message
+  */
   public ParseException(String message) {
     super(message);
   }

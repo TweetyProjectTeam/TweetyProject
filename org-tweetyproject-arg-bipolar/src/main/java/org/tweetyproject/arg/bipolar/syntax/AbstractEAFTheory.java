@@ -227,7 +227,13 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public Set<Attack> getAttacks() {
         return new HashSet<Attack>(attacks);
     }
-
+    /**
+     * Return the powerset
+     * @return the powerset
+     *
+     * @param <T> type
+     * @param originalSet the input set
+     */
     public <T> Set<Set<T>> powerSet(Set<T> originalSet) {
         Set<Set<T>> sets = new HashSet<Set<T>>();
         if (originalSet.isEmpty()) {

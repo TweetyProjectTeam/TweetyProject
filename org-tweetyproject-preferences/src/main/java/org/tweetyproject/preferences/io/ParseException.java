@@ -20,7 +20,7 @@
 /* JavaCCOptions:KEEP_LINE_COL=null */
 package org.tweetyproject.preferences.io;
 
-/*
+/**
  * This exception is thrown when parse errors are encountered.
  * You can explicitly create objects of this exception type by
  * calling the method generateParseException in the generated
@@ -39,12 +39,23 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * This constructor is used by the method "generateParseException"
-   * in the generated parser.  Calling this constructor generates
-   * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
-   */
+/**
+ * Constructs a new {@code ParseException} with the specified details.
+ * This constructor is used by the method {@code generateParseException}
+ * in the generated parser to create a {@code ParseException} that includes
+ * information about the parsing error.
+ *
+ * @param currentTokenVal The token that caused the parse exception. This is the token
+ *                        that was being processed when the exception was thrown.
+ * @param expectedTokenSequencesVal A 2D array where each inner array represents a sequence
+ *                                  of expected tokens. These sequences provide context
+ *                                  about what tokens were expected at the time of the error.
+ * @param tokenImageVal An array of strings representing the textual representations
+ *                      of the tokens used in parsing. This helps in generating
+ *                      meaningful error messages by mapping tokens to their string values.
+ *
+ * @throws NullPointerException if any of the provided parameters are {@code null}.
+ */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
@@ -65,12 +76,13 @@ public class ParseException extends Exception {
    * relevant information.  The JavaCC generated code does not use
    * these constructors.
    */
-
   public ParseException() {
     super();
   }
 
-  /** Constructor with message. */
+  /** Constructor with message.
+   * @param message the message
+  */
   public ParseException(String message) {
     super(message);
   }

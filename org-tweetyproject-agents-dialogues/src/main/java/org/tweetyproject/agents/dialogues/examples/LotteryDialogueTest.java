@@ -191,7 +191,7 @@ public class LotteryDialogueTest {
 	 * LotteryDialogue test main method
 	 *
 	 * @param args the args
-	 * @throws ProtocolTerminatedException
+	 * @throws ProtocolTerminatedException error
 	 */
 	public static void main(String[] args) throws ProtocolTerminatedException {
 		LotteryDialogueTest.attackProbability = 0.3;

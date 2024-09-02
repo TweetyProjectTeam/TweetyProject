@@ -93,7 +93,7 @@ public class QdimacsWriter {
 	 *
 	 * @param kb a kb
 	 * @return kb in string format
-	 * @throws IOException
+	 * @throws IOException error
 	 */
 	public String printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers (indices of the list)

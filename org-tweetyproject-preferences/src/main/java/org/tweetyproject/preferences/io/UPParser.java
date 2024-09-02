@@ -31,18 +31,30 @@ Please note: update file syntax changed from
 e.g. (1, WEAKEN, 2, a)
 to
 (index, operation(amount), element)
-e.g. (1, -2, a)  where
+e.g. (1, -2, a)
+where
 -(/+) is equal to WEAKEN(/STRENGTHEN)
 and 2 is the amount
 */
 @SuppressWarnings("all")
 public class UPParser implements UPParserConstants {
-        public UPParser()
+  /**
+   * Constructor
+   * */
+  public UPParser()
         {
 
         }
 
 
+/**
+ * Parses the specified update file to extract a list of updates.
+ *
+ * @param updatefile The path to the update file to be parsed.
+ * @return A list of {@link Update} objects containing the parsed updates.
+ * @throws ParseException If an error occurs during the parsing process.
+ * @throws java.io.FileNotFoundException If the specified file cannot be found.
+ */
   public static ArrayList<Update < String >> parse(String updatefile) throws ParseException, java.io.FileNotFoundException
   {
     UPParser parser;
@@ -50,6 +62,11 @@ public class UPParser implements UPParserConstants {
     return parser.getUpdate();
   }
 
+  /**
+   * Example
+   * @param args the args
+   * @throws ParseException error
+   */
   public static void main(String args []) throws ParseException
   {
     try
@@ -65,6 +82,13 @@ public class UPParser implements UPParserConstants {
     }
   }
 
+  /**
+   *
+   * Return update
+   * @return update
+   * @throws ParseException error
+   * @throws java.io.FileNotFoundException error
+   */
   final public ArrayList<Update < String > > getUpdate() throws ParseException, java.io.FileNotFoundException {
   Token index, op, element;
   ArrayList < Update < String >> updates = new ArrayList < Update < String >> ();
@@ -143,70 +167,117 @@ public class UPParser implements UPParserConstants {
       jj_la1_0 = new int[] {0x100,0x100,0x4,};
    }
 
-  /** Constructor with InputStream. */
+  /** Constructor with InputStream.
+   *
+   * @param stream input stream
+   */
   public UPParser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /** Constructor with InputStream and supplied encoding */
-  public UPParser(java.io.InputStream stream, String encoding) {
-    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
-    token_source = new UPParserTokenManager(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+ /**
+     * Constructs a parser with an input stream and a specified encoding.
+     *
+     * @param stream   The input stream to read from.
+     * @param encoding The character encoding of the input stream.
+     * @throws RuntimeException If the specified encoding is unsupported.
+     */
+    public UPParser(java.io.InputStream stream, String encoding) {
+      try {
+          jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
+      } catch (java.io.UnsupportedEncodingException e) {
+          throw new RuntimeException(e);
+      }
+      token_source = new UPParserTokenManager(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
-  public void ReInit(java.io.InputStream stream) {
-     ReInit(stream, null);
-  }
-  /** Reinitialise. */
+
+
+
+  /**
+   * Reinitializes the parser with a new input stream and a specified encoding.
+   *
+   * @param stream   The new input stream to read from.
+   * @param encoding The character encoding of the new input stream.
+   * @throws RuntimeException If the specified encoding is unsupported.
+   */
   public void ReInit(java.io.InputStream stream, String encoding) {
-    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
-    token_source.ReInit(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+      try {
+          jj_input_stream.ReInit(stream, encoding, 1, 1);
+      } catch (java.io.UnsupportedEncodingException e) {
+          throw new RuntimeException(e);
+      }
+      token_source.ReInit(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor. */
+  /**
+   * Reinitializes the parser with a new input stream using the default encoding.
+   *
+   * @param stream The new input stream to read from.
+   */
+  public void ReInit(java.io.InputStream stream) {
+      ReInit(stream, null);
+  }
+
+  /**
+   * Constructs a parser with a reader.
+   *
+   * @param stream The reader to read from.
+   */
   public UPParser(java.io.Reader stream) {
-    jj_input_stream = new SimpleCharStream(stream, 1, 1);
-    token_source = new UPParserTokenManager(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+      jj_input_stream = new SimpleCharStream(stream, 1, 1);
+      token_source = new UPParserTokenManager(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new reader.
+   *
+   * @param stream The new reader to read from.
+   */
   public void ReInit(java.io.Reader stream) {
-    jj_input_stream.ReInit(stream, 1, 1);
-    token_source.ReInit(jj_input_stream);
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+      jj_input_stream.ReInit(stream, 1, 1);
+      token_source.ReInit(jj_input_stream);
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor with generated Token Manager. */
+  /**
+   * Constructs a parser with a provided token manager.
+   *
+   * @param tm The token manager to use for token processing.
+   */
   public UPParser(UPParserTokenManager tm) {
-    token_source = tm;
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+      token_source = tm;
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /**
+   * Reinitializes the parser with a new token manager.
+   *
+   * @param tm The new token manager to use for token processing.
+   */
   public void ReInit(UPParserTokenManager tm) {
-    token_source = tm;
-    token = new Token();
-    jj_ntk = -1;
-    jj_gen = 0;
-    for (int i = 0; i < 3; i++) jj_la1[i] = -1;
+      token_source = tm;
+      token = new Token();
+      jj_ntk = -1;
+      jj_gen = 0;
+      for (int i = 0; i < 3; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -224,7 +295,9 @@ public class UPParser implements UPParserConstants {
   }
 
 
-/** Get the next Token. */
+/** Get the next Token.
+ * @return next token
+ */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -233,7 +306,11 @@ public class UPParser implements UPParserConstants {
     return token;
   }
 
-/** Get the specific Token. */
+/** Get the specific Token
+ *
+ * @param index the index
+ * @return a token
+ */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -248,13 +325,15 @@ public class UPParser implements UPParserConstants {
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
-  }
 
+    }
   private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   private int[] jj_expentry;
   private int jj_kind = -1;
 
-  /** Generate ParseException. */
+  /** Generate ParseException.
+   * @return ParseException
+  */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[9];

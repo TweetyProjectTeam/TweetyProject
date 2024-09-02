@@ -350,7 +350,7 @@ public class GroundedTest {
 	/**
 	 * Grounded test method
 	 * @param args the args
-	 * @throws ProtocolTerminatedException
+	 * @throws ProtocolTerminatedException error
 	 */
 	public static void main(String[] args) throws ProtocolTerminatedException {
 		// set logging level to "TRACE" to get detailed descriptions

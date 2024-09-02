@@ -25,10 +25,11 @@ import java.util.*;
 import org.tweetyproject.commons.util.Triple;
 import org.tweetyproject.preferences.*;
 
-@SuppressWarnings("all")
 /**
  * POParser class
+ *
  */
+@SuppressWarnings("all")
 public class POParser implements POParserConstants {
   /** Constructor */
   public POParser() {
@@ -98,6 +99,11 @@ public class POParser implements POParserConstants {
     }
   }
 
+  /**
+   *  Get a StringPreferenceOrder
+   * @return a PreferenceOrder
+   * @throws ParseException error
+   */
   final public PreferenceOrder<String> StringPreferenceOrder() throws ParseException {
     Token t;
     Token t0, t1, t2;

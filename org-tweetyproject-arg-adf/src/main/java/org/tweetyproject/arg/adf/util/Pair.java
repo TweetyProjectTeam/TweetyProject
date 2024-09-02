@@ -22,25 +22,44 @@ import java.util.Objects;
 
 /**
  * Pair class
+ *
  * @author Mathias Hofer
- *@param <T1> type
- *@param <T2> type
+ * @param <T1> type
+ * @param <T2> type
  */
 public final class Pair<T1, T2> {
 
+	/** first */
 	public final T1 first;
 
+	/** second */
 	public final T2 second;
 
 	/**
-	 * @param first some element
-	 * @param second  some element
+	 * Constructor
+	 *
+	 * @param first  some element
+	 * @param second some element
 	 */
 	public Pair(T1 first, T2 second) {
 		this.first = first;
 		this.second = second;
 	}
 
+	/**
+	 * Creates a new {@code Pair} consisting of two elements.
+	 *
+	 * <p>
+	 * This method is a convenience factory method that constructs a {@code Pair}
+	 * from
+	 * the two provided elements.
+	 *
+	 * @param <T1> The type of the first element in the pair.
+	 * @param <T2> The type of the second element in the pair.
+	 * @param a    The first element of the pair.
+	 * @param b    The second element of the pair.
+	 * @return A {@code Pair<T1, T2>} containing the two specified elements.
+	 */
 	public static <T1, T2> Pair<T1, T2> of(T1 a, T2 b) {
 		return new Pair<>(a, b);
 	}
