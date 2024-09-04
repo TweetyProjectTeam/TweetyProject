@@ -59,4 +59,7 @@ public class PmMeasureExample {
 		System.out.println("Pm: " + pm.inconsistencyMeasure(kb));
 		
 	}
+
+    /** Default Constructor */
+    public PmMeasureExample(){}
 }

@@ -36,15 +36,15 @@ import org.tweetyproject.commons.util.Pair;
 /**
  * This class implements the "tuples*" argument ranking approach as proposed by
  * [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]. It takes into
- * account all the ancestors branches of an arguument stored in tupled values. 
+ * account all the ancestors branches of an arguument stored in tupled values.
  * Some arguments are incomparable using this approach; this means that it returns
  * partial rankings.
- * 
+ *
  * <br>
  * <br>
  * Note: This implementation only works for acyclic argument graphs. For cyclic
- * graphs <b>null</b> is returned. 
- * 
+ * graphs <b>null</b> is returned.
+ *
  * @author Anna Gessler
  */
 public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
@@ -97,7 +97,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 				int[] bAttackTuple = tvB.getSecond();
 				double bDefenseTupleSize = getTrueTupleSize(bDefenseTuple);
 				double bAttackTupleSize = getTrueTupleSize(bAttackTuple);
-				
+
 				if (aAttackTupleSize == bAttackTupleSize && aDefenseTupleSize == bDefenseTupleSize) {
 					if ((c.compare(aDefenseTuple, bDefenseTuple) <= 0) && (c.compare(aAttackTuple, bAttackTuple) >= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
@@ -119,11 +119,11 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 
 		return ranking;
 	}
-	
+
 	/**
-	 * Returns the true tuple size, i.e. infinity iff the tuple 
-	 * contains only 0 (a placeholder 
-	 * for an infinite number of zeroes in this implementation), 
+	 * Returns the true tuple size, i.e. infinity iff the tuple
+	 * contains only 0 (a placeholder
+	 * for an infinite number of zeroes in this implementation),
 	 * or the length of the array in all other cases.
 	 * @param l tuple represented by an array of integers
 	 * @return true size of the tuple
@@ -131,13 +131,13 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 	private double getTrueTupleSize(int[] l) {
 		if (l.length==1 && l[0]==0)
 			return Double.POSITIVE_INFINITY;
-		else 
+		else
 			return (double) l.length;
 	}
 
 	/**
 	 * Computes the tupled value for the given argument.
-	 * 
+	 *
 	 * @param a  an argument
 	 * @param kb DungTheory
 	 * @return a pair that consists of the two tuples that represent the defense
@@ -173,6 +173,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 	}
 
 	/**
+	 * Return the tupled values computed by previous calls of getModel
 	 * @return the tupled values computed by previous calls of getModel oder
 	 *         getModels
 	 */
@@ -181,7 +182,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 	}
 
 	/**
-	 * Prints the tupled values computed by previous calls of getModel oder getModels in a 
+	 * Prints the tupled values computed by previous calls of getModel oder getModels in a
 	 * human-readable way.
 	 * @return a string representation of the tuples
 	 */
@@ -195,11 +196,14 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartia
 			tv = tv.substring(2);
 		return tv;
 	}
-	
+
 	/**natively installed*/
 	@Override
 	public boolean isInstalled() {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public TuplesRankingReasoner(){}
 }

@@ -19,19 +19,34 @@
 package org.tweetyproject.logics.dl.syntax;
 
 /**
- * 
- * Abstract base class for assertional axioms (concept assertions
- * and role assertions).
- * 
- * @author Anna Gessler
+ * Abstract base class for assertional axioms (concept assertions and role assertions)
+ * in description logic.
  *
+ * @see DlAxiom
+ * @see org.tweetyproject.logics.dl.syntax.ConceptAssertion
+ * @see org.tweetyproject.logics.dl.syntax.RoleAssertion
+ *
+ * @author Anna Gessler
  */
 public abstract class AssertionalAxiom extends DlAxiom {
-	
+
+    /**
+     * Default constructor for {@code AssertionalAxiom}.
+     * <p>
+     * This constructor is used to initialize an instance of the abstract base class
+     * for assertional axioms in description logic. Concrete subclasses will specify
+     * the specific nature of the assertion.
+     * </p>
+     */
+    public AssertionalAxiom() {
+        // Default constructor with no specific initialization
+    }
+
 	/**
-	 * @return "true" if the concept of the assertion is atomic, "false" if
-	 * it is a complex concept
+	 * Determines if the concept involved in the assertion is atomic.
+	 * @return {@code true} if the concept of the assertion is atomic,
+	 *         {@code false} if it is a complex concept
 	 */
 	public abstract boolean isAtomic();
-	
+
 }

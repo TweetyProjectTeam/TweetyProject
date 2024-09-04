@@ -27,27 +27,59 @@ import org.tweetyproject.logics.pcl.syntax.*;
 import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
 
 /**
- * Example code illustrating the use of inconsistency measures and repairing approaches.
+ * Example code illustrating the use of inconsistency measures and repairing approaches for probabilistic conditional logic.
  *
+ * <p>
+ * This class demonstrates how to evaluate the inconsistency of a probabilistic conditional logic belief set and
+ * how to apply different repairing techniques to make the belief set consistent.
+ * </p>
+ *
+ *
+ * @author Your Name
  */
 public class AnalysisExample {
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 
+    /**
+     * Main method illustrating how to compute the inconsistency measure, culpability, and repair a probabilistic belief set.
+     *
+     * @param args Command line arguments (not used)
+     * @throws FileNotFoundException If the specified belief set file is not found
+     * @throws ParserException If an error occurs while parsing the belief set
+     * @throws IOException If an I/O error occurs while reading the belief set file
+     */
+    public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 
-		PclBeliefSet beliefSet = (PclBeliefSet) new org.tweetyproject.logics.pcl.parser.PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/test.pcl");
+        // Parse the belief set from a PCL file
+        PclBeliefSet beliefSet = (PclBeliefSet) new org.tweetyproject.logics.pcl.parser.PclParser().parseBeliefBaseFromFile("/path/to/test.pcl");
 
-		OptimizationRootFinder rootFinder = null; // TODO to be defined
-		BeliefSetInconsistencyMeasure<ProbabilisticConditional> dist = new DistanceMinimizationInconsistencyMeasure(rootFinder);
-		MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(rootFinder,false);
-		System.out.println(beliefSet);
-		System.out.println(dist.inconsistencyMeasure(beliefSet));
+        // Define the root finder to be used for distance minimization and culpability measures
+        OptimizationRootFinder rootFinder = null; // TODO: Root finder to be defined
 
-		for(ProbabilisticConditional pc: beliefSet)
-			System.out.println(pc + "\t" + cp.culpabilityMeasure(beliefSet, pc));
+        // Define the inconsistency measure based on distance minimization
+        BeliefSetInconsistencyMeasure<ProbabilisticConditional> dist = new DistanceMinimizationInconsistencyMeasure(rootFinder);
 
-		PenalizingCreepingMachineShop ms = new PenalizingCreepingMachineShop(rootFinder);
-		BalancedMachineShop ms2 = new BalancedMachineShop(cp);
-		System.out.print(ms.repair(beliefSet));
-		System.out.print(ms2.repair(beliefSet));
-	}
+        // Define the culpability measure using the mean distance approach
+        MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(rootFinder, false);
+
+        // Print the belief set and its inconsistency measure
+        System.out.println(beliefSet);
+        System.out.println(dist.inconsistencyMeasure(beliefSet));
+
+        // Print the culpability measure for each probabilistic conditional in the belief set
+        for (ProbabilisticConditional pc : beliefSet)
+            System.out.println(pc + "\t" + cp.culpabilityMeasure(beliefSet, pc));
+
+        // Define the machine shops for repairing the belief set
+        PenalizingCreepingMachineShop ms = new PenalizingCreepingMachineShop(rootFinder);
+        BalancedMachineShop ms2 = new BalancedMachineShop(cp);
+
+        // Repair the belief set using the different machine shop approaches
+        System.out.print(ms.repair(beliefSet));
+        System.out.print(ms2.repair(beliefSet));
+    }
+
+    /** Default Constructor */
+    public AnalysisExample() {
+    }
 }
+

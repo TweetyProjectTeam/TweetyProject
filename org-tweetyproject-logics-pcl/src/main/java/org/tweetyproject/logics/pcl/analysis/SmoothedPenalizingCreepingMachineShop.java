@@ -38,21 +38,22 @@ public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachi
 	 * The scaling parameter for the function 'v'
 	 */
 	private double scalingParameter = 0;
-	
+
 	/**
 	 * The culpability measure used by this machine shop.
 	 */
 	private CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure;
-		
+
 	/**
 	 * Creates a new creeping machine shop based on the given culpability measure.
+	 * @param rootFinder the rootFinder
 	 * @param culpabilityMeasure a culpability measure.
 	 */
 	public SmoothedPenalizingCreepingMachineShop(OptimizationRootFinder rootFinder,CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
 		super(rootFinder);
 		this.culpabilityMeasure = culpabilityMeasure;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.probabilisticconditionallogic.analysis.AbstractCreepingMachineShop#getValues(double, org.tweetyproject.logics.probabilisticconditionallogic.PclBeliefSet)
 	 */
@@ -95,10 +96,10 @@ public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachi
 				this.scalingParameter = current;
 				first = false;
 			}else if(current > this.scalingParameter)
-				this.scalingParameter = current;				
+				this.scalingParameter = current;
 		}
 	}
-	
+
 	/**
 	 * This method implements a weighted linear approach from 'b2' to 'b1'
 	 * with gradient 'a'; 'x' is the parameter in [0,1].
@@ -115,5 +116,5 @@ public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachi
 			return b2-a*this.scalingParameter*x;
 		return b1;
 	}
-	
+
 }

@@ -34,11 +34,15 @@ import org.tweetyproject.math.probability.*;
 /**
  * This class bundles common answering behaviour for
  * relational conditional semantics.
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  */
 public abstract class AbstractRpclSemantics implements RpclSemantics {
+	/** Default Constructor */
+	public AbstractRpclSemantics(){
+
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.rpcl.semantics.RpclSemantics#satisfies(org.tweetyproject.logics.rpcl.semantics.RpclProbabilityDistribution, org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional)
@@ -51,13 +55,13 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 */
 	@Override
 	public abstract String toString();
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.rpcl.semantics.RpclSemantics#getSatisfactionStatement(org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional, org.tweetyproject.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override
 	public abstract Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars);
-	
+
 	/**
 	 * Checks whether the given ground conditional is satisfied by the given distribution
 	 * wrt. this semantics. For every rational semantics this satisfaction relation
@@ -73,7 +77,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 		return p.probability(groundConditional).getValue() < groundConditional.getProbability().getValue() + Probability.PRECISION &&
 			p.probability(groundConditional).getValue() > groundConditional.getProbability().getValue() - Probability.PRECISION;
 	}
-	
+
 	/**
 	 * Constructs the term expressing the probability of the given formula "f"
 	 * wrt. to the variables (describing probabilities) of the reference worlds.
@@ -82,7 +86,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @return the term expressing the probability of the given formula "f".
 	 */
 	protected Term probabilityTerm(FolFormula f, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars){
-		Term result = null;		
+		Term result = null;
 		for(Interpretation<FolBeliefSet,FolFormula> world: worlds2vars.keySet()){
 			Integer multiplicator;
 			if(world instanceof ReferenceWorld)
@@ -95,9 +99,9 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 				if(result == null)
 					result = t;
 				else result = result.add(t);
-			}				
-		}			
+			}
+		}
 		return (result == null)? new FloatConstant(0): result;
 	}
-	
+
 }

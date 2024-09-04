@@ -24,11 +24,19 @@ import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
  * Ancestor class for all Setaf reasoners.
- * 
+ *
  * @author Sebastian Franke
  *
  */
 public abstract class AbstractSetAfReasoner implements QualitativeReasoner<SetAf,Argument>{
+
+		/**
+	 * Default constructor for {@code AbstractSetAfReasoner}.
+	 */
+	public AbstractSetAfReasoner() {
+		// No specific initialization required
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)

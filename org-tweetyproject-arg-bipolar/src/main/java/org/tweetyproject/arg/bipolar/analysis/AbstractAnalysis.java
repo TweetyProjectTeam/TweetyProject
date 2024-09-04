@@ -47,7 +47,7 @@ public abstract class AbstractAnalysis implements Analysis {
 
 
     /**
-     * 
+     * Setter for peafTheory
      * @param peafTheory theory
      */
     public void setPEAFTheory(PEAFTheory peafTheory) {

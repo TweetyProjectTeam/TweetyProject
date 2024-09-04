@@ -39,7 +39,7 @@ import org.tweetyproject.math.opt.problem.*;
 import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 
 /**
- * This class implements  the ant colony algorithm using 
+ * This class implements  the ant colony algorithm using
  * isula (https://github.com/cptanalatriste/isula) for combinatrics problems
  * @author Sebastian Franke
  */
@@ -56,8 +56,8 @@ public class AntColonyOptimization extends CombinatoricsSolver {
      /**Pheromone Importance*/
      public double PheromoneImportance;
 	//end of configuration data
-	
-	
+
+
 	/**for using the problem sepciifc functions*/
 	protected CombinatoricsProblem problem;
 	/**ajacence array representation of graph*/
@@ -71,20 +71,20 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	 * @param PheromoneImportance importance of pheromons
 	 * @throws IOException IOException
 	 */
-	public AntColonyOptimization(int NumberOfAnts, double EvaporationRatio, 
-			int NumberOfIterations, double HeuristicImportance, 
+	public AntColonyOptimization(int NumberOfAnts, double EvaporationRatio,
+			int NumberOfIterations, double HeuristicImportance,
 			double PheromoneImportance) throws IOException {
-		
-		
+
+
 		this.NumberOfAnts = NumberOfAnts;
 		this.EvaporationRatio = EvaporationRatio;
 		this.NumberOfIterations = NumberOfIterations;
 		this.HeuristicImportance = HeuristicImportance;
-		
+
 	}
 	/**solves the problem and connects the config and initializes the rest
 	 * @param prob some problem
-	 * @return the solution 
+	 * @return the solution
 	 * @throws ConfigurationException if some error occurs
 	 * @throws InvalidInputException if some error occurs
 	 * @throws IOException if some error occurs
@@ -102,7 +102,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        solver.initialize(environment, colony, (ConfigurationProvider) configurationProvider);
 	        solver.addDaemonActions(new StartPheromoneMatrix<ElementOfCombinatoricsProb, AntCol_Environment>(),
 	                new PerformEvaporation<ElementOfCombinatoricsProb, AntCol_Environment>());
-	        solver.addDaemonActions(getPheromoneUpdatePolicy());       
+	        solver.addDaemonActions(getPheromoneUpdatePolicy());
 	        solver.getAntColony().addAntPolicies(new RandomNodeSelection<ElementOfCombinatoricsProb, AntCol_Environment>());
 
 	        solver.solveProblem();
@@ -110,7 +110,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        ArrayList<ElementOfCombinatoricsProb> bestSol = new ArrayList<ElementOfCombinatoricsProb>();
 	        for(ElementOfCombinatoricsProb i : solver.getBestSolution())
 	        	bestSol.add(i);
-	        	
+
 			return bestSol;
 	}
 	/**Ant colony
@@ -129,14 +129,14 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 					e.printStackTrace();
 				}
                 ant.initialReference = environment.members[initialReference];
-                
+
                 return ant;
             }
         };
 
     }
 	/**
-	 * 
+	 *
 	 * @return daemon action
 	 */
     private static DaemonAction<ElementOfCombinatoricsProb, AntCol_Environment> getPheromoneUpdatePolicy() {
@@ -153,7 +153,8 @@ public class AntColonyOptimization extends CombinatoricsSolver {
         };
     }
 	/**
-	 * 
+	 *
+	 * Return represntation
 	 * @param prob problem
 	 * @return represntation
 	 * @throws  IOException IOException
@@ -166,14 +167,14 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	class ProblemConfiguration implements ConfigurationProvider {
 		private double initialPheromoneValue;
 		/**
-		 * 
+		 *
 		 * @param problemRepresentation representation
 		 */
 		public ProblemConfiguration(double[][] problemRepresentation) {
-	        ArrayList<ElementOfCombinatoricsProb> randomSolution = 
+	        ArrayList<ElementOfCombinatoricsProb> randomSolution =
 	        		AntColonyOptimization.this.problem.createRandomNewSolution(null);
 	        int numberOfCities = problemRepresentation.length;
-	        
+
 	        this.initialPheromoneValue = numberOfCities / AntColonyOptimization.this.problem.sumOfWeights(randomSolution);
 		}
 
@@ -203,24 +204,24 @@ public class AntColonyOptimization extends CombinatoricsSolver {
         public double getPheromoneImportance() {
             return AntColonyOptimization.this.PheromoneImportance;
         }
-		
+
 	}
 	/**environment*/
 	public class AntCol_Environment extends Environment{
 		/**represent elements in a given order to access the graphRepresantation better*/
 		protected ElementOfCombinatoricsProb[] members = new ElementOfCombinatoricsProb[AntColonyOptimization.this.problem.elements.size()];
 		/**
-		 * 
+		 * Constructor
 		 * @param problemRepresentation problem
 		 * @throws InvalidInputException InvalidInputException
 		 */
 		public AntCol_Environment(double[][] problemRepresentation) throws InvalidInputException {
-			super(problemRepresentation);			
+			super(problemRepresentation);
 			int i = 0;
 			for(ElementOfCombinatoricsProb el: AntColonyOptimization.this.problem.elements) {
 				members[i] = el;
 				i++;
-			}			
+			}
 		}
 
 		/**initialize the pheromone matrix with zeroes*/
@@ -230,7 +231,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 
 			return rep;
 		}
-		
+
 	}
 	/**ant*/
 	class AntCol_Ant extends Ant<ElementOfCombinatoricsProb, AntCol_Environment>{
@@ -239,14 +240,14 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	    public AntCol_Ant(int probSize) throws InterruptedException {
 	        super();
 
-	        
+
 	        this.probSize = probSize;
 	        this.setSolution(new ElementOfCombinatoricsProb[probSize]);
 
 	    }
 		/**starting point for this particular ant*/
 		private ElementOfCombinatoricsProb initialReference;
-		
+
 		/**find an element in an array*/
 		public <T> int find(T[] arr, T target)
 		{
@@ -258,10 +259,10 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 					return i;
 			}
 
-				
+
 			return -1;
 		}
-		
+
 		boolean contains(ElementOfCombinatoricsProb[] arr, ElementOfCombinatoricsProb el) {
 			for (ElementOfCombinatoricsProb i : arr) {
 			    if (i == el) {
@@ -269,13 +270,13 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 			    }
 			}
 			return false;
-			
+
 		}
-	
+
 		@Override
 		public boolean isSolutionReady(AntCol_Environment environment) {
 			ArrayList<ElementOfCombinatoricsProb> list = new ArrayList<ElementOfCombinatoricsProb>();
-			
+
 			for(ElementOfCombinatoricsProb el: this.getSolution()) {
 				list.add(el);
 			}
@@ -285,7 +286,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 		@Override
 		public double getSolutionCost(AntCol_Environment environment) {
 			ArrayList<ElementOfCombinatoricsProb> list = new ArrayList<ElementOfCombinatoricsProb>();
-			
+
 			for(ElementOfCombinatoricsProb el: environment.members) {
 				list.add(el);
 			}
@@ -296,11 +297,11 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 		@Override
 		public Double getHeuristicValue(ElementOfCombinatoricsProb solutionComponent, Integer positionInSolution,
 				AntCol_Environment environment) {
-			
-			
+
+
 			 return AntColonyOptimization.this.problem.getHeuristicValue(solutionComponent,
 						 getCurrentIndex(), this.initialReference, this.getSolution());
-	        
+
 		}
 
 		@Override
@@ -318,7 +319,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 			//only add elements if they are reachable and not yet i the solution
 			for(int i = 0; i < environment.getProblemRepresentation().length; i++){
 					if(AntColonyOptimization.this.problem.getGraphrepresentation()[lastComp][i] == 1 &&
-							 this.contains(this.getSolution(), environment.members[i]) == false){					
+							 this.contains(this.getSolution(), environment.members[i]) == false){
 						neighbors.add( environment.members[i]);
 					}
 			}
@@ -329,16 +330,16 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 		public Double getPheromoneTrailValue(ElementOfCombinatoricsProb solutionComponent, Integer positionInSolution,
 				AntCol_Environment environment) {
 			ElementOfCombinatoricsProb previousComponent = this.initialReference;
-		
+
 	        if (positionInSolution > 0) {
 	            previousComponent = getSolution()[positionInSolution - 1];
 	        }
 
 	        double[][] pheromoneMatrix = environment.getPheromoneMatrix();
-       
+
 
 	        return pheromoneMatrix[find(environment.members, solutionComponent)][find(environment.members, previousComponent)];
-			
+
 		}
 
 		@Override
@@ -352,7 +353,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        double[][] pheromoneMatrix = environment.getPheromoneMatrix();
 	        pheromoneMatrix[find(environment.members, solutionComponent)][find(environment.members, previousComponent)] = value;
 	        pheromoneMatrix[find(environment.members, previousComponent)][find(environment.members, solutionComponent)] = value;
-			
+
 		}
 
 	    @Override
@@ -372,8 +373,8 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	    public boolean isInstalled() {
 	    	return true;
 	    }
-		
-		
+
+
 	}
 
 }

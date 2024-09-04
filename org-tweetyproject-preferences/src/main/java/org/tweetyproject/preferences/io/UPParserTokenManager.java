@@ -30,7 +30,9 @@ public class UPParserTokenManager implements UPParserConstants
 
   /** Debug output. */
   public  java.io.PrintStream debugStream = System.out;
-  /** Set debug output. */
+  /** Set debug output.
+   * @param ds print stream
+  */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
 private final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
@@ -196,60 +198,93 @@ public static final String[] lexStateNames = {
    "DEFAULT",
 };
 static final long[] jjtoToken = {
-   0x1fdL, 
+   0x1fdL,
 };
 static final long[] jjtoSkip = {
-   0x2L, 
+   0x2L,
 };
+/** input stream */
 protected SimpleCharStream input_stream;
+/** jjrounds */
 private final int[] jjrounds = new int[10];
+/** jjstateSet */
 private final int[] jjstateSet = new int[20];
+/** char */
 protected char curChar;
-/** Constructor. */
-public UPParserTokenManager(SimpleCharStream stream){
-   if (SimpleCharStream.staticFlag)
-      throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+/**
+ * Token manager for parsing with the given input stream.
+ * @param stream the simple
+ */
+public UPParserTokenManager(SimpleCharStream stream) {
+   if (SimpleCharStream.staticFlag) {
+       throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+   }
    input_stream = stream;
 }
 
-/** Constructor. */
-public UPParserTokenManager(SimpleCharStream stream, int lexState){
+/**
+* Token manager for parsing with the given input stream and initial lexical state.
+*
+* @param stream The input stream to be used by the token manager.
+* @param lexState The initial lexical state to switch to.
+*/
+public UPParserTokenManager(SimpleCharStream stream, int lexState) {
    this(stream);
    SwitchTo(lexState);
 }
 
-/** Reinitialise parser. */
-public void ReInit(SimpleCharStream stream)
-{
+/**
+* Reinitializes the parser with a new input stream, resetting to default lexical state.
+*
+* @param stream The new input stream to be used.
+*/
+public void ReInit(SimpleCharStream stream) {
    jjmatchedPos = jjnewStateCnt = 0;
    curLexState = defaultLexState;
    input_stream = stream;
    ReInitRounds();
 }
-private void ReInitRounds()
-{
+
+/**
+* Resets the internal state rounds for the token manager.
+*/
+private void ReInitRounds() {
    int i;
    jjround = 0x80000001;
-   for (i = 10; i-- > 0;)
-      jjrounds[i] = 0x80000000;
+   for (i = 10; i-- > 0;) {
+       jjrounds[i] = 0x80000000;
+   }
 }
 
-/** Reinitialise parser. */
-public void ReInit(SimpleCharStream stream, int lexState)
-{
+/**
+* Reinitializes the parser with a new input stream and sets the lexical state.
+*
+* @param stream The new input stream to be used.
+* @param lexState The lexical state to switch to.
+*/
+public void ReInit(SimpleCharStream stream, int lexState) {
    ReInit(stream);
    SwitchTo(lexState);
 }
 
-/** Switch to specified lex state. */
-public void SwitchTo(int lexState)
-{
-   if (lexState >= 1 || lexState < 0)
-      throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
-   else
-      curLexState = lexState;
+/**
+* Switches the lexical analyzer to a specified lexical state.
+*
+* @param lexState The new lexical state to switch to.
+* @throws TokenMgrError If the specified lexical state is invalid.
+*/
+public void SwitchTo(int lexState) {
+   if (lexState >= 1 || lexState < 0) {
+       throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
+   } else {
+       curLexState = lexState;
+   }
 }
-
+/**
+ * Return fill token
+ *
+ * @return token
+ */
 protected Token jjFillToken()
 {
    final Token t;
@@ -281,8 +316,10 @@ int jjround;
 int jjmatchedPos;
 int jjmatchedKind;
 
-/** Get the next Token. */
-public Token getNextToken() 
+/** Get the next Token.
+ * @return token
+*/
+public Token getNextToken()
 {
   Token matchedToken;
   int curPos = 0;

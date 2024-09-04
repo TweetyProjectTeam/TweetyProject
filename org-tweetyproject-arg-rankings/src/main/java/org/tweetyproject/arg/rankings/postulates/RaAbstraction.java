@@ -79,4 +79,7 @@ public class RaAbstraction extends RankingPostulate {
 		GeneralComparator<Argument, DungTheory> isoRanking = ev.getModel(isoDt);
 		return ranking.compare(a, b) == isoRanking.compare(isoArg, b);
 	}
+
+    /** Default Constructor */
+    public RaAbstraction(){}
 }

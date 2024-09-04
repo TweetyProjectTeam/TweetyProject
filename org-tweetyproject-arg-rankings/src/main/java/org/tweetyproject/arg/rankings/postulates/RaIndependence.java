@@ -73,4 +73,7 @@ public class RaIndependence extends RankingPostulate {
 		return ranking.compare(a, b) == ranking2.compare(a, b);
 	}
 
+
+    /** Default Constructor */
+    public RaIndependence(){}
 }

@@ -34,6 +34,13 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  * @author Lars Bengel, Sebastian Franke
  */
 public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
+
+
+		/** Default */
+		public SimpleEagerSetAfReasoner(){
+			// Default
+		}
+
     @Override
     public Collection<Extension<SetAf>> getModels(SetAf bbase) {
         Collection<Extension<SetAf>> exts = new HashSet<Extension<SetAf>>();

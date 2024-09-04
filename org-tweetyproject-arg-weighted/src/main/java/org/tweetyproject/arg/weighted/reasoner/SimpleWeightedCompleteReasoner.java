@@ -27,23 +27,30 @@ import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
 /**
  * This reasoner for weighted Dung theories performs inference on the complete extensions.
  * Computes the set of all complete extensions, i.e., all alpha gamma admissible sets that contain all their acceptable arguments.
+ * @param <T> The type
  * @author Sandra Hoffmann
  *
  */
 public class SimpleWeightedCompleteReasoner<T> {
-	
-	
+
+
+		/** Default Constructor */
+		public SimpleWeightedCompleteReasoner(){
+
+		}
+
+
 	/**
-	 * Computes all alpha-gamma-complete extensions for the given weighted argumentation framework. 
+	 * Computes all alpha-gamma-complete extensions for the given weighted argumentation framework.
 	 *
 	 * @param bbase The weighted argumentation framework.
 	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
-	 * @param gamma The threshold for defense, representing the maximum allowable difference between the 
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the
 	 *              aggregated weights of attack and defense.
 	 * @return A collection all complete extensions.
 	 */
 	public Collection<Extension<DungTheory>> getModels(WeightedArgumentationFramework<T> bbase, T alpha, T gamma) {
-		Collection<Extension<DungTheory>> completeExtensions = new HashSet<>(); 
+		Collection<Extension<DungTheory>> completeExtensions = new HashSet<>();
 		// get all admissible extensions
 		SimpleWeightedAdmissibleReasoner<T> admReasoner = new SimpleWeightedAdmissibleReasoner<>();
 		Collection<Extension<DungTheory>> admExtensions = admReasoner.getModels(bbase,alpha,gamma);
@@ -55,11 +62,11 @@ public class SimpleWeightedCompleteReasoner<T> {
 	}
 
 	/**
-	 * Returns an alpha-gamma-complete extension for the given weighted argumentation framework. 
+	 * Returns an alpha-gamma-complete extension for the given weighted argumentation framework.
 	 *
 	 * @param bbase The weighted argumentation framework.
 	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
-	 * @param gamma The threshold for defense, representing the maximum allowable difference between the 
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the
 	 *              aggregated weights of attack and defense.
 	 * @return An alpha-gamma-complete extension.
 	 */
@@ -73,7 +80,7 @@ public class SimpleWeightedCompleteReasoner<T> {
 		}
 		return new Extension<DungTheory>() ;
 	}
-		
+
 
 }
 

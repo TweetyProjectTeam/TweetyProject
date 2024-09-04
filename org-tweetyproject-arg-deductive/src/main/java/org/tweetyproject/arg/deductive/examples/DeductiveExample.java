@@ -32,32 +32,52 @@ import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * 
+ *
  * Shows how to construct and query a deductive knowledge base.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class DeductiveExample {
+	/**
+	 * Default Constructor
+	 */
+	public DeductiveExample() {
+		// default
+	}
 
-	public static void main(String[] args) throws ParserException, IOException{
+	/**
+	 * This class demonstrates the use of a deductive knowledge base in combination
+	 * with a SAT solver
+	 * to perform reasoning using propositional logic formulas. The program adds
+	 * several logical
+	 * formulas to the knowledge base, uses a deductive reasoning engine, and
+	 * queries the knowledge
+	 * base for a specific formula's truth value.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 * @throws ParserException If there is an error in parsing the logical formulas.
+	 * @throws IOException     If there is an I/O error while processing.
+	 */
+	public static void main(String[] args) throws ParserException, IOException {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
-		
+
 		PlParser parser = new PlParser();
-		kb.add((PlFormula)parser.parseFormula("s"));
-		kb.add((PlFormula)parser.parseFormula("!s || h"));
-		kb.add((PlFormula)parser.parseFormula("f"));		
-		kb.add((PlFormula)parser.parseFormula("!f || !h"));
-		kb.add((PlFormula)parser.parseFormula("v"));
-		kb.add((PlFormula)parser.parseFormula("!v || !h"));
-		
+		kb.add((PlFormula) parser.parseFormula("s"));
+		kb.add((PlFormula) parser.parseFormula("!s || h"));
+		kb.add((PlFormula) parser.parseFormula("f"));
+		kb.add((PlFormula) parser.parseFormula("!f || !h"));
+		kb.add((PlFormula) parser.parseFormula("v"));
+		kb.add((PlFormula) parser.parseFormula("!v || !h"));
+
 		System.out.println(kb);
-		
-		AbstractDeductiveArgumentationReasoner reasoner = new SimpleDeductiveReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
-		
-		System.out.println(reasoner.query(kb,(PlFormula) parser.parseFormula("h")));
-		
+
+		AbstractDeductiveArgumentationReasoner reasoner = new SimpleDeductiveReasoner(new ClassicalCategorizer(),
+				new SimpleAccumulator());
+
+		System.out.println(reasoner.query(kb, (PlFormula) parser.parseFormula("h")));
+
 	}
-	
+
 }

@@ -27,21 +27,21 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 /**
  * This class models an universal restriction in description logics,
  * i.e. an expression of the form "forall R.C" for a role R and a Concept C.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class UniversalRestriction extends ComplexConcept {
-	
+
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
 	private Pair<AtomicRole,ComplexConcept> formulas;
-	
+
 	/**
 	 * Creates a new ALC universal restriction with the given role
 	 * and concept.
-	 * 
+	 *
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
@@ -50,22 +50,25 @@ public class UniversalRestriction extends ComplexConcept {
 		formulas.setFirst(r);
 		formulas.setSecond(c);
 	}
-	
+
 	/**
+	 * Return the (atomic) role and the concept that are part of the universal restriction.
 	 * @return the (atomic) role and the concept that are part of the universal restriction.
 	 */
 	public Pair<AtomicRole,ComplexConcept> getFormulas() {
-		return this.formulas;	
+		return this.formulas;
 	}
-	
+
 	/**
+	 * Return the (atomic) role of the universal restriction.
 	 * @return the (atomic) role of the universal restriction.
 	 */
 	public AtomicRole getRole() {
 		return this.formulas.getFirst();
 	}
-	
+
 	/**
+	 * Return the concept of the universal restriction.
 	 * @return the concept of the universal restriction.
 	 */
 	public ComplexConcept getConcept() {
@@ -79,7 +82,7 @@ public class UniversalRestriction extends ComplexConcept {
 		sig.add(this.formulas.getSecond());
 		return sig;
 	}
-	
+
 	public String toString() {
 		return "(forall " + " " + this.formulas.getFirst().toString() + " " + this.getFormulas().getSecond().toString() + ")";
 	}
@@ -105,9 +108,9 @@ public class UniversalRestriction extends ComplexConcept {
 	@Override
 	public ComplexConcept collapseAssociativeFormulas() {
 		 return new UniversalRestriction(formulas.getFirst().collapseAssociativeFormulas(),formulas.getSecond().collapseAssociativeFormulas());
-			
+
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,5 +137,5 @@ public class UniversalRestriction extends ComplexConcept {
 			return false;
 		return true;
 	}
-	
+
 }

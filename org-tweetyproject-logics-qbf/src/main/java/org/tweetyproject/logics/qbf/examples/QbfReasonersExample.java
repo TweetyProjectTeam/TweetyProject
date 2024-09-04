@@ -32,11 +32,38 @@ import org.tweetyproject.logics.qbf.reasoner.QuteSolver;
 
 /**
  * Examples for using QBF solvers.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class QbfReasonersExample {
+
+	/** Default */
+	public QbfReasonersExample() {
+
+	}
+
+	/**
+	 * Demonstrates the use of various Quantified Boolean Formula (QBF) reasoners
+	 * and solvers with the TweetyProject library.
+	 * The method parses belief sets and formulas from files or strings, and
+	 * evaluates their satisfiability or consistency
+	 * using different solvers such as NaiveQbfReasoner, CAQE, GhostQ, Qute, and
+	 * Cadet.
+	 *
+	 * The demonstration includes:
+	 * 1. Parsing belief sets and formulas using the QbfParser.
+	 * 2. Performing naive classical inference using the NaiveQbfReasoner.
+	 * 3. Utilizing external QBF solvers (CAQE, GhostQ, Qute, and Cadet) to check
+	 * satisfiability and consistency of belief sets and formulas.
+	 *
+	 * Each solver is evaluated on the same set of inputs to compare their
+	 * performance and behavior.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 * @throws ParserException If an error occurs during parsing.
+	 * @throws IOException     If an error occurs during file I/O operations.
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		QbfParser parser = new QbfParser();
 		PlBeliefSet p = parser.parseBeliefBaseFromFile("src/main/resources/tweety-example.qbf");
@@ -54,8 +81,9 @@ public class QbfReasonersExample {
 		System.out.println(reasoner.query(p2, query2));
 		PlFormula query3 = parser.parseFormula("exists b: (b && !b)");
 		System.out.println(reasoner.query(p2, query3));
-		
-		PlFormula f1 = parser.parseFormula("forall x1: (exists y1: (forall x2: (exists y2: ((x1 || y1) && (!x2 || y2)))))");
+
+		PlFormula f1 = parser
+				.parseFormula("forall x1: (exists y1: (forall x2: (exists y2: ((x1 || y1) && (!x2 || y2)))))");
 		PlFormula f2 = parser.parseFormula("forall x1: (x1||!x1)");
 		PlFormula f3 = parser.parseFormula("exists x2: (forall x1: (x1||!x2||x2 && (!x1||x2)))");
 		PlBeliefSet p3 = parser.parseBeliefBase("forall A: (forall B:( exists C:( (C) <=> (A && B))))");
@@ -73,20 +101,21 @@ public class QbfReasonersExample {
 		// GhostQ
 		System.out.println("\nGhostQ\n=================");
 		GhostQSolver reasoner5 = new GhostQSolver("/home/anna/snap/qbf/ghostq/bin/");
-	    System.out.println(reasoner5.isSatisfiable(p3));
+		System.out.println(reasoner5.isSatisfiable(p3));
 		System.out.println(reasoner5.isSatisfiable(p4));
 		System.out.println(reasoner5.isConsistent(f1));
 		System.out.println(reasoner5.isConsistent(f2));
 		System.out.println(reasoner5.isConsistent(f3));
-		
+
 		// Qute
 		System.out.println("\nQute\n=================");
 		QuteSolver reasoner4 = new QuteSolver("/home/anna/snap/qbf/qute");
-		System.out.println(reasoner4.isSatisfiable(p3)); //TODO: Why does this evaluate to false (in contrast to the other solvers)?
+		System.out.println(reasoner4.isSatisfiable(p3)); // TODO: Why does this evaluate to false (in contrast to the
+															// other solvers)?
 		System.out.println(reasoner4.isSatisfiable(p4));
 		System.out.println(reasoner4.isConsistent(f1));
 		System.out.println(reasoner4.isConsistent(f2));
-		
+
 		// Cadet
 		// Note: Only takes input in 2QBF
 		System.out.println("\nCadet\n=================");

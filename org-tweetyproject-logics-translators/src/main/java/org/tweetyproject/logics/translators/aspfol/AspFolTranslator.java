@@ -33,118 +33,142 @@ import org.tweetyproject.logics.fol.syntax.Negation;
 /**
  * This Translator can translate between FOL and ASP literals (without default
  * negated literals).
- * 
+ *
  * @author Tim Janus
  */
-public class AspFolTranslator extends Translator
-{
-	/**TT_Negation*/
+public class AspFolTranslator extends Translator {
+
+
+	/** Constant representing translation type for negation */
 	public static final int TT_NEGATION = 1;
-	
-	/** Default-Ctor */
+
+	/** Default constructor for the AspFolTranslator class */
 	public AspFolTranslator() {}
+
 	/**
-	 * 
-	 * @param source source
-	 * @return FolAtom toFOL 
+	 * Translates an ASPAtom to its corresponding FolAtom.
+	 *
+	 * @param source the ASPAtom to be translated
+	 * @return the translated FolAtom
 	 */
 	public FolAtom toFOL(ASPAtom source) {
 		return (FolAtom) this.translateAtom(source, FolAtom.class);
 	}
+
 	/**
-	 * 
-	 * @param source source
-	 * @return ASPAtom toASP
+	 * Translates a FolAtom to its corresponding ASPAtom.
+	 *
+	 * @param source the FolAtom to be translated
+	 * @return the translated ASPAtom
 	 */
 	public ASPAtom toASP(FolAtom source) {
 		return (ASPAtom) this.translateAtom(source, ASPAtom.class);
 	}
-/**
- * 
- * @param source source
- * @return ASPLiteral toASP
- */
+
+	/**
+	 * Translates a FolFormula to an ASPLiteral. If the formula is an atom or negation, it will translate accordingly.
+	 *
+	 * @param source the FolFormula to be translated
+	 * @return the translated ASPLiteral
+	 */
 	public ASPLiteral toASP(FolFormula source) {
-		if(source instanceof FolAtom) {
-			return toASP((FolAtom)source);
-		} else if(source instanceof Negation) {
-			return toASP((Negation)source);
-		} 
-		return null;
-	}
-	/**
-	 * 
-	 * @param source source
-	 * @return Negation toFOL
-	 */
-	public Negation toFOL(StrictNegation source) {
-		return new Negation((FolAtom) 
-				this.translateAtom(source.getAtom(), FolAtom.class));
-	}
-/**
- * 
- * @param source source
- * @return StrictNegation toASP
- */
-	public StrictNegation toASP(Negation source) {
-		return new StrictNegation((ASPAtom) this.translateAtom(
-				source.getAtoms().iterator().next(), ASPAtom.class));
-	}
-	/**
-	 * 
-	 * @param source source
-	 * @return FolFormula toFOL
-	 */
-	public FolFormula toFOL(ASPLiteral source) {
-		if(source instanceof ASPAtom) {
-			return toFOL((ASPAtom)source);
-		} else if(source instanceof StrictNegation) {
-			return toFOL((StrictNegation)source);
+		if (source instanceof FolAtom) {
+			return toASP((FolAtom) source);
+		} else if (source instanceof Negation) {
+			return toASP((Negation) source);
 		}
 		return null;
 	}
+
 	/**
-	 * 
-	 * @param source source
-	 * @return Disjunction toFOL
+	 * Translates a StrictNegation into a Negation for FOL.
+	 *
+	 * @param source the StrictNegation to be translated
+	 * @return the translated Negation
+	 */
+	public Negation toFOL(StrictNegation source) {
+		return new Negation((FolAtom) this.translateAtom(source.getAtom(), FolAtom.class));
+	}
+
+	/**
+	 * Translates a Negation from FOL into a StrictNegation for ASP.
+	 *
+	 * @param source the Negation to be translated
+	 * @return the translated StrictNegation
+	 */
+	public StrictNegation toASP(Negation source) {
+		return new StrictNegation((ASPAtom) this.translateAtom(source.getAtoms().iterator().next(), ASPAtom.class));
+	}
+
+	/**
+	 * Translates an ASPLiteral to a FolFormula. If the literal is an atom or negation, it will translate accordingly.
+	 *
+	 * @param source the ASPLiteral to be translated
+	 * @return the translated FolFormula
+	 */
+	public FolFormula toFOL(ASPLiteral source) {
+		if (source instanceof ASPAtom) {
+			return toFOL((ASPAtom) source);
+		} else if (source instanceof StrictNegation) {
+			return toFOL((StrictNegation) source);
+		}
+		return null;
+	}
+
+	/**
+	 * Translates a ClassicalHead (ASP disjunction) to a FOL Disjunction.
+	 *
+	 * @param source the ClassicalHead to be translated
+	 * @return the translated Disjunction
 	 */
 	public Disjunction toFOL(ClassicalHead source) {
 		return (Disjunction) this.translateAssociative(source, Disjunction.class);
 	}
+
 	/**
-	 * 
-	 * @param source source
-	 * @return ClassicalHead toASP
+	 * Translates a FOL Disjunction into an ASP ClassicalHead.
+	 *
+	 * @param source the Disjunction to be translated
+	 * @return the translated ClassicalHead
 	 */
 	public ClassicalHead toASP(Disjunction source) {
 		return (ClassicalHead) this.translateAssociative(source, ClassicalHead.class);
 	}
-	
+
+	/**
+	 * Translates the given formula using the translation map, handling custom logic for negations if needed.
+	 *
+	 * @param source the source formula to be translated
+	 * @return the translated SimpleLogicalFormula or null if no translation could be performed
+	 */
 	@Override
 	public SimpleLogicalFormula translateUsingMap(SimpleLogicalFormula source) {
 		SimpleLogicalFormula reval = super.translateUsingMap(source);
-		if(reval == null) {
+		if (reval == null) {
 			Pair<Integer, Class<?>> translateInfo = getTranslateInfo(source.getClass());
-			switch(translateInfo.getFirst()) {
-			case TT_NEGATION:
-				return translateInfo.getSecond() == Negation.class ? 
-						toFOL((StrictNegation)source) : 
-						toASP((FolAtom)source);
+			switch (translateInfo.getFirst()) {
+				case TT_NEGATION:
+					return translateInfo.getSecond() == Negation.class ? toFOL((StrictNegation) source) : toASP((FolAtom) source);
 			}
 		}
 		return reval;
 	}
-	
+
+	/**
+	 * Creates the mapping between ASP and FOL types for this translator.
+	 *
+	 * @return the map that links ASP and FOL classes for translation
+	 */
 	@Override
 	protected Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap() {
-		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<Class<?>, Pair<Integer, Class<?>>>();
+		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<>();
 
-		tmap.put(ASPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FolAtom.class));
-		tmap.put(FolAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, ASPAtom.class));
-		
-		tmap.put(ClassicalHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
-		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, ClassicalHead.class));
-		
+		tmap.put(ASPAtom.class, new Pair<>(TT_ATOM, FolAtom.class));
+		tmap.put(FolAtom.class, new Pair<>(TT_ATOM, ASPAtom.class));
+
+		tmap.put(ClassicalHead.class, new Pair<>(TT_ASSOC, Disjunction.class));
+		tmap.put(Disjunction.class, new Pair<>(TT_ASSOC, ClassicalHead.class));
+
 		return tmap;
 	}
 }

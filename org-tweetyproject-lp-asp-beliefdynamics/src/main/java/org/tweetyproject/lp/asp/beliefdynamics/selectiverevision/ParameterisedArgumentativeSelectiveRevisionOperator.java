@@ -33,42 +33,53 @@ import org.tweetyproject.lp.asp.reasoner.ASPSolver;
 
 /**
  * This class represents a selective revision using the base revision approach
- *  from [1] for the inner revision and the sceptical argumentative transformation 
+ *  from [1] for the inner revision and the sceptical argumentative transformation
  *  function from [2]. The selective revision operator is parameterised by two
  *  notions of attack used by the argumentation framework utilised by the transformation
  *  function. In [2] it is shown that there are at least 5 classes
  *  of distinct plausible instantiations of this operator: a/a, d/d, sa/sa, sa/a, and ca/ca
  *  where "a" stands for Attack, "d" for Defeat, "sa" for Strong Attack and "ca" for Confident
- *  Attack. For further details see the parameterisedhierarchy tweety project and [2]. 
- * 
- * [1] Kruempelmann, Patrick und Gabriele Kern-Isberner: 
- * 	Belief Base Change Operations for Answer Set Programming. 
+ *  Attack. For further details see the parameterisedhierarchy tweety project and [2].
+ *
+ * [1] Kruempelmann, Patrick und Gabriele Kern-Isberner:
+ * 	Belief Base Change Operations for Answer Set Programming.
  *  In: Cerro, Luis Farinas, Andreas Herzig und Jerome Mengin (Herausgeber):
- *  Proceedings of the 13th European conference on Logics in Artificial 
- *  Intelligence, Band 7519, Seiten 294-306, Toulouse, France, 2012. 
+ *  Proceedings of the 13th European conference on Logics in Artificial
+ *  Intelligence, Band 7519, Seiten 294-306, Toulouse, France, 2012.
  *  Springer Berlin Heidelberg.
- * 
+ *
  * [2] Homann, Sebastian:
  *  Master thesis: Argumentationsbasierte selektive Revision von erweiterten logischen
  *  Programmen. 2013
- * 
+ *
  * @author Sebastian Homann
  *
  */
 public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 		MultipleBaseRevisionOperator<ASPRule> {
-	
-	public enum TransformationType {
-		SCEPTICAL, NAIVE;
-		
-		@Override
-		public String toString() {
-			   //only capitalize the first letter
-			   String s = super.toString();
-			   return s.substring(0, 1) + s.substring(1).toLowerCase();
-			 }
-	}
-	
+
+/**
+ * Represents the type of transformation to be applied in a logic program or algorithm.
+ */
+public enum TransformationType {
+    /**
+     * Represents a skeptical transformation type.
+     */
+    SCEPTICAL,
+
+    /**
+     * Represents a naive transformation type.
+     */
+    NAIVE;
+
+    @Override
+    public String toString() {
+        // Only capitalize the first letter and lowercase the rest
+        String s = super.toString();
+        return s.substring(0, 1) + s.substring(1).toLowerCase();
+    }
+}
+
 	private ASPSolver solver;
 	private AttackStrategy attackRelation;
 	private AttackStrategy defenseRelation;
@@ -96,12 +107,12 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 	@Override
 	public Collection<ASPRule> revise(Collection<ASPRule> base,
 			Collection<ASPRule> formulas) {
-		
+
 		// inner revision operator: base revision
-		SelectionFunction<ASPRule> selection = new MonotoneGlobalMaxichoiceSelectionFunction();		
+		SelectionFunction<ASPRule> selection = new MonotoneGlobalMaxichoiceSelectionFunction();
 		MultipleBaseRevisionOperator<ASPRule> innerRevision;
 		innerRevision = new ELPBaseRevisionOperator(solver, selection);
-		
+
 		// transformation function
 		MultipleTransformationFunction<ASPRule> transformationFunction;
 		switch(transformationType) {
@@ -116,10 +127,10 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 
 		MultipleSelectiveRevisionOperator<ASPRule> revisionOperator;
 		revisionOperator = new MultipleSelectiveRevisionOperator<ASPRule>(transformationFunction, innerRevision);
-		
+
 		return revisionOperator.revise(base, formulas);
 	}
-	
+
 	@Override
 	public String toString() {
 		return transformationType + " revision " + attackRelation.toAbbreviation() + "/" + defenseRelation.toAbbreviation();

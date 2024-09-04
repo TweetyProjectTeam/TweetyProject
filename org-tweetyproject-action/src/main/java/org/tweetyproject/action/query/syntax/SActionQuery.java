@@ -43,21 +43,30 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * which is based on the query language "P" discussed in the paper: Action
  * Languages. by Michael Gelfond and Vladimir Lifschitz, ETAI: Electronic
  * Transactions on AI, 1998.
- * 
+ *
  * An action query is represented by a propositional formula over propositions
  * of one of the following kinds: HoldsQuery, AlwaysQuery, NecessarilyQuery.
- * 
+ *
  * @author Sebastian Homann
  */
 public class SActionQuery implements ActionQuery {
 
+    /**
+     * The propositional formula that defines the logical structure of the action query.
+     */
 	protected PlFormula formula;
+
+
+	/**
+     * A set of grounding requirements that must be met when grounding the variables
+     * in this action query.
+     */
 	protected Set<GroundingRequirement> requirements = new HashSet<GroundingRequirement>();
 
 	/**
 	 * Creates a new action query with the given propositional formula and no
 	 * grounding requirements.
-	 * 
+	 *
 	 * @param formula a propositional formula
 	 */
 	public SActionQuery(PlFormula formula) {
@@ -74,7 +83,7 @@ public class SActionQuery implements ActionQuery {
 	/**
 	 * Creates a new action query with the given propositional formula and grounding
 	 * requirements.
-	 * 
+	 *
 	 * @param formula      a propositional formula
 	 * @param requirements a set of requirements
 	 */
@@ -85,7 +94,7 @@ public class SActionQuery implements ActionQuery {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.Formula#getSignature()
 	 */
 	@Override
@@ -94,6 +103,7 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves the propositional formula represented by this action query.
 	 * @return the formula represented by this action query.
 	 */
 	public PlFormula getFormula() {
@@ -101,6 +111,7 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves the action signature of this action query.
 	 * @return the action signature of this action query.
 	 */
 	public ActionSignature getActionSignature() {
@@ -114,7 +125,7 @@ public class SActionQuery implements ActionQuery {
 	/**
 	 * Returns all inner formulas that are contained in query propositions in this
 	 * action query.
-	 * 
+	 *
 	 * @return all inner formulas of this action query.
 	 */
 	public Set<FolFormula> getInnerFormulas() {
@@ -126,6 +137,8 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves all actions that occur in action sequences within necessarily queries
+     * in this action query.
 	 * @return all actions, which occur in action sequences in necessarily queries
 	 *         in this action query.
 	 */
@@ -138,6 +151,8 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves all inner atoms that occur in state formulas and actions within
+     * this action query.
 	 * @return all inner atoms, which occur in state formulas and actions in this
 	 *         action query.
 	 */
@@ -153,6 +168,8 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves all inner variables that occur in state formulas and actions within
+     * this action query.
 	 * @return all inner variables, which occur in state formulas and actions in
 	 *         this action query.
 	 */
@@ -166,7 +183,7 @@ public class SActionQuery implements ActionQuery {
 	/**
 	 * Returns all grounding requirements, that have to be met, when this action
 	 * query is grounded.
-	 * 
+	 *
 	 * @return a set of grounding requirements.
 	 */
 	public Set<GroundingRequirement> getGroundingRequirements() {
@@ -174,6 +191,7 @@ public class SActionQuery implements ActionQuery {
 	}
 
 	/**
+	 * Retrieves the set of all grounded instances of this action query.
 	 * @return the set of all grounded instances of this causal rule.
 	 */
 	public Set<SActionQuery> getAllGrounded() {
@@ -194,7 +212,7 @@ public class SActionQuery implements ActionQuery {
 	/**
 	 * Returns a new action query in which all variables are mapped to constants
 	 * with regard to the given map.
-	 * 
+	 *
 	 * @param map a map from variables to constants.
 	 * @return a new action query in which all variables are mapped to constants
 	 *         with regard to the given map.
@@ -207,7 +225,7 @@ public class SActionQuery implements ActionQuery {
 	 * Utility function that walks through all parts of a propositional formula with
 	 * query propositions substituting all variables with constants according to the
 	 * given map.
-	 * 
+	 *
 	 * @param map     a map from variables to constants.
 	 * @param formula an action query.
 	 * @return a new propositional formula in which all variables have been
@@ -237,7 +255,7 @@ public class SActionQuery implements ActionQuery {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

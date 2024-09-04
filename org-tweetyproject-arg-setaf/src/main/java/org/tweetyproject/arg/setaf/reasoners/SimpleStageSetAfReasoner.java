@@ -34,6 +34,13 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  */
 public class SimpleStageSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
+
+
+
+		/** Default */
+		public SimpleStageSetAfReasoner(){
+			// Default
+		}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */

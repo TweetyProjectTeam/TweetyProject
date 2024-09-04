@@ -19,7 +19,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * Indecision(a) is true, if formula a is undecided
  * Indecision(a) is false, if formula a is true or false
  * Adapted from the class "Negation"
- * 
+ *
  * @author Jonas Schumacher
  */
 public class Indecision extends PlFormula {
@@ -28,15 +28,15 @@ public class Indecision extends PlFormula {
 	 * The formula within this negation.
 	 */
 	private PlFormula formula;
-	
+
 	/**
 	 * Creates a new negation with the given formula.
 	 * @param formula the formula within the negation.
 	 */
 	public Indecision(PlFormula formula){
-		this.formula = formula;	
+		this.formula = formula;
 	}
-	
+
 	/**
 	 * Returns the formula within this negation.
 	 * @return the formula within this negation.
@@ -44,7 +44,7 @@ public class Indecision extends PlFormula {
 	public PlFormula getFormula(){
 		return this.formula;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
@@ -52,12 +52,13 @@ public class Indecision extends PlFormula {
 	public PlFormula collapseAssociativeFormulas(){
 		return new Indecision(this.formula.collapseAssociativeFormulas());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#hasLowerBindingPriority(org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula)
 	 */
 	/**
-	 * 
+	 *
+	 * Return returns false
 	 * @param other a formula
 	 * @return returns false
 	 */
@@ -65,24 +66,24 @@ public class Indecision extends PlFormula {
 		// negations have the highest binding priority
 		return false;
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString(){
-		if(this.formula instanceof AssociativePlFormula || this.formula instanceof Indecision)			
+		if(this.formula instanceof AssociativePlFormula || this.formula instanceof Indecision)
 			return "¤" + "(" + this.formula + ")";
 		return "¤" + this.formula;
 	}
-	
+
   /* (non-Javadoc)
    * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
 	public PlFormula toNnf() {
-    // remove double negation    
+    // remove double negation
     if(formula instanceof Indecision)
       return ((Indecision)formula).formula.toNnf();
 
@@ -92,17 +93,17 @@ public class Indecision extends PlFormula {
     if(formula instanceof Conjunction) {
       Conjunction c = (Conjunction)formula;
       Disjunction d = new Disjunction();
-      
+
       for(PlFormula p : c) {
         d.add( new Indecision( p ).toNnf() );
       }
       return d;
     }
-    
+
     if(formula instanceof Disjunction) {
        Disjunction d = (Disjunction)formula;
        Conjunction c = new Conjunction();
-       
+
        for(PlFormula p : d) {
          c.add( new Indecision( p ).toNnf() );
        }
@@ -120,7 +121,7 @@ public class Indecision extends PlFormula {
 			return ((Indecision)f).formula;
 		return new Indecision(f);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -171,29 +172,29 @@ public class Indecision extends PlFormula {
 	public boolean isLiteral() {
 		return (formula instanceof Proposition);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
 	public Set<PlFormula> getLiterals(){
 		Set<PlFormula> result = new HashSet<PlFormula>();
-		if(this.isLiteral())			
+		if(this.isLiteral())
 			result.add(this);
 		else result.addAll(this.formula.getLiterals());
 		return result;
 	}
-	
+
 	@Override
 	public PlSignature getSignature() {
 		return formula.getSignature();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
 	@Override
-	public Conjunction toCnf() {	
+	public Conjunction toCnf() {
 		if(this.formula instanceof Indecision){
 			return ((Indecision)this.formula).getFormula().toCnf();
 		}else if(this.formula instanceof Conjunction){
@@ -225,7 +226,7 @@ public class Indecision extends PlFormula {
 		conj.add(disj);
 		return conj;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#getModels(org.tweetyproject.logics.pl.syntax.PropositionalSignature)
 	 */
@@ -236,14 +237,14 @@ public class Indecision extends PlFormula {
 			models.remove(w);
 		return models;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(org.tweetyproject.logics.pl.syntax.Proposition)
 	 */
 	public int numberOfOccurrences(Proposition p){
 		return this.formula.numberOfOccurrences(p);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.syntax.PropositionalFormula#replace(org.tweetyproject.logics.pl.syntax.Proposition, org.tweetyproject.logics.pl.syntax.PropositionalFormula, int)
 	 */

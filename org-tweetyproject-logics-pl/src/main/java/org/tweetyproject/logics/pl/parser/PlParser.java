@@ -358,4 +358,7 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 	}
 
 
+
+    /** Default Constructor */
+    public PlParser(){}
 }

@@ -46,9 +46,9 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * The CLI-Plugin for the Preferences-Package
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  */
 @PluginImplementation
 public class PreferencesPlugin extends AbstractTweetyPlugin {
@@ -59,6 +59,11 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	// Unused!
 	// private static final String PREF__PLUGIN_DESCRIPTION = "";
 
+	/**
+	 *
+	 * Return capabilities
+	 * @return capabilities
+	 */
 	@Capabilities
 	public String[] capabilities() {
 		return new String[] { "TweetyProject Plugin", PREF__CALL_PARAMETER };
@@ -90,16 +95,16 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	// determine, if aggregation is dynamic and updates are possible
 	private boolean isDynamic = false;
-	
-	
-	
+
+
+
 	public String getCommand() {
 		return PREF__CALL_PARAMETER;
 	}
 
 	/**
 	 * non-empty constructur in case of errors in JSPF
-	 * 
+	 *
 	 * @param args some arguments
 	 */
 	public PreferencesPlugin(String[] args) {
@@ -127,7 +132,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
 
 		Solver.setDefaultLinearSolver(new LpSolve());
-		
+
 		// Init empty output
 		PluginOutput out = new PluginOutput();
 
@@ -177,7 +182,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 							0);
 					result = vetoaggr.aggregate(poset);
 				}
-				
+
 				out.addField("Result: ", result.toString());
 				out.addField("Leveling Function: ", result.getLevelingFunction().toString());
 				out.addField("Ranking Function: ", result.getLevelingFunction().getRankingFunction().toString());
@@ -308,7 +313,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 			// }
 			// }
 		}
-	
+
 		return out;
 
 	}

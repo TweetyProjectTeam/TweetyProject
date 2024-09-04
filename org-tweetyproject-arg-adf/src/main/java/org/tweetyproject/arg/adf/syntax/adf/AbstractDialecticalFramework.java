@@ -21,6 +21,7 @@ package org.tweetyproject.arg.adf.syntax.adf;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,236 +39,295 @@ import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.transform.Transformer;
-
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.graphs.Graph;
 /**
  * The implementing subtypes must ensure the following properties:
  * <ul>
- * 	<li>Immutability</li>
- * 	<li>All methods return a non-null value if its parameters, e.g. arguments, are from this ADF</li>
- * 	<li>If a method returns a collection or stream, all its elements are non-null</li>
+ *  <li>Immutability</li>
+ *  <li>All methods return a non-null value if its parameters, e.g. arguments, are from this ADF</li>
+ *  <li>If a method returns a collection or stream, all its elements are non-null</li>
  * </ul>
  * This makes the usage of {@link AbstractDialecticalFramework} implementations
  * more convenient to the user, since it avoids unnecessary nullchecks and
  * therefore leads to more readable code. Immutability should lead to more
  * robust code, since an ADF always remains in a valid state after creation. It
  * makes it also easier to use in a parallel context.
- * 
+ *
  * @author Mathias Hofer
  *
  */
-public interface AbstractDialecticalFramework {
-/**
- * 
- * @return AbstractDialecticalFramework empty
- */
-	static AbstractDialecticalFramework empty() {
-		return EmptyAbstractDialecticalFramework.INSTANCE;
-	}
-/**
- * 
- * @return Builder builder
- */
-	static Builder builder() {
-		return new GraphAbstractDialecticalFramework.Builder();
-	}
-	/**
-	 * 
-	 * @param file file
-	 * @return AbstractDialecticalFramework fromFile
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	static AbstractDialecticalFramework fromFile(File file) throws FileNotFoundException, IOException {
-		return new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), true).parse(file);
-	}
-/**
- * 
- * @param map map
- * @return Builder fromMap
- */
-	static Builder fromMap(Map<Argument, AcceptanceCondition> map) {
-		Builder builder = new GraphAbstractDialecticalFramework.Builder();
-		for (Entry<Argument, AcceptanceCondition> entry : map.entrySet()) {
-			builder.add(entry.getKey(), entry.getValue());
-		}
-		return builder;
-	}
+public interface AbstractDialecticalFramework extends Graph<Argument>, Collection<Argument>, ArgumentationFramework<Argument> {
 
-	/**
-	 * Creates a new {@link AbstractDialecticalFramework} with transformed acceptance conditions.
-	 * 
-	 * @param transformer the transformer to use
-	 * @return a new ADF with transformed acceptance conditions
-	 */
-	AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer);
-	/**
-	 * 
-	 * @param transformer transformer
-	 * @return AbstractDialecticalFramework transform
-	 */
-	AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer);
-	
-	/**
-	 * Creates a new {@link AbstractDialecticalFramework} with transformed acceptance conditions.
-	 * 
-	 * @param transformer the transformer to use
-	 * @return a new ADF with transformed acceptance conditions
-	 */
-	AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer);
-	/**
-	 * 
-	 * @return SemanticsStep query
-	 */
-	default SemanticsStep query() {
-		return new SatQueryBuilder(this).defaultConfiguration();
-	}
-	/**
-	 * 
-	 * @return size
-	 */
-	default int size() {
-		return getArguments().size();
-	}
+    /**
+     * Returns an empty {@link AbstractDialecticalFramework}.
+     * This can be used to create an ADF with no arguments or links.
+     *
+     * @return an empty AbstractDialecticalFramework instance
+     */
+    static AbstractDialecticalFramework empty() {
+        return EmptyAbstractDialecticalFramework.INSTANCE;
+    }
 
-	/**
-	 * 
-	 * @return an unmodifiable set of all the arguments
-	 */
-	Set<Argument> getArguments();
+    /**
+     * Returns a builder for constructing a new {@link AbstractDialecticalFramework}.
+     * The builder allows for adding arguments, acceptance conditions, and links incrementally.
+     *
+     * @return a builder for constructing an AbstractDialecticalFramework
+     */
+    static Builder builder() {
+        return new GraphAbstractDialecticalFramework.Builder();
+    }
 
-	/**
-	 * If the caller just consumes some links, this method should be used.
-	 * Depending on the implementation, the links may be computed lazily and
-	 * therefore we may avoid unnecessary computation.
-	 * 
-	 * @return a stream of the links of this adf
-	 */
-	default Stream<Link> linksStream() {
-		return links().stream();
-	}
+    /**
+     * Reads an {@link AbstractDialecticalFramework} from a file.
+     * The file is parsed into an ADF using a format parser.
+     *
+     * @param file the file containing the ADF definition
+     * @return an AbstractDialecticalFramework parsed from the file
+     * @throws FileNotFoundException if the file is not found
+     * @throws IOException if an I/O error occurs while reading the file
+     */
+    static AbstractDialecticalFramework fromFile(File file) throws FileNotFoundException, IOException {
+        return new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), true).parse(file);
+    }
 
-	/**
-	 * If the caller just consumes some of the links, the method
-	 * {@link #linksStream()} should be preferred to this one. Depending on the
-	 * implementation, the links may be computed lazily and therefore we may
-	 * avoid unnecessary computation.
-	 * 
-	 * @return an unmodifiable set of all the links
-	 */
-	Set<Link> links();
+    /**
+     * Creates a builder from a map of arguments and their corresponding acceptance conditions.
+     *
+     * @param map a map of arguments to acceptance conditions
+     * @return a builder for constructing an AbstractDialecticalFramework from the given map
+     */
+    static Builder fromMap(Map<Argument, AcceptanceCondition> map) {
+        Builder builder = new GraphAbstractDialecticalFramework.Builder();
+        for (Entry<Argument, AcceptanceCondition> entry : map.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        return builder;
+    }
 
-	/**
-	 * Computes the link (parent, child) iff necessary and returns it
-	 * afterwards.
-	 * 
-	 * @param parent the parent
-	 * @param child the child
-	 * @throws IllegalArgumentException if the adf does not contain a link (parent, child)
-	 * @return the link (parent, child)
-	 */
-	Link link(Argument parent, Argument child);
+    /**
+     * Creates a new {@link AbstractDialecticalFramework} with acceptance conditions transformed
+     * using the provided function.
+     *
+     * @param transformer the transformer to apply to each acceptance condition
+     * @return a new ADF with transformed acceptance conditions
+     */
+    AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer);
 
-	/**
-	 * 
-	 * @param child the child
-	 * @return a set of links (parent, child)
-	 */
-	Set<Link> linksTo(Argument child);
+    /**
+     * Creates a new {@link AbstractDialecticalFramework} with acceptance conditions transformed
+     * based on both the argument and its acceptance condition.
+     *
+     * @param transformer the transformer to apply to each acceptance condition and argument
+     * @return a new ADF with transformed acceptance conditions
+     */
+    AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer);
 
-	/**
-	 * 
-	 * @param parent the parent
-	 * @return a set of links (parent, child)
-	 */
-	Set<Link> linksFrom(Argument parent);
-/**
- * 
- * @param child child
- * @return Set
- */
-	Set<Argument> parents(Argument child);
-/**
- * 
- * @param parent parent
- * @return Set
- */
-	Set<Argument> children(Argument parent);
-		/**
-		 * 
-		 * @param arg arg
-		 * @return outgoingDegree
-		 */
-	int outgoingDegree(Argument arg);
-	/**
-	 * 
-	 * @param arg arg
-	 * @return incomingDegree
-	 */
-	int incomingDegree(Argument arg);
-	/**
-	 * 
-	 * @param arg arg
-	 * @return contains
-	 */
-	boolean contains(Argument arg);
+    /**
+     * Creates a new {@link AbstractDialecticalFramework} with acceptance conditions transformed
+     * using a {@link Transformer}.
+     *
+     * @param transformer the transformer to apply to each acceptance condition
+     * @return a new ADF with transformed acceptance conditions
+     */
+    AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer);
 
-	/**
-	 * Guaranteed to be non-null if the ADF contains the argument.
-	 * 
-	 * @param argument some argument of this ADF
-	 * @throws IllegalArgumentException if the argument is not contained in the ADF
-	 * @return the found acceptance condition, never <code>null</code>
-	 */
-	AcceptanceCondition getAcceptanceCondition(Argument argument);
+    /**
+     * Initiates a query on this {@link AbstractDialecticalFramework} using the default configuration.
+     * The returned {@link SemanticsStep} allows further refinement of the query.
+     *
+     * @return a SemanticsStep to refine the query
+     */
+    default SemanticsStep query() {
+        return new SatQueryBuilder(this).defaultConfiguration();
+    }
 
-	/**
-	 * Checks if the ADF is bipolar. May compute all links to do so.
-	 * 
-	 * @return true iff all of the links are bipolar
-	 */
-	default boolean bipolar() {
-		return kBipolar() == 0;
-	}
+    /**
+     * Returns the number of arguments in this {@link AbstractDialecticalFramework}.
+     *
+     * @return the number of arguments in this ADF
+     */
+    default int size() {
+        return getArguments().size();
+    }
 
-	/**
-	 * Returns the count k of non-bipolar links, which makes this ADF k-bipolar.
-	 * 
-	 * @return k
-	 */
-	int kBipolar();
-/**
- * 
- * @author Sebastian
- *
- */
-	interface Builder {
+    /**
+     * Returns an unmodifiable set of all the arguments in this {@link AbstractDialecticalFramework}.
+     *
+     * @return an unmodifiable set of arguments
+     */
+    Set<Argument> getArguments();
 
-		Builder lazy(LinkStrategy linkStrategy);
+    /**
+     * Returns a stream of the links in this {@link AbstractDialecticalFramework}.
+     * This method is preferable if the caller only needs to consume some of the links.
+     *
+     * @return a stream of links in this ADF
+     */
+    default Stream<Link> linksStream() {
+        return links().stream();
+    }
 
-		Builder provided();
+    /**
+     * Returns an unmodifiable set of all the links in this {@link AbstractDialecticalFramework}.
+     * This method returns all the links and should be used when access to all links is needed.
+     *
+     * @return an unmodifiable set of links in this ADF
+     */
+    Set<Link> links();
 
-		Builder eager(LinkStrategy linkStrategy);
-/**
- * 
- * @param arg arg
- * @param acc acc
- * @return Builder add
- */
-		Builder add(Argument arg, AcceptanceCondition acc);
-	/**
-	 * 	
-	 * @param link link
-	 * @return Builder add
-	 */
-		Builder add(Link link);
-		
-		Builder remove(Argument arg);
-		/**
-		 * 
-		 * @return AbstractDialecticalFramework build
-		 */
-		AbstractDialecticalFramework build();
+    /**
+     * Computes and returns the link between the given parent and child arguments.
+     *
+     * @param parent the parent argument
+     * @param child the child argument
+     * @throws IllegalArgumentException if the ADF does not contain a link between the parent and child
+     * @return the link between the parent and child
+     */
+    Link link(Argument parent, Argument child);
 
-	}
+    /**
+     * Returns a set of links directed towards the specified child argument.
+     *
+     * @param child the target argument
+     * @return a set of links pointing to the given argument
+     */
+    Set<Link> linksTo(Argument child);
 
+    /**
+     * Returns a set of links originating from the specified parent argument.
+     *
+     * @param parent the source argument
+     * @return a set of links originating from the given argument
+     */
+    Set<Link> linksFrom(Argument parent);
+
+    /**
+     * Returns a set of parent arguments for the given child argument.
+     *
+     * @param child the target argument
+     * @return a set of parent arguments
+     */
+    Set<Argument> parents(Argument child);
+
+    /**
+     * Returns a set of child arguments for the given parent argument.
+     *
+     * @param parent the source argument
+     * @return a set of child arguments
+     */
+    Set<Argument> children(Argument parent);
+
+    /**
+     * Returns the number of outgoing links from the given argument.
+     *
+     * @param arg the argument
+     * @return the number of outgoing links
+     */
+    int outgoingDegree(Argument arg);
+
+    /**
+     * Returns the number of incoming links to the given argument.
+     *
+     * @param arg the argument
+     * @return the number of incoming links
+     */
+    int incomingDegree(Argument arg);
+
+    /**
+     * Checks if the given argument is contained in this {@link AbstractDialecticalFramework}.
+     *
+     * @param arg the argument to check
+     * @return true if the argument is contained, false otherwise
+     */
+    boolean contains(Argument arg);
+
+    /**
+     * Retrieves the acceptance condition for the specified argument.
+     * The acceptance condition is guaranteed to be non-null if the argument is present in the ADF.
+     *
+     * @param argument the argument for which to retrieve the acceptance condition
+     * @throws IllegalArgumentException if the argument is not contained in the ADF
+     * @return the acceptance condition for the given argument
+     */
+    AcceptanceCondition getAcceptanceCondition(Argument argument);
+
+    /**
+     * Checks if the ADF is bipolar, meaning all links are either supporting or attacking.
+     *
+     * @return true if the ADF is bipolar, false otherwise
+     */
+    default boolean bipolar() {
+        return kBipolar() == 0;
+    }
+
+    /**
+     * Returns the number of non-bipolar links, indicating the degree of bipolarity in this ADF.
+     *
+     * @return the count of non-bipolar links
+     */
+    int kBipolar();
+
+    /**
+     * Builder interface for constructing instances of {@link AbstractDialecticalFramework}.
+     *
+     * @author Sebastian
+     *
+     */
+    interface Builder {
+
+        /**
+         *
+         * Return lazy builder instance
+         * @param linkStrategy linkStrategy
+         * @return lazy builder instance
+         */
+        Builder lazy(LinkStrategy linkStrategy);
+
+        /**
+         * provided builder
+         * @return Builder instance
+         */
+        Builder provided();
+
+        /**
+         *  Eager builder
+         * @param linkStrategy linkStrategy
+         * @return builder instance
+         */
+        Builder eager(LinkStrategy linkStrategy);
+
+        /**
+         * Adds an argument and its acceptance condition to the ADF.
+         *
+         * @param arg the argument to add
+         * @param acc the acceptance condition of the argument
+         * @return this Builder instance
+         */
+        Builder add(Argument arg, AcceptanceCondition acc);
+
+        /**
+         * Adds a link between arguments to the ADF.
+         *
+         * @param link the link to add
+         * @return this Builder instance
+         */
+        Builder add(Link link);
+
+        /**
+         * Removes arg
+         *
+         * @param arg arg to remove
+         * @return this Builder instance
+         */
+        Builder remove(Argument arg);
+
+        /**
+         * Builds and returns the constructed {@link AbstractDialecticalFramework}.
+         *
+         * @return the constructed AbstractDialecticalFramework
+         */
+        AbstractDialecticalFramework build();
+    }
 }

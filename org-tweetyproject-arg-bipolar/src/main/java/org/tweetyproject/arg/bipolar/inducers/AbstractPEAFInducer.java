@@ -82,7 +82,7 @@ public abstract class AbstractPEAFInducer implements PEAFInducer {
     }
 
     /**
-     * 
+     * Induce n times
      * @param consumer a inducible eaf consumer
      * @param n number of iterations
      */

@@ -34,7 +34,7 @@ import org.tweetyproject.lp.asp.writer.DLVWriter;
 
 /**
  * Wrapper class for the DLV answer set solver command line utility.
- * 
+ *
  * @author Thomas Vengels, Tim Janus, Anna Gessler
  *
  */
@@ -56,7 +56,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * 
+	 *
 	 * @param pathToDLV binary location of DLV on the hard drive. The given location
 	 *                  has to contain a binary called "dlv". Do not include the
 	 *                  binary itself in the path.
@@ -68,7 +68,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * 
+	 *
 	 * @param pathToDLV binary location of DLV on the hard drive. The given location
 	 *                  has to contain a binary called "dlv". Do not include the
 	 *                  binary itself in the path.
@@ -81,8 +81,8 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * 
-	 * @param pathToDLV    binary location of Clingo on the hard drive. The given
+	 *
+	 * @param pathToDLV      binary location of Clingo on the hard drive. The given
 	 *                       location has to contain a binary called "clingo". Do
 	 *                       not include the binary itself in the path.
 	 * @param maxNOfModels   the maximum number of models that DLV will compute.
@@ -98,7 +98,7 @@ public class DLVSolver extends ASPSolver {
 	/**
 	 * Returns a characterizing model (answer set) of the given belief base using
 	 * the given upper integer limit.
-	 * 
+	 *
 	 * @param p      a program
 	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
@@ -111,7 +111,7 @@ public class DLVSolver extends ASPSolver {
 	/**
 	 * Returns a characterizing model (answer set) of the given belief base using
 	 * the given upper integer limit.
-	 * 
+	 *
 	 * @param p      a program
 	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
@@ -136,12 +136,15 @@ public class DLVSolver extends ASPSolver {
 						String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
 						this.integerMaximum = Integer.parseInt(integerMaximum);
 					} catch (NumberFormatException e) {
-						System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+						System.err.println(
+								"Warning: Failed to parse #maxint statement in program. Using default integer maximum "
+										+ this.integerMaximum);
 					}
 				}
 			}
 
-			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N="
+					+ Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
 			this.outputData = (bash.run(cmd));
 			result = parseResult(outputData);
 		} catch (Exception e) {
@@ -167,11 +170,14 @@ public class DLVSolver extends ASPSolver {
 					String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
 					this.integerMaximum = Integer.parseInt(integerMaximum);
 				} catch (NumberFormatException e) {
-					System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+					System.err.println(
+							"Warning: Failed to parse #maxint statement in program. Using default integer maximum "
+									+ this.integerMaximum);
 				}
 			}
 
-			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N="
+					+ Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
 			this.outputData = (bash.run(cmd));
 			result = parseResult(outputData);
 		} catch (Exception e) {
@@ -203,24 +209,24 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Processes a string containing answer sets and returns an AnswerSetList.
-	 * 
+	 *
 	 * @param s String containing DLV output
 	 * @return AnswerSet
-	 * @throws SolverException 
+	 * @throws SolverException error
 	 */
 	protected List<AnswerSet> parseResult(String s) throws SolverException {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		String[] temp = s.split("}");
-		
+
 		if (s.contains("errors")) {
 			throw new SolverException("DLV error: " + s, 1);
 		}
 		try {
 			for (int i = 0; i < temp.length - 1; i++) {
-				//DLV answer sets consist of literals separated by commas
-				//Remove commas that are not inside parentheses to achieve the format
-				//expected by ASPParser (literals separated by spaces)
-				String toParse = temp[i].trim().substring(1).replaceAll(",(?![^()]*\\))", ""); 	
+				// DLV answer sets consist of literals separated by commas
+				// Remove commas that are not inside parentheses to achieve the format
+				// expected by ASPParser (literals separated by spaces)
+				String toParse = temp[i].trim().substring(1).replaceAll(",(?![^()]*\\))", "");
 				AnswerSet as = ASPParser.parseAnswerSet(toParse);
 				result.add(as);
 			}
@@ -232,7 +238,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Set additional command line options for DLV.
-	 * 
+	 *
 	 * @param options a string of options
 	 */
 	public void setOptions(String options) {
@@ -241,7 +247,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Sets the location of the DLV solver on the hard drive.
-	 * 
+	 *
 	 * @param pathToDLV path to DLV
 	 */
 	public void setPathToDLV(String pathToDLV) {
@@ -253,6 +259,25 @@ public class DLVSolver extends ASPSolver {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
+	/**
+	 * Evaluates a query on the given belief base using the specified inference
+	 * mode.
+	 * <p>
+	 * This method checks whether the given formula is entailed by the belief base
+	 * under the specified inference mode. It retrieves the answer sets of the
+	 * belief base
+	 * and checks the presence of the formula in these sets based on the chosen
+	 * inference
+	 * mode, either skeptical or credulous.
+	 * </p>
+	 *
+	 * @param beliefbase    The program representing the belief base to query.
+	 * @param formula       The formula (literal) to be checked within the answer
+	 *                      sets.
+	 * @param inferenceMode The mode of inference, either skeptical or credulous.
+	 * @return {@code true} if the formula is entailed by the belief base under the
+	 *         specified inference mode, {@code false} otherwise.
+	 */
 	public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
 		Collection<AnswerSet> answerSets = this.getModels(beliefbase);
 		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
@@ -271,16 +296,16 @@ public class DLVSolver extends ASPSolver {
 
 	@Override
 	public boolean isInstalled() {
-		
-	    try {
 
-	            String cmd = pathToSolver + "/dlv";
-				this.outputData = (bash.run(cmd));
-	            return true;
-	    } catch (Exception e) {
-	            return false;
-	    }
-		
+		try {
+
+			String cmd = pathToSolver + "/dlv";
+			this.outputData = (bash.run(cmd));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 }

@@ -39,12 +39,12 @@ import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
  * In this approach, initial values are assigned to arguments and then
  * propagated into the graph. The paper describes three different ways of
  * computing a ranking out of the propagation vector.
- * 
+ *
  * <br>
  * <br>
  * Note: This implementation only works for acyclic argument graphs. For cyclic
- * graphs <b>null</b> is returned. 
- * 
+ * graphs <b>null</b> is returned.
+ *
  * @author Anna Gessler
  */
 public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
@@ -71,8 +71,21 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 	 * </ol>
 	 */
 	public enum PropagationSemantics {
-		PROPAGATION1, PROPAGATION2, PROPAGATION3,
-	};
+		/**
+		 * The first propagation semantics approach.
+		 */
+		PROPAGATION1,
+
+		/**
+		 * The second propagation semantics approach.
+		 */
+		PROPAGATION2,
+
+		/**
+		 * The third propagation semantics approach.
+		 */
+		PROPAGATION3
+	}
 
 	/**
 	 * The variant of Propagation semantics that is used.
@@ -81,10 +94,10 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 
 	/**
 	 * Creates a new PropagationRankingReasoner with the given parameters.
-	 * 
+	 *
 	 * @param useMultiset determines whether the multiset (M) of
-	 *                     attackers/defenders of length is used instead of the set
-	 *                     (S)
+	 *                    attackers/defenders of length is used instead of the set
+	 *                    (S)
 	 */
 	public PropagationRankingReasoner(boolean useMultiset) {
 		this.attacked_arguments_influence = 0.75;
@@ -94,14 +107,14 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 
 	/**
 	 * Creates a new PropagationRankingReasoner with the given parameters.
-	 * 
+	 *
 	 * @param attackedArgumentsInfluence the smaller this value is, the more
-	 *                                     important is the influence of the
-	 *                                     non-attacked arguments.
-	 * @param useMultiset                 determines whether the multiset (M) of
-	 *                                     attackers/defenders of length is used
-	 *                                     instead of the set (S)
-	 * @param semantics                    one of the three propagation semantics
+	 *                                   important is the influence of the
+	 *                                   non-attacked arguments.
+	 * @param useMultiset                determines whether the multiset (M) of
+	 *                                   attackers/defenders of length is used
+	 *                                   instead of the set (S)
+	 * @param semantics                  one of the three propagation semantics
 	 */
 	public PropagationRankingReasoner(double attackedArgumentsInfluence, boolean useMultiset,
 			PropagationSemantics semantics) {
@@ -121,16 +134,18 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 
 	@Override
 	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
-		if (((DungTheory)kb).containsCycle())
+		if (((DungTheory) kb).containsCycle())
 			return null;
-		
-		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(((DungTheory)kb).getNodes());
+
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(
+				((DungTheory) kb).getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
-		Map<Argument, List<Double>> pv = calculatePropagationVector(((DungTheory)kb), this.attacked_arguments_influence);
+		Map<Argument, List<Double>> pv = calculatePropagationVector(((DungTheory) kb),
+				this.attacked_arguments_influence);
 
 		if (this.semantics == PropagationSemantics.PROPAGATION1) {
-			for (Argument a : ((DungTheory)kb)) {
-				for (Argument b : ((DungTheory)kb)) {
+			for (Argument a : ((DungTheory) kb)) {
+				for (Argument b : ((DungTheory) kb)) {
 					double[] pvA = pv.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvB = pv.get(b).stream().mapToDouble(d -> d).toArray();
 					int res = c.compare(pvA, pvB);
@@ -144,11 +159,11 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 					}
 				}
 			}
-			
+
 		} else if (this.semantics == PropagationSemantics.PROPAGATION2) {
-			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory)kb), 0.0);
-			for (Argument a : ((DungTheory)kb)) {
-				for (Argument b : ((DungTheory)kb)) {
+			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory) kb), 0.0);
+			for (Argument a : ((DungTheory) kb)) {
+				for (Argument b : ((DungTheory) kb)) {
 					double[] pvA = pv.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvA0 = pv0.get(a).stream().mapToDouble(d -> d).toArray();
 					pvA = shufflePropagationVectors(pvA0, pvA);
@@ -166,11 +181,11 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 					}
 				}
 			}
-			
+
 		} else if (this.semantics == PropagationSemantics.PROPAGATION3) {
-			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory)kb), 0.0);
-			for (Argument a : ((DungTheory)kb)) {
-				for (Argument b : ((DungTheory)kb)) {
+			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory) kb), 0.0);
+			for (Argument a : ((DungTheory) kb)) {
+				for (Argument b : ((DungTheory) kb)) {
 					double[] pvA = pv0.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvB = pv0.get(b).stream().mapToDouble(d -> d).toArray();
 					int res = c.compare(pvA, pvB);
@@ -179,9 +194,9 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 					else if (res > 0)
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					else {
-						//if two arguments are ranked equally using the 0.0
-						//propagation vector, compare them using the epsilon
-						//propagation vector instead
+						// if two arguments are ranked equally using the 0.0
+						// propagation vector, compare them using the epsilon
+						// propagation vector instead
 						pvA = pv.get(a).stream().mapToDouble(d -> d).toArray();
 						pvB = pv.get(b).stream().mapToDouble(d -> d).toArray();
 						res = c.compare(pvA, pvB);
@@ -205,7 +220,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 
 	/**
 	 * Calculate the "propagation vector" for the given argumentation framework.
-	 * 
+	 *
 	 * @param kb
 	 * @param epsilon the influence of attacked arguments
 	 * @return propagation vector (a map of arguments and their corresponding lists
@@ -258,7 +273,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 	/**
 	 * Computes the (multi-)set of arguments such that there exists a path with a
 	 * given length to the given argument a.
-	 * 
+	 *
 	 * @param a  argument
 	 * @param kb the complete framework
 	 * @param i  path length
@@ -311,7 +326,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 	/**
 	 * Performs the "shuffle operation": The two input vectors are combined in an
 	 * alternating fashion.
-	 * 
+	 *
 	 * @param a double array
 	 * @param b double array
 	 * @return "shuffled" array containing the elements of a,b alternately
@@ -326,8 +341,8 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeP
 		}
 		return shuffled_list.stream().mapToDouble(d -> d).toArray();
 	}
-	
-	/**natively installed*/
+
+	/** natively installed */
 	@Override
 	public boolean isInstalled() {
 		return true;

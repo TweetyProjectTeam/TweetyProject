@@ -29,7 +29,14 @@ import java.util.HashSet;
 import org.tweetyproject.arg.bipolar.syntax.BArgument;
 import org.tweetyproject.arg.bipolar.syntax.EAFTheory;
 
+/**
+ * OrenEtAl2010Figure2Example class
+ */
 public class OrenEtAl2010Figure2Example {
+    /**
+     * Example
+     * @param args args
+     */
     public static void main(String[] args) {
         EAFTheory eafTheory = new EAFTheory();
         for(int i = 0; i< 4 ; i++) {

@@ -30,10 +30,19 @@ import org.tweetyproject.logics.ml.parser.MlParser;
  * Some examples for testing ModalParser and NaiveModalReasoner. Shows how to
  * construct a modal logic knowledge base programmatically and how to query it
  * using the naive reasoner.
- * 
+ *
  * @author Anna Gessler
  */
 public class MlExample {
+
+	/**
+	 * Demonstrates the parsing and reasoning capabilities of the `MlParser` and `SimpleMlReasoner` classes.
+	 *
+	 *
+	 * @param args command-line arguments (not used in this example).
+	 * @throws ParserException if there is an error during parsing of the belief bases or formulas.
+	 * @throws IOException if there is an error reading from the files.
+	 */
 
 	public static void main(String[] args) throws ParserException, IOException {
 		// Parse simple BeliefBase from file

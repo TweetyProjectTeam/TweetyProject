@@ -98,4 +98,7 @@ public class CompareInference {
 			converter.compareInference(adf,reasoner_adf,kappa);
 		}
 	}
+
+    /** Default Constructor */
+    public CompareInference(){}
 }

@@ -28,7 +28,7 @@ import org.tweetyproject.commons.Signature;
 /**
  * This class represents an action description for the action language C as a
  * set of causal rules, and provides some basic functionality such as grounding.
- * 
+ *
  * @author Sebastian Homann
  */
 public class CActionDescription extends ActionDescription<CLaw> {
@@ -41,7 +41,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 
 	/**
 	 * Creates a new belief set with the given collection of formulae.
-	 * 
+	 *
 	 * @param c a collection of formulae.
 	 */
 	public CActionDescription(Collection<? extends CausalLaw> c) {
@@ -57,7 +57,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	/**
 	 * Calculates a new action description containing all ground instances of each
 	 * law in this action description.
-	 * 
+	 *
 	 * @return a new action description containing only ground laws.
 	 */
 	public CActionDescription ground() {
@@ -71,7 +71,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	/**
 	 * Calculates a new action description which describes the same transition system
 	 * and contains only definite causal laws.
-	 * 
+	 *
 	 * @return a new definite action description.
 	 * @throws IllegalStateException when there is no equivalent definite action
 	 *                               description
@@ -86,7 +86,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 
 	/**
 	 * Checks whether this action description contains any non-ground laws.
-	 * 
+	 *
 	 * @return true iff each law in this action description is grounded.
 	 */
 	public boolean isGround() {
@@ -98,7 +98,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 
 	/**
 	 * Checks whether this action description contains any non-definite laws.
-	 * 
+	 *
 	 * @return true iff each law in this action description is definite.
 	 */
 	public boolean isDefinite() {
@@ -108,34 +108,39 @@ public class CActionDescription extends ActionDescription<CLaw> {
 		return true;
 	}
 
-	/**
-	 * @return a set of all static laws contained in this action description.
-	 */
-	public Set<StaticLaw> getStaticLaws() {
-		Set<StaticLaw> result = new HashSet<StaticLaw>();
-		for (CLaw r : this) {
-			if (r instanceof StaticLaw)
-				result.add((StaticLaw) r);
-		}
-		return result;
-	}
+/**
+ * Retrieves a set of all static laws contained in this action description.
+ *
+ * @return a `Set` of `StaticLaw` objects representing all static laws in this action description.
+ */
+public Set<StaticLaw> getStaticLaws() {
+    Set<StaticLaw> result = new HashSet<StaticLaw>();
+    for (CLaw r : this) {
+        if (r instanceof StaticLaw)
+            result.add((StaticLaw) r);
+    }
+    return result;
+}
 
-	/**
-	 * @return a set of all dynamic laws contained in this action description.
-	 */
-	public Set<DynamicLaw> getDynamicLaws() {
-		Set<DynamicLaw> result = new HashSet<DynamicLaw>();
-		for (CLaw r : this) {
-			if (r instanceof DynamicLaw)
-				result.add((DynamicLaw) r);
-		}
-		return result;
-	}
+/**
+ * Retrieves a set of all dynamic laws contained in this action description.
+ *
+ *
+ * @return a `Set` of `DynamicLaw` objects representing all dynamic laws in this action description.
+ */
+public Set<DynamicLaw> getDynamicLaws() {
+    Set<DynamicLaw> result = new HashSet<DynamicLaw>();
+    for (CLaw r : this) {
+        if (r instanceof DynamicLaw)
+            result.add((DynamicLaw) r);
+    }
+    return result;
+}
 
 	/**
 	 * Returns a string representation of this action description in human readable
 	 * form, which may be written to a file or printed on screen.
-	 * 
+	 *
 	 * @return a string representation of this action description.
 	 */
 	public String toOutputString() {

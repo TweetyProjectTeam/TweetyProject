@@ -34,6 +34,10 @@ import org.tweetyproject.commons.util.SetTools;
  *
  */
 public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasoner {
+	/** Default */
+	public SimpleAdmissibleSetAfReasoner(){
+		// Default
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
@@ -42,9 +46,9 @@ public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasone
 	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
 		Set<Extension<SetAf>> extensions = new HashSet<Extension<SetAf>>();
 		// Check all subsets
-		
+
 		for(Set<Argument> ext: new SetTools<Argument>().subsets((SetAf)bbase)) {
-			if(((SetAf)bbase).isAdmissable(new Extension<SetAf>(ext)))
+			if(((SetAf)bbase).isAdmissible(new Extension<SetAf>(ext)))
 				extensions.add(new Extension<SetAf>(ext));
 		}
 		return extensions;

@@ -107,4 +107,7 @@ public class PlExample {
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase_xor.proplogic");
 		System.out.println(beliefSet);
 	}
+
+    /** Default Constructor */
+    public PlExample(){}
 }

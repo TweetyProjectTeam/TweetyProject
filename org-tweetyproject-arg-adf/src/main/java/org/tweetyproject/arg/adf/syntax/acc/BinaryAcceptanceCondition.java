@@ -3,14 +3,14 @@ package org.tweetyproject.arg.adf.syntax.acc;
 import java.util.Objects;
 import java.util.Set;
 /**
- * 
+ * BinaryAcceptanceCondition class
  * @author Sebastian
  *
  */
 public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 
 	private final AcceptanceCondition left;
-	
+
 	private final AcceptanceCondition right;
 
 	/**
@@ -30,21 +30,21 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 		return Set.of(left, right);
 	}
 	/**
-	 * 
+	 *
 	 * @return AcceptanceCondition getLeft
 	 */
 	public AcceptanceCondition getLeft() {
 		return left;
 	}
 	/**
-	 * 
+	 *
 	 * @return AcceptanceCondition getRight
 	 */
 	public AcceptanceCondition getRight() {
 		return right;
 	}
 	/**
-	 * 
+	 *
 	 * @return String getName
 	 */
 	protected abstract String getName();
@@ -68,7 +68,7 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 		BinaryAcceptanceCondition other = (BinaryAcceptanceCondition) obj;
 		return Objects.equals(left, other.left) && Objects.equals(right, other.right);
 	}
-	
+
 	@Override
 	public String toString() {
 		return new StringBuilder(getName())
@@ -79,5 +79,5 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 				.append(")")
 				.toString();
 	}
-	
+
 }

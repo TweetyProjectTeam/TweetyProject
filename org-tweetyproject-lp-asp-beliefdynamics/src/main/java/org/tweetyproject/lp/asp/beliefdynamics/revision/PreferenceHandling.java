@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.beliefdynamics.CredibilityRevisionIterative;
@@ -47,7 +48,7 @@ import org.tweetyproject.lp.asp.syntax.ClassicalHead;
 
 /**
  * The implementation orients on the diploma thesis of Mirja Boehmer
- * 
+ *
  * in this class a variant of the approach
  * "A Preference-Based Framework for Updating Logic Programs" by James P.
  * Delgrande, Torsten Schaub and Hans Tompits is implemented, respectively the
@@ -56,31 +57,61 @@ import org.tweetyproject.lp.asp.syntax.ClassicalHead;
  * defaulticated programs third step: computation of the revised program with
  * the help of these answer sets last step: computation of the answer sets of
  * the revised program
- * 
+ *
  * We are only check for conflicting rules and remove this rules with lesser priority.
- * 
+ *
  * @author Tim Janus
  **/
 public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
-	
-	
-	private int maxInt;
-	
-	private ASPSolver solver;
-	
-	public PreferenceHandling(ASPSolver solver) {
-		this(solver, 5);
-	}
-	
-	public PreferenceHandling(ASPSolver solver, int maxInt)  {
-		this.solver = solver;
-		this.maxInt = maxInt;
-	}
-	
-	public void setSolver(ASPSolver solver) {
-		this.solver = solver;
-	}
-	
+
+
+/**
+     * The maximum integer value used in preference handling.
+     * <p>
+     * This value can be adjusted to control the range of preferences considered in the logic program.
+     * </p>
+     */
+    private int maxInt;
+
+    /**
+     * The {@link ASPSolver} instance used for solving logic programs.
+     * <p>
+     * The solver is responsible for processing the logic program and computing results based on the provided preferences.
+     * </p>
+     */
+    private ASPSolver solver;
+
+    /**
+     * Constructs a {@code PreferenceHandling} instance with the specified ASP solver and a default maximum integer value of 5.
+     *
+     * @param solver the {@link ASPSolver} to be used for solving logic programs
+     * @throws NullPointerException if {@code solver} is {@code null}
+     */
+    public PreferenceHandling(ASPSolver solver) {
+        this(solver, 5);
+    }
+
+    /**
+     * Constructs a {@code PreferenceHandling} instance with the specified ASP solver and maximum integer value.
+     *
+     * @param solver the {@link ASPSolver} to be used for solving logic programs
+     * @param maxInt the maximum integer value used in preference handling
+     * @throws NullPointerException if {@code solver} is {@code null}
+     */
+    public PreferenceHandling(ASPSolver solver, int maxInt) {
+        this.solver = Objects.requireNonNull(solver, "Solver cannot be null");
+        this.maxInt = maxInt;
+    }
+
+    /**
+     * Sets the {@link ASPSolver} instance for this {@code PreferenceHandling} instance.
+     *
+     * @param solver the {@link ASPSolver} to be used for solving logic programs
+     * @throws NullPointerException if {@code solver} is {@code null}
+     */
+    public void setSolver(ASPSolver solver) {
+        this.solver = Objects.requireNonNull(solver, "Solver cannot be null");
+    }
 	@Override
 	public Program revise(Collection<ASPRule> base, Collection<ASPRule> formulas) {
 		Program p1 = null;
@@ -91,21 +122,21 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 			p1 = new Program();
 			p1.addAll(base);
 		}
-		
+
 		if(formulas instanceof Program) {
 			p2 = (Program)formulas;
 		} else {
 			p2 = new Program();
 			p2.addAll(formulas);
 		}
-		
+
 		Program combined = new Program();
 		Program concat = new Program();
-		
+
 		// Defaultification of given programs.
 		Program pd1 = Program.getDefaultification(p1);
 		Program pd2 = Program.getDefaultification(p2);
-		
+
 		// list of conflicting rules of the defaultificated programs
 		List<Pair<ASPRule, ASPRule>> conflictsDef = getConflictingRules(pd1, pd2);
 
@@ -119,15 +150,15 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		Collections.sort(pdr2);
 		Collections.sort(pr1);
 		Collections.sort(pr2);
-		
+
 		List<Pair<ASPRule, ASPRule>> conflicts = new LinkedList<Pair<ASPRule,ASPRule>>();
 		for(Pair<ASPRule, ASPRule> defConf : conflictsDef) {
 			int index1 = pdr1.indexOf(defConf.getFirst());
 			int index2 = pdr2.indexOf(defConf.getSecond());
-			
+
 			conflicts.add(new Pair<ASPRule, ASPRule>(pr1.get(index1), pr2.get(index2)));
 		}
-		
+
 		// get answer sets of combined defaultificated programs.
 		concat.add(pd1);
 		concat.add(pd2);
@@ -138,13 +169,13 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		/*
 		System.out.println("Default Program: " + concat);
 		System.out.println("Default answer: " + asDefault);
 		System.out.println("Conflicts: " + conflicts);
 		*/
-		
+
 		// proof which rules can be removed from concat:
 		// Let the rule R be the higher prioritized Rule in a conflict pair.
 		// First test if the body of R is in the answer set but the head is not in the answer set.
@@ -155,40 +186,40 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				Set<ASPLiteral> literals = new HashSet<ASPLiteral>();
 				literals.addAll(conflict.getSecond().getLiterals());
 				literals.removeAll((Collection<?>) conflict.getSecond().getConclusion());
-				
+
 				if(	as.containsAll(literals) &&
 					!as.containsAll((Collection<?>) conflict.getSecond().getConclusion())) {
 					toRemoveCollection.add(conflict.getFirst());
 				}
 			}
 		}
-		
-		
+
+
 	//	System.out.println("To Remove: " + toRemoveCollection);
-		
+
 		combined.add(p1);
 		combined.add(p2);
 		combined.removeAll(toRemoveCollection);
-		
+
 		return combined;
 	}
-	
+
 	/**
 	 * Helper method: Finds all pairs of conflicting rules in program p1 and p2.
-	 * A conflicting rule is a pair(r1, r2 | r1 in p1, r2 in p2, H(r1) = -H(r2)) 
-	 * @param p1	The first program 
+	 * A conflicting rule is a pair(r1, r2 | r1 in p1, r2 in p2, H(r1) = -H(r2))
+	 * @param p1	The first program
 	 * @param p2	The second program
 	 * @return		A list of all pairs representing the conflicting rules in p1 and p2.
 	 */
 	protected static List<Pair<ASPRule, ASPRule>> getConflictingRules(Program p1, Program p2) {
 		List<Pair<ASPRule, ASPRule>> reval = new LinkedList<Pair<ASPRule,ASPRule>>();
-		
+
 		Iterator<ASPRule> p1It = p1.iterator();
 		while(p1It.hasNext()) {
 			ASPRule r1 = p1It.next();
 			if(r1.isConstraint())
 				continue;
-			
+
 			// Create negated head of rule 1.
 			if (r1.getConclusion() instanceof AggregateHead)
 				throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
@@ -201,7 +232,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 			} else {
 				throw new RuntimeException("Head Atom must be normal or strict negated.");
 			}
-			
+
 			// try to find the negated head in the rules of the other program.
 			Iterator<ASPRule> p2it = p2.iterator();
 			while(p2it.hasNext()) {
@@ -215,12 +246,14 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				}
 			}
 		}
-		
+
 		return reval;
 	}
-	
-	/*
-	 * Temporary functional test method.
+
+	/**
+	 *  Temporary functional test method.
+	 * @param args the args
+	 * @throws ParseException error when parsing
 	 */
 	public static void main(String [] args) throws ParseException {
 		// Example from Mirja diplom thesis.
@@ -228,27 +261,27 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		String program2 = "-a:-not b.";
 		program1 = "sleep:-not tv_on.\nnight.\ntv_on.\nwatch_tv:-tv_on.";
 		program2 = "-tv_on:-power_failure.\npower_failure.";
-		
+
 		DLVSolver dlv = new DLVSolver("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
-		
+
 		InstantiateVisitor visitor = new InstantiateVisitor();
 		ASPParser parser = new ASPParser(new StringReader(program1)); //TODO test with new parser
 		Program p1 = visitor.visit(parser.Program(), null);
 		parser.ReInit(new StringReader(program2));
 		Program p2 = visitor.visit(parser.Program(), null);
-		
+
 		System.out.println("P1:");
 		System.out.println(p1.toString()+"\n" + dlv.getModels(p1, 5) + "\n");
-		
+
 		System.out.println("P2:");
 		System.out.println(p2.toString()+"\n" + dlv.getModels(p2, 5) + "\n");
-		
+
 		PreferenceHandling ph = new PreferenceHandling(dlv);
-		Program r = ph.revise(p1, p2);		
+		Program r = ph.revise(p1, p2);
 
 		System.out.println("Revised:");
 		System.out.println(r.toString()+"\n\n");
-		
+
 		System.out.println(dlv.getModels(r, 5));
 	}
 }

@@ -188,6 +188,8 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     }
 
     /**
+     *
+     * Return a list of arguments
      * @return a list of arguments
      */
     public ArrayList<BArgument> getArguments() {
@@ -202,7 +204,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public Set<Support> getSupports() {
         return new HashSet<Support>(supports);
     }
-    
+
     /**
      * Get all supports invloving argument arg
      * @param arg an argument
@@ -225,7 +227,13 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public Set<Attack> getAttacks() {
         return new HashSet<Attack>(attacks);
     }
-
+    /**
+     * Return the powerset
+     * @return the powerset
+     *
+     * @param <T> type
+     * @param originalSet the input set
+     */
     public <T> Set<Set<T>> powerSet(Set<T> originalSet) {
         Set<Set<T>> sets = new HashSet<Set<T>>();
         if (originalSet.isEmpty()) {
@@ -234,16 +242,16 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
         }
         List<T> list = new ArrayList<T>(originalSet);
         T head = list.get(0);
-        Set<T> rest = new HashSet<T>(list.subList(1, list.size())); 
+        Set<T> rest = new HashSet<T>(list.subList(1, list.size()));
         for (Set<T> set : powerSet(rest)) {
             Set<T> newSet = new HashSet<T>();
             newSet.add(head);
             newSet.addAll(set);
             sets.add(newSet);
             sets.add(set);
-        }       
+        }
         return sets;
-    } 
+    }
     /**
      * Pretty print of the EAFTheory
      */
@@ -292,4 +300,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public BArgument getEta() {
         return eta;
     }
+
+    /** Default Constructor */
+    public AbstractEAFTheory(){}
 }

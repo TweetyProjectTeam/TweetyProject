@@ -24,11 +24,11 @@ import java.util.Set;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
- * 
+ *
  * This class models a concept assertion in description logic, i.e. an
  * expression of the form "a : C" (a is in the extension of C) where a
  * is an individual and C is a concept.
- * 
+ *
  * @author Anna Gessler
  */
 public class ConceptAssertion extends AssertionalAxiom {
@@ -38,27 +38,27 @@ public class ConceptAssertion extends AssertionalAxiom {
 	 * is an instance of this assertion's concept)
 	 */
 	private Individual individual;
-	
+
 	/**
 	 * The concept or role of this assertional axiom (= the concept or role that the
 	 * individuals are instances of).
 	 */
 	private ComplexConcept concept;
-	
+
 	/**
 	 * Empty default constructor.
 	 */
 	public ConceptAssertion() {
 	}
-	
+
 	/**
 	 * Initializes a role assertion with the given concept and Individual.
-	 * 
+	 *
 	 * @param i
 	 *            an Individual, term of the concept
 	 * @param c
 	 *            a (complex) concept
-	 * 
+	 *
 	 */
 	public ConceptAssertion(Individual i, ComplexConcept c) {
 		this.concept = c;
@@ -67,12 +67,12 @@ public class ConceptAssertion extends AssertionalAxiom {
 
 	/**
 	 * Initializes a role assertion with the given atomic concept and Individual.
-	 * 
+	 *
 	 * @param i
 	 *            an Individual, term of the concept
 	 * @param c
 	 *            AtomicConcept
-	 * 
+	 *
 	 */
 	public ConceptAssertion(Individual i, AtomicConcept c) {
 		this.concept = c;
@@ -85,17 +85,17 @@ public class ConceptAssertion extends AssertionalAxiom {
 		ps.addAll(this.concept.getPredicates());
 		return ps;
 	}
-	
+
 	@Override
 	public ConceptAssertion clone() {
 		return new ConceptAssertion(this.individual, this.concept);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "instance " + this.individual.toString()+ " " + this.concept.toString();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,23 +113,23 @@ public class ConceptAssertion extends AssertionalAxiom {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
-			return true;		
+			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 		ConceptAssertion other = (ConceptAssertion) obj;
 		if (individual == null) {
 			if (other.individual != null)
 				return false;
-		} else if (!individual.equals(other.individual)) 
-			return false; 
+		} else if (!individual.equals(other.individual))
+			return false;
 		if (concept == null) {
 			if (other.concept != null)
 				return false;
-		} else if (!concept.equals(other.concept))  
-			return false;  
+		} else if (!concept.equals(other.concept))
+			return false;
 		return true;
 	}
-	
+
 	@Override
 	public DlSignature getSignature() {
 		DlSignature sig = new DlSignature();
@@ -139,16 +139,26 @@ public class ConceptAssertion extends AssertionalAxiom {
 	}
 
 	/**
-	 * @return the individual of this assertional axiom (= the individual that
-	 * is an instance of this axiom's concept)
+	 * Returns the individual involved in this concept assertion.
+	 * <p>
+	 * This is the individual that is an instance of the concept in this assertion.
+	 * For example, in the assertion "a : C", the individual would be "a".
+	 * </p>
+	 *
+	 * @return the individual of this concept assertion
 	 */
 	public Individual getIndividual() {
 		return individual;
 	}
-	
+
 	/**
-	 * @return the concept of this assertional axiom (= the concept that the 
-	 * individual is an instance of).
+	 * Returns the concept involved in this concept assertion.
+	 * <p>
+	 * This is the concept that the individual in this assertion is an instance of.
+	 * For example, in the assertion "a : C", the concept would be "C".
+	 * </p>
+	 *
+	 * @return the concept of this concept assertion
 	 */
 	public ComplexConcept getConcept() {
 		return concept;

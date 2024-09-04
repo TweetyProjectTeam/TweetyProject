@@ -17,7 +17,7 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 /**
-* 
+*
 */
 package org.tweetyproject.arg.aba.syntax;
 
@@ -32,6 +32,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
+ * This represents a negation relation of form
  * @author Nils Geilen (geilenn@uni-koblenz.de) This represents a negation
  *         relation of form "not <code>formula</code> = <code>negation</code>"
  * @param <T> the type of formulas
@@ -46,7 +47,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 
 	/**
 	 * Creates a new Negation
-	 * 
+	 *
 	 * @param formula  a formula
 	 * @param negation it's complement
 	 */
@@ -58,7 +59,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -72,7 +73,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("rawtypes")
@@ -100,7 +101,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.Formula#getSignature()
 	 */
 	@Override
@@ -112,7 +113,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

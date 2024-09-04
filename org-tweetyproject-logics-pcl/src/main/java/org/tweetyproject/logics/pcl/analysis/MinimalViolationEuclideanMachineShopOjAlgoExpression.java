@@ -113,4 +113,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 
 	
 
+
+    /** Default Constructor */
+    public MinimalViolationEuclideanMachineShopOjAlgoExpression(){}
 }

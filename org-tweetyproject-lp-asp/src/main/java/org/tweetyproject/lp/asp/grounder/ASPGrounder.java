@@ -37,4 +37,7 @@ public abstract class ASPGrounder {
 	 */
 	public abstract Program getGroundProgram(Program p);
 
+
+    /** Default Constructor */
+    public ASPGrounder(){}
 }

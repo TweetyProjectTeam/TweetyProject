@@ -47,7 +47,7 @@
 	  * @param ext the extension that potentially contains attackers of the argument.
 	  * @return true if the argument {@code a} is attacked by any argument in the given extension {@code ext}, false otherwise.
 	  */
-	 boolean isAttacked(Arg a, Extension<? extends ArgumentationFramework> ext);
+	 boolean isAttacked(Arg a, Extension<? extends ArgumentationFramework<?>> ext);
  
 	 /**
 	  * Retrieves all the nodes (arguments) of this argumentation framework.

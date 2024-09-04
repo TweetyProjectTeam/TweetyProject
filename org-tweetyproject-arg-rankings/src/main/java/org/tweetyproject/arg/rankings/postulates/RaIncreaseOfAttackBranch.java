@@ -105,4 +105,7 @@ public class RaIncreaseOfAttackBranch extends RankingPostulate {
 		return ranking.isStrictlyMoreAcceptableThan(argClone2, argClone);
 	}
 
+
+    /** Default Constructor */
+    public RaIncreaseOfAttackBranch(){}
 }

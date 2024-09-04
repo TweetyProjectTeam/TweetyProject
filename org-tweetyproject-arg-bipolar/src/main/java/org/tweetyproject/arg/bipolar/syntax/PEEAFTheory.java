@@ -508,6 +508,7 @@ public class PEEAFTheory {
 
         /**
          * The atomic variable to store the occurrence of this exception.
+         * @param message the message
          */
         public ElementNotFoundException(String message) {
             super(message);

@@ -29,4 +29,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class PlWindowInconsistencyMeasurementProcess extends WindowInconsistencyMeasurementProcess<PlFormula>{
+
+    /** Default Constructor */
+    public PlWindowInconsistencyMeasurementProcess(){}
 }

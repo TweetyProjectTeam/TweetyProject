@@ -324,8 +324,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework> ext){
+	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework<?>> ext){
 		if(!this.parents.containsKey(argument))
 			return false;
 		for(Argument attacker: this.parents.get(argument))

@@ -20,10 +20,10 @@
 package org.tweetyproject.math.algebra;
 
 /**
- * This class represents a Boolean semiring. In this semiring, the addition operation corresponds to logical OR (||),
- * the multiplication operation corresponds to logical AND (&&), the additive identity is false,
+ * This class represents a Boolean semiring. In this semiring, the addition operation corresponds to logical OR,
+ * the multiplication operation corresponds to logical AND, the additive identity is false,
  * and the multiplicative identity is true.
- * 
+ *
  * @author Sandra Hoffmann
  */
 

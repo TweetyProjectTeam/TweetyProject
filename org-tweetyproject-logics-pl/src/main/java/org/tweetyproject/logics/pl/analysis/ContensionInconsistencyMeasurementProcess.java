@@ -143,4 +143,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 		return "approx-contension";
 	}
 
+
+    /** Default Constructor */
+    public ContensionInconsistencyMeasurementProcess(){}
 }

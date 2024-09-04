@@ -19,15 +19,17 @@
 package org.tweetyproject.arg.adf.reasoner.query;
 
 /**
+ * ConditionalTaskStep class
  * @author Mathias Hofer
  *
  */
 public interface ConditionalTaskStep extends TaskStep {
-	
+
 	/**
-	 * 
+	 *
+	 * Return forAll
 	 * @return forAll
 	 */
 	Query<Boolean> forAll();
-	
+
 }

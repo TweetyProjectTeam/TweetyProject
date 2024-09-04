@@ -32,14 +32,24 @@ import org.tweetyproject.commons.Formula;
  * This abstract class is the common ancestor for semantical approaches to
  * ranking, i.e. relations that allow a more fine-grained comparison by
  * e.g. utilizing numerical values for arguments.
- * 
+ *
+ *
+ * @param <T> The type of formulas that are compared.
+ * @param <R> The type of the belief base that the interpretation operates on.
  * @author Matthias Thimm
  */
 public abstract class GeneralComparator<T extends Formula, R extends BeliefBase> extends AbstractInterpretation<R,T> implements Comparator<T> {
 
+	/**
+	 * Default COnstructor
+	 */
+	public GeneralComparator(){
+		super();
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -54,8 +64,8 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	}
 
 	/**
-	 * Returns "true" iff a is strictly more acceptable than b, i.e. a &lt; b 
-	 * 
+	 * Returns "true" iff a is strictly more acceptable than b, i.e. a &lt; b
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 * @return "true" iff a is strictly more acceptable than b
@@ -65,21 +75,21 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	}
 
 	/**
-	 * Returns "true" iff a is strictly less acceptable than b, i.e. a &gt; b 
-	 * 
+	 * Returns "true" iff a is strictly less acceptable than b, i.e. a &gt; b
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 * @return "true" iff a is strictly less acceptable than b
 	 */
 	public boolean isStrictlyLessAcceptableThan(T a, T b) {
 		return !this.isIncomparable(a, b) && !this.isStrictlyLessOrEquallyAcceptableThan(b, a);
-		
+
 	}
 
 	/**
 	 * Returns "true" iff a is strictly more acceptable than b or a is equally
 	 * acceptable as b, i.e. a &lt;= b (or a ~ b)
-	 * 
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 * @return "true" iff a is strictly more acceptable than b or a is equally
@@ -90,9 +100,9 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	}
 
 	/**
-	 * Returns "true" iff a is equally acceptable as b, 
-	 * i.e. a = b (or a ~ b) 
-	 * 
+	 * Returns "true" iff a is equally acceptable as b,
+	 * i.e. a = b (or a ~ b)
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 * @return "true" iff a is equally acceptable as b, "false" otherwise or if a and b are incomparable
@@ -105,7 +115,7 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	 * Returns the set of all comparable elements a from the given set that are maximally
 	 * accepted, i.e. where there is no other comparable element that is strictly more
 	 * acceptable.
-	 * 
+	 *
 	 * @param args a set of comparable element
 	 * @return the set of all comparable element a that are maximally accepted
 	 */
@@ -128,7 +138,7 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	 * Returns the set of all comparable elements a from the given set that are minimally
 	 * accepted, i.e. where there is no other comparable element that is strictly less
 	 * acceptable.
-	 * 
+	 *
 	 * @param args a set of comparable elements
 	 * @return the set of all comparable elements a that are minimally accepted
 	 */
@@ -150,7 +160,7 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	/**
 	 * Checks whether this ranking is equivalent to the other one wrt. the given set
 	 * of comparable elements.
-	 * 
+	 *
 	 * @param other some ranking
 	 * @param args  some comparable elements
 	 * @return "true" if both rankings are equivalent.
@@ -171,7 +181,7 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	/**
 	 * Returns "true" iff a is strictly less acceptable than b or a is equally
 	 * acceptable as b or a and b are not comparable, i.e. a &gt;= b (or a ~ b)
-	 * 
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 * @return "true" iff a is strictly less acceptable than b or a is equally
@@ -182,7 +192,7 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	/**
 	 * Returns "true" iff a and b are incomparable (i.e. this ranking is a partial
 	 * ranking).
-	 * 
+	 *
 	 * @param a comparable element
 	 * @param b comparable element
 	 * @return "true" iff a and b are incomparable
@@ -190,6 +200,8 @@ public abstract class GeneralComparator<T extends Formula, R extends BeliefBase>
 	public abstract boolean isIncomparable(T a, T b);
 
 	/**
+	 *
+	 * Return true if this ranking contains incomparable arguments, false otherwise
 	 * @return true if this ranking contains incomparable arguments, false otherwise
 	 */
 	public abstract boolean containsIncomparableArguments();

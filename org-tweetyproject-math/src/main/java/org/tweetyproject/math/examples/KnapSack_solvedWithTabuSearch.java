@@ -33,19 +33,26 @@ import org.tweetyproject.math.term.Term;
  *
  */
 public class KnapSack_solvedWithTabuSearch {
-	
+
+
+	/** Constructor */
+	public KnapSack_solvedWithTabuSearch() {
+	}
+
+
+
 	/**
 	 * main method
 	 * @param args arguments
 	 */
 	public static void main(String args[]) {
-		
-		
+
+
 		//define the maximum weight
 		FloatConstant maxl = new FloatConstant(15);
 
 		//create a list of items defined by weight and value
-		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();	
+		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
 		for(int i = 0; i < 10; i++) {
 			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
 			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
@@ -54,16 +61,16 @@ public class KnapSack_solvedWithTabuSearch {
 		}
 		KnapSack test = new KnapSack(elems, maxl);
 
-		
+
 		//solve the problem with a tabu size of 5, max 100000 iterations and max 2000 iterations without an improvement to the best solution
 		TabuSearch ts = new TabuSearch(1000000, 50, 1000);
 		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
 		System.out.println("MySol: ");
 		for(ElementOfCombinatoricsProb i : mySol)
 			System.out.print(i.components + " ");
-		
-			
-		
+
+
+
 	}
 }
 

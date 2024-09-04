@@ -37,6 +37,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * An abstract class for performing extension analysis on a PEAF (Process-Entity-Attribute-Function) theory.
+ * <p>
+ * This class is designed to convert a PEAF theory into an EAF (Extended Argumentation Framework) theory,
+ * then into a Dung theory, and finally use an extension reasoner to compute the extensions of the Dung theory.
+ * </p>
+ */
 public abstract class AbstractExtensionAnalysis extends AbstractAnalysis implements ExtensionAnalysis {
     /**
      * The default constructor

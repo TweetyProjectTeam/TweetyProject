@@ -23,18 +23,26 @@ import java.util.*;
 import org.tweetyproject.commons.*;
 
 /**
- * This is the interface for a classic multiple belief base revision operator, ie. an
- * operator that takes some set of formulas and another set of formulas and revises
- * the former by the latter. 
- * 
+ * This is the interface for a classic multiple belief base revision operator,
+ * ie. an
+ * operator that takes some set of formulas and another set of formulas and
+ * revises
+ * the former by the latter.
+ *
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas that this operator works on.
  */
 public abstract class MultipleBaseRevisionOperator<T extends Formula> implements BaseRevisionOperator<T> {
+	/** Default */
+	public MultipleBaseRevisionOperator() {
+	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.beliefdynamics.BaseRevisionOperator#revise(java.util.Collection, org.tweetyproject.Formula)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.tweetyproject.beliefdynamics.BaseRevisionOperator#revise(java.util.
+	 * Collection, org.tweetyproject.Formula)
 	 */
 	public Collection<T> revise(Collection<T> base, T formula) {
 		Set<T> formulas = new HashSet<T>();
@@ -43,11 +51,13 @@ public abstract class MultipleBaseRevisionOperator<T extends Formula> implements
 	}
 
 	/**
-	 * Revises the first collection of formulas by the second collection of formulas.
-	 * @param base some collection of formulas.
+	 * Revises the first collection of formulas by the second collection of
+	 * formulas.
+	 *
+	 * @param base     some collection of formulas.
 	 * @param formulas some formulas.
 	 * @return the revised collection.
 	 */
 	public abstract Collection<T> revise(Collection<T> base, Collection<T> formulas);
-	
+
 }

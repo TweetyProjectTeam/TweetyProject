@@ -169,6 +169,7 @@ public class MarkovWalk {
 		return diff.distanceToZero();
 	}
 	/**
+	 * Return the currentState
 	 * @return the currentState
 	 */
 	public Matrix getCurrentState() {
@@ -176,6 +177,7 @@ public class MarkovWalk {
 	}
 
 	/**
+	 * Return the mean state
 	 * @return the mean state
 	 */
 	public Matrix getMeanState() {
@@ -183,6 +185,7 @@ public class MarkovWalk {
 	}
 
 	/**
+	 * Return the controlVector
 	 * @return the controlVector
 	 */
 	public Matrix getControlVector() {
@@ -190,6 +193,7 @@ public class MarkovWalk {
 	}
 
 	/**
+	 * Return the normalized control vector
 	 * @return the normalized control vector
 	 */
 	public Matrix getNormalizedControlVector() {

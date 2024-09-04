@@ -33,26 +33,37 @@ import org.tweetyproject.lp.asp.syntax.*;
 /**
  * Instances of this class represent arguments in the sense
  * of Definition 2 in [1].
- * 
- * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of 
- *  Argumentation Semantics for Extended Logic Programming and its 
- *  Application to the Well-founded Semantics. 
+ *
+ * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of
+ *  Argumentation Semantics for Extended Logic Programming and its
+ *  Application to the Well-founded Semantics.
  *  In: Theory and Practice of Logic Programming, 5(1-2):207-242, 2003.
- * 
+ *
  * @author Sebastian Homann
  */
 public class Argument extends LinkedList<ASPRule> implements Formula {
-	
+
 	private static final long serialVersionUID = 6017406379850600902L;
 
+	/**
+	 * Constructs an `Argument` object initialized with a single ASP rule.
+	 *
+	 * @param rule an `ASPRule` object that represents the rule to be added to the argument.
+	 */
 	public Argument(ASPRule rule) {
 		this.add(rule);
 	}
-	
+
+	/**
+	 * Constructs an `Argument` object initialized with a list of ASP rules.
+	 *
+	 *
+	 * @param rules a `List` of `ASPRule` objects representing the rules to be added to the argument.
+	 */
 	public Argument(List<ASPRule> rules) {
 		this.addAll(rules);
-	}
-	
+}
+
 	/**
 	 * Returns the set of conclusions of this argument, which is made up of
 	 * the heads of all rules contained in this argument.
@@ -67,13 +78,13 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns the set of assumptions, i.e. the set of DLPLiterals, that appear
 	 * default-negated in the premise of some rule in this argument.
-	 * Ex.: Let a &lt;- b, not -c. be a rule in argument A. Then A.getAssumptions() 
+	 * Ex.: Let a &lt;- b, not -c. be a rule in argument A. Then A.getAssumptions()
 	 *      will contain -c.
-	 * 
+	 *
 	 * @return a set of literals which this argument assumes not to be true
 	 */
 	public Set<ASPLiteral> getAssumptions() {
@@ -88,12 +99,12 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 		}
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * An argument may only contain nonempty ground rules (i.e. no constraints).
 	 * Also, for an argument A = [r1, r2, ..., rn] for each literal Lj in the body
-	 * of a rule ri there has to be a rule rk with k&gt;i with head(rk) = Lj.  
+	 * of a rule ri there has to be a rule rk with k&gt;i with head(rk) = Lj.
 	 * @return true iff the the argument is valid
 	 */
 	public boolean checkValid() {
@@ -124,20 +135,20 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 		}
 		return true;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.util.AbstractCollection#toString()
 	 */
 	public String toString() {
 		String result = new String();
-		
+
 		String delimiter = "";
 		for(ASPRule r : this) {
 			result += delimiter + r.toString();
 			delimiter = ",";
 		}
-		
+
 		return "[" + result + "]";
 	}
 

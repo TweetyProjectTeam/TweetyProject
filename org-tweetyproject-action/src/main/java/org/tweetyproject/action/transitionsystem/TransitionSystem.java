@@ -35,7 +35,7 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
  * For a collection of action languages defined in terms of transition systems,
  * see: [Gelfond, Michael and Lifschitz, Vladimir: Action Languages. ETAI:
  * Electronic Transactions on AI, 1998.]
- * 
+ *
  * @author Sebastian Homann
  */
 public class TransitionSystem {
@@ -45,7 +45,7 @@ public class TransitionSystem {
 
 	/**
 	 * Creates a new transition system.
-	 * 
+	 *
 	 * @param states      A set of states which is contained in this transition
 	 *                    system.
 	 * @param transitions A set of transitions which is contained in this transition
@@ -60,7 +60,7 @@ public class TransitionSystem {
 
 	/**
 	 * Creates a new transition system.
-	 * 
+	 *
 	 * @param states    A set of states which is contained in this transition
 	 *                  system.
 	 * @param signature The action signature for this transition system.
@@ -72,7 +72,7 @@ public class TransitionSystem {
 
 	/**
 	 * Creates a new empty transition system with the given ActionSignature.
-	 * 
+	 *
 	 * @param signature the action signature of this transition system
 	 */
 	public TransitionSystem(ActionSignature signature) {
@@ -81,7 +81,7 @@ public class TransitionSystem {
 
 	/**
 	 * Creates a new state and adds it to this transition system.
-	 * 
+	 *
 	 * @param fluents The set of fluents which are to be mapped to true by the new
 	 *                state.
 	 * @return the new state which maps the given fluents to true.
@@ -97,7 +97,7 @@ public class TransitionSystem {
 
 	/**
 	 * Adds a state to this transition system.
-	 * 
+	 *
 	 * @param s a new state
 	 */
 	public void addState(State s) {
@@ -107,7 +107,7 @@ public class TransitionSystem {
 	/**
 	 * Returns the state that maps the given fluents to true, if it exists,
 	 * otherwise null.
-	 * 
+	 *
 	 * @param fluents a set of fluents
 	 * @return the state that maps the given fluents to true, if it exists,
 	 *         otherwise null.
@@ -123,7 +123,7 @@ public class TransitionSystem {
 
 	/**
 	 * Adds a given transition to this transition system.
-	 * 
+	 *
 	 * @param t a new transition
 	 */
 	public void addTransition(Transition t) {
@@ -131,6 +131,7 @@ public class TransitionSystem {
 	}
 
 	/**
+	 * Creates a HashSet with all states contained in this transition system.
 	 * @return all states contained in this transition system.
 	 */
 	public Set<State> getStates() {
@@ -138,6 +139,7 @@ public class TransitionSystem {
 	}
 
 	/**
+	 * Creates a HashSet with all transitions contained in this transition system.
 	 * @return all transitions contained in this transition system.
 	 */
 	public Set<Transition> getTransitions() {
@@ -146,7 +148,7 @@ public class TransitionSystem {
 
 	/**
 	 * Returns the value of a fluent in a state in this transition system.
-	 * 
+	 *
 	 * @param fluent a fluent
 	 * @param state  a state
 	 * @return true, iff the fluent is mapped to true by the given state.
@@ -164,7 +166,7 @@ public class TransitionSystem {
 	 * Returns this transition system in dot-format with collapsed transitions,
 	 * which may be further processed using a graph drawing library such as
 	 * graphviz. For more information, see http://www.graphviz.org
-	 * 
+	 *
 	 * @return This transition system in dot format.
 	 */
 	public String toDotFormat() {
@@ -208,6 +210,7 @@ public class TransitionSystem {
 	}
 
 	/**
+	 * Returns the action signature of this transition system.
 	 * @return the action signature of this transition system.
 	 */
 	public ActionSignature getSignature() {
@@ -216,7 +219,7 @@ public class TransitionSystem {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

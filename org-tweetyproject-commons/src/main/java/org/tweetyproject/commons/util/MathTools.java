@@ -22,10 +22,14 @@ import java.util.Collection;
 
 /**
  * This class contains some useful math tools.
- * 
+ *
  * @author Matthias Thimm
  */
 public class MathTools {
+	/**Constructor */
+	public MathTools(){
+
+	}
 
 	/**
 	 * This method computes "n choose k". If n &lt; 0 or k &lt; 0
@@ -39,10 +43,10 @@ public class MathTools {
 			return 0;
 		if(n < k) return 0;
 		if(k == 0) return 1;
-		if(n == 0) return 0;		
-		return MathTools.binomial(n-1,k-1) + MathTools.binomial(n-1,k);		
+		if(n == 0) return 0;
+		return MathTools.binomial(n-1,k-1) + MathTools.binomial(n-1,k);
 	}
-	
+
 	/**
 	 * Computes the faculty of the given number.
 	 * @param i an integer.
@@ -56,7 +60,7 @@ public class MathTools {
 			result *= j;
 		return result;
 	}
-	
+
 	/**
 	 * Compute the average value and the variance of the given list of
 	 * numbers.
@@ -73,6 +77,6 @@ public class MathTools {
 		for(Double d: values)
 			sum += Math.pow((d-result.getFirst()), 2);
 		result.setSecond(sum/(values.size()-1));
-		return result;		
+		return result;
 	}
 }

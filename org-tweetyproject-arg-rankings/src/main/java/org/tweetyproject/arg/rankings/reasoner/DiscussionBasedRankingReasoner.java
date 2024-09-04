@@ -131,4 +131,7 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public DiscussionBasedRankingReasoner(){}
 }

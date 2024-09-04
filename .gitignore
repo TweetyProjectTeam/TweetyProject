@@ -10,6 +10,7 @@ bin/
 /org-tweetyproject-web/tweetyserver.log
 .vscode
 
+*.py
 *.log
 /.metadata
 .metadata/.log
@@ -30,3 +31,8 @@ bin/
 .metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log
 .metadata/version.ini
 *.resources
+constructor.json
+skipped_files.txt
+warnings.json
+
+*.txt

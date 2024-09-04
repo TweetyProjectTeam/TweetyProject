@@ -23,17 +23,25 @@ import java.util.Collection;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
- * @author Mathias Hofer
+ * The {@code Decomposer} interface defines a contract for decomposing an
+ * argumentation framework or a logic system into multiple parts based on a
+ * desired criterion.
  *
+ * @author Mathias Hofer
  */
 public interface Decomposer {
-	
+
 	/**
-	 * 
+	 * Decomposes the framework or system into a collection of {@link Interpretation}
+	 * objects based on the provided criterion.
 	 *
-	 * @param desired desired
-	 * @return decompose
+	 * @param desired an integer representing the desired criterion for decomposition;
+	 *                the meaning of this parameter is implementation-specific
+	 *                (e.g., it could represent the number of desired interpretations
+	 *                or a specific threshold for decomposition)
+	 * @return a collection of decomposed {@link Interpretation} objects based on the
+	 *         specified criterion
 	 */
 	Collection<Interpretation> decompose(int desired);
-	
+
 }

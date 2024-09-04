@@ -29,77 +29,121 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
- * @author Mathias Hofer
+ * This class implements a SAT encoding for two-valued models in an Abstract Dialectical Framework (ADF).
+ * The encoding handles both fixed and unfixed arguments by generating SAT clauses that represent their
+ * acceptance conditions. It also provides a way to encode an interpretation as two-valued, where each
+ * argument is either satisfied or unsatisfied.
+ * <p>
+ * The generated clauses can be passed to a SAT solver for further processing.
+ * </p>
  *
+ * @author Mathias Hofer
  */
 public class TwoValuedModelSatEncoding implements SatEncoding, RelativeSatEncoding {
 
-	private final AbstractDialecticalFramework adf;
-	
-	private final PropositionalMapping mapping;
-	
-	/**
-	 * @param adf adf
-	 * @param mapping mapping
-	 */
-	public TwoValuedModelSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-		this.adf = Objects.requireNonNull(adf);
-		this.mapping = Objects.requireNonNull(mapping);
-	}
+    /** The Abstract Dialectical Framework (ADF) that this encoding is based on. */
+    private final AbstractDialecticalFramework adf;
 
-	@Override
-	public void encode(Consumer<Clause> consumer) {
-		for (Argument arg : adf.getArguments()) {			
-			handleUnfixed(consumer, arg);
-		}
-	}
+    /** The propositional mapping used to map arguments and links to propositional literals. */
+    private final PropositionalMapping mapping;
 
-	@Override
-	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
-		if (!interpretation.undecided().isEmpty()) throw new IllegalArgumentException("Interpretation must be two-valued!");
-		
-		for (Argument arg : adf.getArguments()) {
-			if (interpretation.satisfied(arg)) {
-				handleSatisfied(consumer, arg);
-			} else if (interpretation.unsatisfied(arg)) {
-				handleUnsatisfied(consumer, arg);
-			} else {
-				handleUnfixed(consumer, arg);				
-			}
-		}
-	}
-	
-	private void handleSatisfied(Consumer<Clause> consumer, Argument arg) {
-		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, true);
-		
-		Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+    /**
+     * Constructs a new TwoValuedModelSatEncoding for the given Abstract Dialectical Framework (ADF)
+     * and propositional mapping.
+     *
+     * @param adf the Abstract Dialectical Framework (ADF) to encode, must not be null
+     * @param mapping the propositional mapping for the arguments and links, must not be null
+     */
+    public TwoValuedModelSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+        this.adf = Objects.requireNonNull(adf);
+        this.mapping = Objects.requireNonNull(mapping);
+    }
 
-		consumer.accept(Clause.of(accName));
-		consumer.accept(Clause.of(mapping.getTrue(arg)));
-		consumer.accept(Clause.of(mapping.getFalse(arg).neg()));
-	}
-	
-	private void handleUnsatisfied(Consumer<Clause> consumer, Argument arg) {
-		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(mapping::getTrue, true);
-		
-		Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+    /**
+     * Encodes the two-valued model of the ADF into a set of SAT clauses and provides them to the given consumer.
+     * This method handles arguments that are not fixed in the interpretation, i.e., their truth value is unknown.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     */
+    @Override
+    public void encode(Consumer<Clause> consumer) {
+        for (Argument arg : adf.getArguments()) {
+            handleUnfixed(consumer, arg);
+        }
+    }
 
-		consumer.accept(Clause.of(accName.neg()));
-		consumer.accept(Clause.of(mapping.getFalse(arg)));
-		consumer.accept(Clause.of(mapping.getTrue(arg).neg()));
-	}
-	
-	private void handleUnfixed(Consumer<Clause> consumer, Argument arg) {
-		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, false);
+    /**
+     * Encodes a specific two-valued interpretation of the ADF into a set of SAT clauses and provides them to the given consumer.
+     * The interpretation must be two-valued, meaning that all arguments are either satisfied or unsatisfied, with no undecided arguments.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     * @param interpretation the interpretation to be encoded, must be two-valued (no undecided arguments)
+     * @throws IllegalArgumentException if the interpretation contains undecided arguments
+     */
+    @Override
+    public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
+        if (!interpretation.undecided().isEmpty()) throw new IllegalArgumentException("Interpretation must be two-valued!");
 
-		Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+        for (Argument arg : adf.getArguments()) {
+            if (interpretation.satisfied(arg)) {
+                handleSatisfied(consumer, arg);
+            } else if (interpretation.unsatisfied(arg)) {
+                handleUnsatisfied(consumer, arg);
+            } else {
+                handleUnfixed(consumer, arg);
+            }
+        }
+    }
 
-		// arg = true iff the acceptance condition holds
-		consumer.accept(Clause.of(accName.neg(), mapping.getTrue(arg)));
-		consumer.accept(Clause.of(accName, mapping.getTrue(arg).neg()));
+    /**
+     * Handles encoding for arguments that are satisfied in the interpretation by generating the necessary SAT clauses.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     * @param arg the argument to be handled
+     */
+    private void handleSatisfied(Consumer<Clause> consumer, Argument arg) {
+        TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, true);
 
-		// arg != true implies arg = false
-		consumer.accept(Clause.of(mapping.getTrue(arg), mapping.getFalse(arg)));
-	}
+        Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+
+        consumer.accept(Clause.of(accName));
+        consumer.accept(Clause.of(mapping.getTrue(arg)));
+        consumer.accept(Clause.of(mapping.getFalse(arg).neg()));
+    }
+
+    /**
+     * Handles encoding for arguments that are unsatisfied in the interpretation by generating the necessary SAT clauses.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     * @param arg the argument to be handled
+     */
+    private void handleUnsatisfied(Consumer<Clause> consumer, Argument arg) {
+        TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(mapping::getTrue, true);
+
+        Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+
+        consumer.accept(Clause.of(accName.neg()));
+        consumer.accept(Clause.of(mapping.getFalse(arg)));
+        consumer.accept(Clause.of(mapping.getTrue(arg).neg()));
+    }
+
+    /**
+     * Handles encoding for arguments that are unfixed (i.e., their truth value is undecided) by generating the necessary SAT clauses.
+     *
+     * @param consumer the consumer that will accept the generated SAT clauses
+     * @param arg the argument to be handled
+     */
+    private void handleUnfixed(Consumer<Clause> consumer, Argument arg) {
+        TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, false);
+
+        Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+
+        // arg = true iff the acceptance condition holds
+        consumer.accept(Clause.of(accName.neg(), mapping.getTrue(arg)));
+        consumer.accept(Clause.of(accName, mapping.getTrue(arg).neg()));
+
+        // arg != true implies arg = false
+        consumer.accept(Clause.of(mapping.getTrue(arg), mapping.getFalse(arg)));
+    }
 
 }

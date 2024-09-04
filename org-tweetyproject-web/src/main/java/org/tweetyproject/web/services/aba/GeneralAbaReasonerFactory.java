@@ -41,10 +41,15 @@ public abstract class GeneralAbaReasonerFactory<T> {
      * An enumeration of all available semantics for ABA reasoners.
      */
     public enum Semantics {
+        /** ideal */
         ID("id", "Ideal"),
+        /** preferred */
         PR("pr", "Preferred"),
+        /** complete */
         CO("co", "Complete"),
+        /** stable */
         ST("st", "Stable"),
+        /** well founded */
         WF("wf", "Well-founded");
 
         /** The identifier of the semantics */
@@ -92,6 +97,13 @@ public abstract class GeneralAbaReasonerFactory<T> {
      *
      * @param sem The desired semantics for the ABA reasoner
      * @return The requested ABA reasoner instance
+     */
+    /**
+     *
+     * Return a reasoner
+     * @param <T> type
+     * @param sem semantik
+     * @return a reasoner
      */
 	public static  <T> GeneralAbaReasoner getReasoner(Semantics sem){
 		switch(sem){

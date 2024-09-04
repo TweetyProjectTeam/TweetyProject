@@ -25,11 +25,18 @@ import java.util.List;
  * up the categorizations of the argument trees.
  * Values of pro-trees are added and values of
  * con-trees are subtracted.
- *  
+ *
  * @author Matthias Thimm
  *
  */
 public class SimpleAccumulator implements Accumulator {
+
+	/**
+	 * Default Constructor
+	 */
+	public SimpleAccumulator(){
+		//default
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.deductive.accumulator.Accumulator#accumulate(java.util.List, java.util.List)

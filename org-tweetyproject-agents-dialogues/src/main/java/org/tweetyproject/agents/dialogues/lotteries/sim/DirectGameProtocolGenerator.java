@@ -37,4 +37,7 @@ public class DirectGameProtocolGenerator implements ProtocolGenerator<DirectGame
 		return new DirectGameProtocol(mas);
 	}
 
+
+    /** Default Constructor */
+    public DirectGameProtocolGenerator(){}
 }

@@ -26,20 +26,20 @@ import org.tweetyproject.commons.util.rules.*;
 import org.tweetyproject.logics.pl.syntax.*;
 
 /**
- * This class represents a structured argumentation framework, i.e. a set of 
+ * This class represents a structured argumentation framework, i.e. a set of
  * basic arguments and an attack relation.
- * 
+ *
  * @author Matthias Thimm
  */
 public class StructuredArgumentationFramework extends DungTheory{
-	
+
 	/**
 	 * Creates a new empty structured argumentation framework.
 	 */
 	public StructuredArgumentationFramework(){
 		super();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.dung.DungTheory#getSignature()
 	 */
@@ -53,7 +53,16 @@ public class StructuredArgumentationFramework extends DungTheory{
 		}
 		return sig;
 	}
-	
+
+	/**
+	 * Retrieves all propositions from the collection of formulas in this object.
+	 *
+	 *
+	 * @return a `Collection` of `Proposition` objects representing all propositions
+	 *         extracted from the formulas in this object.
+	 * @throws IllegalArgumentException if a formula that is not an instance of
+	 *         `BasicArgument` is encountered.
+	 */
 	public Collection<Proposition> getAllPropositions() {
 		Set<Proposition> reval = new HashSet<Proposition>();
 		for(Formula a: this){
@@ -63,7 +72,7 @@ public class StructuredArgumentationFramework extends DungTheory{
 		}
 		return reval;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.dung.DungTheory#isAttackedBy(org.tweetyproject.argumentation.dung.syntax.Argument, org.tweetyproject.argumentation.dung.syntax.Argument)
 	 */
@@ -71,9 +80,9 @@ public class StructuredArgumentationFramework extends DungTheory{
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
 		if(arg1 instanceof ArgumentStructure && arg2 instanceof ArgumentStructure)
 			return ((ArgumentStructure)arg2).attacks((ArgumentStructure) arg1, this);
-		return super.isAttackedBy(arg1, arg2);		
+		return super.isAttackedBy(arg1, arg2);
 	}
-	
+
 	/**
 	 * Constructs a (pure) Dung theory from this structured argumentation framework.
 	 * The set of arguments of this theory comprises of all possible argument structures of this framework,
@@ -100,9 +109,9 @@ public class StructuredArgumentationFramework extends DungTheory{
 			for(Formula b: dungTheory){
 				ArgumentStructure arg2 = (ArgumentStructure) b;
 				if(this.isAttackedBy(arg1, arg2))
-					dungTheory.add(new Attack(arg2, arg1));					
+					dungTheory.add(new Attack(arg2, arg1));
 			}
-		}		
+		}
 		return dungTheory;
 	}
 

@@ -34,10 +34,15 @@ import org.tweetyproject.math.term.FloatVariable;
  */
 public class JustifiablePASemantics extends AbstractPASemantics{
 
+	/** Deafult */
+	public JustifiablePASemantics(){
+		super();
+	}
+
 	/** The semantics this semantics is based upon. */
 	private PASemantics cohSemantics = new CoherentPASemantics();
 	private PASemantics optSemantics = new OptimisticPASemantics();
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */

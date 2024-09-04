@@ -32,10 +32,16 @@ import org.tweetyproject.comparator.Order;
  * This revision operator accepts only those pieces of information for revision where the credibility
  * of the source is at least as high as the credibility of the agent which proves the complement. The
  * actual revision is performed using a Levi revision which bases on the random kernel contraction
- * 
+ *
  * @author Matthias Thimm
  */
 public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PlFormula>>{
+
+	/**Default */
+
+	public CrMasSimpleRevisionOperator() {
+	}
+
 
 	/**
 	 * Private extension of credibility comparer
@@ -44,12 +50,12 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 	private class CredibilityComparer extends AbstractCredibilityComparer{
 		public CredibilityComparer(Collection<InformationObject<PlFormula>> formulas, Order<Agent> credOrder) {
 			super(formulas, credOrder);
-		}		
+		}
 		public boolean isFormerAtLeastAsPreferredAsLatter(PlFormula f, Collection<PlFormula> formulas){
 			return this.isAtLeastAsPreferredAs(f, formulas);
 		}
 	};
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
@@ -57,7 +63,7 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 	@Override
 	public Collection<InformationObject<PlFormula>> revise(Collection<InformationObject<PlFormula>> base,	Collection<InformationObject<PlFormula>> formulas) {
 		if(!(base instanceof CrMasBeliefSet))
-			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");		
+			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");
 		Collection<InformationObject<PlFormula>> allInformation = new HashSet<InformationObject<PlFormula>>(base);
 		allInformation.addAll(formulas);
 		CredibilityComparer comparer = new CredibilityComparer(allInformation,((CrMasBeliefSet<PlFormula,PlSignature>)base).getCredibilityOrder());
@@ -66,7 +72,7 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 			allProps.add(f.getFormula());
 		Collection<InformationObject<PlFormula>> credFormulas = new HashSet<InformationObject<PlFormula>>();
 		for(InformationObject<PlFormula> f: formulas){
-			// get all proofs of the complement of the formula			
+			// get all proofs of the complement of the formula
 			KernelProvider<PlFormula> kernelProvider = new SimplePlReasoner();
 			Collection<Collection<PlFormula>> kernels = kernelProvider.getKernels(allProps, new Negation(f.getFormula()));
 			// if there is one kernel of the complement that is strictly more preferred then don't revise
@@ -76,16 +82,16 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 					formulaIsPlausible = false;
 					break;
 				}
-			}			
+			}
 			if(formulaIsPlausible)
-				credFormulas.add(f);		
+				credFormulas.add(f);
 		}
 		CrMasRevisionWrapper<PlFormula> rev = new CrMasRevisionWrapper<PlFormula>(
 					new LeviMultipleBaseRevisionOperator<PlFormula>(
 							new RandomKernelContractionOperator(),
 							new DefaultMultipleBaseExpansionOperator<PlFormula>()
-				));		
-		return rev.revise(base, credFormulas);		
+				));
+		return rev.revise(base, credFormulas);
 	}
 
 }

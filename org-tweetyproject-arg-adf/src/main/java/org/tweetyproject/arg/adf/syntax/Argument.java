@@ -24,75 +24,85 @@ import java.util.stream.Stream;
 
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.Visitor;
+import org.tweetyproject.graphs.Node;
 
 /**
  * An immutable representation of an ADF argument
  * <p>
  * This argument can also be used as an {@link AcceptanceCondition}, since it is
  * its atomic building block.
- * 
+ *
  * @author Mathias Hofer
  *
  */
-public final class Argument implements AcceptanceCondition {
+public final class Argument implements AcceptanceCondition, Node {
 
-	private final String name;
-/**
- * Argument
- */
-	public Argument() {
-		this(null);
-	}
-	
-	/**
-	 * @param name the name of the argument
-	 */
-	public Argument(String name) {
-		this.name = name;
-	}
+    private final String name;
+    /**
+     * Argument
+     */
+    public Argument() {
+        this(null);
+    }
 
-	@Override
-	public Stream<Argument> arguments() {
-		return Stream.of(this);
-	}
+    /**
+     * @param name the name of the argument
+     */
+    public Argument(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    @Override
+    public Stream<Argument> arguments() {
+        return Stream.of(this);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
-	@Override
-	public boolean contains(Argument arg) {
-		return arg == this;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#children()
-	 */
-	@Override
-	public Set<AcceptanceCondition> getChildren() {
-		return Collections.emptySet();
-	}
+    /* (non-Javadoc)
+     * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(org.tweetyproject.arg.adf.syntax.Argument)
+     */
+    @Override
+    public boolean contains(Argument arg) {
+        return arg == this;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject.arg.adf.syntax.acc.Visitor, java.lang.Object)
-	 */
-	@Override
-	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
-		return visitor.visit(this, topDownData);
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return name;
-	}
+    /* (non-Javadoc)
+     * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#children()
+     */
+    @Override
+    public Set<AcceptanceCondition> getChildren() {
+        return Collections.emptySet();
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject.arg.adf.syntax.acc.Visitor, java.lang.Object)
+     */
+    @Override
+    public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
+        return visitor.visit(this, topDownData);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object o){
+        if(!o.getClass().equals(this.getClass())) return false;
+        if(!((Argument)o).getName().equals(getName())) return false;
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

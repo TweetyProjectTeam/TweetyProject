@@ -37,7 +37,7 @@ public abstract class GeneralConstraintSatisfactionProblem extends  HashSet<OptP
 		super();
 	}
 	/**
-	 * 
+	 * Constructor
 	 * @param opts elements
 	 */
 	public GeneralConstraintSatisfactionProblem(Collection<? extends OptProbElement> opts)

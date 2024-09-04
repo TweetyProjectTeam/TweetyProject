@@ -24,6 +24,12 @@ package org.tweetyproject.math.func;
  */
 public class MaxFunction implements BinaryFunction<Double,Double,Double>{
 
+
+	/** Constructor */
+	public MaxFunction() {
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.BinaryFunction#eval(java.lang.Object, java.lang.Object)
 	 */

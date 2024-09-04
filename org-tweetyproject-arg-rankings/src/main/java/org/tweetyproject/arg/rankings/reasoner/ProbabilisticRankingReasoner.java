@@ -28,87 +28,131 @@ import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
 import org.tweetyproject.arg.prob.reasoner.MonteCarloPafReasoner;
 import org.tweetyproject.arg.prob.reasoner.SimplePafReasoner;
 import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Implements a graded semantics reasoner based on the ideas from 
+ * Implements a graded semantics reasoner based on the ideas from
  * [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
- * 
+ *
  * @author Matthias Thimm
  */
-public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>>{
+public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
 
-	/**
-	 * Number of trials for the used monte carlo search (this is a factor
-	 * multiplied with the number of arguments of the actual framework)
-	 */
-	public static int NUMBER_OF_TRIALS = 10000;
-		
-	/**
-	 * The probability used for all arguments to instantiate 
-	 * a probabilistic argumentation framework
-	 */
-	private Probability p;
-	
-	/**
-	 * The classical semantics used for evaluating subgraphs.
-	 */
-	private Semantics sem;
-			
-	/**
-	 * Whether to use exact inference. 
-	 */
-	private boolean exactInference = false;
-	
-	/**
-	 * Creates a new ProbabilisticRankingReasoner.
-	 * @param sem The classical semantics used for evaluating subgraphs
-	 * @param p The probability used for all arguments to instantiate a probabilistic argumentation framework
-	 * @param exactInference Whether to use exact inference. 
-	 */
-	public ProbabilisticRankingReasoner(Semantics sem,Probability p, boolean exactInference) {
-		this.sem = sem;
-		this.p = p;
-		this.exactInference = exactInference;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
-		Collection<NumericalPartialOrder<Argument, DungTheory>> models = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
-		models.add(this.getModel(bbase));
-		return models;
-	}
+    /**
+     * Number of trials for the used monte carlo search (this is a factor
+     * multiplied with the number of arguments of the actual framework)
+     */
+    public static int NUMBER_OF_TRIALS = 10000;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory aaf) {
-		// construct PAF
-		ProbabilisticArgumentationFramework paf = new ProbabilisticArgumentationFramework((DungTheory)aaf);
-		// set probabilities
-		for(Argument a: (DungTheory)aaf)
-			paf.add(a, this.p);		
-		// Estimate/compute probabilities
-		AbstractPafReasoner reasoner;
-		if(this.exactInference)
-			reasoner = new SimplePafReasoner(this.sem);
-		else
-			reasoner = new MonteCarloPafReasoner(this.sem, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
-		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
-		ranking.sortingType = NumericalPartialOrder.SortingType.DESCENDING;
-		for(Argument a: (DungTheory)aaf)
-			ranking.put(a, reasoner.query(paf,a));
-		return ranking;
-	}
-	
-	/**natively installed*/
-	@Override
-	public boolean isInstalled() {
-		return true;
-	}
+    /**
+     * The probability used for all arguments to instantiate
+     * a probabilistic argumentation framework
+     */
+    private Probability p;
+
+    /**
+     * The classical semantics used for evaluating subgraphs.
+     */
+    private Semantics sem;
+
+    /**
+     * Whether to use exact inference.
+     */
+    private boolean exactInference = false;
+
+    private InferenceMode mode;
+
+    /**
+     * Creates a new ProbabilisticRankingReasoner.
+     *
+     * @param sem            The classical semantics used for evaluating subgraphs
+     * @param p              The probability used for all arguments to instantiate a
+     *                       probabilistic argumentation framework
+     * @param exactInference Whether to use exact inference.
+     */
+    public ProbabilisticRankingReasoner(Semantics sem, Probability p, boolean exactInference) {
+        this(sem, p, exactInference, InferenceMode.SKEPTICAL);
+    }
+
+    /**
+     * Constructs a new instance of {@code ProbabilisticRankingReasoner} with the
+     * specified parameters.
+     *
+     * @param sem
+     *                       The semantics used for reasoning. This defines the
+     *                       criteria or rules for evaluating the arguments in the
+     *                       framework.
+     * @param p
+     *                       The probability threshold to be used in the ranking
+     *                       process. This defines the minimum probability value
+     *                       considered for ranking.
+     * @param exactInference
+     *                       A boolean flag indicating whether exact inference
+     *                       should be used. If {@code true}, the reasoner will use
+     *                       exact inference methods;
+     *                       otherwise, approximate methods may be used.
+     * @param mode
+     *                       The inference mode to be applied. This specifies the
+     *                       approach or method used for performing inference in the
+     *                       reasoning process.
+     *
+     * @see Semantics
+     * @see Probability
+     * @see InferenceMode
+     */
+    public ProbabilisticRankingReasoner(Semantics sem, Probability p, boolean exactInference, InferenceMode mode) {
+        this.sem = sem;
+        this.p = p;
+        this.exactInference = exactInference;
+        this.mode = mode;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.
+     * BeliefBase)
+     */
+    @Override
+    public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+        Collection<NumericalPartialOrder<Argument, DungTheory>> models = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
+        models.add(this.getModel(bbase));
+        return models;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.
+     * BeliefBase)
+     */
+    @Override
+    public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory aaf) {
+        // construct PAF
+        ProbabilisticArgumentationFramework paf = new ProbabilisticArgumentationFramework((DungTheory) aaf);
+        // set probabilities
+        for (Argument a : (DungTheory) aaf)
+            paf.add(a, this.p);
+        // Estimate/compute probabilities
+        AbstractPafReasoner reasoner;
+        if (this.exactInference)
+            reasoner = new SimplePafReasoner(this.sem);
+        else
+            reasoner = new MonteCarloPafReasoner(this.sem, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
+        NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+        ranking.sortingType = NumericalPartialOrder.SortingType.DESCENDING;
+        for (Argument a : (DungTheory) aaf)
+            ranking.put(a, reasoner.query(paf, a, this.mode));
+        return ranking;
+    }
+
+    /** natively installed */
+    @Override
+    public boolean isInstalled() {
+        return true;
+    }
 }

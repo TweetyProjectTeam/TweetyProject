@@ -27,15 +27,44 @@ import org.tweetyproject.arg.setaf.syntax.SetAttack;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.arg.setaf.reasoners.*;
 
-
 /**
- * Examples of SetAf Theorys and their semantics
- * 
+ * Examples of SetAf Theories and their semantics
+ *
  * @author Sebastian Franke
  *
  */
 public class SetAfTheoryTest {
-	
+
+	/** Default */
+	public SetAfTheoryTest() {
+		// Constructor
+	}
+
+	/**
+	 * Demonstrates the construction and reasoning within a SetAf (Set Attack
+	 * Framework) argumentation framework.
+	 * The method performs the following steps:
+	 *
+	 * 1. Constructs a SetAf with four arguments (a, b, c, d).
+	 * 2. Defines two set attacks:
+	 * - One attack from the set {b, d} to argument a.
+	 * - One attack from the set {c, a} to argument c.
+	 * 3. Prints the SetAf structure.
+	 * 4. Applies various reasoning methods (grounded, admissible, and preferred
+	 * semantics) to the SetAf:
+	 * - The grounded model is computed using {@link SimpleGroundedSetAfReasoner}.
+	 * - The admissible models are computed using
+	 * {@link SimpleAdmissibleSetAfReasoner}.
+	 * - The preferred models are computed using
+	 * {@link SimplePreferredSetAfReasoner}.
+	 * 5. Prints the results of the reasoning under each semantic.
+	 *
+	 * This example illustrates how to define a Set Attack Framework and perform
+	 * reasoning to compute extensions.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 */
+
 	public static void main(String[] args) {
 		SetAf s = new SetAf();
 		Argument a = new Argument("a");
@@ -46,28 +75,26 @@ public class SetAfTheoryTest {
 		s.add(b);
 		s.add(c);
 		s.add(d);
-		
+
 		Set<Argument> a1 = new HashSet<Argument>();
 		a1.add(b);
 		a1.add(d);
-		
+
 		Set<Argument> a2 = new HashSet<Argument>();
 		a2.add(c);
 		a2.add(a);
-		
-		
+
 		s.add(new SetAttack(a1, a));
 		s.add(new SetAttack(a2, c));
-		//s.remove(a);
+		// s.remove(a);
 		System.out.println(s.toString());
-		//System.out.println(s.getComplementGraph(0));
+		// System.out.println(s.getComplementGraph(0));
 		SimpleGroundedSetAfReasoner gr = new SimpleGroundedSetAfReasoner();
 		SimpleAdmissibleSetAfReasoner ad = new SimpleAdmissibleSetAfReasoner();
 		SimplePreferredSetAfReasoner pr = new SimplePreferredSetAfReasoner();
 		System.out.println("grounded: " + gr.getModel(s));
 		System.out.println("admissible: " + ad.getModels(s));
 		System.out.println("preferred: " + pr.getModels(s));
-
 
 	}
 

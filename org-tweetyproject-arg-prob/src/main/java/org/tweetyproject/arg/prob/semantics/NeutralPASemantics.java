@@ -37,6 +37,12 @@ import org.tweetyproject.math.term.FloatVariable;
  */
 public class NeutralPASemantics extends AbstractPASemantics {
 
+
+	/** Default */
+	public NeutralPASemantics(){
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */
@@ -47,7 +53,7 @@ public class NeutralPASemantics extends AbstractPASemantics {
 					p.probability(arg).doubleValue() > 0.5 + Probability.PRECISION)
 				return false;
 		}
-		return true;			
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +63,7 @@ public class NeutralPASemantics extends AbstractPASemantics {
 	public Collection<Statement> getSatisfactionStatements(DungTheory theory, Map<Collection<Argument>, FloatVariable> worlds2vars) {
 		Set<Statement> stats = new HashSet<Statement>();
 		for(Argument arg: theory){
-			stats.add(new Equation(this.probabilityTerm(arg, worlds2vars),new FloatConstant(0.5)));			
+			stats.add(new Equation(this.probabilityTerm(arg, worlds2vars),new FloatConstant(0.5)));
 		}
 		return stats;
 	}

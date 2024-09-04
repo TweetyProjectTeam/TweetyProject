@@ -47,13 +47,18 @@ import org.tweetyproject.math.term.Variable;
  * @author Matthias Thimm
  */
 public class LpSolve extends Solver {
-	
+
+	/**Constructor */
+	public LpSolve() {
+	}
+
 	/**Path to the binary or lp_solve*/
-	
+
 	private static String binary = "lp_solve";
-	
+
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
@@ -65,13 +70,13 @@ public class LpSolve extends Solver {
 			return false;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve()
 	 */
 	@Override
 	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) {
-		
+
 		if(! ((ConstraintSatisfactionProblem) problem).isLinear())
 			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
 		//check existence of lp_solve first
@@ -80,19 +85,19 @@ public class LpSolve extends Solver {
 			return null;}
 		String output = new String();
 		//String error = "";
-		
+
 		try{
 			File lpFile = File.createTempFile("lptmp", null);
 //			File lpFile = new File("lptmp2");
 			// Delete temp file when program exits.
-			//lpFile.deleteOnExit();    
+			//lpFile.deleteOnExit();
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
 			out.write(((OptimizationProblem)problem).convertToLpFormat());
-			out.close();		
-			//execute lp_solve on problem in lp format and retrieve console output					
+			out.close();
+			//execute lp_solve on problem in lp format and retrieve console output
 			output = NativeShell.invokeExecutable(LpSolve.binary + " " + lpFile.getAbsolutePath());
-			
+
 			//lpFile.delete();
 		}catch(IOException e){
 			//TODO add error handling
@@ -102,12 +107,12 @@ public class LpSolve extends Solver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		}	
-		
-		//parse output		
+		}
+
+		//parse output
 		String delimiter = "Actual values of the variables:";
-		
-		
+
+
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
 		StringTokenizer tokenizer = new StringTokenizer(assignments,"\n");
 		Set<Variable> variables = ((ConstraintSatisfactionProblem) problem).getVariables();
@@ -121,7 +126,7 @@ public class LpSolve extends Solver {
 			Constant c;
 			try{
 				c = new IntegerConstant(Integer.valueOf(varValue));
-				v = new IntegerVariable(varName);				
+				v = new IntegerVariable(varName);
 			}catch(NumberFormatException e){
 				c = new FloatConstant(Float.valueOf(varValue));
 				v = new FloatVariable(varName);
@@ -131,11 +136,11 @@ public class LpSolve extends Solver {
 				v = new FloatVariable(v.getName());
 				if(!variables.contains(v))
 					throw new IllegalStateException("Something is terribly wrong: optimization problem contains variables it is not supposed to contain.");
-			}				
+			}
 			variables.remove(v);
-			result.put(v, c);			
+			result.put(v, c);
 		}
-		if(!variables.isEmpty())	
+		if(!variables.isEmpty())
 			throw new IllegalStateException("Not every variable has been assigned a value. This shouldn't happen.");
 		return result;
 	}
@@ -146,5 +151,5 @@ public class LpSolve extends Solver {
 	 */
 	public static void setBinary(String binary){
 		LpSolve.binary = binary;
-	}	
+	}
 }

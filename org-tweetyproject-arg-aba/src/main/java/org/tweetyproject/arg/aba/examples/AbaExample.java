@@ -39,11 +39,30 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * Shows some simple code for working with ABA, including how to parse an ABA file and how to ask queries.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class AbaExample {
+
+
+	    /**
+     * Default constructor for the {@code AbaExample} class.
+     * This constructor initializes the class without any specific setup.
+     */
+    public AbaExample() {
+        // Default constructor
+    }
+
+    /**
+     * Main method that demonstrates parsing and reasoning with Assumption-Based Argumentation (ABA)
+     * using both propositional logic and first-order logic.
+     *
+     * @param args command line arguments (not used)
+     * @throws FileNotFoundException if the input file is not found
+     * @throws ParserException if there is an error during parsing
+     * @throws IOException if there is an error reading the file
+     */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		//PL Example
 		SatSolver.setDefaultSolver(new Sat4jSolver());
@@ -56,13 +75,13 @@ public class AbaExample {
 		System.out.println("query " + a + ": " + r1.query(abat1,a));
 		System.out.println("query " + a + ": " + r2.query(abat1,a));
 		System.out.println("as graph: " + abat1.asDungTheory());
-		
+
 		//FOL Example
 		FolParser folparser = new FolParser();
 		FolSignature sig = folparser.parseSignature("Male = {a,b}\n"
-				+ "Female = {c,d}\n" +  
-				"type(Pair(Male,Female))\n" + 
-				"type(ContraryPair(Male,Female))\n" + 
+				+ "Female = {c,d}\n" +
+				"type(Pair(Male,Female))\n" +
+				"type(ContraryPair(Male,Female))\n" +
 				"type(MPrefers(Male,Female,Female))\n"
 				+ "type(WPrefers(Female,Male,Male))");
 		folparser.setSignature(sig);

@@ -64,4 +64,7 @@ public class DSumMeasureExample {
 		System.out.println(inc3.inconsistencyMeasure(c));
 		
 	}
+
+    /** Default Constructor */
+    public DSumMeasureExample(){}
 }

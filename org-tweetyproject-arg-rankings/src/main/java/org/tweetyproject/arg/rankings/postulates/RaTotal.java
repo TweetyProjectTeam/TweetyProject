@@ -62,4 +62,7 @@ public class RaTotal extends RankingPostulate {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public RaTotal(){}
 }

@@ -33,11 +33,16 @@ import org.tweetyproject.math.probability.*;
 
 /**
  * This class implements aggregating semantics due to [Kern-Isberner, Thimm, KR'2010].
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  */
 public class AggregatingSemantics extends AbstractRpclSemantics {
+
+	/** Default Constructor */
+	public AggregatingSemantics(){
+
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.rpcl.semantics.AbstractRpclSemantics#satisfies(org.tweetyproject.logics.rpcl.semantics.RpclProbabilityDistribution, org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional)
@@ -49,19 +54,19 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 		Set<RelationalFormula> groundInstances = r.allGroundInstances(((FolSignature)p.getSignature()).getConstants());
 		Double nominator = 0d;
 		Double denominator = 0d;
-		for(RelationalFormula f: groundInstances){			
-			FolFormula body = ((RelationalProbabilisticConditional)f).getPremise().iterator().next();			
+		for(RelationalFormula f: groundInstances){
+			FolFormula body = ((RelationalProbabilisticConditional)f).getPremise().iterator().next();
 			FolFormula head_and_body;
 			if(body instanceof Tautology)
 				head_and_body = ((RelationalProbabilisticConditional)f).getConclusion();
 			else head_and_body = body.combineWithAnd(((RelationalProbabilisticConditional)f).getConclusion());
 			nominator += p.probability(head_and_body).getValue();
 			denominator += p.probability(body).getValue();
-		}	
+		}
 		return (nominator/denominator) < r.getProbability().getValue() + Probability.PRECISION &&
 			(nominator/denominator) > r.getProbability().getValue() - Probability.PRECISION ;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.rpcl.semantics.AbstractRpclSemantics#getSatisfactionStatement(org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional, org.tweetyproject.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
@@ -76,12 +81,12 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 				Term tHead = this.probabilityTerm(head, worlds2vars);
 				if(term == null)
 					term = tHead;
-				else term = term.add(tHead);					
+				else term = term.add(tHead);
 			}
 			return new Equation(term,new FloatConstant(r.getProbability().getValue() * groundInstances.size()));
-		}else{			
+		}else{
 			Term nominator = null;
-			Term denominator = null;				
+			Term denominator = null;
 			for(RelationalFormula rf: groundInstances){
 				RelationalProbabilisticConditional rfg = (RelationalProbabilisticConditional)rf;
 				FolFormula body = rfg.getPremise().iterator().next();
@@ -98,7 +103,7 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 			return new Equation(nominator,denominator.mult(new FloatConstant(r.getProbability().getValue())));
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#toString()
 	 */

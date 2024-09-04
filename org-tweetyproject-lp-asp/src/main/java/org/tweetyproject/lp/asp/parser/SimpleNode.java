@@ -21,110 +21,217 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * A base class representing a node in the abstract syntax tree (AST) for the ASPParser.
+ * <p>
+ * This class implements the basic operations for managing the structure of the tree,
+ * including parent-child relationships and visitor acceptance. It provides a foundation
+ * that can be extended to represent specific types of nodes in the AST.
+ * </p>
+ */
 public class SimpleNode implements Node {
 
-	protected Node parent;
-	protected Node[] children;
-	protected int id;
-	protected Object value;
-	protected ASPParser parser;
+    /**
+     * The parent node of this node in the AST.
+     */
+    protected Node parent;
 
-	public SimpleNode(int i) {
-		id = i;
-	}
+    /**
+     * The children of this node in the AST.
+     */
+    protected Node[] children;
 
-	public SimpleNode(ASPParser p, int i) {
-		this(i);
-		parser = p;
-	}
+    /**
+     * The identifier of this node, typically used to distinguish between different types of nodes.
+     */
+    protected int id;
 
-	public void jjtOpen() {
-	}
+    /**
+     * The value associated with this node, which can store additional information.
+     */
+    protected Object value;
 
-	public void jjtClose() {
-	}
+    /**
+     * The parser that created this node, if applicable.
+     */
+    protected ASPParser parser;
 
-	public void jjtSetParent(Node n) {
-		parent = n;
-	}
+    /**
+     * Constructs a new {@code SimpleNode} with the specified node identifier.
+     *
+     * @param i The identifier for this node.
+     */
+    public SimpleNode(int i) {
+        id = i;
+    }
 
-	public Node jjtGetParent() {
-		return parent;
-	}
+    /**
+     * Constructs a new {@code SimpleNode} with the specified parser and node identifier.
+     *
+     * @param p The parser that created this node.
+     * @param i The identifier for this node.
+     */
+    public SimpleNode(ASPParser p, int i) {
+        this(i);
+        parser = p;
+    }
 
-	public void jjtAddChild(Node n, int i) {
-		if (children == null) {
-			children = new Node[i + 1];
-		} else if (i >= children.length) {
-			Node c[] = new Node[i + 1];
-			System.arraycopy(children, 0, c, 0, children.length);
-			children = c;
-		}
-		children[i] = n;
-	}
+    /**
+     * Called when this node is opened. This method is meant to be overridden by subclasses if needed.
+     */
+    public void jjtOpen() {
+    }
 
-	public Node jjtGetChild(int i) {
-		return children[i];
-	}
+    /**
+     * Called when this node is closed. This method is meant to be overridden by subclasses if needed.
+     */
+    public void jjtClose() {
+    }
 
-	public int jjtGetNumChildren() {
-		return (children == null) ? 0 : children.length;
-	}
+    /**
+     * Sets the parent of this node in the AST.
+     *
+     * @param n The parent node.
+     */
+    public void jjtSetParent(Node n) {
+        parent = n;
+    }
 
-	public void jjtSetValue(Object value) {
-		this.value = value;
-	}
+    /**
+     * Gets the parent of this node in the AST.
+     *
+     * @return The parent node.
+     */
+    public Node jjtGetParent() {
+        return parent;
+    }
 
-	public Object jjtGetValue() {
-		return value;
-	}
+    /**
+     * Adds a child node to this node at the specified index.
+     *
+     * @param n The child node to add.
+     * @param i The index at which to add the child node.
+     */
+    public void jjtAddChild(Node n, int i) {
+        if (children == null) {
+            children = new Node[i + 1];
+        } else if (i >= children.length) {
+            Node[] c = new Node[i + 1];
+            System.arraycopy(children, 0, c, 0, children.length);
+            children = c;
+        }
+        children[i] = n;
+    }
 
-	/* Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Gets the child node at the specified index.
+     *
+     * @param i The index of the child node to retrieve.
+     * @return The child node at the specified index.
+     */
+    public Node jjtGetChild(int i) {
+        return children[i];
+    }
 
-	/* Accept the visitor. **/
-	public Object childrenAccept(ASPParserVisitor visitor, Object data) {
-		if (children != null) {
-			for (int i = 0; i < children.length; ++i) {
-				children[i].jjtAccept(visitor, data);
-			}
-		}
-		return data;
-	}
+    /**
+     * Gets the number of children this node has.
+     *
+     * @return The number of children.
+     */
+    public int jjtGetNumChildren() {
+        return (children == null) ? 0 : children.length;
+    }
 
-	/*
-	 * You can override these two methods in subclasses of SimpleNode to customize
-	 * the way the node appears when the tree is dumped. If your output uses more
-	 * than one line you should override toString(String), otherwise overriding
-	 * toString() is probably all you need to do.
-	 */
+    /**
+     * Sets the value associated with this node.
+     *
+     * @param value The value to associate with this node.
+     */
+    public void jjtSetValue(Object value) {
+        this.value = value;
+    }
 
-	public String toString() {
-		return ASPParserTreeConstants.jjtNodeName[id];
-	}
+    /**
+     * Gets the value associated with this node.
+     *
+     * @return The value associated with this node.
+     */
+    public Object jjtGetValue() {
+        return value;
+    }
 
-	public String toString(String prefix) {
-		return prefix + toString();
-	}
+    /**
+     * Accepts the visitor and allows it to visit this node.
+     *
+     * @param visitor The visitor object.
+     * @param data Additional data for the visitor.
+     * @return The result of visiting this node.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 
-	/*
-	 * Override this method if you want to customize how the node dumps out its
-	 * children.
-	 */
+    /**
+     * Accepts the visitor and allows it to visit all the children of this node.
+     *
+     * @param visitor The visitor object.
+     * @param data Additional data for the visitor.
+     * @return The data passed to the visitor.
+     */
+    public Object childrenAccept(ASPParserVisitor visitor, Object data) {
+        if (children != null) {
+            for (int i = 0; i < children.length; ++i) {
+                children[i].jjtAccept(visitor, data);
+            }
+        }
+        return data;
+    }
 
-	public void dump(String prefix) {
-		if (children != null) {
-			for (int i = 0; i < children.length; ++i) {
-				SimpleNode n = (SimpleNode) children[i];
-				if (n != null) {
-					n.dump(prefix + " ");
-				}
-			}
-		}
-	}
+    /**
+     * Returns a string representation of this node.
+     * <p>
+     * This method can be overridden in subclasses to customize the string representation.
+     * </p>
+     *
+     * @return A string representing this node.
+     */
+    public String toString() {
+        return ASPParserTreeConstants.jjtNodeName[id];
+    }
+
+    /**
+     * Returns a string representation of this node with a specified prefix.
+     * <p>
+     * This method can be overridden in subclasses to customize the string representation with a prefix.
+     * </p>
+     *
+     * @param prefix The prefix to prepend to the string representation.
+     * @return A string representing this node with the specified prefix.
+     */
+    public String toString(String prefix) {
+        return prefix + toString();
+    }
+
+    /**
+     * Dumps the structure of this node and its children, including their string representations.
+     * <p>
+     * This method can be overridden in subclasses to customize how the node and its children are dumped.
+     * </p>
+     *
+     * @param prefix The prefix to prepend to the string representation of each node.
+     */
+    public void dump(String prefix) {
+        if (children != null) {
+            for (int i = 0; i < children.length; ++i) {
+                SimpleNode n = (SimpleNode) children[i];
+                if (n != null) {
+                    n.dump(prefix + " ");
+                }
+            }
+        }
+    }
 }
+
 
 /*
  * JavaCC - OriginalChecksum=63c23ced376fae23c6ae5ceb84ebe1e1 (do not edit this

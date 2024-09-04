@@ -31,6 +31,10 @@ import org.tweetyproject.math.term.Variable;
  */
 public class CombinatoricsSolver extends Solver{
 
+	/** Constructor */
+	public CombinatoricsSolver() {
+	}
+
 	@Override
 	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException {
 		// TODO Auto-generated method stub
@@ -38,6 +42,6 @@ public class CombinatoricsSolver extends Solver{
 	}
 
 
-	
+
 
 }

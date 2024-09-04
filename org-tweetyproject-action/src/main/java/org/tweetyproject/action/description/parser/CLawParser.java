@@ -44,28 +44,33 @@ import org.tweetyproject.logics.fol.syntax.Negation;
 import org.tweetyproject.logics.fol.syntax.Tautology;
 
 /**
- * This class implements a parser for causal laws in C. 
+ * This class implements a parser for causal laws in C.
  * The BNF of such rules is given by: (starting symbol is DESC) <br>
  * <br> DESC         ::== LAW ("\n" LAW)*
- * <br> LAW         ::== STATICLAW | DYNAMICLAW 
+ * <br> LAW         ::== STATICLAW | DYNAMICLAW
  * <br> STATICLAW   ::== "caused" FOLFORMULA ("if" FOLFORMULA)? ("requires" REQUIREMENTS)?
- * <br> DYNAMICLAW  ::== "caused" FOLFORMULA ("if" FOLFORMULA)? "after" FOLFORMULA ("requires" REQUIREMENTS)? 
- * <br> REQUIREMENTS ::== REQUIREMENT ("," REQUIREMENT)* 
+ * <br> DYNAMICLAW  ::== "caused" FOLFORMULA ("if" FOLFORMULA)? "after" FOLFORMULA ("requires" REQUIREMENTS)?
+ * <br> REQUIREMENTS ::== REQUIREMENT ("," REQUIREMENT)*
  * <br> REQUIREMENT  ::== (VARIABLENAME "&lt;&gt;" VARIABLENAME | VARIABLENAME "&lt;&gt;" CONSTANTNAME)*
  * <br>
  * where FOLFORMULA is an unquantified first-order formula without functors, <br>
  * and VARIABLENAME, CONSTANTNAME are sequences of symbols <br>
  * from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
- * 
+ *
  * @author Sebastian Homann
  */
 public class CLawParser extends Parser<CActionDescription, Formula> {
 
+
+	/**
+	 * The action signature.
+	 *
+	 */
 	protected ActionSignature signature;
 
 	/**
 	 * This parser needs a valid action signature to parse causal laws.
-	 * 
+	 *
 	 * @param signature some signature
 	 */
 	public CLawParser(ActionSignature signature) {
@@ -74,7 +79,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
@@ -90,7 +95,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 				c = reader.read();
 				if (c == 10 || c == 13 || c == -1) {
 					if (!s.equals("") && !s.trim().startsWith("%")) {
-					
+
 						actionDescription.add((CLaw) this.parseFormula(s));
 					}
 					s = "";
@@ -106,7 +111,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.Parser#parseFormula(java.io.Reader)
 	 */
 	@Override
@@ -122,7 +127,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 
 	/**
 	 * Parses a FolFormula from a string using the FolParser class
-	 * 
+	 *
 	 * @param s a string
 	 * @return A first order formula
 	 * @throws ParserException if parsing fails
@@ -136,7 +141,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.Parser#parseFormula(java.lang.String)
 	 */
 	@Override
@@ -174,7 +179,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "caused A (if B)?
 	 * (after C)?"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -233,7 +238,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "inertial A which
 	 * is converted to the causal law caused A if A after A"
-	 * 
+	 *
 	 * @param s         a string containing a single inertial law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -263,7 +268,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "default A (if B)?
 	 * which is converted to the causal law caused A if A && B"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -312,7 +317,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "A causes B if C
 	 * which is converted to caused B if + after A && C"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -372,7 +377,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "always A which is
 	 * converted to caused - if !A"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -402,7 +407,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "nonexecutable A if
 	 * B which is converted to caused - after A && B"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -451,7 +456,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Parses a string containing a single causal law of the form "A may cause B if C
 	 * which is converted to caused B if B after A && C"
-	 * 
+	 *
 	 * @param s         a string containing a single causal law.
 	 * @param reqString the grounding requirements of this law.
 	 * @return the corresponding causal law
@@ -511,7 +516,7 @@ public class CLawParser extends Parser<CActionDescription, Formula> {
 	/**
 	 * Returns the set of forbidden keywords, that are contained in a string. This
 	 * is used for error recognition in input strings.
-	 * 
+	 *
 	 * @param s some string
 	 * @return the set of forbidden keywords
 	 */

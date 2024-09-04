@@ -65,4 +65,7 @@ public class RaNonAttackedEquivalence extends RankingPostulate {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public RaNonAttackedEquivalence(){}
 }

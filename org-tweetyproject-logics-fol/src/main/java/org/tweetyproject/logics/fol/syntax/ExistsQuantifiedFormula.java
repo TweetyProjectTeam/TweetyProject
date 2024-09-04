@@ -29,21 +29,21 @@ import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 
 /**
- * Exists-quantified first-order logic formula. 
+ * Exists-quantified first-order logic formula.
  * Delegates to QuantifiedFormulaSupport for shared functionalities with other quantified formulas.
- * 
+ *
  * @author Matthias Thimm
  * @author Anna Gessler
  */
 public class ExistsQuantifiedFormula extends FolFormula {
-	
+
 	/**
 	 * This helper class implements common functionalities of quantified
 	 * formulas, meaning the implementation can delegate the method calls to the support
-	 * class. 
+	 * class.
 	 */
 	protected QuantifiedFormulaSupport<FolFormula> support;
-	
+
 	/**
 	 * Creates a new quantified folFormula with the given folFormula and variables.
 	 * @param folFormula the folFormula this quantified folFormula ranges over.
@@ -55,7 +55,7 @@ public class ExistsQuantifiedFormula extends FolFormula {
 		support = new QuantifiedFormulaSupport<FolFormula>((FolFormula)folFormula, variables);
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
-	
+
 	/**
 	 * Creates a new quantified folFormula with the given folFormula and variable.
 	 * @param folFormula the folFormula this quantified folFormula ranges over.
@@ -70,7 +70,8 @@ public class ExistsQuantifiedFormula extends FolFormula {
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
 	/**
-	 * 
+	 *
+	 * Formula to be constructed
 	 * @param other formula to be constructed
 	 */
 	public ExistsQuantifiedFormula(ExistsQuantifiedFormula other) {
@@ -79,9 +80,9 @@ public class ExistsQuantifiedFormula extends FolFormula {
 		support = new QuantifiedFormulaSupport<FolFormula>(other.getFormula(), other.getQuantifierVariables());
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
-	
+
 	/**
-	 * 
+	 * Return quantified formulas
 	 * @return formulas
 	 */
 	public Set<FolFormula> getQuantifiedFormulas(){
@@ -94,7 +95,7 @@ public class ExistsQuantifiedFormula extends FolFormula {
 		qf.add(this);
 		return qf;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -168,11 +169,11 @@ public class ExistsQuantifiedFormula extends FolFormula {
 	public ExistsQuantifiedFormula clone() {
 		return new ExistsQuantifiedFormula(this);
 	}
-	
+
 	//-------------------------------------------------------------------------
 	//	METHODS IMPLEMENTED IN QuantifiedFormulaSupport:
 	//-------------------------------------------------------------------------
-	
+
 	/**
 	 * returns formula
 	 */
@@ -186,20 +187,20 @@ public class ExistsQuantifiedFormula extends FolFormula {
 		return support.getQuantifierVariables();
 	}
 	/**
-	 * set formula 
+	 * set formula
 	 * @param formula formulas to be set
 	 */
 	public void setFormula(FolFormula formula) {
 		support.setFormula(formula);
 	}
 	/**
-	 * sets variables 
+	 * sets variables
 	 * @param variables variables to be set
 	 */
 	public void setQuantifierVariables(Set<Variable> variables) {
 		support.setQuantifierVariables(variables);
 	}
-	
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -211,13 +212,13 @@ public class ExistsQuantifiedFormula extends FolFormula {
 	public Set<Functor> getFunctors() {
 		return support.getFunctors();
 	}
-	
+
 
 	@Override
 	public boolean isDnf() {
 		return support.isDnf();
 	}
-	
+
 
 	@Override
 	public Set<? extends Predicate> getPredicates() {

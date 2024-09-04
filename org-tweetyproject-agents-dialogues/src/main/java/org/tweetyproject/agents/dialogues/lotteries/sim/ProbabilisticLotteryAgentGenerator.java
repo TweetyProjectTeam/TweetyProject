@@ -33,27 +33,50 @@ import org.tweetyproject.arg.prob.lotteries.UtilityFunction;
  * @author Matthias Thimm
  */
 public class ProbabilisticLotteryAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
-	
+
 	/** The name of the agents generator by this generator. */
 	private String name;
-	
+	/** The update strategy. */
 	private byte updatestrategy;
+	/** The stickyness coefficient. */
 	private double stickynesscoefficient;
-	
-	public ProbabilisticLotteryAgentGenerator(String name){
-		this(name,ProbabilisticLotteryAgent.UPDATE_NAIVE);
-	}
-	
-	public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy){
-		this(name,updatestrategy,0.5);
-	}
-	
-	public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy, double stickynesscoefficient){
-		this.name = name;
-		this.updatestrategy = updatestrategy;
-		this.stickynesscoefficient = stickynesscoefficient;
-	}
-	
+
+/**
+ * Creates a new {@code ProbabilisticLotteryAgentGenerator} with the specified name and
+ * the default update strategy {@code ProbabilisticLotteryAgent.UPDATE_NAIVE}.
+ *
+ * @param name the name of the generator.
+ */
+public ProbabilisticLotteryAgentGenerator(String name){
+    this(name, ProbabilisticLotteryAgent.UPDATE_NAIVE);
+}
+
+/**
+ * Creates a new {@code ProbabilisticLotteryAgentGenerator} with the specified name
+ * and update strategy. The stickiness coefficient is set to a default value of 0.5.
+ *
+ * @param name the name of the generator.
+ * @param updatestrategy the update strategy to use, as a byte value.
+ */
+public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy){
+    this(name, updatestrategy, 0.5);
+}
+
+/**
+ * Creates a new {@code ProbabilisticLotteryAgentGenerator} with the specified name,
+ * update strategy, and stickiness coefficient.
+ *
+ * @param name the name of the generator.
+ * @param updatestrategy the update strategy to use, as a byte value.
+ * @param stickynesscoefficient the stickiness coefficient, indicating how strongly
+ *                              the agent tends to stick to a specific action.
+ */
+public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy, double stickynesscoefficient){
+    this.name = name;
+    this.updatestrategy = updatestrategy;
+    this.stickynesscoefficient = stickynesscoefficient;
+}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.sim.AgentGenerator#generate(org.tweetyproject.agents.MultiAgentSystem, org.tweetyproject.agents.sim.SimulationParameters)
 	 */
@@ -67,7 +90,7 @@ public class ProbabilisticLotteryAgentGenerator implements AgentGenerator<Abstra
 	 */
 	@Override
 	public void setSeed(long seed) { }
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

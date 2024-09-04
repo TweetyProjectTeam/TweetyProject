@@ -41,7 +41,7 @@ import org.tweetyproject.math.term.Variable;
  *
  */
 public class IteratedLocalSearchOnConstrProb extends Solver{
-	
+
 	private ConstraintSatisfactionProblem prob;
 	private double perturbationStrength;
 	private int maxnumberOfRestarts;
@@ -50,15 +50,21 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 	private Random rand = new Random();
 	/** The magnitude of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
-	
+
+	/**
+	 * Constructor
+	 * @param perturbationStrength perturbationStrength
+	 * @param maxnumberOfRestarts maxnumberOfRestarts
+	 * @param maxIterations maxIterations
+	 */
 	public IteratedLocalSearchOnConstrProb(double perturbationStrength, int maxnumberOfRestarts, int maxIterations) {
 		this.perturbationStrength = perturbationStrength;
 		this.maxnumberOfRestarts = maxnumberOfRestarts;
 		this.maxIterations = maxIterations;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param ind basis of new solution
 	 * @return new solution on the basis of @param ind
 	 */
@@ -66,10 +72,10 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 
 		Map<Variable,Term> mutant = new HashMap<Variable,Term>();
 
-		
+
 		int numberOfFailedTries = 0;
 		boolean mutantSuccessful = false; //iterate through all variables
-		
+
 		//try to find a solution that satisfies all constraints, max tries = 5000
 		while(numberOfFailedTries < 5000 && mutantSuccessful == false)
 		{
@@ -77,19 +83,19 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 			if(ind == null || ind.size() == 0)
 			{
 				for(Variable v: ((ConstraintSatisfactionProblem) this.prob).getVariables()){
-						
+
 					double val =  v.getLowerBound() + rand.nextDouble() * (v.getUpperBound() - v.getLowerBound());
 					mutant.put(v, new FloatConstant(val));
-		
+
 				}
-				
+
 			}
 			//else alter the values found in @param ind
 			else {
 				for(Variable v: ind.keySet()){
-		
+
 						// decide if there is a positive or negative mutation
-						if(rand.nextBoolean()){			
+						if(rand.nextBoolean()){
 							double val = ind.get(v).doubleValue();
 							val = val + rand.nextDouble() * VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
 							mutant.put(v, new FloatConstant(val));
@@ -100,18 +106,18 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 							}
 				}
 			}
-			
+
 			mutantSuccessful = true;
 			//check if the new solution mutant satisfies all constraints
 			l1: for(OptProbElement s : this.prob)
 			{
-				
+
 				if(((Statement) s).isValid(((Statement) s).replaceAllTerms(mutant)) == false)
 				{
 					numberOfFailedTries++;
 					mutantSuccessful = false;
 					break l1;
-					
+
 				}
 
 			}
@@ -119,11 +125,12 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 		if(numberOfFailedTries == 5000) {
 			return ind;
 		}
-			
+
 		return mutant;
 	}
-	
+
 	/**
+	 * Return the best solution that was found and is a mutant of currSol
 	 * @param minIterations: the minimum amount of solutions to be created
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries
@@ -155,12 +162,12 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 			else if(eval >= threshold)
 				thresholdSwitch = true;
 			cnt++;
-			
+
 		}
 
 		return result;
 	}
-	
+
 
 	/**
 	 * changes the solution drastically to escape a local minimum
@@ -173,13 +180,20 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 			currSol = createNewSol(currSol);
 		return currSol;
 	}
-	
+
+	/**
+	 *
+	 * Return the evaluation
+	 * @param sol sol
+	 * @param  minT minT
+	 * @return the evaluation
+	 */
 	public double evaluate(Map<Variable, Term> sol, Term minT) {
 		return minT.replaceAllTerms(sol).doubleValue();
 	}
-	
+
 	public Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) {
-		
+
 		// only optimization problems
 		this.prob = (ConstraintSatisfactionProblem) problem;
 		if(!(this.prob instanceof OptimizationProblem))
@@ -193,12 +207,12 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 		Map<Variable,Term> bestSol = initialSol;
 		Map<Variable,Term> currSol = initialSol;
 		ArrayList<Map<Variable,Term>> visitedMinima = new ArrayList<Map<Variable,Term>>();
-		
+
 		int cnt = 0;
 		int restarts = 0;
-		
 
-		
+
+
 		while(cnt < maxIterations) {
 			//local search until local optimum is found
 			boolean localSearch = true;
@@ -220,12 +234,12 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 			/*check if the new local optimum is better than the last local optimum
 			 * if the new one is better, continue with the new one
 			 * else continue with the old optimum
-			 * */		 
-			if(visitedMinima.size() == 0 ? false : 
+			 * */
+			if(visitedMinima.size() == 0 ? false :
 					evaluate(currSol, minT) > evaluate(visitedMinima.get(visitedMinima.size() - 1), minT)) {
 				restarts++;
 
-				currSol = visitedMinima.get(visitedMinima.size() - 1); 
+				currSol = visitedMinima.get(visitedMinima.size() - 1);
 			}
 			//add the new optimum to the visited optima
 			if(!visitedMinima.contains(currSol)){
@@ -240,9 +254,9 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 				currSol = createNewSol(null);
 			}
 		}
-		
 
-		
+
+
 		return bestSol;
 	}
 

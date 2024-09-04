@@ -44,6 +44,9 @@ public class LexicographicIntTupleComparator implements Comparator<int[]> {
 		return s1.compareTo(s2);
 	}
 
+
+    /** Default Constructor */
+    public LexicographicIntTupleComparator(){}
 }
 
 

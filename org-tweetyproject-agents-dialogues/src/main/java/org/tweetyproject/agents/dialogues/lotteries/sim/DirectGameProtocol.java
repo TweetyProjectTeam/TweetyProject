@@ -30,61 +30,79 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This class implements a direct protocol for argumentation games.
- * 
+ *
  * @author Matthias Thimm
  */
-public class DirectGameProtocol extends SynchronousProtocol implements GameProtocol{
-	
-	public DirectGameProtocol(MultiAgentSystem<? extends Agent> multiAgentSystem) {
-		super(multiAgentSystem,1);
-	}
+public class DirectGameProtocol extends SynchronousProtocol implements GameProtocol {
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.agents.GameProtocol#hasWinner()
-	 */
-	@Override
-	public boolean hasWinner() {
-		return this.hasTerminated();
-	}
+    /**
+     * Constructs a new {@code DirectGameProtocol} with the given multi-agent system.
+     *
+     * @param multiAgentSystem The multi-agent system involved in the game.
+     */
+    public DirectGameProtocol(MultiAgentSystem<? extends Agent> multiAgentSystem) {
+        super(multiAgentSystem, 1);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.agents.GameProtocol#getWinner()
-	 */
-	@Override
-	public Agent getWinner() {
-		// the winner is always the pro agent by default
-		for(Agent a: this.getMultiAgentSystem())
-			if(!(a instanceof DummyLotteryAgent))
-				return a;
-		return null;
-	}
+    /**
+     * Determines if the game has a winner. The game is considered to have a winner when it has terminated.
+     *
+     * @return {@code true} if the game has a winner, {@code false} otherwise.
+     */
+    @Override
+    public boolean hasWinner() {
+        return this.hasTerminated();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.agents.sim.GameProtocol#getUtility(org.tweetyproject.agents.Agent)
-	 */
-	public Double getUtility(Agent agent){
-		DungTheory theory = new DungTheory();
-		// get theory of audience
-		for(Agent b: this.getMultiAgentSystem())
-			if(b instanceof DummyLotteryAgent){
-				theory.addAll(((DummyLotteryAgent)b).getTheory());
-				theory.addAllAttacks(((DummyLotteryAgent)b).getTheory().getAttacks());
-				break;
-			}
-		// get disclosed arguments and attacks
-		for(DungTheory action: ((LotteryArgumentationEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace().getElements()){
-			theory.addAll(action);
-			theory.addAllAttacks(action.getAttacks());
-		}
-		// get utility				
-		return ((AbstractLotteryAgent)agent).getUtility(theory, ((AbstractLotteryAgent)agent).getSemantics());
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		return "DirectGameProtocol";
-	}
+    /**
+     * Retrieves the winner of the game. The winner is typically the pro agent (non-{@link DummyLotteryAgent}).
+     *
+     * @return The agent who won the game, or {@code null} if no winner is found.
+     */
+    @Override
+    public Agent getWinner() {
+        // The winner is always the pro agent by default
+        for (Agent a : this.getMultiAgentSystem()) {
+            if (!(a instanceof DummyLotteryAgent)) {
+                return a;
+            }
+        }
+        return null;
+    }
 
+    /**
+     * Calculates the utility of the given agent based on the disclosed arguments and attacks in the game.
+     * The utility is determined from the perspective of the agent's preferences and the current state of the argumentation.
+     *
+     * @param agent The agent for whom the utility is being calculated.
+     * @return The utility value for the given agent, or {@code null} if no utility can be calculated.
+     */
+    public Double getUtility(Agent agent) {
+        DungTheory theory = new DungTheory();
+        // Get theory of audience
+        for (Agent b : this.getMultiAgentSystem()) {
+            if (b instanceof DummyLotteryAgent) {
+                theory.addAll(((DummyLotteryAgent) b).getTheory());
+                theory.addAllAttacks(((DummyLotteryAgent) b).getTheory().getAttacks());
+                break;
+            }
+        }
+        // Get disclosed arguments and attacks
+        for (DungTheory action : ((LotteryArgumentationEnvironment) this.getMultiAgentSystem().getEnvironment()).getDialogueTrace().getElements()) {
+            theory.addAll(action);
+            theory.addAllAttacks(action.getAttacks());
+        }
+        // Get utility
+        return ((AbstractLotteryAgent) agent).getUtility(theory, ((AbstractLotteryAgent) agent).getSemantics());
+    }
+
+    /**
+     * Provides a string representation of the protocol.
+     *
+     * @return The string "DirectGameProtocol".
+     */
+    @Override
+    public String toString() {
+        return "DirectGameProtocol";
+    }
 }

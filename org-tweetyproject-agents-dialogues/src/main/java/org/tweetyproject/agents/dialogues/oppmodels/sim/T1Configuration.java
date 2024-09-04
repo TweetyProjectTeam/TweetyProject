@@ -54,4 +54,7 @@ public class T1Configuration extends BeliefStateConfiguration{
 			return false;
 		return true;
 	}
+
+    /** Default Constructor */
+    public T1Configuration(){}
 }

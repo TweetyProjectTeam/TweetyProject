@@ -30,7 +30,7 @@ import org.tweetyproject.commons.Formula;
 
 /**
  * Summarises the results of a postulate evaluation.
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <S> The type of formulas
@@ -60,7 +60,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 
 	/**
 	 * Creates a new evaluation report for the given approach and set of postulates
-	 * 
+	 *
 	 * @param ev         some approach
 	 * @param postulates a set of postulates
 	 */
@@ -78,7 +78,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 
 	/**
 	 * Adds a positive instance for the given postulate (that is applicable)
-	 * 
+	 *
 	 * @param postulate some postulate
 	 * @param instance  some instance
 	 */
@@ -88,7 +88,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 
 	/**
 	 * Adds an instance that is not applicable for the given postulate
-	 * 
+	 *
 	 * @param postulate some postulate
 	 * @param instance  some instance
 	 */
@@ -98,7 +98,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 
 	/**
 	 * Adds a negative instance for the given postulate
-	 * 
+	 *
 	 * @param postulate some postulate
 	 * @param instance  some instance
 	 */
@@ -118,7 +118,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 	}
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -128,9 +128,9 @@ public class PostulateEvaluationReport<S extends Formula> {
 		return result + "]";
 
 	}
-	
-	/**
-	 * @return an easy-to-read string representation of the report in which 
+
+	/** Pretty print report.
+	 * @return an easy-to-read string representation of the report in which
 	 * the results are ordered alphabetically by postulate name.
 	 */
 	public String prettyPrint() {
@@ -143,18 +143,18 @@ public class PostulateEvaluationReport<S extends Formula> {
 		String result = this.ev.getClass().getSimpleName() + " RESULTS\n----------\n" + String.format("%-" + longest + "s%-13s%-14s%s",
 				"Postulate ", "posInstances ", "notApplicable ", "negInstances\n");
 
-		TreeMap<String,String> ordered_postulate_strings = new TreeMap<String,String>(); 
+		TreeMap<String,String> ordered_postulate_strings = new TreeMap<String,String>();
 		for (Postulate<S> p : this.positiveInstances.keySet()) {
 			String s = String.format("%-" + longest + "s%-13s%-14s%s", p.getName() + " ",
 					this.positiveInstances.get(p).size(), this.notApplicableInstances.get(p).size(),
 					this.negativeInstances.get(p).size()) + "\n";
 			ordered_postulate_strings.put(p.getName(), s); //TreeMap sorts postulates alphabetically by their names
-			
+
 		}
-		
-		for(String s : ordered_postulate_strings.values()) 
+
+		for(String s : ordered_postulate_strings.values())
 			result += s;
-		
+
 		return result;
 	}
 }

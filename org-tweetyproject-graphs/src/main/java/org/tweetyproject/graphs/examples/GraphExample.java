@@ -29,6 +29,11 @@ import org.tweetyproject.math.ComplexNumber;
  * Example that shows how to construct graphs programmatically.
  */
 public class GraphExample {
+	/** Default Constructor
+	 */
+	public GraphExample(){
+
+	}
 	/**
 	 * 1st run method
 	 */
@@ -51,10 +56,10 @@ public class GraphExample {
 		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[1]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[0]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[1]));		
+		g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[1]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[3]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[1]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[5]));		
+		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[5]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[5],nodes[1]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[5],nodes[4]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[6],nodes[1]));
@@ -65,7 +70,7 @@ public class GraphExample {
 		g.add(new DirectedEdge<SimpleNode>(nodes[8],nodes[4]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[9],nodes[4]));
 		g.add(new DirectedEdge<SimpleNode>(nodes[10],nodes[4]));
-		
+
 		for(SimpleNode n: nodes){
 			System.out.println(n + "\t" + GraphUtil.pageRank(g, n, 0.85, 0.00001));
 		}
@@ -88,14 +93,14 @@ public class GraphExample {
 		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[3]));
 		//g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[0]));
 		//g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[4]));
-		
+
 //		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[0]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[3]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[4]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[3]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[2]));
-		
+
 		System.out.println(g.toString());
 		System.out.println();
 		for(ComplexNumber d: GraphUtil.eigenvalues(g))
@@ -106,6 +111,6 @@ public class GraphExample {
 	 * @param args arguments
 	 */
 	public static void main(String[] args){
-		new GraphExample().run();		
-	}	
+		new GraphExample().run();
+	}
 }

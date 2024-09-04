@@ -22,9 +22,9 @@ import org.tweetyproject.math.Interval;
 
 /**
  * This parameter holds a number-interval of possible arguments
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  */
 
 public class IntegerCommandParameter extends CommandParameter {
@@ -32,22 +32,52 @@ public class IntegerCommandParameter extends CommandParameter {
 	/**
 	 * all possible values for this parameter's argument
 	 */
-	private Interval<Integer> interval; 
-	
+	private Interval<Integer> interval;
+
 	/**
 	 * the value each instantiated needs, has to be in selections
 	 */
 	private Integer value;
 
+	/**
+	 * Constructs an `IntegerCommandParameter` with the specified identifier and
+	 * description.
+	 *
+	 * @param id  a `String` representing the unique identifier for this parameter.
+	 * @param des a `String` representing the description of this parameter.
+	 */
 	public IntegerCommandParameter(String id, String des) {
 		super(id, des);
 	}
-	
+
+	/**
+	 * Constructs an `IntegerCommandParameter` with the specified identifier,
+	 * description, and interval.
+	 *
+	 *
+	 * @param id       a `String` representing the unique identifier for this
+	 *                 parameter.
+	 * @param des      a `String` representing the description of this parameter.
+	 * @param interval an object specifying the range of valid
+	 *                 integer values for this parameter.
+	 */
 	public IntegerCommandParameter(String id, String des, Interval<Integer> interval) {
 		super(id, des);
 		this.interval = interval;
 	}
-	
+
+	/**
+	 * Constructs an `IntegerCommandParameter` with the specified identifier,
+	 * description, and interval.
+	 *
+	 *
+	 * @param id       a `String` representing the unique identifier for this
+	 *                 parameter.
+	 * @param des      a `String` representing the description of this parameter.
+	 * @param interval a `String` representing the range of valid integer values for
+	 *                 this parameter.
+	 *                 The string should be in a format that can be parsed
+	 */
 	public IntegerCommandParameter(String id, String des, String interval) {
 		super(id, des);
 		setInterval(interval);
@@ -55,22 +85,25 @@ public class IntegerCommandParameter extends CommandParameter {
 
 	/**
 	 * sets new selection parameter
+	 *
 	 * @param interval some string
 	 */
-	public void setInterval(String interval){
-		
+	public void setInterval(String interval) {
+
 	}
-	
+
 	/**
 	 * returns each possible selection argument
+	 *
 	 * @return each possible selection argument
 	 */
-	public Interval<Integer> getInterval(){
+	public Interval<Integer> getInterval() {
 		return interval;
 	}
-	
+
 	/**
 	 * returns the given instantiation argument value for this parameter
+	 *
 	 * @return the given instantiation argument value for this parameter
 	 */
 	public Integer getValue() {
@@ -80,43 +113,46 @@ public class IntegerCommandParameter extends CommandParameter {
 	/**
 	 * sets the instantiated parameter argument value,
 	 * value has to be one of the options contained in selections
+	 *
 	 * @param value the value given as argument value
 	 */
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * checks whether a cli input parameter argument is valid for the called command parameter
+	 * checks whether a cli input parameter argument is valid for the called command
+	 * parameter
 	 */
 	@Override
 	public boolean isValid(String s) {
 		Integer in = Integer.parseInt(s);
-		if(in >= interval.getLowerBound() && in <= interval.getUpperBound()){
+		if (in >= interval.getLowerBound() && in <= interval.getUpperBound()) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * instantiates a new parameter iff the given value is valid for this command parameter
+	 * instantiates a new parameter iff the given value is valid for this command
+	 * parameter
 	 */
 	@Override
-	public CommandParameter instantiate(String s){
-		if(isValid(s)){
+	public CommandParameter instantiate(String s) {
+		if (isValid(s)) {
 			IntegerCommandParameter newParameter = (IntegerCommandParameter) this.clone();
 			newParameter.setValue(Integer.parseInt(s));
 			return newParameter;
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Clones the object 
-	 * 
+	 * Clones the object
+	 *
 	 */
 	@Override
-	public Object clone(){
+	public Object clone() {
 		return new IntegerCommandParameter(this.getIdentifier(), this.getDescription(), this.getInterval());
 	}
 

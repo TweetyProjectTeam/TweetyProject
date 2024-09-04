@@ -34,6 +34,31 @@ import org.tweetyproject.logics.mln.syntax.MarkovLogicNetwork;
  *
  */
 public class AlchemyExample {
+
+
+	/**
+	 * Default constructor for {@code AlchemyExample}.
+	 * <p>
+	 * This constructor initializes the example for running the Alchemy reasoner
+	 * with a predefined MLN setup.
+	 * </p>
+	 */
+	public AlchemyExample() {
+		// Default constructor, no specific initialization required
+	}
+
+	/**
+	 * The main method to run the Alchemy reasoner example.
+	 * <p>
+	 * This method sets up an MLN with smokers and cancer, parses a query, and
+	 * invokes the Alchemy reasoner to compute the result. It prints the result
+	 * of the query to the console.
+	 * </p>
+	 *
+	 * @param args command-line arguments (not used in this example)
+	 * @throws ParserException if there is an error during parsing
+	 * @throws IOException if there is an I/O error
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		Pair<MarkovLogicNetwork,FolSignature> exp1 = MlnExample.SmokersExample(3);
 		AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner();

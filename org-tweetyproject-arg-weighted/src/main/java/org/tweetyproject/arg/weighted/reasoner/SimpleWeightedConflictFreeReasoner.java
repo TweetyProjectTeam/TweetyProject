@@ -30,13 +30,19 @@ import org.tweetyproject.commons.util.SetTools;
 
 /**
  * This reasoner for weighted Dung theories performs inference on the  alpha conflict-free extensions.
+ * @param <T> The type
  * @author Sandra Hoffmann
  *
  */
 public class SimpleWeightedConflictFreeReasoner<T> {
+		/** Default Constructor */
+		public SimpleWeightedConflictFreeReasoner(){
+
+		}
+
 
 	/**
-	 * Computes all alpha-conflict-free extensions for the given weighted argumentation framework. 
+	 * Computes all alpha-conflict-free extensions for the given weighted argumentation framework.
 	 * Conflict-free extensions are subsets of the set of arguments that satisfy the alpha-conflict-free
 	 * condition. This method uses a simple approach by checking all possible subsets of the arguments.
 	 *

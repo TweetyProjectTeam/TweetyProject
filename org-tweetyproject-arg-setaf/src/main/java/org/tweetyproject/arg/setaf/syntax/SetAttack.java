@@ -33,124 +33,124 @@ import org.tweetyproject.graphs.HyperDirEdge;
  * This class models an attack between two arguments. It comprises of two attributes of <code>Argument</code> and is mainly used by
  * abstract argumentation theories as e.g. <code>SetAfTheory</code>.
  *
- * @author  Sebastian Franke
- *
+ * @author Sebastian Franke
+ * @author Lars Bengel
  */
 public class SetAttack extends HyperDirEdge<Argument>   implements DungEntity {
 
-	/**
-	 * Default constructor; initializes the two arguments used in this attack relation
-	 * @param attackers the attacking argument
-	 * @param attacked the attacked argument
-	 */
-	public SetAttack(Set<Argument> attackers, Argument attacked){
-			super(attackers, attacked);
+    /**
+     * Default constructor; initializes the two arguments used in this attack relation
+     * @param attackers the attacking argument
+     * @param attacked the attacked argument
+     */
+    public SetAttack(Set<Argument> attackers, Argument attacked){
+        super(attackers, attacked);
 
-	}
-	
-	/**
-	 * Default constructor; initializes the two arguments used in this attack relation
-	 * @param attacker the attacking argument
-	 * @param attacked the attacked argument
-	 */
-	public SetAttack(Argument attacker, Argument attacked){
-		super(attacker, attacked);
-		
-	}
+    }
+
+    /**
+     * Default constructor; initializes the two arguments used in this attack relation
+     * @param attacker the attacking argument
+     * @param attacked the attacked argument
+     */
+    public SetAttack(Argument attacker, Argument attacked){
+        super(attacker, attacked);
+
+    }
 
 
-	
-	/**
-	 * returns true if one arguments in <code>arguments</code> attacks another within this attack relation.
-	 * @param arguments a list of arguments
-	 * @return returns true if one arguments in <code>arguments</code> attacks another.
-	 */
-	public boolean isConflictFree(Collection<? extends Argument> arguments){
-		Iterator<? extends Argument> it = arguments.iterator();
-		while(it.hasNext()){
-			Argument arg = (Argument) it.next();
-			if(arg.equals(this.getAttacked())){
 
-				if(!arguments.containsAll(this.getNodeA()))
-					return false;
-						
-				}
-			}
-		
-		return true;
-	}
+    /**
+     * returns true if one arguments in <code>arguments</code> attacks another within this attack relation.
+     * @param arguments a list of arguments
+     * @return returns true if one arguments in <code>arguments</code> attacks another.
+     */
+    public boolean isConflictFree(Collection<? extends Argument> arguments){
+        Iterator<? extends Argument> it = arguments.iterator();
+        while(it.hasNext()){
+            Argument arg = (Argument) it.next();
+            if(arg.equals(this.getAttacked())){
 
-	/**
-	 * returns the attacked argument of this attack relation.
-	 * @return the attacked argument of this attack relation.
-	 */
-	public Argument getAttacked() {
-		
-		return this.getNodeB();
-	}
+                if(!arguments.containsAll(this.getNodeA()))
+                    return false;
 
-	/**
-	 * returns the attacking argument of this attack relation.
-	 * @return the attacking argument of this attack relation.
-	 */
-	public Set<Argument> getAttackers() {
-		return this.getNodeA();
-	}
+            }
+        }
 
-	
-	/**
-	 * Return true if the given argument is in this attack relation.
-	 * @param argument some argument
-	 * @return true if the given argument is in this attack relation.
-	 */
-	public boolean contains(Argument argument){
-		return this.getAttacked().equals(argument) || this.getAttackers().contains(argument);
-	}
+        return true;
+    }
 
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.kr.Formula#getSignature()
-	 */
-	public Signature getSignature(){
-		DungSignature sig = new DungSignature();
-		sig.add(this.getAttacked());
-		sig.add(this.getAttackers());
-		return sig;
-	}
+    /**
+     * returns the attacked argument of this attack relation.
+     * @return the attacked argument of this attack relation.
+     */
+    public Argument getAttacked() {
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		return "("+ (this.getAttackers() == null? "":this.getAttackers().toString())+
-						","+(this.getAttacked() == null? "":this.getAttacked().toString())+")";
-	}
+        return this.getNodeB();
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o){
-		if(!o.getClass().equals(this.getClass())) return false;
-		if(!this.getAttackers().equals(((SetAttack)o).getAttackers())) return false;
-		if(!this.getAttacked().equals(((SetAttack)o).getAttacked())) return false;
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode(){
-		return this.getAttacked() == null? 0 : this.getAttacked().hashCode()
-					+ (this.getAttackers() == null? 0 : this.getAttackers().hashCode());
-	}
+    /**
+     * returns the attacking argument of this attack relation.
+     * @return the attacking argument of this attack relation.
+     */
+    public Set<Argument> getAttackers() {
+        return new HashSet<>(this.getNodeA());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.SetAf.syntax.DungEntity#getLdoFormula()
-	 */
-	@Override
-	public LdoFormula getLdoFormula() {
-		return new LdoRelation(((DungEntity) this.getAttackers()).getLdoFormula(), new LdoNegation(this.getAttacked().getLdoFormula()));
-	}
+
+    /**
+     * Return true if the given argument is in this attack relation.
+     * @param argument some argument
+     * @return true if the given argument is in this attack relation.
+     */
+    public boolean contains(Argument argument){
+        return this.getAttacked().equals(argument) || this.getAttackers().contains(argument);
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.kr.Formula#getSignature()
+     */
+    public Signature getSignature(){
+        DungSignature sig = new DungSignature();
+        sig.add(this.getAttacked());
+        sig.add(this.getAttackers());
+        return sig;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString(){
+        return "("+ (this.getAttackers() == null? "":this.getAttackers().toString())+
+                ","+(this.getAttacked() == null? "":this.getAttacked().toString())+")";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object o){
+        if(!o.getClass().equals(this.getClass())) return false;
+        if(!this.getAttackers().equals(((SetAttack)o).getAttackers())) return false;
+        if(!this.getAttacked().equals(((SetAttack)o).getAttacked())) return false;
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode(){
+        return this.getAttacked() == null? 0 : this.getAttacked().hashCode()
+                + (this.getAttackers() == null? 0 : this.getAttackers().hashCode());
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.arg.SetAf.syntax.DungEntity#getLdoFormula()
+     */
+    @Override
+    public LdoFormula getLdoFormula() {
+        return new LdoRelation(((DungEntity) this.getAttackers()).getLdoFormula(), new LdoNegation(this.getAttacked().getLdoFormula()));
+    }
 
 
 

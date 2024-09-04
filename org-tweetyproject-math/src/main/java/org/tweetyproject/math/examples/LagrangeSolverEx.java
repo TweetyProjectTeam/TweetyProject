@@ -47,12 +47,19 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class LagrangeSolverEx {
+
+	/** Constructor */
+	public LagrangeSolverEx() {
+	}
+
+
+
 	/**
 	 * constructor
 	 * @return problem
 	 */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
-		
+
 		//Define the constraints (all are equations)
 		IntegerVariable m1 = new IntegerVariable("Maschine 1");
 		IntegerVariable m2 = new IntegerVariable("Maschine 2");
@@ -61,7 +68,7 @@ public class LagrangeSolverEx {
 		Equation constr3 = new Equation(m1, new IntegerConstant(0));
 		Equation constr4 = new Equation(m2, new IntegerConstant(0));
 		Equation constr5 = new Equation(m1.add(m2), new IntegerConstant(16));
-		
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 		constraints.add(constr1);
 		constraints.add(constr2);
@@ -70,13 +77,13 @@ public class LagrangeSolverEx {
 		constraints.add(constr5);
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
-		
+
 		//Define targetfunction
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 		prob.setTargetFunction(opt);
-		
-		
-		
+
+
+
 		return prob;
 	}
 	/**
@@ -97,7 +104,7 @@ public class LagrangeSolverEx {
 		LagrangeSolver solver = new LagrangeSolver(startingPoint);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

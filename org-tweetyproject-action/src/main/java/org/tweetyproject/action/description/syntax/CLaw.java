@@ -42,8 +42,21 @@ import org.tweetyproject.logics.fol.syntax.Tautology;
  * @author Sebastian Homann
  */
 public abstract class CLaw implements CausalLaw {
+	/**
+	 * The head formula of this causal law.
+	 */
 	protected FolFormula headFormula = new Contradiction();
+
+	/**
+	 * The conditional (if) formula of this causal law.
+	 *
+	 */
 	protected FolFormula ifFormula = new Tautology();
+
+	/**
+	 * The set of grounding requirements for this causal law.
+	 *
+	 */
 	protected Set<GroundingRequirement> requirements = new HashSet<GroundingRequirement>();
 
 	/*
@@ -74,9 +87,13 @@ public abstract class CLaw implements CausalLaw {
 	public abstract Set<CLaw> toDefinite() throws IllegalStateException;
 
 	/**
-	 * @return the set of propositions in all formulas in this law.
+	 * Retrieves the set of propositions (atoms) contained in all formulas within this law.
+	 *
+	 * @return a `Set` of `FolAtom` objects representing all the propositions in the formulas
+	 *         that constitute this law.
 	 */
 	public abstract Set<FolAtom> getAtoms();
+
 
 	/**
 	 * Returns the set of formulas contained in this causal law, e.g. in a static
@@ -186,18 +203,24 @@ public abstract class CLaw implements CausalLaw {
 	}
 
 	/**
-	 * @return the headFormula of this causal law.
+	 * Retrieves the head formula of this causal law.
+	 *
+	 * @return the `FolFormula` that constitutes the head of this causal law.
 	 */
 	public FolFormula getHeadFormula() {
 		return headFormula;
 	}
 
 	/**
-	 * @return the ifFormula of this causal law.
+	 * Retrieves the conditional (if) formula of this causal law.
+	 *
+	 *
+	 * @return the `FolFormula` that constitutes the condition (if clause) of this causal law.
 	 */
 	public FolFormula getIfFormula() {
 		return ifFormula;
 	}
+
 
 
 	/**
@@ -213,7 +236,9 @@ public abstract class CLaw implements CausalLaw {
 	}
 
 	/**
-	 * @return the set of all grounded instances of this causal law.
+	 * Retrieves the set of all grounded instances of this causal law.
+	 *
+	 * @return a `Set` of `CLaw` objects representing all grounded instances of this causal law.
 	 */
 	public abstract Set<CLaw> getAllGrounded();
 

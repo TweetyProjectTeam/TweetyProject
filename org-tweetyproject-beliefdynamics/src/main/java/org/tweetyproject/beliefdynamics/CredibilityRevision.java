@@ -25,17 +25,23 @@ import org.tweetyproject.commons.Formula;
 
 /**
  * Abstract base class for a revision process on belief bases of type TBeliefBase, it
- * provides a method to revise one belief base with another and a method 
+ * provides a method to revise one belief base with another and a method
  * to revise a ordered list of belief bases. The ordering of the list defines
  * the credibility of the different belief bases.
- * 
+ *
  * @author Tim Janus
  *
  * @param <T>	The type of formulas of the belief bases
  */
-public abstract class CredibilityRevision<T extends Formula> 
+public abstract class CredibilityRevision<T extends Formula>
 	extends MultipleBaseRevisionOperator<T> {
-	/** 
+
+	/** Default Constructor*/
+	public CredibilityRevision() {
+	}
+
+
+	/**
 	 * Revises the given belief base with the given formula, the credibility of the
 	 * formula is higher.
 	 * @param base		Collection of formulas forming the basis belief base.
@@ -44,7 +50,7 @@ public abstract class CredibilityRevision<T extends Formula>
 	 */
 	@Override
 	public Collection<T> revise(Collection<T> base, T formula) {return super.revise(base, formula);}
-	
+
 	/**
 	 * Revises the two given belief bases and returns the result, the former belief base has
 	 * a lesser credibility than the latter.
@@ -54,8 +60,8 @@ public abstract class CredibilityRevision<T extends Formula>
 	 */
 	@Override
 	public abstract Collection<T> revise(Collection<T> beliefBase1, Collection<T> beliefBase2);
-	
-	
+
+
 	/**
 	 * Revises the belief bases in the orderer list into one belief base.
 	 * @param orderedBeliefBases	An orderer list of belief bases which assumes

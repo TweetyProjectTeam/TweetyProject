@@ -26,11 +26,11 @@ import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
- * 
+ *
  * This class models a role assertion in description logic, i.e. an
  * expression of the form  "(a,b) : R", where a,b are Individuals
  * and R is a role.
- * 
+ *
  * @author Anna Gessler
  */
 public class RoleAssertion extends AssertionalAxiom {
@@ -40,30 +40,30 @@ public class RoleAssertion extends AssertionalAxiom {
 	 * are instances of the role)
 	 */
 	private Pair<Individual,Individual> individuals = new Pair<Individual,Individual>();
-	
+
 	/**
 	 * The role of this assertional axiom (= the role that the
 	 * individuals are instances of).
 	 */
 	private AtomicRole role;
-	
+
 
 	/**
 	 * Empty default constructor.
 	 */
 	public RoleAssertion() {
 	}
-	
+
 	/**
 	 * Initializes a role assertion with the given individuals and role.
-	 * 
+	 *
 	 * @param a
 	 *            an Individual
 	 * @param b
-	 *            an Individual         
+	 *            an Individual
 	 * @param r
 	 *            a role
-	 * 
+	 *
 	 */
 	public RoleAssertion(Individual a, Individual b, AtomicRole r) {
 		this.role = r;
@@ -72,28 +72,28 @@ public class RoleAssertion extends AssertionalAxiom {
 
 	/**
 	 * Initializes a role assertion with the given individuals and role.
-	 * 
+	 *
 	 * @param args
-	 *            list of individuals         
+	 *            list of individuals
 	 * @param r
 	 *            a role
-	 * 
+	 *
 	 */
 	public RoleAssertion(List<Individual> args, AtomicRole r) {
 		if (args.size() != 2)
-			throw new IllegalArgumentException("Incorrect number of arguments, has to be for 2 for a role assertion, but is " + args.size()); 
+			throw new IllegalArgumentException("Incorrect number of arguments, has to be for 2 for a role assertion, but is " + args.size());
 		this.role = r;
 		this.individuals = new Pair<Individual,Individual>(args.get(0),args.get(1));
 	}
 
 	/**
 	 * Initializes a role assertion with the given role and individuals.
-	 * 
+	 *
 	 * @param args
 	 * 			  pair of individuals
 	 * @param r
 	 *            role
-	 * 
+	 *
 	 */
 	public RoleAssertion(Pair<Individual, Individual> args, AtomicRole r) {
 		this.role = r;
@@ -106,17 +106,17 @@ public class RoleAssertion extends AssertionalAxiom {
 		ps.addAll(this.role.getPredicates());
 		return ps;
 	}
-	
+
 	@Override
 	public RoleAssertion clone() {
 		return new RoleAssertion(this.individuals,this.role);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "related " + individuals.getFirst().toString() + " " + individuals.getSecond().toString() + " "+ this.role.toString();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,7 +134,7 @@ public class RoleAssertion extends AssertionalAxiom {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
-			return true;		
+			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 		RoleAssertion other = (RoleAssertion) obj;
@@ -159,17 +159,19 @@ public class RoleAssertion extends AssertionalAxiom {
 		sig.add(this.individuals.getSecond());
 		return sig;
 	}
-	
+
 	/**
+	 * Return the individuals of this assertional axiom
 	 * @return the individuals of this assertional axiom (= the individuals that
 	 * are instances of the role)
 	 */
 	public Pair<Individual,Individual> getIndividuals() {
 		return individuals;
 	}
-	
+
 	/**
-	 * @return the role that the individuals of this assertional axiom are 
+	 * Return the role that the individuals assertional axiom
+	 * @return the role that the individuals of this assertional axiom are
 	 * instances of.
 	 */
 	public AtomicRole getRole() {

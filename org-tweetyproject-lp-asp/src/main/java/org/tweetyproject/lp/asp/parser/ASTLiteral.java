@@ -21,31 +21,74 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTLiteral} class represents a node in the abstract syntax tree (AST)
+ * for literals within the context of Answer Set Programming (ASP). This class
+ * extends {@code SimpleNode} and is used by the ASP parser to handle literal expressions,
+ * which may include a name and an optional negation.
+ */
 public class ASTLiteral extends SimpleNode {
-	protected boolean neg;
-	public String name;
 
-	public ASTLiteral(int id) {
-		super(id);
-	}
+    /**
+     * Indicates whether this literal is negated.
+     */
+    protected boolean neg;
 
-	public ASTLiteral(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * The name of the literal represented by this AST node.
+     */
+    public String name;
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTLiteral} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTLiteral(int id) {
+        super(id);
+    }
 
-	public void neg(boolean b) {
-		this.neg = b;
-	}
-	
-	public void name(String n) {
-		this.name = n;
-	}
+    /**
+     * Constructs a new {@code ASTLiteral} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTLiteral(ASPParser p, int id) {
+        super(p, id);
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
+
+    /**
+     * Sets whether this literal is negated.
+     *
+     * @param b {@code true} if the literal is negated, {@code false} otherwise.
+     */
+    public void neg(boolean b) {
+        this.neg = b;
+    }
+
+    /**
+     * Sets the name of the literal represented by this AST node.
+     *
+     * @param n The string representing the name of the literal.
+     */
+    public void name(String n) {
+        this.name = n;
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=b6e43a9d164ef598138628698fbb9360 (do not edit this
  * line)

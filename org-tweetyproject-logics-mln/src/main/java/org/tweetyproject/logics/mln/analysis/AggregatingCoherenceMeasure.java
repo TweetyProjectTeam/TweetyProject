@@ -34,28 +34,34 @@ import org.tweetyproject.logics.commons.syntax.RelationalFormula;
 /**
  * This coherence measure uses an aggregation function and a distance function
  * to measure the coherence of an MLN. For each formula in the MLN the distance
- * function looks at the probabilities of all ground instance and compares this 
+ * function looks at the probabilities of all ground instance and compares this
  * vector to the intended probabilities. The aggregation function is used to
- * aggregate the distances for all formulas. 
- * 
+ * aggregate the distances for all formulas.
+ *
  * @author Matthias Thimm
  *
  */
 public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 
 	private static final long serialVersionUID = 4162719595968757160L;
-	
+
 	/** The norm used to measure the difference of the probabilities
 	 * of each ground instance for a single formula. */
 	private RealVectorNorm norm;
 	/** The aggregation function used to aggregate the distances for each formula. */
 	private AggregationFunction aggregator;
-	
+
+
+	/**
+	 * Constructor
+	 * @param norm The Norm
+	 * @param aggregator The Aggragating function
+	 */
 	public AggregatingCoherenceMeasure(RealVectorNorm norm, AggregationFunction aggregator){
 		this.aggregator = aggregator;
 		this.norm = norm;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.markovlogic.analysis.AbstractCoherenceMeasure#coherence(org.tweetyproject.logics.markovlogic.MarkovLogicNetwork, org.tweetyproject.Reasoner, org.tweetyproject.logics.firstorderlogic.syntax.FolSignature)
 	 */
@@ -72,7 +78,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(signature.getConstants())){
 				observed.add(reasoner.query(mln,(FolFormula) groundFormula));
 				intended.add(pObserved);
-			}			
+			}
 			distances.add(this.norm.distance(intended, observed));
 		}
 		return 1-this.aggregator.eval(distances);
@@ -82,10 +88,10 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	 * @see org.tweetyproject.logics.markovlogic.analysis.AbstractCoherenceMeasure#toString()
 	 */
 	@Override
-	public String toString() {		
+	public String toString() {
 		return "C<" + this.norm.toString() + ", " + this.aggregator.toString() + ">";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

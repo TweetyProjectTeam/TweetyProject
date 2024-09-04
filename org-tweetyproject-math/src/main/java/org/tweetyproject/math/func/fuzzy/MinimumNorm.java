@@ -22,11 +22,16 @@ import org.tweetyproject.math.term.Minimum;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the minimum-norm in fuzzy logic, i.e., T(x,y)=min(x,y) 
- * 
+ * Represents the minimum-norm in fuzzy logic, i.e., T(x,y)=min(x,y)
+ *
  * @author Matthias Thimm
  */
 public class MinimumNorm extends TNorm{
+
+	/** Constructor */
+	public MinimumNorm() {
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#eval(java.lang.Double, java.lang.Double)
@@ -50,7 +55,7 @@ public class MinimumNorm extends TNorm{
 	 * @see org.tweetyproject.math.func.fuzzy.TNorm#evalTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */
 	@Override
-	public Term evalTerm(Term val1, Term val2) {		
+	public Term evalTerm(Term val1, Term val2) {
 		return new Minimum(val1,val2);
 	}
 

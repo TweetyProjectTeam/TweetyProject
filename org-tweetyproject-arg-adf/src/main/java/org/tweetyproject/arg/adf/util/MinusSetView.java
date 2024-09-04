@@ -24,8 +24,19 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @author Mathias Hofer
+ * A view that represents the result of subtracting one set from another.
+ * Specifically, this class models the set difference: {@code superset - subset}.
+ * <p>
+ * The class assumes that all elements of the {@code subset} are contained in
+ * the {@code superset}. This property must be ensured by the caller; the class
+ * does not perform any validation checks for this condition.
+ * <p>
+ * This is an unmodifiable view, and all mutating operations will throw an
+ * {@link UnsupportedOperationException}.
  *
+ * @param <E> the type of elements in this set
+ *
+ * @author Mathias Hofer
  */
 public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> implements Set<E> {
 
@@ -42,7 +53,7 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 	 * <p>
 	 * It is up to the caller to ensure this property, this class performs no
 	 * additional checks.
-	 * 
+	 *
 	 * @param superset the minuend
 	 * @param subset the subtrahend
 	 */
@@ -50,14 +61,27 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 		this.superset = Set.copyOf(superset);
 		this.subset = Set.copyOf(subset);
 	}
-	
+
+
+	/**
+ * Returns a view of a set that excludes a specific element.
+ *
+ * <p>This method creates a new set view that represents the given {@code superset} with a specified
+ * element excluded. The resulting set is a view, meaning that it does not create a copy of the
+ * superset but instead excludes the specified element dynamically.
+ *
+ * @param <E>        The type of elements in the set.
+ * @param superset   The original set from which an element is to be excluded.
+ * @param subtrahend The element to be excluded from the {@code superset}.
+ * @return A set view that represents the {@code superset} with the {@code subtrahend} excluded.
+ */
 	public static <E> Set<E> of(Set<E> superset, E subtrahend) {
 		return new MinusSetView<E>(superset, Set.of(subtrahend));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#size()
 	 */
 	@Override
@@ -67,7 +91,7 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#isEmpty()
 	 */
 	@Override
@@ -77,7 +101,7 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#contains(java.lang.Object)
 	 */
 	@Override
@@ -87,7 +111,7 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#iterator()
 	 */
 	@Override
@@ -100,7 +124,7 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 			private final Iterator<E> iterator = superset.iterator();
 
 			private int count = 0;
-						
+
 			@Override
 			public boolean hasNext() {
 				return count < size();
@@ -116,15 +140,15 @@ public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> imp
 						count++;
 					}
 				}
-					
+
 				return next;
-			}		
+			}
 		};
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Set#containsAll(java.util.Collection)
 	 */
 	@Override

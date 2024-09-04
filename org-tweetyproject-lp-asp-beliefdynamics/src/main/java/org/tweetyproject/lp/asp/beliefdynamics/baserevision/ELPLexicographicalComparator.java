@@ -67,4 +67,7 @@ public class ELPLexicographicalComparator implements Comparator<Program> {
 		return 0;
 	}
 
+
+    /** Default Constructor */
+    public ELPLexicographicalComparator(){}
 }

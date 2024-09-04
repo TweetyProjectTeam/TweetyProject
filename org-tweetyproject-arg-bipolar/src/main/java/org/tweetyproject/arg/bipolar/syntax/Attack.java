@@ -27,9 +27,35 @@ package org.tweetyproject.arg.bipolar.syntax;
  *
  */
 public interface Attack extends BipolarEntity{
-    public BipolarEntity getAttacked();
+   /**
+     * Returns the entity that is being attacked.
+     * <p>
+     * This method provides access to the argument or set of arguments that is the target of the attack.
+     * </p>
+     *
+     * @return the entity that is attacked
+     */
+    BipolarEntity getAttacked();
 
-    public BipolarEntity getAttacker();
+    /**
+     * Returns the entity that is initiating the attack.
+     * <p>
+     * This method provides access to the argument or set of arguments that is performing the attack.
+     * </p>
+     *
+     * @return the entity that is attacking
+     */
+    BipolarEntity getAttacker();
+
+    /**
+     * Provides a string representation of the attack.
+     * <p>
+     * This method returns a string that describes the attack relation, typically including
+     * the identities of the attacker and the attacked entity.
+     * </p>
+     *
+     * @return a string representation of the attack
+     */
 
     public String toString();
 }

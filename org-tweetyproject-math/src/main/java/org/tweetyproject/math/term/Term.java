@@ -27,7 +27,7 @@ import org.tweetyproject.math.*;
  * @author Matthias Thimm
  */
 public abstract class Term {
-	
+
 	/**
 	 * Returns the sum of this and the given term.
 	 * @param t a term
@@ -42,17 +42,17 @@ public abstract class Term {
 			sum.addAllTerm(((Sum)t).getTerms());
 		else sum.addTerm(t);
 		return sum;
-	}	
-	
+	}
+
 	/**
 	 * Returns the sum of this and (-1) * the given term.
 	 * @param t a term
 	 * @return the sum of this and (-1) * the given term.
 	 */
 	public Difference minus(Term t){
-		return new Difference(this,t);	
+		return new Difference(this,t);
 	}
-	
+
 	/**
 	 * Returns the product of this and the given term.
 	 * @param t a term.
@@ -66,9 +66,9 @@ public abstract class Term {
 		if(t instanceof Product)
 			p.addAllTerm(((Product)t).getTerms());
 		else p.addTerm(t);
-		return p;		
+		return p;
 	}
-	
+
 	/**
 	 * Returns the minimum of this and the given term.
 	 * @param t a term.
@@ -85,7 +85,7 @@ public abstract class Term {
 	 * 		variable.
 	 */
 	public abstract Constant value() throws IllegalArgumentException;
-	
+
 	/**
 	 * Computes the actual value of this term if it contains no variables.
 	 * @return the double value of this term.
@@ -98,14 +98,14 @@ public abstract class Term {
 			return ((FloatConstant)c).getValue();
 		return ((IntegerConstant)c).getValue();
 	}
-	
+
 	/**
-	 * Checks whether this term is continuous in v. 
+	 * Checks whether this term is continuous in v.
 	 * @param v a variable
 	 * @return "true" iff this term is continuous in v.
 	 */
 	public abstract boolean isContinuous(Variable v);
-	
+
 	/**
 	 * Checks whether this term is continuous in all appearing variables.
 	 * @return "true" iff this term is continuous in all appearing variables
@@ -116,60 +116,66 @@ public abstract class Term {
 				return false;
 		return true;
 	}
-	
+
 	/**
 	 * Returns all variables in this term.
 	 * @return all variables in this term.
 	 */
 	public abstract Set<Variable> getVariables();
-	
+
 	/**
 	 * Returns all products of this term.
 	 * @return all products of this term.
 	 */
 	public abstract Set<Product> getProducts();
-	
+
 	/**
 	 * Returns all sums of this term.
 	 * @return all sums of this term.
 	 */
 	public abstract Set<Sum> getSums();
-	
+
 	/**
 	 * Returns all minimums of this term.
 	 * @return all minimums of this term.
 	 */
 	public abstract Set<Minimum> getMinimums();
-	
+
 	/**
 	 * Returns all maximums of this term.
 	 * @return all maximums of this term.
 	 */
 	public abstract Set<Maximum> getMaximums();
-	
+
 	/**
 	 * Returns all absolute values of this term.
 	 * @return all absolute values of this term.
 	 */
 	public abstract Set<AbsoluteValue> getAbsoluteValues();
-	
+
 	/**
 	 * Checks whether this term represents an integer value.
 	 * @return "true" iff this term represents an integer value.
 	 */
 	public abstract boolean isInteger();
-	
+
 	/**
 	 * Converts this term into a linear normal form, i.e.
 	 * into a sum of products of a constant and a variable.
 	 * @return a term in linear normal form.
-	 * @throws IllegalArgumentException if this term cannot be 
+	 * @throws IllegalArgumentException if this term cannot be
 	 * converted into a linear normal form.
 	 */
 	public abstract Sum toLinearForm() throws IllegalArgumentException;
-	
+
+	/**
+	 *
+	 * Return a quadratic form
+	 * @return a quadratic form
+	 * @throws IllegalArgumentException error
+	 */
 	public abstract Sum toQuadraticForm() throws IllegalArgumentException;
-	
+
 	/**
 	 * Replaces each occurrence of "toSubstitute" by "substitution" and
 	 * return the new term.
@@ -178,7 +184,7 @@ public abstract class Term {
 	 * @return this term where "toSubstitute" is replaced by "substitution"
 	 */
 	public abstract Term replaceTerm(Term toSubstitute, Term substitution);
-	
+
 	/**
 	 * Evaluates each function in the given list with the given values for variables.
 	 * @param functions a list of functions
@@ -191,7 +197,7 @@ public abstract class Term {
 			result.add(t.replaceAllTerms(mapping).doubleValue());
 		return result;
 	}
-	
+
 	/**
 	 * Evaluates each function in the given list with the given values for variables.
 	 * @param functions a list of functions
@@ -206,7 +212,7 @@ public abstract class Term {
 			result[idx++] = t.replaceAllTerms(values, variables).doubleValue();
 		return result;
 	}
-	
+
 	/**
 	 *  Evaluates each function in the given matrix with the given values for variables.
 	 * @param functions a list of functions
@@ -221,7 +227,7 @@ public abstract class Term {
 			result[idx++] = Term.evaluateVector(l, values, variables);
 		return result;
 	}
-	
+
 	/**
 	 * Replaces terms according to the given map.
 	 * @param values an array of values.
@@ -235,7 +241,7 @@ public abstract class Term {
 			t = t.replaceTerm(v, new FloatConstant(values[idx++]));
 		return t;
 	}
-	
+
 	/**
 	 * Replaces terms according to the given map.
 	 * @param substitutes a map.
@@ -247,14 +253,14 @@ public abstract class Term {
 			t = t.replaceTerm(s, substitutes.get(s));
 		return t;
 	}
-	
+
 	/**
 	 * Checks whether this term is linear.
 	 * @return "true" if this term is linear.
 	 */
 	public boolean isLinear(){
 //		return false;
-		
+
 		Set<Product> products = this.getProducts();
 		for(Product p: products){
 			boolean hasVariable = false;
@@ -263,13 +269,13 @@ public abstract class Term {
 					if(hasVariable)
 						return false;
 					else hasVariable = true;
-				}				
+				}
 			}
-		}		
+		}
 
 		return true;
 	}
-	
+
 	/**
 	 * Checks whether this term is quadratic.
 	 * @return "true" if this term is quadratic.
@@ -288,12 +294,12 @@ public abstract class Term {
 						hasVariable2 = true;
 					else
 						hasVariable1 = true;
-				}				
+				}
 			}
-		}		
+		}
 		return true;
 	}
-	
+
 	/**
 	 * Simplifies this term in an equivalent way:<br>
 	 * - Replaces products that contain a zero by the constant zero<br>
@@ -305,7 +311,11 @@ public abstract class Term {
 	 * @return the simplified term.
 	 */
 	public abstract Term simplify();
-	
+
+	/**
+	 *  Getter Terms
+	 * @return List of Terms
+	 */
 	public abstract List<Term> getTerms();
 	/**
 	 * Differentiates the term with respect to the given variable.
@@ -315,23 +325,23 @@ public abstract class Term {
 	 * 	differentiated.
 	 */
 	public abstract Term derive(Variable v) throws NonDifferentiableException;
-	
+
 	/**
 	 * This method collapses all associative operations appearing
 	 * in this term, e.g. every min{min{a,b},c} becomes min{a,b,c}.
 	 */
 	public abstract void collapseAssociativeOperations();
-	
+
 	/**
 	 * This method expands all associative operations appearing
 	 * in this term, e.g. every min{a,b,c} becomes min{min{a,b},c}.
 	 */
 	public abstract void expandAssociativeOperations();
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public abstract String toString();
-	
+
 }

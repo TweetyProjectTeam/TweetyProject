@@ -54,4 +54,7 @@ public class SimplePlReasoner extends AbstractPlReasoner {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public SimplePlReasoner(){}
 }

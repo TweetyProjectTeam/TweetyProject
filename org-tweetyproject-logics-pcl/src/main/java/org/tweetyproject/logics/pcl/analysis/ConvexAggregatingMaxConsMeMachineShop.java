@@ -32,20 +32,24 @@ import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
 
 /**
  * This consistency restorer determines the new probabilities of conditionals
- * by computing the ME-distribution of each maximal consistent subset of the 
+ * by computing the ME-distribution of each maximal consistent subset of the
  * knowledge base, then convex combining those yielding a distribution P,
- * and extracting the new probabilities from P. 
- * 
+ * and extracting the new probabilities from P.
+ *
  * @author Matthias Thimm
  */
 public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineShop {
 
+	/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+		/**
+		 * Constructor
+		 * @param rootFinder the rootFinder
+		 */
 	public ConvexAggregatingMaxConsMeMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -65,11 +69,11 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 		int cnt = 0;
 		for(Collection<ProbabilisticConditional> mc: maxCons){
 			PclBeliefSet bs = new PclBeliefSet();
-			for(Formula f: mc) 
+			for(Formula f: mc)
 				bs.add((ProbabilisticConditional) f);
 			// name the signature explicitly in order to ensure that the distributions
-			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner(this.rootFinder).getModel(bs,(PlSignature) beliefSet.getMinimalSignature());			
+			// are defined on the same set.
+			distributions[cnt] = new DefaultMeReasoner(this.rootFinder).getModel(bs,(PlSignature) beliefSet.getMinimalSignature());
 			cnt++;
 		}
 		double[] factors = new double[maxCons.size()];

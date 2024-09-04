@@ -34,12 +34,12 @@ import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * 
- * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  * Parses a simple logic knowledge base out of an input text.
  * Each line contains either a literal or a simple rule of the form
  * l1, ..., ln -&gt; c
+ * @author Federico Cerutti (federico.cerutti@acm.org)
+ *
  */
 public class SimplePlLogicParser
 		extends
@@ -48,6 +48,9 @@ public class SimplePlLogicParser
 	private String symbolInf = "->", symbolComma = ",";
 	private final Parser<? extends BeliefBase,?> formulaparser;
 
+	/**
+	 * Default Constructor
+	 */
 	public SimplePlLogicParser() {
 		super();
 		this.formulaparser = new PlParser();
@@ -56,7 +59,7 @@ public class SimplePlLogicParser
 	/**
 	 * Read an entire piece of text and send each line to the actual parser
 	 * @param reader a reader
-	 * 
+	 *
 	 * @return	the simple logic knowledge base read from the input
 	 */
 	@Override

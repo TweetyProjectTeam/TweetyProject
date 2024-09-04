@@ -42,7 +42,7 @@ import org.tweetyproject.lp.asp.syntax.ASPOperator.DLVPredicate;
 /**
  * This class models an atom, which is a basic structure for building literals
  * and rules for logic programs.
- * 
+ *
  * @author Tim Janus
  * @author Thomas Vengels
  * @author Matthias Thimm
@@ -67,7 +67,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new atom with the given predicate and terms.
-	 * 
+	 *
 	 * @param p     a predicate
 	 * @param terms arguments of the atom
 	 */
@@ -81,7 +81,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new atom with the given predicate and terms.
-	 * 
+	 *
 	 * @param p     a predicate
 	 * @param terms arguments of the atom
 	 */
@@ -95,7 +95,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new atom with the given predicate name and no terms.
-	 * 
+	 *
 	 * @param name a name
 	 */
 	public ASPAtom(String name) {
@@ -104,7 +104,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Copy-Constructor: Generates a deep copy of the given FOL atom.
-	 * 
+	 *
 	 * @param other The FOL atom acting as source for the deep copy
 	 */
 	public ASPAtom(FolAtom other) {
@@ -118,7 +118,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Copy-Constructor: Generates a deep copy of the given ASP atom.
-	 * 
+	 *
 	 * @param other The atom acting as source for the deep copy
 	 */
 	public ASPAtom(ASPAtom other) {
@@ -131,7 +131,7 @@ public class ASPAtom extends ASPLiteral {
 	/**
 	 * Creates an atom with the given predicate as name and the given terms as
 	 * argument
-	 * 
+	 *
 	 * @param symbol The name of the atom
 	 * @param terms  A list of Term&lt;?&gt; defining the arguments of the term
 	 */
@@ -144,7 +144,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new ASPAtom with the given predicate.
-	 * 
+	 *
 	 * @param p a predicate
 	 */
 	public ASPAtom(Predicate p) {
@@ -284,6 +284,21 @@ public class ASPAtom extends ASPLiteral {
 		return reval;
 	}
 
+	/**
+	 * Retrieves the term at the specified index from the list of arguments.
+	 *
+	 * <p>
+	 * This method allows access to the term stored at the given index in the list
+	 * of arguments.
+	 * The returned term is of a generic type {@code Term<?>}, meaning it can
+	 * represent any type of term.
+	 * </p>
+	 * @param i the index of the term to retrieve, starting from 0.
+	 * @return the {@code Term<?>} at the specified index.
+	 * @throws IndexOutOfBoundsException if the index is out of range (i.e.,
+	 *                                   {@code i < 0} or
+	 *                                   {@code i >= arguments.size()}).
+	 */
 	public Term<?> getTerm(int i) {
 		return this.arguments.get(i);
 	}
@@ -306,26 +321,31 @@ public class ASPAtom extends ASPLiteral {
 		String res = this.predicate.getName();
 		if (this.predicate instanceof DLVPredicate) {
 			if (this.predicate.getName().equals("#int") && this.arguments.size() == 3) {
-				//#int(X, Y, Z) is true, iff X<=Z<=Y holds
-				ComparativeAtom i1 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(0), this.arguments.get(2));
-				ComparativeAtom i2 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(2), this.arguments.get(1));
+				// #int(X, Y, Z) is true, iff X<=Z<=Y holds
+				ComparativeAtom i1 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(0),
+						this.arguments.get(2));
+				ComparativeAtom i2 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(2),
+						this.arguments.get(1));
 				return i1.printToClingo() + "\n" + i2.printToClingo();
-			}
-			else
-				throw new IllegalArgumentException("Rule contains DLVPredicate " + this.predicate + " that is not supported by Clingo");
-		} 
+			} else
+				throw new IllegalArgumentException(
+						"Rule contains DLVPredicate " + this.predicate + " that is not supported by Clingo");
+		}
 		if (this.predicate.getArity() > 0) {
 			res += "(";
 			for (int i = 0; i < arguments.size(); i++) {
 				String termName = arguments.get(i).toString();
 				if (arguments.get(i) instanceof Constant) {
-					if (!Character.isLowerCase(termName.charAt(0))) 
-						throw new IllegalArgumentException("Invalid constant name '" + termName + "' Constants in clingo must start with a lowercase letter.");
+					if (!Character.isLowerCase(termName.charAt(0)))
+						throw new IllegalArgumentException("Invalid constant name '" + termName
+								+ "' Constants in clingo must start with a lowercase letter.");
 				} else if (arguments.get(i) instanceof Variable) {
-					//this check is unnecessary because variables in TweetyProject are required to start with 
-					//an uppercase letter, but just in case
-					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0)!='_') 
-						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in clingo must start with an uppercase letter (exception: '_').");
+					// this check is unnecessary because variables in TweetyProject are required to
+					// start with
+					// an uppercase letter, but just in case
+					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0) != '_')
+						throw new IllegalArgumentException("Invalid variable name '" + termName
+								+ "' Variables in clingo must start with an uppercase letter (exception: '_').");
 				}
 				if (i < arguments.size() - 1)
 					res += termName + ",";
@@ -335,30 +355,34 @@ public class ASPAtom extends ASPLiteral {
 		}
 		return res;
 	}
-	
+
 	@Override
 	public String printToDLV() {
 		String res = this.predicate.getName();
 		if (this.predicate instanceof ClingoPredicate) {
-			if (this.predicate.getName().equals("#true") && arguments.size()==0) 
+			if (this.predicate.getName().equals("#true") && arguments.size() == 0)
 				return "true";
-			else if (this.predicate.getName().equals("#false") && arguments.size()==0) 
+			else if (this.predicate.getName().equals("#false") && arguments.size() == 0)
 				return "false";
 			else
-				throw new IllegalArgumentException("Rule contains ClingoPredicate " + this.predicate + " that is not supported by DLV");
-		} 
+				throw new IllegalArgumentException(
+						"Rule contains ClingoPredicate " + this.predicate + " that is not supported by DLV");
+		}
 		if (this.predicate.getArity() > 0) {
 			res += "(";
 			for (int i = 0; i < arguments.size(); i++) {
 				String termName = arguments.get(i).toString();
 				if (arguments.get(i) instanceof Constant) {
-					if (!Character.isLowerCase(termName.charAt(0))) 
-						throw new IllegalArgumentException("Invalid constant name '" + termName + "' Constants in DLV must start with a lowercase letter");
+					if (!Character.isLowerCase(termName.charAt(0)))
+						throw new IllegalArgumentException("Invalid constant name '" + termName
+								+ "' Constants in DLV must start with a lowercase letter");
 				} else if (arguments.get(i) instanceof Variable) {
-					//this check is unnecessary because variables in TweetyProject are required to start with 
-					//an uppercase letter, but just in case
-					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0)!='_') 
-						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in DLV must start with an uppercase letter (exception: '_').");
+					// this check is unnecessary because variables in TweetyProject are required to
+					// start with
+					// an uppercase letter, but just in case
+					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0) != '_')
+						throw new IllegalArgumentException("Invalid variable name '" + termName
+								+ "' Variables in DLV must start with an uppercase letter (exception: '_').");
 				}
 				if (i < arguments.size() - 1)
 					res += termName + ",";
@@ -385,5 +409,5 @@ public class ASPAtom extends ASPLiteral {
 		ASPAtom other = (ASPAtom) obj;
 		return Objects.equals(arguments, other.arguments) && Objects.equals(predicate, other.predicate);
 	}
-	
+
 }

@@ -47,30 +47,37 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class OctaveSqpSolverEx {
+
+	/** Constructor */
+	public OctaveSqpSolverEx() {
+	}
+
+
+
 	/**
 	 * constructor
 	 * @return problem
 	 */
 public static ConstraintSatisfactionProblem createConstraintSatProb1() {
-		
+
 		//Define the constraints (all are equations)
 	FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
 	FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
 
 		Equation constr5 = new Equation(m1.add(m2), new IntegerConstant(16));
-		
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 
 		constraints.add(constr5);
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
-		
+
 		//Define targetfunction
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 		prob.setTargetFunction(opt);
-		
-		
-		
+
+
+
 		return prob;
 	}
 /**
@@ -91,7 +98,7 @@ public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		OctaveSqpSolver solver = new OctaveSqpSolver();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

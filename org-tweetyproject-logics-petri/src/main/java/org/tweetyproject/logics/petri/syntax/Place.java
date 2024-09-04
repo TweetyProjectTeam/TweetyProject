@@ -25,10 +25,10 @@ package org.tweetyproject.logics.petri.syntax;
 public class Place extends PetriNetNode implements Comparable<Place> {
 
 	/**
-	* the current number of tokens at this place, 
+	* the current number of tokens at this place,
 	* at a certain time point in an instance of the Petri net
 	*/
-	private int tokens = 0;	
+	private int tokens = 0;
 	/**
 	* a static constant to describe infinity
 	*/
@@ -49,7 +49,7 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	public Place(String id) {
 		super(id);
 	}
-	
+
 	/**
 	 * Create a new instance
 	 * @param id a unique identifier
@@ -58,8 +58,10 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	public Place(String id, String name) {
 		super(id, name);
 	}
-	
+
 	/**
+	 *
+	 * Return the id
 	 * @return the id
 	 */
 	public String getId() {
@@ -67,6 +69,7 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	}
 
 	/**
+	 * setter id
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
@@ -74,37 +77,43 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	}
 
 	/**
+	* Return the number of tokens currently at this place
 	* @return the number of tokens currently at this place
-	*/	
+	*/
 	public int getTokens() {
 		return tokens;
 	}
 
 	/**
+	 * setter tokens
 	 * @param tokens the number of tokens currently at this place
-	 */	
+	 */
 	public void setTokens(int tokens) {
 		this.tokens = tokens;
 	}
-	
+
 	/**
+	 *
+	* Return the maximal number of tokens that this place can hold
 	* @return the maximal number of tokens that this place can hold
-	*/	
+	*/
 	public int getMaxtokens() {
 		return maxtokens;
 	}
-	
+
 	/**
+	 *Setter maxtokens
 	* @param maxtokens the maximal number of tokens that this place can hold
-	*/	
+	*/
 	public void setMaxtokens(int maxtokens) {
 		this.maxtokens = maxtokens;
 	}
-	
+
 	/**
+	 * Add tokens
     * @param tokens the number of tokens to be added to this place
     * @throws IllegalArgumentException if this number of tokens can not be added
-	*/	
+	*/
 	public void addTokens(int tokens) {
 		if(!this.canAddTokens(tokens)) {
 			throw new IllegalArgumentException("An amount of " + String.valueOf(tokens)
@@ -112,11 +121,12 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 		}
 		this.tokens += tokens;
 	}
-	
+
 	/**
+	 * Remove tokens
 	* @param tokens the number of tokens to be removed from this place
 	* @throws IllegalArgumentException if this number of tokens can not be removed
-	*/	
+	*/
 	public void removeTokens(int tokens) {
 		if(!this.canRemoveTokens(tokens)) {
 			throw new IllegalArgumentException("An amount of " + String.valueOf(tokens)
@@ -126,28 +136,30 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	}
 
 	/**
+	 * Check if tokens can be added
 	 * @param tokens the number of tokens to be added to this place
 	 * @return true if this number can be added with respect to the token limit and the current number of tokens
-	 */	
+	 */
 	public boolean canAddTokens(int tokens) {
 		return this.maxtokens == this.INFINITY|| this.tokens + tokens <= this.maxtokens;
 	}
 
 	/**
+	 * Check if tokens are removeable
 	 * @param tokens the number of tokens to be removed from this place
 	 * @return true if this number can be removed with respect to current number of tokens
-	 */	
+	 */
 	public boolean canRemoveTokens(int tokens) {
 		return this.tokens >= tokens;
 	}
 
 	@Override
 	public int compareTo(Place that) {
-		// Make places comparable to 
+		// Make places comparable to
 		// facilitate linear algebra operations
 		return this.hashCode() - that.hashCode();
 	}
-	
+
 	/**
 	 * check if this place is a designated initial place
 	 * @return true iff this place is a designated initial place
@@ -155,14 +167,14 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	public boolean isInitial() {
 		return this.placeType == PlaceType.INITIAL;
 	}
-	
+
 	/**
 	 * specify that this place is a designated initial place
 	 */
 	public void setInitial() {
 		this.placeType = PlaceType.INITIAL;
 	}
-	
+
 	/**
 	 * check if this place is a designated final place
 	 * @return true iff this place is a designated final place
@@ -170,19 +182,22 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	public boolean isFinal() {
 		return this.placeType == PlaceType.FINAL;
 	}
-	
+
 	/**
 	 * specify that this place is a designated final place
 	 */
 	public void setFinal() {
 		this.placeType = PlaceType.FINAL;
 	}
-	
+
 	/**
-	 * Some special types of places 
+	 * Some special types of places
 	 * @author Benedikt Knopp
 	 */
 	private enum PlaceType {
-		INITIAL, FINAL
+		/** initial */
+		INITIAL,
+		/** final */
+		FINAL
 	}
 }

@@ -32,11 +32,18 @@ import org.tweetyproject.arg.deductive.semantics.DeductiveArgumentNode;
  * <br>
  * The method "categorize" returns "1" if the root node is
  * undefeated and "0" if it is defeated.
- * 
+ *
  * @author Matthias Thimm
  */
 public class ClassicalCategorizer implements Categorizer {
 
+	/**
+	 * Default Constructor
+	 */
+	public ClassicalCategorizer() {
+
+			//default
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.deductive.categorizer.Categorizer#categorize(org.tweetyproject.argumentation.deductive.semantics.ArgumentTree)
 	 */

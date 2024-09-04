@@ -28,12 +28,17 @@ import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
 
 /**
  *  * Writes an weighted abstract argumentation framework into a file of the
- * APX format including the weight value of each attack. Weights on attacks are specified by the suffix :- followed by the weight value. 
- * 
+ * APX format including the weight value of each attack. Weights on attacks are specified by the suffix :- followed by the weight value.
+ *
  * @author Sandra Hoffmann
  *
  */
 public class WeightedApxWriter {
+	/** Default */
+	public WeightedApxWriter(){
+
+	}
+
 
 	/**
 	 * Writes the weighted argumentation framework to a file.
@@ -46,7 +51,7 @@ public class WeightedApxWriter {
 	public void write(WeightedArgumentationFramework waf, File f) throws IOException {
 	    write(waf, f, -1, false);
 	}
-	
+
 	/**
 	 * Writes the weighted argumentation framework to a file.
 	 *
@@ -59,7 +64,7 @@ public class WeightedApxWriter {
 	public void write(WeightedArgumentationFramework waf, File f, int precision) throws IOException {
 	    write(waf, f, precision, false);
 	}
-	
+
 	/**
 	 * Writes the weighted argumentation framework to a file.
 	 *
@@ -86,8 +91,8 @@ public class WeightedApxWriter {
 	public void write(WeightedArgumentationFramework waf, File f, int precision, Boolean convertToNumericWeight) throws IOException {
 	    PrintWriter writer = new PrintWriter(f, "UTF-8");
 	    Object weight;
-	    for (Argument a : waf)
-	        writer.println("arg(" + a.getName() + ").");
+	    for (Object a : waf)
+	        writer.println("arg(" + a + ").");
 
 	    for (Attack att : waf.getAttacks()) {
 	        String formattedWeight;
@@ -105,9 +110,9 @@ public class WeightedApxWriter {
 	        	} else {
 		            formattedWeight = String.valueOf(waf.getWeight(att));
 	        	}
-	        	
+
 	        }
-	        
+
 	        writer.println("att(" + att.getAttacker().getName() + "," + att.getAttacked().getName() + "):-" + formattedWeight + ".");
 	    }
 

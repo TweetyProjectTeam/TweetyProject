@@ -26,22 +26,41 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * @author Mathias Hofer
+ * This class represents a reasoner for determining stable interpretations
+ * in an Abstract Dialectical Framework (ADF). The reasoner uses a SAT solver
+ * to compute stable interpretations.
  *
+ * <p>Note: This class is deprecated and scheduled for removal in version 1.19.
+ * It is recommended to use an updated reasoner implementation instead.</p>
+ *
+ * @deprecated This class is deprecated and scheduled for removal since version 1.19.
+ *             Use alternative reasoners for stable interpretations in ADFs.
+ *
+ * @author Mathias Hofer
+ * @since 1.19
  */
-@Deprecated( forRemoval = true, since = "1.19" )
+@Deprecated(forRemoval = true, since = "1.19")
 public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
-	
-	/**
-	 * @param solver the underlying sat solver
-	 */
-	public StableReasoner(IncrementalSatSolver solver) {
-		super(solver);
-	}
-	
-	@Override
-	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
-		return adf.query().stable().interpretations();
-	}
 
+    /**
+     * Constructs a new StableReasoner using the given incremental SAT solver.
+     *
+     * @param solver the underlying incremental SAT solver used for querying
+     *               stable interpretations in the Abstract Dialectical Framework.
+     */
+    public StableReasoner(IncrementalSatSolver solver) {
+        super(solver);
+    }
+
+    /**
+     * Queries the Abstract Dialectical Framework (ADF) for stable interpretations.
+     *
+     * @param adf the Abstract Dialectical Framework to query
+     * @return a query returning a stream of stable interpretations from the ADF
+     */
+    @Override
+    Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+        return adf.query().stable().interpretations();
+    }
 }
+

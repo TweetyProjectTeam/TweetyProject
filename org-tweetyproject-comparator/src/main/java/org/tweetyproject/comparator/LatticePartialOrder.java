@@ -30,9 +30,10 @@ import org.tweetyproject.commons.Formula;
 /**
  * This class models comparable element ranking by representing the acceptability of
  * comparable elements in a graph-based structure.
- * 
+ *
  * @author Matthias Thimm
  * @param <T> some formula
+ * @param <R> some Beliefbase
  *
  */
 public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extends GeneralComparator<T, R> {
@@ -41,14 +42,16 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	private Order<T> order;
 	private Collection<T> args;
 	/**
-	 * 
+	 *
+	 * Return the order
 	 * @return the order
 	 */
 	public Order<T> getOrder(){
 		return this.order;
 	}
 	/**
-	 * 
+	 *
+	 * Return the arguments
 	 * @return the arguments
 	 */
 	public Collection<T> getArgs(){
@@ -58,7 +61,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	/**
 	 * Creates a new argument ranking with the given comparable elements which are initially
 	 * all incomparable.
-	 * 
+	 *
 	 * @param args a set of arguments
 	 */
 	public LatticePartialOrder(Collection<T> args) {
@@ -69,7 +72,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	/**
 	 * Defines comparable element "a" to be strictly less or equally acceptable than
 	 * comparable element "b".
-	 * 
+	 *
 	 * @param a some comparable element
 	 * @param b some comparable element
 	 */
@@ -79,7 +82,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.semantics.ArgumentRanking#
 	 * isStrictlyLessOrEquallyAcceptableThan(org.tweetyproject.arg.dung.syntax.Argument,
 	 * org.tweetyproject.arg.dung.syntax.Argument)
@@ -96,22 +99,23 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (T a : this.order.getElements()) 
-			for (T b : this.order.getElements()) 
-				if (this.isIncomparable(a, b)) 
+		for (T a : this.order.getElements())
+			for (T b : this.order.getElements())
+				if (this.isIncomparable(a, b))
 					return true;
 		return false;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation#
 	 * getArgumentsOfStatus(org.tweetyproject.arg.dung.semantics.ArgumentStatus)
 	 */
 
 	/**
-	 * 
+	 *
+	 * Return if they are the same
 	 * @param ra some artial order
 	 * @return if they are the same
 	 */
@@ -129,7 +133,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation#toString
 	 * ()
@@ -172,7 +176,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	/**
 	 * Comparator for comparing arguments on the basis of a given
 	 * LatticeArgumentRanking. Fails for incomparable arguments.
-	 * 
+	 *
 	 * @author Anna Gessler
 	 *
 	 */

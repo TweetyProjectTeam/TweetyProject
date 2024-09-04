@@ -25,21 +25,29 @@ import java.util.function.BinaryOperator;
 /**
  * This class represents a generic Semiring, an algebraic structure with two binary operations
  * (addition and multiplication), and two corresponding identity elements (zeroElement and oneElement).
- * 
+ *
  * @param <T> The type of elements in the semiring.
- * 
+ *
  * @author Sandra Hoffmann
  */
 public abstract class Semiring<T> {
-	protected BinaryOperator<T> addition;
-	protected BinaryOperator<T> multiplication;
-    protected T zeroElement;
-    protected T oneElement;
-    protected final Random random = new Random();
+    /** The binary addition operation defined on the semiring elements. */
+    protected BinaryOperator<T> addition;
 
+    /** The binary multiplication operation defined on the semiring elements. */
+    protected BinaryOperator<T> multiplication;
+
+    /** The additive identity element (zero) in the semiring. */
+    protected T zeroElement;
+
+    /** The multiplicative identity element (one) in the semiring. */
+    protected T oneElement;
+
+    /** A random number generator for operations that may require randomness. */
+    protected final Random random = new Random();
     /**
      * Constructs a Semiring instance.
-     * 
+     *
      * @param addition The binary addition operation.
      * @param multiplication The binary multiplication operation.
      * @param zeroElement The additive identity element.
@@ -54,7 +62,7 @@ public abstract class Semiring<T> {
 
     /**
      * Retrieves the binary addition operation.
-     * 
+     *
      * @return The binary addition operation.
      */
     public BinaryOperator<T> getAddition() {
@@ -63,7 +71,7 @@ public abstract class Semiring<T> {
 
     /**
      * Retrieves the binary multiplication operation.
-     * 
+     *
      * @return The binary multiplication operation.
      */
     public BinaryOperator<T> getMultiplication() {
@@ -72,16 +80,16 @@ public abstract class Semiring<T> {
 
     /**
      * Retrieves the additive identity element.
-     * 
+     *
      * @return The additive identity element.
      */
     public T getZeroElement() {
         return zeroElement;
     }
-    
+
     /**
      * Retrieves the multiplicative identity element.
-     * 
+     *
      * @return The multiplicative identity element.
      */
     public T getOneElement() {
@@ -90,7 +98,7 @@ public abstract class Semiring<T> {
 
     /**
      * Performs the multiplication operation on two elements.
-     * 
+     *
      * @param a The first operand.
      * @param b The second operand.
      * @return The result of the multiplication operation.
@@ -98,10 +106,10 @@ public abstract class Semiring<T> {
     public T multiply(T a, T b) {
         return multiplication.apply(a, b);
     }
-    
+
     /**
      * Performs the addition operation on two elements.
-     * 
+     *
      * @param a The first operand.
      * @param b The second operand.
      * @return The result of the addition operation.
@@ -109,10 +117,10 @@ public abstract class Semiring<T> {
     public T add(T a, T b) {
         return addition.apply(a, b);
     }
-    
+
     /**
      * Returns true if value 'a' is better than or equal to value 'b' in the semiring.
-     * 
+     *
      * @param a The first operand.
      * @param b The second operand.
      * @return True if 'a' is better than or equal to 'b'; otherwise, false.
@@ -124,14 +132,14 @@ public abstract class Semiring<T> {
 
     /**
      * Validates and returns the given value.
-     * 
+     *
      * @param value The value to be validated.
      * @return The validated value.
      */
     public T validateAndReturn(T value) {
         return value;
     }
-    
+
     /**
      * Generates a random element of the semiring.
      * Note: Concrete implementations in subclasses should provide the actual logic.
@@ -139,19 +147,21 @@ public abstract class Semiring<T> {
      * @return A random element of the semiring.
      */
     public abstract T getRandomElement();
-    
+
     /**
      * Performs the division operation as definded in the semiring class. Needed for g-defense.
      * Note: Concrete implementations in subclasses should provide the actual logic.
      *
      * @return The inverse of element.
+     * @param dividend the dividend
+     * @param divisor the divisor
      */
     public abstract T divide(T dividend, T divisor);
-    
+
     /**
      * Converts a value in a semiring to a numerical representation.
      *
-     * @param weight The value in the semiring.
+     * @param value The value in the semiring.
      * @return The numerical representation of the semiring value.
      * @throws IllegalArgumentException If the provided semiring value is not a valid numeric representation.
      */
@@ -163,6 +173,6 @@ public abstract class Semiring<T> {
     		throw new IllegalArgumentException("Unknown SemiringElement: " + value);
     	}
     }
-    
+
 }
 

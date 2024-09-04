@@ -28,7 +28,7 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 /**
  * Iterates through all two-valued(!) interpretations except the ones equal to
  * or more specific than the provided ones.
- * 
+ *
  * @author Mathias Hofer
  *
  */
@@ -39,7 +39,19 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 	private final Node root;
 
 	private final Argument[] order;
-	
+
+	/**
+	 * Constructs a new {@code ExcludeTwoValuedSubinterpretationsIterator} that
+	 * iterates over a list of interpretations,
+	 * excluding two-valued subinterpretations according to a specific order and
+	 * structure.
+	 *
+	 *
+	 * @param interpretations A list of {@code Interpretation} objects to be
+	 *                        iterated over. The list must not be null or empty.
+	 * @throws IllegalArgumentException if the list of interpretations is null or
+	 *                                  empty.
+	 */
 	public ExcludeTwoValuedSubinterpretationsIterator(List<Interpretation> interpretations) {
 		if (interpretations == null || interpretations.isEmpty()) {
 			throw new IllegalArgumentException("interpretations must not be null!");
@@ -61,7 +73,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 	/**
 	 * Creates an array of the arguments in <code>interpretation</code> but
 	 * orders them s.t. the undecided ones are at the end.
-	 * 
+	 *
 	 * @param interpretation
 	 * @return the arguments as an array and in a more efficient order
 	 */
@@ -98,9 +110,9 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		void buildNext(Builder builder);
 
 		void add(int offset, int remaining, Interpretation interpretation);
-		
+
 		void addLeafs();
-		
+
 		default Node propagateSink() {
 			return this;
 		}
@@ -110,7 +122,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 	private final class InnerNode implements Node {
 
 		private final int index;
-		
+
 		private boolean value;
 
 		private Node fNode;
@@ -190,7 +202,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			fNode = createLeaf(fNode, false);
 			tNode = createLeaf(tNode, true);
 		}
-		
+
 		@Override
 		public Node propagateSink() {
 			fNode = fNode.propagateSink();
@@ -218,11 +230,11 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 	private final class TailNode implements Node {
 
 		private final int offset;
-		
+
 		private final int max;
 
 		private boolean first = true; // do not swallow the all undecided
-		
+
 		private int value;
 
 		/**
@@ -243,9 +255,9 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		public boolean done() {
 			return value >= max;
 		}
-		
+
 		boolean getBit(int n, int k) {
-		    return ((n >> k) & 1) == 1;
+			return ((n >> k) & 1) == 1;
 		}
 
 		@Override
@@ -265,7 +277,8 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		}
 
 		@Override
-		public void addLeafs() {}
+		public void addLeafs() {
+		}
 
 	}
 
@@ -295,10 +308,12 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		}
 
 		@Override
-		public void add(int offset, int remaining, Interpretation interpretation) {}
+		public void add(int offset, int remaining, Interpretation interpretation) {
+		}
 
 		@Override
-		public void addLeafs() {}
+		public void addLeafs() {
+		}
 
 	}
 

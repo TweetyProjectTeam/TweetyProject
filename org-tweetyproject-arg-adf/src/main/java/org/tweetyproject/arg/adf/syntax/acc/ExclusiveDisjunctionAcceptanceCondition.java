@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 /**
- * 
+ * ExclusiveDisjunctionAcceptanceCondition class
  * @author Sebastian
  *
  */

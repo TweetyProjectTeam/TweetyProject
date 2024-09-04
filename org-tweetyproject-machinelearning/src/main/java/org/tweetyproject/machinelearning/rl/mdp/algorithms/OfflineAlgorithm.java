@@ -34,14 +34,21 @@ import org.tweetyproject.machinelearning.rl.mdp.State;
  * @param <A> The type of actions
  */
 public abstract class OfflineAlgorithm<S extends State, A extends Action> {
+
+	/**
+	 * Default Constructor
+	 */
+	public OfflineAlgorithm(){
+		// default
+	}
 	/**
 	 * Determines the optimal policy for the given MDP.
-	 * @param mdp some MDP 
+	 * @param mdp some MDP
 	 * @param gamma the used discount factor for utility determination
 	 * @return the optimal policy
 	 */
 	public abstract Policy<S,A> getPolicy(MarkovDecisionProcess<S,A> mdp, double gamma);
-	
+
 	/**
 	 * Determines the best policy, given the utilities
 	 * @param utilities a mapping of states to utilities

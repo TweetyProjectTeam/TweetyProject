@@ -32,7 +32,7 @@ import libsvm.svm_problem;
 import org.tweetyproject.commons.util.Pair;
 
 /**
- * A set of observations together with their category. 
+ * A set of observations together with their category.
  * @author Matthias Thimm
  *
  * @param <S> The type of the observations.
@@ -40,9 +40,14 @@ import org.tweetyproject.commons.util.Pair;
  */
 public class TrainingSet<S extends Observation, T extends Category> extends HashSet<Pair<S,T>>{
 
+	/** Default Constructor */
+	public TrainingSet(){
+		// default
+	}
+
 	/** For serialization. */
 	private static final long serialVersionUID = 6814079760992723045L;
-	
+
 	/**
 	 * Adds the specified elements as a pair to this set
 	 * if it is not already present. More formally,
@@ -60,7 +65,7 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 	}
 
 	/**
-	 * Returns the collection of categories present in this 
+	 * Returns the collection of categories present in this
 	 * training set.
 	 * @return a set of categories.
 	 */
@@ -70,7 +75,7 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 			cats.add(entry.getSecond());
 		return cats;
 	}
-	
+
 	/**
 	 * Returns all observations of the given category.
 	 * @param cat a category
@@ -83,7 +88,7 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 				result.add(entry);
 		return result;
 	}
-	
+
 	/**
 	 * Returns a svm_problem (the data data model of libsvm) of this training set.
 	 * @return a svm_problem (the data data model of libsvm) of this training set.
@@ -101,7 +106,7 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 		}
 		return problem;
 	}
-	
+
 	/**
 	 * Loads a training file in LIBSVM syntax
 	 * @param file some file
@@ -111,7 +116,7 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 	 */
 	public static TrainingSet<DefaultObservation, DoubleCategory> loadLibsvmTrainingFile(File file) throws NumberFormatException, IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-		String line;				
+		String line;
 		TrainingSet<DefaultObservation, DoubleCategory> set = new TrainingSet<DefaultObservation, DoubleCategory>();
 		while ((line = br.readLine()) != null) {
 			StringTokenizer tokens = new StringTokenizer(line, " ");
@@ -127,5 +132,5 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 		br.close();
 		return set;
 	}
-	
+
 }

@@ -154,7 +154,7 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
     /**
      * The default constructor for the ExactPEAFInducer
      *
-     * @param peafTheory
+     * @param peafTheory a theory
      */
     public ExactPEAFInducer(PEAFTheory peafTheory) {
         super(peafTheory);

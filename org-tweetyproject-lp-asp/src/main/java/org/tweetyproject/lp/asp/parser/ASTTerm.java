@@ -21,26 +21,59 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTTerm} class represents a term node in the abstract syntax tree (AST)
+ * within the context of Answer Set Programming (ASP). This class extends {@code SimpleNode}
+ * and is used by the ASP parser to handle and represent terms, which can optionally be negated.
+ */
 public class ASTTerm extends SimpleNode {
-	boolean neg;
 
-	public ASTTerm(int id) {
-		super(id);
-	}
+    /**
+     * Indicates whether this term is negated.
+     */
+    boolean neg;
 
-	public ASTTerm(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTTerm} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTTerm(int id) {
+        super(id);
+    }
 
-	public void neg(boolean b) {
-		this.neg = b;
-	}
+    /**
+     * Constructs a new {@code ASTTerm} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTTerm(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Sets whether this term is negated.
+     *
+     * @param b {@code true} if the term is negated, {@code false} otherwise.
+     */
+    public void neg(boolean b) {
+        this.neg = b;
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=7473ebc609c50146ca4529f94745e3aa (do not edit this
  * line)

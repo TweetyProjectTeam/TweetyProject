@@ -12,19 +12,22 @@ import org.tweetyproject.math.opt.problem.CombinatoricsProblem;
 import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 
 
+/**
+ * SimpleGeneticOptimizationSolverCombinatorics class
+ */
 public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsSolver{
 
 
-	
+
 	/** The probability of changing the value of a variable in the mutation step. */
-	private static final double VAR_MUTATE_PROB = 0.2; 
+	private static final double VAR_MUTATE_PROB = 0.2;
 	/** The probability of taking the average value of a variable in the crossover step. */
-	private static final double VAR_CROSSOVER_PROB = 0.2; 
-	
-	
+	private static final double VAR_CROSSOVER_PROB = 0.2;
+
+
 	/** For randomization */
 	private Random rand = new Random();
-	
+
 	/** The size of the population */
 	private int populationSize;
 	/** How many new individuals are created by mutation (per individual) */
@@ -37,13 +40,18 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 	private int minIterations;
 	/**the exact problem that is to  be solved*/
 	private CombinatoricsProblem prob;
-	
+
 	/**
 	 * Compares individuals by the fitness (value of the target function)
 	 */
-	public class FitnessComparator implements Comparator<ArrayList<ElementOfCombinatoricsProb>>{		
-
+	public class FitnessComparator implements Comparator<ArrayList<ElementOfCombinatoricsProb>>{
+		/** probability */
 		CombinatoricsProblem prob;
+
+		/**
+		 * Constructor
+		 * @param prob the prob
+		 */
 		public FitnessComparator(CombinatoricsProblem prob){
 			this.prob = prob;
 		}
@@ -56,11 +64,11 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 			if(val1 < val2)
 				return -1;
 			return 1;
-		}		
-	}	
-	
+		}
+	}
+
 	/**
-	 * Creates a new simple genetic optimization solver. 
+	 * Creates a new simple genetic optimization solver.
 	 * @param populationSize The size of the population
 	 * @param populationIncreaseMutation How many new individuals are created by mutation (per individual)
 	 * @param populationIncreaseCrossOver How many new individuals are created by cross-over (per pair of individuals)
@@ -73,10 +81,10 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 		this.populationIncreaseCrossOver = populationIncreaseCrossOver;
 		this.minIterations = minIterations;
 		this.precision = precision;
-	}	
-	
+	}
 
-	
+
+
 	/**
 	 * Mutates the given individual
 	 * @param ind some individual
@@ -86,12 +94,12 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 		//create a mutant according to the probability
 		if(rand.nextDouble() >= SimpleGeneticOptimizationSolverCombinatorics.VAR_MUTATE_PROB)
 			return this.prob.createRandomNewSolution(ind);
-		
+
 		else
 			return ind;
-		
+
 	}
-	
+
 	/**
 	 * Makes a crossover of the two individuals
 	 * @param ind1 some individual
@@ -106,16 +114,16 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 			return ind2;
 		else if(ind2.size() == 0)
 			return ind1;
-		//choose thesmaller of the 2 solutions 
+		//choose thesmaller of the 2 solutions
 		int sizeOfsmallerInd = ind1.size() < ind2.size() ? ind1.size() : ind2.size();
-		//choose starte of the crossover 
+		//choose starte of the crossover
 		int changeStart = (Math.abs(rand.nextInt()) % sizeOfsmallerInd);
 		//choose the length of the crossover
 		int changeEnd = (int) (SimpleGeneticOptimizationSolverCombinatorics.VAR_CROSSOVER_PROB * rand.nextDouble() * sizeOfsmallerInd);
-		
+
 		ArrayList<ElementOfCombinatoricsProb> crossInd1= new ArrayList<ElementOfCombinatoricsProb>();
 		ArrayList<ElementOfCombinatoricsProb> crossInd2= new ArrayList<ElementOfCombinatoricsProb>();
-		//create the parts to be crossed over 
+		//create the parts to be crossed over
 		for(int i = 0; i < changeEnd; i++)
 		{
 			crossInd1.add(ind1.get((changeStart + i) % ind1.size()));
@@ -128,8 +136,8 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 		//create the child on the basis of ind1
 		for(ElementOfCombinatoricsProb i : ind1)
 			child.add(i);
-		//copy all elements of the crossover part of ind2 (cross2) to the positions of crossover of ind1 (cross1). 
-		//If elements of cross2 are already in ind1 and not in cross1, then replace these elements in ind1 with 
+		//copy all elements of the crossover part of ind2 (cross2) to the positions of crossover of ind1 (cross1).
+		//If elements of cross2 are already in ind1 and not in cross1, then replace these elements in ind1 with
 		for(int i = 0; i < changeEnd; i++)
 		{
 			//copy the elements of cross2 to the child
@@ -149,10 +157,10 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 				}
 			}
 		}
-			
+
 		return child;
 	}
-	
+
 	/**
 	 * Returns the solution according the problem; problem has to be minimizing
 	 * (which only contains variables with defined upper and lower bounds).
@@ -175,13 +183,13 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 		ArrayList<ElementOfCombinatoricsProb> currentBest = null;
 		PriorityQueue<ArrayList<ElementOfCombinatoricsProb>> p = new PriorityQueue<ArrayList<ElementOfCombinatoricsProb>>(this.populationSize,new FitnessComparator(this.prob));
 		int it = 0;
-		
+
 		do{
 			previous_val = current_val;
 			// create new population
 			p.clear();
 			p.addAll(currentPopulation);
-			
+
 			// mutate
 			for(ArrayList<ElementOfCombinatoricsProb> ind: currentPopulation)
 				for(int i = 0; i < this.populationIncreaseMutation; i++)
@@ -194,9 +202,9 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 							p.add(this.crossover(ind1, ind2));
 			// select best individuals
 			currentBest = p.peek();
-			
-			current_val = this.prob.evaluate(p.peek());			
-			currentPopulation.clear();			
+
+			current_val = this.prob.evaluate(p.peek());
+			currentPopulation.clear();
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
 		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
@@ -206,9 +214,9 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 		result = currentBest;
 		return result;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

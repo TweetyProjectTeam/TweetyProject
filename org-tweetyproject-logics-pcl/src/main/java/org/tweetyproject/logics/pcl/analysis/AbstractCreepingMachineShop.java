@@ -35,38 +35,43 @@ import org.tweetyproject.math.probability.Probability;
  */
 public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineShop {
 
+	/** The rootFinder */
 	protected OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the root finder
+	 */
 	public AbstractCreepingMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
 
-	
+
+
 	/**
 	 * The precision for finding the minimal consistent knowledge base.
 	 */
 	public static final double PRECISION = 0.0000001;
-	
+
 	/**
 	 * The maximum number of steps in the line search.
 	 */
 	public static final int MAX_ITERATIONS = 10000000;
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
 	@Override
-	public BeliefBase repair(BeliefBase beliefBase) {		
+	public BeliefBase repair(BeliefBase beliefBase) {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
-			return beliefSet;		
+			return beliefSet;
 		this.init(beliefSet);
 		double lowerBound = this.getLowerBound();
-		double upperBound = this.getUpperBound();		
+		double upperBound = this.getUpperBound();
 		PclBeliefSet lastConsistentBeliefSet = beliefSet;
 		PclBeliefSet newBeliefSet;
 		int cnt = 0;
@@ -86,14 +91,14 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		}
 		return lastConsistentBeliefSet;
 	}
-	
+
 	/**
 	 * Performs some optional initializations before beginning
-	 * to restore consistency. 
+	 * to restore consistency.
 	 * @param beliefSet a PCL belief set.
 	 */
 	protected void init(PclBeliefSet beliefSet){ }
-	
+
 	/**
 	 * Returns a modified belief base that replaces each conditionals probability
 	 * by the one given by "values".
@@ -107,7 +112,7 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 			result.add(new ProbabilisticConditional(pc,values.get(pc)));
 		return result;
 	}
-	
+
 	/**
 	 * Computes the values of the conditionals for step delta
 	 * @param delta the step parameter.
@@ -115,13 +120,13 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 	 * @return a map mapping conditionals to probabilities.
 	 */
 	protected abstract Map<ProbabilisticConditional,Probability> getValues(double delta, PclBeliefSet beliefSet);
-	
+
 	/**
 	 * Retrieves the lower bound for delta for this machine shop.
 	 * @return the lower bound for delta for this machine shop.
 	 */
 	protected abstract double getLowerBound();
-	
+
 	/**
 	 * Retrieves the upper bound for delta for this machine shop.
 	 * @return the upper bound for delta for this machine shop.

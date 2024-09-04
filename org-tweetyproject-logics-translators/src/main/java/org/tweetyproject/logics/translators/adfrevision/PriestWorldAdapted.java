@@ -22,11 +22,11 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 /**
  * This class models a three-valued interpretation for propositional logic from
  * Priest's three valued logic (3VL) [Priest, G.: Logic of paradox. Journal of Philosophical Logic 8, 219-241 (1979)].
- * 
+ *
  * Every proposition is assigned one of three truth values: true, false, both.
- * 
+ *
  * Adapted from class "PriestWorld" for the use of a wider range of operators
- * 
+ *
  * @author Jonas Schumacher
  */
 public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFormula>{
@@ -34,44 +34,46 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 	/** The three truth values. */
 	public enum TruthValue {
 		/**TRUE*/
-		TRUE, 
+		TRUE,
 		/**FALSE*/
-		FALSE, 
+		FALSE,
 		/**BOTH*/
 		BOTH;
-		
+
 		/*
 		 * J: Strong negation
 		 */
 		/**
-		 * 
+		 *
+		 * Return a Truthvalue
 		 * @return a Truthvalue
 		 */
 		public TruthValue neg(){
 			if(this.equals(TRUE)) return FALSE;
 			if(this.equals(FALSE)) return TRUE;
 			return BOTH;
-		}	
+		}
 		/**
 		 * J: Weak negation
-		 * @return false, if interpretation is true, true in all other case 
+		 * @return false, if interpretation is true, true in all other case
 		 */
 		public TruthValue weakNeg(){
 			if(this.equals(TRUE)) return FALSE;
 			return TRUE;
 		}
-		
+
 
 		/**
-		 * J: Return "True" iff TruthValue is True  
-		 * (!) Compared to the original PriestWorld, return False if value is Both/Undecided (!) 
+		 * J: Return "True" iff TruthValue is True
+		 * (!) Compared to the original PriestWorld, return False if value is Both/Undecided (!)
 		 * @return whether this is equal to TRUE
 		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
 		}
 		/**
-		 * 
+		 *
+		 * Return TruthValue
 		 * @param v a truth value
 		 * @return TruthValue
 		 */
@@ -81,7 +83,8 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			return TRUE;
 		}
 		/**
-		 * 
+		 *
+		 * Return TruthValue
 		 * @param v a truth value
 		 * @return TruthValue
 		 */
@@ -97,25 +100,25 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			return "B";
 		}
 	};
-	
+
 	/** The truth values of the propositions. */
 	private Map<Proposition,TruthValue> values;
-	
+
 	/**
-	 * Creates a new world where all propositions get the truth value FALSE.  
+	 * Creates a new world where all propositions get the truth value FALSE.
 	 */
 	public PriestWorldAdapted(){
 		this.values = new HashMap<Proposition,TruthValue>();
 	}
-	
+
 	/**
-	 * Creates a new world which is a copy of the given world	 
+	 * Creates a new world which is a copy of the given world
 	 * @param other some other world
 	 */
 	public PriestWorldAdapted(PriestWorldAdapted other){
 		this.values = new HashMap<Proposition,TruthValue>(other.values);
 	}
-	
+
 	/**
 	 * Sets the value of the given proposition.
 	 * @param p some proposition.
@@ -124,7 +127,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 	public void set(Proposition p, TruthValue val){
 		this.values.put(p, val);
 	}
-	
+
 	/**
 	 * Returns the truth value of the given proposition.
 	 * @param p a proposition
@@ -135,7 +138,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			return TruthValue.FALSE;
 		return this.values.get(p);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.Formula)
 	 */
@@ -157,13 +160,13 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			return TruthValue.TRUE;
 		if(formula instanceof Proposition)
 			return this.get((Proposition)formula);
-		
+
 		/*
 		 * Strong Negation
 		 */
 		if(formula instanceof Negation)
-			return this.satisfies3VL(((Negation)formula).getFormula()).neg();	
-		
+			return this.satisfies3VL(((Negation)formula).getFormula()).neg();
+
 		/*
 		 *  Weak Negation
 		 *  J: This extracts the "inner" part of the Negation
@@ -184,7 +187,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			TruthValue val2 = this.satisfies3VL(inner);
 			return (val1.or(val2)).weakNeg();
 		}
-		
+
 		if(formula instanceof Conjunction){
 			Conjunction c = (Conjunction) formula;
 			TruthValue val = TruthValue.TRUE;
@@ -209,18 +212,18 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 		}
 		if (formula instanceof Implication) {
 			Implication i = (Implication) formula;
-			Disjunction d = new Disjunction(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond()); 
+			Disjunction d = new Disjunction(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
 			return this.satisfies3VL(d);
 		}
 		if(formula instanceof Equivalence) {
 			Equivalence e = (Equivalence) formula;
-			Disjunction d1 = new Disjunction(new Negation(e.getFormulas().getFirst()), e.getFormulas().getSecond()); 
-			Disjunction d2 = new Disjunction(new Negation(e.getFormulas().getSecond()), e.getFormulas().getFirst()); 
+			Disjunction d1 = new Disjunction(new Negation(e.getFormulas().getFirst()), e.getFormulas().getSecond());
+			Disjunction d2 = new Disjunction(new Negation(e.getFormulas().getSecond()), e.getFormulas().getFirst());
 			return this.satisfies3VL(new Conjunction(d1,d2));
 		}
 		throw new IllegalArgumentException("Propositional formula " + formula + " is of unknown type.");
 	}
-	
+
 	/**
 	 * Returns the binary base of this world, i.e. the set of all propositions
 	 * which are assigned either to TRUE or FALSE.
@@ -233,7 +236,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 				binarybase.add(p);
 		return binarybase;
 	}
-	
+
 	/**
 	 * Returns the conflict base of this world, i.e. the set of all propositions
 	 * which are assigned to BOTH.
@@ -246,7 +249,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 				cbase.add(p);
 		return cbase;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.BeliefBase)
 	 */
@@ -257,7 +260,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 				return false;
 		return true;
 	}
-	
+
 	/**
 	 * Returns the signature of this world.
 	 * @return the signature of this world.
@@ -267,7 +270,7 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 		sig.addAll(this.values.keySet());
 		return sig;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -300,7 +303,8 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 		return true;
 	}
 	/**
-	 * 
+	 *
+	 * Return countUndecided
 	 * @return countUndecided
 	 */
 	/*

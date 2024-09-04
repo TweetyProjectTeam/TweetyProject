@@ -1,4 +1,4 @@
-/*
+/**
  *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
@@ -20,50 +20,76 @@
 /* JavaCCOptions:STATIC=true,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.logics.rpcl.parser.rpclcondensedprobabilitydistributionparser;
 
-/*
+/**
  * An implementation of interface CharStream, where the stream is assumed to
  * contain only ASCII characters (without unicode processing).
  */
-
-public class SimpleCharStream
-{
-/* Whether parser is static. */
+public class SimpleCharStream {
+  /** Whether parser is static. */
   public static final boolean staticFlag = true;
+  /** bufsize */
   static int bufsize;
+  /** available */
   static int available;
+  /** tokenBegin */
   static int tokenBegin;
-/* Position in buffer. */
+  /** Position in buffer. */
   static public int bufpos = -1;
+  /** bufline */
   static protected int bufline[];
+  /** bufcolumn */
   static protected int bufcolumn[];
 
+  /** Position in buffer. */
   static protected int column = 0;
+  /** Position in buffer. */
   static protected int line = 1;
 
+  /** prevCharIsCR. */
   static protected boolean prevCharIsCR = false;
+  /** prevCharIsLF */
   static protected boolean prevCharIsLF = false;
 
+  /** inputStream. */
   static protected java.io.Reader inputStream;
 
+  /** Position in buffer. */
   static protected char[] buffer;
+  /** maxNextCharInd. */
   static protected int maxNextCharInd = 0;
+  /** in buffer. */
   static protected int inBuf = 0;
+  /** tabsize. */
   static protected int tabSize = 8;
 
-  static protected void setTabSize(int i) { tabSize = i; }
-  static protected int getTabSize(int i) { return tabSize; }
+  /**
+   * setter
+   * @param i index
+   */
+  static protected void setTabSize(int i) {
+    tabSize = i;
+  }
 
+  /**
+   * Getter
+   * @param i index
+   * @return tabb size
+   */
+  static protected int getTabSize(int i) {
+    return tabSize;
+  }
 
-  static protected void ExpandBuff(boolean wrapAround)
-  {
+  /**
+   * ExpandBuffer
+   * @param wrapAround is warpAround
+   */
+  static protected void ExpandBuff(boolean wrapAround) {
     char[] newbuffer = new char[bufsize + 2048];
     int newbufline[] = new int[bufsize + 2048];
     int newbufcolumn[] = new int[bufsize + 2048];
 
-    try
-    {
-      if (wrapAround)
-      {
+    try {
+      if (wrapAround) {
         System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
         System.arraycopy(buffer, 0, newbuffer, bufsize - tokenBegin, bufpos);
         buffer = newbuffer;
@@ -77,9 +103,7 @@ public class SimpleCharStream
         bufcolumn = newbufcolumn;
 
         maxNextCharInd = (bufpos += (bufsize - tokenBegin));
-      }
-      else
-      {
+      } else {
         System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
         buffer = newbuffer;
 
@@ -91,35 +115,30 @@ public class SimpleCharStream
 
         maxNextCharInd = (bufpos -= tokenBegin);
       }
-    }
-    catch (Throwable t)
-    {
+    } catch (Throwable t) {
       throw new Error(t.getMessage());
     }
-
 
     bufsize += 2048;
     available = bufsize;
     tokenBegin = 0;
   }
 
-  static protected void FillBuff() throws java.io.IOException
-  {
-    if (maxNextCharInd == available)
-    {
-      if (available == bufsize)
-      {
-        if (tokenBegin > 2048)
-        {
+  /**
+   * FillBuffer
+   * @throws java.io.IOException error
+   */
+  static protected void FillBuff() throws java.io.IOException {
+    if (maxNextCharInd == available) {
+      if (available == bufsize) {
+        if (tokenBegin > 2048) {
           bufpos = maxNextCharInd = 0;
           available = tokenBegin;
-        }
-        else if (tokenBegin < 0)
+        } else if (tokenBegin < 0)
           bufpos = maxNextCharInd = 0;
         else
           ExpandBuff(false);
-      }
-      else if (available > tokenBegin)
+      } else if (available > tokenBegin)
         available = bufsize;
       else if ((tokenBegin - available) < 2048)
         ExpandBuff(true);
@@ -129,16 +148,13 @@ public class SimpleCharStream
 
     int i;
     try {
-      if ((i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1)
-      {
+      if ((i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1) {
         inputStream.close();
         throw new java.io.IOException();
-      }
-      else
+      } else
         maxNextCharInd += i;
       return;
-    }
-    catch(java.io.IOException e) {
+    } catch (java.io.IOException e) {
       --bufpos;
       backup(0);
       if (tokenBegin == -1)
@@ -147,49 +163,47 @@ public class SimpleCharStream
     }
   }
 
-/* Start. */
-  static public char BeginToken() throws java.io.IOException
-  {
+  /** Start.
+   * @return chars
+   * @throws java.io.IOException error
+  */
+  static public char BeginToken() throws java.io.IOException {
     tokenBegin = -1;
     char c = readChar();
     tokenBegin = bufpos;
 
     return c;
   }
-
-  static protected void UpdateLineColumn(char c)
-  {
+  /**
+   * Update
+   * @param c the character
+   */
+  static protected void UpdateLineColumn(char c) {
     column++;
 
-    if (prevCharIsLF)
-    {
+    if (prevCharIsLF) {
       prevCharIsLF = false;
       line += (column = 1);
-    }
-    else if (prevCharIsCR)
-    {
+    } else if (prevCharIsCR) {
       prevCharIsCR = false;
-      if (c == '\n')
-      {
+      if (c == '\n') {
         prevCharIsLF = true;
-      }
-      else
+      } else
         line += (column = 1);
     }
 
-    switch (c)
-    {
-      case '\r' :
+    switch (c) {
+      case '\r':
         prevCharIsCR = true;
         break;
-      case '\n' :
+      case '\n':
         prevCharIsLF = true;
         break;
-      case '\t' :
+      case '\t':
         column--;
         column += (tabSize - (column % tabSize));
         break;
-      default :
+      default:
         break;
     }
 
@@ -197,11 +211,12 @@ public class SimpleCharStream
     bufcolumn[bufpos] = column;
   }
 
-/* Read a character. */
-  static public char readChar() throws java.io.IOException
-  {
-    if (inBuf > 0)
-    {
+  /** Read a character.
+   * @return chars
+   * @throws java.io.IOException error
+  */
+  static public char readChar() throws java.io.IOException {
+    if (inBuf > 0) {
       --inBuf;
 
       if (++bufpos == bufsize)
@@ -219,47 +234,59 @@ public class SimpleCharStream
     return c;
   }
 
-  @Deprecated
-  /*
+  /**
    * @deprecated
    * @see #getEndColumn
+   *  Getter
+   * @return the column
    */
-
+  @Deprecated
   static public int getColumn() {
     return bufcolumn[bufpos];
   }
 
-  @Deprecated
-  /*
+  /**
    * @deprecated
    * @see #getEndLine
+   * Getter line
+   * @return the line
    */
-
+  @Deprecated
   static public int getLine() {
     return bufline[bufpos];
   }
 
-  /* Get token end column number. */
+  /** Get token end column number.
+   * @return token end
+  */
   static public int getEndColumn() {
     return bufcolumn[bufpos];
   }
 
-  /* Get token end line number. */
+  /** Get token end line number.
+   * @return token
+  */
   static public int getEndLine() {
-     return bufline[bufpos];
+    return bufline[bufpos];
   }
 
-  /* Get token beginning column number. */
+  /** Get token beginning column number.
+   * @return token beginning
+  */
   static public int getBeginColumn() {
     return bufcolumn[tokenBegin];
   }
 
-  /* Get token beginning line number. */
+  /** Get token beginning line number.
+   * @return token
+  */
   static public int getBeginLine() {
     return bufline[tokenBegin];
   }
 
-/* Backup a number of characters. */
+  /** Backup a number of characters.
+   * @param amount the amount
+  */
   static public void backup(int amount) {
 
     inBuf += amount;
@@ -267,14 +294,35 @@ public class SimpleCharStream
       bufpos += bufsize;
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.Reader dstream, int startline,
-  int startcolumn, int buffersize)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, start line, start column,
+   * and buffer size.
+   *
+   * <p>
+   * This constructor initializes the character stream with the provided
+   * {@code Reader} and sets up the internal
+   * buffer and tracking information based on the given parameters. If the
+   * {@code inputStream} is already initialized,
+   * it throws an {@code Error} indicating that the constructor should not be
+   * called again. This behavior is intended
+   * to prevent multiple initializations of a static instance of
+   * {@code SimpleCharStream}.
+   * </p>
+   *
+   * @param dstream     The {@code Reader} from which characters will be read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   *
+   * @throws Error If this constructor is called more than once, indicating a
+   *               misuse of the static instance.
+   */
+  public SimpleCharStream(java.io.Reader dstream, int startline, int startcolumn, int buffersize) {
     if (inputStream != null)
       throw new Error("\n   ERROR: Second call to the constructor of a static SimpleCharStream.\n" +
-      "       You must either use ReInit() or set the JavaCC option STATIC to false\n" +
-      "       during the generation of this class.");
+          "       You must either use ReInit() or set the JavaCC option STATIC to false\n" +
+          "       during the generation of this class.");
     inputStream = dstream;
     line = startline;
     column = startcolumn - 1;
@@ -285,29 +333,56 @@ public class SimpleCharStream
     bufcolumn = new int[buffersize];
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.Reader dstream, int startline,
-                          int startcolumn)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, start line, and start column,
+   * using a default buffer size of 4096.
+   *
+   * @param dstream     The {@code Reader} from which characters will be read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   */
+  public SimpleCharStream(java.io.Reader dstream, int startline, int startcolumn) {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.Reader dstream)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, using default values for
+   * the start line, start column, and buffer size.
+   *
+   * @param dstream The {@code Reader} from which characters will be read.
+   */
+  public SimpleCharStream(java.io.Reader dstream) {
     this(dstream, 1, 1, 4096);
   }
 
-  /* Reinitialise. */
-  public void ReInit(java.io.Reader dstream, int startline,
-  int startcolumn, int buffersize)
-  {
+  /**
+   * Reinitializes the {@code SimpleCharStream} instance with a new
+   * {@code Reader}, starting line, starting column,
+   * and buffer size. This method clears the existing buffer and sets up a new
+   * buffer if necessary.
+   *
+   * <p>
+   * This method updates the internal state of the character stream to reflect the
+   * new input stream and reinitializes
+   * the buffer and tracking variables. If the buffer size changes, a new buffer
+   * is allocated. This method should be
+   * used when you need to reuse the same {@code SimpleCharStream} instance with
+   * different input or buffer settings.
+   * </p>
+   *
+   * @param dstream     The new {@code Reader} from which characters will be read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   */
+  public void ReInit(java.io.Reader dstream, int startline, int startcolumn, int buffersize) {
     inputStream = dstream;
     line = startline;
     column = startcolumn - 1;
 
-    if (buffer == null || buffersize != buffer.length)
-    {
+    if (buffer == null || buffersize != buffer.length) {
       available = bufsize = buffersize;
       buffer = new char[buffersize];
       bufline = new int[buffersize];
@@ -318,152 +393,278 @@ public class SimpleCharStream
     bufpos = -1;
   }
 
-  /* Reinitialise. */
-  public void ReInit(java.io.Reader dstream, int startline,
-                     int startcolumn)
-  {
+  /**
+   * Reinitializes the {@code SimpleCharStream} instance with a new
+   * {@code Reader}, starting line, and starting column,
+   * using a default buffer size of 4096.
+   *
+   * @param dstream     The new {@code Reader} from which characters will be read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   */
+  public void ReInit(java.io.Reader dstream, int startline, int startcolumn) {
     ReInit(dstream, startline, startcolumn, 4096);
   }
 
-  /* Reinitialise. */
-  public void ReInit(java.io.Reader dstream)
-  {
+  /**
+   * Reinitializes the {@code SimpleCharStream} instance with a new
+   * {@code Reader}, using default values for
+   * the starting line, starting column, and buffer size.
+   *
+   * @param dstream The new {@code Reader} from which characters will be read.
+   */
+  public void ReInit(java.io.Reader dstream) {
     ReInit(dstream, 1, 1, 4096);
   }
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
-  int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
-  {
-    this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, character encoding,
+   * starting line, starting column, and buffer size.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param encoding    The character encoding to use. If {@code null}, the
+   *                    default encoding will be used.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline, int startcolumn, int buffersize)
+      throws java.io.UnsupportedEncodingException {
+    this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding),
+        startline, startcolumn, buffersize);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream, int startline,
-  int startcolumn, int buffersize)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, starting line, starting column,
+   * and buffer size, using the default character encoding.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   */
+  public SimpleCharStream(java.io.InputStream dstream, int startline, int startcolumn, int buffersize) {
     this(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
-                          int startcolumn) throws java.io.UnsupportedEncodingException
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, character encoding,
+   * starting line, and starting column, using a default buffer size of 4096.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param encoding    The character encoding to use. If {@code null}, the
+   *                    default encoding will be used.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline, int startcolumn)
+      throws java.io.UnsupportedEncodingException {
     this(dstream, encoding, startline, startcolumn, 4096);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream, int startline,
-                          int startcolumn)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, starting line,
+   * and starting column, using a default buffer size of 4096 and the default
+   * character encoding.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   */
+  public SimpleCharStream(java.io.InputStream dstream, int startline, int startcolumn) {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream and character encoding,
+   * using default values for the starting line, starting column, and buffer size.
+   *
+   * @param dstream  The {@code InputStream} from which characters will be read.
+   * @param encoding The character encoding to use. If {@code null}, the default
+   *                 encoding will be used.
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException {
     this(dstream, encoding, 1, 1, 4096);
   }
 
-  /* Constructor. */
-  public SimpleCharStream(java.io.InputStream dstream)
-  {
+  /**
+   * Constructs a new {@code SimpleCharStream} instance with the specified input
+   * stream, using default values
+   * for the starting line, starting column, buffer size, and character encoding.
+   *
+   * @param dstream The {@code InputStream} from which characters will be read.
+   */
+  public SimpleCharStream(java.io.InputStream dstream) {
     this(dstream, 1, 1, 4096);
   }
 
-  /* Reinitialise. */
+  /**
+   * Reinitializes the {@code SimpleCharStream} with the specified input stream,
+   * character encoding,
+   * starting line, starting column, and buffer size.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param encoding    The character encoding to use. If {@code null}, the
+   *                    default encoding will be used.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
-                          int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
-  {
-    ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+      int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException {
+    ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding),
+        startline, startcolumn, buffersize);
   }
 
-  /* Reinitialise. */
+  /**
+   * Reinitializes the {@code SimpleCharStream} with the specified input stream,
+   * starting line,
+   * starting column, and buffer size, using the default character encoding.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @param buffersize  The size of the buffer to use for reading characters.
+   */
   public void ReInit(java.io.InputStream dstream, int startline,
-                          int startcolumn, int buffersize)
-  {
+      int startcolumn, int buffersize) {
     ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /* Reinitialise. */
-  public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
-  {
+  /**
+   * Reinitializes the {@code SimpleCharStream}
+   *
+   * @param dstream  The {@code InputStream} from which characters will be read.
+   * @param encoding The character encoding to use. If {@code null}, the default
+   *                 encoding will be used.
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
+  public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException {
     ReInit(dstream, encoding, 1, 1, 4096);
   }
 
-  /* Reinitialise. */
-  public void ReInit(java.io.InputStream dstream)
-  {
+  /**
+   * Reinitializes the {@code SimpleCharStream} with the specified input stream,
+   * using default values
+   * for the starting line (1), starting column (1), buffer size (4096), and
+   * character encoding.
+   *
+   * @param dstream The {@code InputStream} from which characters will be read.
+   */
+  public void ReInit(java.io.InputStream dstream) {
     ReInit(dstream, 1, 1, 4096);
   }
-  /* Reinitialise. */
+
+  /**
+   * Reinitializes the {@code SimpleCharStream} with the specified input stream,
+   * character encoding,
+   * starting line, and starting column, using a default buffer size of 4096.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param encoding    The character encoding to use. If {@code null}, the
+   *                    default encoding will be used.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   * @throws java.io.UnsupportedEncodingException If the specified encoding is not
+   *                                              supported.
+   */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
-                     int startcolumn) throws java.io.UnsupportedEncodingException
-  {
+      int startcolumn) throws java.io.UnsupportedEncodingException {
     ReInit(dstream, encoding, startline, startcolumn, 4096);
   }
-  /* Reinitialise. */
+
+  /**
+   * Reinitializes the {@code SimpleCharStream} with the specified input stream,
+   * starting line,
+   * and starting column, using default values for the buffer size (4096) and
+   * character encoding.
+   *
+   * @param dstream     The {@code InputStream} from which characters will be
+   *                    read.
+   * @param startline   The line number where reading starts (1-based index).
+   * @param startcolumn The column number where reading starts (1-based index).
+   */
   public void ReInit(java.io.InputStream dstream, int startline,
-                     int startcolumn)
-  {
+      int startcolumn) {
     ReInit(dstream, startline, startcolumn, 4096);
   }
-  /* Get token literal value. */
-  static public String GetImage()
-  {
+
+  /** Get token literal value.
+   * @return image
+  */
+  static public String GetImage() {
     if (bufpos >= tokenBegin)
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
     else
       return new String(buffer, tokenBegin, bufsize - tokenBegin) +
-                            new String(buffer, 0, bufpos + 1);
+          new String(buffer, 0, bufpos + 1);
   }
 
-  /* Get the suffix. */
-  static public char[] GetSuffix(int len)
-  {
+  /** Get the suffix.
+   * @param len length
+   * @return  the suffix
+  */
+  static public char[] GetSuffix(int len) {
     char[] ret = new char[len];
 
     if ((bufpos + 1) >= len)
       System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
-    else
-    {
+    else {
       System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0,
-                                                        len - bufpos - 1);
+          len - bufpos - 1);
       System.arraycopy(buffer, 0, ret, len - bufpos - 1, bufpos + 1);
     }
 
     return ret;
   }
 
-  /* Reset buffer when finished. */
-  static public void Done()
-  {
+  /** Reset buffer when finished. */
+  static public void Done() {
     buffer = null;
     bufline = null;
     bufcolumn = null;
   }
 
-  /*
+  /**
    * Method to adjust line and column numbers for the start of a token.
+   * @param newLine new line
+   * @param newCol new column
    */
-  static public void adjustBeginLineColumn(int newLine, int newCol)
-  {
+  static public void adjustBeginLineColumn(int newLine, int newCol) {
     int start = tokenBegin;
     int len;
 
-    if (bufpos >= tokenBegin)
-    {
+    if (bufpos >= tokenBegin) {
       len = bufpos - tokenBegin + inBuf + 1;
-    }
-    else
-    {
+    } else {
       len = bufsize - tokenBegin + bufpos + 1 + inBuf;
     }
 
     int i = 0, j = 0, k = 0;
     int nextColDiff = 0, columnDiff = 0;
 
-    while (i < len && bufline[j = start % bufsize] == bufline[k = ++start % bufsize])
-    {
+    while (i < len && bufline[j = start % bufsize] == bufline[k = ++start % bufsize]) {
       bufline[j] = newLine;
       nextColDiff = columnDiff + bufcolumn[k] - bufcolumn[j];
       bufcolumn[j] = newCol + columnDiff;
@@ -471,13 +672,11 @@ public class SimpleCharStream
       i++;
     }
 
-    if (i < len)
-    {
+    if (i < len) {
       bufline[j] = newLine++;
       bufcolumn[j] = newCol + columnDiff;
 
-      while (i++ < len)
-      {
+      while (i++ < len) {
         if (bufline[j = start % bufsize] != bufline[++start % bufsize])
           bufline[j] = newLine++;
         else
@@ -490,4 +689,7 @@ public class SimpleCharStream
   }
 
 }
-/* JavaCC - OriginalChecksum=81b95ca0cd70a80b7890fec9912ddbf5 (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=81b95ca0cd70a80b7890fec9912ddbf5 (do not edit this
+ * line)
+ */

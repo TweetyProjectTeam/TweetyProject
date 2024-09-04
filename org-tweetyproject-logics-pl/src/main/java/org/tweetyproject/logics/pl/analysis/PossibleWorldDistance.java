@@ -63,4 +63,7 @@ public abstract class PossibleWorldDistance implements InterpretationDistance<Po
 		// Note that the distance is maximal if there is no model.
 		return dist;
 	}
+
+    /** Default Constructor */
+    public PossibleWorldDistance(){}
 }

@@ -31,11 +31,11 @@ import org.tweetyproject.arg.social.syntax.SocialAbstractArgumentationFramework;
 
 /**
  * This class implements the social abstract argumentation approach as proposed
- * by [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
- * Semantics for Abstract Argumentation. AAAI 2016]. It uses social abstract argumentation 
- * frameworks and the simple product semantics which were introduced by 
+ * by [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based
+ * Semantics for Abstract Argumentation. AAAI 2016]. It uses social abstract argumentation
+ * frameworks and the simple product semantics which were introduced by
  * [Leite, Martins. Social abstract argumentation. IJCAI 2011].
- * 
+ *
  * @author Anna Gessler
  */
 public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
@@ -45,20 +45,20 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 	 * @see org.tweetyproject.arg.social.semantics.SimpleProductSemantics
 	 */
 	private double epsilon;
-	
+
 	/**
 	 * Precision of comparisons between values of the simple product semantics.
 	 * @see org.tweetyproject.arg.social.semantics.SimpleProductSemantics
 	 */
-	private double precision; 
-	
+	private double precision;
+
 	/**
 	 * The tolerance of the "Iterative Successive Substitution" algorithm
 	 * used by the reasoner.
 	 * @see org.tweetyproject.arg.social.reasoner.IssReasoner
 	 */
 	private double tolerance;
-	
+
 	/**
 	 * Create a new SAFRankingReasoner with default parameters.
 	 */
@@ -67,9 +67,9 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 		this.precision =  0.0001;
 		this.tolerance = 0.0001;
 	}
-	
+
 	/**
-	 * Create a new SAFRankingReasoner with the given epsilon 
+	 * Create a new SAFRankingReasoner with the given epsilon
 	 * for the SimpleProductSemantics.
 	 * @param epsilon must be non-negative
 	 */
@@ -77,12 +77,12 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 		this();
 		this.epsilon = epsilon;
 	}
-	
+
 	/**
-	 * Create a new SAFRankingReasoner with the given epsilon 
+	 * Create a new SAFRankingReasoner with the given epsilon
 	 * and the given tolerance for the SimpleProductSemantics.
-	 * @param epsilon 
-	 * @param tolerance 
+	 * @param epsilon must be non-negative
+	 * @param tolerance the tolerance
 	 */
 	public SAFRankingReasoner(double epsilon, double tolerance) {
 		this();
@@ -91,11 +91,11 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 	}
 
 	/**
-	 * Create a new SAFRankingReasoner with the given epsilon, the given precision 
+	 * Create a new SAFRankingReasoner with the given epsilon, the given precision
 	 * and the given tolerance for the SimpleProductSemantics.
-	 * @param epsilon 
-	 * @param precision 
-	 * @param tolerance 
+	 * @param epsilon must be non-negative
+	 * @param tolerance the tolerance
+	 * @param precision the precision
 	 */
 	public SAFRankingReasoner(double epsilon, double precision, double tolerance) {
 		this.epsilon = epsilon;
@@ -116,7 +116,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 		saf.add((DungTheory)kb);
 		for (Argument a : (DungTheory)kb) {
 			saf.voteUp(a, 1);
-			saf.voteDown(a, 1); 
+			saf.voteDown(a, 1);
 		}
 		IssReasoner reasoner6 = new IssReasoner(new SimpleProductSemantics(this.epsilon, this.precision), this.tolerance);
 		SocialMapping<Double> result = reasoner6.getModel(saf);
@@ -126,7 +126,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartial
 			ranking.put(a, result.get(a));
 		return ranking;
 	}
-	
+
 	/**natively installed*/
 	@Override
 	public boolean isInstalled() {

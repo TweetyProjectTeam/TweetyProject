@@ -22,12 +22,36 @@ import org.tweetyproject.commons.Writer;
 import org.tweetyproject.logics.commons.syntax.RelationalFormula;
 import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
 
+
+/**
+ * The `MlWriter` class is responsible for writing  formulas and belief sets to a specific format.
+ *
+ *
+ * <p><b>Author:</b> [Your Name]</p>
+ */
+
 public class MlWriter extends Writer {
+
+	/**
+     * Initializes a new `MlWriter` instance.
+     *
+     *
+     * @param formula the `RelationalFormula` object representing formula
+     *                that this writer will serialize and output.
+     */
 
 	public MlWriter(RelationalFormula formula) {
 		super(formula);
 	}
 
+
+
+    /**
+     * Initializes a new `MlWriter` instance for writing a belief set.
+     *
+     * @param beliefSet the `MlBeliefSet` object representing the set of formulas
+     *                  that this writer will serialize and output.
+     */
 	public MlWriter(MlBeliefSet beliefSet) {
 		super(beliefSet);
 	}

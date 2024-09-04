@@ -31,7 +31,7 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * computes the inconsistency measure of the 
+ * computes the inconsistency measure of the
  * @author Sebastian Franke
  *
  */
@@ -39,7 +39,7 @@ public class PrimeImplicantBasedInconsistencyMeasure extends BeliefSetInconsiste
 	/**prime implicant enumerator*/
 	public PrimeImplicantEnumerator primeImp;
 	/**
-	 * 
+	 *Constructor
 	 * @param primeImp prime implicant inconsistency measure
 	 */
 	public PrimeImplicantBasedInconsistencyMeasure(PrimeImplicantEnumerator primeImp) {
@@ -51,15 +51,16 @@ public class PrimeImplicantBasedInconsistencyMeasure extends BeliefSetInconsiste
 	public PrimeImplicantBasedInconsistencyMeasure() {
 		this.primeImp = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator()));
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return the conflicts of the prime implicants
 	 * @param beliefSet the bleiefSet of which the conflicts of prime implicants are calculated
 	 * @return the conflicts of the prime implicants
 	 */
 	public Set<PlFormula> getConflicts(PlBeliefSet beliefSet){
 		Set<PlFormula> conflicts = new HashSet<PlFormula>();
-		List<Set<PlFormula>> primeImplicates = this.primeImp.getPrimeImplicants(beliefSet); 
+		List<Set<PlFormula>> primeImplicates = this.primeImp.getPrimeImplicants(beliefSet);
 		for(Set<PlFormula> primeImplicate1 : primeImplicates) {
 			for(Set<PlFormula> primeImplicate2 : primeImplicates) {
 				for(PlFormula a : primeImplicate1) {
@@ -86,5 +87,5 @@ public class PrimeImplicantBasedInconsistencyMeasure extends BeliefSetInconsiste
 		return (((double) this.getConflicts(beliefset).size()/2) / literalCount) ;
 	}
 
-	
+
 }

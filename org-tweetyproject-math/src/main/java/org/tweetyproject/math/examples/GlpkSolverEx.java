@@ -42,6 +42,12 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class GlpkSolverEx {
+
+	/**Constructor */
+
+	public GlpkSolverEx() {
+	}
+
 	/**
 	 * constructor
 	 * @return problem
@@ -52,14 +58,14 @@ public class GlpkSolverEx {
 		//Target funcion = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
-		
-		
+
+
 		OptimizationProblem prob = new OptimizationProblem(0);
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -80,7 +86,7 @@ public class GlpkSolverEx {
 		BfgsSolver solver = new BfgsSolver(startingPoint);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

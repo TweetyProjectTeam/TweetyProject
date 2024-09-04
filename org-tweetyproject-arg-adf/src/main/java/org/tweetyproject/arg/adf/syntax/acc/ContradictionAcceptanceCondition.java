@@ -24,17 +24,17 @@ import java.util.stream.Stream;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 /**
- * 
+ * ContradictionAcceptanceCondition enum
  * @author Sebastian
  *
  */
 public enum ContradictionAcceptanceCondition implements AcceptanceCondition {
 	/**Instance*/
 	INSTANCE;
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.adf.syntax.AcceptanceCondition#arguments()
 	 */
 	@Override
@@ -44,7 +44,7 @@ public enum ContradictionAcceptanceCondition implements AcceptanceCondition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(org.tweetyproject.arg.adf.syntax.Argument)
 	 */
@@ -64,7 +64,7 @@ public enum ContradictionAcceptanceCondition implements AcceptanceCondition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#children()
 	 */
 	@Override

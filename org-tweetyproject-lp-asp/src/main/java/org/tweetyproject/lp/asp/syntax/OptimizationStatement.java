@@ -35,7 +35,7 @@ import org.tweetyproject.lp.asp.syntax.ASPOperator.OptimizeFunction;
  * This class represents an optimization statement. Optimization statements
  * represent sets of weak constraints with the goal of finding an optimal
  * answer set wrt. to the constraints.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -46,14 +46,14 @@ public class OptimizationStatement extends ASPBodyElement {
 	private OptimizeFunction optimizeFunction;
 
 	/**
-	 * The term-literal tuples the optimization statement ranges over. 
+	 * The term-literal tuples the optimization statement ranges over.
 	 */
 	private List<OptimizationElement> optElements = new ArrayList<OptimizationElement>();
 
 	/**
 	 * Creates a new empty OptimizatonStatement with the given function.
-	 * 
-	 * @param function
+	 *
+	 * @param function the function
 	 */
 	public OptimizationStatement(OptimizeFunction function) {
 		this.optimizeFunction = function;
@@ -62,8 +62,8 @@ public class OptimizationStatement extends ASPBodyElement {
 	/**
 	 * Creates a new empty OptimizatonStatement with the given function and the
 	 * given optimization elements (term-literal tuples with weight and priority).
-	 * 
-	 * @param function
+	 *
+	 * @param function the function
 	 * @param optElements list of OptimizationElements
 	 */
 	public OptimizationStatement(OptimizeFunction function, List<OptimizationElement> optElements) {
@@ -74,11 +74,11 @@ public class OptimizationStatement extends ASPBodyElement {
 	/**
 	 * Creates a new OptimizatonStatement with the given function, weight and single
 	 * term-literal tuple.
-	 * 
-	 * @param function
-	 * @param weight
-	 * @param terms
-	 * @param literals
+	 *
+	 * @param function function
+	 * @param weight weight
+	 * @param terms terms
+	 * @param literals literals
 	 */
 	public OptimizationStatement(OptimizeFunction function, Term<?> weight, List<Term<?>> terms,
 			List<ASPBodyElement> literals) {
@@ -90,11 +90,12 @@ public class OptimizationStatement extends ASPBodyElement {
 	/**
 	 * Creates a new OptimizatonStatement with the given function, weight, priority
 	 * and single term-literal tuple.
-	 * 
-	 * @param function
-	 * @param weight
-	 * @param terms
-	 * @param literals
+	 *
+	 * @param function function
+	 * @param weight weight
+	 * @param terms terms
+	 * @param literals literals
+	 * @param priority priority
 	 */
 	public OptimizationStatement(OptimizeFunction function, Term<?> weight, int priority, List<Term<?>> terms,
 			List<ASPBodyElement> literals) {
@@ -106,8 +107,8 @@ public class OptimizationStatement extends ASPBodyElement {
 	/**
 	 * Creates a new OptimizatonStatement with the given function and single
 	 * term-literal tuple.
-	 * 
-	 * @param function	the target function 
+	 *
+	 * @param function	the target function
 	 * @param element  some element
 	 */
 	public OptimizationStatement(OptimizeFunction function, OptimizationElement element) {
@@ -118,14 +119,15 @@ public class OptimizationStatement extends ASPBodyElement {
 
 	/**
 	 * Sets the optimization elements of this optimization statement.
-	 * 
+	 *
 	 * @param elements the optimization elements
 	 */
 	public void setElements(List<OptimizationElement> elements) {
 		this.optElements = elements;
 	}
-	
+
 	/**
+	 * Return the optimization elements of this optimization statement
 	 * @return the optimization elements of this optimization statement
 	 */
 	public List<OptimizationElement> getElements() {
@@ -133,15 +135,16 @@ public class OptimizationStatement extends ASPBodyElement {
 	}
 
 	/**
+	 * Return the optimize function of this optimization statement
 	 * @return the optimize function of this optimization statement
 	 */
 	public OptimizeFunction getOptimizeFunction() {
 		return optimizeFunction;
 	}
-	
+
 	/**
 	 * Sets the optimization function.
-	 * 
+	 *
 	 * @param function function
 	 */
 	public void setOptimizeFunction(OptimizeFunction function) {
@@ -206,7 +209,7 @@ public class OptimizationStatement extends ASPBodyElement {
 	public OptimizationStatement clone() {
 		return new OptimizationStatement(this.optimizeFunction, this.optElements);
 	}
-	
+
 	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();

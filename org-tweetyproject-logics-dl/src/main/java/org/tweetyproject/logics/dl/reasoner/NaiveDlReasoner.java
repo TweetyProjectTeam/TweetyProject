@@ -39,26 +39,31 @@ import org.tweetyproject.logics.dl.syntax.DlAxiom;
 
 /**
  * Naive reasoner for the description logic ALC.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom> {
+
+	/** Default */
+	public NaiveDlReasoner(){
+		super();
+	}
 	@Override
 	public Boolean query(DlBeliefSet kb, DlAxiom formula) {
 		DlSignature sig = new DlSignature();
 		sig.addSignature(kb.getMinimalSignature());
-		sig.addSignature(formula.getSignature());	
-		
+		sig.addSignature(formula.getSignature());
+
 		Set<DlInterpretation> interpretations = getAllInterpretations(sig);
 		for(DlInterpretation i: interpretations) {
-			if(i.satisfies(kb)) 
-				if(!i.satisfies(formula)) 
-					return false;	 
-		}				
+			if(i.satisfies(kb))
+				if(!i.satisfies(formula))
+					return false;
+		}
 		return true;
 	}
-	
+
 	/**
 	 * Get all interpretations for the given signature.
 	 * @param sig a DLSignature
@@ -69,15 +74,15 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 		for(Predicate p: sig.getPredicates()){
 			atoms.addAll(this.getAllInstantiations(sig, p, new ArrayList<Individual>()));
 		}
-	
+
 		Set<Set<AssertionalAxiom>> subsets = new SetTools<AssertionalAxiom>().subsets(atoms);
 		Set<DlInterpretation> interpretations = new HashSet<DlInterpretation>();
-	
+
 		for(Set<AssertionalAxiom> ats: subsets)
-			interpretations.add(new DlInterpretation(ats));		
+			interpretations.add(new DlInterpretation(ats));
 		return interpretations;
 	}
-	
+
 	/**
 	 * Computes all instantiations of the predicate "p" relative to the signature "sig"
 	 * where "arguments" defines the first arguments of the atoms.
@@ -97,16 +102,16 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 				throw new IllegalArgumentException("Predicate arity must be 1 (concept) or 2 (role), but was " + p.getArity());
 			return atoms;
 		}
-	
+
 		Set<AssertionalAxiom> atoms = new HashSet<AssertionalAxiom>();
 		for(Individual c: sig.getIndividuals()){
 			List<Individual> newArgs = new ArrayList<Individual>(args);
 			newArgs.add(c);
 			atoms.addAll(this.getAllInstantiations(sig, p, newArgs));
-		}		
+		}
 		return atoms;
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */
@@ -114,6 +119,6 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 	public boolean isInstalled() {
 		return true;
 	}
-	
+
 
 }

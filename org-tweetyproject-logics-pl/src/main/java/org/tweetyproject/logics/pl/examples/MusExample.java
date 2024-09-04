@@ -57,4 +57,7 @@ public class MusExample {
 		
 		System.out.println(enumerator.minimalInconsistentSubsets(beliefSet));		
 	}
+
+    /** Default Constructor */
+    public MusExample(){}
 }

@@ -118,4 +118,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 
 	
 
+
+    /** Default Constructor */
+    public MinimalViolationEuclideanMachineShopOjAlgoMatrix(){}
 }

@@ -23,39 +23,88 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.util.CacheMap;
 import org.tweetyproject.arg.adf.util.Pair;
 
+/**
+ * TseitinTransformer class
+ */
 public final class TseitinTransformer implements Collector<Literal, Clause>, Transformer<Pair<Literal, Collection<Clause>>> {
 
-	private final boolean optimize;
-		
-	private final int rootPolarity;
-	
-	private final Function<Argument, Literal> mapping;
-	
+
 	private final Literal TRUE = Literal.create("T");
-	
+
 	private final Literal FALSE = TRUE.neg();
 
-	private TseitinTransformer(Function<Argument, Literal> mapping, boolean optimize, int rootPolarity) {
-		this.mapping = Objects.requireNonNull(mapping);
-		this.optimize = optimize;
-		this.rootPolarity = rootPolarity;
-	}
-	
-	public static TseitinTransformer ofPositivePolarity(boolean optimize) {
-		return ofPositivePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
-	}
-	
-	public static TseitinTransformer ofNegativePolarity(boolean optimize) {
-		return ofNegativePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
-	}
-	
-	public static TseitinTransformer ofPositivePolarity(Function<Argument, Literal> mapping, boolean optimize) {
-		return new TseitinTransformer(mapping, optimize, 1);
-	}
-	
-	public static TseitinTransformer ofNegativePolarity(Function<Argument, Literal> mapping, boolean optimize) {
-		return new TseitinTransformer(mapping, optimize, -1);
-	}
+	/**
+     * A function that maps arguments to literals during the transformation.
+     */
+    private final Function<Argument, Literal> mapping;
+
+    /**
+     * A flag indicating whether to apply optimizations during the transformation.
+     */
+    private final boolean optimize;
+
+    /**
+     * The root polarity for the transformation, where 1 represents positive polarity
+     * and -1 represents negative polarity.
+     */
+    private final int rootPolarity;
+
+    /**
+     * Constructs a new {@code TseitinTransformer} with the specified mapping function,
+     * optimization flag, and root polarity.
+     *
+     * @param mapping      A {@code Function<Argument, Literal>} that maps arguments to literals.
+     * @param optimize     A boolean indicating whether optimizations should be applied.
+     * @param rootPolarity An integer representing the root polarity (1 for positive, -1 for negative).
+     * @throws NullPointerException if the {@code mapping} function is {@code null}.
+     */
+    private TseitinTransformer(Function<Argument, Literal> mapping, boolean optimize, int rootPolarity) {
+        this.mapping = Objects.requireNonNull(mapping);
+        this.optimize = optimize;
+        this.rootPolarity = rootPolarity;
+    }
+
+    /**
+     * Creates a new {@code TseitinTransformer} instance with positive root polarity and default argument-to-literal mapping.
+     *
+     * @param optimize A boolean indicating whether optimizations should be applied.
+     * @return A new {@code TseitinTransformer} instance with positive polarity.
+     */
+    public static TseitinTransformer ofPositivePolarity(boolean optimize) {
+        return ofPositivePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
+    }
+
+    /**
+     * Creates a new {@code TseitinTransformer} instance with negative root polarity and default argument-to-literal mapping.
+     *
+     * @param optimize A boolean indicating whether optimizations should be applied.
+     * @return A new {@code TseitinTransformer} instance with negative polarity.
+     */
+    public static TseitinTransformer ofNegativePolarity(boolean optimize) {
+        return ofNegativePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
+    }
+
+    /**
+     * Creates a new {@code TseitinTransformer} instance with positive root polarity and a custom argument-to-literal mapping.
+     *
+     * @param mapping  A {@code Function<Argument, Literal>} that maps arguments to literals.
+     * @param optimize A boolean indicating whether optimizations should be applied.
+     * @return A new {@code TseitinTransformer} instance with positive polarity.
+     */
+    public static TseitinTransformer ofPositivePolarity(Function<Argument, Literal> mapping, boolean optimize) {
+        return new TseitinTransformer(mapping, optimize, 1);
+    }
+
+    /**
+     * Creates a new {@code TseitinTransformer} instance with negative root polarity and a custom argument-to-literal mapping.
+     *
+     * @param mapping  A {@code Function<Argument, Literal>} that maps arguments to literals.
+     * @param optimize A boolean indicating whether optimizations should be applied.
+     * @return A new {@code TseitinTransformer} instance with negative polarity.
+     */
+    public static TseitinTransformer ofNegativePolarity(Function<Argument, Literal> mapping, boolean optimize) {
+        return new TseitinTransformer(mapping, optimize, -1);
+    }
 
 	@Override
 	public Literal collect(AcceptanceCondition acc, Consumer<Clause> clauses) {
@@ -89,7 +138,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			clauses.accept(Clause.of(right.neg(), name));
 		}
 	}
-	
+
 	private void defineImplication(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
 			clauses.accept(Clause.of(name.neg(), left.neg(), right));
@@ -99,7 +148,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			clauses.accept(Clause.of(name, right.neg()));
 		}
 	}
-	
+
 	private void defineEquivalence(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
 			clauses.accept(Clause.of(name.neg(), left, right.neg()));
@@ -110,7 +159,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			clauses.accept(Clause.of(left.neg(), right.neg(), name));
 		}
 	}
-	
+
 	private void defineExclusiveDisjunction(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
 			clauses.accept(Clause.of(name.neg(), left, right));
@@ -121,7 +170,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			clauses.accept(Clause.of(name, left, right.neg()));
 		}
 	}
-	
+
 	private void defineNegation(Literal name, Literal child, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
 			clauses.accept(Clause.of(name.neg(), child.neg()));
@@ -130,7 +179,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			clauses.accept(Clause.of(name, child));
 		}
 	}
-	
+
 	private Literal define(AcceptanceCondition acc, Consumer<Clause> clauses) {
 		Literal name = createRootName(acc);
 		define(name, acc, clauses, rootPolarity);
@@ -140,7 +189,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 	/**
 	 * Works as a replacement to the Visitor-Pattern approach, since it is expected
 	 * to be faster. The goal is to replace it with pattern matching, once it is available in a future java release.
-	 * 
+	 *
 	 * @param name
 	 * @param acc
 	 * @param clauses
@@ -171,14 +220,14 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 				defineExclusiveDisjunction(name, left, right, clauses, polarity);
 				define(left, bin.getLeft(), clauses, polarity);
 				define(right, bin.getRight(), clauses, polarity);
-			} 
+			}
 		} else if (acc instanceof NegationAcceptanceCondition) {
 			Literal child = createName(((NegationAcceptanceCondition) acc).getChild());
 			defineNegation(name, child, clauses, polarity);
 			define(child, ((NegationAcceptanceCondition) acc).getChild(), clauses, -polarity);
 		}
 	}
-		
+
 	private Literal createName(AcceptanceCondition acc) {
 		if (acc instanceof Argument) {
 			return mapping.apply((Argument)acc);
@@ -190,7 +239,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 			return Literal.createTransient();
 		}
 	}
-	
+
 	private Literal createRootName(AcceptanceCondition acc) {
 		if (acc instanceof Argument) {
 			return mapping.apply((Argument)acc);

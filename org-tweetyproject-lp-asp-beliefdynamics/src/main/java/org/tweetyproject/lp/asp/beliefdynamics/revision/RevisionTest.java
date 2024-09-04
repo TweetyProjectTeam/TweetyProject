@@ -47,13 +47,18 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * @author Tim Janus
  */
 public class RevisionTest {
+
+	/**
+	 * Test method
+	 * @param args the args
+	 */
 	public static void main(final String [] args) {
 		RevisionCompareModel model = new RevisionCompareModel();
 		RevisionCompareView view = new RevisionCompareView();
 		RevisionComparePresenter presenter = new RevisionComparePresenter(model, view);
-		
+
 		presenter.setFileHandler(new FileHandler() {
-			
+
 			@Override
 			public Collection<? extends Formula> load(File file) {
 				if(file == null)
@@ -69,16 +74,16 @@ public class RevisionTest {
 				}
 				return null;
 			}
-			
+
 			@Override
 			public FileFilter getFilter() {
 				return new FileFilter() {
-					
+
 					@Override
 					public String getDescription() {
 						return "*.(asp|dl|dlv)";
 					}
-					
+
 					@Override
 					public boolean accept(File f) {
 						String path = f.getPath();
@@ -88,20 +93,20 @@ public class RevisionTest {
 			}
 
 			@Override
-			public File getCurrentDiretory() {
-				return args.length >= 2 ? new File(args[1]) : new File("."); 
+			public File getCurrentDirectory() {
+				return args.length >= 2 ? new File(args[1]) : new File(".");
 			}
 		});
-		
+
 		JFrame frame = new JFrame("ASP - Revision Test");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(view);
 		frame.setVisible(true);
 		frame.pack();
-		
+
 		String path = "";
 		String msg = "";
-		
+
 		if(args.length >= 1) {
 			path = args[0];
 		} else {
@@ -114,18 +119,21 @@ public class RevisionTest {
 		if(!msg.isEmpty()) {
 			JOptionPane.showMessageDialog(view, msg);
 		}
-		
+
 		if(!new File(path).exists()) {
 			JFileChooser chooser = new JFileChooser();
 			chooser.setCurrentDirectory(new File("."));
 			chooser.showOpenDialog(frame);
 			path = chooser.getSelectedFile().getPath();
 		}
-		
+
 		DLVSolver solver = new DLVSolver(path); //TODO should be DLVComplex
 		model.addOperator(new PreferenceHandling(solver));
 		model.addOperator(new CredibilityRevision(solver));
-		
+
 		frame.pack();
 	}
+
+    /** Default Constructor */
+    public RevisionTest(){}
 }

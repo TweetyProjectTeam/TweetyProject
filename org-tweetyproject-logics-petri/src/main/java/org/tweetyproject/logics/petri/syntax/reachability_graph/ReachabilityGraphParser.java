@@ -31,7 +31,7 @@ import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Transition;
 
 /**
- * 
+ * ReachabilityGraphParser class
  * @author Matthias Thimm
  *
  */
@@ -53,15 +53,15 @@ public class ReachabilityGraphParser extends Parser{
 	 * true iff the construction has finished
 	 */
 	private boolean constructed = false;
-	
+
 	/**
-	 * 
+	 *Constructor
 	 * @param petriNet a Petri net with some designated initial markings
 	 */
 	public ReachabilityGraphParser(PetriNet petriNet) {
 		this.petriNet = petriNet;
 	}
-	
+
 	/**
 	 * Construct the reachability graph for the Petri net
 	 */
@@ -77,7 +77,7 @@ public class ReachabilityGraphParser extends Parser{
 				// set the token distribution in the net according to the marking
 				petriNet.setState(initialMarking);
 				if(!reachabilityGraph.hasMarking(currentMarking)) {
-					reachabilityGraph.add(currentMarking);					
+					reachabilityGraph.add(currentMarking);
 				}
 				search();
 			}
@@ -88,7 +88,7 @@ public class ReachabilityGraphParser extends Parser{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Get the reachability graph after parsing
 	 * @return the reachability graph if the graph had been parsed before
@@ -100,7 +100,7 @@ public class ReachabilityGraphParser extends Parser{
 		}
 		return reachabilityGraph;
 	}
-	
+
 	/**
 	 * Search depth-first recursively for possible follow-up markings to the current marking
 	 */
@@ -116,7 +116,7 @@ public class ReachabilityGraphParser extends Parser{
 		Marking temp;
 		for(Transition transition : enabledTransitions) {
 			temp = currentMarking;
-			transition.fire();			
+			transition.fire();
 			newMarking = petriNet.getMarking();
 			// add edge to new marking and also check if we have been there before
 			boolean hasLoop = addEdge(currentMarking, newMarking, transition);
@@ -124,16 +124,16 @@ public class ReachabilityGraphParser extends Parser{
 				// search only if that marking is new
 				// otherwise, the search at that marking has been called before
 				currentMarking = newMarking;
-				search();								
+				search();
 			}
 			// reset states to continue search for other markings
 			transition.revertFire();
 			currentMarking = temp;
 		}
 	}
-	
+
 	/**
-	 * Add an edge to the reachability graph 
+	 * Add an edge to the reachability graph
 	 * and add the target marking to the graph if it does not already exist in the graph
 	 * @param source the source of the edge
 	 * @param target the target of the edge

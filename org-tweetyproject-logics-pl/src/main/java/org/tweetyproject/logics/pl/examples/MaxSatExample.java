@@ -61,4 +61,7 @@ public class MaxSatExample {
 		System.out.println("Interpretation satisfying the hard constraints and minimising costs of violated soft constraints: " + witness);
 		System.out.println("Cost of solution: " + MaxSatSolver.costOf(witness, bs, softClauses));
 	}
+
+    /** Default Constructor */
+    public MaxSatExample(){}
 }

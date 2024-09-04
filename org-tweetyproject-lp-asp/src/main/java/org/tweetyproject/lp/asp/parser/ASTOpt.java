@@ -21,26 +21,62 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTOpt} class represents a node in the abstract syntax tree (AST)
+ * for optimization statements within the context of Answer Set Programming (ASP).
+ * This class extends {@code SimpleNode} and is used by the ASP parser to handle
+ * optimization directives, such as maximizing or minimizing a function.
+ */
 public class ASTOpt extends SimpleNode {
-	public boolean maximize;
 
-	public ASTOpt(int id) {
-		super(id);
-	}
+    /**
+     * Indicates whether the optimization is for maximizing.
+     * If {@code true}, the optimization goal is to maximize;
+     * if {@code false}, the goal is to minimize.
+     */
+    public boolean maximize;
 
-	public ASTOpt(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTOpt} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTOpt(int id) {
+        super(id);
+    }
 
-	public void maximize(boolean b) {
-		this.maximize = b;
-	}
+    /**
+     * Constructs a new {@code ASTOpt} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTOpt(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Sets the optimization directive to either maximize or minimize.
+     *
+     * @param b {@code true} to set the optimization goal to maximize, {@code false} to minimize.
+     */
+    public void maximize(boolean b) {
+        this.maximize = b;
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=477443a36dcbaea8864245e0e24d47e1 (do not edit this
  * line)

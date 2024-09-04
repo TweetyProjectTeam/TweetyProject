@@ -26,13 +26,14 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
+ * ClauseSplittingProcessor class
  * @author Mathias Hofer
  *
  */
 public final class ClauseSplittingProcessor implements Processor<Set<Literal>, Collection<Set<Literal>>>{
 
 	private final int maxClauseSize;
-		
+
 	/**
 	 * @param maxClauseSize the maximal clause size of the generated clauses
 	 */

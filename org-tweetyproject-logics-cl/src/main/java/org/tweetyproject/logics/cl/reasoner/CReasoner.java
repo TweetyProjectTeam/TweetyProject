@@ -34,21 +34,25 @@ import org.tweetyproject.math.term.*;
 /**
  * This class models a c-reasoner for conditional logic. Reasoning is performed
  * by computing a minimal c-representation for the given knowledge base.<br>
- * 
+ *
  * A c-representation for a conditional knowledge base R={r1,...,rn} is a ranking function k such that
  * k accepts every conditional in R (k |= R) and if there are numbers k0,k1+,k1-,...,kn+,kn- with<br>
- * 
+ *
  * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
- * 
- * for every w. A c-representation is minimal if k0+...+kn- is minimal. This reasoner uses mathematical 
+ *
+ * for every w. A c-representation is minimal if k0+...+kn- is minimal. This reasoner uses mathematical
  * optimization for solving the above problem and is usually faster than the brute force approach.
- * 
+ *
  * <br><br>See Gabriele Kern-Isberner. Conditionals in nonmonotonic reasoning and belief revision.
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
 public class CReasoner extends AbstractConditionalLogicReasoner{
-	
+	/** Deafult */
+	public CReasoner(){
+		// public
+	}
+
 	/**
 	 * For the given conditional (B|A) and the given ranks of possible worlds, this
 	 * method constructs the inequation k(AB) < k(A-B) where k(AB) is the minimum of
@@ -65,8 +69,8 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 				if(leftSide == null)
 					leftSide = ranks.get(w);
 				else leftSide = leftSide.min(ranks.get(w));
-			}				
-		}			
+			}
+		}
 		// if term is still null then set to constant zero
 		if(leftSide == null)
 			leftSide = new org.tweetyproject.math.term.IntegerConstant(0);
@@ -77,7 +81,7 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 				if(rightSide == null)
 					rightSide = ranks.get(w);
 				else rightSide = rightSide.min(ranks.get(w));
-			}				
+			}
 		}
 		// if term is still null then set to constant zero
 		if(rightSide == null)
@@ -85,21 +89,21 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 		// return inequation
 		return new Inequation(leftSide.minus(rightSide),new IntegerConstant(0),Inequation.LESS);
 	}
-	
+
 	/**
 	 * For the given interpretation "i" and the given kappas, this method
 	 * computes the constraint
 	 * <br>
-	 * 
+	 *
 	 * k("i")=\sum_{"i" verifies ri} ki+ + \sum_{"i" falsifies ri} kj-
-	 * 
+	 *
 	 * @param w a possible world.
 	 * @param ranki the rank (an integer variable) of interpretation "i".
 	 * @param kappa_pos the positive penalties for interpretations.
 	 * @param kappa_neg the negative penalties for interpretations.
 	 * @return the mathematical statement
 	 */
-	private Statement getRankConstraint(PossibleWorld w, IntegerVariable ranki, Map<Conditional,IntegerVariable> kappa_pos, Map<Conditional,IntegerVariable> kappa_neg){		
+	private Statement getRankConstraint(PossibleWorld w, IntegerVariable ranki, Map<Conditional,IntegerVariable> kappa_pos, Map<Conditional,IntegerVariable> kappa_neg){
 		// construct ride side of the inequation
 		org.tweetyproject.math.term.Term rightSide = null;
 		for(Conditional cond: kappa_pos.keySet()){
@@ -114,7 +118,7 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 				else
 					rightSide = rightSide.add(kappa_neg.get(cond));
 			}
-		}		
+		}
 		// if term is still null then set to constant zero
 		if(rightSide == null)
 			rightSide = new org.tweetyproject.math.term.IntegerConstant(0);
@@ -127,7 +131,7 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 	 */
 	@Override
 	public RankingFunction getModel(ClBeliefSet kb) {
-		RankingFunction crep = new RankingFunction(kb.getMinimalSignature());		
+		RankingFunction crep = new RankingFunction(kb.getMinimalSignature());
 		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
 		// variables for ranks
 		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();
@@ -144,19 +148,19 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 			kappa_pos.put((Conditional)f, new IntegerVariable("kp"+i));
 			kappa_neg.put((Conditional)f, new IntegerVariable("km"+i));
 			i++;
-		}		
+		}
 		// represent optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		org.tweetyproject.math.term.Term targetFunction = null;
 		for(IntegerVariable v: kappa_pos.values()){
 			if(targetFunction == null)
 				targetFunction = v;
-			else targetFunction = v.add(targetFunction);			
+			else targetFunction = v.add(targetFunction);
 		}
 		for(IntegerVariable v: kappa_neg.values()){
 			if(targetFunction == null)
 				targetFunction = v;
-			else targetFunction = v.add(targetFunction);			
+			else targetFunction = v.add(targetFunction);
 		}
 		problem.setTargetFunction(targetFunction);
 		// for every conditional "cond" in "kb", "crep" should accept "cond"
@@ -171,13 +175,13 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 			// extract ranking function
 			for(PossibleWorld w: ranks.keySet()){
 				crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());
-			}		
+			}
 			return crep;
 		} catch (GeneralMathException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

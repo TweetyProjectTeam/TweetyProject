@@ -67,4 +67,7 @@ public class T3Configuration extends T2Configuration {
 			return false;
 		return true;
 	}	
+
+    /** Default Constructor */
+    public T3Configuration(){}
 }

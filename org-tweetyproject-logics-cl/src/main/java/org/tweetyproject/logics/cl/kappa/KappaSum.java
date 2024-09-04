@@ -26,22 +26,26 @@ import java.util.Set;
 /**
  * This constructs represents a sum of kappa values (or terms).
  * If it is empty its evaluated to zero.
- * 
+ *
  * @author Tim Janus
  */
 public class KappaSum implements KappaTerm {
+	/** Default */
+	public KappaSum(){
+		// default
+	}
 
 	/** the value of the kappa-sum, it is -1 as long as the sum cannot be evaluated */
 	int value = -1;
-	
+
 	/** the elements that form the sum */
 	List<KappaTerm> elements = new ArrayList<KappaTerm>();
-	
+
 	@Override
 	public boolean evaluate() {
 		if(value != -1 || elements.isEmpty())
 			return true;
-		
+
 		// check if each element is resolvable
 		boolean allResolvable = true;
 		for(KappaTerm kt : elements) {
@@ -50,14 +54,14 @@ public class KappaSum implements KappaTerm {
 				break;
 			}
 		}
-		
+
 		if(allResolvable) {
 			value = 0;
 			for(KappaTerm kt : elements) {
 				value += kt.value();
 			}
 		}
-			
+
 		return value != -1;
 	}
 
@@ -82,7 +86,7 @@ public class KappaSum implements KappaTerm {
 		return reval;
 	}
 
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -93,7 +97,7 @@ public class KappaSum implements KappaTerm {
 		if(!elements.isEmpty())
 			builder.delete(builder.length()-3, builder.length());
 		builder.append(")");
-		
+
 		/*
 		if(value == -1) {
 			builder.append(" >= ");
@@ -103,7 +107,7 @@ public class KappaSum implements KappaTerm {
 			builder.append(value);
 		}
 		*/
-		
+
 		return builder.toString();
 	}
 

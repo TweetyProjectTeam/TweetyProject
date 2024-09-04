@@ -22,34 +22,32 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
 import org.tweetyproject.arg.dung.syntax.Attack;
 
 
+import org.tweetyproject.arg.weighted.syntax.*;
+import org.tweetyproject.math.algebra.Semiring;
+
 /**
  * Implements a customizable weighted Dung theory generator
  * @author Sandra Hoffmann
  *
  */
-
-import org.tweetyproject.arg.weighted.syntax.*;
-import org.tweetyproject.math.algebra.Semiring;
-
 public class WeightedSemiringDungTheoryGenerator<T> {
-	
+
 	/** The generator used to generate the argumentation framework. */
 	private DungTheoryGenerator generator;
 	/** The semiring used for generation. */
 	private Semiring<T> semiring;
-	
+
 	/**
 	 * Constructs a WeightedSemiringDungTheoryGenerator with the specified DungTheoryGenerator and Semiring.
 	 *
 	 * @param generator The DungTheoryGenerator to be used for generating Dung theories.
 	 * @param semiring The Semiring associated with the generated weighted Dung theories.
-	 * @param <T> The type of weights in the Semiring.
 	 */
 	public WeightedSemiringDungTheoryGenerator(DungTheoryGenerator generator, Semiring<T> semiring){
 		this.generator = generator;
 		this.semiring = semiring;
 	}
-	
+
 	/**
 	 * Generates the next WeightedArgumentationFramework using the associated DungTheoryGenerator and Semiring.
 	 *
@@ -59,14 +57,14 @@ public class WeightedSemiringDungTheoryGenerator<T> {
 
 		WeightedArgumentationFramework<T> AF = new WeightedArgumentationFramework<T>(semiring);
 		AF.add(generator.next());
-		
+
 		for(Attack att : AF.getAttacks()) {
 			AF.setWeight(att, semiring.getRandomElement());
 		}
-	
+
 		return AF;
-		
+
 	}
-	
-	
+
+
 }

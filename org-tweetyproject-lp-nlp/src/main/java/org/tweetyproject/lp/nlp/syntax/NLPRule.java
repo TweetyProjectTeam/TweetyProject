@@ -38,48 +38,103 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 import org.tweetyproject.lp.nlp.error.NestedLogicProgramException;
 
 /**
- * A rule of a nested logic program. A nested logic program contains not quantified 
+ * A rule of a nested logic program. A nested logic program contains not quantified
  * first order formulas.
- * 
+ *
  * @author Tim Janus
  */
-public class NLPRule 
-	extends ComplexLogicalFormulaAdapter 
+public class NLPRule
+	extends ComplexLogicalFormulaAdapter
 	implements ComplexLogicalFormula, Rule<FolFormula, FolFormula> {
 
+	/**
+     * The conclusion of the rule, represented as a first-order logic formula.
+     */
 	FolFormula conclusion = null;
-	
+
+	/**
+     * The premises of the rule, represented as a set of first-order logic formulas.
+     * These are the conditions that must hold for the conclusion to be valid.
+     */
 	Set<FolFormula> premise = new HashSet<FolFormula>();
-	
+
+	/**
+     * Default constructor that creates an empty `NLPRule`.
+     */
 	public NLPRule() {}
-	
+
+
+
+	/**
+     * Copy constructor that creates a new `NLPRule` by copying an existing rule.
+     *
+     * <p>
+     * The new rule is created by cloning the conclusion and premises of the
+     * provided `NLPRule` object. This ensures that the original rule and the
+     * copied rule do not share references to the same formula objects.
+     * </p>
+     *
+     * @param other the `NLPRule` to be copied.
+     */
 	public NLPRule(NLPRule other) {
 		setConclusion(other.getConclusion().clone());
 		for(FolFormula p : other.premise) {
 			addPremise(p.clone());
 		}
 	}
-	
+
+	/**
+     * Constructor that creates a `NLPRule` with a specified conclusion.
+     *
+     * <p>
+     * This constructor initializes the rule with a given conclusion formula,
+     * without any premises.
+     * </p>
+     *
+     * @param conclusion the `FolFormula` that serves as the conclusion of the rule.
+     */
 	public NLPRule(FolFormula conclusion) {
 		setConclusion(conclusion);
 	}
-	
+
+	/**
+     * Constructor that creates a `NLPRule` with a specified conclusion and a single premise.
+     *
+     * <p>
+     * This constructor initializes the rule with a given conclusion formula and a
+     * single premise formula.
+     * </p>
+     *
+     * @param conclusion the `FolFormula` that serves as the conclusion of the rule.
+     * @param premise the `FolFormula` that serves as the premise of the rule.
+     */
 	public NLPRule(FolFormula conclusion, FolFormula premise) {
 		setConclusion(conclusion);
 		addPremise(premise);
 	}
-	
+
+	/**
+     * Constructor that creates a `NLPRule` with a specified conclusion and a collection of premises.
+     *
+     * <p>
+     * This constructor initializes the rule with a given conclusion formula and a
+     * collection of premise formulas.
+     * </p>
+     *
+     * @param conclusion the `FolFormula` that serves as the conclusion of the rule.
+     * @param premise a collection of `FolFormula` objects that serve as the premises of the rule.
+     */
 	public NLPRule(FolFormula conclusion, Collection<FolFormula> premise) {
 		setConclusion(conclusion);
 		addPremises(premise);
 	}
-	
+
 	@Override
 	public void addPremise(FolFormula premise) throws LanguageException {
 		checkFormula(premise);
 		this.premise.add(premise);
 	}
-	
+
 	@Override
 	public void addPremises(Collection<? extends FolFormula> premises) {
 		for(FolFormula f : premises) {
@@ -87,13 +142,13 @@ public class NLPRule
 		}
 		this.premise.addAll(premises);
 	}
-	
+
 	@Override
 	public void setConclusion(FolFormula conclusion) throws LanguageException {
 		checkFormula(conclusion);
 		this.conclusion = conclusion;
 	}
-	
+
 	/**
 	 * Helper methods checks if the given FOL formula is supported by the nested logic
 	 * program language, that means it checks if it contains quantifiers and if that
@@ -104,11 +159,11 @@ public class NLPRule
 	private void checkFormula(FolFormula formula) throws LanguageException {
 		if(formula.containsQuantifier()) {
 			throw new NestedLogicProgramException(
-					LanguageExceptionReason.LER_QUANTIFICATION_NOT_SUPPORTED, 
+					LanguageExceptionReason.LER_QUANTIFICATION_NOT_SUPPORTED,
 					formula.toString());
 		}
 	}
-	
+
 	@Override
 	public Collection<FolFormula> getPremise() {
 		return Collections.unmodifiableCollection(premise);
@@ -191,7 +246,7 @@ public class NLPRule
 		int prime = 13;
 		return (conclusion.hashCode() + premise.hashCode()) * prime;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if(other == null)
@@ -201,7 +256,7 @@ public class NLPRule
 		NLPRule or = (NLPRule)other;
 		return conclusion.equals(or.conclusion) && premise.equals(or.premise);
 	}
-	
+
 	@Override
 	public NLPRule clone() {
 		return new NLPRule(this);

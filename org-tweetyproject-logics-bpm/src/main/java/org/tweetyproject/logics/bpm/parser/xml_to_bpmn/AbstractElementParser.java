@@ -23,7 +23,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Benedikt Knopp
+ * The AbstractElementParser class
+ *  @author Benedikt Knopp
  *
  * @param <T> the class to instantiate with the parsed content
  */
@@ -47,6 +48,7 @@ public abstract class AbstractElementParser<T> {
 	}
 
 	/**
+	 * Return the parsed element
 	 * @param documentNode the XML representation of the element to parse
 	 * @return the parsed element
 	 */

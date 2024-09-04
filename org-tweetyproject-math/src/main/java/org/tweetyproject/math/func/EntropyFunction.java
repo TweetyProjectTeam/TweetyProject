@@ -30,6 +30,11 @@ import org.tweetyproject.math.term.Term;
  */
 public class EntropyFunction implements SimpleRealValuedFunction {
 
+	/** Constructor */
+	public EntropyFunction() {
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.Function#eval(java.lang.Object)
 	 */
@@ -52,7 +57,7 @@ public class EntropyFunction implements SimpleRealValuedFunction {
 	public Term getTerm(Vector<Term> element) {
 		Term result = new FloatConstant(0);;
 		for(Term t: element)
-			result = result.minus(t.mult(new Logarithm(t)));		
+			result = result.minus(t.mult(new Logarithm(t)));
 		return result;
 	}
 

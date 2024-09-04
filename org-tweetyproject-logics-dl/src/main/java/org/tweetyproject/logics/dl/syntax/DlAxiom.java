@@ -7,14 +7,19 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Atom;
 import org.tweetyproject.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 
 /**
- * 
+ *
  * The common abstract class for axioms of the description logic ALC.
  * Belief bases in description logics consist of axioms.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public abstract class DlAxiom implements SimpleLogicalFormula {
+
+	/**Default */
+	public DlAxiom(){
+		super();
+	}
 
 	@Override
 	public abstract DlSignature getSignature();

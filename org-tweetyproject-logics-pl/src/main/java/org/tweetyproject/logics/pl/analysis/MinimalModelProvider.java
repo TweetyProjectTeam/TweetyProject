@@ -26,7 +26,7 @@ import org.tweetyproject.commons.InterpretationSet;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 
 /**
- * 
+ *  MinimalModelProvider class
  * @author Sebastian Franke
  *
  * @param <A> a formula
@@ -35,16 +35,16 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
  */
 public interface MinimalModelProvider<A extends Formula,B extends BeliefBase,C extends Formula> {
 	/**
-	 * 
+	 * Constructor
 	 * @param f a beliefbase
 	 * @return the minimal models
 	 */
 	public Set<InterpretationSet<A,B,C>> getMinModels(B f);
 	/**
-	 * 
+	 * Constructor
 	 * @param f a beliefbase
 	 * @return a set of possible worlds
 	 */
 	public Set<PossibleWorld> getMinModels(C f);
-	
+
 }

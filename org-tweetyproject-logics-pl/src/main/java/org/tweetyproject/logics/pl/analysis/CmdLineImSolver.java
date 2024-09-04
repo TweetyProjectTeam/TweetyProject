@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.logics.pl.analysis;
 
- 
+
 
 import java.io.File;
 import java.io.IOException;
@@ -34,19 +34,19 @@ import org.tweetyproject.logics.pl.writer.PlWriter;
 
 /**
  * Provides an interface to a command line based inconsistency measure analyzer
- * 
+ *
  * @author Sebastian Franke
  */
 public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 	/** The binary location of the binaries. */
 	private String binaryLocation;
-	
 
-	
+
+
 	/**
 	 * Creates a new solver based on the open-wbo
-	 * executable given as a parameter. 
+	 * executable given as a parameter.
 	 * @param binaryLocation the path to the executable.
 	 */
 	public CmdLineImSolver(String binaryLocation){
@@ -62,6 +62,7 @@ public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 
 	/**
+	 * Return the path of the Prover9 binaries.
 	 * @return the path of the Prover9 binaries.
 	 */
 	public String getBinaryLocation() {
@@ -70,17 +71,18 @@ public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 	/**
 	 * Changes the path of the Prover9 binaries.
-	 * 
+	 *
 	 * @param binaryLocation
 	 *            the new path of the binary
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
 	}
-	
+
 
 	/**
-	 * 
+	 *
+	 * Return if the solver is installed
 	 * @return if the solver is installed
 	 */
 	public boolean isInstalled() {
@@ -92,7 +94,7 @@ public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 		catch(Exception e) {
 			return false;
 		}
-		
+
 	}
 
 
@@ -109,11 +111,11 @@ public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 			writer.close();
 			System.out.println(wr.writeToString());
 			double output = Double.parseDouble(NativeShell.invokeExecutable(
-					this.binaryLocation + " " +  file.getAbsolutePath()));	
-			
+					this.binaryLocation + " " +  file.getAbsolutePath()));
+
 			return output;
-		} 
-		
+		}
+
 		catch (IOException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {

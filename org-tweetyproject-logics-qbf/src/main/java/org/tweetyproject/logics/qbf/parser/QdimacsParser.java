@@ -29,8 +29,8 @@ import org.tweetyproject.logics.qbf.syntax.ForallQuantifiedFormula;
 
 /**
  * This class implements a parser for the QDIMACS input format. It is an
- * extension of the DIMACS format used in sat solver competitions. 
- * See <a href="http://www.qbflib.org/qdimacs.html">http://www.qbflib.org/qdimacs.html</a> for more information. 
+ * extension of the DIMACS format used in sat solver competitions.
+ * See <a href="http://www.qbflib.org/qdimacs.html">http://www.qbflib.org/qdimacs.html</a> for more information.
  * <br>
  * <br>
  * The BNF for a QDIMACS input file is given by (starting symbol is
@@ -54,14 +54,20 @@ import org.tweetyproject.logics.qbf.syntax.ForallQuantifiedFormula;
  * The two numbers in PREAMBLE specify the number of variables and the number of
  * clauses. <br>
  * <br>
- * 
+ *
  * To parse QDIMACS output files, use {@link org.tweetyproject.logics.qbf.parser.QdimacsParser#parseQDimacsOutput(String)}
- * 
+ *
  * @author Anna Gessler
  */
 public class QdimacsParser extends DimacsParser {
+
+
+	/** Default */
+	public QdimacsParser(){
+		super();
+	}
 	/**
-	 * List for temporarily storing the quantification lines of the input file. 
+	 * List for temporarily storing the quantification lines of the input file.
 	 * The rest of the input file is parsed with {@link org.tweetyproject.logics.pl.parser.DimacsParser}.
 	 */
 	private List<String> quantifications = new ArrayList<String>();
@@ -93,7 +99,7 @@ public class QdimacsParser extends DimacsParser {
 		//Parse the cnf lines of the input with the normal dimacs parser
 		PlBeliefSet dimacsBeliefSet = super.parseBeliefBase(new StringReader(dimacs));
 		PlFormula temp = new Conjunction(dimacsBeliefSet);
-		
+
 		//Parse the quantifier lines
 		for (String q : quantifications) {
 			Set<Proposition> vars = new HashSet<Proposition>();
@@ -102,7 +108,7 @@ public class QdimacsParser extends DimacsParser {
 				if (q.charAt(i) == '0')
 					break;
 				if (q.charAt(i) == ' ') {
-					int idx = Integer.parseInt(ids); 
+					int idx = Integer.parseInt(ids);
 					vars.add(super.prop_idx[idx - 1]);
 					ids = "";
 				}
@@ -127,15 +133,18 @@ public class QdimacsParser extends DimacsParser {
 	 * Possible answers that solvers can find for a given QDIMACS problem.
 	 */
 	public enum Answer {
-		SAT, // satisfiable
-		UNSAT, // unsatisfiable
+		/** Satisfiable */
+		SAT,
+		/** Unsat */
+		UNSAT,
+		/** Unknown */
 		UNKNOWN
 	}
 
 	/**
 	 * Parses the answer from a given QDIMACS output file. The rest of the file is
 	 * ignored.
-	 * 
+	 *
 	 * @param output string containing a QDIMACS output file
 	 * @return either SAT, UNSAT or UNKNOWN
 	 */

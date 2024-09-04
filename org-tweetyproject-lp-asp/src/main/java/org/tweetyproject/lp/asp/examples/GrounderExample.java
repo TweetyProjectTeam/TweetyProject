@@ -33,15 +33,15 @@ import org.tweetyproject.lp.asp.semantics.AnswerSet;
 import org.tweetyproject.lp.asp.syntax.Program;
 
 /*
- * Example code for using GringoGrounder and AspifParser. 
- * 
+ * Example code for using GringoGrounder and AspifParser.
+ *
  * Tested with gringo/clingo 5.4.0
- * 
+ *
  * @author Anna Gessler
  *
  */
 /**
- * 
+ * GrounderExample class
  * @author Anna Gessler
  *
  */
@@ -50,7 +50,7 @@ public class GrounderExample {
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	/**
-	 * 
+	 * Example
 	 * @param args IOException
 	 * @throws IOException IOException
 	 * @throws ParseException ParseException
@@ -81,17 +81,17 @@ public class GrounderExample {
 		// b :- a.
 		// c :- not a.
 		AspifParser aspifParser = new AspifParser();
-		Program groundP2 = aspifParser.parseProgram("asp 1 0 0\n" 
-				+ "1 1 1 1 0 0\n" 
+		Program groundP2 = aspifParser.parseProgram("asp 1 0 0\n"
+				+ "1 1 1 1 0 0\n"
 				+ "1 0 1 2 0 1 1\n"
-				+ "1 0 1 3 0 1 -1\n" 
-				+ "4 1 a 1 1\n" 
-				+ "4 1 b 1 2\n" 
+				+ "1 0 1 3 0 1 -1\n"
+				+ "4 1 a 1 1\n"
+				+ "4 1 b 1 2\n"
 				+ "4 1 c 1 3\n" + "0");
 		System.out.println(groundP2 + "\n");
-		
-		// Parse a more complex program in aspif format. 
-		// This file is the result of grounding the example from 
+
+		// Parse a more complex program in aspif format.
+		// This file is the result of grounding the example from
 		// org.tweetyproject.lp.asp.examples.OptimizeExample using gringo
 		Program groundP3 = aspifParser.parseProgramFile("src/main/resources/optimize.aspif");
 		System.out.println(groundP3);

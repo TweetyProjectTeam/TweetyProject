@@ -96,7 +96,7 @@ public class SerialisationSequence extends AbstractArgumentationInterpretation<D
     }
 
     /**
-     * Checks whether the given object is in the sequence. Can be either an {@link Extension<>} or an {@link Argument}.
+     * Checks whether the given object is in the sequence.
      * @param o element whose presence in this list is to be tested
      * @return true, if the element is present in the sequence
      */

@@ -31,6 +31,7 @@ import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGrap
 import org.tweetyproject.math.matrix.Matrix;
 
 /**
+ * The DeadEndMeasure
  * @author Benedikt Knopp
  */
 public class DeadEndMeasure implements BpmnInconsistencyMeasure{
@@ -39,22 +40,22 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 	 * the ReachabilityGraph for which the inconsistency value is to find
 	 */
 	private ReachabilityGraph reachabilityGraph;
-	
+
 	/**
 	 * DeadEndInconsistencyMeasure
 	 */
 	public DeadEndMeasure() {}
-	
+
 	/**
 	 * A token sensitive measure assigns higher inconsistency values if more tokens remain in non-final places
 	 */
 	private boolean tokenSensitive = false;
-	
+
 	/**
 	 * the inconsistency value, calculated after performing the Markov walk
 	 */
 	private Double inconsistencyValue;
-	
+
 	/**
 	 * the responsibilities of individual places for the global inconsistency value, calculated after performing the Markov walk
 	 */
@@ -64,8 +65,8 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 	 * the responsibilities of individual states for the global inconsistency value, calculated after performing the Markov walk
 	 */
 	private Map<Marking, Double> markingCulpabilities = new HashMap<>();
-	
-	
+
+
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
 		this.reachabilityGraph = reachabilityGraph;
@@ -75,8 +76,8 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 		Matrix limit = randomWalk.getMeanState();
 		calculateInconsistencyValue(limit);
 		return inconsistencyValue;
-	} 
-	
+	}
+
 	/**
 	 * calculates the inconsistency and culpabilities after performing the Markov walk
 	 * @param limit the mean state limit of the Markov walk
@@ -112,8 +113,8 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 
 	@Override
 	/**
-	 * Build and return some strings that describe the graph and its inconsistency value 
-	 * This comprises 1) an ordered list of places and 2) the markings as token distributions 
+	 * Build and return some strings that describe the graph and its inconsistency value
+	 * This comprises 1) an ordered list of places and 2) the markings as token distributions
 	 * with respect to that ordering and 3) the calculated inconsistency value
 	 * @return the info strings
 	 */
@@ -131,7 +132,7 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 				.collect(Collectors.joining(",<br>"));
 		infoString += "<br>";
 		infoStrings.add(infoString);
-		
+
 		infoString = "";
 		infoString += "Markings (w.r.t place ordering above) / Culpabilities:";
 		infoStrings.add(infoString);
@@ -152,19 +153,19 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 		infoStrings.add("<i>---Dead-end inconsistency: " + Math.round(inconsistencyValue * 100.0) / 100.0 + "---</i>");
 		return infoStrings;
 	}
-	
+
 	/**
 	 * specify before determining the values whether the value should be token sensitive
 	 * A token sensitive measure assigns higher inconsistency values if more tokens remain in non-final places
-	 * @param tokenSensitive
+	 * @param tokenSensitive if token is sensitive
 	 */
 	public void setTokenSensitivity(boolean tokenSensitive) {
 		this.tokenSensitive = tokenSensitive;
 	}
-	
+
 	/**
 	 * Retrieve for a particular (non-final) place its local culpability for the global inconsistency
-	 * A high culpability means that many tokens remain in that place with a high probability 
+	 * A high culpability means that many tokens remain in that place with a high probability
 	 * @param place the place
 	 * @return the place culpability
 	 */

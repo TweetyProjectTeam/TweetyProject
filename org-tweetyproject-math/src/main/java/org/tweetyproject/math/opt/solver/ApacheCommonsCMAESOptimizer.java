@@ -42,9 +42,9 @@ import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
 /**
- * This class is a wrapper for the Apache Commons Math3 CMAES optimizer 
+ * This class is a wrapper for the Apache Commons Math3 CMAES optimizer
  * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>).
- *   
+ *
  * @author Matthias Thimm
  */
 public class ApacheCommonsCMAESOptimizer extends Solver{
@@ -52,18 +52,18 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 	/** Population size */
 	private int populationSize;
 	/** Maximal number of iterations.*/
-	private int maxIterations; 
+	private int maxIterations;
 	/** Whether to stop if objective function value is smaller than stopFitness. */
 	private double stopFitness;
-	/** Chooses the covariance matrix update method. */ 
+	/** Chooses the covariance matrix update method. */
 	private boolean isActiveCMA;
 	/** Number of initial iterations, where the covariance matrix remains diagonal. */
 	private int diagonalOnly;
 	/** Determines how often new random objective variables are generated in case they are out of bounds. */
-	private int checkFeasableCount; 
+	private int checkFeasableCount;
 	/** The precision of the optimization*/
 	private double precision;
-	
+
 	/**
 	 * Parameters from org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer:
 	 * @param populationSize the population size
@@ -83,7 +83,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 		this.checkFeasableCount = checkFeasableCount;
 		this.precision = precision;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -92,7 +92,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
-		OptimizationProblem p = (OptimizationProblem) problem; 
+		OptimizationProblem p = (OptimizationProblem) problem;
 		// only box constraints allowed (so far)
 		if(!p.isEmpty())
 			throw new IllegalArgumentException("Only optimization problems with box constraints on variables allowed for this solver (no other constraints.");
@@ -107,17 +107,17 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 			s[i] = (lb[i]+ub[i])/2;
 			sigma[i] = ub[i]-lb[i];
 		}
-		
+
 		final Term targetFunction = p.getTargetFunction();
 		MultivariateFunction target = new MultivariateFunction(){
 			@Override
-			public double value(double[] arg0) {	
+			public double value(double[] arg0) {
 				return targetFunction.replaceAllTerms(arg0, vars).doubleValue();
-			}			
-		};		
+			}
+		};
 		// construct solver
-		
-		CMAESOptimizer optimizer = new CMAESOptimizer(this.maxIterations, this.stopFitness, this.isActiveCMA, this.diagonalOnly, 
+
+		CMAESOptimizer optimizer = new CMAESOptimizer(this.maxIterations, this.stopFitness, this.isActiveCMA, this.diagonalOnly,
 				this.checkFeasableCount, new JDKRandomGenerator(), true, new SimplePointChecker<PointValuePair>(this.precision,this.precision));
 		PointValuePair val = optimizer.optimize(new CMAESOptimizer.Sigma(sigma),
 				new ObjectiveFunction(target),
@@ -126,18 +126,18 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 				new MaxEval(this.maxIterations),
 				new SimpleBounds(lb,ub),
 				new CMAESOptimizer.PopulationSize(this.populationSize));
-		
+
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		for(int i = 0; i < vars.size(); i++)
 			result.put(vars.get(i), new FloatConstant(val.getPoint()[i]));
 		return result;
 	}
-	
+
 	/**
 	 * Returns the variable assignment that maximizes/minimizes the given term
 	 * (which only contains variables with defined upper and lower bounds).
 	 * @param t the term to be evaluated
-	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
+	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE
 	 * @return the optimal variable assignment
 	 * @throws GeneralMathException if there is some issue in the computation
 	 */
@@ -146,10 +146,11 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 		p.setTargetFunction(t);
 		return this.solve(p);
 	}
-	
+
 
 	/**
-	 * 
+	 * Return if it is installed
+	 *
 	 * @return if it is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

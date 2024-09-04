@@ -44,23 +44,29 @@ import org.tweetyproject.math.term.Variable;
 
 /**
  * This class models an approximation from above to the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], see [PhD thesis, Thimm].
- * 
+ *
  * @author Matthias Thimm
  */
 public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
-
+	/**
+	 * rootFinder
+	 */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public UpperApproxDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
-	
+
+
 	/**
 	 * For archiving.
 	 */
 	private Map<PclBeliefSet,Double> archive = new HashMap<PclBeliefSet,Double>();
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
@@ -70,7 +76,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
-		// first check whether the belief set is consistent		
+		// first check whether the belief set is consistent
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
@@ -90,14 +96,14 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 			if(normConstraint == null)
 				normConstraint = var;
 			else normConstraint = normConstraint.add(var);
-		}		
+		}
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
 		// For each conditional add a variables mu and nu and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> mus = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> nus = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
-		i = 0;		
+		i = 0;
 		for(ProbabilisticConditional c: beliefSet){
 			FloatVariable mu = new FloatVariable("m" + i,0,1);
 			FloatVariable nu = new FloatVariable("n" + i++,0,1);
@@ -116,7 +122,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -129,7 +135,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -142,10 +148,10 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			problem.add(new Equation(leftSide,rightSide));			
+			problem.add(new Equation(leftSide,rightSide));
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// transform into eta values
 
@@ -153,7 +159,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 			for(ProbabilisticConditional pc: beliefSet){
 				Double eta = solution.get(mus.get(pc)).doubleValue() - solution.get(nus.get(pc)).doubleValue();
 				Double denom = 0d;
-				if(eta != 0){					
+				if(eta != 0){
 					PlFormula body = pc.getPremise().iterator().next();
 					for(PossibleWorld w: worlds)
 						if(w.satisfies(body))
@@ -162,7 +168,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						eta /= denom;
 					else eta = 0d;
 				}
-				
+
 				result += Math.abs(eta);
 			}
 
@@ -174,7 +180,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
-		}		
+		}
 	}
 }
 

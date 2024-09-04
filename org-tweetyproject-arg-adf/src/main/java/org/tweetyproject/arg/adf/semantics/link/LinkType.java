@@ -18,89 +18,109 @@
  */
 package org.tweetyproject.arg.adf.semantics.link;
 /**
- * 
- * @author Sebastian
+ * Enum representing different types of links in a framework. A link can be
+ * dependent, supporting, attacking, or redundant. Each link type has certain
+ * properties that define whether it is attacking, supporting, or both.
  *
+ * @author Sebastian
  */
-public enum LinkType{
-	/** Dependent*/
-	DEPENDENT(false, false), 
-	/** Supporting*/
-	SUPPORTING(false, true), 
-	/** Attacking*/
-	ATTACKING(true, false), 
-	/**Redundant*/
-	REDUNDANT(true, true);
-	
-	private final boolean attacking;
-	private final boolean supporting;
-	
-	/**
-	 * @param attacking attacking
-	 * @param supporting supporting
-	 */
-	private LinkType(boolean attacking, boolean supporting) {
-		this.attacking = attacking;
-		this.supporting = supporting;
-	}
-	
-	/**  
-	 * @return true iff the link is supporting, note that this is also the case if the link is redundant.
-	 */
-	public boolean isAttacking() {
-		return attacking;
-	}
-	
-	/**
-	 * @return true iff the link is supporting, note that this is also the case if the link is redundant.
-	 */
-	public boolean isSupporting() {
-		return supporting;
-	}
-	
-	/**
-	 * @return true iff the link is attacking and supporting
-	 */
-	public boolean isRedundant() {
-		return attacking && supporting;
-	}
-	
-	/**
-	 * @return true iff the link is neither attacking nor supporting
-	 */
-	public boolean isDependent() {
-		return !attacking && !supporting;
-	}
-	
-	/**
-	 * @return true iff the link is attacking or supporting
-	 */
-	public boolean isBipolar() {
-		return attacking || supporting;
-	}
-	/**
-	 * 
-	 * @return isNonBipolar
-	 */
-	public boolean isNonBipolar() {
-		return !isBipolar();
-	}
-/**
- * 
- * @param attacking attacking
- * @param supporting supporting
- * @return
- */
-	public static LinkType get(boolean attacking, boolean supporting) {
-		if (attacking && supporting) {
-			return REDUNDANT;
-		} else if (attacking) {
-			return ATTACKING;
-		} else if (supporting) {
-			return SUPPORTING;
-		} else {
-			return DEPENDENT;
-		}
-	}
+public enum LinkType {
+    /** Dependent link: neither attacking nor supporting */
+    DEPENDENT(false, false),
+    /** Supporting link: link provides support */
+    SUPPORTING(false, true),
+    /** Attacking link: link represents an attack */
+    ATTACKING(true, false),
+    /** Redundant link: both attacking and supporting */
+    REDUNDANT(true, true);
 
+    private final boolean attacking;
+    private final boolean supporting;
+
+    /**
+     * Constructs a LinkType with specified properties of whether it is attacking
+     * and/or supporting.
+     *
+     * @param attacking   whether the link is attacking
+     * @param supporting  whether the link is supporting
+     */
+    private LinkType(boolean attacking, boolean supporting) {
+        this.attacking = attacking;
+        this.supporting = supporting;
+    }
+
+    /**
+     * Checks if the link is attacking.
+     *
+     * @return true if the link is attacking, otherwise false
+     */
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    /**
+     * Checks if the link is supporting.
+     *
+     * @return true if the link is supporting, otherwise false
+     */
+    public boolean isSupporting() {
+        return supporting;
+    }
+
+    /**
+     * Checks if the link is redundant, meaning it is both attacking and supporting.
+     *
+     * @return true if the link is redundant, otherwise false
+     */
+    public boolean isRedundant() {
+        return attacking && supporting;
+    }
+
+    /**
+     * Checks if the link is dependent, meaning it is neither attacking nor supporting.
+     *
+     * @return true if the link is dependent, otherwise false
+     */
+    public boolean isDependent() {
+        return !attacking && !supporting;
+    }
+
+    /**
+     * Checks if the link is bipolar, meaning it is either attacking or supporting.
+     *
+     * @return true if the link is attacking or supporting, otherwise false
+     */
+    public boolean isBipolar() {
+        return attacking || supporting;
+    }
+
+    /**
+     * Checks if the link is non-bipolar, meaning it is neither attacking nor supporting.
+     *
+     * @return true if the link is non-bipolar, otherwise false
+     */
+    public boolean isNonBipolar() {
+        return !isBipolar();
+    }
+
+    /**
+     * Returns the corresponding LinkType based on the given properties of
+     * attacking and supporting.
+     *
+     * @param attacking   whether the link is attacking
+     * @param supporting  whether the link is supporting
+     * @return the appropriate LinkType based on the properties
+     */
+    public static LinkType get(boolean attacking, boolean supporting) {
+        if (attacking && supporting) {
+            return REDUNDANT;
+        } else if (attacking) {
+            return ATTACKING;
+        } else if (supporting) {
+            return SUPPORTING;
+        } else {
+            return DEPENDENT;
+        }
+    }
 }
+

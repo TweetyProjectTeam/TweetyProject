@@ -21,26 +21,56 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * Represents a node in the abstract syntax tree (AST) for a weight in the ASP (Answer Set Programming) parser.
+ * This class extends {@link SimpleNode} and provides methods to accept a visitor and manage the weight's level status.
+ */
 public class ASTWeight extends SimpleNode {
-	protected boolean hasLevel;
 
-	public ASTWeight(int id) {
-		super(id);
-	}
+    /** Indicates whether the weight has a level. */
+    protected boolean hasLevel;
 
-	public ASTWeight(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTWeight} with the specified node ID.
+     *
+     * @param id The node ID.
+     */
+    public ASTWeight(int id) {
+        super(id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTWeight} with the specified parser and node ID.
+     *
+     * @param p The parser instance used to create this node.
+     * @param id The node ID.
+     */
+    public ASTWeight(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	public void hasLevel(boolean b) {
-		this.hasLevel = b;
-	}
+    /**
+     * Accepts a visitor and allows it to visit this node.
+     *
+     * @param visitor The visitor to accept.
+     * @param data Optional data to pass to the visitor.
+     * @return The result of the visitor's visit method.
+     */
+    @Override
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
+
+    /**
+     * Sets whether this weight has a level.
+     *
+     * @param b {@code true} if the weight has a level; {@code false} otherwise.
+     */
+    public void hasLevel(boolean b) {
+        this.hasLevel = b;
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=3d490a323f4e0e07cc3eba160799f375 (do not edit this
  * line)

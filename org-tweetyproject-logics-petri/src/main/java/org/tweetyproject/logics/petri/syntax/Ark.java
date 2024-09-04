@@ -42,18 +42,19 @@ public class Ark extends Edge<PetriNetNode> {
 	 * the transition of this ark
 	 */
 	private Transition transition;
-	
+
 	/**
-	 * 
+	 * Directions
 	 * @author Matthias Timm
 	 *
 	 */
 	public enum Direction {
 		/** PLACE_TO_TRANSITION */
+		PLACE_TO_TRANSITION,
 		/** TRANSITION_TO_PLACE */
-		PLACE_TO_TRANSITION, TRANSITION_TO_PLACE
+		TRANSITION_TO_PLACE
 	}
-	
+
 	/**
 	 * Create a new ark from a place to a transition
 	 * @param place the place
@@ -67,13 +68,13 @@ public class Ark extends Edge<PetriNetNode> {
 	/**
 	 * Create a new ark from a transition to a place
 	 * @param transition the transition
-	 * @param place the place	
+	 * @param place the place
 	 */
 	public Ark(Transition transition, Place place) {
 		super(transition, place);
 		this.init(place, transition, Direction.TRANSITION_TO_PLACE, 1);
 	}
-	
+
 	/**
 	 * Create a new ark from a place to a transition with a certain weight
 	 * @param place the place
@@ -84,24 +85,24 @@ public class Ark extends Edge<PetriNetNode> {
 		super(place, transition);
 		this.init(place, transition, Direction.PLACE_TO_TRANSITION, weight);
 	}
-	
+
 	/**
 	 * Create a new ark from a transition to a place with a certain weight
 	 * @param transition the transition
-	 * @param place the place	
-	 * @param weight the ark weight	 
+	 * @param place the place
+	 * @param weight the ark weight
 	 */
 	public Ark(Transition transition, Place place, int weight) {
 		super(transition, place);
 		this.init(place, transition, Direction.TRANSITION_TO_PLACE, weight);
 	}
-	
+
 	/**
 	 * Initialize basic properties of this ark
 	 * @param place the place
-	 * @param transition the transition	
+	 * @param transition the transition
 	 * @param direction the ark direction
-	 * @param weight the ark weight	
+	 * @param weight the ark weight
 	 */
 	private void init(Place place, Transition transition, Direction direction, int weight) {
 		this.place = place;
@@ -109,22 +110,25 @@ public class Ark extends Edge<PetriNetNode> {
 		this.direction = direction;
 		this.weight = weight;
 	}
-	
+
 	/**
+	 * Return the ark direction, from place to transition or vice versa
 	 * @return the ark direction, from place to transition or vice versa
 	 */
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	/**
+	 * Return the place of this ark
 	 * @return the place of this ark
 	 */
 	public Place getPlace() {
 		return place;
 	}
-	
+
 	/**
+	 * Return the transition of this ark
 	 * @return the transition of this ark
 	 */
 	public Transition getTransition() {
@@ -132,22 +136,25 @@ public class Ark extends Edge<PetriNetNode> {
 	}
 
 	/**
+	 * Return the ark weight
 	 * @return the ark weight
 	 */
 	public int getWeight() {
 		return weight;
 	}
 
-	
+
 	/**
-	 * 
+	 *
+	 * Setter Weight
 	 * @param weight setWeight
 	 */
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
-	
+
 	/**
+	 * Return true if this ark can fire based on its weight and properties of the connected place
 	 * @return true if this ark can fire based on its weight and properties of the connected place
 	 */
 	public boolean canFire() {
@@ -156,7 +163,7 @@ public class Ark extends Edge<PetriNetNode> {
 		}
 		return this.place.canAddTokens(this.weight);
 	}
-	
+
 	/**
 	 * Fire this ark and conduct respective token propagations
 	 * @throws IllegalStateException if this ark can not be fired at the moment

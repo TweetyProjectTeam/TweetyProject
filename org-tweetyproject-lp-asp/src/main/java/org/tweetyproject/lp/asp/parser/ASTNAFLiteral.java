@@ -21,27 +21,60 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTNAFLiteral} class represents a node in the abstract syntax tree (AST)
+ * for literals with negation as failure (NAF) within the context of Answer Set Programming (ASP).
+ * This class extends {@code SimpleNode} and is used by the ASP parser to handle literals
+ * that can be prefixed with NAF.
+ */
 public class ASTNAFLiteral extends SimpleNode {
-	protected boolean nafneg;
-	
-	public ASTNAFLiteral(int id) {
-		super(id);
-	}
 
-	public ASTNAFLiteral(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Indicates whether this literal is negated using negation as failure (NAF).
+     */
+    protected boolean nafneg;
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTNAFLiteral} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTNAFLiteral(int id) {
+        super(id);
+    }
 
-	public void nafneg(boolean b) {
-		this.nafneg = b;
-	}
+    /**
+     * Constructs a new {@code ASTNAFLiteral} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTNAFLiteral(ASPParser p, int id) {
+        super(p, id);
+    }
 
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
+
+    /**
+     * Sets whether this literal is negated using negation as failure (NAF).
+     *
+     * @param b {@code true} if the literal is negated using NAF, {@code false} otherwise.
+     */
+    public void nafneg(boolean b) {
+        this.nafneg = b;
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=e8591feaae7da17f539bf655c43b5604 (do not edit this
  * line)

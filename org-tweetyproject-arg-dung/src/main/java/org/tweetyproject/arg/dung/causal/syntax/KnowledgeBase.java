@@ -60,7 +60,8 @@ public class KnowledgeBase extends PlBeliefSet{
      * 
      * @param assumption The PlFormula representing the assumption to be added.
      * @return true if the assumption was successfully added, false if it already exists in the set.
-     */ic boolean addAssumption(PlFormula assumption) {
+     */
+	public boolean addAssumption(PlFormula assumption) {
 		return this.assumptions.add(assumption);
 	}
 	

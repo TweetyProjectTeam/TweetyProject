@@ -33,12 +33,17 @@ import org.tweetyproject.math.probability.Probability;
  */
 public class PartialProbabilityAssignment extends HashMap<Argument,Probability> implements BeliefBase{
 
+
+	/** Default */
+	public PartialProbabilityAssignment(){
+		super();
+	}
 	/** For serialization.*/
 	private static final long serialVersionUID = 7051185602937753358L;
 
 	/**
 	 * Checks whether the given probabilistic extension is compliant with this
-	 * partial probability assignment, i.e. whether the probabilities of the 
+	 * partial probability assignment, i.e. whether the probabilities of the
 	 * arguments coincide.
 	 * @param pext some probabilistic extension.
 	 * @return "true" iff the given probabilistic extension is compliant.

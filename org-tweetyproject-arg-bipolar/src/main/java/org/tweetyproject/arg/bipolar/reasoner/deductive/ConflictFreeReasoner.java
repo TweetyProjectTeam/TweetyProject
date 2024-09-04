@@ -33,7 +33,8 @@ import java.util.*;
  */
 public class ConflictFreeReasoner {
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -47,4 +48,7 @@ public class ConflictFreeReasoner {
         }
         return result;
     }
+
+    /** Default Constructor */
+    public ConflictFreeReasoner(){}
 }

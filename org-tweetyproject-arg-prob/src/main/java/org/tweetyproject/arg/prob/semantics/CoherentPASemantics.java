@@ -38,6 +38,13 @@ import org.tweetyproject.math.term.FloatVariable;
  */
 public class CoherentPASemantics extends AbstractPASemantics {
 
+
+
+	/** Default */
+	public CoherentPASemantics(){
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */
@@ -46,7 +53,7 @@ public class CoherentPASemantics extends AbstractPASemantics {
 		for(Attack att: theory.getAttacks()){
 			if(p.probability(att.getAttacker()).doubleValue() >  1 - p.probability(att.getAttacked()).doubleValue() + Probability.PRECISION)
 				return false;
-		}		
+		}
 		return true;
 	}
 
@@ -57,7 +64,7 @@ public class CoherentPASemantics extends AbstractPASemantics {
 	public Collection<Statement> getSatisfactionStatements(DungTheory theory, Map<Collection<Argument>, FloatVariable> worlds2vars) {
 		Set<Statement> stats = new HashSet<Statement>();
 		for(Attack att: theory.getAttacks()){
-			stats.add(new Inequation(this.probabilityTerm(att.getAttacker(), worlds2vars),new FloatConstant(1).minus(this.probabilityTerm(att.getAttacked(), worlds2vars)),Inequation.LESS_EQUAL));			
+			stats.add(new Inequation(this.probabilityTerm(att.getAttacker(), worlds2vars),new FloatConstant(1).minus(this.probabilityTerm(att.getAttacked(), worlds2vars)),Inequation.LESS_EQUAL));
 		}
 		return stats;
 	}

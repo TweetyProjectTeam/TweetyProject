@@ -45,7 +45,7 @@ import org.tweetyproject.math.probability.Probability;
 /**
  * Models a default rule in Reiter's default logic, see [R. Reiter. A logic for
  * default reasoning. Artificial Intelligence, 13:81–132, 1980].
- * 
+ *
  * @author Matthias Thimm, Nils Geilen
  *
  */
@@ -57,14 +57,14 @@ public class DefaultRule extends RelationalFormula {
 	private Collection<FolFormula> jus;
 	/** The conclusion of the default rule */
 	private FolFormula conc;
-	
+
 	/**
 	 * an empty Default Rule
 	 */
 	public DefaultRule(){
-		
+
 	}
-	
+
 	/**
 	 * Creates a new DefaultRule
 	 * @param pre 	the prerequsite
@@ -111,8 +111,9 @@ public class DefaultRule extends RelationalFormula {
 		return prover.equivalent(dt.getFacts(), jus.iterator().next(), conc);
 	}
 
-	
+
 	/**
+	 * Return the default's prerequisite
 	 * @return the default's prerequisite
 	 */
 	public FolFormula getPrerequisite() {
@@ -120,6 +121,7 @@ public class DefaultRule extends RelationalFormula {
 	}
 
 	/**
+	 * Return the default's justification
 	 * @return the default's justification
 	 */
 	public Collection<FolFormula> getJustification() {
@@ -127,6 +129,7 @@ public class DefaultRule extends RelationalFormula {
 	}
 
 	/**
+	 * Return the default's conclusion
 	 * @return the default's conclusion
 	 */
 	public FolFormula getConclusion() {
@@ -136,7 +139,7 @@ public class DefaultRule extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.syntax.interfaces.SimpleLogicalFormula#getPredicates()
 	 */
-	@Override 
+	@Override
 	@SuppressWarnings("all")
 	public Set<? extends Predicate> getPredicates() {
 		Set result = pre.getPredicates();
@@ -341,7 +344,7 @@ public class DefaultRule extends RelationalFormula {
 	public Conjunction combineWithAnd(Conjunctable formula) {
 		throw new IllegalArgumentException("Not combinable with and");
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.fol.syntax.RelationalFormula#getSignature()
 	 */
@@ -414,7 +417,7 @@ public class DefaultRule extends RelationalFormula {
 		}
 		return false;
 	}
-	
-	
+
+
 
 }

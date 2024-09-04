@@ -37,6 +37,9 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  */
 public class InferenceRule<T extends Formula> extends AbaRule<T> {
+	/** Default */
+	public InferenceRule() {
+	}
 
 	/**
 	 * The rule's conclusion
@@ -49,7 +52,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.util.rules.Rule#isFact()
 	 */
 	@Override
@@ -59,7 +62,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.util.rules.Rule#isConstraint()
 	 */
 	@Override
@@ -69,9 +72,10 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * org.tweetyproject.commons.util.rules.Rule#setConclusion(org.tweetyproject.commons.
+	 * org.tweetyproject.commons.util.rules.Rule#setConclusion(org.tweetyproject.
+	 * commons.
 	 * Formula)
 	 */
 	@Override
@@ -82,8 +86,9 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.commons.util.rules.Rule#addPremise(org.tweetyproject.commons.
+	 *
+	 * @see org.tweetyproject.commons.util.rules.Rule#addPremise(org.tweetyproject.
+	 * commons.
 	 * Formula)
 	 */
 	@Override
@@ -94,8 +99,9 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.commons.util.rules.Rule#addPremises(java.util.Collection)
+	 *
+	 * @see
+	 * org.tweetyproject.commons.util.rules.Rule#addPremises(java.util.Collection)
 	 */
 	@Override
 	public void addPremises(Collection<? extends T> premises) {
@@ -105,7 +111,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.util.rules.Rule#getSignature()
 	 */
 	@Override
@@ -118,7 +124,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.util.rules.Rule#getPremise()
 	 */
 	@Override
@@ -128,7 +134,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.util.rules.Rule#getConclusion()
 	 */
 	@Override
@@ -138,7 +144,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.aba.syntax.ABARule#isAssumption()
 	 */
 	@Override
@@ -148,7 +154,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -165,7 +171,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -179,7 +185,7 @@ public class InferenceRule<T extends Formula> extends AbaRule<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("rawtypes")

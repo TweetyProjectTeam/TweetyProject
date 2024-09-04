@@ -260,4 +260,7 @@ public class StreamInconsistencyEvaluationExample {
 			}
 		}
 	}
+
+    /** Default Constructor */
+    public StreamInconsistencyEvaluationExample(){}
 }

@@ -33,7 +33,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class represents existential quantification for boolean formulas.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -42,12 +42,12 @@ public class ExistsQuantifiedFormula extends PlFormula {
 	 * The quantified formula.
 	 */
 	private PlFormula innerFormula;
-	
+
 	/**
 	 * The quantified variables.
 	 */
 	private Set<Proposition> quantifier_variables;
-	
+
 	/**
 	 * Create a new existential boolean quantification.
 	 * @param f inner formula
@@ -58,7 +58,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 		this.quantifier_variables = variables;
 		//TODO check well-formed-ness
 	}
-	
+
 	/**
 	 * Create a new existential boolean quantification.
 	 * @param f inner formula
@@ -70,7 +70,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 		variables.add(variable);
 		this.quantifier_variables = variables;
 	}
-	
+
 	/**
 	 * Create a new existential boolean quantification.
 	 * @param other other existential quantified formula
@@ -81,6 +81,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 	}
 
 	/**
+	 * Return the quantifier variables (propositions)
 	 * @return the quantifier variables (propositions)
 	 */
 	public Set<Proposition> getQuantifierVariables() {
@@ -88,6 +89,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 	}
 
 	/**
+	 * Return the quantified formula
 	 * @return the quantified formula
 	 */
 	public PlFormula getFormula() {
@@ -125,7 +127,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 	}
 
 	/**
-	 * In this case, this method returns this quantified boolean formula's 
+	 * In this case, this method returns this quantified boolean formula's
 	 * cnf kernel.
 	 */
 	@Override
@@ -143,7 +145,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 			for (int i = 2; i < n; i++)
 				result_tautology = result_tautology.replace(p, new Tautology(), i);
 			models_p = result_tautology.getModels();
-			
+
 			PlFormula result_contra = this.innerFormula.replace(p, new Tautology(), 1);
 			for (int i = 2; i < n; i++)
 				result_contra = result_contra.replace(p, new Tautology(), i);
@@ -199,7 +201,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 	public PlFormula clone() {
 		return new ExistsQuantifiedFormula(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = LogicalSymbols.EXISTSQUANTIFIER() + " ";
@@ -211,7 +213,7 @@ public class ExistsQuantifiedFormula extends PlFormula {
 		s += ": (" + this.getFormula() + ")";
 		return s;
 	}
-	
+
 	@Override
 	public PlSignature getSignature() {
 		PlSignature sig = this.innerFormula.getSignature();
