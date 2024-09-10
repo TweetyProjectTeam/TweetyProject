@@ -239,5 +239,10 @@
     	<artifactId>weighted</artifactId>
     	<version>1.27-SNAPSHOT</version>
     </dependency>
+        <dependency>
+    	<groupId>org.tweetyproject.arg</groupId>
+    	<artifactId>caf</artifactId>
+    	<version>1.27-SNAPSHOT</version>
+    </dependency>
 </dependencies>
 </project>
