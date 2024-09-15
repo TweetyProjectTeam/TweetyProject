@@ -22,7 +22,7 @@ import java.util.BitSet;
 
 /**
  * Inspired by {@link BitSet} but with three values.
- *  
+ *
  * @author Mathias Hofer
  *
  */
@@ -32,7 +32,7 @@ public final class ThreeValuedBitSet {
 
 	/**
 	 * Creates a new bitset with the specified size and all values undefined.
-	 * 
+	 *
 	 * @param size the fixed size of the bitset
 	 */
 	public ThreeValuedBitSet(int size) {
@@ -47,7 +47,7 @@ public final class ThreeValuedBitSet {
 	 * true, it resets the current position and increments the one at i + 1.
 	 * <p>
 	 * The order of the values is Undefined &lt; False &lt; True.
-	 * 
+	 *
 	 * @param i the position
 	 * @return the new value at position i
 	 */
@@ -58,18 +58,36 @@ public final class ThreeValuedBitSet {
 		if (oldValue != null && oldValue) {
 			increment(i + 1);
 		}
-		
+
 		return bitSet[i];
 	}
-	
+
+	/**
+	 * Getter
+	 *
+	 * @param i index
+	 * @return bit at index
+	 */
 	public Boolean get(int i) {
 		return bitSet[i];
 	}
-	
+
+	/**
+	 * Setter value
+	 *
+	 * @param i     index
+	 * @param value value to set
+	 */
 	public void set(int i, Boolean value) {
 		bitSet[i] = value;
 	}
-	
+
+	/**
+	 * Checks if all elements in the {@code bitSet} are {@code true}.
+	 *
+	 * @return {@code true} if all elements in the {@code bitSet} are {@code true},
+	 *         otherwise {@code false}.
+	 */
 	public boolean allTrue() {
 		// TODO make O(1)
 		for (int i = 0; i < bitSet.length; i++) {
@@ -79,20 +97,25 @@ public final class ThreeValuedBitSet {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Sets the value at position to undecided resp. <code>null</code>
-	 * 
+	 *
 	 * @param index the index of the bit to clear
 	 */
 	public void clear(int index) {
 		bitSet[index] = null;
 	}
-	
+
+	/**
+	 *
+	 * Return size
+	 * @return size
+	 */
 	public int size() {
 		return bitSet.length;
 	}
-	
+
 	private Boolean next(Boolean bool) {
 		if (bool == null) {
 			return false;
@@ -115,7 +138,7 @@ public final class ThreeValuedBitSet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

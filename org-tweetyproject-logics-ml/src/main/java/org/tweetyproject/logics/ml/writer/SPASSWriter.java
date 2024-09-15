@@ -30,31 +30,31 @@ import org.tweetyproject.logics.ml.syntax.Necessity;
 import org.tweetyproject.logics.ml.syntax.Possibility;
 
 /**
- * This class prints single first-order modal logic formulas and knowledge bases to 
+ * This class prints single first-order modal logic formulas and knowledge bases to
  * the SPASS format.
  * <p>
  * A SPASS input file consists of the following parts:
  * <ul>
  * <li> Description: Contains meta-information about the problem, i.e. name, author, satisfiability
- * <li> Symbols: Signature declaration 
+ * <li> Symbols: Signature declaration
  * <li> Axioms: a list of formulas
  * <li> Conjectures: a list of formulas
  * </ul>
- * 
+ *
  * SPASS attempts to prove that the conjunction of all axioms implies the
  * disjunction of all conjectures.
- * 
- * @see org.tweetyproject.logics.ml.reasoner.SPASSMlReasoner 
+ *
+ * @see org.tweetyproject.logics.ml.reasoner.SPASSMlReasoner
  * @author Anna Gessler
  */
 
 public class SPASSWriter {
-	
+
 	/**
 	 * Output is redirected to this writer.
 	 */
 	final Writer writer;
-	
+
 	/**
 	 * Creates a new SPASSWriter.
 	 * @param writer Output is redirected to this writer.
@@ -62,14 +62,14 @@ public class SPASSWriter {
 	public SPASSWriter(Writer writer) {
 		this.writer = writer;
 	}
-	
+
 	/**
 	 * Creates a new SPASSWriter.
 	 */
 	public SPASSWriter() {
 		this.writer = new StringWriter();
 	}
-	
+
 	/**
 	 * Prints the contents of a SPASS problem file for a given knowledge base and a formula.
 	 * @param kb a knowledge base
@@ -80,56 +80,56 @@ public class SPASSWriter {
 	public void printProblem(MlBeliefSet kb, RelationalFormula formula) throws ParserException, IOException {
 		FolSignature signature = (FolSignature) kb.getMinimalSignature();
 		signature.addSignature(formula.getSignature());
-		
+
 		String problem = "begin_problem(UnnamedProblem).\n\n";
 		problem += printDescription()+ "\n";
 		problem += printSignature(signature) + "\n";
 		problem += printFormulas(kb, formula) + "\n";;
 		problem += "end_problem.";
-		
+
 		writer.write(problem);
 	}
-	
+
 	/**
 	 * Generates a generic description part for a SPASS problem file.
 	 * @return a string containing the description part
 	 */
 	private String printDescription() {
 		String genericDescription =
-		"list_of_descriptions.\n" + 
-		"name({*UnnamedProblem*}).\n" + 
-		"author({*TweetyUser*}).\n" + 
-		"status(unknown).\n" + 
-		"description({*No description*}).\n" + 
+		"list_of_descriptions.\n" +
+		"name({*UnnamedProblem*}).\n" +
+		"author({*TweetyUser*}).\n" +
+		"status(unknown).\n" +
+		"description({*No description*}).\n" +
 		"end_of_list.\n";
 		return genericDescription;
 	}
-	
+
 	/**
 	 * Prints the symbols declaration for a SPASS input file.
 	 * First-order quantifiers and operators do not need to be declared. All declared
 	 * symbols have to be unique.
-	 * 
+	 *
 	 * @param signature FolSignature of the problem
 	 * @return a string containing the signature declaration
 	 */
 	private String printSignature(FolSignature signature) {
 		String symbols = "list_of_symbols.\n";
-		
+
 		Set<Functor> functors = signature.getFunctors();
 		Set<Sort> sorts = signature.getSorts();
-		
+
 		//Collect all constants
 		Set<String> constants = new HashSet<String>();
 		for (Sort s : sorts) {
-			Set<Term<?>> terms = s.getTerms(); 
+			Set<Term<?>> terms = s.getTerms();
 			for (Term<?> t: terms) {
-				if (!constants.contains(t.toString()) && !(t instanceof Variable)) 
+				if (!constants.contains(t.toString()) && !(t instanceof Variable))
 					constants.add(t.toString());
 			}
-				
-		}	
-	
+
+		}
+
 		//Print functors
 		if (!functors.isEmpty() || !constants.isEmpty()) {
 			String functorsString = "functions[";
@@ -142,7 +142,7 @@ public class SPASSWriter {
 			functorsString = functorsString.substring(0, functorsString.length()-1)+ "].\n";
 			symbols += functorsString;
 		}
-		
+
 		//Print predicates
 		Set<Predicate> predicates = signature.getPredicates();
 		if (!predicates.isEmpty()) {
@@ -154,7 +154,7 @@ public class SPASSWriter {
 			//predicatesString = predicatesString.substring(0, predicatesString.length()-1)+ "].\n";
 			symbols += predicatesString;
 		}
-		
+
 		//Print sorts
 		boolean hasSorts = false;
 		if (!sorts.isEmpty()) {
@@ -166,28 +166,28 @@ public class SPASSWriter {
 			sortsString = sortsString.substring(0, sortsString.length()-1)+ "].\n";
 			symbols += sortsString;
 		}
-		
+
 		symbols += "end_of_list.\n";
-		
+
 		if (hasSorts) {
 			String sortsDeclarations = "\nlist_of_declarations.\n";
 			for (Sort s : sorts) {
-				Set<Term<?>> terms = s.getTerms(); 
+				Set<Term<?>> terms = s.getTerms();
 				for (Term<?> t : terms) {
 					if (!(t instanceof Variable))
-						sortsDeclarations += s.getName() + "(" + t.toString() + ").\n"; 
+						sortsDeclarations += s.getName() + "(" + t.toString() + ").\n";
 					}
 			}
-			
+
 			return symbols + sortsDeclarations + "end_of_list.\n";
-		}	
-		
-		return symbols;		
+		}
+
+		return symbols;
 	}
-	
+
 	/**
-	 * Prints the axioms declaration and conjectures declaration for a SPASS input file. 
-	 * All formulas must be closed. 
+	 * Prints the axioms declaration and conjectures declaration for a SPASS input file.
+	 * All formulas must be closed.
 	 * @param kb a knowledge base of relational formulas that will be used as the axioms declarations
 	 * @param formula a formula that will be used as the conjectures declaration
 	 * @return a string containing the axioms and conjectures declaration
@@ -199,16 +199,16 @@ public class SPASSWriter {
 		//EML specifies the type of special formulae, in this case "extended modal logic"
 		//For SPASS Version 3.9, "eml" has to be used instead
 		String axioms = "list_of_special_formulae(axioms,EML).\n";
-		
-		for (Object f : kb) 
+
+		for (Object f : kb)
 			axioms += "prop_formula(" + printFormula((RelationalFormula) f) + ").\n";
-		
+
 		String conjectures = "list_of_special_formulae(conjectures,EML).\n";
 		conjectures += "prop_formula(" + printFormula(formula) + ").\n";
-	
+
 		return axioms + "end_of_list.\n\n" + conjectures + "end_of_list.\n";
 	}
-	
+
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {
 			Negation n = (Negation) f;
@@ -227,7 +227,7 @@ public class SPASSWriter {
 			boolean existential = f instanceof ExistsQuantifiedFormula;
 			String result = "";
 			result += existential ? "exists([" : "forall([";
-			
+
 			for(Variable v: fqf.getQuantifierVariables()) {
 				result += v;
 				result += ",";
@@ -257,12 +257,23 @@ public class SPASSWriter {
 		}
 		if (f instanceof Contradiction) {
 			return "false";
-		}	
+		}
 		return f.toString();
 	}
 
-	public void close() throws IOException {
-		writer.close();
-	}
+
+/**
+ * Closes the underlying writer stream.
+
+ * <p>
+ * If an I/O error occurs while closing the writer, an `IOException` is thrown.
+ * </p>
+ *
+ * @throws IOException if an I/O error occurs while closing the writer.
+ */
+public void close() throws IOException {
+    writer.close();
+}
+
 
 }

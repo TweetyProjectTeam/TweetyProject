@@ -24,6 +24,9 @@
    between nodes. */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * node interfdace
+ */
 public interface Node {
 
 	/**
@@ -37,31 +40,42 @@ public interface Node {
 	 */
 	public void jjtClose();
 
-	/*
+	/**
 	 * This pair of methods are used to inform the node of its parent.
+	 * @param n node
 	 */
 	public void jjtSetParent(Node n);
 
+	/**
+	 *  Get parent node
+	 * @return node
+	 */
 	public Node jjtGetParent();
 
-	/*
+	/**
 	 * This method tells the node to add its argument to the node's list of
 	 * children.
+	 * @param n node
+	 * @param i index
 	 */
 	public void jjtAddChild(Node n, int i);
 
-	/*
+	/**
 	 * This method returns a child node. The children are numbered from zero, left
 	 * to right.
+	 * @param i index
+	 * @return a node
 	 */
 	public Node jjtGetChild(int i);
 
-	/* Return the number of children the node has. */
+	/** Return the number of children the node has.
+	 * @return num children
+	*/
 	public int jjtGetNumChildren();
 
-	/* Accept the visitor. */
+	/**  */
 	/**
-	 * 
+	 *Accept the visitor.
 	 * @param visitor parser visitor
 	 * @param data object
 	 * @return a new object

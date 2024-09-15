@@ -26,7 +26,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 /**
  * Abstract base class implementing the substitute(), getSort(), getTerms(), and
  * containsTermsOfType() methods in a way it is useful for terms.
- * 
+ *
  * @author Tim Janus, Matthias Thimm
  *
  * @param <T>	The type of the value saved in the term, this might be a string
@@ -35,11 +35,12 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
  */
 public abstract class TermAdapter<T> implements Term<T>{
 
+	/** value */
 	protected T value;
-	
+
 	/** the type of the term */
 	private Sort sort;
-	
+
 	/**
 	 * Default-Ctor: Creates an TermAdapter with the Sort "Thing"
 	 * @param value the value of this term
@@ -47,7 +48,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 	public TermAdapter(T value) {
 		this(value, Sort.THING);
 	}
-	
+
 	/**
 	 * Ctor: Creates a TermAdapter with the given Sort
 	 * @param value the value of this term
@@ -58,7 +59,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 		set(value);
 		sort.add(this);
 	}
-	
+
 	@Override
 	public Set<Term<?>> getTerms() {
 		Set<Term<?>> reval = new HashSet<Term<?>>();
@@ -107,7 +108,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 		}
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -124,7 +125,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 			return false;
 		return get().equals(other.get());
 	}
-	
+
 	@Override
 	public abstract TermAdapter<?> clone();
 
@@ -132,7 +133,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 	public String toString() {
 		return String.valueOf(value);
 	}
-	
+
 	@Override
 	public void set(T value) {
 		this.value = value;

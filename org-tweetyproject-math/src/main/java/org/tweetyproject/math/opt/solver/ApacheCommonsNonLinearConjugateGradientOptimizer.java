@@ -44,8 +44,8 @@ import org.tweetyproject.math.term.Variable;
 
 /**
  * This class is a wrapper for the Apache Commons Math3 Non-Linear
- * Conjugate Gradient Optimizer 
- * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>). 
+ * Conjugate Gradient Optimizer
+ * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>).
  * <br>
  * <br>
  * NOTE: This solver does not allow any constraints, box constraints of
@@ -58,7 +58,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 	private int maxEval;
 	/** The precision */
 	private double precision;
-	
+
 	/**
 	 * Creates a new solver.
 	 * @param maxEval the maximum number of evaluations.
@@ -68,7 +68,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 		this.maxEval = maxEval;
 		this.precision = precision;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -77,7 +77,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
-		OptimizationProblem p = (OptimizationProblem) problem; 
+		OptimizationProblem p = (OptimizationProblem) problem;
 		// no constraints allowed
 		if(!p.isEmpty())
 			throw new IllegalArgumentException("Only optimization problems without constraints allowed for this solver.");
@@ -85,7 +85,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 		final List<Variable> vars = new ArrayList<Variable>(target.getVariables());
 		MultivariateFunction acTarget = new MultivariateFunction(){
 			@Override
-			public double value(double[] arg0) {				
+			public double value(double[] arg0) {
 				return target.replaceAllTerms(arg0, vars).doubleValue();
 			}
 		};
@@ -97,7 +97,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 			public double[] value(double[] arg0) throws IllegalArgumentException {
 				double[] result = new double[arg0.length];
 				for(int i = 0 ; i < arg0.length; i++)
-					result[i] = targetGradient[i].replaceAllTerms(arg0, vars).doubleValue();				
+					result[i] = targetGradient[i].replaceAllTerms(arg0, vars).doubleValue();
 				return result;
 			}
 		};
@@ -117,9 +117,10 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 			result.put(vars.get(i), new FloatConstant(val.getPoint()[i]));
 		return result;
 	}
-	
+
 /**
- * 
+ *
+ * Return if solver is installed
  * @return if solver is installed
  * @throws UnsupportedOperationException UnsupportedOperationException
  */

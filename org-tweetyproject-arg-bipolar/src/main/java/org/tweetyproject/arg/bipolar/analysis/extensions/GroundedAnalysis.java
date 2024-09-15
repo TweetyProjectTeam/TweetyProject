@@ -30,6 +30,10 @@ import org.tweetyproject.arg.bipolar.syntax.NamedPEAFTheory;
  * @author Taha Dogan Gunes
  */
 public class GroundedAnalysis extends AbstractExtensionAnalysis {
+    /**
+     * Construct a GroundedAnalysis
+     * @param peaf a PEAF theory
+     */
     public GroundedAnalysis(NamedPEAFTheory peaf) {
         super(peaf, new SimpleGroundedReasoner(), AnalysisType.GROUNDED);
     }

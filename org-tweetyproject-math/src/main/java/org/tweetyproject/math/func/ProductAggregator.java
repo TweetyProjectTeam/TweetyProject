@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class ProductAggregator implements AggregationFunction {
 
+	/** Constructor */
+	public ProductAggregator() {
+	}
+
+
 	private static final long serialVersionUID = -2717855227084369340L;
 
 	/* (non-Javadoc)

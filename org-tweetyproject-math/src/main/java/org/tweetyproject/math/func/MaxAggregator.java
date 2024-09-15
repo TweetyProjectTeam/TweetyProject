@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class MaxAggregator implements AggregationFunction {
 
+	/** Constructor */
+	public MaxAggregator() {
+	}
+
+
 	private static final long serialVersionUID = 6006586362664929980L;
 
 	/* (non-Javadoc)

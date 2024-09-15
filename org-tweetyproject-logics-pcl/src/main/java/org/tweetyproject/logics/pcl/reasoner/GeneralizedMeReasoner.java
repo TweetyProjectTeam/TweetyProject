@@ -55,17 +55,27 @@ import org.tweetyproject.math.term.Variable;
  * conditional logic as proposed in [Potyka, Thimm, 2014] which also works for
  * inconsistent belief sets. It computes the generalized  ME-distribution for
  * the given belief set and answers queries with respect to this ME-distribution.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class GeneralizedMeReasoner extends AbstractPclReasoner {
 
-
+	/**
+	 * Manhattan Distance id
+	 */
 	public final static int MANHATTAN = 1;
+
+	/**
+	 * Euclidean Distance id
+	 */
 	public final static int EUCLIDEAN = 2;
+
+	/**
+	 * Maximum Distance id
+	 */
 	public final static int MAXIMUM = 0;
-	
+
 	/** The norm. */
 	private RealVectorNorm norm;
 
@@ -74,8 +84,8 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 
 	/** The numerical accuracy. */
 	private double accuracy;
-	
-	
+
+
 	/**
 	 * Creates a new generalized ME-reasoner
 	 * @param p the p-norm used
@@ -102,7 +112,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, Solver.getDefaultGeneralSolver());
 		}
 	}
-		
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pcl.reasoner.AbstractPclReasoner#query(org.tweetyproject.logics.pcl.syntax.PclBeliefSet, org.tweetyproject.logics.pl.syntax.PropositionalFormula)
 	 */
@@ -127,8 +137,8 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
 		return this.getModel(beliefbase, (PlSignature) beliefbase.getMinimalSignature());
-	}		
-	
+	}
+
 	/**
 	 * Computes the ME-distribution this reasoner bases on.
 	 * @param bs the belief set
@@ -139,11 +149,11 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 		if(!bs.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		// get inconsistency value
-		double iValue = inc.inconsistencyMeasure(bs);		
+		double iValue = inc.inconsistencyMeasure(bs);
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds(signature);
-		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();		
+		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();
 		int cnt = 0;
 		Term normConstraint = null;
 		for(PossibleWorld w: worlds){
@@ -158,12 +168,12 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 		// add constraints imposed by conditionals
 		cnt = 0;
 		// violation variables
-		Vector<Term> vioVars = new Vector<Term>(); 
+		Vector<Term> vioVars = new Vector<Term>();
 		for(ProbabilisticConditional pc: bs){
 			Variable vio = new FloatVariable("x" + cnt++,-1,1);
 			vioVars.add(vio);
 			Term leftSide = null;
-			Term rightSide = null;			
+			Term rightSide = null;
 			if(pc.isFact()){
 				for(PossibleWorld w: worlds)
 					if(w.satisfies(pc.getConclusion())){
@@ -172,7 +182,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 						else leftSide = leftSide.add(vars.get(w));
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
-			}else{				
+			}else{
 				PlFormula body = pc.getPremise().iterator().next();
 				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -185,7 +195,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 						if(rightSide == null)
 							rightSide = vars.get(w);
 						else rightSide = rightSide.add(vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -208,16 +218,16 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 		for(PossibleWorld w: worlds){
 			if(targetFunction == null)
 				targetFunction = vars.get(w).mult(new Logarithm(vars.get(w)));
-			else targetFunction = targetFunction.add(vars.get(w).mult(new Logarithm(vars.get(w))));			
+			else targetFunction = targetFunction.add(vars.get(w).mult(new Logarithm(vars.get(w))));
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(signature);
 			for(PossibleWorld w: worlds)
 				p.put(w, new Probability(solution.get(vars.get(w)).doubleValue()));
-			return p;					
+			return p;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible (the knowledge base is consistent)
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible.");
@@ -227,6 +237,6 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	@Override
 	public boolean isInstalled() {
 		return true;
-	}	
-	
+	}
+
 }

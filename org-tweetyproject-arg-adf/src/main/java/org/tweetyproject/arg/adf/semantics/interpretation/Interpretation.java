@@ -42,13 +42,13 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 /**
  * This class represents a three-valued interpretation of an Abstract
  * Dialectical Framework (ADF).
- * 
+ *
  * @author Mathias Hofer
  *
  */
 public interface Interpretation {
 /**
- * 
+ *
  * @param adf adf
  * @return Interpretation empty
  */
@@ -56,7 +56,7 @@ public interface Interpretation {
 		return new EmptyInterpretation(adf);
 	}
 /**
- * 
+ *
  * @param assignment assignment
  * @return Interpretation fromMap
  */
@@ -76,8 +76,13 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
+
 	/**
 	 * 	Interpretation fromSets
+	 * @param satisfied satisfied
+	 * @param unsatisfied unsatisfied
+	 * @param adf adf
+	 * @return 	Interpretation fromSets
 	 */
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
 		Set<Argument> undecided = new HashSet<>();
@@ -88,10 +93,10 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), undecided);
 	}
-	
+
 	/**
 	 * Creates the union of two disjunct interpretations.
-	 * 
+	 *
 	 * @param i1 i1
 	 * @param i2 i2
 	 * @return Interpretation union
@@ -99,22 +104,22 @@ public interface Interpretation {
 	 */
 	static Interpretation union(Interpretation i1, Interpretation i2) {
 		if (!Collections.disjoint(i1.arguments(), i2.arguments())) throw new IllegalArgumentException("The given interpretations are not disjunct!");
-		
+
 		Set<Argument> satisfied = new HashSet<>(i1.satisfied());
 		satisfied.addAll(i2.satisfied());
-		
+
 		Set<Argument> unsatisfied = new HashSet<>(i1.unsatisfied());
 		unsatisfied.addAll(i2.unsatisfied());
-		
+
 		Set<Argument> undecided = new HashSet<>(i1.undecided());
 		undecided.addAll(i2.undecided());
-		
+
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
-	
+
 	/**
 	 * Extends the given interpretation by deciding a currently undecided argument. If the argument is not undecided in the given interpretation, an exception is thrown.
-	 * 
+	 *
 	 * @param toExtend toExtend
 	 * @param argument argument
 	 * @param value value
@@ -137,7 +142,7 @@ public interface Interpretation {
 		}
 	}
 /**
- * 
+ *
  * @param satisfied satisfied
  * @param unsatisfied unsatisfied
  * @param undecided undecided
@@ -146,10 +151,10 @@ public interface Interpretation {
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
 		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), Set.copyOf(undecided));
 	}
-	
+
 	/**
 	 * Constructs a three-valued ADF interpretation from a witness of a propositional sat encoding.
-	 * 
+	 *
 	 * @param witness the propositional sat witness
 	 * @param mapping the mapping of the propositional variables and the adf
 	 * @throws NullPointerException if any of the arguments are null
@@ -171,7 +176,7 @@ public interface Interpretation {
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
 	/**
-	 * 		
+	 *
 	 * @param satisfied satisfied
 	 * @param unsatisfied unsatisfied
 	 * @param adf adf
@@ -187,7 +192,7 @@ public interface Interpretation {
 		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), undecided);
 	}
 /**
- * 
+ *
  * @param interpretation interpretation
  * @return Map
  */
@@ -204,10 +209,10 @@ public interface Interpretation {
 		}
 		return assignment;
 	}
-	
+
 	/**
 	 * Creates a new interpretation with the same assignments as in the given interpretation, but only uses the arguments contained in <code>restriction</code>.
-	 * 
+	 *
 	 * @param interpretation the interpretation to restrict
 	 * @param restriction the arguments that act as a restriction/filter
 	 * @return an interpretation which only contains arguments in <code>restriction</code>
@@ -227,31 +232,31 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
-	
+
 	/**
 	 * Checks if, and only if, the two valued assignments for both of the
 	 * interpretations are the same, ignores differences in the undecided
 	 * assignments.
-	 * 
+	 *
 	 * @param i1 an interpretation
 	 * @param i2 an interpretation to be compared with <code>i1</code> for the two-valued assignments
 	 * @return true iff the values of the decided arguments of both interpretations are the same
 	 */
 	static boolean equalsTwoValued(Interpretation i1, Interpretation i2) {
 		return Objects.equals(i1, i2) ||
-				(i1.satisfied().containsAll(i2.satisfied()) && i2.satisfied().containsAll(i1.satisfied()) && 
+				(i1.satisfied().containsAll(i2.satisfied()) && i2.satisfied().containsAll(i1.satisfied()) &&
 				i1.unsatisfied().containsAll(i2.unsatisfied()) && i2.unsatisfied().containsAll(i1.unsatisfied()));
 	}
 	/**
-	 * 
+	 *
 	 * @param argument argument
 	 * @return Interpretation ofSatisfied
-	 */ 
+	 */
 	static Interpretation ofSatisfied(Argument argument) {
 		return new SingleSatisfiedInterpretation(argument);
 	}
 	/**
-	 * 
+	 *
 	 * @param argument argument
 	 * @return Interpretation ofUnsatisfied
 	 */
@@ -259,28 +264,28 @@ public interface Interpretation {
 		return new SingleUnsatisfiedInterpretation(argument);
 	}
 	/**
-	 * 
+	 *
 	 * @param argument argument
 	 * @return Interpretation ofUndecided
 	 */
 	static Interpretation ofUndecided(Argument argument) {
 		return new SingleUndecidedInterpretation(argument);
 	}
-	
+
 	/**
 	 * Goes through all possible partial interpretations respecting the order of the given list of arguments.
 	 * <p>
 	 * This returns exponentially many in the size of <code>arguments</code> interpretations.
-	 * 
+	 *
 	 * @param arguments the arguments for which we compute the interpretations
 	 * @param adf the contextual ADF
 	 * @return the partial interpretations
 	 */
 	static Iterator<Interpretation> partials(List<Argument> arguments, AbstractDialecticalFramework adf) {
 		return new Iterator<Interpretation>() {
-			
+
 			private final Iterator<Interpretation> iter = new InterpretationIterator(arguments);
-			
+
 			@Override
 			public Interpretation next() {
 				Interpretation partial = iter.next();
@@ -291,11 +296,11 @@ public interface Interpretation {
 			public boolean hasNext() {
 				return iter.hasNext();
 			}
-			
+
 		};
 	}
 	/**
-	 * 
+	 *
 	 * @param adf adf
 	 * @return Builder builder
 	 */
@@ -303,7 +308,7 @@ public interface Interpretation {
 		return new Builder(adf);
 	}
 	/**
-	 * 
+	 *
 	 * @param arguments arguments
 	 * @return Builder builder
 	 */
@@ -311,24 +316,24 @@ public interface Interpretation {
 		return new Builder(arguments);
 	}
 	/**
-	 * 
+	 * Builder class
 	 * @author  Matthias Hofer
 	 *
 	 */
 	static final class Builder {
 		private final Map<Argument, Boolean> assignment = new HashMap<>();
-		
+
 		private Builder(Collection<Argument> arguments) {
 			for (Argument arg : arguments) {
 				assignment.put(arg, null); // initialize as undecided
 			}
 		}
-				
+
 		private Builder(AbstractDialecticalFramework adf) {
 			this(adf.getArguments());
 		}
 /**
- * 		
+ *
  * @param arg arg
  * @param value value
  * @return Builder put
@@ -341,7 +346,7 @@ public interface Interpretation {
 			return this;
 		}
 	/**
-	 * 	
+	 *
 	 * @param arg arg
 	 * @return Builder satisfied
 	 */
@@ -349,7 +354,7 @@ public interface Interpretation {
 			return put(arg, true);
 		}
 		/**
-		 * 
+		 *
 		 * @param arg arg
 		 * @return Builder unsatisfied
 		 */
@@ -357,7 +362,7 @@ public interface Interpretation {
 			return put(arg, false);
 		}
 		/**
-		 * 
+		 *
 		 * @param arg arg
 		 * @return Builder undecided
 		 */
@@ -365,7 +370,7 @@ public interface Interpretation {
 			return put(arg, null);
 		}
 	/**
-	 * 	
+	 *
 	 * @return Interpretation build
 	 */
 		public Interpretation build() {
@@ -373,35 +378,35 @@ public interface Interpretation {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param arg arg
 	 * @return satisfied
 	 */
 	boolean satisfied(Argument arg);
 /**
- * 
+ *
  * @param arg arg
  * @return unsatisfied
  */
 	boolean unsatisfied(Argument arg);
 /**
- * 
+ *
  * @param arg arg
  * @return undecided
  */
 	boolean undecided(Argument arg);
 /**
- * 
+ *
  * @return Set
  */
 	Set<Argument> satisfied();
 /**
- * 
+ *
  * @return Set
  */
 	Set<Argument> unsatisfied();
 /**
- * 
+ *
  * @return Set
  */
 	Set<Argument> undecided();
@@ -409,21 +414,21 @@ public interface Interpretation {
 	/**
 	 * Returns the union of {@link #satisfied()}, {@link #unsatisfied()} and
 	 * {@link #undecided()}. Must not return additional arguments.
-	 * 
+	 *
 	 * @return all the assigned arguments
 	 */
 	Set<Argument> arguments();
-	
+
 	/**
 	 * Returns the number of arguments in this interpretation.
-	 * 
+	 *
 	 * @return the number of arguments
 	 */
 	default int size() {
 		return arguments().size();
 	}
 /**
- * 	
+ *
  * @param arguments arguments
  * @return containsAll
  */
@@ -431,14 +436,14 @@ public interface Interpretation {
 		return arguments().containsAll(arguments);
 	}
 	/**
-	 * 
+	 *
 	 * @param argument argument
 	 * @return contains
 	 */
 	default boolean contains(Argument argument) {
 		return arguments().contains(argument);
 	}
-	
+
 	/**
 	 * @param arg some argument
 	 * @return true iff the argument is either satisfied or unsatisfied
@@ -446,17 +451,17 @@ public interface Interpretation {
 	default boolean decided(Argument arg) {
 		return satisfied(arg) || unsatisfied(arg);
 	}
-	
+
 	/**
 	 * Returns the number of decided arguments, i.e. satisfied or unsatisfied, in this interpretation.
-	 *  
+	 *
 	 * @return the number of decided arguments
 	 */
 	default int numDecided() {
 		return satisfied().size() + unsatisfied().size();
 	}
 	/**
-	 * 
+	 *
 	 * @param superset superset
 	 * @return isSubsetOf
 	 */
@@ -464,7 +469,7 @@ public interface Interpretation {
 		return superset.satisfied().containsAll(satisfied()) && superset.unsatisfied().containsAll(unsatisfied());
 	}
 	/**
-	 * 
+	 *
 	 * @param superset superset
 	 * @return isStrictSubsetOf
 	 */
@@ -472,7 +477,7 @@ public interface Interpretation {
 		return isSubsetOf(superset) && numDecided() != superset.numDecided();
 	}
 	/**
-	 * 
+	 *
 	 * @param subset subset
 	 * @return isSupersetOf
 	 */
@@ -480,7 +485,7 @@ public interface Interpretation {
 		return satisfied().containsAll(subset.satisfied()) && unsatisfied().containsAll(subset.unsatisfied());
 	}
 	/**
-	 * 
+	 *
 	 * @param subset subset
 	 * @return isStrictSupersetOf
 	 */

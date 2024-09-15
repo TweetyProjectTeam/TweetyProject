@@ -45,6 +45,9 @@ public class LexicographicDoubleTupleComparator implements Comparator<double[]> 
 		return 0;
 	}
 
+
+    /** Default Constructor */
+    public LexicographicDoubleTupleComparator(){}
 }
 
 

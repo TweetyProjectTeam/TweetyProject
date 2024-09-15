@@ -358,4 +358,7 @@ public class PlParserThreeValued extends Parser<PlBeliefSet, PlFormula> {
 	}
 
 
+
+    /** Default Constructor */
+    public PlParserThreeValued(){}
 }

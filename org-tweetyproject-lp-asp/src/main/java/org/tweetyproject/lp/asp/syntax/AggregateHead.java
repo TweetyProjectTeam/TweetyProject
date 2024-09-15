@@ -30,9 +30,9 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 /**
  * This class is a variant of the basic ASP rule head. It
  * allows the usage of aggregate atoms as heads.
- * 
+ *
  * Note: this is not allowed in the ASP-Core-2 standard.
- * 
+ *
  * @author Anna Gessler
  */
 public class AggregateHead extends ASPHead {
@@ -43,7 +43,7 @@ public class AggregateHead extends ASPHead {
 
 	/**
 	 * Creates a new ASPAggregateHead with the given aggregate atom.
-	 * 
+	 *
 	 * @param head an AggregateAtom
 	 */
 	public AggregateHead(AggregateAtom head) {
@@ -59,7 +59,7 @@ public class AggregateHead extends ASPHead {
 
 	/**
 	 * Creates a new cardinality rule head.
-	 * 
+	 *
 	 * @param literals   of the cardinality rule head
 	 * @param leftBound  of the cardinality rule
 	 * @param rightBound of the cardinality rule
@@ -70,6 +70,7 @@ public class AggregateHead extends ASPHead {
 	}
 
 	/**
+	 * Return the aggregate atom that makes up this rule head.
 	 * @return the aggregate atom that makes up this rule head.
 	 */
 	public AggregateAtom getFormula() {
@@ -133,19 +134,19 @@ public class AggregateHead extends ASPHead {
 	public Collection<? extends ASPLiteral> getLiterals() {
 		return this.head.getLiterals();
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.head.toString();
 	}
-	
+
 	@Override
-	public String printToClingo() { 
+	public String printToClingo() {
 		return this.head.printToClingo();
 	}
-	
+
 	@Override
-	public String printToDLV() { 
+	public String printToDLV() {
 		return this.head.printToDLV();
 	}
 

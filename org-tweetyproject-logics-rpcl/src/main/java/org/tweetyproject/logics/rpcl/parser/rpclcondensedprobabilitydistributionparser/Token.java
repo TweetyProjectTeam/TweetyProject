@@ -34,7 +34,7 @@ public class Token implements java.io.Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
-   * An integer that describes the kind of this token.  This numbering
+   * An integer that describes the kind of this token. This numbering
    * system is determined by JavaCCParser, and a table of these numbers is
    * stored in the file ...Constants.java.
    */
@@ -56,10 +56,10 @@ public class Token implements java.io.Serializable {
 
   /**
    * A reference to the next regular (non-special) token from the input
-   * stream.  If this is the last token from the input stream, or if the
+   * stream. If this is the last token from the input stream, or if the
    * token manager has not read tokens beyond this one, this field is
-   * set to null.  This is true only if this token is also a regular
-   * token.  Otherwise, see below for a description of the contents of
+   * set to null. This is true only if this token is also a regular
+   * token. Otherwise, see below for a description of the contents of
    * this field.
    */
   public Token next;
@@ -73,18 +73,19 @@ public class Token implements java.io.Serializable {
    * previous special token through its specialToken field, and so on
    * until the first special token (whose specialToken field is null).
    * The next fields of special tokens refer to other special tokens that
-   * immediately follow it (without an intervening regular token).  If there
+   * immediately follow it (without an intervening regular token). If there
    * is no such token, this field is null.
    */
   public Token specialToken;
 
-  /*
+  /**
    * An optional attribute value of the Token.
    * Tokens which are not used as syntactic sugar will often contain
    * meaningful values that will be used later on by the compiler or
    * interpreter. This attribute value is often different from the image.
    * Any subclass of Token that actually wants to return a non-null value can
    * override this method as appropriate.
+   * @return value
    */
   public Object getValue() {
     return null;
@@ -93,21 +94,26 @@ public class Token implements java.io.Serializable {
   /**
    * No-argument constructor
    */
-  public Token() {}
+  public Token() {
+  }
 
-  /*
+  /**
    * Constructs a new token for the specified Image.
+   *
+   * @param kind kind of token
+   *
    */
-  public Token(int kind)
-  {
+  public Token(int kind) {
     this(kind, null);
   }
 
-  /*
+  /**
    * Constructs a new token for the specified Image and Kind.
+   *
+   * @param kind  kind of token
+   * @param image the image
    */
-  public Token(int kind, String image)
-  {
+  public Token(int kind, String image) {
     this.kind = kind;
     this.image = image;
   }
@@ -116,35 +122,44 @@ public class Token implements java.io.Serializable {
    * Returns the image.
    */
   @Override
-public String toString()
-  {
+  public String toString() {
     return image;
   }
 
-  /*
-   * Returns a new Token object, by default. However, if you want, you
-   * can create and return subclass objects based on the value of ofKind.
-   * Simply add the cases to the switch for all those special cases.
-   * For example, if you have a subclass of Token called IDToken that
-   * you want to create if ofKind is ID, simply add something like :
+  /**
+   * Creates and returns a new {@code Token} object based on the specified token
+   * kind.
+   * By default, this method returns a basic {@code Token} object. However, if you
+   * need
+   * to return instances of a subclass of {@code Token} for specific token kinds,
+   * you can
+   * customize this method by adding cases to the switch statement.
    *
-   *    case MyParserConstants.ID : return new IDToken(ofKind, image);
-   *
-   * to the following switch statement. Then you can cast matchedToken
-   * variable to the appropriate type and use sit in your lexical actions.
+   * @param ofKind The integer value representing the kind of the token to be
+   *               created.
+   * @param image  The string representation of the token's value.
+   * @return A new {@code Token} object, or a subclass of {@code Token} if
+   *         customized in the switch statement.
    */
-  public static Token newToken(int ofKind, String image)
-  {
-    switch(ofKind)
-    {
-      default : return new Token(ofKind, image);
+  public static Token newToken(int ofKind, String image) {
+    switch (ofKind) {
+      default:
+        return new Token(ofKind, image);
     }
   }
 
-  public static Token newToken(int ofKind)
-  {
+  /**
+   *
+   * Return new token
+   * @param ofKind kind of token
+   * @return new token
+   */
+  public static Token newToken(int ofKind) {
     return newToken(ofKind, null);
   }
 
 }
-/* JavaCC - OriginalChecksum=84f75de7cd5edcb291ea3528aad0e151 (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=84f75de7cd5edcb291ea3528aad0e151 (do not edit this
+ * line)
+ */

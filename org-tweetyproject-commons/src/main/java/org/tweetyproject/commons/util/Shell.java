@@ -21,12 +21,17 @@ package org.tweetyproject.commons.util;
 import java.io.IOException;
 
 /**
- * @author Nils Geilen
  * Provides several ways to run unix commands on different OSes.
+ * @author Nils Geilen
  */
 public abstract class Shell {
+
+	/** Default Constructor*/
+	public Shell(){
+
+	}
 	private static Shell nat = new NativeShell();
-	
+
 	/**
 	 * a wrapper for the os' native shell
 	 * @return  a wrapper for the os' native shell
@@ -34,7 +39,7 @@ public abstract class Shell {
 	public static Shell getNativeShell(){
 		return nat;
 	}
-	
+
 	/**
 	 * a wrapper around the cygwin shell
 	 * @param binary path to bash.exe
@@ -43,9 +48,9 @@ public abstract class Shell {
 	public static Shell getCygwinShell(String binary){
 		return new CygwinShell(binary);
 	}
-	
+
 	/**
-	 * runs command 
+	 * runs command
 	 * @param cmd the command to be run
 	 * @return the terminal output
 	 * @throws InterruptedException if some interruption occurred.

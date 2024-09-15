@@ -45,6 +45,13 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class LpSolverEx {
+
+
+	/**Constructor */
+	public LpSolverEx() {
+	}
+
+
 	/**
 	 * constructor
 	 * @return problem
@@ -57,27 +64,27 @@ public class LpSolverEx {
 		Inequation constr2 = new Inequation(m2, new FloatConstant(11), 1);
 		Inequation constr3 = new Inequation(m1, new FloatConstant(0), 3);
 		Inequation constr4 = new Inequation(m2, new FloatConstant(0), 3);
-		
-		
+
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 		constraints.add(constr1);
 		constraints.add(constr2);
 		constraints.add(constr3);
 		constraints.add(constr4);
-		
+
 		OptimizationProblem prob = new OptimizationProblem(1);
 		prob.addAll(constraints);
-		
+
 		//Define targetfunction
 		Term opt = m1;
 		prob.setTargetFunction(opt);
-		
 
-		
+
+
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -98,7 +105,7 @@ public class LpSolverEx {
 		LpSolve solver = new LpSolve();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

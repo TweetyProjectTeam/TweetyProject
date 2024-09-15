@@ -107,7 +107,7 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
     /**
      * The default constructor for the ApproxPEAFInducer
      *
-     * @param peafTheory
+     * @param peafTheory a theory
      */
     public ApproxPEAFInducer(PEAFTheory peafTheory) {
         super(peafTheory);

@@ -37,6 +37,11 @@ import java.util.Collection;
  */
 public abstract class AbstractExtendedExtensionReasoner implements ModelProvider<Argument, ExtendedTheory, Extension<ExtendedTheory>>, PostulateEvaluatable<Argument>, QualitativeReasoner<ExtendedTheory, Argument> {
 
+
+	/** Default */
+	public AbstractExtendedExtensionReasoner(){
+		super();
+	}
     /**
      * Returns a simple extended theory reasoner for the given semantics
      * @param semantics some semantics

@@ -327,4 +327,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	public boolean isInstalled() {
 		return true;
 	}
+
+    /** Default Constructor */
+    public IteratedGradedDefenseReasoner(){}
 }

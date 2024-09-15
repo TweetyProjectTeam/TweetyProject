@@ -33,102 +33,151 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
+ * The {@code ConflictFreeGenerator} is an abstract class responsible for generating conflict-free interpretations
+ * in the context of abstract dialectical frameworks (ADFs). It provides methods to create either unrestricted
+ * conflict-free generators or restricted ones based on a partial interpretation. The class leverages SAT-based
+ * encodings to ensure that the generated interpretations satisfy the conflict-free property.
+ * <p>
+ * The {@code ConflictFreeGenerator} works in conjunction with a {@link PropositionalMapping}, which maps arguments
+ * to propositional literals, and a SAT solver state to produce valid interpretations.
+ * </p>
+ *
+ * <p>The class has two main variants:</p>
+ * <ul>
+ *   <li>{@code UnrestrictedConflictFreeGenerator}: Computes all conflict-free interpretations.</li>
+ *   <li>{@code RestrictedConflictFreeGenerator}: Computes only conflict-free interpretations that extend a given partial interpretation.</li>
+ * </ul>
+ *
+ * @see AbstractDialecticalFramework
+ * @see PropositionalMapping
+ * @see Interpretation
+ * @see SatEncoding
+ * @see RelativeSatEncoding
+ * @see SatSolverState
+ * @see CandidateGenerator
+ *
  * @author Mathias Hofer
  *
  */
 public abstract class ConflictFreeGenerator extends AbstractCandidateGenerator {
 
-	private final PropositionalMapping mapping;
+    /** The propositional mapping of the arguments. */
+    private final PropositionalMapping mapping;
 
-	private final RelativeSatEncoding refineUnequal;
+    /** The SAT encoding used to refine unequal interpretations. */
+    private final RelativeSatEncoding refineUnequal;
 
-	/**
-	 * 
-	 * @param stateSupplier
-	 * @param mapping
-	 */
-	private ConflictFreeGenerator(Supplier<SatSolverState> stateSupplier, PropositionalMapping mapping) {
-		super(stateSupplier);
-		this.mapping = Objects.requireNonNull(mapping);
-		this.refineUnequal = new RefineUnequalSatEncoding(mapping);
-	}
+    /**
+     * Constructs a {@code ConflictFreeGenerator} with a given SAT solver state supplier and propositional mapping.
+     *
+     * @param stateSupplier the supplier for the SAT solver state
+     * @param mapping the propositional mapping for the arguments and links, must not be null
+     */
+    private ConflictFreeGenerator(Supplier<SatSolverState> stateSupplier, PropositionalMapping mapping) {
+        super(stateSupplier);
+        this.mapping = Objects.requireNonNull(mapping);
+        this.refineUnequal = new RefineUnequalSatEncoding(mapping);
+    }
 
-	/**
-	 * The resulting {@link CandidateGenerator} only computes conflict free
-	 * interpretations which are extensions of the defined partial interpretation.
-	 * 
-	 * @param adf adf
-	 * @param mapping mapping
-	 * @param partial partial
-	 * @return a candidate generator that only computes interpretations that extend
-	 *         the given partial interpretation.
-	 * @param mapping Propositional  
-	 * @param stateSupplier  Supplier
-	 */
-	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
-			Interpretation partial, Supplier<SatSolverState> stateSupplier) {
-		return new RestrictedConflictFreeGenerator(adf, mapping, partial, stateSupplier);
-	}
+    /**
+     * Creates a {@link CandidateGenerator} that computes conflict-free interpretations which are extensions of the provided partial interpretation.
+     *
+     * @param adf the Abstract Dialectical Framework (ADF), must not be null
+     * @param mapping the propositional mapping, must not be null
+     * @param partial the partial interpretation to extend, must not be null
+     * @param stateSupplier the supplier for the SAT solver state, must not be null
+     * @return a {@link CandidateGenerator} for conflict-free interpretations extending the given partial interpretation
+     */
+    public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+                                                Interpretation partial, Supplier<SatSolverState> stateSupplier) {
+        return new RestrictedConflictFreeGenerator(adf, mapping, partial, stateSupplier);
+    }
 
-	/**
-	 * The resulting {@link CandidateGenerator} computes all conflict free
-	 * interpretations.
-	 * 
-	 * @param adf adf
-	 * @param mapping mapping
-	 * @return CandidateGeneratorwithoutPrefix
-	 * @param stateSupplier Supplier
-	 */
-	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
-		return new UnrestrictedConflictFreeGenerator(adf, mapping, stateSupplier);
-	}
+    /**
+     * Creates a {@link CandidateGenerator} that computes all conflict-free interpretations.
+     *
+     * @param adf the Abstract Dialectical Framework (ADF), must not be null
+     * @param mapping the propositional mapping, must not be null
+     * @param stateSupplier the supplier for the SAT solver state, must not be null
+     * @return a {@link CandidateGenerator} for all conflict-free interpretations
+     */
+    public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+                                                  Supplier<SatSolverState> stateSupplier) {
+        return new UnrestrictedConflictFreeGenerator(adf, mapping, stateSupplier);
+    }
 
-	@Override
-	public Interpretation generate(SatSolverState state) {
-		Set<Literal> witness = state.witness(mapping.getArgumentLiterals());
-		if (witness != null) {
-			// prevent the same interpretation from being computed again
-			Interpretation conflictFree = Interpretation.fromWitness(witness, mapping);
-			refineUnequal.encode(state::add, conflictFree);
-			return conflictFree;
-		}
-		return null;
-	}
+    @Override
+    public Interpretation generate(SatSolverState state) {
+        Set<Literal> witness = state.witness(mapping.getArgumentLiterals());
+        if (witness != null) {
+            // Generate a conflict-free interpretation based on the witness and refine it to prevent duplicates
+            Interpretation conflictFree = Interpretation.fromWitness(witness, mapping);
+            refineUnequal.encode(state::add, conflictFree);
+            return conflictFree;
+        }
+        return null;
+    }
 
-	private static final class UnrestrictedConflictFreeGenerator extends ConflictFreeGenerator {
+    /**
+     * The {@code UnrestrictedConflictFreeGenerator} generates all conflict-free interpretations for an ADF.
+     */
+    private static final class UnrestrictedConflictFreeGenerator extends ConflictFreeGenerator {
 
-		private final SatEncoding conflictFree;
+        /** The SAT encoding to enforce the conflict-free property. */
+        private final SatEncoding conflictFree;
 
-		private UnrestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
-			super(stateSupplier, mapping);
-			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
-		}
+        /**
+         * Constructs an {@code UnrestrictedConflictFreeGenerator} for the given ADF, mapping, and state supplier.
+         *
+         * @param adf the Abstract Dialectical Framework (ADF), must not be null
+         * @param mapping the propositional mapping, must not be null
+         * @param stateSupplier the supplier for the SAT solver state, must not be null
+         */
+        private UnrestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
+            super(stateSupplier, mapping);
+            this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
+        }
 
-		@Override
-		public void prepare(SatSolverState state) {
-			conflictFree.encode(state::add);
-		}
+        @Override
+        public void prepare(SatSolverState state) {
+            // Prepare the SAT solver state by encoding the conflict-free property
+            conflictFree.encode(state::add);
+        }
 
-	}
+    }
 
-	private static final class RestrictedConflictFreeGenerator extends ConflictFreeGenerator {
+    /**
+     * The {@code RestrictedConflictFreeGenerator} generates conflict-free interpretations that extend a given partial interpretation.
+     */
+    private static final class RestrictedConflictFreeGenerator extends ConflictFreeGenerator {
 
-		private final Interpretation prefix;
+        /** The partial interpretation to extend. */
+        private final Interpretation prefix;
 
-		private final RelativeSatEncoding conflictFree;
+        /** The SAT encoding to enforce the conflict-free property based on the partial interpretation. */
+        private final RelativeSatEncoding conflictFree;
 
-		private RestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping,
-				Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
-			super(stateSupplier, mapping);
-			this.prefix = Objects.requireNonNull(prefix);
-			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
-		}
+        /**
+         * Constructs a {@code RestrictedConflictFreeGenerator} for the given ADF, mapping, partial interpretation, and state supplier.
+         *
+         * @param adf the Abstract Dialectical Framework (ADF), must not be null
+         * @param mapping the propositional mapping, must not be null
+         * @param prefix the partial interpretation to extend, must not be null
+         * @param stateSupplier the supplier for the SAT solver state, must not be null
+         */
+        private RestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+                                                Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
+            super(stateSupplier, mapping);
+            this.prefix = Objects.requireNonNull(prefix);
+            this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
+        }
 
-		@Override
-		public void prepare(SatSolverState state) {
-			conflictFree.encode(state::add, prefix);
-		}
+        @Override
+        public void prepare(SatSolverState state) {
+            // Prepare the SAT solver state by encoding the conflict-free property for the partial interpretation
+            conflictFree.encode(state::add, prefix);
+        }
 
-	}
+    }
 
 }

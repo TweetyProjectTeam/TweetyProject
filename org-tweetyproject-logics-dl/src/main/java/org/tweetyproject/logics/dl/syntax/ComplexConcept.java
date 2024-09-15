@@ -28,12 +28,12 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Disjunctable;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * The common abstract class for concepts (also called concepts, complex concepts or concept descriptions) 
- * of description logics. 
- * <br>Specifically, this library supports formulas of 
- * the description logic ALC (attributive concept language with complements). 
+ * The common abstract class for concepts (also called concepts, complex concepts or concept descriptions)
+ * of description logics.
+ * <br>Specifically, this library supports formulas of
+ * the description logic ALC (attributive concept language with complements).
  * In an ALC language for a given signature, concepts are:
- * 
+ *
  * <ul>
  * <li> All atomic concepts of the signature </li>
  * <li> The universal concept </li>
@@ -48,11 +48,23 @@ import org.tweetyproject.math.probability.Probability;
  * 		</ul>
  *  </li>
  * </ul>
- * 
+ *
  * @author Anna Gessler
  *
  */
 public abstract class ComplexConcept implements ClassicalFormula {
+
+	    /**
+     * Default constructor for {@code ComplexConcept}.
+     *
+     * This constructor initializes a complex concept in description logic.
+     * It is meant to be extended by subclasses that implement specific
+     * types of complex concepts such as intersections, unions, and complements.
+     */
+    public ComplexConcept() {
+        // No specific initialization required
+		super();
+    }
 
 	@Override
 	public ComplexConcept complement() {
@@ -73,14 +85,14 @@ public abstract class ComplexConcept implements ClassicalFormula {
 			throw new IllegalArgumentException("The given formula " + f + " is not a description logic formula.");
 		return new Intersection(this,(ComplexConcept)f);
 	}
-	
+
 	/**
      * This method collapses all associative operations appearing
      * in this term, e.g. every a||(b||c) becomes a||b||c.
      * @return the collapsed formula.
      */
 	public abstract ComplexConcept collapseAssociativeFormulas();
-	
+
 	/** Creates a deep copy of this formula */
 	public abstract ComplexConcept clone();
 
@@ -99,17 +111,17 @@ public abstract class ComplexConcept implements ClassicalFormula {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public abstract DlSignature getSignature();
-	
+
 	@Override
 	public abstract int hashCode();
-	
+
 	@Override
 	public abstract boolean equals(Object other);
 
 	@Override
 	public abstract Set<Predicate> getPredicates();
-	
+
 }

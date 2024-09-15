@@ -26,6 +26,12 @@ import java.util.List;
  */
 public class MinAggregator implements AggregationFunction {
 
+	/** Constructor */
+	public MinAggregator() {
+	}
+
+
+
 	private static final long serialVersionUID = -8571729834785975974L;
 
 	/* (non-Javadoc)

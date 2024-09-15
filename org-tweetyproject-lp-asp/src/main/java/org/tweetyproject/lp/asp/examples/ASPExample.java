@@ -42,9 +42,9 @@ import org.tweetyproject.lp.asp.syntax.StrictNegation;
  * Example code for creating basic ASP programs and calling solvers and grounders.
  * See {@link org.tweetyproject.lp.asp.examples.ASPParserExample} for how to quickly
  * parse the same examples using the parser.
- * 
+ *
  * <br> Tested with clingo 5.4.0
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -52,8 +52,8 @@ public class ASPExample {
 
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
-	/** 
-	 * 
+	/**
+	 * Example
 	 * @param args IOException
 	 * @throws IOException IOException
 	 */
@@ -92,8 +92,8 @@ public class ASPExample {
 		ClingoSolver solver = new ClingoSolver(CLINGO_PATH);
 		List<AnswerSet> as = solver.getModels(p2);
 		System.out.println("Clingo output:\n" + as + "\n");
-		
-		// Calling grounder 
+
+		// Calling grounder
 		GringoGrounder grounder = new GringoGrounder(CLINGO_PATH);
 		Program groundP2 = grounder.getGroundProgram(p2);
 		System.out.println("ground program:"+groundP2);
@@ -119,4 +119,7 @@ public class ASPExample {
 		r2.setBody(new AggregateAtom(literals, 1, 2));
 	}
 
+
+    /** Default Constructor */
+    public ASPExample(){}
 }

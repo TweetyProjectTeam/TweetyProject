@@ -29,6 +29,11 @@ import org.tweetyproject.math.term.Term;
  */
 public class ManhattanNorm extends AbstractRealVectorNorm{
 
+	/** Constructor */
+	public ManhattanNorm() {
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.Norm#norm(java.lang.Object)
 	 */

@@ -30,25 +30,42 @@ import org.tweetyproject.commons.ParserException;
 
 /**
  * Example code for simple logic argumentation.
- * 
+ *
  * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  */
 public class SimplePlLogicExample {
+	/**
+	 * Default Constructor
+	 */
+	public SimplePlLogicExample() {
+		// Default
+	}
 
+	/**
+	 * This class demonstrates the parsing of a simple propositional logic belief
+	 * base,
+	 * the generation of a deductive knowledge base, and the construction of an
+	 * argumentation framework.
+	 * The program parses a belief base in propositional logic, generates the
+	 * corresponding
+	 * argumentation framework (AF) with arguments and attacks, and prints the
+	 * results.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 */
 	public static void main(String[] args) {
-		
+
 		String skb = "a" + "\n" +
-					"t" + "\n" +
-					"a, t -> b" + "\n" + 
-					"b -> c" + "\n" +
-					"-> d" + "\n" +
-					"d -> !a" + "\n" +
-					"d -> !c";
-		
-		
+				"t" + "\n" +
+				"a, t -> b" + "\n" +
+				"b -> c" + "\n" +
+				"-> d" + "\n" +
+				"d -> !a" + "\n" +
+				"d -> !c";
+
 		SimplePlLogicParser p = new SimplePlLogicParser();
-		
+
 		SimplePlLogicDeductiveKnowledgebase k = null;
 		try {
 			k = p.parseBeliefBase(new StringReader(skb));
@@ -59,19 +76,20 @@ public class SimplePlLogicExample {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		System.out.println(k.getAF());
-		
+
 		DungTheory af = k.getAF();
 		for (Argument arg : af.getNodes())
 			System.out.println(arg);
-		
-		for (Attack att : af.getAttacks()){
+
+		for (Attack att : af.getAttacks()) {
 			System.out.println(att);
 		}
-		if(k.getAF().toString().equals("<{ <[[a, t] -> b, [b] -> c, t, a],c>, <[[d] -> !a, d],!a>, <[[d] -> !c, d],!c>, <[[a, t] -> b, t, a],b> },[(<[[a, t] -> b, [b] -> c, t, a],c>,<[[d] -> !c, d],!c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !c, d],!c>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, t, a],b>)]>")){
+		if (k.getAF().toString().equals(
+				"<{ <[[a, t] -> b, [b] -> c, t, a],c>, <[[d] -> !a, d],!a>, <[[d] -> !c, d],!c>, <[[a, t] -> b, t, a],b> },[(<[[a, t] -> b, [b] -> c, t, a],c>,<[[d] -> !c, d],!c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !c, d],!c>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, t, a],b>)]>")) {
 			System.out.println("hurrah");
-		
+
 		}
 	}
 

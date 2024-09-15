@@ -32,4 +32,7 @@ public class BpmnFormula implements Formula {
 		return null;
 	}
 
+
+    /** Default Constructor */
+    public BpmnFormula(){}
 }

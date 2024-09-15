@@ -25,16 +25,25 @@ import org.tweetyproject.commons.util.SetTools;
 import java.util.*;
 
 /**
- * a set of arguments S is self-supporting iff all arguments in S are e-supported by S.
+ * a set of arguments S is self-supporting iff all arguments in S are
+ * e-supported by S.
  *
  * @author Lars Bengel
  *
  */
 public class SelfSupportingReasoner {
+    /**
+     * Computes all self-supporting argument sets from the given evidential
+     * argumentation framework.
+     *
+     * @param bbase The evidential argumentation framework containing arguments and
+     *              support relations.
+     * @return A collection of self-supporting argument sets.
+     */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all subsets
-        for(Set<BArgument> ext: new SetTools<BArgument>().subsets(bbase)) {
+        for (Set<BArgument> ext : new SetTools<BArgument>().subsets(bbase)) {
             boolean selfSupporting = true;
             for (BArgument argument : ext) {
                 if (!bbase.hasEvidentialSupport(argument, ext)) {
@@ -43,13 +52,15 @@ public class SelfSupportingReasoner {
                 }
             }
             if (selfSupporting)
-            extensions.add(new ArgumentSet(ext));
+                extensions.add(new ArgumentSet(ext));
         }
         return extensions;
     }
 
     /**
-     * 
+     *
+     * Return a model
+     *
      * @param bbase arg framework
      * @return a model
      */

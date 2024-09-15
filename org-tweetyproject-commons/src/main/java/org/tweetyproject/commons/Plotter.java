@@ -41,13 +41,13 @@ public class Plotter {
 	 * The main panel in the frame
 	 */
 	private JPanel mainPanel;
-	
+
 	/**
 	 * Create a new instance
 	 */
 	public Plotter() {
 	}
-	
+
 	/**
 	 * Create a new main frame with specific proportions
 	 * @param frameWidth the width of the frame
@@ -57,10 +57,10 @@ public class Plotter {
 		this.frame = new JFrame();
 		this.mainPanel = new JPanel(new FlowLayout());
 		this.mainPanel.setPreferredSize(new Dimension(frameWidth, frameHeight));
-        this.frame.setSize(frameWidth, frameHeight);	
-        
+        this.frame.setSize(frameWidth, frameHeight);
+
 	}
-	
+
 	/**
 	 * Show the frame after adding some plots
 	 */
@@ -72,6 +72,7 @@ public class Plotter {
 	}
 
 	/**
+	 * Return the frame
 	 * @return the frame
 	 */
 	public JFrame getFrame() {
@@ -101,7 +102,7 @@ public class Plotter {
 	public int getVGap() {
 		return 20;
 	}
-	
+
 	/**
 	 * Add some description to the frame
 	 * @param labels a list of strings that will be aligned vertically
@@ -115,5 +116,5 @@ public class Plotter {
 		this.mainPanel.add( new JLabel(labelHTML), FlowLayout.LEFT );
 	}
 
-	
+
 }

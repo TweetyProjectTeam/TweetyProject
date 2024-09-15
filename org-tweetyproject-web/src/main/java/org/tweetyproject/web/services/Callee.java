@@ -27,8 +27,6 @@ import java.util.concurrent.Callable;
  * The Callee class is a simple implementation of the java.util.concurrent.Callable interface
  * that provides a placeholder for the call method. When an instance of this class is used in a
  * Callable context, it will throw an UnsupportedOperationException for the unimplemented call method.
- *
- * @param <T> The type of the result returned by the call method.
  * @see Callable
  * @see UnsupportedOperationException
  */

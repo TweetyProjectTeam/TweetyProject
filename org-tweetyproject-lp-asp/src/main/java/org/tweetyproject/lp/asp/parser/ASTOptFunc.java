@@ -21,31 +21,76 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTOptFunc} class represents a node in the abstract syntax tree (AST)
+ * for an optimization function within the context of Answer Set Programming (ASP).
+ * This class extends {@code SimpleNode} and is used by the ASP parser to handle
+ * optimization functions that specify whether to maximize or minimize a particular
+ * objective.
+ */
 public class ASTOptFunc extends SimpleNode {
-	public String func;
-	public boolean maximize;
 
-	public ASTOptFunc(int id) {
-		super(id);
-	}
+    /**
+     * The name or representation of the optimization function.
+     */
+    public String func;
 
-	public ASTOptFunc(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Indicates whether the optimization function is set to maximize.
+     * If {@code true}, the function is to maximize; if {@code false}, to minimize.
+     */
+    public boolean maximize;
 
-	public void func(String f) {
-		this.func = f;
-	}
+    /**
+     * Constructs a new {@code ASTOptFunc} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTOptFunc(int id) {
+        super(id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTOptFunc} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTOptFunc(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	public void maximize(boolean b) {
-		this.maximize = b;
-	}
+    /**
+     * Sets the name or representation of the optimization function.
+     *
+     * @param f The string representing the optimization function.
+     */
+    public void func(String f) {
+        this.func = f;
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
+
+    /**
+     * Sets whether the optimization function is to maximize or minimize.
+     *
+     * @param b {@code true} to set the function to maximize, {@code false} to minimize.
+     */
+    public void maximize(boolean b) {
+        this.maximize = b;
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=2e63ad8cc991694fac69c3adaf9f6a1a (do not edit this
  * line)

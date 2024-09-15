@@ -34,6 +34,15 @@ import org.tweetyproject.arg.setaf.syntax.*;
 public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 
+
+
+		/** Default */
+		public SimpleStableSetAfReasoner(){
+			// Default
+		}
+
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
@@ -44,7 +53,7 @@ public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 		for(Extension<SetAf> e: completeExtensions)
 			if(((SetAf)bbase).isAttackingAllOtherArguments(e))
 				result.add(e);
-		return result;	
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -57,9 +66,9 @@ public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 		for(Extension<SetAf> e: completeExtensions)
 			if(((SetAf)bbase).isAttackingAllOtherArguments(e))
 				return e;
-		return null;	
-	}	
-	
+		return null;
+	}
+
 	@Override
 	public boolean isInstalled() {
 		return true;

@@ -21,7 +21,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * ASTBuiltInAtom class
  * @author Anna Gessler
  *
  */
@@ -29,14 +29,14 @@ public class ASTBuiltInAtom extends SimpleNode {
 	/** operatr*/
 	public String operator;
 /**
- * 
+ * Constructor
  * @param id ID
  */
 	public ASTBuiltInAtom(int id) {
 		super(id);
 	}
 /**
- * 
+ * Constructor
  * @param p parser
  * @param id ID
  */
@@ -44,7 +44,7 @@ public class ASTBuiltInAtom extends SimpleNode {
 		super(p, id);
 	}
 /**
- * 
+ * set operator
  * @param op op
  */
 	public void operator(String op) {

@@ -31,13 +31,19 @@ import org.tweetyproject.commons.util.SetTools;
 /**
  *  * This reasoner for weighted Dung theories performs inference on the apha gamma admissible extensions.
  * Extensions are determined by checking all possible sets for alpha gamma admissibility.
- * @author Sandra Hoffmann
+ *@param <T> The type
+ *  @author Sandra Hoffmann
  *
  */
 public class SimpleWeightedAdmissibleReasoner<T> {
-	
+
+		/** Default Constructor */
+		public SimpleWeightedAdmissibleReasoner(){
+
+		}
+
 	/**
-	 * Computes all alpha-gamma-admissible extensions for the given weighted argumentation framework. 
+	 * Computes all alpha-gamma-admissible extensions for the given weighted argumentation framework.
 	 * Admissible extensions are subsets of the set of arguments that satisfy the alpha-gamma admissibility
 	 * condition. This method uses a simple approach by checking all possible subsets of the arguments.
 	 *
@@ -56,7 +62,7 @@ public class SimpleWeightedAdmissibleReasoner<T> {
 	}
 
 	/**
-	 * Returns the empty set as it is always admissible. 
+	 * Returns the empty set as it is always admissible.
 	 *
 	 * @param bbase The base argumentation theory.
 	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.

@@ -48,4 +48,7 @@ public class RecognitionFunction extends HashMap<Argument,Set<Argument>> {
 		return null;
 	}
 
+
+    /** Default Constructor */
+    public RecognitionFunction(){}
 }

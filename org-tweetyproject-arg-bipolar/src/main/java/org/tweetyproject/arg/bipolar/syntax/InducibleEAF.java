@@ -51,16 +51,17 @@ public class InducibleEAF {
      */
     public final Set<BArgument> newArguments;
     /**
-     *
+     * pInside
      */
     public final double pInside;
     /**
-     *
+     * inducePro
      */
     public final double inducePro;
 
     /**
-     * @param arguments arguments
+     * Constructor
+    * @param arguments arguments
      * @param supports supports
      * @param attacks attacks
      * @param newArguments new arguments

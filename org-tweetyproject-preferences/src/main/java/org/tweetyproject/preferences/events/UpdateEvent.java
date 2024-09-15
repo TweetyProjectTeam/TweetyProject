@@ -24,25 +24,28 @@ import org.tweetyproject.preferences.PreferenceOrder;
 
 /**
  * The class for event objects used in dynamic preference aggregation
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  * @param <T> generic preference order type
  */
 
 public class UpdateEvent<T> extends EventObject {
 
 	/**
-	 * 
+	 * id
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * the result
+	 */
 	private PreferenceOrder<T> result;
 
 	/**
 	 * constructor for an update containing the aggregation result
-	 * 
-	 * @param source where the event occurred 
+	 *
+	 * @param source where the event occurred
 	 * @param result of the occurring event
 	 */
 	public UpdateEvent(Object source, PreferenceOrder<T> result) {

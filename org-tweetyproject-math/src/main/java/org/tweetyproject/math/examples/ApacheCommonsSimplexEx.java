@@ -46,6 +46,12 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class ApacheCommonsSimplexEx {
+	/** Constructor */
+	public ApacheCommonsSimplexEx() {
+	}
+
+
+
 	/**
 	 * constructor
 	 * @return the problem
@@ -59,7 +65,7 @@ public class ApacheCommonsSimplexEx {
 				Inequation constr3 = new Inequation(m1, new IntegerConstant(0), 3);
 				Inequation constr4 = new Inequation(m2, new IntegerConstant(0), 3);
 				Inequation constr5 = new Inequation(m1.add(m2), new IntegerConstant(16), 0);
-				
+
 				Collection<Statement> constraints = new ArrayList<Statement>();
 				constraints.add(constr1);
 				constraints.add(constr2);
@@ -68,19 +74,19 @@ public class ApacheCommonsSimplexEx {
 				constraints.add(constr5);
 				OptimizationProblem prob = new OptimizationProblem(1);
 				prob.addAll(constraints);
-				
+
 				//Define targetfunction
 				Term opt = new Sum(new Sum(m1,new FloatConstant(1)), m2);
 				prob.setTargetFunction(opt);
-				
-				
-				
+
+
+
 				return prob;
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * main method
 	 * @param args arguments
 	 * @throws ParserException ParserException
@@ -100,7 +106,7 @@ public class ApacheCommonsSimplexEx {
 		ApacheCommonsSimplex solver = new ApacheCommonsSimplex();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }

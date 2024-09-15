@@ -418,4 +418,7 @@ public abstract class PlFormula implements ClassicalFormula {
 
 	@Override
 	public abstract PlFormula clone();
+
+    /** Default Constructor */
+    public PlFormula(){}
 }

@@ -78,38 +78,54 @@ public class Token implements java.io.Serializable {
    */
   public Token specialToken;
 
-  /*
-   * An optional attribute value of the Token.
-   * Tokens which are not used as syntactic sugar will often contain
-   * meaningful values that will be used later on by the compiler or
-   * interpreter. This attribute value is often different from the image.
-   * Any subclass of Token that actually wants to return a non-null value can
-   * override this method as appropriate.
-   */
-  public Object getValue() {
-    return null;
+/**
+     * An optional attribute value of the token.
+     * <p>
+     * Tokens that are not used merely as syntactic sugar often contain meaningful values that will be
+     * used later by the compiler or interpreter. This attribute value may differ from the token's image.
+     * Subclasses of {@code Token} can override this method to return a meaningful value if required.
+     * </p>
+     *
+     * @return The value associated with this token, or {@code null} by default.
+     */
+    public Object getValue() {
+      return null;
   }
 
   /**
-   * No-argument constructor
+   * No-argument constructor.
+   * <p>
+   * Initializes a new {@code Token} with no specific kind or image.
+   * </p>
    */
   public Token() {}
 
-  /*
-   * Constructs a new token for the specified Image.
+  /**
+   * Constructs a new token for the specified kind.
+   * <p>
+   * This constructor initializes a {@code Token} with the specified kind and a {@code null} image.
+   * The kind typically represents the type of token, such as an identifier, keyword, or operator.
+   * </p>
+   *
+   * @param kind The kind of token.
    */
-  public Token(int kind)
-  {
-    this(kind, null);
+  public Token(int kind) {
+      this(kind, null);
   }
 
-  /*
-   * Constructs a new token for the specified Image and Kind.
+  /**
+   * Constructs a new token for the specified kind and image.
+   * <p>
+   * This constructor initializes a {@code Token} with the specified kind and image, representing
+   * the type and the string representation of the token, respectively.
+   * </p>
+   *
+   * @param kind The kind of token.
+   * @param image The string representation of the token.
    */
-  public Token(int kind, String image)
-  {
-    this.kind = kind;
-    this.image = image;
+  public Token(int kind, String image) {
+      this.kind = kind;
+      this.image = image;
   }
 
   /**
@@ -121,7 +137,7 @@ public String toString()
     return image;
   }
 
-  /*
+  /**
    * Returns a new Token object, by default. However, if you want, you
    * can create and return subclass objects based on the value of ofKind.
    * Simply add the cases to the switch for all those special cases.
@@ -132,6 +148,11 @@ public String toString()
    *
    * to the following switch statement. Then you can cast matchedToken
    * variable to the appropriate type and use sit in your lexical actions.
+
+   *
+   * @param ofKind the kind
+   * @param image the image
+   * @return Returns a new Token object, by default
    */
   public static Token newToken(int ofKind, String image)
   {
@@ -141,6 +162,12 @@ public String toString()
     }
   }
 
+  /**
+   *
+   * Return new token
+   * @param ofKind the kinf
+   * @return new token
+   */
   public static Token newToken(int ofKind)
   {
     return newToken(ofKind, null);

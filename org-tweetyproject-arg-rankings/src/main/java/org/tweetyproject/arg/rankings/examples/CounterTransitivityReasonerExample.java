@@ -24,8 +24,21 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.CounterTransitivityReasoner;
 import org.tweetyproject.comparator.LatticePartialOrder;
 
+/**
+ * Demonstrates the usage of the {@link CounterTransitivityReasoner} with a specific Argumentation Framework (AAF).
+ * <p>
+ * This example constructs an argumentation framework, adds arguments and attacks to it, and then creates a
+ * {@link LatticePartialOrder} to specify the acceptability relations between arguments. It then uses a
+ * {@link CounterTransitivityReasoner} to evaluate various ranking strategies and prints the results.
+ * </p>
+ */
 public class CounterTransitivityReasonerExample {
 
+	   /**
+     * The main method that sets up an argumentation framework, applies various ranking strategies, and prints the results.
+     *
+     * @param args Command-line arguments (not used in this example).
+     */
 	public static void main(String[] args) {
 
 		//Construct AAF
@@ -36,14 +49,14 @@ public class CounterTransitivityReasonerExample {
 		Argument a4 = new Argument("d");
 		Argument a5 = new Argument("e");
 		Argument a6 = new Argument("f");
-		
+
 		theory.add(a1);
 		theory.add(a2);
 		theory.add(a3);
 		theory.add(a4);
 		theory.add(a5);
 		theory.add(a6);
-		
+
 		theory.add(new Attack(a1,a2));
 		theory.add(new Attack(a2,a1));
 		theory.add(new Attack(a1,a5));
@@ -52,9 +65,9 @@ public class CounterTransitivityReasonerExample {
 		theory.add(new Attack(a4,a1));
 		theory.add(new Attack(a3,a5));
 		theory.add(new Attack(a6,a3));
-		
+
 		LatticePartialOrder<Argument, DungTheory> lat = new LatticePartialOrder<Argument, DungTheory>(theory);
-		
+
 		lat.setStrictlyLessOrEquallyAcceptableThan(a2, a5);
 		lat.setStrictlyLessOrEquallyAcceptableThan(a5, a2);
 		lat.setStrictlyLessOrEquallyAcceptableThan(a2, a6);
@@ -64,10 +77,10 @@ public class CounterTransitivityReasonerExample {
 		lat.setStrictlyLessOrEquallyAcceptableThan(a1, a4);
 		lat.setStrictlyLessOrEquallyAcceptableThan(a4, a1);
 		lat.setStrictlyLessOrEquallyAcceptableThan(a1, a2);
-		
+
 		CounterTransitivityReasoner r = new CounterTransitivityReasoner(CounterTransitivityReasoner.solver.quality, lat);
-		
-		
+
+
 		System.out.println("cardinality: " +r.cardinality(theory).toString());
 		System.out.println("quality: " +  r.quality(theory, lat).toString());
 		System.out.println("quality first: " +  r.qualityFirst(theory, lat).toString());
@@ -76,4 +89,7 @@ public class CounterTransitivityReasonerExample {
 		System.out.println("dominance: " +r.simpleDominance(theory, lat).toString());
 		System.out.println("call by getModel (quality): " +r.getModel(theory).toString());
 	}
+
+    /** Default Constructor */
+    public CounterTransitivityReasonerExample(){}
 }

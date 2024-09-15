@@ -114,4 +114,7 @@ public class SatSolverExample {
 		SatSolver defaultSolver = SatSolver.getDefaultSolver();
 		System.out.println("\n" + defaultSolver.isSatisfiable(kb1));
 	}
+
+    /** Default Constructor */
+    public SatSolverExample(){}
 }

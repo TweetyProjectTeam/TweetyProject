@@ -26,9 +26,9 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.Formula;
 
 /**
- * 
+ *
  * An argument derived from an ABA theory.
- * 
+ *
  * @param <T> is the type of the language that the ABA theory's rules range over
  * @author Nils Geilen
  */
@@ -39,7 +39,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/**
 	 * Constructs a new deduction.
-	 * 
+	 *
 	 * @param name an identifier
 	 */
 	public Deduction(String name) {
@@ -48,7 +48,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/**
 	 * Constructs a new deduction.
-	 * 
+	 *
 	 * @param name an identifier
 	 * @param rule the toprule
 	 */
@@ -59,7 +59,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/**
 	 * Constructs a new deduction.
-	 * 
+	 *
 	 * @param name an identifier
 	 * @param rule the toprule
 	 * @param subs a set of subdeductions
@@ -71,6 +71,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return all rules appearing in this argument.
 	 * @return all rules appearing in this argument.
 	 */
 	public Collection<AbaRule<T>> getAllRules() {
@@ -82,6 +83,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return all conclusions appearing in this argument.
 	 * @return all conclusions appearing in this argument.
 	 */
 	public Collection<T> getAllConclusions() {
@@ -92,6 +94,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return the conclusion of this deduction
 	 * @return the conclusion of this deduction
 	 */
 	public T getConclusion() {
@@ -99,6 +102,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return the rule
 	 * @return the rule
 	 */
 
@@ -106,7 +110,7 @@ public class Deduction<T extends Formula> extends Argument {
 		return rule;
 	}
 
-	/**
+	/**Set Rule
 	 * @param rule the rule to set
 	 */
 	public void setRule(AbaRule<T> rule) {
@@ -114,6 +118,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return all assumptions employed by this deduction
 	 * @return all assumptions employed by this deduction
 	 */
 	public Collection<T> getAssumptions() {
@@ -128,7 +133,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/**
 	 * Adds a subdeduction
-	 * 
+	 *
 	 * @param sub a deduction
 	 */
 	public void addSubDeduction(Deduction<T> sub) {
@@ -136,6 +141,7 @@ public class Deduction<T extends Formula> extends Argument {
 	}
 
 	/**
+	 * Return all rules used in this deduction
 	 * @return all rules used in this deduction
 	 */
 	public Collection<AbaRule<T>> getRules() {
@@ -149,7 +155,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.syntax.Argument#hashCode()
 	 */
 	@Override
@@ -163,7 +169,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.syntax.Argument#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("rawtypes")
@@ -191,7 +197,7 @@ public class Deduction<T extends Formula> extends Argument {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.syntax.Argument#toString()
 	 */
 	@Override

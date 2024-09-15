@@ -34,12 +34,8 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
 /**
  * This sampler generates random belief sets by selecting,
  * for each formula a random set of possible worlds as its models.
- * 
- * @author Matthias Thimm
  *
- */
-/**
- * @author mthimm
+ * @author Matthias Thimm
  *
  */
 public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
@@ -50,7 +46,7 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	private Random rand = new Random();
 	/** Probability of selecting any world as a model of a formula*/
 	private double worldProb;
-	
+
 	/**
 	 * Creates a new sampler for the given signature
 	 * @param signature some signature
@@ -61,7 +57,7 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 		this.allWorlds = new ArrayList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PlSignature)signature));
 		this.worldProb = worldProb;
 	}
-	
+
 	/**
 	 * Creates a new sampler for the given signature
 	 * @param signature some signature
@@ -80,7 +76,7 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	 */
 	@Override
 	public PlBeliefSet next() {
-		PlBeliefSet beliefSet = new PlBeliefSet();		
+		PlBeliefSet beliefSet = new PlBeliefSet();
 		int length;
 		if(this.getMaxLength() - this.getMinLength() > 0)
 			length = this.getMinLength() + this.rand.nextInt(this.getMaxLength() - this.getMinLength());
@@ -94,7 +90,7 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 		}
 		return beliefSet;
 	}
-	
+
 	/**
 	 * Returns a random formula.
 	 * @return a random formula.
@@ -104,7 +100,7 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 		PlFormula p = a.combineWithAnd(new Negation(a));
 		for(int i = 0; i < this.allWorlds.size(); i++)
 			if(this.rand.nextDouble()<this.worldProb)
-				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PlSignature)this.getSamplerSignature()));		
+				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PlSignature)this.getSamplerSignature()));
 		return p;
 	}
 }

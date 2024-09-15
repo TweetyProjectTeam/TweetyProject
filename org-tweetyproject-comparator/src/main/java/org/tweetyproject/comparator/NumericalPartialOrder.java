@@ -33,7 +33,8 @@ import org.tweetyproject.commons.Formula;
  * This class provides an acceptability interpretation of arguments by assigning
  * them real values. Often larger values indicate more acceptability, but some
  * semantics use other ways of ranking the values.
- * 
+ * @param <T> Some Formular
+ * @param <R> Some Beliefbase
  * @author Matthias Thimm
  * @author Anna Gessler
  */
@@ -87,10 +88,10 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/**
 	 * Creates a new ranking with the given set of
-	 * arguments and the given initial ranking value. 
-	 * 
+	 * arguments and the given initial ranking value.
+	 *
 	 * @param args         some set of comparable elements
-	 * @param initialvalue an initial value that will be 
+	 * @param initialvalue an initial value that will be
 	 * assigned to all comparable elements
 	 */
 	public NumericalPartialOrder(Collection<T> args, double initialvalue) {
@@ -101,7 +102,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.dung.semantics.ArgumentRanking#
 	 * isStrictlyLessOrEquallyAcceptableThan(org.tweetyproject.arg.dung.syntax.Argument,
 	 * org.tweetyproject.arg.dung.syntax.Argument)
@@ -127,7 +128,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation#toString
 	 * ()
@@ -139,7 +140,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#clear()
 	 */
 	@Override
@@ -149,7 +150,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
 	@Override
@@ -159,7 +160,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
 	@Override
@@ -169,7 +170,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#entrySet()
 	 */
 	@Override
@@ -179,7 +180,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
 	@Override
@@ -189,7 +190,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#isEmpty()
 	 */
 	@Override
@@ -199,7 +200,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#keySet()
 	 */
 	@Override
@@ -209,7 +210,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -219,7 +220,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
@@ -229,7 +230,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
 	@Override
@@ -239,7 +240,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#size()
 	 */
 	@Override
@@ -249,7 +250,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Map#values()
 	 */
 	@Override
@@ -258,6 +259,8 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	}
 
 	/**
+	 * Return the sorting type that is used for ranking values (descending, ascending or sorted
+	 *         lexicographically)
 	 * @return the sorting type that is used for ranking values (descending, ascending or sorted
 	 *         lexicographically)
 	 */
@@ -268,7 +271,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	/**
 	 * Set the sorting type for ranking values. For example, the "ascending" type
 	 * means that smaller values signify a higher ranking than bigger values.
-	 * 
+	 *
 	 * @param sortingType see {@link org.tweetyproject.comparator.NumericalPartialOrder#sortingType} for a description of
 	 * the available sorting methods
 	 */
@@ -283,9 +286,9 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (T a : this.objectToValue.keySet()) 
-			for (T b : this.objectToValue.keySet()) 
-				if (this.isIncomparable(a, b)) 
+		for (T a : this.objectToValue.keySet())
+			for (T b : this.objectToValue.keySet())
+				if (this.isIncomparable(a, b))
 					return true;
 		return false;
 	}

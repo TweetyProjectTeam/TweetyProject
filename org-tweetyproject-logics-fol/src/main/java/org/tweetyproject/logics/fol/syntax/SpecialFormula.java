@@ -32,7 +32,11 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
  * @author Matthias Thimm
  */
 public abstract class SpecialFormula extends FolFormula {
-	
+	/** Default Constructor */
+	public SpecialFormula(){
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
@@ -50,7 +54,7 @@ public abstract class SpecialFormula extends FolFormula {
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
 		return new HashSet<C>();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
@@ -98,7 +102,7 @@ public abstract class SpecialFormula extends FolFormula {
 	public boolean isWellBound(Set<Variable> boundVariables) {
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
@@ -115,7 +119,7 @@ public abstract class SpecialFormula extends FolFormula {
 	public FolFormula substitute(Term<?> v, Term<?> t){
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
@@ -131,9 +135,10 @@ public abstract class SpecialFormula extends FolFormula {
 	public Set<Functor> getFunctors() {
 		return new HashSet<Functor>();
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return formulas
 	 * @return formulas
 	 */
 	public Set<FolFormula> getQuantifiedFormulas(){
@@ -142,16 +147,18 @@ public abstract class SpecialFormula extends FolFormula {
 
 
 	/**
-	 * 
+	 *
+	 * Return disjunction
 	 * @return disjunction
 	 */
 	public Set<Disjunction> getDisjunctions(){
 		return new HashSet<Disjunction>();
 	}
-	
+
 
 	/**
-	 * 
+	 *
+	 * Return conjunctions
 	 * @return conjunctions
 	 */
 	public Set<Conjunction> getConjunctions(){
@@ -165,7 +172,7 @@ public abstract class SpecialFormula extends FolFormula {
 	public boolean isDnf(){
 		return true;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#toNNF()

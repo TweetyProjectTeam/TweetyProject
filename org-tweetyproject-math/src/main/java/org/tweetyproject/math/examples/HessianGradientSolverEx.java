@@ -40,6 +40,12 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class HessianGradientSolverEx  {
+
+	/** Constructor */
+	public HessianGradientSolverEx() {
+	}
+
+
 	/**
 	 * constructor
 	 * @return problem
@@ -50,14 +56,14 @@ public class HessianGradientSolverEx  {
 		//Target funcion = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
-		
-		
+
+
 		OptimizationProblem prob = new OptimizationProblem();
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -78,8 +84,8 @@ public class HessianGradientSolverEx  {
 		HessianGradientDescent solver = new HessianGradientDescent(startingPoint);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }
 

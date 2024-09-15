@@ -79,4 +79,7 @@ public class IcebergInconsistencyExample {
 		System.out.println("*-conflicts: " + im.getStarConflicts(kb3));
 		System.out.println("IM: " + im.inconsistencyMeasure(kb3));
 	}
+
+    /** Default Constructor */
+    public IcebergInconsistencyExample(){}
 }

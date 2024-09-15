@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.tweetyproject.commons.Signature;
 
 /**
+ * The BpmnSignature class
  * @author Benedikt Knopp
  */
 public class BpmnSignature implements Signature{
@@ -79,7 +80,10 @@ public class BpmnSignature implements Signature{
 
 	@Override
 	public void add(Object... objects) {
-		
+
 	}
 
+
+    /** Default Constructor */
+    public BpmnSignature(){}
 }

@@ -30,20 +30,41 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
 
 /**
  * Shows how to parse and query a DeLP program.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class DeLPExample {
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		DelpParser parser = new DelpParser();
-		DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(DeLPExample.class.getResource("/birds2.txt").getFile());
-		DelpReasoner reasoner = new DelpReasoner(new GeneralizedSpecificity());
-		
-		FolFormula query = (FolFormula) parser.parseFormula("Fly(opus)");
-		System.out.println(query + "\t" + reasoner.query(delp,query));
-		
-		query = (FolFormula) parser.parseFormula("Fly(tweety)");
-		System.out.println(query + "\t" + reasoner.query(delp,query));
-	}
+
+    /**
+     * The entry point of the application that parses a defeasible logic program from a file,
+     * creates a reasoner with a specific criterion, and performs queries on the logic program.
+     *
+     * @param args Command-line arguments (not used in this example).
+     * @throws FileNotFoundException If the specified file cannot be found.
+     * @throws ParserException If there is an error while parsing the belief base or formula.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
+    public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
+        DelpParser parser = new DelpParser();
+
+        // Parse the defeasible logic program from the specified file
+        DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(
+            DeLPExample.class.getResource("/birds2.txt").getFile()
+        );
+
+        // Create a reasoner with a Generalized Specificity criterion
+        DelpReasoner reasoner = new DelpReasoner(new GeneralizedSpecificity());
+
+        // Parse and query a formula, then print the result
+        FolFormula query = (FolFormula) parser.parseFormula("Fly(opus)");
+        System.out.println(query + "\t" + reasoner.query(delp, query));
+
+        // Parse and query another formula, then print the result
+        query = (FolFormula) parser.parseFormula("Fly(tweety)");
+        System.out.println(query + "\t" + reasoner.query(delp, query));
+    }
+
+    /** Default Constructor */
+    public DeLPExample() {}
 }

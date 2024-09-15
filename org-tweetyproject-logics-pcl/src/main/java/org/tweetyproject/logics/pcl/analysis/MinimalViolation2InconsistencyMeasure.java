@@ -97,4 +97,7 @@ public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistenc
 	}
 
 
+
+    /** Default Constructor */
+    public MinimalViolation2InconsistencyMeasure(){}
 }

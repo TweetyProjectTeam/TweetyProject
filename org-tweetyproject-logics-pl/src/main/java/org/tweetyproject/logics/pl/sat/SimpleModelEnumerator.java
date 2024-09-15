@@ -41,7 +41,8 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 public class SimpleModelEnumerator implements ModelProvider<PlFormula, PlBeliefSet, InterpretationSet<Proposition,PlBeliefSet,PlFormula>> {
 
 	/**
-	 * 
+	 *
+	 * Return all models satifying the formulas
 	 * @param formulas Pl Formulas to have all models enumerated
 	 * @return all models satifying the formulas
 	 */
@@ -54,8 +55,8 @@ public class SimpleModelEnumerator implements ModelProvider<PlFormula, PlBeliefS
 				clauses.add((Disjunction)f);
 			else {
 	 			f = f.toCnf();
-				for(PlFormula c: ((Conjunction)f)) 
-					clauses.add((Disjunction)c);				
+				for(PlFormula c: ((Conjunction)f))
+					clauses.add((Disjunction)c);
 			}
 		}
 
@@ -76,7 +77,7 @@ public class SimpleModelEnumerator implements ModelProvider<PlFormula, PlBeliefS
 		for(Set<Proposition> model : propPowerSet) {
 			PossibleWorld possWorld = new PossibleWorld(model);
 			allModels.add(possWorld);
-		}		
+		}
 		for(PlFormula f : formulas)
 			allModels.addAll(f.getModels());
 		Set<InterpretationSet<Proposition, PlBeliefSet, PlFormula>> satModels = new HashSet<InterpretationSet<Proposition, PlBeliefSet, PlFormula>> ();
@@ -105,4 +106,7 @@ public class SimpleModelEnumerator implements ModelProvider<PlFormula, PlBeliefS
 		return this.getModels(form).iterator().next();
 	}
 
+
+    /** Default Constructor */
+    public SimpleModelEnumerator(){}
 }

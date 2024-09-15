@@ -64,4 +64,7 @@ public class RaVoidPrecedence extends RankingPostulate {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public RaVoidPrecedence(){}
 }

@@ -27,16 +27,22 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * Audience agents (do nothing) for argumentation games.
- *  
+ *
  * @author Matthias Thimm
  *
  */
 public class DummyLotteryAgent extends AbstractLotteryAgent{
 
+	/**
+	 * Create DummyLotteryAgent
+	 * @param name the name
+	 * @param theory the theory
+	 * @param semantics the semantics
+	 */
 	public DummyLotteryAgent(String name, DungTheory theory, Semantics semantics) {
 		super(name, theory, semantics);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.agents.dialogues.lotteries.AbstractLotteryAgent#next(java.util.Collection)
 	 */

@@ -23,7 +23,7 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
 
 /**
- * Abstract modal reasoner to be implemented by concrete reasoners. 
+ * Abstract modal reasoner to be implemented by concrete reasoners.
  *
  * @author Bastian Wolf
  * @author Nils Geilen
@@ -32,12 +32,19 @@ import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
  *
  */
 public abstract class AbstractMlReasoner implements QualitativeReasoner<MlBeliefSet,FolFormula> {
-	
+
+    /**
+	 * Default Constructor
+	 */
+	public AbstractMlReasoner() {
+	}
+
+
 	/**
 	 * Empty default prover
 	 */
 	public static AbstractMlReasoner defaultReasoner = null;
-	
+
 	/**
 	 * Set default modal reasoner with given
 	 * @param reasoner an ML Reasoner
@@ -45,7 +52,7 @@ public abstract class AbstractMlReasoner implements QualitativeReasoner<MlBelief
 	public static void setDefaultReasoner(AbstractMlReasoner reasoner){
 		AbstractMlReasoner.defaultReasoner = reasoner;
 	}
-	
+
 	/**
 	 * Returns the default reasoner for modal logic
 	 * @return the default modal reasoner
@@ -55,7 +62,7 @@ public abstract class AbstractMlReasoner implements QualitativeReasoner<MlBelief
 			return AbstractMlReasoner.defaultReasoner;
 		} else{
 			System.err.println("No default modal reasoner configured, using "
-					+ "'NaiveModalReasoner' with default settings as fallback.");			
+					+ "'NaiveModalReasoner' with default settings as fallback.");
 			return new SimpleMlReasoner();
 		}
 	}

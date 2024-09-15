@@ -29,7 +29,15 @@ import org.tweetyproject.graphs.util.GraphUtil;
  */
 public class GraphExample2 {
 	/**
+	 * Default Constructor
+	 */
+	public GraphExample2() {
+
+	}
+
+	/**
 	 * main
+	 *
 	 * @param args arguments
 	 */
 	public static void main(String[] args) {
@@ -38,18 +46,18 @@ public class GraphExample2 {
 		nodes[0] = new SimpleNode("A");
 		nodes[1] = new SimpleNode("B");
 		nodes[2] = new SimpleNode("C");
-		nodes[3] = new SimpleNode("D");		
+		nodes[3] = new SimpleNode("D");
 		nodes[4] = new SimpleNode("E");
 		nodes[5] = new SimpleNode("F");
-		for(SimpleNode n: nodes)
+		for (SimpleNode n : nodes)
 			g.add(n);
-		g.add(new DirectedEdge<SimpleNode>(nodes[0],nodes[1]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[2],nodes[3]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[3],nodes[4]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[5]));
-		g.add(new DirectedEdge<SimpleNode>(nodes[5],nodes[1]));
-		
+		g.add(new DirectedEdge<SimpleNode>(nodes[0], nodes[1]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[1], nodes[2]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[2], nodes[3]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[3], nodes[4]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[4], nodes[5]));
+		g.add(new DirectedEdge<SimpleNode>(nodes[5], nodes[1]));
+
 		System.out.println(GraphUtil.betweennessCentralityNormalised(g));
 	}
 }

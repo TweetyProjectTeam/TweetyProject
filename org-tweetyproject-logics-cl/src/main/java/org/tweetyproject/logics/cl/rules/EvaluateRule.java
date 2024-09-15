@@ -30,9 +30,9 @@ import org.tweetyproject.logics.cl.kappa.KappaTerm;
 import org.tweetyproject.logics.cl.kappa.KappaValue;
 
 /**
- * The evaluate rule tries to evaluate the kappa values by using logical 
+ * The evaluate rule tries to evaluate the kappa values by using logical
  * constraints, therefore the {@link KappaTerm} evaluate() methods are called.
- * 
+ *
  * In fact this rule uses multiple rules, because evaluate() is implemented in a
  * different way on the classes that implement the {@link KappaTerm} interface:
  * - It evaluates {@link KappaMin} instances by proofing if there is an element e
@@ -41,14 +41,18 @@ import org.tweetyproject.logics.cl.kappa.KappaValue;
  * - The {@link KappaSum} instances are simply evaluated if every sub-element of the sum can be evaluated
  * - The {@link KappaValue} instances are evaluated as soon as their {@link KappaMin} members are
  *   evaluated.
- *   
+ *
  * @author Tim Janus
  */
 public class EvaluateRule extends RuleAdapter {
+	/** Default */
+	public EvaluateRule(){
+		super();
+	}
 
 	/** stores the old values of the kappa and is used to realize if some progress in calculation occured */
 	private Map<KappaTerm, Integer> progressMap = new HashMap<KappaTerm, Integer>();
-	
+
 	@Override
 	public void setKappas(Collection<KappaValue> kappas) {
 		this.kappas = new ArrayList<KappaValue>(kappas);
@@ -59,21 +63,21 @@ public class EvaluateRule extends RuleAdapter {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean apply() {
 		// first update the progress-map otherwise there might be changes of other rules:
 		changeOccurred();
-		
+
 		// then evaluate each kappa
 		for(KappaValue kappa : kappas) {
 			kappa.evaluate();
 		}
-		
+
 		// and update the progress-map again and also return if a change occurred:
 		return changeOccurred();
 	}
-	
+
 	/**
 	 * Updates the progressMap and also checks if a change to one kappa value is occurred sicnge the last application of
 	 * this rule.

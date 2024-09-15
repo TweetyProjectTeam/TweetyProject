@@ -254,5 +254,8 @@ public class CADFSemantics {
 		System.out.println("Preferred interpretations: " + FourValuedWorld.printCollection(preferredWorlds));
 		System.out.println("Grounded State: " + FourValuedWorld.printCollection(inputCollection));
 	}
+
+    /** Default Constructor */
+    public CADFSemantics(){}
 }
 

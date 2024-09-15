@@ -34,63 +34,97 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
- * @author Mathias Hofer
+ * The {@code CompleteVerifier} is a verifier class that checks whether a given interpretation
+ * is a complete interpretation within an abstract dialectical framework (ADF). It ensures that
+ * the interpretation is conflict-free and adheres to acceptance conditions for all undecided arguments.
  *
+ * @author Mathias Hofer
  */
 public final class CompleteVerifier implements Verifier {
 
-	private final Supplier<SatSolverState> stateSupplier;
-	
-	private final AbstractDialecticalFramework adf;
-	
-	private final PropositionalMapping mapping;
-	
-	private final SatEncoding conflictFree;
-	
-	private final RelativeSatEncoding fixPartial;
-		
-	/**
-	 * @param stateSupplier stateSupplier
-	 * @param adf adf
-	 * @param mapping mapping
-	 */
-	public CompleteVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-		this.stateSupplier = Objects.requireNonNull(stateSupplier);
-		this.adf = Objects.requireNonNull(adf);
-		this.mapping = Objects.requireNonNull(mapping);
-		this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
-		this.fixPartial = new FixPartialSatEncoding(mapping);
-	}
+    /** Supplier for creating new instances of {@code SatSolverState}. */
+    private final Supplier<SatSolverState> stateSupplier;
 
-	@Override
-	public void prepare() {}
+    /** The abstract dialectical framework containing arguments and links. */
+    private final AbstractDialecticalFramework adf;
 
-	@Override
-	public boolean verify(Interpretation candidate) {
-		try(SatSolverState state = stateSupplier.get()) {
-			conflictFree.encode(state::add);			
-			fixPartial.encode(state::add, candidate);
-			for (Argument s : candidate.undecided()) {
-				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
-				Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
-				
-				// check not-taut
-				state.assume(accName.neg());
-				boolean notTaut = state.satisfiable();
-				
-				if (!notTaut) return false;
+    /** The propositional mapping used for SAT encoding. */
+    private final PropositionalMapping mapping;
 
-				// check not-unsat
-				state.assume(accName);
-				boolean notUnsat = state.satisfiable();
+    /** The SAT encoding for conflict-free interpretations. */
+    private final SatEncoding conflictFree;
 
-				if (!notUnsat) return false;
-			}
-			return true;
-		}
-	}
-	
-	@Override
-	public void close() {}
+    /** The SAT encoding for fixing partial interpretations. */
+    private final RelativeSatEncoding fixPartial;
+
+    /**
+     * Constructs a {@code CompleteVerifier} with the given SAT solver state supplier, abstract
+     * dialectical framework, and propositional mapping. Initializes the SAT encodings for conflict-free
+     * and partial interpretation fixing.
+     *
+     * @param stateSupplier a supplier that provides new instances of {@code SatSolverState}, must not be null
+     * @param adf the abstract dialectical framework to be processed, must not be null
+     * @param mapping the propositional mapping used for SAT encoding, must not be null
+     * @throws NullPointerException if any of the parameters are null
+     */
+    public CompleteVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+        this.stateSupplier = Objects.requireNonNull(stateSupplier);
+        this.adf = Objects.requireNonNull(adf);
+        this.mapping = Objects.requireNonNull(mapping);
+        this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
+        this.fixPartial = new FixPartialSatEncoding(mapping);
+    }
+
+    /**
+     * Prepares the SAT solver state for verification. This implementation does not perform any preparation.
+     * This method is provided to comply with the {@code Verifier} interface.
+     */
+    @Override
+    public void prepare() {}
+
+    /**
+     * Verifies whether the given interpretation is a complete interpretation. It checks if the interpretation
+     * is conflict-free and verifies the acceptance conditions for all undecided arguments.
+     * <p>
+     * For each undecided argument, the method encodes the acceptance condition and verifies that it is neither
+     * tautologically satisfied nor unsatisfied in the given interpretation.
+     * </p>
+     *
+     * @param candidate the interpretation to be verified
+     * @return {@code true} if the interpretation is complete, {@code false} otherwise
+     */
+    @Override
+    public boolean verify(Interpretation candidate) {
+        try (SatSolverState state = stateSupplier.get()) {
+            conflictFree.encode(state::add);
+            fixPartial.encode(state::add, candidate);
+            for (Argument s : candidate.undecided()) {
+                TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
+                Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
+
+                // Check for not-tautological condition
+                state.assume(accName.neg());
+                boolean notTaut = state.satisfiable();
+
+                if (!notTaut) return false;
+
+                // Check for not-unsatisfiable condition
+                state.assume(accName);
+                boolean notUnsat = state.satisfiable();
+
+                if (!notUnsat) return false;
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Closes the SAT solver state and releases any resources associated with it.
+     * This method should be called when the verifier is no longer needed to ensure
+     * proper resource management.
+     */
+    @Override
+    public void close() {}
 
 }
+

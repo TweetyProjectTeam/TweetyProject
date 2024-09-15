@@ -43,40 +43,45 @@ import org.tweetyproject.math.term.Variable;
 
 /**
  * This class models an approximation from below to the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], see [PhD thesis, Thimm].
- * 
+ *
  * @author Matthias Thimm
  */
 public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
+	/** the rootfinder */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootfinder
+	 */
 	public LowerApproxDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
 
-	
+
 	/**
 	 * For archiving.
 	 */
 	private Map<PclBeliefSet,Double> archive = new HashMap<PclBeliefSet,Double>();
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
+	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
-		// first check whether the belief set is consistent		
+		// first check whether the belief set is consistent
 
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;
 		}
-	
+
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
@@ -91,14 +96,14 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 			if(normConstraint == null)
 				normConstraint = var;
 			else normConstraint = normConstraint.add(var);
-		}		
+		}
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
 		// For each conditional add a variables mu and nu and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> mus = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> nus = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
-		i = 0;		
+		i = 0;
 		for(ProbabilisticConditional c: beliefSet){
 			FloatVariable mu = new FloatVariable("m" + i,0,1);
 			FloatVariable nu = new FloatVariable("n" + i++,0,1);
@@ -117,7 +122,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -130,7 +135,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -143,15 +148,15 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			problem.add(new Equation(leftSide,rightSide));			
+			problem.add(new Equation(leftSide,rightSide));
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultLinearSolver().solve(problem);
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
-		}		
+		}
 	}
 }

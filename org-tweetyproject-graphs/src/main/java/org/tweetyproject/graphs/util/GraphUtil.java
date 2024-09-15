@@ -33,18 +33,23 @@ import org.tweetyproject.math.matrix.Matrix;
 /**
  * This abstract class contains some auxiliary methods for working
  * with graphs.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class GraphUtil {
 
+	/** Default Constructor */
+	public GraphUtil(){
+		//default
+	}
+
 	/** For archiving page rank values. */
 	private static Map<Graph<? extends Node>,Map<Double,Map<Double,Map<Node,Double>>>> archivePageRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Double,Map<Node,Double>>>>();
-	
+
 	/** For archiving HITS rank values. */
 	private static Map<Graph<? extends Node>,Map<Double,Map<Node,Double>>> archiveHITSAuthRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Node,Double>>>();
 	private static Map<Graph<? extends Node>,Map<Double,Map<Node,Double>>> archiveHITSHubRank = new HashMap<Graph<? extends Node>,Map<Double,Map<Node,Double>>>();
-	
+
 	/**
 	 * Computes the PageRank of the given node in the given graph.
 	 * @param g a graph
@@ -70,10 +75,10 @@ public abstract class GraphUtil {
 		// iterate
 		double maxDiff;
 		double sum;
-		Map<Node,Double> pageRanks_tmp;		
-		do{			
+		Map<Node,Double> pageRanks_tmp;
+		do{
 			maxDiff = 0;
-			pageRanks_tmp = new HashMap<Node,Double>();			
+			pageRanks_tmp = new HashMap<Node,Double>();
 			for(Node v: g){
 				sum = 0;
 				for(Node w: g.getParents(v)){
@@ -81,19 +86,19 @@ public abstract class GraphUtil {
 				}
 				for(Node w: sinks)
 					sum += pageRanks.get(w)/m;
-				pageRanks_tmp.put(v, ((1-dampingFactor)/m) + (dampingFactor * sum));						
-				maxDiff = Math.max(maxDiff, Math.abs(pageRanks.get(v)-pageRanks_tmp.get(v)));				
+				pageRanks_tmp.put(v, ((1-dampingFactor)/m) + (dampingFactor * sum));
+				maxDiff = Math.max(maxDiff, Math.abs(pageRanks.get(v)-pageRanks_tmp.get(v)));
 			}
-			pageRanks = pageRanks_tmp;			
-		}while(maxDiff > precision);		
+			pageRanks = pageRanks_tmp;
+		}while(maxDiff > precision);
 		if(!GraphUtil.archivePageRank.containsKey(g))
 			GraphUtil.archivePageRank.put(g, new HashMap<Double,Map<Double,Map<Node,Double>>>());
 		if(!GraphUtil.archivePageRank.get(g).containsKey(dampingFactor))
 			GraphUtil.archivePageRank.get(g).put(dampingFactor, new HashMap<Double,Map<Node,Double>>());
-		GraphUtil.archivePageRank.get(g).get(dampingFactor).put(precision, pageRanks);		
+		GraphUtil.archivePageRank.get(g).get(dampingFactor).put(precision, pageRanks);
 		return pageRanks.get(n);
 	}
-	
+
 	/**
 	 * Computes the HITS rank of the given node in the given graph.
 	 * @param g a graph
@@ -117,14 +122,14 @@ public abstract class GraphUtil {
 		// init
 		for(Node v: g){
 			auth.put(v,1d);
-			hub.put(v,1d);			
+			hub.put(v,1d);
 		}
 		// iterate
 		double maxDiff;
 		double sum;
 		double norm;
-		Map<Node,Double> auth_tmp, hub_tmp;		
-		do{						
+		Map<Node,Double> auth_tmp, hub_tmp;
+		do{
 			maxDiff = 0;
 			norm = 0;
 			auth_tmp = new HashMap<Node,Double>();
@@ -155,17 +160,17 @@ public abstract class GraphUtil {
 				maxDiff = Math.max(maxDiff, Math.abs(hub.get(v)-hub_tmp.get(v)));
 			}
 			auth = auth_tmp;
-			hub = hub_tmp;			
-		}while(maxDiff > precision);	
+			hub = hub_tmp;
+		}while(maxDiff > precision);
 		if(!GraphUtil.archiveHITSHubRank.containsKey(g))
-			GraphUtil.archiveHITSHubRank.put(g, new HashMap<Double,Map<Node,Double>>());		
-		GraphUtil.archiveHITSHubRank.get(g).put(precision,hub);		
+			GraphUtil.archiveHITSHubRank.put(g, new HashMap<Double,Map<Node,Double>>());
+		GraphUtil.archiveHITSHubRank.get(g).put(precision,hub);
 		if(!GraphUtil.archiveHITSAuthRank.containsKey(g))
-			GraphUtil.archiveHITSAuthRank.put(g, new HashMap<Double,Map<Node,Double>>());		
+			GraphUtil.archiveHITSAuthRank.put(g, new HashMap<Double,Map<Node,Double>>());
 		GraphUtil.archiveHITSAuthRank.get(g).put(precision,auth);
-		return getAuth ? auth.get(n) : hub.get(n);		
+		return getAuth ? auth.get(n) : hub.get(n);
 	}
-	
+
 	/**
 	 * Computes the (real parts of the) Eigenvalues of the given graph.
 	 * @param g some graph
@@ -173,14 +178,14 @@ public abstract class GraphUtil {
 	 */
 	public static ComplexNumber[] eigenvalues(Graph<? extends Node> g){
 		Matrix m = g.getAdjacencyMatrix();
-		EigenvalueDecomposition ed = new EigenvalueDecomposition(m.getJamaMatrix());		
+		EigenvalueDecomposition ed = new EigenvalueDecomposition(m.getJamaMatrix());
 		ComplexNumber[] result = new ComplexNumber[ed.getRealEigenvalues().length];
 		for(int i = 0; i < ed.getImagEigenvalues().length; i++){
 			result[i] = new ComplexNumber(ed.getRealEigenvalues()[i], ed.getImagEigenvalues()[i]);
-		}			
+		}
 		return result;
 	}
-	
+
 	/**
 	 * Checks whether the two graphs are isomorphic.
 	 * @param g1 some graph.
@@ -191,13 +196,13 @@ public abstract class GraphUtil {
 		// NOTE: we simply try out every possible permutation (note that this is an NP-hard problem anyway)
 		MapTools<Node, Node> mapTools = new MapTools<Node,Node>();
 		Set<Map<Node,Node>> bijections;
-		
+
 		try {
 			bijections = mapTools.allBijections(new HashSet<Node>(g1.getNodes()), new HashSet<Node>(g2.getNodes()));
 		} catch (IllegalArgumentException e) {
 			return false; // cannot be isomorphic, if number of nodes in both graphs are different
 		}
-		
+
 		for(Map<Node,Node> isomorphism: bijections){
 			boolean isomorphic = true;
 			for(Node a: g1){
@@ -212,13 +217,13 @@ public abstract class GraphUtil {
 			}
 			if(isomorphic)
 				return true;
-		}		
+		}
 		return false;
 	}
-	
+
 	/**
 	 * 	 * Returns the (undirected) diameter of the graph, i.e. the longest shortest
-	 * path in the undirected version of the graph. 
+	 * path in the undirected version of the graph.
 	 * @param <T> a Node
 	 * @param g some graph
 	 * @return the (undirected) diameter of the graph
@@ -285,16 +290,16 @@ public abstract class GraphUtil {
 						continue;
 					numTriplets++;
 					if(g.areAdjacent(a, c) || g.areAdjacent(c, a))
-						numClosedTriplets++;					
-				}	
+						numClosedTriplets++;
+				}
 			}
 		}
 		return numClosedTriplets/numTriplets;
-	}	
-	
+	}
+
 	/**
 	 * Enumerates all chordless circuits of the given graph, i.e. all circuits a1,...,an
-	 * where there is no edge connecting any ak with aj unless k=j+1 or k=j-1. The algorithm 
+	 * where there is no edge connecting any ak with aj unless k=j+1 or k=j-1. The algorithm
 	 * of this method is adapted from [Bisdorff, On enumerating chordless circuits in directed graphs, 2010].
 	 * @param <T> a Node
 	 * @param g some graph
@@ -314,7 +319,7 @@ public abstract class GraphUtil {
 				T vk = elem.getSecond();
 				T vkm1 = p.get(p.size()-1);
 				visitedLEdges.add(new UndirectedEdge<T>(vkm1,vk));
-				if(g.contains(new DirectedEdge<T>(vkm1,vk)) && !g.contains(new DirectedEdge<T>(vk,vkm1))) 
+				if(g.contains(new DirectedEdge<T>(vkm1,vk)) && !g.contains(new DirectedEdge<T>(vk,vkm1)))
 					ccircuits.add(p);
 				else {
 					Stack<T> n = new Stack<T>();
@@ -324,7 +329,7 @@ public abstract class GraphUtil {
 					while(!n.isEmpty()) {
 						T v = n.pop();
 						if(!visitedLEdges.contains(new UndirectedEdge<T>(vkm1,v))) {
-							boolean noChord = true;							
+							boolean noChord = true;
 							for(T x: p)
 								if(!x.equals(vkm1)) {
 									if(g.getChildren(x).contains(v)) {
@@ -336,7 +341,7 @@ public abstract class GraphUtil {
 											noChord = false;
 											break;
 										}
-									}							
+									}
 								}
 							if(noChord) {
 								List<T> p_current = new LinkedList<T>();
@@ -348,16 +353,16 @@ public abstract class GraphUtil {
 					}
 				}
 			}
-				
+
 		}
 		return ccircuits;
-	}		
-	
+	}
+
 	/**
 	 * Computes the normalised betweenness centrality of all nodes, i.e. the number of shortest paths
 	 * going through each node. The value is normalised by subtracting the minimum number (min) of such shortest
 	 * paths and dividing by (max-min).
-	 *  
+	 *
 	 * @param <T> a Node
 	 * @param graph some graph
 	 * @return a map mapping each node to its betweenness centrality.
@@ -390,7 +395,7 @@ public abstract class GraphUtil {
 						q.add(node3);
 					}
 				}
-			}			
+			}
 			for(T node2: pred.keySet()) {
 				List<T> path = new LinkedList<T>();
 				path.add(node2);
@@ -423,14 +428,14 @@ public abstract class GraphUtil {
 		//special case max=min
 		if(max == min)
 			return result;
-		for(T node: result.keySet()) 
+		for(T node: result.keySet())
 			result.put(node, (result.get(node)-min)/(max-min));
 		return result;
 	}
-	
+
 	/**
 	 * Returns "true" if the graph is (simply) connected, i.e.
-	 * if there is a path from every node to each other node 
+	 * if there is a path from every node to each other node
 	 * (ignoring edge directions).
 	 * @param <T> a Node
 	 * @param g some graph
@@ -450,8 +455,8 @@ public abstract class GraphUtil {
 			for(T node2: g.getChildren(node))
 				q.add(node2);
 			for(T node2: g.getParents(node))
-				q.add(node2);			
-		}		
+				q.add(node2);
+		}
 		return false;
 	}
 }

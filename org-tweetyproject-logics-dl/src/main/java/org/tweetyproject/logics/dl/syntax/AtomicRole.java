@@ -25,10 +25,10 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
  * This class models a role in description logics.
- * 
+ *
  * <br> Note: Role assertions like (a,b):r ("the Individuals a,b are in the extension of the role r") are
  * modeled with a different class: {@link org.tweetyproject.logics.dl.syntax.ConceptAssertion}.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -37,27 +37,43 @@ public class AtomicRole extends ComplexConcept {
 	 * The predicate that represents this atomic role.
 	 */
 	private Predicate predicate;
-	
+
 	/**
-	 * Initializes a role with the given name. 
-	 * 
+	 * Initializes a role with the given name.
+	 *
 	 * @param name the name of the role
 	 */
 	public AtomicRole(String name){
 		this.predicate = new Predicate(name,2);
 	}
-	
+
+/**
+	 * Initializes an atomic role with the given predicate.
+	 *
+	 * @param p the predicate representing the role; must have arity 2
+	 * @throws IllegalArgumentException if the predicate's arity is not 2
+	 */
 	public AtomicRole(Predicate p) {
 		if (p.getArity() == 2)
 			this.predicate = p;
-		else 
+		else
 			throw new IllegalArgumentException("Role names are always predicates of arity 2. Argument has arity " + p.getArity());
 		}
 
+	/**
+	 * Returns the predicate representing this atomic role.
+	 *
+	 * @return the predicate representing this atomic role
+	 */
 	public Predicate getPredicate() {
 		return this.predicate;
 	}
-	
+
+	/**
+	 * Returns the name of this atomic role.
+	 *
+	 * @return the name of this atomic role
+	 */
 	public String getName() {
 		return this.predicate.getName();
 	}
@@ -73,12 +89,12 @@ public class AtomicRole extends ComplexConcept {
 	public ComplexConcept clone() {
 		return new AtomicConcept(this.getName());
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.predicate.getName();
 	}
-	
+
 	@Override
 	public AtomicRole collapseAssociativeFormulas() {
 		return this;
@@ -108,7 +124,7 @@ public class AtomicRole extends ComplexConcept {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
-			return true;		
+			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 		AtomicRole other = (AtomicRole) obj;

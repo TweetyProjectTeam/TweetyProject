@@ -27,8 +27,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * LiThesisPage21EAFExample class
+ */
 public class LiThesisPage21EAFExample {
 
+    /**
+     * Example
+     * @param args the args
+     */
     public static void main(String[] args) {
         EAFTheory eafTheory = new EAFTheory();
         for(int i = 0; i< 9; i++) {

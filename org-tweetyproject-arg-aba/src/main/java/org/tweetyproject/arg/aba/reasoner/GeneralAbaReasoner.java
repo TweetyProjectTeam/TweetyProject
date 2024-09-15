@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- package org.tweetyproject.arg.aba.reasoner;
+package org.tweetyproject.arg.aba.reasoner;
 
 import java.util.Collection;
 
@@ -30,56 +30,74 @@ import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
  * This is an abstract generalization over non-flat ABA reasoners.
- * @param <T>	the language of the underlying ABA theory
+ *
+ * @param <T> the language of the underlying ABA theory
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
-public abstract class GeneralAbaReasoner<T extends Formula> implements QualitativeReasoner<AbaTheory<T>,Assumption<T>>, ModelProvider<Assumption<T>,AbaTheory<T>,AbaExtension<T>> {
+public abstract class GeneralAbaReasoner<T extends Formula> implements QualitativeReasoner<AbaTheory<T>, Assumption<T>>,
+		ModelProvider<Assumption<T>, AbaTheory<T>, AbaExtension<T>> {
+	/** Default */
+	public GeneralAbaReasoner() {
+	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons
+	 * .BeliefBase, org.tweetyproject.commons.Formula)
 	 */
 	@Override
 	public Boolean query(AbaTheory<T> beliefbase, Assumption<T> query) {
-		return this.query(beliefbase, query, InferenceMode.SKEPTICAL);	
+		return this.query(beliefbase, query, InferenceMode.SKEPTICAL);
 	}
 
 	/**
-	 * Queries the given ABA theory for the given assumption using the given 
+	 * Queries the given ABA theory for the given assumption using the given
 	 * inference type.
-	 * @param beliefbase an ABA theory
-	 * @param query some assumption
-	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 *
+	 * @param beliefbase    an ABA theory
+	 * @param query         some assumption
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or
+	 *                      InferenceMode.CREDULOUS
 	 * @return "true" if the query is accepted
 	 */
 	public Boolean query(AbaTheory<T> beliefbase, Assumption<T> query, InferenceMode inferenceMode) {
 		Collection<AbaExtension<T>> extensions = this.getModels(beliefbase);
-		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(AbaExtension<T> e: extensions)
-				if(!e.contains(query))
+		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+			for (AbaExtension<T> e : extensions)
+				if (!e.contains(query))
 					return false;
 			return true;
 		}
 		// so its credulous semantics
-		for(AbaExtension<T> e: extensions){
-			if(e.contains(query))
-				return true;			
-		}			
+		for (AbaExtension<T> e : extensions) {
+			if (e.contains(query))
+				return true;
+		}
 		return false;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.
+	 * BeliefBase)
 	 */
 	@Override
 	public abstract Collection<AbaExtension<T>> getModels(AbaTheory<T> bbase);
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModel(org.tweetyproject.arg.aba.syntax.ABATheory)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModel(org.
+	 * tweetyproject.arg.aba.syntax.ABATheory)
 	 */
 	@Override
 	public AbaExtension<T> getModel(AbaTheory<T> bbase) {
 		// just return the first one.
-		return this.getModels(bbase).iterator().next();				
-	}	
+		return this.getModels(bbase).iterator().next();
+	}
 }

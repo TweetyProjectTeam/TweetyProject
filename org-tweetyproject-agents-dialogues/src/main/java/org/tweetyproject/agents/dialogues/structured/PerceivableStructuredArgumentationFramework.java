@@ -29,4 +29,7 @@ import org.tweetyproject.arg.saf.syntax.StructuredArgumentationFramework;
  *
  */
 public class PerceivableStructuredArgumentationFramework extends StructuredArgumentationFramework implements Perceivable {
+
+    /** Default Constructor */
+    public PerceivableStructuredArgumentationFramework(){}
 }

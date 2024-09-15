@@ -41,16 +41,17 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 /**
  * skeleton of the new main method of this CLI using plugins.
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  */
 
 public class CliMain {
 
+	/** help text */
 	public static final String HELPTEXT = "help.txt";
 
-	// TODO: Create external configuration file and Setter
+	/** config */
 	public static final String TWEETY_CLI_DEFAULT_CONFIG = "tweety_config.xml";
 
 	/** The argument name for the called plugin */
@@ -111,7 +112,7 @@ public class CliMain {
 
 	/**
 	 * This method is meant to load the tweety plugin pathes on startup
-	 * 
+	 *
 	 * @return an object with one or more pluginpathes
 	 * @throws ConfigurationException if there is an issue with the configuration
 	 * @throws FileNotFoundException if the file could not be found
@@ -178,7 +179,7 @@ public class CliMain {
 
 	/**
 	 * TODO: own method for plugin loading
-	 * 
+	 *
 	 * @param plugin
 	 */
 	// public static boolean loadPlugin(Map<String, String> availablePlugins,
@@ -201,11 +202,18 @@ public class CliMain {
 
 	}
 
-
+	/**
+	 * setter
+	 * @param path the path
+	 */
 	public void setConfigurationFilePath(String path) {
 
 	}
 
+	/**
+	 * setter
+	 * @param path the path
+	 */
 	public void setHelptextPath(String path) {
 
 	}
@@ -213,7 +221,7 @@ public class CliMain {
 	/**
 	 * instantiates each given input parameter within the called plugin - if
 	 * possible
-	 * 
+	 *
 	 * @param tp
 	 *            the called Tweety-Plugin Implementation
 	 * @param inparams
@@ -251,6 +259,10 @@ public class CliMain {
 		return tmp;
 	}
 
+	/**
+	 * Example
+	 * @param args the arg
+	 */
 	public static void main(String[] args) {
 
 		// check, if first call parameter is for the helptext

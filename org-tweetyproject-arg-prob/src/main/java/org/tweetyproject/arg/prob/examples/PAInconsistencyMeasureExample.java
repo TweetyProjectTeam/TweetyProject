@@ -32,11 +32,38 @@ import org.tweetyproject.math.probability.Probability;
 
 /**
  * Example code for the PAInconsistencyMeasure.
+ *
  * @author Matthias Thimm
  *
  */
 public class PAInconsistencyMeasureExample {
-	public static void main(String[] args){
+
+	/** Default */
+	public PAInconsistencyMeasureExample() {
+
+	}
+
+	/**
+	 * This method demonstrates how to calculate an inconsistency measure for
+	 * argumentation theory
+	 * with a partial probability assignment and apply a change operator to update
+	 * the probability
+	 * assignment based on argumentation semantics and entropy.
+	 *
+	 * The demonstration includes the following steps:
+	 * 1. Constructing a argumentation theory with three arguments (A, B, and
+	 * C) and three attacks.
+	 * 2. Creating a partial probability assignment with a specific probability for
+	 * argument A.
+	 * 3. Using a PA inconsistency measure to assess the inconsistency of the
+	 * partial probability assignment.
+	 * 4. Applying a change operator to update the partial probability assignment
+	 * based on a coherent semantics
+	 * and entropy-based reasoning.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 */
+	public static void main(String[] args) {
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("A");
 		Argument b = new Argument("B");
@@ -44,19 +71,20 @@ public class PAInconsistencyMeasureExample {
 		theory.add(a);
 		theory.add(b);
 		theory.add(c);
-		theory.add(new Attack(a,b));
-		theory.add(new Attack(b,c));
-		theory.add(new Attack(a,c));
-		
+		theory.add(new Attack(a, b));
+		theory.add(new Attack(b, c));
+		theory.add(new Attack(a, c));
+
 		PartialProbabilityAssignment ppa = new PartialProbabilityAssignment();
 		ppa.put(a, new Probability(0.9));
-				
+
 		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new PNorm(2), theory, new SemiOptimisticPASemantics());
-		
+
 		System.out.println(mes.inconsistencyMeasure(ppa));
-		
-		ChangeOperator op = new PAUpdateOperator(new CoherentPASemantics(), new EntropyNorm<Extension<DungTheory>>(), new EntropyFunction());
-		
+
+		ChangeOperator op = new PAUpdateOperator(new CoherentPASemantics(), new EntropyNorm<Extension<DungTheory>>(),
+				new EntropyFunction());
+
 		System.out.println(op.change(ppa, theory));
 	}
 }

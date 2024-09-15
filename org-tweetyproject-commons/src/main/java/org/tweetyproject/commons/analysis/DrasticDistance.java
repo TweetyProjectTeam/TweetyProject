@@ -27,7 +27,7 @@ import org.tweetyproject.commons.Interpretation;
  * This class models the drastic distance measure between interpretations,
  * see [Grant, Hunter. Distance-based Measures of Inconsistency, ECSQARU'13].
  * It returns 0 if the interpretations are equivalent and 1 otherwise.
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <T> The actual type of interpretation
@@ -35,6 +35,15 @@ import org.tweetyproject.commons.Interpretation;
  * @param <S> the type of formulas
  */
 public class DrasticDistance<T extends Interpretation<B,S>,B extends BeliefBase, S extends Formula> implements InterpretationDistance<T,B,S>{
+
+
+		/**
+	 * Default Constructor
+	 */
+	public DrasticDistance(){
+
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.analysis.InterpretationDistance#distance(org.tweetyproject.commons.Interpretation, org.tweetyproject.commons.Interpretation)
@@ -48,7 +57,7 @@ public class DrasticDistance<T extends Interpretation<B,S>,B extends BeliefBase,
 	 * @see org.tweetyproject.commons.analysis.InterpretationDistance#distance(org.tweetyproject.commons.Formula, org.tweetyproject.commons.Interpretation)
 	 */
 	@Override
-	public double distance(S f, T b) {		
+	public double distance(S f, T b) {
 		return b.satisfies(f) ? 0 : 1;
 	}
 

@@ -28,10 +28,10 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.writer.Prover9Writer;
 
 /**
- * Invokes Prover9 
+ * Invokes Prover9
  * (<a href="https://www.cs.unm.edu/~mccune/mace4/"> https://www.cs.unm.edu/~mccune/mace4/</a>),
  * an automated theorem prover for first-order logic, and returns its results.
- * 
+ *
  * @author Nils Geilen
  * @author Matthias Thimm
  */
@@ -39,7 +39,7 @@ import org.tweetyproject.logics.fol.writer.Prover9Writer;
 public class Prover9FolReasoner extends FolReasoner {
 
 	/**
-	 *  String representation of the EProver binary path. 
+	 *  String representation of the EProver binary path.
 	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
@@ -51,7 +51,7 @@ public class Prover9FolReasoner extends FolReasoner {
 
 	/**
 	 * Constructs a new instance pointing to a specific Prover9.
-	 * 
+	 *
 	 * @param binaryLocation
 	 *            of the prover9 executable on the hard drive
 	 * @param bash
@@ -66,7 +66,7 @@ public class Prover9FolReasoner extends FolReasoner {
 
 	/**
 	 * Constructs a new instance pointing to a specific Prover9
-	 * 
+	 *
 	 * @param binaryLocation
 	 *            of the prover9 executable on the hard drive
 	 */
@@ -95,7 +95,7 @@ public class Prover9FolReasoner extends FolReasoner {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.logics.fol.prover.FolTheoremProver#equivalent(org.tweetyproject
 	 * .logics.fol.FolBeliefSet, org.tweetyproject.logics.fol.syntax.FolFormula,
@@ -117,7 +117,7 @@ public class Prover9FolReasoner extends FolReasoner {
 
 	/**
 	 * Invokes Prover9.
-	 * 
+	 *
 	 * @param file
 	 *            input file for Prover9
 	 * @return query result
@@ -135,6 +135,7 @@ public class Prover9FolReasoner extends FolReasoner {
 	}
 
 	/**
+	 * Return the path of the Prover9 binaries.
 	 * @return the path of the Prover9 binaries.
 	 */
 	public String getBinaryLocation() {
@@ -143,14 +144,14 @@ public class Prover9FolReasoner extends FolReasoner {
 
 	/**
 	 * Changes the path of the Prover9 binaries.
-	 * 
+	 *
 	 * @param binaryLocation
 	 *            the new path of the binary
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		try {
@@ -161,7 +162,7 @@ public class Prover9FolReasoner extends FolReasoner {
 		catch(Exception e) {
 			return false;
 		}
-		
+
 	}
 
 }

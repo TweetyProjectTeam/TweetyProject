@@ -43,7 +43,7 @@ import org.tweetyproject.math.term.Variable;
  * Provides a bridge to the Octave (http://www.gnu.org/software/octave/) optimization
  * solver "sqp" which implements a successive quadratic programming solver for
  * general non-linear optimization problems.
- * 
+ *
  * Version used is 5.2.0
  * @author Matthias Thimm
  *
@@ -52,18 +52,22 @@ public class OctaveSqpSolver extends Solver{
 
 	/** Path to Octave */
 	private static String pathToOctave = "octave";
-	
+
 	/**
 	 * Default constructor. If "octave" is not in the PATH,
 	 * it must be set using the static method "setPathToOctave"
 	 */
-	public OctaveSqpSolver(){		
+	public OctaveSqpSolver(){
 	}
-	
+
+	/**
+	 *  Set path
+	 * @param pathToOctave path
+	 */
 	public static void setPathToOctave(String pathToOctave){
 		OctaveSqpSolver.pathToOctave = pathToOctave;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -77,8 +81,8 @@ public class OctaveSqpSolver extends Solver{
 		// 1. create maps for variables
 		Map<Integer,Variable> idx2var = new HashMap<Integer,Variable>();
 		Map<Variable,Integer> var2idx = new HashMap<Variable,Integer>();
-		Map<Variable,Variable> old2new = new HashMap<Variable,Variable>();		
-		int idx = 1;		
+		Map<Variable,Variable> old2new = new HashMap<Variable,Variable>();
+		int idx = 1;
 		for(Variable v: p.getVariables()){
 			idx2var.put(idx, v);
 			var2idx.put(v, idx);
@@ -105,11 +109,11 @@ public class OctaveSqpSolver extends Solver{
 				else throw new IllegalArgumentException("No strict inequalities allows for Octave SQP solver.");
 				hasInequations = true;
 			}
-		}		
+		}
 		if(!hasEquations) eqConstraints += "0";
 		if(!hasInequations) ineqConstraints += "0";
 		eqConstraints += "];\nendfunction\n";
-		ineqConstraints += "];\nendfunction\n";		
+		ineqConstraints += "];\nendfunction\n";
 		String octaveCode = eqConstraints + ineqConstraints;
 		// 3. encode target function
 		octaveCode += "function obj = phi(x)\n";
@@ -153,15 +157,15 @@ public class OctaveSqpSolver extends Solver{
 		octaveCode += "]\n";
 		// 6. encode sqp call
 		octaveCode += "[x, obj, info, iter, nf, lambda] = sqp (x0, @phi, @g, @h, lb, ub)";
-		// write code to temp file and execute octave		
+		// write code to temp file and execute octave
 		try {
 			File ocFile = File.createTempFile("octmp", null);
 			// Delete temp file when program exits.
-			ocFile.deleteOnExit();    
+			ocFile.deleteOnExit();
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ocFile));
 			out.write(octaveCode);
-			out.close();			
+			out.close();
 			String result = NativeShell.invokeExecutable(OctaveSqpSolver.pathToOctave + " " + ocFile.getAbsolutePath());
 			// parse result
 			Map<Variable, Term> varMap = new HashMap<Variable,Term>();
@@ -171,17 +175,18 @@ public class OctaveSqpSolver extends Solver{
 			for(int i = 1; i <= idx2var.keySet().size(); i++ ){
 				FloatConstant f = new FloatConstant(Double.parseDouble((tokenizer.nextToken().trim())));
 				varMap.put(idx2var.get(i), f);
-			}			 
+			}
 			return varMap;
 		} catch (IOException e) {
-			throw new GeneralMathException("IO error: " + e.getMessage());			
+			throw new GeneralMathException("IO error: " + e.getMessage());
 		} catch (InterruptedException e) {
-			throw new GeneralMathException("Could not call executable 'octave': " + e.getMessage());			
-		}		
+			throw new GeneralMathException("Could not call executable 'octave': " + e.getMessage());
+		}
 	}
-		
+
 	/**
-	 * 
+	 * Return if solver is installed
+	 *
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
@@ -191,6 +196,6 @@ public class OctaveSqpSolver extends Solver{
 			return true;
 		} catch (Exception e) {
 			return false;
-		}		
+		}
 	}
 }

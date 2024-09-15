@@ -45,8 +45,8 @@ import java.io.IOException;
  * @see FileHandler
  * @see SimpleFormatter
  */
-
 public class LoggerUtil {
+    /** logger */
     public static final Logger logger = Logger.getLogger(LoggerUtil.class.getName());
 
     static {

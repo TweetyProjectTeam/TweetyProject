@@ -28,16 +28,21 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract QBF sat solver to be implemented by concrete solvers.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public abstract class QbfSolver implements BeliefSetConsistencyTester<PlFormula> {
+
+	/** Default */
+	public QbfSolver(){
+		super();
+	}
 	/**
 	 * Shell for running solvers.
 	 */
 	protected Shell bash;
-	
+
 	/**
 	 * Checks whether the given set of formulas is satisfiable.
 	 * @param formulas a set of formulas.
@@ -70,5 +75,10 @@ public abstract class QbfSolver implements BeliefSetConsistencyTester<PlFormula>
 		formulas.add(formula);
 		return this.isSatisfiable(formulas);
 	}
+	/**
+	 *
+	 * Return installation status
+	 * @return installation status
+	 */
 	public abstract boolean isInstalled();
 }

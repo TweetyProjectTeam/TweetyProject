@@ -23,10 +23,14 @@ import java.util.*;
 /**
  * This class contains some auxiliary methods for
  * working with vectors.
- * 
+ *
  * @author Matthias Thimm
  */
 public class VectorTools {
+	/**Default */
+	public VectorTools(){
+
+	}
 
 	/**
 	 * Computes the midpoint of the two given vectors.
@@ -42,7 +46,7 @@ public class VectorTools {
 			result[i] = ( left[i] + right[i] )/2;
 		return result;
 	}
-	
+
 	/**
 	 * Computes the sum of the elements in v
 	 * @param v  some vector
@@ -54,7 +58,7 @@ public class VectorTools {
 			result +=d;
 		return result;
 	}
-	
+
 	/**
 	 * Computes the Manhattan distance between the two given vectors.
 	 * @param left  some vector
@@ -69,7 +73,7 @@ public class VectorTools {
 			result += Math.abs(left[i]-right[i]);
 		return result;
 	}
-	
+
 	/**
 	 * Computes the Manhattan distance between the two given lists.
 	 * @param left  some vector
@@ -84,7 +88,7 @@ public class VectorTools {
 			result += Math.abs(left.get(i)-right.get(i));
 		return result;
 	}
-	
+
 	/**
 	 * Computes the Manhattan distance of the given value vector to zero
 	 * @param values a list of doubles.
@@ -96,7 +100,7 @@ public class VectorTools {
 			zero.add(0d);
 		return VectorTools.manhattanDistance(values, zero);
 	}
-	
+
 	/**
 	 * Computes the Manhattan distance of the given value vector to zero
 	 * @param values a list of doubles.
@@ -108,7 +112,7 @@ public class VectorTools {
 			zero[i] = 0;
 		return VectorTools.manhattanDistance(values, zero);
 	}
-	
+
 	/**
 	 * Normalizes the given vector such that the sum of the elements
 	 * equals "sum"
@@ -123,5 +127,5 @@ public class VectorTools {
 			result[i] = (v[i] / oldsum) * sum;
 		return result;
 	}
-	
+
 }

@@ -37,6 +37,11 @@ import org.tweetyproject.math.term.FloatVariable;
  */
 public class SemiFoundedPASemantics extends AbstractPASemantics{
 
+
+	/** Default */
+	public SemiFoundedPASemantics(){
+		super();
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */

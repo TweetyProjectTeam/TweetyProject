@@ -35,17 +35,20 @@ import org.tweetyproject.math.probability.*;
 
 /**
  * This approach to consistency restoration follows the approach proposed in [Thimm, DKB, 2011].
- * 
+ *
  * @author Matthias Thimm
  */
 public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineShop {
-
+    /** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public MinimumAggregatedDistanceMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -87,7 +90,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 						else leftSide = leftSide.add(prob.get(w));
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
-			}else{				
+			}else{
 				PlFormula body = pc.getPremise().iterator().next();
 				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -100,7 +103,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 						if(rightSide == null)
 							rightSide = prob.get(w);
 						else rightSide = rightSide.add(prob.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -115,7 +118,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 		}
 		Map<PossibleWorld,Variable> prob_main = new HashMap<PossibleWorld,Variable>();
 		Term t = null;
-		int w_cnt = 0;		
+		int w_cnt = 0;
 		for(PossibleWorld w: worlds){
 			Variable var = new FloatVariable("w_" + w_cnt++,0,1);
 			prob_main.put(w, var);
@@ -136,10 +139,10 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 			}
 			if(targetFunction == null)
 				targetFunction = t.mult(t);
-			else targetFunction = targetFunction.add(t.mult(t));			
+			else targetFunction = targetFunction.add(t.mult(t));
 		}
-		problem.setTargetFunction(targetFunction);	
-		try{			
+		problem.setTargetFunction(targetFunction);
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
@@ -148,11 +151,11 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)
-				result.add(new ProbabilisticConditional(pc,p.conditionalProbability(pc)));							
-			return result;					
+				result.add(new ProbabilisticConditional(pc,p.conditionalProbability(pc)));
+			return result;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
-		}		
-	}	
+		}
+	}
 }

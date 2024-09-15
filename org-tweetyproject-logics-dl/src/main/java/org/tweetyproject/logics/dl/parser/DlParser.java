@@ -61,27 +61,26 @@ import org.tweetyproject.logics.dl.syntax.UniversalRestriction;
  * <br>
  * <br> The input syntax for an ALC knowledge base is given by the following BNF
  * (starting symbol is KB):
- * <br> KB ::== SIGNATURE FORMULAS 
- * <br> SIGNATURE ::== "signature(" (CONCEPT_DECLAR)? (ROLE_DECLAR)? (INDIVIDUAL_DECLAR)? ")" 
- * <br> CONCEPT_DECLAR ::== ("\n")* "atomic-concepts(" (CONCEPTNAME)* ")" 
- * <br> ROLE_DECLAR ::== ("\n")* "roles(" (ROLENAME)* ")" 
- * <br> INDIVIDUAL_DECLAR ::== ("\n")* "individuals(" (CONSTANTNAME)* ")" 
- * <br> AXIOMS ::== ("\n" AXIOM)* 
+ * <br> KB ::== SIGNATURE FORMULAS
+ * <br> SIGNATURE ::== "signature(" (CONCEPT_DECLAR)? (ROLE_DECLAR)? (INDIVIDUAL_DECLAR)? ")"
+ * <br> CONCEPT_DECLAR ::== ("\n")* "atomic-concepts(" (CONCEPTNAME)* ")"
+ * <br> ROLE_DECLAR ::== ("\n")* "roles(" (ROLENAME)* ")"
+ * <br> INDIVIDUAL_DECLAR ::== ("\n")* "individuals(" (CONSTANTNAME)* ")"
+ * <br> AXIOMS ::== ("\n" AXIOM)*
  * <br> AXIOM ::== "instance " " " CONSTANTNAME " " CONCEPT | "related " CONSTANTNAME
- * 		" " CONSTANTNAME " " ROLENAME | 
- * <br> "implies " " " CONCEPT " " CONCEPT | "equivalent" CONCEPT " " CONCEPT 
+ * 		" " CONSTANTNAME " " ROLENAME |
+ * <br> "implies " " " CONCEPT " " CONCEPT | "equivalent" CONCEPT " " CONCEPT
  * <br> CONCEPT ::== "(" CONCEPT ")" | CONCEPTNAME | "not " CONCEPT | "*top*" |
  * 		"*bottom*" | "top" | "bottom" | <br>
  * 		"and " CONCEPT " " CONCEPT | "or " CONCEPT " " CONCEPT | <br>
- * 		"forall " ROLENAME " " CONCEPT | "exists " ROLENAME " " CONCEPT 
+ * 		"forall " ROLENAME " " CONCEPT | "exists " ROLENAME " " CONCEPT
  * <br>
- * <br> where CONCEPTNAME, ROLENAME, CONSTANTNAME are sequences of 
- * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning 
+ * <br> where CONCEPTNAME, ROLENAME, CONSTANTNAME are sequences of
+ * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning
  * <br> excluding {"top","bottom"}.
- * 
+ *
  * @author Anna Gessler
  * @author Matthias Thimm
- *
  */
 public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 
@@ -155,7 +154,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	 * Parses an atomic concept declaration of the form "concept" "(" CONCEPTNAME
 	 * ")" or an atomic role declaration of the form "role" "(" ROLENAME ")" and
 	 * modifies the given signature accordingly.
-	 * 
+	 *
 	 * @param s   a string
 	 * @param signature a signature
 	 */
@@ -212,9 +211,9 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	}
 
 	/**
-	 * This method reads one character from the given reader and appropriately 
+	 * This method reads one character from the given reader and appropriately
 	 * tokenizes it.
-	 * 
+	 *
 	 * @param stack used for monitoring the read items
 	 * @param c token from stream
 	 */
@@ -224,7 +223,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 			if (!stack.contains("("))
 				throw new ParserException("Missing opening parenthesis.");
 			List<Object> l = new ArrayList<Object>();
-			for (Object o = stack.pop(); !((o instanceof String) && ((String) o).equals("(")); o = stack.pop()) 
+			for (Object o = stack.pop(); !((o instanceof String) && ((String) o).equals("(")); o = stack.pop())
 				l.add(0, o);
 			stack.push(this.parseConcept(l)); //Parse contents of parentheses as complex concept
 		}
@@ -236,14 +235,14 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 			//previous token is whitespace: begin new token with current character s, discard whitespace
 			if (top.equals(" ")) {
 				stack.pop();
-				stack.push(s); 
+				stack.push(s);
 			}
 			//previous token is opening parenthesis: begin new token with current character s
-			else if (top.equals("("))  
-				stack.push(s); 
+			else if (top.equals("("))
+				stack.push(s);
 			//previous token is not whitespace or opening parenthesis: concatenate current character s with previous token
-			else 
-				stack.push(stack.pop() + s); 
+			else
+				stack.push(stack.pop() + s);
 		}
 		else {
 			stack.push(s);
@@ -258,16 +257,16 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	 */
 	private DlAxiom parseAxiom(List<Object> l) {
 		String type = (String) l.get(0);
-		if (type.equals("instance")) 
+		if (type.equals("instance"))
 			return new ConceptAssertion(parseIndividual(l.get(1)),parseConcept(l.get(2)));
-		else if (type.equals("related")) 
+		else if (type.equals("related"))
 			return new RoleAssertion(parseIndividual(l.get(1)),parseIndividual(l.get(2)),parseRole(l.get(3)));
-		else if (type.equals("implies")) 
+		else if (type.equals("implies"))
 			return new EquivalenceAxiom(parseConcept(l.get(1)),parseConcept(l.get(2)));
-		else 
+		else
 			throw new ParserException("Illegal Axiom identifier " + type);
 	}
-	
+
 	/**
 	 * Parses a complex concept as a list of String tokens or formulas.
 	 * @param l list of String tokens or description logic formulas
@@ -279,7 +278,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 			return parseConcept(l.get(0));
 		if (l.get(0) instanceof ComplexConcept)
 			return (ComplexConcept) l.get(0);
-		
+
 		String type = (String) l.get(0);
 
 		if (type.equals("not")) {
@@ -296,7 +295,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 		else
 			throw new ParserException("Unknown concept identifier " + type);
 	}
-	
+
 	/**
 	 * Parses an individual from a String token.
 	 * @param s identifier of the individual
@@ -309,7 +308,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 		else
 			throw new ParserException("Unknown object " + s);
 	}
-	
+
 	/**
 	 * Parses an atomic concept, top concept or bottom concept from a String token.
 	 * @param s String identifier of the concept
@@ -321,9 +320,9 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 			return (ComplexConcept) s;
 		else if (s instanceof String && this.signature.containsConcept((String) s))
 			return new AtomicConcept((String)s);
-		else if (s.equals("*bottom*") | s.equals("bottom")) 
+		else if (s.equals("*bottom*") | s.equals("bottom"))
 			return new BottomConcept();
-		else if (s.equals("*top*") | s.equals("top")) 
+		else if (s.equals("*top*") | s.equals("top"))
 			return new TopConcept();
 		else
 			throw new ParserException("Unknown object " + s);
@@ -344,7 +343,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 
 	/**
 	 * Sets the signature for this parser.
-	 * 
+	 *
 	 * @param signature a DL signature.
 	 */
 	public void setSignature(DlSignature signature) {
@@ -352,6 +351,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	}
 
 	/**
+	 * Return the signature of this parser.
 	 * @return the signature of this parser.
 	 */
 	public DlSignature getSignature() {

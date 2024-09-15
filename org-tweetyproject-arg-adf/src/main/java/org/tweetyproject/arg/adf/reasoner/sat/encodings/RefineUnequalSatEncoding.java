@@ -29,35 +29,58 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
- * @author Mathias Hofer
+ * This class implements a SAT encoding for refining unequal interpretations in an Abstract Dialectical Framework (ADF).
+ * It generates clauses based on the current interpretation, ensuring that the refinement does not result in the same
+ * interpretation as the input.
+ * <p>
+ * The encoding is used to enforce conditions on satisfied, unsatisfied, and undecided arguments within an ADF.
+ * </p>
  *
+ * @author Mathias Hofer
  */
 public class RefineUnequalSatEncoding implements RelativeSatEncoding {
 
-	private final PropositionalMapping mapping;
+    /** The propositional mapping used to map arguments to their corresponding propositional variables. */
+    private final PropositionalMapping mapping;
 
-	/**
-	 * 
-	 * @param mapping mapping
-	 */
-	public RefineUnequalSatEncoding(PropositionalMapping mapping) {
-		this.mapping = Objects.requireNonNull(mapping);
-	}
+    /**
+     * Constructs a new RefineUnequalSatEncoding with the specified propositional mapping.
+     *
+     * @param mapping the mapping from arguments to propositional variables, must not be null
+     */
+    public RefineUnequalSatEncoding(PropositionalMapping mapping) {
+        this.mapping = Objects.requireNonNull(mapping);
+    }
 
-	@Override
-	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
-		Set<Literal> clause = new HashSet<>();
-		for (Argument arg : interpretation.satisfied()) {
-			clause.add(mapping.getTrue(arg).neg());
-		}
-		for (Argument arg : interpretation.unsatisfied()) {
-			clause.add(mapping.getFalse(arg).neg());
-		}
-		for (Argument arg : interpretation.undecided()) {
-			clause.add(mapping.getTrue(arg));
-			clause.add(mapping.getFalse(arg));
-		}
-		consumer.accept(Clause.of(clause));
-	}
+    /**
+     * Encodes the given interpretation into a set of SAT clauses that represent the refinement of
+     * the interpretation, ensuring that the resulting interpretation is not equal to the input interpretation.
+     *
+     * @param consumer the clause consumer that accepts the generated clauses
+     * @param interpretation the interpretation to be refined and encoded
+     */
+    @Override
+    public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
+        Set<Literal> clause = new HashSet<>();
 
+        // Encode clauses for satisfied arguments
+        for (Argument arg : interpretation.satisfied()) {
+            clause.add(mapping.getTrue(arg).neg());
+        }
+
+        // Encode clauses for unsatisfied arguments
+        for (Argument arg : interpretation.unsatisfied()) {
+            clause.add(mapping.getFalse(arg).neg());
+        }
+
+        // Encode clauses for undecided arguments
+        for (Argument arg : interpretation.undecided()) {
+            clause.add(mapping.getTrue(arg));
+            clause.add(mapping.getFalse(arg));
+        }
+
+        // Pass the clause to the consumer
+        consumer.accept(Clause.of(clause));
+    }
 }
+

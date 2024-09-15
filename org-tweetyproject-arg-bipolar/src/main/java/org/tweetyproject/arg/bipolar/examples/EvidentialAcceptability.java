@@ -26,9 +26,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Examples for evidential argumentation frameworks.
+ * Demonstrates the use of evidential argumentation frameworks.
+ * <p>
+ * This example shows how to construct an instance of {@link EvidentialArgumentationFramework},
+ * add arguments, support, and attack relationships, and check the acceptability of arguments
+ * with respect to a given set of arguments.
+ * It also prints the framework in a human-readable format.
  */
 public class EvidentialAcceptability {
+
+    /**
+     * The entry point of the example program. Constructs an {@link EvidentialArgumentationFramework} instance,
+     * adds arguments, defines support and attack relationships, specifies prima facie arguments, and checks
+     * the acceptability of various arguments with respect to a specified set of arguments.
+     *
+     * @param args command-line arguments (not used in this example)
+     */
     public static void main(String[] args) {
         EvidentialArgumentationFramework et = new EvidentialArgumentationFramework();
         BArgument a = new BArgument("a");
@@ -78,4 +91,7 @@ public class EvidentialAcceptability {
         System.out.println("Argument f is acceptable wrt. " + s1 + ": " + et.isAcceptable(f, s1));
 
     }
+
+    /** Default Constructor */
+    public EvidentialAcceptability(){}
 }

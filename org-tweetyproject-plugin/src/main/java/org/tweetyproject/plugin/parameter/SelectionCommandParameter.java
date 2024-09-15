@@ -23,9 +23,9 @@ import java.util.ArrayList;
 /**
  * This class expands the CommandParameter with a selection-array containing
  * strings the parameter supports
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  */
 
 public class SelectionCommandParameter extends CommandParameter {
@@ -62,7 +62,7 @@ public class SelectionCommandParameter extends CommandParameter {
 
 	/**
 	 * returns each possible selection argument
-	 * 
+	 *
 	 * @return each possible selection argument
 	 */
 	public String[] getSelections() {
@@ -71,7 +71,7 @@ public class SelectionCommandParameter extends CommandParameter {
 
 	/**
 	 * sets new selection parameter
-	 * 
+	 *
 	 * @param selections an array of strings
 	 */
 	public void setSelections(String[] selections) {
@@ -80,7 +80,7 @@ public class SelectionCommandParameter extends CommandParameter {
 
 	/**
 	 * returns the given instantiation argument value for this parameter
-	 * 
+	 *
 	 * @return the given instantiation argument value for this parameter
 	 */
 	public String getValue() {
@@ -90,7 +90,7 @@ public class SelectionCommandParameter extends CommandParameter {
 	/**
 	 * sets the instantiated parameter argument value, value has to be one of
 	 * the options contained in selections
-	 * 
+	 *
 	 * @param value
 	 *            the value given as argument value
 	 */
@@ -126,7 +126,23 @@ public class SelectionCommandParameter extends CommandParameter {
 		return null;
 	}
 
-	// TODO: Instantiation with an arraylist of strings instead of strings
+	/**
+	 * Instantiates a list of `CommandParameter` objects based on the provided list of strings.
+	 *
+	 * <p>
+	 * This method processes a list of string values, validates each one, and creates a corresponding
+	 * `SelectionCommandParameter` for each valid string. The `SelectionCommandParameter` is created
+	 * by cloning the current object and setting its value to the corresponding string from the input list.
+	 * The created parameters are collected into an `ArrayList` and returned.
+	 * </p>
+	 *
+	 * <p>
+	 * The method modifies the input list of strings by removing each processed and valid string.
+	 * </p>
+	 *
+	 * @param s an `ArrayList` of `String` objects representing the input values to be converted into command parameters.
+	 * @return an `ArrayList` of `CommandParameter` objects, each instantiated from a valid string in the input list.
+	*/
 	public ArrayList<CommandParameter> instantiate(ArrayList<String> s) {
 		ArrayList<CommandParameter> alcp = new ArrayList<CommandParameter>();
 		for (int i = 0; i < s.size(); i++) {

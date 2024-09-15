@@ -95,5 +95,8 @@ public abstract class SpecialFormula extends PlFormula {
 	public PlFormula trim(){
 		return this;
 	}
+
+    /** Default Constructor */
+    public SpecialFormula(){}
 }
 

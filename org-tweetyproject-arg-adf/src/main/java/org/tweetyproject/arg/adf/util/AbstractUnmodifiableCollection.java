@@ -23,12 +23,12 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
- * 
+ * AbstractUnmodifiableCollection class
  * @author Mathias Hofer
  *
  * @param <E> the elements
  */
-public abstract class AbstractUnmodifiableCollection<E> extends AbstractCollection<E>{
+ public abstract class AbstractUnmodifiableCollection<E> extends AbstractCollection<E>{
 
 	/* (non-Javadoc)
 	 * @see java.util.Collection#removeIf(java.util.function.Predicate)
@@ -86,6 +86,6 @@ public abstract class AbstractUnmodifiableCollection<E> extends AbstractCollecti
 		throw new UnsupportedOperationException();
 	}
 
-	
-	
+
+
 }

@@ -26,7 +26,7 @@ import java.io.IOException;
  * An inconsistency listener that is apt for doing evaluations on the
  * performance of an inconsistency measure. Stores runtime and further information
  * in a csv file.
- * 
+ *
  * @author Matthias Thimm
  *
  */
@@ -44,21 +44,26 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 	private long lastMillis;
 	/** Sum of all steps. */
 	private long cumulativeTime;
-	
 
-	
-	// TEMPORARY BEGIN
+
+
+	/** TEMPORARY BEGIN */
 	public static double INCDEFAULTVALUE = -1;
+	/** Tolerance */
 	public static double TOLERANCE = -1;
 	// TEMPORATY END
-	
-	
-	
+
+
+	/**
+	 * Constructor
+	 * @param file filename
+	 * @param maxEvents max number of events
+	 */
 	public EvaluationInconsistencyListener(String file, int maxEvents){
 		this.file = new File(file);
 		this.maxEvents = maxEvents;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.streams.InconsistencyListener#inconsistencyUpdateOccured(org.tweetyproject.logics.commons.analysis.streams.InconsistencyUpdateEvent)
 	 */
@@ -75,8 +80,8 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 		log += evt.f.toString() + ";";
 		log += evt.inconsistencyValue + "\n";
 		//TEMPORARY BEGIN
-		if(EvaluationInconsistencyListener.TOLERANCE != -1){		
-			if(evt.inconsistencyValue >= EvaluationInconsistencyListener.INCDEFAULTVALUE - EvaluationInconsistencyListener.TOLERANCE && 
+		if(EvaluationInconsistencyListener.TOLERANCE != -1){
+			if(evt.inconsistencyValue >= EvaluationInconsistencyListener.INCDEFAULTVALUE - EvaluationInconsistencyListener.TOLERANCE &&
 					evt.inconsistencyValue <= EvaluationInconsistencyListener.INCDEFAULTVALUE + EvaluationInconsistencyListener.TOLERANCE){
 				evt.process.abort();
 				log += "END\n";
@@ -84,10 +89,10 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 		}
 		//TEMPORARY END
 		if(this.numberOfEvents+1 > this.maxEvents){
-			
+
 			// abort
 			evt.process.abort();
-			log += "END\n";							
+			log += "END\n";
 		}
 		this.writeToDisk(log);
 	}
@@ -105,7 +110,7 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.analysis.streams.InconsistencyListener#inconsistencyMeasurementStarted(org.tweetyproject.logics.commons.analysis.streams.InconsistencyUpdateEvent)
 	 */
@@ -115,5 +120,5 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 		this.writeToDisk("BEGIN\n");
 		this.lastMillis = System.currentTimeMillis();
 		this.cumulativeTime = 0;
-	}	
+	}
 }

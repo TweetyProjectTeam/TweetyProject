@@ -23,20 +23,24 @@ import java.util.Collection;
 /**
  * This class is a common base class for ASP formulas
  * that can be part of an ASP rule head.
- * 
+ *
  * @author Anna Gessler
  */
 public abstract class ASPHead extends ASPElement {
 	/**
+	 * Return true if the head is empty, false otherwise
 	 * @return true if the head is empty, false otherwise
 	 */
 	public abstract boolean isEmpty();
 
 	/**
-	 * Returns all literals in this element in form of a SortedSet. 
+	 * Returns all literals in this element in form of a SortedSet.
 	 * Literals are atoms or strict negations of atoms.
-	 * @return all the literals used in the rule element 
+	 * @return all the literals used in the rule element
 	 */
 	public abstract Collection<? extends ASPLiteral> getLiterals();
 
+
+    /** Default Constructor */
+    public ASPHead(){}
 }

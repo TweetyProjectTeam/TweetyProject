@@ -27,7 +27,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class PlParserFactory {
-	
+
 	/** An enumeration of all available knowledge base formats. */
 	public enum Format{
 		/**TWEETY*/
@@ -36,13 +36,13 @@ public class PlParserFactory {
 		public String id;
 		/**label*/
 		public String label;
-		
+
 		Format(String id, String label){
 			this.id = id;
 			this.label = label;
 		}
 		/**
-		 * 
+		 * Getter Format
 		 * @param id ID
 		 * @return format
 		 */
@@ -64,4 +64,7 @@ public class PlParserFactory {
 			return new PlParser();
 		return null;
 	}
+
+    /** Default Constructor */
+    public PlParserFactory(){}
 }

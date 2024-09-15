@@ -96,6 +96,7 @@ public class ConcurrentApproxAnalysis extends AbstractAnalysis implements Probab
         this.executorService = Executors.newFixedThreadPool(noThreads);
         this.batchSize = batchSize;
     }
+    /** Total */
     public double total = 0.0;
     /**
      * Computes approximately what is probabilistic justification of the given set of arguments in the PEAF given error

@@ -34,11 +34,18 @@ import org.tweetyproject.math.probability.*;
 
 /**
  * This class implements averaging semantics due to [Kern-Isberner, Thimm, KR'2010].
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class AveragingSemantics extends AbstractRpclSemantics {
+
+	/**
+	 * Default Constructor
+	 */
+	public AveragingSemantics(){
+		// default
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#satisfies(org.tweetyproject.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, org.tweetyproject.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
@@ -49,22 +56,22 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 			return this.satisfiesGroundConditional(p, r);
 		Set<RelationalFormula> groundInstances = r.allGroundInstances(((FolSignature)p.getSignature()).getConstants());
 		Double leftTerm = 0d;
-		for(RelationalFormula f: groundInstances){			
-			FolFormula body = ((RelationalProbabilisticConditional)f).getPremise().iterator().next();			
+		for(RelationalFormula f: groundInstances){
+			FolFormula body = ((RelationalProbabilisticConditional)f).getPremise().iterator().next();
 			FolFormula head_and_body;
 			if(body instanceof Tautology)
 				head_and_body = ((RelationalProbabilisticConditional)f).getConclusion();
 			else head_and_body = body.combineWithAnd(((RelationalProbabilisticConditional)f).getConclusion());
 			double probBody = p.probability(body).getValue();
 			//TODO check the following
-			if(probBody != 0)				
+			if(probBody != 0)
 				leftTerm += p.probability(head_and_body).getValue() / probBody;
-		}	
+		}
 		return leftTerm < (r.getProbability().getValue()*groundInstances.size()) + Probability.PRECISION &&
 			leftTerm > (r.getProbability().getValue()*groundInstances.size()) - Probability.PRECISION ;
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.rpcl.semantics.AbstractRpclSemantics#getSatisfactionStatement(org.tweetyproject.logics.rpcl.syntax.RelationalProbabilisticConditional, org.tweetyproject.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
@@ -79,10 +86,10 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 				Term tHead = this.probabilityTerm(head, worlds2vars);
 				if(term == null)
 					term = tHead;
-				else term = term.add(tHead);					
+				else term = term.add(tHead);
 			}
 			return new Equation(term,new FloatConstant(r.getProbability().getValue() * groundInstances.size()));
-		}else{			
+		}else{
 			Term rightTerm = new FloatConstant(r.getProbability().getValue() * groundInstances.size());
 			Set<Product> summands = new HashSet<Product>();
 			Product denoms = new Product();
@@ -98,12 +105,12 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 				for(Product p: summands)
 					p.addTerm(tBody);
 				summands.add(tHead_and_body.mult(denoms));
-				denoms.addTerm(tBody);								
+				denoms.addTerm(tBody);
 			}
 			return new Equation(new Sum(summands),rightTerm);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#toString()
 	 */

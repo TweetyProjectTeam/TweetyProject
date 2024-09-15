@@ -30,7 +30,7 @@ import org.tweetyproject.arg.adf.sat.SatSolverState;
 
 /**
  * A decorator which provides a pool of pre computed {@link SatSolverState}.
- * 
+ *
  * @author Mathias Hofer
  *
  */
@@ -41,13 +41,13 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 	private final IncrementalSatSolver satSolver;
 
 	private final BlockingQueue<SatSolverState> states;
-	
+
 	private final Function<SatSolverState, SatSolverState> stateDecorator;
 
 	private boolean closed = false;
 
 	/**
-	 * 
+	 *
 	 * @param executor
 	 * @param satSolver
 	 * @param size the number of states
@@ -63,21 +63,21 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			}
 
 
-		
+
 	}
 	/**
-	 * 
+	 *
 	 * @param satSolver satSolver
 	 * @return Builder builder
 	 */
 	public static Builder builder(IncrementalSatSolver satSolver) {
 		return new Builder(satSolver);
 	}
-	
+
 	private SatSolverState createDecoratedState() {
 		return stateDecorator.apply(satSolver.createState());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.sat.IncrementalSatSolver#createState()
 	 */
@@ -109,29 +109,29 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 		states.clear();
 	}
 	/**
-	 * 
+	 * class Builder
 	 * @author Sebastian
 	 *
 	 */
 	public static final class Builder {
-		
+
 		private final IncrementalSatSolver satSolver;
-		
+
 		private int poolSize;
-		
+
 		private Executor executor = Executors.newSingleThreadExecutor();
-		
+
 		private Function<SatSolverState, SatSolverState> stateDecorator = Function.identity();
-		
+
 		private Builder(IncrementalSatSolver satSolver) {
 			this.satSolver = Objects.requireNonNull(satSolver);
 		}
-		
+
 		/**
 		 * The executor used to perform the creation of the sat solver states.
 		 * <p>
 		 * As a default {@link Executors#newSingleThreadExecutor()} is used.
-		 * 
+		 *
 		 * @param executor the executor to set
 		 * @return Builder setExecutor
 		 */
@@ -139,7 +139,7 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			this.executor = Objects.requireNonNull(executor);
 			return this;
 		}
-		
+
 		/**
 		 * @param poolSize the poolSize to set
 		 * @return Builder setPoolSize
@@ -151,7 +151,7 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			this.poolSize = poolSize;
 			return this;
 		}
-		
+
 		/**
 		 * @param stateDecorator the stateDecorator to set
 		 * @return Builder setStateDecorator
@@ -165,13 +165,13 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			return this;
 		}
 		/**
-		 * 
+		 *
 		 * @return PooledIncrementalSatSolver
 		 */
 		public PooledIncrementalSatSolver build() {
 			return new PooledIncrementalSatSolver(this);
 		}
-		
+
 	}
 
 }

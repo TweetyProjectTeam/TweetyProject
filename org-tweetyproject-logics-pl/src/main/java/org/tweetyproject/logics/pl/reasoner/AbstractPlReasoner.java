@@ -93,4 +93,7 @@ public abstract class AbstractPlReasoner implements QualitativeReasoner<PlBelief
 		}		
 		return kernels;		
 	}
+
+    /** Default Constructor */
+    public AbstractPlReasoner(){}
 }

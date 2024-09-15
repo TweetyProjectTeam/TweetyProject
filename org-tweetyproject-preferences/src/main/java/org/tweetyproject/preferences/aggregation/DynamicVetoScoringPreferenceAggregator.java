@@ -20,7 +20,7 @@ package org.tweetyproject.preferences.aggregation;
 
 /**
  * Creates an dynamic aggregator for veto scoring
- * 
+ *
  * @author Bastian Wolf
  *
  * @param <T> generic preference order type
@@ -28,8 +28,12 @@ package org.tweetyproject.preferences.aggregation;
 
 public class DynamicVetoScoringPreferenceAggregator<T> extends DynamicScoringPreferenceAggregator<T> {
 
+	/**
+	 * Constructor
+	 * @param min the minimum
+	 */
 	public DynamicVetoScoringPreferenceAggregator(int min) {
 		super(new SingleValeWeightVector(min));
 	}
-	
+
 }

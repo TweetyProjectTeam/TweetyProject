@@ -138,4 +138,7 @@ public class LotteryDialogueTest2 {
 		}
 
 	}
+
+    /** Default Constructor */
+    public LotteryDialogueTest2(){}
 }

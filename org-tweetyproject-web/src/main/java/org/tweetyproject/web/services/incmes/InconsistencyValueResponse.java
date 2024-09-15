@@ -37,19 +37,27 @@ import org.tweetyproject.web.services.Response;
  */
 
 public class InconsistencyValueResponse extends Response {
+    /** reply */
     private String reply;
+    /** email adress */
     private String email;
+    /** the measure */
     private String measure;
+    /** kb */
     private String kb;
+    /** format */
     private String format;
+    /** execution time */
     private double value;
+    /** reply */
     private double time;
+    /** respones status */
     private String status;
 
-
+    /** Default Constructor */
     public InconsistencyValueResponse() {
     }
-    
+
     /**
      * Constructs a fully initialized {@code InconsistencyValueResponse} with the specified details.
      *
@@ -70,7 +78,7 @@ public class InconsistencyValueResponse extends Response {
         this.value = value;
         this.time = time;
     }
-    
+
     /**
      * Gets the current status of the response.
      *
@@ -80,7 +88,7 @@ public class InconsistencyValueResponse extends Response {
         return status;
     }
 
-        
+
 
     /**
      * Sets the status for this response.

@@ -41,17 +41,17 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * @author Tim Janus
  */
 public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlFormula> {
-	
+
 	/**
-	 * The premise of this conditional. 
+	 * The premise of this conditional.
 	 */
 	private PlFormula premise;
-	
+
 	/**
 	 * The conclusion of this conditional.
 	 */
 	private PlFormula conclusion;
-	
+
 	/**
 	 * Creates a new conditional with a tautological premise
 	 * and given conclusion.
@@ -61,7 +61,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlForm
 		this.premise = new Tautology();
 		this.conclusion = conclusion;
 	}
-	
+
 	/**
 	 * Creates a new conditional with the given premise
 	 * and conclusion.
@@ -72,19 +72,19 @@ public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlForm
 		this.premise = premise;
 		this.conclusion = conclusion;
 	}
-	
+
 	@Override
 	public Collection<PlFormula> getPremise(){
 		HashSet<PlFormula> premiseSet = new HashSet<PlFormula>();
 		premiseSet.add(this.premise);
 		return premiseSet;
 	}
-	
+
 	@Override
 	public PlFormula getConclusion(){
 		return this.conclusion;
 	}
-		
+
 	/**
 	 * Checks whether this conditional is a fact, i.e.
 	 * has a tautological premise.
@@ -94,15 +94,15 @@ public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlForm
 	public boolean isFact(){
 		return (this.premise instanceof Tautology);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.Formula#getSignature()
 	 */
 	@Override
-	public Signature getSignature(){		
+	public Signature getSignature(){
 		return this.premise.combineWithAnd(this.conclusion).getSignature();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -110,27 +110,46 @@ public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlForm
 	public String toString(){
 		return "(" + conclusion + "|" + premise + ")";
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.kr.ClassicalFormula#combineWithAnd(org.tweetyproject.kr.Formula)
-	 */
-	public Conjunction combineWithAnd(Conjunctable f){		
-		throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");		
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.kr.ClassicalFormula#combineWithOr(org.tweetyproject.kr.ClassicalFormula)
-	 */
-	public Disjunction combineWithOr(Disjunctable f){
-		throw new UnsupportedOperationException("Conditionals cannot be combined by 'OR'");
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.kr.ClassicalFormula#complement()
-	 */
-	public Conditional complement(){
-		return new Conditional(this.premise,(PlFormula)this.conclusion.complement());
-	}
+
+/**
+ * Combines this conditional with another formula using logical conjunction (AND).
+ * <p>
+ * This operation is unsupported for conditionals, and calling this method will result in an exception.
+ * </p>
+ *
+ * @param f the formula to combine with.
+ * @return this method will not return anything as it throws an exception.
+ * @throws UnsupportedOperationException because conditionals cannot be combined using AND.
+ */
+public Conjunction combineWithAnd(Conjunctable f) {
+    throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");
+}
+
+/**
+ * Combines this conditional with another formula using logical disjunction (OR).
+ * <p>
+ * This operation is unsupported for conditionals, and calling this method will result in an exception.
+ * </p>
+ *
+ * @param f the formula to combine with.
+ * @return this method will not return anything as it throws an exception.
+ * @throws UnsupportedOperationException because conditionals cannot be combined using OR.
+ */
+public Disjunction combineWithOr(Disjunctable f) {
+    throw new UnsupportedOperationException("Conditionals cannot be combined by 'OR'");
+}
+
+/**
+ * Returns the complement of this conditional.
+ * <p>
+ * The complement is a new conditional with the same premise but with the complement of the conclusion.
+ * </p>
+ *
+ * @return a new conditional that represents the complement of this conditional.
+ */
+public Conditional complement() {
+    return new Conditional(this.premise, (PlFormula) this.conclusion.complement());
+}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

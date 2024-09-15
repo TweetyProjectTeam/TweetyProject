@@ -19,41 +19,77 @@
 package org.tweetyproject.plugin;
 
 /**
- * This class models single fields used for the PluginOutput
- * Each field contains its description and its value, e.g.:
- * 
+ * This class models individual fields used for the PluginOutput.
+ * Each field consists of a description and its corresponding value.
+ *
+ * <p>
+ * For example, in the following case:
+ * </p>
+ *
+ * <pre>
  * Query:
  * a + b || !a + !b
- * 
- * where "Query:" is the description and "a + b || !a + !b" is the value.
- * 
- * @author Bastian Wolf
+ * </pre>
+ *
+ * <p>
+ * "Query:" is the description and "a + b || !a + !b" is the value.
+ * </p>
+ *
+ * <p><b>Authors:</b> Bastian Wolf</p>
  */
-
 public class OutputField {
-	
-	// this fields value description
-	private String description;
-	//the field value
-	private String value;
-	
-	public OutputField() {
-		value = "";
-	}
-	
-	public OutputField(String val){
-		value = val;
-	}
-	
-	public OutputField(String description, String val){
-		this.description = description;
-		value = val;
-	}
-	
-	public String merge(){
-		String s = "";
-		s += description + ":\n";
-		s += value;
-		return s;
-	}
+
+    /** The description of the field's value. */
+    private String description;
+
+    /** The value associated with the field. */
+    private String value;
+
+    /**
+     * Constructs an {@code OutputField} with an empty value and no description.
+     */
+    public OutputField() {
+        this.value = "";
+    }
+
+    /**
+     * Constructs an {@code OutputField} with the specified value and no description.
+     *
+     * @param val the value to be associated with this field.
+     */
+    public OutputField(String val) {
+        this.value = val;
+    }
+
+    /**
+     * Constructs an {@code OutputField} with the specified description and value.
+     *
+     * @param description the description of the field's value.
+     * @param val the value to be associated with this field.
+     */
+    public OutputField(String description, String val) {
+        this.description = description;
+        this.value = val;
+    }
+
+    /**
+     * Merges the description and value into a single string representation.
+     *
+     * <p>
+     * The resulting string is formatted as:
+     * </p>
+     *
+     * <pre>
+     * description:
+     * value
+     * </pre>
+     *
+     * @return a string that merges the description and value.
+     */
+    public String merge() {
+        String s = "";
+        s += description + ":\n";
+        s += value;
+        return s;
+    }
 }

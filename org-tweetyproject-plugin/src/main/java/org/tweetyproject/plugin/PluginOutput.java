@@ -24,46 +24,108 @@ import java.util.ArrayList;
  * This class provides the output for each plugin to be used in the CLI.
  * Only meant for command line output, not for writing into output files (those are handled within each project
  * as well as parsing input files)
- * 
+ *
  * @author Bastian Wolf
  *
  */
 
-public class PluginOutput {
-	// TODO: implementation of solid representation (e.g. Output-Strings, error-messages, help-text)
-	
-	// list of all fields this output contains
-	private ArrayList<OutputField> fields;
-	// merged output string from all fields
-	private String output;
-	
-	public PluginOutput(){
-		fields = new ArrayList<OutputField>();
-		output = new String();
-	}
-	
-	public PluginOutput(ArrayList<OutputField> fields){
-		this.fields = fields;
-	}
-	
-	public void addField(OutputField field){
-		fields.add(field);
-	}
-	
-	public void addField(String description, String value){
-		fields.add(new OutputField(description, value));
-	}
-	
-	public void mergeFields(){
-		output = "";
-		for(OutputField f : fields){
-			output += f.merge()+"\n";
-		}
-	}
-	
-	public String getOutput(){
-		mergeFields();
-		return output;
-	}
+ public class PluginOutput {
+
+    /**
+     * A list of all `OutputField` objects that this output contains.
+     */
+    private ArrayList<OutputField> fields;
+
+    /**
+     * A merged output string that combines the content of all fields.
+     */
+    private String output;
+
+    /**
+     * Constructs an empty `PluginOutput` object.
+     *
+     * <p>
+     * This constructor initializes the `fields` list to an empty `ArrayList` and sets the `output` string
+     * to an empty string. It is useful when starting with an empty output that will be populated later.
+     * </p>
+     */
+    public PluginOutput() {
+        fields = new ArrayList<OutputField>();
+        output = new String();
+    }
+
+    /**
+     * Constructs a `PluginOutput` object with a predefined list of `OutputField` objects.
+     *
+     * <p>
+     * This constructor initializes the `PluginOutput` with a provided list of `OutputField` objects.
+     * The `output` string is not immediately merged; it can be generated later using the `mergeFields` method.
+     * </p>
+     *
+     * @param fields an `ArrayList` of `OutputField` objects to initialize the `PluginOutput`.
+     */
+    public PluginOutput(ArrayList<OutputField> fields) {
+        this.fields = fields;
+    }
+
+    /**
+     * Adds a new `OutputField` to the list of fields.
+     *
+     * <p>
+     * This method appends a new `OutputField` object to the `fields` list. It allows dynamically adding
+     * fields to the `PluginOutput` after it has been created.
+     * </p>
+     *
+     * @param field the `OutputField` object to be added.
+     */
+    public void addField(OutputField field) {
+        fields.add(field);
+    }
+
+    /**
+     * Adds a new `OutputField` to the list of fields with the specified description and value.
+     *
+     * <p>
+     * This method creates a new `OutputField` object with the given description and value, and then appends
+     * it to the `fields` list. It provides a convenient way to add fields without explicitly creating
+     * `OutputField` objects.
+     * </p>
+     *
+     * @param description a `String` representing the description of the output field.
+     * @param value a `String` representing the value of the output field.
+     */
+    public void addField(String description, String value) {
+        fields.add(new OutputField(description, value));
+    }
+
+    /**
+     * Merges all fields into a single output string.
+     *
+     * <p>
+     * This method concatenates the merged output of each `OutputField` in the `fields` list into a single
+     * `output` string, separated by new lines. This merged string can then be retrieved using the `getOutput` method.
+     * </p>
+     */
+    public void mergeFields() {
+        output = "";
+        for (OutputField f : fields) {
+            output += f.merge() + "\n";
+        }
+    }
+
+    /**
+     * Retrieves the merged output string.
+     *
+     * <p>
+     * This method first calls `mergeFields` to ensure the output string is up-to-date, then returns
+     * the merged output string that contains the content of all fields.
+     * </p>
+     *
+     * @return a `String` containing the merged output from all fields.
+     */
+    public String getOutput() {
+        mergeFields();
+        return output;
+    }
 
 }

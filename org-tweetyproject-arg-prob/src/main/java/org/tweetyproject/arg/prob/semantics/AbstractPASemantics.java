@@ -31,10 +31,14 @@ import org.tweetyproject.math.term.Term;
 /**
  * This class bundles common answering behaviour for
  * probabilistic argumentation semantics.
- * 
+ *
  * @author Matthias Thimm
  */
 public abstract class AbstractPASemantics implements PASemantics {
+	/** Default */
+	public AbstractPASemantics(){
+
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.PASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
@@ -47,13 +51,13 @@ public abstract class AbstractPASemantics implements PASemantics {
 	 */
 	@Override
 	public abstract Collection<Statement> getSatisfactionStatements(DungTheory theory, Map<Collection<Argument>, FloatVariable> worlds2vars);
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public abstract String toString();
-	
+
 	/**
 	 * Constructs the term expressing the probability of the given argument
 	 * wrt. to the variables (describing probabilities) of the extensions.
@@ -62,7 +66,7 @@ public abstract class AbstractPASemantics implements PASemantics {
 	 * @return the term expressing the probability of the given argument.
 	 */
 	protected Term probabilityTerm(Argument arg, Map<Collection<Argument>,FloatVariable> worlds2vars){
-		Term result = null;		
+		Term result = null;
 		for(Collection<Argument> ext: worlds2vars.keySet()){
 			if(ext.contains(arg)){
 				Term t = worlds2vars.get(ext);
@@ -70,7 +74,7 @@ public abstract class AbstractPASemantics implements PASemantics {
 					result = t;
 				else result = result.add(t);
 			}
-		}			
+		}
 		return (result == null)? new FloatConstant(0): result;
 	}
 

@@ -36,7 +36,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * A Translator between the FOL and propositonal logic and vice versa.
- * 
+ *
  * @author Tim Janus
  * @author Anna Gessler
  */
@@ -44,7 +44,7 @@ public class FOLPropTranslator extends Translator {
 
 	/** Default-Ctor */
 	public FOLPropTranslator() {}
-	
+
 	/**
 	 * Translates the given FOL-Atom into a Proposition
 	 * @param atom	FOL-Atom, if the given Atom has
@@ -54,7 +54,7 @@ public class FOLPropTranslator extends Translator {
 	public Proposition toPropositional(FolAtom atom) {
 		return (Proposition) this.translateAtom(atom, Proposition.class);
 	}
-	
+
 	/**
 	 * Translates the given proposition into a FOL-Atom
 	 * @param proposition The Proposition
@@ -72,7 +72,7 @@ public class FOLPropTranslator extends Translator {
 	public Disjunction toFOL(org.tweetyproject.logics.pl.syntax.Disjunction disjunction) {
 		return (Disjunction) this.translateAssociative(disjunction, Disjunction.class);
 	}
-	
+
 	/**
 	 * Translates the given FOL Disjunction to a propositional Disjunction
 	 * @param disjunction	The FOL-Disjunction, if it contains formulas which
@@ -84,7 +84,7 @@ public class FOLPropTranslator extends Translator {
 		return (org.tweetyproject.logics.pl.syntax.Disjunction)
 				this.translateAssociative(disjunction, org.tweetyproject.logics.pl.syntax.Disjunction.class);
 	}
-	
+
 	/**
 	 * Translates the given FOL Exclusive Disjunction to a propositional Exclusive Disjunction
 	 * @param xor			The FOL-Exclusive Disjunction, if it contains formulas which
@@ -96,16 +96,16 @@ public class FOLPropTranslator extends Translator {
 		return (org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction)
 				this.translateAssociative(xor, org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction.class);
 	}
-	
+
 	/**
 	 * Translates the given propositional Conjunction to a FOL Conjunction
-	 * @param conjunction a PL conjunction	
+	 * @param conjunction a PL conjunction
 	 * @return	The FOL Conjunction
 	 */
 	public Conjunction toFOL(org.tweetyproject.logics.pl.syntax.Conjunction conjunction) {
 		return (Conjunction) this.translateAssociative(conjunction, Conjunction.class);
 	}
-	
+
 	/**
 	 * Translates the given FOL Conjunction to a propositional Conjunction
 	 * @param conjunction	The FOL-Conjunction, if it contains formulas which
@@ -118,7 +118,8 @@ public class FOLPropTranslator extends Translator {
 				this.translateAssociative(conjunction, org.tweetyproject.logics.pl.syntax.Conjunction.class);
 	}
 	/**
-	 * 
+	 *
+	 * Return FolFormula toFOL
 	 * @param propFormula propFormula
 	 * @return FolFormula toFOL
 	 */
@@ -152,7 +153,8 @@ public class FOLPropTranslator extends Translator {
 		return null;
 	}
 	/**
-	 * 
+	 *
+	 * Return PlFormula toPropositional
 	 * @param folFormula folFormula
 	 * @return PlFormula toPropositional
 	 */
@@ -184,28 +186,28 @@ public class FOLPropTranslator extends Translator {
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap() {
 		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<Class<?>, Pair<Integer,Class<?>>>();
 		tmap.put(FolAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, Proposition.class));
 		tmap.put(Proposition.class, new Pair<Integer, Class<?>>(TT_ATOM, FolAtom.class));
-		
+
 		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(
 				TT_ASSOC, org.tweetyproject.logics.pl.syntax.Disjunction.class));
-		tmap.put(org.tweetyproject.logics.pl.syntax.Disjunction.class, 
+		tmap.put(org.tweetyproject.logics.pl.syntax.Disjunction.class,
 				new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
-		
+
 		tmap.put(Conjunction.class, new Pair<Integer, Class<?>>(
 				TT_ASSOC, org.tweetyproject.logics.pl.syntax.Conjunction.class));
-		tmap.put(org.tweetyproject.logics.pl.syntax.Conjunction.class, 
+		tmap.put(org.tweetyproject.logics.pl.syntax.Conjunction.class,
 				new Pair<Integer, Class<?>>(TT_ASSOC, Conjunction.class));
-		
+
 		tmap.put(ExclusiveDisjunction.class, new Pair<Integer, Class<?>>(
 				TT_ASSOC, org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction.class));
-		tmap.put(org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction.class, 
+		tmap.put(org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction.class,
 				new Pair<Integer, Class<?>>(TT_ASSOC, ExclusiveDisjunction.class));
-		
+
 		return tmap;
 	}
 }

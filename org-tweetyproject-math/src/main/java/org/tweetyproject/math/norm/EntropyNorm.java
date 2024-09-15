@@ -29,22 +29,26 @@ import org.tweetyproject.math.term.Term;
 
 /**
  * The entropy norm. Uses the entropy of a vector of doubles
- * (=probability function) as a measure of norm and the relative entropy of two 
+ * (=probability function) as a measure of norm and the relative entropy of two
  * probability distributions as distance.
  * Note that entropy is not actually a norm!
  * @author Matthias Thimm
- * @param <T>  The class of the objects used. 
+ * @param <T>  The class of the objects used.
  */
 public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implements RealVectorNorm{
+
+	/** Constructor */
+	public EntropyNorm() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.Norm#norm(java.lang.Object)
 	 */
 	@Override
 	public double norm(Vector<Double> obj) {
-		return this.eval(obj);		
+		return this.eval(obj);
 	}
-	
+
 	/**
 	 *  norm
 	 * @param prob problem
@@ -63,7 +67,7 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 			v.add(t);
 		return this.normTerm(v);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#distanceTerm(org.tweetyproject.math.term.Term[], org.tweetyproject.math.term.Term[])
 	 */
@@ -75,9 +79,9 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 		for(Term t: obj2)
 			v2.add(t);
 		return this.distanceTerm(v1,v2);
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.Norm#distance(java.lang.Object, java.lang.Object)
 	 */
@@ -107,7 +111,7 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 	 */
 	@Override
 	public Term normTerm(Vector<Term> obj) {
-		return this.getTerm(obj);		
+		return this.getTerm(obj);
 	}
 
 	/* (non-Javadoc)
@@ -122,5 +126,5 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 			distance = distance.minus(obj1.get(i).mult(new Logarithm(new Fraction(obj1.get(i),obj2.get(i)))));
 		return distance;
 	}
-	
+
 }

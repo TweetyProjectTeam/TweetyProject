@@ -30,16 +30,23 @@ import org.tweetyproject.logics.cl.semantics.ConditionalStructure;
  * A simple adapter class that wraps the straightforward methods
  * of the Rule interface, such that the developer can spare the work
  * to implement the setter methods.
- * 
+ *
  * @author Tim janus
  */
 public abstract class RuleAdapter implements Rule {
+
+	/** Constructor */
+	public RuleAdapter(){
+		// default
+	}
+
+
 	/** the kappas the rule works on */
 	protected List<KappaValue> kappas;
-	
+
 	/** the conditional structure the rule works on */
 	protected ConditionalStructure conditionalStructure;
-	
+
 	@Override
 	public void setKappas(Collection<KappaValue> kappas) {
 		this.kappas = new ArrayList<KappaValue>(kappas);

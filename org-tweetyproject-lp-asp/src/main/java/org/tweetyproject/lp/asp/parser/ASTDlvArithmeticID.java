@@ -20,28 +20,59 @@
  */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTDlvArithmeticID} class represents a node in the abstract syntax tree (AST)
+ * for arithmetic identifiers in the DLV language, a variant of Answer Set Programming (ASP).
+ * This class extends {@code SimpleNode} and is used within the context of the ASP parser.
+ */
 public class ASTDlvArithmeticID extends SimpleNode {
 
-	protected String name;
+    /**
+     * The name or identifier represented by this AST node.
+     */
+    protected String name;
 
-	public ASTDlvArithmeticID(int id) {
-		super(id);
-	}
+    /**
+     * Constructs a new {@code ASTDlvArithmeticID} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTDlvArithmeticID(int id) {
+        super(id);
+    }
 
-	public ASTDlvArithmeticID(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTDlvArithmeticID} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTDlvArithmeticID(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 
-	public void name(String image) {
-		this.name = image;
-	}
-
+    /**
+     * Sets the name or identifier represented by this AST node.
+     *
+     * @param image The string representing the name or identifier.
+     */
+    public void name(String image) {
+        this.name = image;
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=370185ac5261ef5de69c01a3967e7182 (do not edit this
  * line)

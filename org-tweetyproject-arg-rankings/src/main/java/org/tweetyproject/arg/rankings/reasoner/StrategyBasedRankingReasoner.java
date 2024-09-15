@@ -183,4 +183,7 @@ public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<Numeri
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public StrategyBasedRankingReasoner(){}
 }

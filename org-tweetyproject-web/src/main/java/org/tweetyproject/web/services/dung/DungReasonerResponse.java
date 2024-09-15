@@ -23,10 +23,10 @@ import java.util.Objects;
 
 import org.tweetyproject.web.services.Response;
 
-
 /**
  * The DungReasonerResponse class extends the Response class and represents
- * a response containing information related to a Dung argumentation reasoner result.
+ * a response containing information related to a Dung argumentation reasoner
+ * result.
  */
 public class DungReasonerResponse extends Response {
 
@@ -60,20 +60,12 @@ public class DungReasonerResponse extends Response {
     /** The status of the Dung reasoner response */
     private String status;
 
-    public String getUnit_time() {
-        return unit_time;
-    }
-
     /**
-     * *description missing*
-     * @param unit_time *description missing*
+     * Default constructor for DungReasonerResponse.
      */
-    public void setUnit_time(String unit_time) {
-        this.unit_time = unit_time;
-    }
-
     public DungReasonerResponse() {
     }
+
     /**
      * Parameterized constructor for DungReasonerResponse.
      *
@@ -88,7 +80,8 @@ public class DungReasonerResponse extends Response {
      * @param unit_time       The unit time specified
      * @param status          The status of the response
      */
-    public DungReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks, String semantics, String solver, String answer, int time, String unit_time, String status) {
+    public DungReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks,
+            String semantics, String solver, String answer, double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.nr_of_arguments = nr_of_arguments;
@@ -102,153 +95,190 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the reply message in the Dung reasoner response.
+     *
+     * @return The reply message in the Dung reasoner response.
      */
     public String getReply() {
-        return this.reply;
+        return reply;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
+     * Sets the reply message in the Dung reasoner response.
+     *
+     * @param reply The reply message in the Dung reasoner response.
      */
     public void setReply(String reply) {
         this.reply = reply;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the email associated with the Dung reasoner response.
+     *
+     * @return The email associated with the Dung reasoner response.
      */
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
+     * Sets the email associated with the Dung reasoner response.
+     *
+     * @param email The email associated with the Dung reasoner response.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the number of arguments in the Dung reasoner response.
+     *
+     * @return The number of arguments in the Dung reasoner response.
      */
     public int getNr_of_arguments() {
-        return this.nr_of_arguments;
+        return nr_of_arguments;
     }
 
     /**
-     * *description missing*
-     * @param nr_of_arguments *description missing*
+     * Sets the number of arguments in the Dung reasoner response.
+     *
+     * @param nr_of_arguments The number of arguments in the Dung reasoner response.
      */
     public void setNr_of_arguments(int nr_of_arguments) {
         this.nr_of_arguments = nr_of_arguments;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the attacks information in the Dung reasoner response.
+     *
+     * @return The attacks information in the Dung reasoner response.
      */
     public List<List<Integer>> getAttacks() {
-        return this.attacks;
+        return attacks;
     }
 
     /**
-     * *description missing*
-     * @param attacks *description missing*
+     * Sets the attacks information in the Dung reasoner response.
+     *
+     * @param attacks The attacks information in the Dung reasoner response.
      */
     public void setAttacks(List<List<Integer>> attacks) {
         this.attacks = attacks;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the semantics specified in the Dung reasoner response.
+     *
+     * @return The semantics specified in the Dung reasoner response.
      */
     public String getSemantics() {
-        return this.semantics;
+        return semantics;
     }
 
     /**
-     * *description missing*
-     * @param semantics *description missing*
+     * Sets the semantics specified in the Dung reasoner response.
+     *
+     * @param semantics The semantics specified in the Dung reasoner response.
      */
     public void setSemantics(String semantics) {
         this.semantics = semantics;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the solver specified in the Dung reasoner response.
+     *
+     * @return The solver specified in the Dung reasoner response.
      */
     public String getSolver() {
-        return this.solver;
+        return solver;
     }
 
     /**
-     * *description missing*
-     * @param solver *description missing*
+     * Sets the solver specified in the Dung reasoner response.
+     *
+     * @param solver The solver specified in the Dung reasoner response.
      */
     public void setSolver(String solver) {
         this.solver = solver;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the answer provided by the Dung reasoner response.
+     *
+     * @return The answer provided by the Dung reasoner response.
      */
     public String getAnswer() {
-        return this.answer;
+        return answer;
     }
 
     /**
-     * *description missing*
-     * @param answer *description missing*
+     * Sets the answer provided by the Dung reasoner response.
+     *
+     * @param answer The answer provided by the Dung reasoner response.
      */
     public void setAnswer(String answer) {
         this.answer = answer;
     }
 
     /**
-     * *description missing*
-     * @return *description missing*
+     * Gets the time taken for the Dung reasoner operation (in seconds).
+     *
+     * @return The time taken for the Dung reasoner operation (in seconds).
      */
     public double getTime() {
-        return this.time;
+        return time;
     }
 
     /**
-     * *description missing*
-     * @param time *description missing*
+     * Sets the time taken for the Dung reasoner operation (in seconds).
+     *
+     * @param time The time taken for the Dung reasoner operation (in seconds).
      */
     public void setTime(double time) {
         this.time = time;
     }
 
     /**
-     * *description missing*
-     * @return  *description missing*
+     * Gets the unit time specified in the Dung reasoner response.
+     *
+     * @return The unit time specified in the Dung reasoner response.
      */
-    public String getStatus() {
-        return this.status;
+    public String getUnit_time() {
+        return unit_time;
     }
 
     /**
-     * *description missing*
-     * @param status *description missing*
+     * Sets the unit time specified in the Dung reasoner response.
+     *
+     * @param unit_time The unit time specified in the Dung reasoner response.
+     */
+    public void setUnit_time(String unit_time) {
+        this.unit_time = unit_time;
+    }
+
+    /**
+     * Gets the status of the Dung reasoner response.
+     *
+     * @return The status of the Dung reasoner response.
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status of the Dung reasoner response.
+     *
+     * @param status The status of the Dung reasoner response.
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
-     * *description missing*
-     * @param reply *description missing*
-     * @return *description missing*
+     * Sets the reply message in the Dung reasoner response.
+     *
+     * @param reply The reply message in the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse reply(String reply) {
         setReply(reply);
@@ -256,9 +286,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param email *description missing*
-     * @return *description missing*
+     * Sets the email associated with the Dung reasoner response.
+     *
+     * @param email The email associated with the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse email(String email) {
         setEmail(email);
@@ -266,9 +297,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param nr_of_arguments *description missing*
-     * @return *description missing*
+     * Sets the number of arguments in the Dung reasoner response.
+     *
+     * @param nr_of_arguments The number of arguments in the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse nr_of_arguments(int nr_of_arguments) {
         setNr_of_arguments(nr_of_arguments);
@@ -276,9 +308,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param attacks *description missing*
-     * @return *description missing*
+     * Sets the attacks information in the Dung reasoner response.
+     *
+     * @param attacks The attacks information in the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse attacks(List<List<Integer>> attacks) {
         setAttacks(attacks);
@@ -286,9 +319,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param semantics *description missing*
-     * @return *description missing*
+     * Sets the semantics specified in the Dung reasoner response.
+     *
+     * @param semantics The semantics specified in the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse semantics(String semantics) {
         setSemantics(semantics);
@@ -296,9 +330,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param solver *description missing*
-     * @return *description missing*
+     * Sets the solver specified in the Dung reasoner response.
+     *
+     * @param solver The solver specified in the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse solver(String solver) {
         setSolver(solver);
@@ -306,9 +341,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param answer *description missing*
-     * @return *description missing*
+     * Sets the answer provided by the Dung reasoner response.
+     *
+     * @param answer The answer provided by the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse answer(String answer) {
         setAnswer(answer);
@@ -316,9 +352,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param time *description missing*
-     * @return *description missing*
+     * Sets the time taken for the Dung reasoner operation (in seconds).
+     *
+     * @param time The time taken for the Dung reasoner operation (in seconds).
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse time(int time) {
         setTime(time);
@@ -326,9 +363,10 @@ public class DungReasonerResponse extends Response {
     }
 
     /**
-     * *description missing*
-     * @param status *description missing*
-     * @return *description missing*
+     * Sets the status of the Dung reasoner response.
+     *
+     * @param status The status of the Dung reasoner response.
+     * @return The current instance of DungReasonerResponse.
      */
     public DungReasonerResponse status(String status) {
         setStatus(status);
@@ -343,7 +381,11 @@ public class DungReasonerResponse extends Response {
             return false;
         }
         DungReasonerResponse tweetyResponse = (DungReasonerResponse) o;
-        return Objects.equals(reply, tweetyResponse.reply) && Objects.equals(email, tweetyResponse.email) && nr_of_arguments == tweetyResponse.nr_of_arguments && Objects.equals(attacks, tweetyResponse.attacks) && Objects.equals(semantics, tweetyResponse.semantics) && Objects.equals(solver, tweetyResponse.solver) && Objects.equals(answer, tweetyResponse.answer) && time == tweetyResponse.time && Objects.equals(status, tweetyResponse.status);
+        return Objects.equals(reply, tweetyResponse.reply) && Objects.equals(email, tweetyResponse.email)
+                && nr_of_arguments == tweetyResponse.nr_of_arguments && Objects.equals(attacks, tweetyResponse.attacks)
+                && Objects.equals(semantics, tweetyResponse.semantics) && Objects.equals(solver, tweetyResponse.solver)
+                && Objects.equals(answer, tweetyResponse.answer) && time == tweetyResponse.time
+                && Objects.equals(status, tweetyResponse.status);
     }
 
     @Override
@@ -354,17 +396,16 @@ public class DungReasonerResponse extends Response {
     @Override
     public String toString() {
         return "{" +
-            " reply='" + getReply() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", nr_of_arguments='" + getNr_of_arguments() + "'" +
-            ", attacks='" + getAttacks() + "'" +
-            ", semantics='" + getSemantics() + "'" +
-            ", solver='" + getSolver() + "'" +
-            ", answer='" + getAnswer() + "'" +
-            ", time='" + getTime() + "'" +
-            ", status='" + getStatus() + "'" +
-            "}";
+                " reply='" + getReply() + "'" +
+                ", email='" + getEmail() + "'" +
+                ", nr_of_arguments='" + getNr_of_arguments() + "'" +
+                ", attacks='" + getAttacks() + "'" +
+                ", semantics='" + getSemantics() + "'" +
+                ", solver='" + getSolver() + "'" +
+                ", answer='" + getAnswer() + "'" +
+                ", time='" + getTime() + "'" +
+                ", status='" + getStatus() + "'" +
+                "}";
     }
-
 
 }

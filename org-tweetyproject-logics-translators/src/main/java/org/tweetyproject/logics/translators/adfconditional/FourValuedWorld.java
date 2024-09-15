@@ -17,29 +17,29 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * This class models a four-valued interpretation for propositional logic
  * Formulas are interpreted using completions
  * Every atom is assigned one of the four truth values: TRUE, FALSE, UNDECIDED, INCONSISTENT
- * 
+ *
  * @author Jonas Schumacher
  */
 public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 /**
- * 
+ * Truth values
  * @author Jonas Schumacher
  *
  */
 	public enum TruthValue {
 		/**true*/
-		TRUE, 
+		TRUE,
 		/**false*/
-		FALSE, 
+		FALSE,
 		/**undecided*/
-		UNDECIDED, 
+		UNDECIDED,
 		/**inconsistent*/
 		INCONSISTENT;
-		
-		
-		/**
-		 * 
-		 * @return Return "TRUE" iff 4-valued TruthValue is also "TRUE"  
+
+
+		/**		 *
+		 * Return "TRUE" iff 4-valued TruthValue is also "TRUE"
+		 * @return Return "TRUE" iff 4-valued TruthValue is also "TRUE"
 		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
@@ -53,24 +53,24 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 			return "ERROR: No such symbol";
 		}
 	}
-	
+
 	private Map<Proposition,TruthValue> values;
-	
+
 	/**
-	 * Creates an empty 4-valued world  
+	 * Creates an empty 4-valued world
 	 */
 	public FourValuedWorld(){
 		this.values = new HashMap<Proposition,TruthValue>();
 	}
-	
+
 	/**
-	 * Creates a new world which is a copy of the given world	 
+	 * Creates a new world which is a copy of the given world
 	 * @param other some other world
 	 */
 	public FourValuedWorld(FourValuedWorld other){
 		this.values = new HashMap<Proposition,TruthValue>(other.values);
 	}
-	
+
 	/**
 	 * Sets the value of the given proposition.
 	 * @param p some proposition.
@@ -79,7 +79,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	public void set(Proposition p, TruthValue val){
 		this.values.put(p, val);
 	}
-	
+
 	/**
 	 * Returns the truth value of the given proposition.
 	 * @param p a proposition
@@ -90,7 +90,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 			return TruthValue.FALSE;
 		return this.values.get(p);
 	}
-	
+
 	/**
 	 * Returns the signature of this world.
 	 * @return the signature of this world.
@@ -100,7 +100,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		sig.addAll(this.values.keySet());
 		return sig;
 	}
-	
+
 	/**
 	 * Decide whether this world is two-valued or not
 	 * @return isTwoValued
@@ -113,7 +113,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return true;
 	}
-	
+
 	/**
 	 * This method puts the 4 truth values into an information order
 	 * @param firstTruthValue firstTruthValue
@@ -124,7 +124,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		boolean result = false;
 		switch (firstTruthValue) {
 		case INCONSISTENT:
-			result = true;			
+			result = true;
 			break;
 		case TRUE:
 			if (secondTruthValue == TruthValue.UNDECIDED || secondTruthValue == TruthValue.TRUE) {
@@ -144,7 +144,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method compares this world to another world by comparing their information-order
 	 * @param otherWorld = the world to be compared to
@@ -154,7 +154,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		if (!this.getSignature().equals(otherWorld.getSignature())) {
 			throw new IllegalArgumentException("Worlds must have the same signature");
 		}
-		// If we find one proposition where 1st world is not as informative as the 2nd world, the worlds are either incomparable or 2nd world is more informative 
+		// If we find one proposition where 1st world is not as informative as the 2nd world, the worlds are either incomparable or 2nd world is more informative
 		for (Proposition p : this.getSignature()) {
 			if (!FourValuedWorld.informationOrder(this.get(p), otherWorld.get(p))) {
 				return false;
@@ -162,7 +162,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return true;
 	}
-	
+
 	/**
 	 * This method returns the least informative world among a collection of FourValuedWorlds
 	 * @param coll = possible input worlds
@@ -196,7 +196,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 			return leastInformativeWorlds;
 		}
 	}
-	
+
 	/**
 	 * This method calculates a collection of 3-valued worlds based on this 4-valued world
 	 * INCONSISTENT atoms are replaced by FALSE or TRUE
@@ -205,9 +205,9 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	public Collection<ThreeValuedWorld> getThreeValuedSet() {
 		Collection<ThreeValuedWorld> collection3Val = new HashSet<ThreeValuedWorld>();
 		Collection<Proposition> inconsistentPropositions = new HashSet<Proposition>();
-		
+
 		ThreeValuedWorld referenceWorld3V = new ThreeValuedWorld();
-		
+
 		for(Proposition p: this.values.keySet()) {
 			switch (this.values.get(p)) {
 			case TRUE:
@@ -226,21 +226,21 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 			}
 		}
 
-		// System.out.println("All INCONSISTENT atoms: " + inconsistentPropositions);		
+		// System.out.println("All INCONSISTENT atoms: " + inconsistentPropositions);
 		// System.out.println("Reference world (all INCONSISTENT atoms replaced by FALSE): " + referenceWorld3V);
-		
+
 		/*
 		 * Create a BitSet with as many bits as there are INCONSISTENT atoms in the 4-valued world
 		 * Increment the BitSet and construct a new 3-valued world from it
 		 */
 		BitSet bs = new BitSet(inconsistentPropositions.size());
 		collection3Val.add(referenceWorld3V);
-		
+
 		for (int i = 0; i < Math.pow(2, inconsistentPropositions.size())-1; i++) {
 			int clearBit = bs.nextClearBit(0);
 			bs.set(clearBit, true);
 			bs.set(0, clearBit, false);
-			
+
 			ThreeValuedWorld updatedWorld3V = new ThreeValuedWorld(referenceWorld3V);
 			int index = 0;
 			for (Proposition p: inconsistentPropositions) {
@@ -253,16 +253,16 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return collection3Val;
 	}
-	
+
 	/**
 	 * This method takes a set of 3-valued worlds and returns a set of sets of 2-valued worlds
 	 * where undecided atoms are replaced by False or True
-	 * @param coll3V: 
+	 * @param coll3V:
 	 * @return set of sets
 	 */
 	public Collection<Collection<PossibleWorld>> getTwoValuedSetOfSets(Collection<ThreeValuedWorld> coll3V) {
 		Collection<Collection<PossibleWorld>> setOfSets2Val = new HashSet<Collection<PossibleWorld>>();
-		
+
 		/*
 		 * Iterate over all 3-valued worlds and convert each into a set of 2-valued worlds
 		 */
@@ -272,31 +272,31 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 
 		return setOfSets2Val;
 	}
-	
-	/* 
+
+	/*
 	 * Evaluate a PlFormula on this world replacing both UNDECIDED and INCONSISTENT by FALSE
 	 */
 	@Override
 	public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
 		return this.satisfies4VL(formula).getClassical();
 	}
-	
+
 	/**
 	 * Determines the 4-valued truth value of the given formula.
 	 * @param formula: some propositional formula
 	 * @return the 4-valued truth value of the formula.
 	 */
 	public TruthValue satisfies4VL(PlFormula formula) {
-		
+
 		Collection<ThreeValuedWorld> collection3Val = getThreeValuedSet();
-		
+
 		boolean truthValueAlreadySet = false;
 		boolean noUndecided = true;
 		boolean noInconsistent = true;
-		
+
 		TruthValue evaluation = TruthValue.TRUE;	// will be overwritten
 		boolean value = true;						// will be overwritten
-		
+
 		for (ThreeValuedWorld world3val : collection3Val) {
 			/*
 			 * We loop until we find at least one world which is TRUE / FALSE: this world sets the "value"
@@ -343,7 +343,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 				case FALSE:
 					if (value) {
 						evaluation = TruthValue.INCONSISTENT;
-					}					
+					}
 					break;
 				case UNDECIDED:
 					evaluation = TruthValue.UNDECIDED;
@@ -353,7 +353,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return evaluation;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.BeliefBase)
 	 */
@@ -364,7 +364,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 				return false;
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -372,7 +372,8 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		return this.values.toString();
 	}
 	/**
-	 * 
+	 *
+	 * Return values as string
 	 * @return values as string
 	 */
 	public String printValues() {
@@ -383,7 +384,8 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		return pureValues;
 	}
 	/**
-	 * 
+	 *
+	 * Return the string representation
 	 * @param coll worlds
 	 * @return the string representation
 	 */

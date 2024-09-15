@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 
 /**
  * Instance of this class represent graphs with nodes of type T
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  * @param <T> The type of the node.
  */
 public class DefaultGraph<T extends Node> implements Graph<T> {
@@ -50,7 +50,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Node)
 	 */
 	public boolean add(T node) {
@@ -59,11 +59,12 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Edge)
 	 */
 	/**
-	 * 
+	 *
+	 * Return whether the operation was successful
 	 * @param edge an edge
 	 * @return whether the operation was successful
 	 */
@@ -72,11 +73,11 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
 		return this.edges.add(edge);
 	}
-	
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getNodes()
 	 */
 	public Collection<T> getNodes() {
@@ -85,7 +86,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getNumberOfNodes()
 	 */
 	public int getNumberOfNodes() {
@@ -96,10 +97,10 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	public int getNumberOfEdges() {
 		return this.edges.size();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getEdges()
 	 */
 	public Collection<Edge<T>> getEdges() {
@@ -108,7 +109,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#iterator()
 	 */
 	@Override
@@ -118,7 +119,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#contains(java.lang.Object)
 	 */
 	public boolean contains(Object obj) {
@@ -127,7 +128,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getNeighbors(org.tweetyproject.graphs.Node)
 	 */
 	public Collection<T> getNeighbors(T node) {
@@ -145,7 +146,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getChildren(org.tweetyproject.graphs.Node)
 	 */
 	public Collection<T> getChildren(Node node) {
@@ -163,7 +164,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getParents(org.tweetyproject.graphs.Node)
 	 */
 	public Collection<T> getParents(Node node) {
@@ -181,7 +182,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#areAdjacent(org.tweetyproject.graphs.Node,
 	 * org.tweetyproject.graphs.Node)
 	 */
@@ -191,7 +192,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getEdge(org.tweetyproject.graphs.Node,
 	 * org.tweetyproject.graphs.Node)
 	 */
@@ -207,7 +208,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#existsDirectedPath(org.tweetyproject.graphs.Node,
 	 * org.tweetyproject.graphs.Node)
 	 */
@@ -217,7 +218,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getAdjancyMatrix()
 	 */
 	public Matrix getAdjacencyMatrix() {
@@ -236,7 +237,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -245,7 +246,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getComplementGraph(int)
 	 */
 	@Override
@@ -270,7 +271,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#hasSelfLoops()
 	 */
 	@Override
@@ -283,7 +284,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#isWeightedGraph()
 	 */
 	@Override
@@ -296,7 +297,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getStronglyConnectedComponents()
 	 */
 	@Override
@@ -307,7 +308,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/**
 	 * Main method for computing the strongly connected components using Tarjan's
 	 * algorithm.
-	 * 
+	 *
 	 * @param idx     the current node index
 	 * @param v       the current node
 	 * @param stack   the stack of nodes that need to be visited
@@ -349,7 +350,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * of nodes is called strongly connected component if it is strongly connected
 	 * and maximal with respect to set inclusion. The strongly connected components
 	 * are computed using Tarjan's algorithm
-	 * 
+	 *
 	 * @param <S> a Node
 	 * @param g some graph
 	 * @return the strongly connected components of the graph.
@@ -369,7 +370,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.GeneralGraph#getSubgraphs()
 	 */
 	public Collection<Graph<T>> getSubgraphs() {
@@ -380,7 +381,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * Returns the set of sub graphs of the given graph.
 	 * @param g a graph
 	 * @param <S> the type of nodes
-	 * 
+	 *
 	 * @return the set of sub graphs of the given graph.
 	 */
 	public static <S extends Node> Collection<Graph<S>> getSubgraphs(GeneralGraph<S> g) {
@@ -403,7 +404,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.Graph#getRestriction(java.util.Collection)
 	 */
 	@Override
@@ -419,7 +420,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/**
 	 * Checks whether there is a (directed) path from node1 to node2 in the given
 	 * graph.
-	 * 
+	 *
 	 * @param <S> a Node
 	 * @param g     some graph.
 	 * @param node1 some node.
@@ -448,14 +449,14 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/**
 	 * Checks whether there is at least one cycle in the given graph.
-	 * 
+	 *
 	 * @param <S> a Node
 	 * @param g some graph
 	 * @return "true" if there is a cycle in the graph, "false" if the graph is acyclic
 	 */
 	public static <S extends Node> boolean containsCycle(Graph<S> g) {
 		Map<Node, Integer> states = new HashMap<Node, Integer>();
-		for (Node n : g) 
+		for (Node n : g)
 			if (containsBackEdge(n,states,g))
 				return true;
 		return false;
@@ -464,7 +465,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/**
 	 * Helper method for detecting cycles using depth-first search.
-	 * 
+	 *
 	 * @param <S> a Node
 	 * @param parent      current node
 	 * @param states map of states of nodes
@@ -486,7 +487,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		states.put(parent, CLOSED);
 		return false;
 	}
-	
+
 	/**
 	 * Finds the cycles of an graph order-sensitively, excluding self-loops (cycles of length one).
 	 * @param <S> a Node
@@ -497,7 +498,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		Set<Stack<S>> results = new HashSet<Stack<S>>();
 		results.addAll(DefaultGraph.getCyclesIncludingSelfLoops(g));
 		Collection<? extends GeneralEdge<? extends S>> edges = g.getEdges();
-		
+
 		// removing all self-loops
 		for(GeneralEdge<? extends S> singleEdge : edges) {
 			if(((Edge<? extends S>) singleEdge).getNodeA().equals(((Edge<? extends S>) singleEdge).getNodeB())) {
@@ -507,10 +508,10 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 				results.remove(removeFromResults);
 			}
 		}
-		
+
 		return results;
 	}
-	
+
 	/**
 	 * Finds the cycles of an graph order-sensitively, including self-loops (cycles of length one).
 	 * @param <S> a Node
@@ -521,7 +522,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		// early out for performance reason
 		if(!DefaultGraph.containsCycle(g))
 			return new HashSet<Stack<S>>();
-		
+
 		// Adapted version of Johnson's Algorithm described in
 		// "Find All The elementary Circuits Of A Directed Graph" by D. B. Johnson (1975)
 		Map<S, Set<S>> ag = new HashMap<S, Set<S>>();
@@ -530,7 +531,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		S s;
 		Stack<S> stack = new Stack<S>();
 		Set<Stack<S>> results = new HashSet<Stack<S>>();
-		
+
 		Collection<Collection<S>> stronglyConnectedComponents = DefaultGraph.getStronglyConnectedComponents(g);
 		for(Collection<S> singleComponent : stronglyConnectedComponents) {
 			for(S node : singleComponent) {
@@ -538,10 +539,10 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 				// Filtering out children who are not in the same SCC
 				// SCC := Strongly Connected Component
 				Set<S> childrenInSCC = children.stream().filter(child -> singleComponent.contains(child)).collect(Collectors.toSet());
-				ag.put(node, childrenInSCC); 
+				ag.put(node, childrenInSCC);
 			}
 		}
-		
+
 		for(Collection<S> singleComponent : stronglyConnectedComponents) {
 			Iterator<S> componentIterator = singleComponent.iterator();
 			while(componentIterator.hasNext()) {
@@ -554,13 +555,13 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 				DefaultGraph.circuit(s, stack, blocked, ag, b, s, results);
 			}
 		}
-		
-		
+
+
 		return results;
-		
-		
+
+
 	}
-	
+
 	// Helper function for getCycles
 	private static <S extends Node> void unblock(S u, Map<S, Boolean> blocked, Map<S, Set<S>> b){
 		blocked.put(u, false);
@@ -570,7 +571,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 				DefaultGraph.unblock(w, blocked, b);
 		}
 	}
-	
+
 	// Helper function for getCycles
 	private static <S extends Node> Boolean circuit(S v, Stack<S> stack, Map<S, Boolean> blocked, Map<S, Set<S>> ak, Map<S, Set<S>> b, S s, Set<Stack<S>> results) {
 		Boolean f = false;
@@ -587,18 +588,18 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 				if(DefaultGraph.circuit(w, stack, blocked, ak, b, s, results))
 					f = true;
 		}
-		
+
 		if(f)
 			unblock(v, blocked, b);
 		else
 			for(S w : ak.get(v))
 				b.get(w).add(v);
-		
+
 		stack.pop();
 		return f;
 	}
-	
-	
+
+
 	/**
 	 * Finds all components of a graph.
 	 * @param <S> a Node
@@ -610,49 +611,49 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		Collection<Graph<S>> components = new HashSet<Graph<S>>();
 		Stack<S> notVisited = new Stack<S>();
 		notVisited.addAll(g.getNodes());
-		
+
 		while(!notVisited.isEmpty()) {
 			Graph<S> singleComponent = new DefaultGraph<S>();
 			S startNode = notVisited.pop();
-			
+
 			Queue<S> queue = new LinkedList<S>();
 			queue.add(startNode);
-			
+
 			while(!queue.isEmpty()) {
 				S currentNode = queue.poll();
 				singleComponent.add(currentNode);
-				
+
 				Collection<S> parentNodes = g.getParents(currentNode);
 				Collection<S> childNodes = g.getChildren(currentNode);
-				
+
 				Collection<S> adjacentNodes = new HashSet<S>();
 				adjacentNodes.addAll(parentNodes);
 				adjacentNodes.addAll(childNodes);
 				Collection<S> filteredAdjacentNodes = adjacentNodes.stream().filter(node -> notVisited.contains(node)).collect(Collectors.toList());
-				
+
 				queue.addAll(filteredAdjacentNodes);
 				notVisited.removeAll(filteredAdjacentNodes);
-				
+
 				for(S singleParentNode : parentNodes) {
 					singleComponent.add(singleParentNode);
 					singleComponent.add(g.getEdge(singleParentNode, currentNode));
 				}
-					
+
 				for(S singleChildNode : childNodes) {
 					singleComponent.add(singleChildNode);
 					singleComponent.add(g.getEdge(currentNode, singleChildNode));
 				}
-				
+
 			}
-			
+
 			components.add(singleComponent);
-			
+
 		}
-		
+
 		return components;
 	}
-	
-	
+
+
 	/**
 	 * Finds all induced subgraphs.
 	 * @param <S> a Node
@@ -661,26 +662,26 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 */
 	public static <S extends Node> Collection<Graph<S>> getInducedSubgraphs(Graph<S> g) {
 		Collection<Graph<S>> resultingInducedSubgraphs = new HashSet<Graph<S>>();
-		
-		Set<Set<S>> subsetOfNodes = new SetTools<S>().subsets(g.getNodes()); 
-		
+
+		Set<Set<S>> subsetOfNodes = new SetTools<S>().subsets(g.getNodes());
+
 		for(Set<S> singleSubset : subsetOfNodes) {
 			Graph<S> singleInducedSubgraph = new DefaultGraph<S>();
 			for(S singleNode : singleSubset)
 				singleInducedSubgraph.add(singleNode);
-				
+
 			@SuppressWarnings("unchecked")
 			Collection<Edge<S>> edges = (Collection<Edge<S>>) g.getEdges();
-			
+
 			// Leave only those edges where both nodeA and nodeB are contained in the induced graph
 			Collection<Edge<S>> filteredEdges = edges.stream().filter(edge -> singleSubset.contains(edge.getNodeA()) && singleSubset.contains(edge.getNodeB())).collect(Collectors.toList());
-			
+
 			for(Edge<S> singleEdge : filteredEdges)
 				singleInducedSubgraph.add(g.getEdge(singleEdge.getNodeA(), singleEdge.getNodeB()));
-			
+
 			resultingInducedSubgraphs.add(singleInducedSubgraph);
 		}
-		
+
 		return resultingInducedSubgraphs;
 	}
 
@@ -738,5 +739,5 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	}
 
 
-	
+
 }

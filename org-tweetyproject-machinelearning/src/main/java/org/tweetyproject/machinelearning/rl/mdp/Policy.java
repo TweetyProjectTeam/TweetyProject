@@ -27,9 +27,10 @@ package org.tweetyproject.machinelearning.rl.mdp;
  */
 public interface Policy<S extends State, A extends Action> {
 	/**
-	 * 
+	 *
+	 * Return  a action
 	 * @param s state
 	 * @return action
 	 */
-	public A execute(S s); 
+	public A execute(S s);
 }

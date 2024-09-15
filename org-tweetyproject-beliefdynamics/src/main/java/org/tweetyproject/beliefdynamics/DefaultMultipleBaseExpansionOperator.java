@@ -23,22 +23,31 @@ import java.util.*;
 import org.tweetyproject.commons.*;
 
 /**
- * This class implements the default multiple base expansion operator, ie. an operator
+ * This class implements the default multiple base expansion operator, ie. an
+ * operator
  * that returns the union of the sets of formulas
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas that this operator works on.
  */
 public class DefaultMultipleBaseExpansionOperator<T extends Formula> extends MultipleBaseExpansionOperator<T> {
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.beliefdynamics.MultipleBaseExpansionOperator#expand(java.util.Collection, java.util.Collection)
+
+	/** Default */
+	public DefaultMultipleBaseExpansionOperator() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.beliefdynamics.MultipleBaseExpansionOperator#expand(java.
+	 * util.Collection, java.util.Collection)
 	 */
-	public Collection<T> expand(Collection<T> base, Collection<T> formulas){
+	public Collection<T> expand(Collection<T> base, Collection<T> formulas) {
 		Set<T> expandedCollection = new HashSet<T>();
 		expandedCollection.addAll(base);
 		expandedCollection.addAll(formulas);
-		return expandedCollection;		
+		return expandedCollection;
 	}
 }

@@ -34,12 +34,12 @@ public class BpmnNode extends BpmnElement implements Node{
 	 * all directed edges that lead to this node
 	 */
 	private Map<String, Edge<BpmnNode>> incomingEdges = new HashMap<>();
-	
+
 	/**
 	 * all directed edges that lead away from this node
 	 */
 	private Map<String, Edge<BpmnNode>> outgoingEdges = new HashMap<>();
-	
+
 	/**
 	 * Create a new instance
 	 */
@@ -47,7 +47,7 @@ public class BpmnNode extends BpmnElement implements Node{
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Add a new incoming edge
 	 * @param edgeId the id of the incoming edge
@@ -56,7 +56,7 @@ public class BpmnNode extends BpmnElement implements Node{
 	public void putIncomingEdge(String edgeId, Edge<BpmnNode> edge) {
 		this.incomingEdges.put(edgeId, edge);
 	}
-	
+
 	/**
 	 * Add a new outgoing edge
 	 * @param edgeId the id of the outgoing edge
@@ -65,15 +65,17 @@ public class BpmnNode extends BpmnElement implements Node{
 	public void putOutgoingEdge(String edgeId, Edge<BpmnNode> edge) {
 		this.outgoingEdges.put(edgeId, edge);
 	}
-	
+
 	/**
+	 * Return all directed edges that lead to this node
 	 * @return all directed edges that lead to this node
 	 */
 	public Map<String, Edge<BpmnNode>> getIncomingEdges(){
 		return incomingEdges;
 	}
-	
+
 	/**
+	 * Return all directed edges leading away from this node
 	 * @return all directed edges leading away from this node
 	 */
 	public Map<String, Edge<BpmnNode>> getOutgoingEdges(){

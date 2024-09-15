@@ -27,15 +27,19 @@ import org.tweetyproject.arg.rankings.util.RankingTools;
 
 /**
  * Example code for even more ranking semantics:
- * <br> - Counting Semantics [Pu, Zhang, G.Luo, J.Luo. Attacker and Defender Counting Approach 
+ * <br> - Counting Semantics [Pu, Zhang, G.Luo, J.Luo. Attacker and Defender Counting Approach
  * for Abstract Argumentation. CoRR 2015].
- * <br> - The three variations of the Propagation Semantics 
+ * <br> - The three variations of the Propagation Semantics
  * [Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
- * 
+ *
  * @author Anna Gessler
  */
 public class RankingSemanticsExample2 {
-	public static void main(String[] args) {	
+	/**
+	 * Example
+	 * @param args cmd line
+	 */
+	public static void main(String[] args) {
 		// Example 1, taken from [Bonzon, Delobelle, Konieczny, Maudet. A Comparative
 		// Study of Ranking-Based Semantics for Abstract Argumentation. AAAI 2016]
 		DungTheory example1 = new DungTheory();
@@ -50,7 +54,7 @@ public class RankingSemanticsExample2 {
 		example1.add(new Attack(e, d));
 		example1.add(new Attack(c, e));
 		example1.add(new Attack(b, c), new Attack(b, a));
-		
+
 		// Example 2, taken from Figure 1.a in [Pu, Zhang, G.Luo, J.Luo.
 		// Attacker and Defender Counting Approach for Abstract Argumentation. CoRR 2015]
 		DungTheory example2 = new DungTheory();
@@ -62,8 +66,8 @@ public class RankingSemanticsExample2 {
 		example2.add(new Attack(x2, x3), new Attack(x2, x1));
 		example2.add(new Attack(x3, x2), new Attack(x3, x3));
 		example2.add(new Attack(x4, x2));
-		
-		// Example 3, taken from Figure 2.4 in 
+
+		// Example 3, taken from Figure 2.4 in
 		// [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
 		DungTheory example3 = new DungTheory();
 		Argument f = new Argument("f");
@@ -78,7 +82,7 @@ public class RankingSemanticsExample2 {
 		example3.add(new Attack(e,h), new Attack(e,d), new Attack(e,i));
 		example3.add(new Attack(h,g));
 		example3.add(new Attack(j,i));
-		
+
 		// Counting semantics
 		CountingRankingReasoner reasoner = new CountingRankingReasoner(0.98, 0.001);
 		System.out.println(reasoner.getClass().getSimpleName());
@@ -86,8 +90,8 @@ public class RankingSemanticsExample2 {
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example2), 2));
 		reasoner = new CountingRankingReasoner(0.9, 0.001);
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example3), 3));
-		
-		// Propagation semantics (examples from chapter 3.3 in 
+
+		// Propagation semantics (examples from chapter 3.3 in
 		// [Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
 		System.out.println("Propagation semantics epsilon:");
 		PropagationRankingReasoner propagation_reasoner_1 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
@@ -97,13 +101,13 @@ public class RankingSemanticsExample2 {
 		propagation_reasoner_1 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
 		// Example that uses the multiset variant
 		System.out.println("M:" + propagation_reasoner_1.getModel(example3));
-		
+
 		System.out.println("Propagation semantics 1+epsilon:");
 		PropagationRankingReasoner propagation_reasoner_2 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
 		System.out.println("S:" + propagation_reasoner_2.getModel(example3));
 		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
 		System.out.println("M:" + propagation_reasoner_2.getModel(example3));
-		
+
 		System.out.println("Propagation semantics 1->epsilon:");
 		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION3);
 		System.out.println("S:" + propagation_reasoner_2.getModel(example3));
@@ -111,4 +115,7 @@ public class RankingSemanticsExample2 {
 		System.out.println("M:" + propagation_reasoner_2.getModel(example3));
 	}
 
+
+    /** Default Constructor */
+    public RankingSemanticsExample2(){}
 }

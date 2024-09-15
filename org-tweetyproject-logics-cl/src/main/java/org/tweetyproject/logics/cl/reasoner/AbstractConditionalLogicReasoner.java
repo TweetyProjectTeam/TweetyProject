@@ -30,20 +30,24 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract ancestor for all reasoner for conditional logic.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public abstract class AbstractConditionalLogicReasoner implements QualitativeReasoner<ClBeliefSet,PlFormula>, ModelProvider<Conditional,ClBeliefSet,RankingFunction>{
 
+	/** Default */
+	public AbstractConditionalLogicReasoner(){
+		super();
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
 	@Override
-	public Boolean query(ClBeliefSet beliefbase, PlFormula formula) {		
+	public Boolean query(ClBeliefSet beliefbase, PlFormula formula) {
 		return this.getModel(beliefbase).rank(formula) == 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */

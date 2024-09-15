@@ -2,10 +2,38 @@ package org.tweetyproject.sat.minisat;
 
 import org.tweetyproject.sat.SatSolver;
 
+
+
+/**
+ * This class provides an implementation of the `SatSolver` interface using
+ * the MiniSat SAT solver. MiniSat is a widely used, efficient solver for
+ * boolean satisfiability problems.
+ *
+ * <p>
+ * The class handles interactions with the native MiniSat solver through
+ * bindings, allowing for operations such as variable creation, clause addition,
+ * and satisfiability checking.
+ * </p>
+ *
+ */
 public final class MinisatSatSolver implements SatSolver {
 
+	/**
+     * A handle to the internal MiniSat solver instance.
+     * This handle is used to interact with the MiniSat solver through native bindings.
+     */
 	private final long handle;
 
+
+    /**
+     * Initializes a new instance of the MiniSat SAT solver.
+     *
+     * <p>
+     * This constructor initializes the MiniSat solver instance by calling the native
+     * `init` method through the `Binding` class. The handle to the MiniSat instance
+     * is stored in the `handle` field.
+     * </p>
+     */
 	public MinisatSatSolver() {
 		this.handle = Binding.init();
 		Binding.newVar(handle); // skip 0, since we cannot distinguish -0 and +0
@@ -68,7 +96,7 @@ public final class MinisatSatSolver implements SatSolver {
 	public void add(int[] clause) {
 		Binding.add(handle, clause, clause.length);
 	}
-	
+
 	@Override
 	public int newVar() {
 		return Binding.newVar(handle);

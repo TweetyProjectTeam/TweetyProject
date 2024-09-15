@@ -35,11 +35,17 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
  * Some examples for using FolParser and provers.
- * 
+ *
  */
 public class FolExample {
+
+	/** Constructor */
+	public FolExample(){
+		// default
+	}
+
 	/**
-	 * 
+	 * Main method fpr examples
 	 * @param args arguments
 	 * @throws ParserException ParserException
 	 * @throws IOException IOException
@@ -49,12 +55,12 @@ public class FolExample {
 		 * Example 1: Add sorts, constants and predicates to a first-order logic signature
 		 */
 		//Create new FOLSignature with equality
-		FolSignature sig = new FolSignature(true); 
-		
+		FolSignature sig = new FolSignature(true);
+
 		//Add sort
 		Sort sortAnimal = new Sort("Animal");
-		sig.add(sortAnimal); 
-		
+		sig.add(sortAnimal);
+
 		//Add constants
 		Constant constantPenguin = new Constant("penguin",sortAnimal);
 		Constant constantKiwi = new Constant("kiwi",sortAnimal);
@@ -67,10 +73,10 @@ public class FolExample {
 		List<Sort> predicateList2 = new ArrayList<Sort>();
 		predicateList2.add(sortAnimal);
 		predicateList2.add(sortAnimal);
-		Predicate p2 = new Predicate("Knows",predicateList2); //Add Predicate Knows(Animal,Animal) 
-		sig.add(p, p2); 
+		Predicate p2 = new Predicate("Knows",predicateList2); //Add Predicate Knows(Animal,Animal)
+		sig.add(p, p2);
 		System.out.println("Signature: " + sig);
-		
+
 		/*
 		 * Example 2: Parse formulas with FolParser using the signature defined above
 		 */
@@ -84,7 +90,7 @@ public class FolExample {
 		FolFormula f5 = (FolFormula)parser.parseFormula("kiwi == kiwi");
 		bs.add(f1, f2, f3, f4, f5);
 		System.out.println("\nParsed BeliefBase: " + bs);
-		
+
 		//Note that belief bases can have signatures larger (but not smaller) than their formulas' signature
 		FolSignature sigLarger = bs.getSignature();
 		sigLarger.add(new Constant("archaeopteryx",sortAnimal));
@@ -93,7 +99,7 @@ public class FolExample {
 		System.out.println("Minimal signature: " + bs.getMinimalSignature());
 
 		/*
-		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2. 
+		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2.
 		 */
 		FolReasoner.setDefaultReasoner(new SimpleFolReasoner()); //Set default prover, options are NaiveProver, EProver, Prover9
 		FolReasoner prover = FolReasoner.getDefaultReasoner();
@@ -102,7 +108,7 @@ public class FolExample {
 		System.out.println("ANSWER 3: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi == kiwi")));
 		System.out.println("ANSWER 4: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi /== kiwi")));
 		System.out.println("ANSWER 5: " + prover.query(bs, (FolFormula)parser.parseFormula("penguin /== kiwi")));
-		
+
 		/*
 		 * Example 4: Parse another BeliefBase from a file. The signature is also parsed from the file.
 		 * Then prove/disprove some queries on the knowledge bases.

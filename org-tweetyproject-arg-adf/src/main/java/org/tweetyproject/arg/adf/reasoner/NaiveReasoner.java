@@ -25,17 +25,16 @@ import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
-@Deprecated( forRemoval = true, since = "1.19" )
 /**
- * 
+ * NaiveReasoner class
  * @author Mattias Thimm
  *
  */
-
+@Deprecated( forRemoval = true, since = "1.19" )
 public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	/**
-	 * 
+	 *Constructor
 	 * @param solver
 	 *            the underlying sat solver
 	 */

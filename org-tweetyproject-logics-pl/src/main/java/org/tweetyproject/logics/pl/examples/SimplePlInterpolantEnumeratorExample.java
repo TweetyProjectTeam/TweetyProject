@@ -61,4 +61,7 @@ public class SimplePlInterpolantEnumeratorExample {
 		System.out.println("Strongest interpolant: " + en.getStrongestInterpolant(k1, k2));
 		System.out.println("Weakest interpolant: " + en.getWeakestInterpolant(k1, k2));
 	}
+
+    /** Default Constructor */
+    public SimplePlInterpolantEnumeratorExample(){}
 }

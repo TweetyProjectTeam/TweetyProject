@@ -68,4 +68,7 @@ public class RaSelfContradiction extends RankingPostulate {
 		
 	}
 
+
+    /** Default Constructor */
+    public RaSelfContradiction(){}
 }

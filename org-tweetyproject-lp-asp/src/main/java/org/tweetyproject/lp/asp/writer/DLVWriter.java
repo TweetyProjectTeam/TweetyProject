@@ -28,19 +28,19 @@ import org.tweetyproject.lp.asp.syntax.Program;
 /**
  * Prints ASP programs and single rules to the DLV input format
  * (<a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">http://www.dlvsystem.com/html/DLV_User_Manual.html</a>).
- * 
+ *
  * @see org.tweetyproject.lp.asp.reasoner.DLVSolver
- * 
+ *
  * @author Anna Gessler
  */
 
 public class DLVWriter {
 
 	Writer writer;
-	
+
 	/**
 	 * Create a new DLVWriter with the given writer.
-	 * 
+	 *
 	 * @param writer a writer
 	 */
 	public DLVWriter(Writer writer) {
@@ -56,7 +56,7 @@ public class DLVWriter {
 
 	/**
 	 * Prints the given program in DLV format.
-	 * 
+	 *
 	 * @param p a program
 	 * @throws IOException if an IO issue occurs.
 	 */
@@ -65,14 +65,14 @@ public class DLVWriter {
 			if (cmd.startsWith("#const"))
 				writer.write(cmd + ".");
 		}
-		
+
 		for (ASPRule r : p)
 			writer.write(printRule(r) + "\n");
 	}
 
 	/**
 	 * Creates string representation of a single rule in DLV format.
-	 * 
+	 *
 	 * @param r an ASP rule
 	 * @return String representation of the rule
 	 */
@@ -80,6 +80,10 @@ public class DLVWriter {
 		return r.printToDLV();
 	}
 
+	/**
+	 * Close writer
+	 * @throws IOException error
+	 */
 	public void close() throws IOException {
 		this.writer.close();
 	}

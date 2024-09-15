@@ -68,6 +68,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	// CONSTRUCTORS
 	// -------------------------------------------------------------------------
 
+	/**
+	 * Setter
+	 * @param constraintTerms terms
+	 */
 	public void setConstraintTerms(List<Term<?>> constraintTerms) {
 		this.constraintTerms = constraintTerms;
 	}
@@ -85,7 +89,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a fact with the given ASPHead.
-	 * 
+	 *
 	 * @param head an ASPHead
 	 */
 	public ASPRule(ASPHead head) {
@@ -98,7 +102,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a fact with the given literal.
-	 * 
+	 *
 	 * @param literal a literal
 	 */
 	public ASPRule(ASPLiteral literal) {
@@ -108,7 +112,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a rule with the given head and body.
-	 * 
+	 *
 	 * @param head an ASPHead
 	 * @param body a list of ASPBodyElement
 	 */
@@ -127,7 +131,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a rule with the given head and a single-element body.
-	 * 
+	 *
 	 * @param head an ASPLiteral
 	 * @param b    a body element
 	 */
@@ -144,7 +148,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a rule with the given head and a single-element body.
-	 * 
+	 *
 	 * @param head an ASPHead
 	 * @param b    a body element
 	 */
@@ -161,7 +165,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a rule with the given head and body.
-	 * 
+	 *
 	 * @param head an ASPLiteral
 	 * @param body a list of ASPBodyElement
 	 */
@@ -180,7 +184,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a constraint with the given body.
-	 * 
+	 *
 	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(List<ASPBodyElement> body) {
@@ -195,7 +199,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a weak constraint with the given weight and terms.
-	 * 
+	 *
 	 * @param nafliterals the naf literals
 	 * @param weight      some weight
 	 * @param terms       a list of terms
@@ -214,7 +218,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a weak constraint with the given weight, level (priority) and terms.
-	 * 
+	 *
 	 * @param body   a list of ASPBodyElement
 	 * @param weight a term
 	 * @param level  a term
@@ -235,7 +239,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Creates a new rule with the given optimization statement.
-	 * 
+	 *
 	 * @param opt OptimizationStatement
 	 */
 	public ASPRule(OptimizationStatement opt) {
@@ -246,7 +250,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Copy-Constructor
-	 * 
+	 *
 	 * @param other another ASPRule
 	 */
 	public ASPRule(ASPRule other) {
@@ -285,8 +289,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Add the given body element to this rule.
-	 * 
-	 * @param premise
+	 *
+	 * @param premise the premise
 	 */
 	public void addBody(ASPBodyElement premise) {
 		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty()))
@@ -296,6 +300,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
+	 * Return the body of this rule
 	 * @return the body of this rule
 	 */
 	public List<ASPBodyElement> getBody() {
@@ -304,8 +309,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Add the given body elements to this rule.
-	 * 
-	 * @param premises
+	 *
+	 * @param premises premise
 	 */
 	public void addBodyElements(Collection<? extends ASPBodyElement> premises) {
 		for (ASPBodyElement b : premises)
@@ -317,8 +322,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set this rule's body to the given ASPBodyElements.
-	 * 
-	 * @param aspBodyElements
+	 *
+	 * @param aspBodyElements the body elements
 	 */
 	public void setBody(ASPBodyElement... aspBodyElements) {
 		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
@@ -338,8 +343,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set the conclusion of this rule.
-	 * 
-	 * @param head
+	 *
+	 * @param head the head
 	 */
 	public void setConclusion(ASPLiteral head) {
 		this.head = new ClassicalHead(head);
@@ -352,7 +357,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Add the given literal to the head of the rule.
-	 * 
+	 *
 	 * @param literal ASPLiteral
 	 */
 	public void addToHead(ASPLiteral literal) {
@@ -364,6 +369,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
+	 * Return head of this rule
 	 * @return head of this rule
 	 */
 	public ASPHead getHead() {
@@ -372,8 +378,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set the head of this rule.
-	 * 
-	 * @param head
+	 *
+	 * @param head the heas
 	 */
 	public void setHead(ASPHead head) {
 		setConclusion(head);
@@ -381,14 +387,15 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set the head of this rule.
-	 * 
-	 * @param head
+	 *
+	 * @param head the head
 	 */
 	public void setHead(ASPLiteral head) {
 		setConclusion(head);
 	}
 
 	/**
+	 * Return the weight of this constraint.
 	 * @return the weight of this constraint.
 	 */
 	public Term<?> getWeight() {
@@ -397,7 +404,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set the weight attribute of this constraint.
-	 * 
+	 *
 	 * @param weight a term
 	 */
 	public void setWeight(Term<?> weight) {
@@ -405,6 +412,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
+	 * Return the level attribute of this constraint.
 	 * @return the level attribute of this constraint.
 	 */
 	public Term<?> getLevel() {
@@ -413,7 +421,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * Set the level attribute of this constraint.
-	 * 
+	 *
 	 * @param level a term
 	 */
 	public void setLevel(Term<?> level) {
@@ -421,6 +429,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
+	 * Return the constraint terms of this rule.
 	 * @return the constraint terms of this rule.
 	 */
 	public List<Term<?>> getConstraintTerms() {
@@ -441,11 +450,17 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return (head.isEmpty() && !body.isEmpty());
 	}
 
+	/**
+	 *
+	 * Return true if isOptimizationStatement
+	 * @return true if isOptimizationStatement
+	 */
 	public boolean isOptimizationStatement() {
 		return (body.get(0) instanceof OptimizationStatement);
 	}
 
 	/**
+	 * return true if the rule's head and body are both empty, false otherwise.
 	 * @return true if the rule's head and body are both empty, false otherwise.
 	 */
 	public boolean isEmpty() {
@@ -455,12 +470,12 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * This method tests a rule for safety. Solvers (such as clingo) usually do not
 	 * accept unsafe rules.
-	 * 
+	 *
 	 * A rule is safe if all of its variables occur in a positive literal (classical atom) in
 	 * the body of the rule, or as part of one side u of a comparative atom u = t if all
 	 * variables in t are safe (analogously for switched u and t). A more detailed
 	 * description can be found in the ASP-2-Core standard description.
-	 * 
+	 *
 	 * @return true if the rule is safe, false otherwise
 	 */
 	public Boolean isSafe() {
@@ -470,7 +485,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			return true;
 		Set<Variable> boundVars = new HashSet<Variable>();
 		// collects u=t atoms and aggregate atoms with = operators
-		Set<ASPBodyElement> equalsAtoms = new HashSet<ASPBodyElement>(); 
+		Set<ASPBodyElement> equalsAtoms = new HashSet<ASPBodyElement>();
 		for (ASPBodyElement b : this.body) {
 			if (b instanceof ASPLiteral)
 				boundVars.addAll(b.getTerms(Variable.class));
@@ -489,8 +504,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 				}
 			}
 			if (b instanceof OptimizationStatement) {
-				for (OptimizationElement oe : ((OptimizationStatement) b).getElements()) 
-					for (ASPBodyElement literal : oe.getOptLiterals()) 
+				for (OptimizationElement oe : ((OptimizationStatement) b).getElements())
+					for (ASPBodyElement literal : oe.getOptLiterals())
 						boundVars.addAll(literal.getTerms(Variable.class));
 			}
 			if (b instanceof ComparativeAtom && ((ComparativeAtom) b).getOperator() == ASPOperator.BinaryOperator.EQ)
@@ -538,6 +553,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return boundVars.containsAll(allVars);
 	}
 
+	/**
+	 *
+	 */
 	public boolean isGround() {
 		if (!head.isGround())
 			return false;
@@ -608,6 +626,17 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return atoms;
 	}
 
+	/**
+ * Retrieves all the literals contained within this rule.
+ * <p>
+ * This method gathers and returns a collection of literals that are present in both the head
+ * and the body of the rule. The literals are stored in a sorted set, ensuring that they are
+ * returned in a consistent order.
+ * </p>
+ *
+ * @return A sorted collection of literals ({@code ASPLiteral}) contained in the head and body
+ *         of the rule. The returned collection is a {@code SortedSet} to maintain a consistent order.
+ */
 	public Collection<? extends ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
 		literals.addAll(head.getLiterals());
@@ -745,7 +774,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 		return result;
 	}
-	
+
 	@Override
 	public String printToDLV() {
 		String result = "";

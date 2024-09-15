@@ -25,22 +25,22 @@ import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
- * 
+ *
  * This class models an equivalence axiom, also known as "general concept inclusion" (GCU),
  * meaning an expression of the form "C is a subset of or equal to D" where C and D are concepts.
  * This can also be read as "C implies D". If "C implies D" and "C implies C", then the
  * two concepts are equivalent.
- * 
- * <br> Equivalence axioms are used in the TBox of a DL knowledge base to model relationships 
- * between concepts, e.g. "MaleHuman is a subset or equal to Human". 
- * 
+ *
+ * <br> Equivalence axioms are used in the TBox of a DL knowledge base to model relationships
+ * between concepts, e.g. "MaleHuman is a subset or equal to Human".
+ *
  * @author Anna Gessler
  *
  */
 public class EquivalenceAxiom extends DlAxiom {
-	
+
 	private Pair<ComplexConcept,ComplexConcept> axiom;
-	
+
 	/**
 	 * Creates a new equivalence axiom with the given formulas
 	 * (atomic or complex concepts).
@@ -62,7 +62,12 @@ public class EquivalenceAxiom extends DlAxiom {
 	public String toString() {
 		return "implies " + this.axiom.getFirst().toString() + " " + this.axiom.getSecond().toString();
 	}
-	
+
+	/**
+	 *
+	 * Return the formulas
+	 * @return the formulas
+	 */
 	public Pair<ComplexConcept,ComplexConcept> getFormulas() {
 		return this.axiom;
 	}
@@ -109,5 +114,5 @@ public class EquivalenceAxiom extends DlAxiom {
 			return false;
 		return true;
 	}
-	
+
 }

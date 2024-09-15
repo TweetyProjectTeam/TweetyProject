@@ -32,7 +32,8 @@ import java.util.*;
 public class ClosureReasoner {
 
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -45,8 +46,16 @@ public class ClosureReasoner {
         return extensions;
     }
 
+    /**
+     *  Returns a model
+     * @param bbase a belieg base
+     * @return a ArgumentSet
+     */
     public ArgumentSet getModel(DeductiveArgumentationFramework bbase) {
         // as the empty set is always closed we return that one.
         return new ArgumentSet();
     }
+
+    /** Default Constructor */
+    public ClosureReasoner(){}
 }

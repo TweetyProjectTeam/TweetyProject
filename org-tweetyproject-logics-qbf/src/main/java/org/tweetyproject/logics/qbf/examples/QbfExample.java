@@ -34,11 +34,35 @@ import org.tweetyproject.logics.qbf.writer.QdimacsWriter;
 /**
  * Some general examples for quantified boolean formulas and for parsers and
  * writers.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class QbfExample {
+
+	/** Default */
+	public QbfExample() {
+
+	}
+
+	/**
+	 * Demonstrates the use of the TweetyProject library for working with various
+	 * types of belief sets
+	 * and parsers, including propositional logic, QBF (Quantified Boolean
+	 * Formulas), QDIMACS, and QCir formats.
+	 * The method performs the following tasks:
+	 *
+	 * 1. Creates a propositional logic belief set and adds formulas to it.
+	 * 2. Uses the TweetyProject QBF parser to read a belief set from a file.
+	 * 3. Uses the QDIMACS parser to read and parse QDIMACS-formatted belief sets
+	 * and outputs.
+	 * 4. Uses the QDIMACS writer to print a belief set in QDIMACS format.
+	 * 5. Uses the QCir parser to read QCir-formatted belief sets and print them.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 * @throws ParserException If an error occurs during parsing.
+	 * @throws IOException     If an error occurs during file I/O operations.
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		PlBeliefSet p = new PlBeliefSet();
 		Proposition v = new Proposition("V");

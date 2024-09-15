@@ -50,6 +50,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      * Construct a serialisation graph for the given argumentation framework and set of serialisation sequences
      * @param theory some argumentation framework
      * @param sequences the set of serialisation sequences
+     * @param semantics the semantics
      */
     public SerialisationGraph(DungTheory theory, Collection<SerialisationSequence> sequences, Semantics semantics) {
         this.semantics = semantics;
@@ -173,7 +174,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     public int getNumberOfNodes() {
         return this.parents.keySet().size();
     }
-    
+
     @Override
 	public int getNumberOfEdges() {
     	int num = 0;
@@ -181,7 +182,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
 			num += this.parents.get(a).size();
 		return num;
 	}
-    
+
     @Override
     public boolean areAdjacent(SerialisationNode a, SerialisationNode b) {
         return this.parents.get(a).contains(b) || this.parents.get(b).contains(a);

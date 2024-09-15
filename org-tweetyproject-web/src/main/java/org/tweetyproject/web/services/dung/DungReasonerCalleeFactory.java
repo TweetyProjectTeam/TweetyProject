@@ -34,7 +34,9 @@ public class DungReasonerCalleeFactory {
      * Enumeration of commands supported by the factory, each with a unique ID and label.
      */
     public enum Command {
+        /** get models */
         GET_MODELS("get_models", "Get all models"),
+        /** get model */
         GET_MODEL("get_model", "Get some model");
 
         /** ID of the command */

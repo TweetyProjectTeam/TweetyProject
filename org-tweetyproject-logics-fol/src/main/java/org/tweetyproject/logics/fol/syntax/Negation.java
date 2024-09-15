@@ -32,23 +32,24 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
  * @author Matthias Thimm
  */
 public class Negation extends FolFormula {
-	
+
 	private FolFormula folFormula;
 	/**
-	 * 
+	 *
+	 * Relational formula to be negated.
 	 * @param formula relational formula to be negated
 	 */
 	public Negation(RelationalFormula formula){
 		if(!formula.isWellFormed())
-			throw new IllegalArgumentException("FolFormula not well-formed.");		
-		this.folFormula = (FolFormula)formula;		
+			throw new IllegalArgumentException("FolFormula not well-formed.");
+		this.folFormula = (FolFormula)formula;
 	}
-	
+
 	@Override
 	public FolFormula getFormula(){
 		return this.folFormula;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
@@ -56,7 +57,7 @@ public class Negation extends FolFormula {
 	public Set<? extends Predicate> getPredicates(){
 		return this.folFormula.getPredicates();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getFunctors()
 	 */
@@ -64,7 +65,7 @@ public class Negation extends FolFormula {
 	public Set<Functor> getFunctors(){
 		return this.folFormula.getFunctors();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
@@ -73,7 +74,7 @@ public class Negation extends FolFormula {
 	public Set<FolAtom> getAtoms(){
 		return (Set<FolAtom>) this.folFormula.getAtoms();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
@@ -81,7 +82,7 @@ public class Negation extends FolFormula {
 	public boolean containsQuantifier(){
 		return this.folFormula.containsQuantifier();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
@@ -89,7 +90,7 @@ public class Negation extends FolFormula {
 	public boolean isClosed(){
 		return this.folFormula.isClosed();
 	}
-		
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.RelationalFormula#substitute(org.tweetyproject.logics.firstorderlogic.syntax.Term, org.tweetyproject.logics.firstorderlogic.syntax.Term)
 	 */
@@ -97,7 +98,7 @@ public class Negation extends FolFormula {
 	public Negation substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		return new Negation(this.folFormula.substitute(v, t));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
 	 */
@@ -105,7 +106,7 @@ public class Negation extends FolFormula {
 	public boolean isClosed(Set<Variable> boundVariables){
 		return this.folFormula.isClosed(boundVariables);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
@@ -114,7 +115,7 @@ public class Negation extends FolFormula {
 		//return this.getTerms(Variable.class);
 		return folFormula.getUnboundVariables();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isWellBound()
 	 */
@@ -122,7 +123,7 @@ public class Negation extends FolFormula {
 	public boolean isWellBound(){
 		return this.folFormula.isWellBound();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isWellBound(java.util.Set)
 	 */
@@ -130,7 +131,7 @@ public class Negation extends FolFormula {
 	public boolean isWellBound(Set<Variable> boundVariables){
 		return this.folFormula.isWellBound(boundVariables);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isLiteral()
 	 */
@@ -138,7 +139,7 @@ public class Negation extends FolFormula {
 	public boolean isLiteral(){
 		return (this.folFormula instanceof FolAtom);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -178,7 +179,7 @@ public class Negation extends FolFormula {
 		return true;
 	}
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#isDnf()
@@ -187,14 +188,14 @@ public class Negation extends FolFormula {
 	public boolean isDnf() {
 		return (this.folFormula instanceof FolAtom);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#toNNF()
 	 */
 	@Override
 	public FolFormula toNnf() {
-    // remove double negation    
+    // remove double negation
     if(folFormula instanceof Negation)
       return ((Negation)folFormula).folFormula.toNnf();
 
@@ -204,7 +205,7 @@ public class Negation extends FolFormula {
     if(folFormula instanceof Conjunction) {
       Conjunction c = (Conjunction)folFormula;
       Disjunction d = new Disjunction();
-      
+
       for(RelationalFormula p : c) {
         d.add( new Negation( p ).toNnf() );
       }
@@ -213,13 +214,13 @@ public class Negation extends FolFormula {
     if(folFormula instanceof Disjunction) {
        Disjunction d = (Disjunction)folFormula;
        Conjunction c = new Conjunction();
-       
+
        for(RelationalFormula p : d) {
          c.add( new Negation( p ).toNnf() );
        }
        return c;
     }
-    
+
     // Distribute negation inside quantifiers:
     // NNF(! FORALL x : R(x)) = EXISTS x : NNF( ! R(x) )
     if(folFormula instanceof ForallQuantifiedFormula) {
@@ -235,10 +236,10 @@ public class Negation extends FolFormula {
       return new Contradiction();
     if(folFormula instanceof Contradiction)
       return new Tautology();
-    
+
     return new Negation(this.folFormula.toNnf());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()

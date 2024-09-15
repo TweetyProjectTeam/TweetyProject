@@ -35,7 +35,9 @@ import java.util.*;
  */
 public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implements ArgumentationFramework<Argument>, Collection<Argument> {
 
+    /** Children */
     protected Map<Argument, Collection<DungEntity>> children;
+    /** parents */
     protected Map<DungEntity, Collection<Argument>> parents;
 
     /**
@@ -137,7 +139,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
         Collection<Argument> attackers = getAttackers(new Attack(a, b));
         int size_W;
         do {
-            size_W = W_min.size();;
+            size_W = W_min.size();
             for (Attack att : W) {
                 if (attackers.contains(att.getAttacked())) {
                     W_min.add(att);
@@ -390,7 +392,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
     }
 
     @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
+    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
         return getAttacked(ext).contains(a);
     }
 
@@ -416,7 +418,7 @@ public class ExtendedTheory extends BeliefSet<Argument, DungSignature> implement
 
     @Override
     public Collection<Argument> getNodes() {
-        return new HashSet<>(children.keySet());
+        return this;
     }
 
     /**

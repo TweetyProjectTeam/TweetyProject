@@ -38,4 +38,7 @@ public class SyntacticRandomPlBeliefSetSamplerExample {
 			System.out.println(sampler.next());
 		
 	}
+
+    /** Default Constructor */
+    public SyntacticRandomPlBeliefSetSamplerExample(){}
 }

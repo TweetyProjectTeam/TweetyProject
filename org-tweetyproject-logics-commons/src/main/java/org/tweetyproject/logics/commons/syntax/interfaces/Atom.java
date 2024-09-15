@@ -25,29 +25,44 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
  * An atomic language construct, linked to its predicate
- * 
+ *
  * @author Tim Janus
  */
 public interface Atom extends SimpleLogicalFormula  {
-	
+
 	/**
 	 * An enum containing the different return values of the
 	 * setPredicate() method of Atom.
 	 * @author Tim Janus
 	 */
 	public static enum RETURN_SET_PREDICATE {
-		RSP_SUCCESS,
-		RSP_INCOMPLETE,
-		RSP_TRUNCATED,
-		RSP_CLEARED
+   /**
+     * Indicates that the operation completed successfully and returned a complete set of results.
+     */
+    RSP_SUCCESS,
+
+    /**
+     * Indicates that the operation was incomplete and did not return the full set of results.
+     */
+    RSP_INCOMPLETE,
+
+    /**
+     * Indicates that the operation was truncated, meaning that only a partial set of results was returned.
+     */
+    RSP_TRUNCATED,
+
+    /**
+     * Indicates that the operation was cleared, and no results were returned.
+     */
+    RSP_CLEARED
 	}
-	
+
 	/** @return	the name of the predicate */
 	String getName();
-	
+
 	/** @return the predicate of the atom */
 	Predicate getPredicate();
-	
+
 	/**
 	 * Changes the predicate of the atom. Given an old Predicate po and a new predicate
 	 * pn with their list of arguments types at(po) and at(pn) and the arguments of this
@@ -60,17 +75,17 @@ public interface Atom extends SimpleLogicalFormula  {
 	 * 		and isComplete() returns true.
 	 * 4. 	The old and new predicates' argument types differ then the list of arguments of the
 	 * 		atom get cleared and isComplete() returns false.
-	 * 
+	 *
 	 * @param predicate some predicate
 	 * @return	Depends on the cases described above:
 	 * 			1. RSP_SUCCESS
 	 * 			2. RSP_INCOMPLETE
 	 * 			3. RSP_TRUNCATED
 	 * 			4. RSP_CLEARED
-	 * 
+	 *
 	 */
 	RETURN_SET_PREDICATE setPredicate(Predicate predicate);
-	
+
 	/**
 	 * Adds an argument to the atom's argument list
 	 * @param arg	The next argument
@@ -78,21 +93,28 @@ public interface Atom extends SimpleLogicalFormula  {
 	 * 								arguments for their constructs.
 	 */
 	void addArgument(Term<?> arg) throws LanguageException;
-	
+
 	/** @return A list containing all the arguments of this specific atom */
 	List<? extends Term<?>> getArguments();
-	
+
 	/** @return true if the size of the argument list is equal to the arity of the predicate */
 	boolean isComplete();
-	
+
 	/**
 	 * Gives common implementations for methods shared among atoms of different types.
 	 * @author Tim Janus
 	 */
 	public static class AtomImpl {
-		static public RETURN_SET_PREDICATE implSetPredicate(Predicate old, 
+		/**
+		 * Return set predicate
+		 * @param old old
+		 * @param newer newer
+		 * @param arguments arguments
+		 * @return set predicate
+		 */
+		static public RETURN_SET_PREDICATE implSetPredicate(Predicate old,
 				Predicate newer, List<Term<?>> arguments) {
-			
+
 			// Handles border cases: setting or changing a null value:
 			if(old == null) {
 				return RETURN_SET_PREDICATE.RSP_SUCCESS;
@@ -104,19 +126,19 @@ public interface Atom extends SimpleLogicalFormula  {
 					return RETURN_SET_PREDICATE.RSP_SUCCESS;
 				}
 			}
-			
+
 			// same argument types... setting predicate is successful no operations required:
 			if(old.getArgumentTypes().equals(newer.getArgumentTypes())) {
 				return RETURN_SET_PREDICATE.RSP_SUCCESS;
 			} else {
 				// if the length of the argument types is the same then they differ:
 				boolean differs = old.getArgumentTypes().size() == newer.getArgumentTypes().size();
-				
+
 				if(!differs) {
 					// test if the arguments need to be truncated or are incomplete:
 					boolean truncate = old.getArgumentTypes().size() > newer.getArgumentTypes().size();
 					int length = truncate ? newer.getArgumentTypes().size() : old.getArgumentTypes().size();
-					
+
 					// check for different sorts on the length first argument types
 					for(int i=0; i<length; ++i) {
 						if(!(old.getArgumentTypes().get(i).equals(newer.getArgumentTypes().get(i)))) {
@@ -124,7 +146,7 @@ public interface Atom extends SimpleLogicalFormula  {
 							break;
 						}
 					}
-					
+
 					// if the common sublist of argument types does not differ:
 					if(!differs) {
 						// either truncate the arguments and return truncated
@@ -139,7 +161,7 @@ public interface Atom extends SimpleLogicalFormula  {
 						}
 					}
 				}
-				
+
 				// the arguments types differ in a way that is not repairable
 				arguments.clear();
 				return RETURN_SET_PREDICATE.RSP_CLEARED;

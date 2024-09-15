@@ -23,12 +23,16 @@ import org.tweetyproject.math.term.Minimum;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the bounded sum in fuzzy logic, i.e., S(x,y)=min(x+y,1) 
- * 
+ * Represents the bounded sum in fuzzy logic, i.e., S(x,y)=min(x+y,1)
+ *
  * @author Matthias Thimm
  */
 public class BoundedSum extends TCoNorm{
-	
+	/** Constructor */
+	public BoundedSum() {
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#eval(java.lang.Double, java.lang.Double)
 	 */
@@ -38,7 +42,7 @@ public class BoundedSum extends TCoNorm{
 			throw new IllegalArgumentException("A T-conorm is only defined for values in [0,1].");
 		return Math.min(val1+val2,1);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#getDualCoNorm()
 	 */
@@ -51,7 +55,7 @@ public class BoundedSum extends TCoNorm{
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#evalTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */
 	@Override
-	public Term evalTerm(Term val1, Term val2) {		
+	public Term evalTerm(Term val1, Term val2) {
 		return new Minimum(val1.add(val2),new FloatConstant(1));
 	}
 

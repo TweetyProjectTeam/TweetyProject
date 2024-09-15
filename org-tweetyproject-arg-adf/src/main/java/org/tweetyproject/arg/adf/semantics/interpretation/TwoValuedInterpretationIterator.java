@@ -31,18 +31,20 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
+ * TwoValuedInterpretationIterator class
+ *
  * @author Mathias Hofer
  *
  */
 public final class TwoValuedInterpretationIterator implements Iterator<Interpretation> {
 
 	private int value;
-	
+
 	private final int max;
-	
+
 	private final Map<Argument, Integer> arguments;
 	/**
-	 * 
+	 *
 	 * @param arguments arguments
 	 */
 	public TwoValuedInterpretationIterator(Collection<Argument> arguments) {
@@ -52,7 +54,7 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 		this.arguments = toIndexMap(arguments);
 		this.max = 1 << arguments.size(); // 2 ^ arguments.size()
 	}
-	
+
 	private static Map<Argument, Integer> toIndexMap(Collection<Argument> arguments) {
 		Map<Argument, Integer> indexMap = new HashMap<>();
 		int i = 0;
@@ -71,22 +73,22 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 	public Interpretation next() {
 		return new TwoValuedInterpretation(arguments, value++);
 	}
-	
+
 	private static final class TwoValuedInterpretation implements Interpretation {
 
 		private final Map<Argument, Integer> indexMap;
-		
+
 		private final int bits;
-		
+
 		private Set<Argument> satisfied;
-		
+
 		private Set<Argument> unsatisfied;
 
 		public TwoValuedInterpretation(Map<Argument, Integer> indexMap, int bits) {
 			this.indexMap = Objects.requireNonNull(indexMap);
 			this.bits = bits;
 		}
-		
+
 		private boolean getBit(int index) {
 		    return ((bits >> index) & 1) == 1;
 		}
@@ -107,7 +109,7 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 		public boolean undecided(Argument arg) {
 			return false;
 		}
-		
+
 		private void createSets() {
 			if (satisfied == null) {
 				Set<Argument> satisfied = new HashSet<>();
@@ -145,7 +147,7 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 		public Set<Argument> arguments() {
 			return indexMap.keySet();
 		}
-		
+
 	}
-	
+
 }

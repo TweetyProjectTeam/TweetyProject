@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
  *
  */
 public class CollaborationParser {
-	
+
 	/**
 	 * the root parser of the BPMN model
 	 */
@@ -42,6 +42,7 @@ public class CollaborationParser {
 	}
 
 	/**
+	 * Parse
 	 * @param node the XML representation of the element to parse
 	 */
 	public void parse(Node node) throws IllegalArgumentException {

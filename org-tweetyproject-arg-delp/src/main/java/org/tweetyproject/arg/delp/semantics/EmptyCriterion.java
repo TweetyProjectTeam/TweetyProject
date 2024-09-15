@@ -34,4 +34,7 @@ public final class EmptyCriterion extends ComparisonCriterion {
 		return Result.NOT_COMPARABLE;
 	}
 
+
+    /** Default Constructor */
+    public EmptyCriterion(){}
 }

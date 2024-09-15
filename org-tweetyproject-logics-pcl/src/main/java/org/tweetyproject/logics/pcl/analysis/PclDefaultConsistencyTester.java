@@ -47,8 +47,12 @@ import org.tweetyproject.math.term.Variable;
  */
 public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<ProbabilisticConditional> {
 
+/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public PclDefaultConsistencyTester(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}

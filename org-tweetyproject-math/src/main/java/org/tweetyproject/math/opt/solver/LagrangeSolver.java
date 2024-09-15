@@ -33,7 +33,7 @@ import org.tweetyproject.math.term.*;
  * This solver only considers optimization problems without inequations. The solution
  * given by this solver is not verified as it only checks for necessary optimality
  * conditions.
- * 
+ *
  *  it is natively implemented
  * @author Matthias Thimm
  */
@@ -43,14 +43,14 @@ public class LagrangeSolver extends Solver {
 	 * The starting points for finding the optimum.
 	 */
 	private Set<Map<Variable,Term>> startingPoints;
-	
+
 	/**
 	 * possible starting points for Lagrange multiplicators.
 	 */
 	private Map<Statement,Double> startingPointsLMult = new HashMap<Statement,Double>();
 
 	/**
-	 * Creates a new Lagrange solver for the given 
+	 * Creates a new Lagrange solver for the given
 	 * optimization problem
 	 * @param startingPoint The starting point for finding the optimum.
 	 */
@@ -58,9 +58,9 @@ public class LagrangeSolver extends Solver {
 		this.startingPoints = new HashSet<Map<Variable,Term>>();
 		this.startingPoints.add(startingPoint);
 	}
-	
+
 	/**
-	 * Creates a new Lagrange solver for the given 
+	 * Creates a new Lagrange solver for the given
 	 * optimization problem
 	 * @param startingPoints Some starting points for finding the optimum.
 	 */
@@ -68,10 +68,14 @@ public class LagrangeSolver extends Solver {
 		this.startingPoints = startingPoints;
 	}
 
+	/**
+	 * Setter starting pints
+	 * @param startingPointsLMult starting points
+	 */
 	public void setStartingPointsLMult(Map<Statement,Double> startingPointsLMult){
 		this.startingPointsLMult = startingPointsLMult;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve()
 	 */
@@ -98,11 +102,11 @@ public class LagrangeSolver extends Solver {
 		Set<Variable> langMult = new HashSet<Variable>();
 		for(OptProbElement s: problem){
 			Variable lm = new FloatVariable("LAMBDA" + idx++);
-			vars.add(lm);		
-			langMult.add(lm);			
+			vars.add(lm);
+			langMult.add(lm);
 			if(this.startingPointsLMult.containsKey(s)){
 				for(Map<Variable,Term> startingPoint: this.startingPoints)
-					startingPoint.put(lm, new FloatConstant(this.startingPointsLMult.get(s)));				
+					startingPoint.put(lm, new FloatConstant(this.startingPointsLMult.get(s)));
 			}
 			l = l.add(lm.mult(((Statement) s).toNormalizedForm().getLeftTerm()));
 		}
@@ -116,14 +120,14 @@ public class LagrangeSolver extends Solver {
 				throw new NonDifferentiableException("The Lagrange function is not differentiable.");
 			}
 		}
-		System.out.println("Determining gradient... finished");		
+		System.out.println("Determining gradient... finished");
 		// try out the starting points until we find a solution
 		BfgsRootFinder rootFinder = null;
 		for(Map<Variable,Term> startingPoint: this.startingPoints){
 			try{
 				Map<Variable,Term> actualStartingPoint = new HashMap<Variable,Term>();
 				actualStartingPoint.putAll(startingPoint);
-				// add starting points for Lagrange multiplicators				
+				// add starting points for Lagrange multiplicators
 				for(Variable lm: langMult)
 					if(!actualStartingPoint.containsKey(lm))
 						actualStartingPoint.put(lm, new FloatConstant(-1));
@@ -139,11 +143,12 @@ public class LagrangeSolver extends Solver {
 				// -> Bad starting point, try again
 			}
 		}
-		throw new GeneralMathException("No feasible solution.");		
+		throw new GeneralMathException("No feasible solution.");
 	}
 
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

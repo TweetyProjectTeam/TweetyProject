@@ -29,25 +29,29 @@ import org.tweetyproject.arg.weighted.syntax.WeightedArgumentationFramework;
  * This reasoner for weighted Dung theories performs inference on the alpha-gamma-preferred extensions.
  * Computes the set of all alpha-gamma-preferred extensions, i.e., all maximal alpha-gamma-admissable sets.
  * It does so by first computing all alpha-gamma-complete extensions and then checking if they are alpha-gamma-preferred extensions.
- * 
+ * @param <T> The type
  * @author Sandra Hoffmann
  *
  */
 public class SimpleWeightedPreferredReasoner<T> {
-	
+
+		/** Default Constructor */
+		public SimpleWeightedPreferredReasoner(){
+
+		}
 	/**
-	 * Computes  all alpha-gamma-preferred extensions for the given weighted argumentation framework. 
-	 * This method uses a complete reasoner to find complete extensions and then filters out the 
+	 * Computes  all alpha-gamma-preferred extensions for the given weighted argumentation framework.
+	 * This method uses a complete reasoner to find complete extensions and then filters out the
 	 * extensions that are also preferred.
 	 *
 	 * @param bbase The weighted argumentation framework.
 	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
-	 * @param gamma The threshold for defense, representing the maximum allowable difference between the 
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the
 	 *              aggregated weights of attack and defense.
 	 * @return A collection of alpha-gamma-preferred extensions.
 	 */
 	public Collection<Extension<DungTheory>> getModels(WeightedArgumentationFramework<T> bbase, T alpha, T gamma) {
-		Collection<Extension<DungTheory>> preferredExtensions = new HashSet<>(); 
+		Collection<Extension<DungTheory>> preferredExtensions = new HashSet<>();
 		// get all complete extensions
 		SimpleWeightedCompleteReasoner<T> comReasoner = new SimpleWeightedCompleteReasoner<>();
 		Collection<Extension<DungTheory>> comExtensions = comReasoner.getModels(bbase,alpha,gamma);
@@ -59,11 +63,11 @@ public class SimpleWeightedPreferredReasoner<T> {
 	}
 
 	/**
-	 * Computes and returns a single alpha-gamma-preferred extension for the given weighted argumentation framework. 
+	 * Computes and returns a single alpha-gamma-preferred extension for the given weighted argumentation framework.
 	 *
 	 * @param bbase The weighted argumentation framework.
 	 * @param alpha The threshold representing the maximum allowable combined weight of internal attacks.
-	 * @param gamma The threshold for defense, representing the maximum allowable difference between the 
+	 * @param gamma The threshold for defense, representing the maximum allowable difference between the
 	 *              aggregated weights of attack and defense.
 	 * @return The first alpha-gamma-preferred extension found.
 	 */

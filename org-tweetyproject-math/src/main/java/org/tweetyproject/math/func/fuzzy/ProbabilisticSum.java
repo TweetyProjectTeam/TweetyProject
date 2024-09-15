@@ -21,12 +21,18 @@ package org.tweetyproject.math.func.fuzzy;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the probabilistic sum in fuzzy logic, i.e., S(x,y)=x+y-xy 
- * 
+ * Represents the probabilistic sum in fuzzy logic, i.e., S(x,y)=x+y-xy
+ *
  * @author Matthias Thimm
  */
 public class ProbabilisticSum extends TCoNorm{
-	
+
+	/** Constructor */
+	public ProbabilisticSum() {
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#eval(java.lang.Double, java.lang.Double)
 	 */
@@ -36,7 +42,7 @@ public class ProbabilisticSum extends TCoNorm{
 			throw new IllegalArgumentException("A T-conorm is only defined for values in [0,1].");
 		return val1+val2-(val1*val2);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#getDualCoNorm()
 	 */

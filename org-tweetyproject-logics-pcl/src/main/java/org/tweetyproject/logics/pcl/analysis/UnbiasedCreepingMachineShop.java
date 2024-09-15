@@ -31,7 +31,11 @@ import org.tweetyproject.math.probability.*;
  * @author Matthias Thimm
  */
 public class UnbiasedCreepingMachineShop extends AbstractCreepingMachineShop {
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public UnbiasedCreepingMachineShop(OptimizationRootFinder rootFinder) {
 		super(rootFinder);
 	}

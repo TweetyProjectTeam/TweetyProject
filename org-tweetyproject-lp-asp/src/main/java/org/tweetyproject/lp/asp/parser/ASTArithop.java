@@ -21,7 +21,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ *  ASTArithop class
  * @author Anna Gessler
  *
  */
@@ -31,14 +31,14 @@ public class ASTArithop extends SimpleNode {
 	 */
 	public String operator;
 /**
- * 
+ * constructor
  * @param id ID
  */
 	public ASTArithop(int id) {
 		super(id);
 	}
 /**
- * 
+ * constructor
  * @param p parser
  * @param id ID
  */
@@ -46,7 +46,7 @@ public class ASTArithop extends SimpleNode {
 		super(p, id);
 	}
 /**
- * 
+ * setter operation
  * @param op op
  */
 	public void op(String op) {

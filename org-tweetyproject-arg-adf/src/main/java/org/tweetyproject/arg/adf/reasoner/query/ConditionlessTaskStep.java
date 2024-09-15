@@ -21,13 +21,14 @@ package org.tweetyproject.arg.adf.reasoner.query;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
+ * ConditionlessTaskStep class
  * @author Mathias Hofer
  *
  */
 public interface ConditionlessTaskStep extends TaskStep {
 
 	/**
-	 * 
+	 *  where
 	 * @param condition condition
 	 * @return where
 	 */

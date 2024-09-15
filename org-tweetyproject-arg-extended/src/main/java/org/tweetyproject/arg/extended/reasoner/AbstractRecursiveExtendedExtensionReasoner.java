@@ -34,8 +34,14 @@ import java.util.Collection;
  */
 public abstract class AbstractRecursiveExtendedExtensionReasoner {
 
+    /** Default */
+    public AbstractRecursiveExtendedExtensionReasoner() {
+        super();
+    }
+
     /**
      * Returns a simple recursive extended theory reasoner for the given semantics
+     *
      * @param semantics some semantics
      * @return a simple reasoner for the given semantics
      */
@@ -48,8 +54,26 @@ public abstract class AbstractRecursiveExtendedExtensionReasoner {
         };
     }
 
-    /* (non-Javadoc)
-     * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.
+     * tweetyproject.arg.dung.syntax.DungTheory,
+     * org.tweetyproject.arg.dung.syntax.Argument)
+     */
+    /**
+     * Queries the given belief base with a specified argument, using the default
+     * inference mode
+     * of skeptical reasoning.
+     * This method checks whether the provided argument (formula) is entailed by the
+     * belief base
+     * under skeptical inference mode.
+     *
+     * @param beliefbase The belief base, represented as a
+     *                   {@link RecursiveExtendedTheory}, to be queried.
+     * @param formula    The argument (formula) to be queried.
+     * @return {@code TRUE} if the formula is entailed by the belief base under
+     *         skeptical reasoning, {@code FALSE} otherwise.
      */
     public Boolean query(RecursiveExtendedTheory beliefbase, Argument formula) {
         return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
@@ -58,22 +82,24 @@ public abstract class AbstractRecursiveExtendedExtensionReasoner {
     /**
      * Queries the given AAF for the given argument using the given
      * inference type.
-     * @param beliefbase an AAF
-     * @param formula a single argument
-     * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+     *
+     * @param beliefbase    an AAF
+     * @param formula       a single argument
+     * @param inferenceMode either InferenceMode.SKEPTICAL or
+     *                      InferenceMode.CREDULOUS
      * @return "true" if the argument is accepted
      */
     public Boolean query(RecursiveExtendedTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
         Collection<Collection<DungEntity>> extensions = this.getModels(beliefbase);
-        if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-            for(Collection<DungEntity> e: extensions)
-                if(!e.contains(formula))
+        if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+            for (Collection<DungEntity> e : extensions)
+                if (!e.contains(formula))
                     return false;
             return true;
         }
         // so its credulous semantics
-        for(Collection<DungEntity> e: extensions){
-            if(e.contains(formula))
+        for (Collection<DungEntity> e : extensions) {
+            if (e.contains(formula))
                 return true;
         }
         return false;
@@ -81,13 +107,15 @@ public abstract class AbstractRecursiveExtendedExtensionReasoner {
 
     /**
      * Computes all models for the given theory
+     *
      * @param bbase some recursive extended theory
-     * @return the models of this theory  wrt. some semantics
+     * @return the models of this theory wrt. some semantics
      */
     public abstract Collection<Collection<DungEntity>> getModels(RecursiveExtendedTheory bbase);
 
     /**
      * The reasoner is native and thus always installed
+     *
      * @return "true"
      */
     public boolean isInstalled() {

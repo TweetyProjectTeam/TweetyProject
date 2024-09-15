@@ -18,12 +18,12 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 /**
- * 
+ * EquivalenceAcceptanceCondition class
  * @author Sebastian
  *
  */
 public final class EquivalenceAcceptanceCondition extends BinaryAcceptanceCondition {
-	
+
 	/**
 	 * @param left the left side of the equivalence
 	 * @param right the right side of the equivalence
@@ -31,7 +31,7 @@ public final class EquivalenceAcceptanceCondition extends BinaryAcceptanceCondit
 	public EquivalenceAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
 		super(left, right);
 	}
-	
+
 	@Override
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
@@ -41,5 +41,5 @@ public final class EquivalenceAcceptanceCondition extends BinaryAcceptanceCondit
 	public String getName() {
 		return "iff";
 	}
-	
+
 }

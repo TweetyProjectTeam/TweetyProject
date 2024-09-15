@@ -137,4 +137,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 		return clause;
 	}
 
+
+    /** Default Constructor */
+    public DimacsParser(){}
 }

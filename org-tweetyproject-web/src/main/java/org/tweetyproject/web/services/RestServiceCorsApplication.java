@@ -32,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class RestServiceCorsApplication {
-	// Allowed origins for production and debug environments
+	/** Allowed origins for production and debug environments */
     static String allowedOrigins = "http://tweetyproject.org";
 	String debug_allowedOrigins = "http://127.0.0.1:5500/";
     /**
@@ -47,12 +47,12 @@ public class RestServiceCorsApplication {
 
 		SpringApplication.run(RestServiceCorsApplication.class, args);
 	}
-	@Bean
 	/**
      * Configuration method for CORS support in the application.
      *
      * @return A WebMvcConfigurer instance that configures CORS settings.
      */
+	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override

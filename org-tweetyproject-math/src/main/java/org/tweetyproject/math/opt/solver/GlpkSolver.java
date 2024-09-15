@@ -43,14 +43,20 @@ import org.tweetyproject.math.term.Variable;
  */
 public class GlpkSolver extends Solver {
 
+	/** Constructor */
+	public GlpkSolver() {
+	}
+
+
 	/**Path to the binary or lp_solve*/
 	public static String binary = "glpsol";
-	
+
 	/** For temporary files. */
 	private static File tmpFolder = null;
-	
+
 	/**
-	 * 
+	 *
+	 * Return if solver is installed
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
@@ -62,7 +68,7 @@ public class GlpkSolver extends Solver {
 			return false;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve(org.tweetyproject.math.opt.ConstraintSatisfactionProblem)
 	 */
@@ -80,16 +86,16 @@ public class GlpkSolver extends Solver {
 			File lpFile = File.createTempFile("lptmp", null, GlpkSolver.tmpFolder);
 			// Delete temp file when program exits.
 			lpFile.deleteOnExit();
-			outputFile.deleteOnExit();   
+			outputFile.deleteOnExit();
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
 			out.write(((OptimizationProblem)problem).convertToCplexLpFormat());
 			//System.out.println(((OptimizationProblem)problem).convertToCplexLpFormat());
-			out.close();		
-			//execute lp_solve on problem in lp format and retrieve console output					
+			out.close();
+			//execute lp_solve on problem in lp format and retrieve console output
 			output = NativeShell.invokeExecutable(GlpkSolver.binary + " --lp " + lpFile.getAbsolutePath() + " -o " + outputFile.getAbsolutePath());
 			lpFile.delete();
-			//parse output		
+			//parse output
 			if(output.indexOf("PROBLEM HAS NO PRIMAL FEASIBLE SOLUTION") != -1)
 				throw new GeneralMathException("Problem is not feasible");
 			Scanner scanner = new Scanner(outputFile);
@@ -104,7 +110,7 @@ public class GlpkSolver extends Solver {
 				tokens = outputFromFile.substring(idx, outputFromFile.indexOf("\n", idx)).split("\\s");
 				for(i = 0; i < tokens.length && !Parser.isNumeric(tokens[i]); i++){ ; }
 				result.put(v, new FloatConstant(Double.parseDouble(tokens[i])));
-			}			
+			}
 			return result;
 		}catch(IOException e){
 			//TODO add error handling
@@ -114,9 +120,9 @@ public class GlpkSolver extends Solver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		}	
+		}
 	}
-	
+
 	/**
 	 * Sets the path to the binary.
 	 * @param binary the path to the binary.
@@ -124,7 +130,7 @@ public class GlpkSolver extends Solver {
 	public static void setBinary(String binary){
 		GlpkSolver.binary = binary;
 	}
-	
+
 	/**
 	 * Sets the path for the temporary folder.
 	 * @param path some path.

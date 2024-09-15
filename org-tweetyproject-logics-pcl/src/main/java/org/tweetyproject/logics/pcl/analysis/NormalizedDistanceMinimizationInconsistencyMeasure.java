@@ -25,19 +25,28 @@ import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
 
 /**
  * This class models the normalized distance minimization inconsistency measure, see [PhD thesis, Thimm].
- * 
+ *
  * @author Matthias Thimm
  */
 public class NormalizedDistanceMinimizationInconsistencyMeasure extends DistanceMinimizationInconsistencyMeasure {
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public NormalizedDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
-		super(rootFinder);		
+		super(rootFinder);
 	}
 
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 * @param p the p value
+	 */
 	public NormalizedDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder, int p) {
-		super(rootFinder,p);		
+		super(rootFinder,p);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pcl.analysis.DistanceMinimizationInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */

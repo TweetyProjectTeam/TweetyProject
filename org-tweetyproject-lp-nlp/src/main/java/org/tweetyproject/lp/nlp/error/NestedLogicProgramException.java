@@ -23,22 +23,50 @@ import org.tweetyproject.logics.commons.error.LanguageException;
 /**
  * NestedLogicProramException encapsulates those LanugageException that occur
  * in nested logic programs. It allows easier creation of language specific
- * exceptions. The language registered at the base exception is 
+ * exceptions. The language registered at the base exception is
  * "Nested Logic Programs".
- * 
+ *
  * @author Tim Janus
  */
 public class NestedLogicProgramException extends LanguageException {
 
-	/** kill warning */
-	private static final long serialVersionUID = 4406781843927755406L;
-	
-	public NestedLogicProgramException(LanguageExceptionReason reason) {
-		super("Nested Logic Programs", reason);
-	}
-	
-	public NestedLogicProgramException(LanguageExceptionReason reason, 
-			String furtherInformation) {
-		super("Nested Logic Programs", reason, furtherInformation);
-	}
+	    /** Serial version UID for this exception class. */
+		private static final long serialVersionUID = 4406781843927755406L;
+
+		/**
+		 * Constructs a new `NestedLogicProgramException` with the specified reason.
+		 *
+		 * <p>
+		 * This constructor initializes the exception with a specific reason for the
+		 * error, which is provided by the `LanguageExceptionReason` enum. The language
+		 * is automatically set to "Nested Logic Programs".
+		 * </p>
+		 *
+		 * @param reason the reason for the exception, represented by an enum value
+		 *               from `LanguageExceptionReason`.
+		 */
+		public NestedLogicProgramException(LanguageExceptionReason reason) {
+			super("Nested Logic Programs", reason);
+		}
+
+		/**
+		 * Constructs a new `NestedLogicProgramException` with the specified reason
+		 * and additional information.
+		 *
+		 * <p>
+		 * This constructor initializes the exception with a specific reason for the
+		 * error and additional information that provides more context about the error.
+		 * The language is automatically set to "Nested Logic Programs".
+		 * </p>
+		 *
+		 * @param reason the reason for the exception, represented by an enum value
+		 *               from `LanguageExceptionReason`.
+		 * @param furtherInformation additional information about the error, typically
+		 *                           used to provide more specific details in the error message.
+		 */
+		public NestedLogicProgramException(LanguageExceptionReason reason,
+				String furtherInformation) {
+			super("Nested Logic Programs", reason, furtherInformation);
+
+}
 }

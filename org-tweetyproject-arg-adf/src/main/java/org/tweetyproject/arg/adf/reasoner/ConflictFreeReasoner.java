@@ -26,22 +26,38 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * @author Mathias Hofer
+ * This class implements a reasoner for conflict-free semantics in Abstract Dialectical Frameworks (ADFs).
+ * It uses a SAT solver to compute conflict-free interpretations.
+ * <p>
+ * This class is deprecated and is scheduled for removal in future versions.
+ * Users are advised to switch to updated reasoner classes for future-proof implementations.
+ * </p>
  *
+ * @author Mathias Hofer
+ * @deprecated since 1.19, for removal in future versions
  */
-@Deprecated( forRemoval = true, since = "1.19" )
+@Deprecated(forRemoval = true, since = "1.19")
 public class ConflictFreeReasoner extends AbstractDialecticalFrameworkReasoner {
 
-	/**
-	 * 
-	 * @param solver solver
-	 */
-	public ConflictFreeReasoner(IncrementalSatSolver solver) {
-		super(solver);
-	}
+    /**
+     * Constructs a ConflictFreeReasoner with the given SAT solver.
+     *
+     * @param solver the underlying SAT solver used to compute conflict-free interpretations
+     */
+    public ConflictFreeReasoner(IncrementalSatSolver solver) {
+        super(solver);
+    }
 
-	@Override
-	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
-		return adf.query().conflictFree().interpretations();
-	}
+    /**
+     * Queries the given Abstract Dialectical Framework (ADF) for conflict-free interpretations.
+     * This method retrieves the query that computes the conflict-free interpretations for the ADF.
+     *
+     * @param adf the Abstract Dialectical Framework to query for conflict-free interpretations
+     * @return a query that streams the conflict-free interpretations of the ADF
+     */
+    @Override
+    Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+        return adf.query().conflictFree().interpretations();
+    }
 }
+
