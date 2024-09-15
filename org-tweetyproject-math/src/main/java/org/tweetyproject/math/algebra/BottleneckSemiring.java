@@ -59,7 +59,7 @@ public class BottleneckSemiring extends Semiring<Double>{
      */
     @Override    
 	public Double getRandomElement() {
-		return random.nextDouble(maxValue);
+		return 0.0;//random.nextDouble(maxValue);
 	}
 
     /**

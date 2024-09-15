@@ -62,8 +62,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
      */
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
-        // not supported
-        throw new UnsupportedOperationException("Not supported");
+        return getModels(bbase).iterator().next();
     }
 
     /* (non-Javadoc)

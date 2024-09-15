@@ -24,31 +24,35 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Serialised version of the grounded semantics
  *
  * @author Lars Bengel
  */
-public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
+public class SerialisedGroundedReasoner extends SerialisableExtensionReasoner {
     
 	/**
 	 * Initializes a {@link SerialisableExtensionReasoner} for the grounded semantics
 	 */
 	public SerialisedGroundedReasoner() {
-		super();
-		this.semantics = Semantics.GR;
+		super(Semantics.GR);
+	}
+
+	@Override
+	protected Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
+		return new HashSet<>(unattacked);
 	}
 
 	/**
-     * Select a subset of the initial sets of the AF, i.e. the possible successor states
-     * @param unattacked the set of unattacked initial sets
-     * @param unchallenged the set of unchallenged initial sets
-     * @param challenged the set of challenged initial sets
-     * @return the unattacked initial sets
-     */
-    @Override
-    public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
-        return new HashSet<>(unattacked);
-    }
+	 * Determines whether the current state represents an extension wrt. the semantics of the reasoner or not.
+	 * @param theory The current framework of the transition system
+	 * @param extension The extension constructed so far
+	 * @return true, if no unattacked initial set exists in the AF
+	 */
+	@Override
+	public boolean terminationFunction(DungTheory theory, Extension<DungTheory> extension) {
+		return theory.faf(new Extension<>()).isEmpty();
+	}
 }

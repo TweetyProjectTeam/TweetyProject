@@ -34,14 +34,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisedStronglyAdmissibleReasoner extends SerialisedAdmissibleReasoner {
+public class SerialisedStronglyAdmissibleReasoner extends SerialisableExtensionReasoner {
 
 	/**
 	 * Initializes a {@link SerialisableExtensionReasoner} for the strongly admissible semantics
 	 */
 	public SerialisedStronglyAdmissibleReasoner() {
-		super();
-		this.semantics = Semantics.SAD;
+		super(Semantics.SAD);
 	}
 
 	/**
@@ -55,5 +54,10 @@ public class SerialisedStronglyAdmissibleReasoner extends SerialisedAdmissibleRe
 	public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked,
 			Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
 		return new HashSet<>(unattacked);
+	}
+
+	@Override
+	public boolean terminationFunction(DungTheory theory, Extension<DungTheory> extension) {
+		return true;
 	}
 }
