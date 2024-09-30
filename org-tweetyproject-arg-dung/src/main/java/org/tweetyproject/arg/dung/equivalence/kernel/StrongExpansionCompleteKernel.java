@@ -25,23 +25,34 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK for strong equivalence wrt. stable semantics.
- * Also the Kernel for strong expansion equivalence wrt. stable semantics.
+ * Kernel CK for strong equivalence wrt. complete semantics
  * <p>
- * An attack (a,b) is redundant iff: a!=b, (a,a) in R
+ * An attack (a, b) is redundant iff: a!=b, (a,a) in R, (b,b) in R
+ * or (b,b) in R, (b,a) not in R and for all c in A with (b,c) in R: ((a,c) in R or (c,a) in R or (c,c) in R)
  *
  * @author Lars Bengel
  */
-public class StableKernel extends EquivalenceKernel {
+public class StrongExpansionCompleteKernel extends EquivalenceKernel {
 
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
-            if (!theory.isAttackedBy(a, a)) continue;
-            for (Argument b : theory) {
-                if (!a.equals(b)) {
+            for (Argument b : theory.getAttacked(a)) {
+                if (a.equals(b)) continue;
+                if (theory.isAttackedBy(a, a) && theory.isAttackedBy(b, b)) {
                     attacks.add(new Attack(a, b));
+                } else if (theory.isAttackedBy(b, b) && !theory.isAttackedBy(a, b)) {
+                    boolean holdsForAll = true;
+                    for (Argument c : theory.getAttacked(b)) {
+                        if (!theory.isAttackedBy(a, c) && !theory.isAttackedBy(c, a) && !theory.isAttackedBy(c, c)) {
+                            holdsForAll = false;
+                            break;
+                        }
+                    }
+                    if (holdsForAll) {
+                        attacks.add(new Attack(a, b));
+                    }
                 }
             }
         }

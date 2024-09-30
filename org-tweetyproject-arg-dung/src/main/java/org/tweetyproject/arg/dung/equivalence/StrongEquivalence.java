@@ -45,7 +45,7 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 	 * @param semantics some semantics
 	 */
 	public StrongEquivalence(Semantics semantics) {
-		this(EquivalenceKernel.getKernelForSemantics(semantics));
+		this(EquivalenceKernel.getStrongEquivalenceKernelForSemantics(semantics));
 	}
 
 	/**

@@ -26,10 +26,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * A strong equivalence kernel for abstract argumentation frameworks, used to characterise strong equivalence wrt. different semantics.
- * A kernel defines which attacks are redundant an can be removed from the framework without influencing the extensions wrt the semantics.
+ * A general interface for an equivalence kernel for abstract argumentation frameworks, used to characterise strong equivalence and expansion equivalences wrt. different semantics.
+ * A kernel essentially defines which attacks are redundant.
+ * These attacks can be removed from the framework without influencing the extensions wrt. the semantics under some expansion of the argumentation framework.
  *
  * @see "Oikarinen, Emilia, and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
+ * @see "Baumann, Ringo. 'Normal and strong expansion equivalence for argumentation frameworks.' Artificial Intelligence 193 (2012): 18-44."
  *
  * @author Lars Bengel
  */
@@ -42,13 +44,18 @@ public abstract class EquivalenceKernel {
     public static final EquivalenceKernel GROUNDED = new GroundedKernel();
     /** ADMISSIBLE kernel */
     public static final EquivalenceKernel ADMISSIBLE = new AdmissibleKernel();
+    /** Strong Expansion ADMISSIBLE kernel */
+    public static final EquivalenceKernel SE_ADMISSIBLE = new StrongExpansionAdmissibleKernel();
+    /** Strong Expansion COMPLETE kernel */
+    public static final EquivalenceKernel SE_COMPLETE = new StrongExpansionCompleteKernel();
+    /** Strong Expansion GROUNDED kernel */
+    public static final EquivalenceKernel SE_GROUNDED = new StrongExpansionGroundedKernel();
 
     /**
-     * computes the kernel of the given AF
+     * Computes the kernel of the given AF
      * @param theory a dung theory
      * @return a dung theory representing the kernel of the given AF
      */
-    @SuppressWarnings("unlikely-arg-type")
 	public DungTheory getKernel(DungTheory theory) {
         // create copy of theory
         DungTheory kernel = new DungTheory(theory);
@@ -61,18 +68,18 @@ public abstract class EquivalenceKernel {
     }
 
     /**
-     * compute the set of redundant attacks, i.e., all attacks that are removed in oder to retrieve the kernel of the given AF
+     * Computes the set of redundant attacks, i.e., all attacks that are removed in order to retrieve the kernel of the given AF
      * @param theory a dung theory
      * @return the set of redundant attacks
      */
     public abstract Collection<Attack> getRedundantAttacks(DungTheory theory);
     
     /**
-     * Returns the corresponding kernel for the specified semantics
+     * Returns the corresponding strong equivalence kernel for the specified semantics
      * @param semantics some semantics
      * @return equivalence kernel for the given semantics
      */
-    public static EquivalenceKernel getKernelForSemantics(Semantics semantics) {
+    public static EquivalenceKernel getStrongEquivalenceKernelForSemantics(Semantics semantics) {
         switch (semantics) {
 			case ADM,PR,UC,ID,SST,EA -> {
                 return EquivalenceKernel.ADMISSIBLE;

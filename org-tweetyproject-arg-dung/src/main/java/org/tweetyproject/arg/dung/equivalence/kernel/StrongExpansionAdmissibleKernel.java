@@ -14,25 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.equivalence.kernel;
 
-
-import org.tweetyproject.arg.dung.syntax.*;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.Attack;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel AK for strong equivalence wrt. admissible, preferred, unchallenged, ideal, semi-stable and eager semantics
+ * Kernel AK for strong expansion equivalence wrt. admissible, preferred, ideal
  * <p>
  * An attack (a,b) is redundant iff: a!=b, (a,a) in R, and ((b,a) in R or (b,b) in R)
+ * or a!=b, (b,b) in R and for all c in A with (b,c) in R: ((a,c) in R or (c,a) in R or (c,c) in R or (c,b) in R)
  *
  * @author Lars Bengel
  */
-public class AdmissibleKernel extends EquivalenceKernel {
-
+public class StrongExpansionAdmissibleKernel extends EquivalenceKernel {
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();
@@ -41,6 +42,17 @@ public class AdmissibleKernel extends EquivalenceKernel {
                 if (a.equals(b)) continue;
                 if (theory.isAttackedBy(a, a)) {
                     if (theory.isAttackedBy(b, b) || theory.isAttackedBy(a, b)) {
+                        attacks.add(new Attack(a, b));
+                    }
+                } else if (theory.isAttackedBy(b,b)) {
+                    boolean holdsForAll = true;
+                    for (Argument c : theory.getAttacked(b)) {
+                        if (!theory.isAttackedBy(a, c) && !theory.isAttackedBy(c, a) && !theory.isAttackedBy(c, c) && !theory.isAttackedBy(b, c)) {
+                            holdsForAll = false;
+                            break;
+                        }
+                    }
+                    if (holdsForAll) {
                         attacks.add(new Attack(a, b));
                     }
                 }
