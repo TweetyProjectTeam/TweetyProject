@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel GK = (A, R') for strong equivalence wrt. grounded semantics
- * <p> defined as:
- * R' = R \ { (a, b) | a!=b, (b,b) in R, (a,a) in R || (b,a) in R}
+ * Kernel GK for strong equivalence wrt. grounded and strongly admissible semantics
+ * <p>
+ * An attack (a,b) is redundant iff: a!=b, (b,b) in R, and ((a,a) in R or (b,a) in R)
  *
  * @author Lars Bengel
  */
@@ -37,8 +37,9 @@ public class GroundedKernel extends EquivalenceKernel {
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
-            for (Argument b : theory) {
-                if (a != b && theory.isAttackedBy(b, b)) {
+            for (Argument b : theory.getAttacked(a)) {
+                if (a.equals(b)) continue;
+                if (theory.isAttackedBy(b, b)) {
                     if (theory.isAttackedBy(a, a) || theory.isAttackedBy(a, b)) {
                         attacks.add(new Attack(a, b));
                     }

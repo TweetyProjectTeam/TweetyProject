@@ -26,10 +26,11 @@ import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 import java.util.*;
 
 /**
- * This class defines 'Strong' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
- *  * i.e., two AFs F,G are strongly equivalent if they possess the same set of
- *  * {@link org.tweetyproject.arg.dung.semantics.Extension Extensions} wrt. some {@link Semantics} when conjoined
- *  with some arbitrary AF H.
+ * This class defines strong equivalence for {@link DungTheory argumentation frameworks} wrt. some {@link Semantics semantics},
+ * i.e., two AFs F andG are strongly equivalent iff they possess the same set of
+ * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} when conjoined
+ * with some arbitrary AF H.
+ * Can be characterized by a syntactic kernel.
  *
  * @see "Oikarinen, Emilia, and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
  *
@@ -45,7 +46,7 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 	 * @param semantics some semantics
 	 */
 	public StrongEquivalence(Semantics semantics) {
-		this(EquivalenceKernel.getKernelForSemantics(semantics));
+		this(EquivalenceKernel.getStrongEquivalenceKernelForSemantics(semantics));
 	}
 
 	/**
@@ -67,9 +68,9 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 
 	@Override
 	public boolean isEquivalent(Collection<DungTheory> objects) {
-		var first = objects.iterator().next();
+		DungTheory first = objects.iterator().next();
 		
-		for(var theory : objects) {
+		for(DungTheory theory : objects) {
 			if (!isEquivalent(theory, first)) {
 				return false;
 			}

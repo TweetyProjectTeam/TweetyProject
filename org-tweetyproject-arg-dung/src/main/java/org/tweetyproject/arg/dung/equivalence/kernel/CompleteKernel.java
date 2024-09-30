@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel CK = (A, R') for strong equivalence wrt. complete semantics
- * <p> defined as:
- * R' = R \ { (a, b) | a!=b, (a,a) in R, (b,b) in R }
+ * Kernel CK for strong equivalence wrt. complete semantics
+ * <p>
+ * An attack (a,b) is redundant iff: a !=b, (a,a) in R, (b,b) in R
  *
  * @author Lars Bengel
  */
@@ -38,8 +38,9 @@ public class CompleteKernel extends EquivalenceKernel {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
             if (theory.isAttackedBy(a, a)) {
-                for (Argument b : theory) {
-                    if (a != b && theory.isAttackedBy(b, b)) {
+                for (Argument b : theory.getAttacked(a)) {
+                    if (a.equals(b)) continue;
+                    if (theory.isAttackedBy(b, b)) {
                         attacks.add(new Attack(a, b));
                     }
                 }
