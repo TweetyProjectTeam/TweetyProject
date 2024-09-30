@@ -17,10 +17,18 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class NormalExpansionEquivalence extends StrongEquivalence {
 
+    /**
+     * Initialize Normal Expansion Equivalence for the given semantics
+     * @param semantics some semantics
+     */
     public NormalExpansionEquivalence(Semantics semantics) {
         super(semantics);
     }
 
+    /**
+     * Initialize Normal Expansion Equivalence with the given kernel
+     * @param kernel an equivalence kernel
+     */
     public NormalExpansionEquivalence(EquivalenceKernel kernel) {
         super(kernel);
     }
