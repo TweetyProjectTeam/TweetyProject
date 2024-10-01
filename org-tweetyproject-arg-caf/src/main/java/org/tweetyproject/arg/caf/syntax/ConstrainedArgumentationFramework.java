@@ -22,9 +22,7 @@ package org.tweetyproject.arg.caf.syntax;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
@@ -43,7 +41,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
- * This class implements a constrained abstract argumentation theory (WAF) using a propositional logic formula.
+ * This class implements a constrained abstract argumentation theory (CAF) using a propositional logic formula.
  * <br>
  * <br>See
  * <br>
@@ -60,7 +58,7 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	
 
 	/**
-	 * default constructor 
+	 * default constructor.
 	 */
 	public ConstrainedArgumentationFramework() {
 		super();
@@ -68,7 +66,9 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	}
 	
 	/**
-	 * default constructor 
+	 * Constructor for a CAF from a graph. 
+	 * 
+	 * @param graph A graph representing the structure of an argumentation framework.
 	 */
 	public ConstrainedArgumentationFramework(Graph<Argument> graph) {
 		super(graph);
@@ -76,52 +76,79 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	}
 	
 	/**
-	 * default constructor 
+	 * Constructor for a CAF from a given graph and constraint.
+	 * The constraint is parsed from a string into a propositional formula.
+	 * 
+	 * @param graph A graph representing the structure of an argumentation framework.
+	 * @param constraint A string representing the propositional constraint.
 	 */
 	public ConstrainedArgumentationFramework(Graph<Argument> graph, String constraint) {
 		super(graph);
 		try {
 			this.constraint = parser.parseFormula(constraint);
 		} catch (ParserException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public ConstrainedArgumentationFramework(String constraint) {
-		super();
-		try {
-			this.constraint = parser.parseFormula(constraint);
-		} catch (ParserException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
+	
+	/**
+	 * Constructor for a CAF from a graph and a propositional formula as the constraint.
+	 * 
+	 * @param graph A graph representing the structure of arguments and their relations.
+	 * @param constraint A propositional formula representing the constraint.
+	 */
 	public ConstrainedArgumentationFramework(Graph<Argument> graph, PlFormula constraint) {
 		super(graph);
 		this.constraint = constraint;
 	}
 	
+	
+	/**
+	 * Sets a new propositional formula as the constraint of CAF.
+	 * 
+	 * @param constraint A propositional formula to be set as the new constraint.
+	 * @return true when the constraint is successfully set.
+	 */
 	public boolean setConstraint(PlFormula constraint) {
 		this.constraint = constraint;
 		return true;
 	}
 	
+	
+	/**
+	 * Sets a new constraint by parsing a string representing a propositional formula.
+	 * 
+	 * @param constraint A string representing the propositional constraint to be parsed.
+	 * @return true if the constraint is successfully set, false if an error occurs during parsing.
+	 */
 	public boolean setConstraint(String constraint) {
 		try {
 			this.constraint = parser.parseFormula(constraint);
 			return true;
 		} catch (ParserException | IOException e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
 	
+	
+	/**
+	 * Retrieves the current propositional constraint of the framework.
+	 * 
+	 * @return The propositional formula representing the current constraint.
+	 */
 	public PlFormula getConstraint() {
-		return constraint;
+		return this.constraint;
 	}
 	
+	
+	/**
+	 * Checks whether the given extension forms a completion based on the argumentation framework and its constraint.
+	 * 
+	 * @param ext The extension (set of arguments) to be checked for completion.
+	 * @return true if the extension satisfies the framework's constraint, false otherwise.
+	 */
 	public boolean isCompletion(Extension<DungTheory> ext) {
 		// build Belief base from AF and ext, all Args in ext are set to true, all other args set to false
 		PlBeliefSet beliefSet = new PlBeliefSet();
@@ -136,8 +163,6 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 			}
 		}		
 		beliefSet.add(new Conjunction(literals));
-		//System.out.println(beliefSet.toString());
-		
 		
 		//check if constraint satifies beliefbase
 		SimplePlReasoner reasoner = new SimplePlReasoner();
@@ -145,11 +170,22 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 
 	}
 	
-	
+	/**
+	 * Checks whether the given extension is C-admissible, meaning that it is both admissible according to 
+	 * the standard Dung theory and satisfies the current constraint.
+	 * 
+	 * @param ext The extension to be checked for C-admissibility.
+	 * @return true if the extension is C-admissible, false otherwise.
+	 */
 	public boolean isCAdmissibleSet(Extension<DungTheory> ext) {
 		return super.isAdmissible(ext) && isCompletion(ext);
 	}
 	
+	/**
+	 * Checks whether the framework is consistent, i.e., whether there exists at least one C-admissible extension.
+	 * 
+	 * @return true if a C-admissible extension exists, false otherwise.
+	 */
 	public boolean isConsistent() {
 		//get all admissible Sets
 		SimpleAdmissibleReasoner amdReasoner = new SimpleAdmissibleReasoner();
@@ -161,7 +197,12 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 		return false;
 	}
 	
-	
+	/**
+	 * Checks whether the given extension is a preferred C-extension, meaning it is a set-maximal C-admissible extension
+	 * 
+	 * @param ext The extension (set of arguments) to be checked for being a preferred C-extension.
+	 * @return true if the extension is a preferred C-extension, false otherwise.
+	 */
 	public boolean isPreferredCExtension(Extension<DungTheory> ext) {
 		//check if ext is C-Admissible
 		if(!isCAdmissibleSet(ext)) return false;
@@ -182,7 +223,13 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 		return true;	
 	}
 
-	
+	/**
+	 * Checks whether the given extension is a stable C-extension, meaning it is C-admissible 
+	 * and attacks every argument not included in the extension.
+	 * 
+	 * @param ext The extension (set of arguments) to be checked for being a stable C-extension.
+	 * @return true if the extension is a stable C-extension, false otherwise.
+	 */
 	public boolean isStableCExtension(Extension<DungTheory> ext) {
 		return isCAdmissibleSet(ext) && isStable(ext);
 	}
@@ -191,12 +238,10 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	
 	/**
 	 * The characteristic function of a constrained argumentation framework: F_CAF(S) = {A | A is acceptable w.r.t. S and S ∪ {a} satisfies C}.
-	 * This function takes an extension (a set of arguments) and returns a new extension based on whether each argument is 
-	 * acceptable with respect to the given extension, and the extension with the new argument satisfies the constraint C.
 	 * 
 	 * @param extension an extension (a set of arguments) for which the characteristic function will be applied.
 	 * @return a new extension containing arguments that are acceptable with respect to the given extension 
-	 *         and where S ∪ {a} satisfies C, or null if any invalid condition is found.
+	 *         and where S ∪ {a} satisfies C, or null if F_CAF(S) is not a monotone function.
 	 */
 	public Extension<DungTheory> fcaf(Extension<DungTheory> extension){
 	    Extension<DungTheory> newExtension = new Extension<>();
@@ -225,7 +270,6 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	            }
 	        }
 	    }
-	    // Return the newly constructed extension
 	    return newExtension;
 	}
 

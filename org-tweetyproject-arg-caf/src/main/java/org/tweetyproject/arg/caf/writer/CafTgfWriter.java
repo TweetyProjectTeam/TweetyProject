@@ -27,34 +27,34 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 
 /**
- * Writes an constrained abstract argumentation framework into a file of the APX format including the constraint given as a propositional formula.
- * 
+ * Writes an constrained abstract argumentation framework into a file of the TGF format including the constraint given as a propositional formula.
+ *
  * @author Sandra Hoffmann
  *
  */
-public class CafApxWriter extends AbstractCafWriter{
+public class CafTgfWriter extends AbstractCafWriter{
 
 	/** Default */
-	public CafApxWriter(){
+	public CafTgfWriter(){
 
 	}
-
+	
 	/**
 	 * Writes the constrained argumentation framework to a file.
 	 *
 	 * @param caf       The ConstrainedArgumentationFramework to write.
 	 * @param f         The File where the framework should be written.
 	 * @throws IOException If an I/O error occurs while writing to the file.
-	 */
+	 * */
 	public void write(ConstrainedArgumentationFramework caf, File f) throws IOException {
-	    PrintWriter writer = new PrintWriter(f, "UTF-8");
+		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		for(Argument a: caf)
-			writer.println("arg(" + a.getName() + ").");
+			writer.println(a.getName());
+		writer.println("#");
 		for(Attack att: caf.getAttacks())
-			writer.println("att(" + att.getAttacker().getName() + "," + att.getAttacked().getName() + ").");	
-	    writer.println("constraint(" + caf.getConstraint().toString()+ ").");
-	    writer.close();
+			writer.println(att.getAttacker().getName() + " " + att.getAttacked().getName());
+		writer.println("#");
+		writer.println(caf.getConstraint().toString());
+		writer.close();		
 	}
-
-	
 }

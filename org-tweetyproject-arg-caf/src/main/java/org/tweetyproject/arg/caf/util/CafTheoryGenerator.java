@@ -33,7 +33,6 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.util.CnfSampler;
-import org.tweetyproject.logics.pl.util.RandomSampler;
 
 /**
  * The {@code CafTheoryGenerator} class is responsible for generating 

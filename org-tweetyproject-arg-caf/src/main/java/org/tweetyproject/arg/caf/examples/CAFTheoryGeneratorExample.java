@@ -22,16 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.tweetyproject.arg.caf.reasoner.SimpleCAFGroundedReasoner;
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.caf.util.CafTheoryGenerator;
 import org.tweetyproject.arg.caf.writer.CafApxWriter;
-import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
-import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.KwtDungTheoryGenerator;
-import org.tweetyproject.graphs.Graph;
+
 
 /**
  *  CAFTheoryGeneratorExample class
