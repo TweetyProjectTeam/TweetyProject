@@ -32,16 +32,8 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Lars Bengel
  */
 public class EquivalenceExample {
-
-    /** Constructor */
-    public EquivalenceExample() {
-    }
-
     /**
      * Example for Equivalence of Argumentation Frameworks
-     */
-    /**
-     * Example
      * @param args args
      */
      public static void main(String[] args) {
