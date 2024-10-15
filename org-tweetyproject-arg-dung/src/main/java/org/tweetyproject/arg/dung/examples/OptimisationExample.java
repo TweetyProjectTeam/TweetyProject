@@ -68,12 +68,12 @@ public class OptimisationExample {
 		KOptimisationReasoner stableast_k_sfr = new SFR_GreedyKApproximationReasoner();
 		
 		for(Argument x: af) {
-			System.out.println(x + ": " +  stable_k_opt.query(af, a) + " (OPT stable)");
-			System.out.println(x + ": " +  stable_k_gcf.query(af, a) + " (GCF)");
-			System.out.println(x + ": " +  stable_k_scf.query(af, a) + " (SCF)");
-			System.out.println(x + ": " +  stableast_k_opt.query(af, a) + " (OPT stable*)");
-			System.out.println(x + ": " +  stableast_k_gfr.query(af, a) + " (GFR)");
-			System.out.println(x + ": " +  stableast_k_sfr.query(af, a) + " (SFR)");
+			System.out.println(x + ": " +  stable_k_opt.query(af, x) + " (OPT stable)");
+			System.out.println(x + ": " +  stable_k_gcf.query(af, x) + " (GCF)");
+			System.out.println(x + ": " +  stable_k_scf.query(af, x) + " (SCF)");
+			System.out.println(x + ": " +  stableast_k_opt.query(af, x) + " (OPT stable*)");
+			System.out.println(x + ": " +  stableast_k_gfr.query(af, x) + " (GFR)");
+			System.out.println(x + ": " +  stableast_k_sfr.query(af, x) + " (SFR)");
 			System.out.println();
 		}
 		
