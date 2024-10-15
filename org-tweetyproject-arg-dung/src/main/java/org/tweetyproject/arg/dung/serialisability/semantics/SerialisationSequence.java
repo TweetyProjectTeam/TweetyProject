@@ -28,7 +28,7 @@ import java.util.*;
 
 /**
  * Representation of a serialisation sequence,
- * i.e., a sequence of initial sets of the respective reducts.
+ * i.e., a sequence of {@link org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner initial sets} of the respective {@link DungTheory reducts}.
  *
  * @see "Lydia Blümel, Matthias Thimm. 'A Ranking Semantics for Abstract Argumentation based on Serialisability' Computational Models of Argument: Proceedings of COMMA'22 (2022)."
  *
@@ -50,15 +50,6 @@ public class SerialisationSequence extends AbstractArgumentationInterpretation<D
         arguments = new HashSet<>();
     }
 
-    /* (non-Javadoc)
-     * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
-     */
-    @Override
-    public Extension<DungTheory> getArgumentsOfStatus(ArgumentStatus status) {
-        if(status.equals(ArgumentStatus.IN)) return new Extension<>(this.arguments);
-        throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
-    }
-
     /**
      * Initializes a serialisation sequence with {@code arguments} as the first element
      * @param arguments an initial set
@@ -75,6 +66,15 @@ public class SerialisationSequence extends AbstractArgumentationInterpretation<D
     public SerialisationSequence(List<? extends Collection<? extends Argument>> sequence) {
         this();
         this.addAll(sequence);
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
+     */
+    @Override
+    public Extension<DungTheory> getArgumentsOfStatus(ArgumentStatus status) {
+        if(status.equals(ArgumentStatus.IN)) return new Extension<>(this.arguments);
+        throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
     }
 
     /**

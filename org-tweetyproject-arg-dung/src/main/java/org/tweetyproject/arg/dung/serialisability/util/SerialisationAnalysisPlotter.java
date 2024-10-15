@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -37,7 +37,6 @@ import org.tweetyproject.commons.PlotterMultiFrame;
  * @see DungTheoryPlotter
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
  */
 public class SerialisationAnalysisPlotter {
 
@@ -55,7 +54,6 @@ public class SerialisationAnalysisPlotter {
         for (SerialisationGraph analysis : graphs) {
             convExamples.put(framework, new SerialisationGraph[] {analysis});
         }
-
         SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
     }
 
@@ -155,12 +153,11 @@ public class SerialisationAnalysisPlotter {
         return groundPlotter;
     }
 
-    private static SerialisationGraph[] generateGraphs(Semantics[] semantics,
-                                                       DungTheory framework) {
+    private static SerialisationGraph[] generateGraphs(Semantics[] semantics, DungTheory framework) {
         SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
         for (int i = 0; i < graphs.length; i++) {
             try {
-                graphs[i] = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics[i]).getSerialisationGraph(framework);
+                graphs[i] = new SerialisedExtensionReasoner(semantics[i]).getSerialisationGraph(framework);
             }
             catch(NoSuchElementException e) {
                 graphs[i] = null;
@@ -169,8 +166,7 @@ public class SerialisationAnalysisPlotter {
         return graphs;
     }
 
-    private static HashMap<DungTheory, SerialisationGraph[]> generateGraphsMapToAF(Semantics[] semantics,
-                                                                                   DungTheory[] frameworks) {
+    private static HashMap<DungTheory, SerialisationGraph[]> generateGraphsMapToAF(Semantics[] semantics, DungTheory[] frameworks) {
         var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
 
         for (DungTheory example : frameworks) {

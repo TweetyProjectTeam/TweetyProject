@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisability.semantics;
 
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -36,14 +36,14 @@ import java.util.*;
  * @author Julian Sander
  * @author Matthias Thimm
  */
-public class SerialisationGraph implements Graph<SerialisationNode> {
+public class SerialisationGraph implements Graph<SerialisationState> {
 
     /** semantics for this serialisation graph */
     private final Semantics semantics;
     /** explicit storage of parents for each node */
-    private Map<SerialisationNode, Set<SerialisationNode>> parents = new HashMap<>();
+    private Map<SerialisationState, Set<SerialisationState>> parents = new HashMap<>();
     /** explicit storage of children for each node */
-    private Map<SerialisationNode, Set<SerialisationNode>> children = new HashMap<>();
+    private Map<SerialisationState, Set<SerialisationState>> children = new HashMap<>();
 
 
     /**
@@ -54,16 +54,16 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      */
     public SerialisationGraph(DungTheory theory, Collection<SerialisationSequence> sequences, Semantics semantics) {
         this.semantics = semantics;
-        SerialisableExtensionReasoner reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
-        SerialisationNode root = new SerialisationNode(theory, new Extension<>(), reasoner.terminationFunction(theory, new Extension<>()));
+        SerialisedExtensionReasoner reasoner = new SerialisedExtensionReasoner(semantics);
+        SerialisationState root = new SerialisationState(theory, new Extension<>(), reasoner.isTerminal(theory, new Extension<>()));
         this.add(root);
-        SerialisationNode predecessor = root;
+        SerialisationState predecessor = root;
         for (SerialisationSequence sequence: sequences) {
             Extension<DungTheory> ext = new Extension<>();
             for (Collection<? extends Argument> set: sequence) {
                 ext.addAll(set);
                 DungTheory reduct = theory.getReduct(ext);
-                SerialisationNode node = new SerialisationNode(reduct, new Extension<>(ext), reasoner.terminationFunction(reduct, ext));
+                SerialisationState node = new SerialisationState(reduct, new Extension<>(ext), reasoner.isTerminal(reduct, ext));
                 this.add(node);
                 this.add(new DirectedEdge<>(predecessor, node));
                 predecessor = node;
@@ -78,7 +78,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      * @param semantics some semantics
      */
     public SerialisationGraph(DungTheory theory, Semantics semantics) {
-        this(theory, SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics).getSequences(theory), semantics);
+        this(theory, new SerialisedExtensionReasoner(semantics).getSequences(theory), semantics);
     }
 
     /** Pretty print of the graph.
@@ -86,10 +86,10 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      */
     public String prettyPrint(){
         StringBuilder output = new StringBuilder();
-        for (SerialisationNode serialisationNode : this)
+        for (SerialisationState serialisationNode : this)
             output.append("node(").append(serialisationNode.toString()).append(").\n");
         output.append("\n");
-        for (GeneralEdge<? extends SerialisationNode> serialisationNodeEdge : this.getEdges())
+        for (GeneralEdge<? extends SerialisationState> serialisationNodeEdge : this.getEdges())
             output.append("edge").append(serialisationNodeEdge.toString()).append(".\n");
         return output.toString();
     }
@@ -120,7 +120,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      */
     public Collection<Extension<DungTheory>> getExtensions(){
         Collection<Extension<DungTheory>> result = new HashSet<>();
-        for (SerialisationNode node: this) {
+        for (SerialisationState node: this) {
             if (node.isTerminal()) {
                 result.add(node.getExtension());
             }
@@ -133,8 +133,8 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
      * @param extension some extension
      * @return the node corresponding to the extension
      */
-    public SerialisationNode getNodeForExtension(Extension<DungTheory> extension) {
-        for (SerialisationNode node: this) {
+    public SerialisationState getNodeForExtension(Extension<DungTheory> extension) {
+        for (SerialisationState node: this) {
             if (node.getExtension().equals(extension))
                 return node;
         }
@@ -142,12 +142,12 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     @Override
-    public GeneralGraph<SerialisationNode> getRestriction(Collection<SerialisationNode> nodes) {
+    public GeneralGraph<SerialisationState> getRestriction(Collection<SerialisationState> nodes) {
         throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
     }
 
     @Override
-    public boolean add(SerialisationNode node) {
+    public boolean add(SerialisationState node) {
         if (this.parents.containsKey(node)) return false;
         this.parents.put(node, new HashSet<>());
         this.children.put(node, new HashSet<>());
@@ -155,9 +155,9 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     @Override
-    public boolean add(GeneralEdge<SerialisationNode> edge) {
+    public boolean add(GeneralEdge<SerialisationState> edge) {
         boolean result = false;
-        DirectedEdge<SerialisationNode> e = (DirectedEdge<SerialisationNode>) edge;
+        DirectedEdge<SerialisationState> e = (DirectedEdge<SerialisationState>) edge;
         result |= this.add(e.getNodeA());
         result |= this.add(e.getNodeB());
         result |= children.get(e.getNodeA()).add(e.getNodeB());
@@ -166,7 +166,7 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     @Override
-    public Collection<SerialisationNode> getNodes() {
+    public Collection<SerialisationState> getNodes() {
         return this.parents.keySet();
     }
 
@@ -178,27 +178,27 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     @Override
 	public int getNumberOfEdges() {
     	int num = 0;
-		for(SerialisationNode a: this.parents.keySet())
+		for(SerialisationState a: this.parents.keySet())
 			num += this.parents.get(a).size();
 		return num;
 	}
 
     @Override
-    public boolean areAdjacent(SerialisationNode a, SerialisationNode b) {
+    public boolean areAdjacent(SerialisationState a, SerialisationState b) {
         return this.parents.get(a).contains(b) || this.parents.get(b).contains(a);
     }
 
     @Override
-    public GeneralEdge<SerialisationNode> getEdge(SerialisationNode a, SerialisationNode b) {
+    public GeneralEdge<SerialisationState> getEdge(SerialisationState a, SerialisationState b) {
         return new DirectedEdge<>(a, b);
     }
 
     @Override
-    public Collection<? extends GeneralEdge<? extends SerialisationNode>> getEdges() {
-        Collection<DirectedEdge<SerialisationNode>> edges = new HashSet<>();
-        for (SerialisationNode node: this) {
-            for (SerialisationNode succ: this.children.get(node)) {
-                DirectedEdge<SerialisationNode> edge = new DirectedEdge<>(node, succ);
+    public Collection<? extends GeneralEdge<? extends SerialisationState>> getEdges() {
+        Collection<DirectedEdge<SerialisationState>> edges = new HashSet<>();
+        for (SerialisationState node: this) {
+            for (SerialisationState succ: this.children.get(node)) {
+                DirectedEdge<SerialisationState> edge = new DirectedEdge<>(node, succ);
                 edges.add(edge);
             }
         }
@@ -206,36 +206,36 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     @Override
-    public Iterator<SerialisationNode> iterator() {
+    public Iterator<SerialisationState> iterator() {
         return this.parents.keySet().iterator();
     }
 
     @Override
     public boolean contains(Object obj) {
-        if (obj instanceof SerialisationNode) {
+        if (obj instanceof SerialisationState) {
             return this.parents.containsKey(obj);
         }
         return false;
     }
 
     @Override
-    public Collection<SerialisationNode> getChildren(Node node) {
-        return this.children.get((SerialisationNode) node);
+    public Collection<SerialisationState> getChildren(Node node) {
+        return this.children.get((SerialisationState) node);
     }
 
     @Override
-    public Collection<SerialisationNode> getParents(Node node) {
-        return this.parents.get((SerialisationNode) node);
+    public Collection<SerialisationState> getParents(Node node) {
+        return this.parents.get((SerialisationState) node);
     }
 
     @Override
-    public boolean existsDirectedPath(SerialisationNode node1, SerialisationNode node2) {
+    public boolean existsDirectedPath(SerialisationState node1, SerialisationState node2) {
         throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
     }
 
     @Override
-    public Collection<SerialisationNode> getNeighbors(SerialisationNode node) {
-        Collection<SerialisationNode> neighbors = new HashSet<>(this.getChildren(node));
+    public Collection<SerialisationState> getNeighbors(SerialisationState node) {
+        Collection<SerialisationState> neighbors = new HashSet<>(this.getChildren(node));
         neighbors.addAll(this.getParents(node));
         return neighbors;
     }
@@ -246,18 +246,18 @@ public class SerialisationGraph implements Graph<SerialisationNode> {
     }
 
     @Override
-    public Graph<SerialisationNode> getComplementGraph(int selfloops) {
+    public Graph<SerialisationState> getComplementGraph(int selfloops) {
         throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
     }
 
     @Override
-    public Collection<Collection<SerialisationNode>> getStronglyConnectedComponents() {
-        return new HashSet<>();
+    public Collection<Collection<SerialisationState>> getStronglyConnectedComponents() {
+        throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
     }
 
     @Override
-    public Collection<Graph<SerialisationNode>> getSubgraphs() {
-        Collection<Graph<SerialisationNode>> subgraphs = new HashSet<>();
+    public Collection<Graph<SerialisationState>> getSubgraphs() {
+        Collection<Graph<SerialisationState>> subgraphs = new HashSet<>();
         subgraphs.add(this);
         return subgraphs;
     }

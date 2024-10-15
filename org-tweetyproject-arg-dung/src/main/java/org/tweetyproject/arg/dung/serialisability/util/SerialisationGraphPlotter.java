@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.serialisability.util;
 
 import java.util.ArrayList;
 
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationNode;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationState;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.util.GraphPlotter;
@@ -30,9 +30,9 @@ import org.tweetyproject.graphs.util.GraphPlotter;
 import com.mxgraph.util.mxConstants;
 
 /**
- * This class represents a specialization of {@link GraphPlotter GraphPlotters} used
- * to visualize the process of generating extensions by serialising sets of arguments,
- * as realised in {@link SerialisableExtensionReasoner}.
+ * This class represents a specialization of the {@link GraphPlotter} used
+ * to visualize the serialisation process of extensions,
+ * as realised in {@link SerialisedExtensionReasoner}.
  * <br>
  * The class defines the layout specifications of the visualization:
  * <ul>
@@ -46,9 +46,8 @@ import com.mxgraph.util.mxConstants;
  * @see org.tweetyproject.arg.dung.util.DungTheoryPlotter
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
  */
-public class SerialisationGraphPlotter extends GraphPlotter<SerialisationNode, Edge<SerialisationNode>> {
+public class SerialisationGraphPlotter extends GraphPlotter<SerialisationState, Edge<SerialisationState>> {
 
 	/**
 	 * Plots the specified graph in a new created frame.
@@ -121,7 +120,7 @@ public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 	}
 
 	@Override
-	public String getStyle(SerialisationNode node) {
+	public String getStyle(SerialisationState node) {
 		boolean isHighlighted = node.isTerminal();
 		String style;
 
@@ -141,7 +140,7 @@ public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 	}
 
 	@Override
-	protected String getPrettyName(Edge<SerialisationNode> edge) {
+	protected String getPrettyName(Edge<SerialisationState> edge) {
 		String label = edge.getLabel();
 		if((label == null) || label.isEmpty()) {
 			label = this.LABEL_DEFAULT_EDGE;
@@ -150,7 +149,7 @@ public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 	}
 
 	@Override
-	protected String getPrettyName(SerialisationNode node) {
+	protected String getPrettyName(SerialisationState node) {
 		String name = node.toString();
 		if((name == null)|| name.isEmpty()) {
 			name = this.LABEL_DEFAULT_NODE;
@@ -163,7 +162,7 @@ public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 	 * @param node Node, that shall be represented.
 	 * @return String describing the layout of the regular node.
 	 */
-	protected String getStyleNode(SerialisationNode node) {
+	protected String getStyleNode(SerialisationState node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString
@@ -177,7 +176,7 @@ public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
 	 * @param node Node, that shall be represented as highlighted.
 	 * @return String describing the layout of the highlighted node.
 	 */
-	protected String getStyleNodeHighlighted(SerialisationNode node) {
+	protected String getStyleNodeHighlighted(SerialisationState node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString

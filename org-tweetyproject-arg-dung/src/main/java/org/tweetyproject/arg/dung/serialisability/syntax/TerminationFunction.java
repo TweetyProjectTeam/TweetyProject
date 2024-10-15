@@ -21,13 +21,13 @@ package org.tweetyproject.arg.dung.serialisability.syntax;
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 
 import java.util.Collection;
 import java.util.Map;
 
 /**
- * Interface for the termination function of {@link SerialisableReasoner}.
+ * Interface for the termination function of {@link SerialisedExtensionReasoner}.
  * This function takes an AF and a set E and returns {@code true} iff E is an extension of AF.
  *
  * @author Lars Bengel

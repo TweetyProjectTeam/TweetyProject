@@ -21,14 +21,14 @@ package org.tweetyproject.arg.dung.serialisability.syntax;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Interface for the selection functions of {@link SerialisableReasoner}.
+ * Interface for the selection functions of {@link SerialisedExtensionReasoner}.
  * This function takes the set of initial sets as input and returns a selected subset of that.
  * @author Lars Bengel
  */
@@ -36,22 +36,9 @@ public interface SelectionFunction {
     /** Grounded selection function  */
     SelectionFunction GROUNDED = (ua, uc, c) -> new HashSet<>(ua);
     /** Unchallenged selection function  */
-    SelectionFunction UNCHALLENGED = (ua, uc, c) -> {
-        return new SetTools<Extension<DungTheory>>().getUnion(ua, uc);
-        //Collection<Extension<DungTheory>> result = new HashSet<>();
-        //result.addAll(ua);
-        //result.addAll(uc);
-        //return result;
-    };
+    SelectionFunction UNCHALLENGED = (ua, uc, c) -> new SetTools<Extension<DungTheory>>().getUnion(ua, uc);
     /** Admissible selection function  */
-    SelectionFunction ADMISSIBLE = (ua, uc, c) -> {
-        return new SetTools<Extension<DungTheory>>().getUnion(ua, uc, c);
-        //Collection<Extension<DungTheory>> result = new HashSet<>();
-        //result.addAll(ua);
-        //result.addAll(uc);
-        //result.addAll(c);
-        //return result;
-    };
+    SelectionFunction ADMISSIBLE = (ua, uc, c) -> new SetTools<Extension<DungTheory>>().getUnion(ua, uc, c);
 
     /**
      * Select a subset of the initial sets of the AF, i.e. the possible transitions

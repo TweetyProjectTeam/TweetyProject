@@ -26,11 +26,11 @@ import org.tweetyproject.graphs.Node;
  * Representation of a 'state' in the serialisation process, consisting of the current {@link DungTheory}
  * and a (partial) {@link Extension}.
  *
- * @see "Matthias Thimm. Revisiting initial sets in abstract argumentation. Argument and Computation 13 (2022) 325–360"
+ * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation' Argument & Computation (2022)"
  *
  * @author Lars Bengel
  */
-public class SerialisationNode implements Node {
+public class SerialisationState implements Node {
     /** theory of this state */
     private final DungTheory theory;
     /** extension of this state */
@@ -44,7 +44,7 @@ public class SerialisationNode implements Node {
      * @param extension an extension
      * @param terminal if the corresponding extension is valid
      */
-    public SerialisationNode(DungTheory theory, Extension<DungTheory> extension, boolean terminal) {
+    public SerialisationState(DungTheory theory, Extension<DungTheory> extension, boolean terminal) {
         this.theory = theory;
         this.extension = extension;
         this.terminal = terminal;
@@ -55,7 +55,7 @@ public class SerialisationNode implements Node {
      * @param theory a dung theory
      * @param extension an extension
      */
-    public SerialisationNode(DungTheory theory, Extension<DungTheory> extension) {
+    public SerialisationState(DungTheory theory, Extension<DungTheory> extension) {
         this(theory, extension, false);
     }
 
@@ -87,10 +87,10 @@ public class SerialisationNode implements Node {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if(!(obj instanceof SerialisationNode))
+        if(!(obj instanceof SerialisationState))
             return false;
 
-        var other = (SerialisationNode) obj;
+        var other = (SerialisationState) obj;
         return this.extension.equals(other.extension);
     }
 

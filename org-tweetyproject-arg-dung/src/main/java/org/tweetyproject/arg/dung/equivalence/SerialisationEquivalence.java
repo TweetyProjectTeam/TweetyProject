@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -26,7 +26,7 @@ import java.util.Collection;
 
 /**
  * This class defines 'Serialisation' equivalence for {@link DungTheory Argumentation Frameworks} wrt. some {@link Semantics},
- * i.e., two AFs are serialisation equivalent if they possess the same set of
+ * i.e., two AFs are serialisation equivalent iff they possess the same set of
  * {@link org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence Serialisation Sequences} wrt. some {@link Semantics}.
  *
  * @author Julian Sander
@@ -47,7 +47,7 @@ public class SerialisationEquivalence implements Equivalence<DungTheory> {
 
 	@Override
 	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		SerialisableExtensionReasoner reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(this.semantics);
+		SerialisedExtensionReasoner reasoner = new SerialisedExtensionReasoner(this.semantics);
 		return reasoner.getSequences(obj1).equals(reasoner.getSequences(obj2));
 	}
 

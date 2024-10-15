@@ -43,7 +43,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * 		<li> spacing between nodes
  * </ul>
  * <br>
- * This work was inspired by @see org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter.  
+ * This work was inspired by "org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter"
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23

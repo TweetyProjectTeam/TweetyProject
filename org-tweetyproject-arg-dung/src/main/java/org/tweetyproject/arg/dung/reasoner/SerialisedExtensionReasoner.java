@@ -16,10 +16,8 @@
  *
  *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.reasoner.serialisable;
+package org.tweetyproject.arg.dung.reasoner;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
@@ -51,7 +49,7 @@ import static org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner.Initial.
  *
  * @author Lars Bengel
  */
-public class SerialisableReasoner extends AbstractExtensionReasoner {
+public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
     /** Selection function of the reasoner */
     private final SelectionFunction selectionFunction;
     /** Termination function of the reasoner */
@@ -64,7 +62,7 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
      * @param alpha some selection function
      * @param beta some termination function
      */
-    public SerialisableReasoner(SelectionFunction alpha, TerminationFunction beta) {
+    public SerialisedExtensionReasoner(SelectionFunction alpha, TerminationFunction beta) {
         this(alpha, beta, null);
     }
 
@@ -75,7 +73,7 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
      * @param beta some termination function
      * @param semantics some semantics
      */
-    public SerialisableReasoner(SelectionFunction alpha, TerminationFunction beta, Semantics semantics) {
+    public SerialisedExtensionReasoner(SelectionFunction alpha, TerminationFunction beta, Semantics semantics) {
         this.selectionFunction = alpha;
         this.terminationFunction = beta;
         this.semantics = semantics;
@@ -85,7 +83,7 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
      * Initializes a serialisation reasoner for the given semantics
      * @param semantics some selection function
      */
-    public SerialisableReasoner(Semantics semantics) {
+    public SerialisedExtensionReasoner(Semantics semantics) {
         this.semantics = semantics;
         switch (semantics) {
             case ADM -> {
@@ -111,15 +109,6 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
                 terminationFunction = TerminationFunction.STABLE;
             } default -> throw new IllegalArgumentException("Semantics is not serialisable: " + semantics);
         }
-    }
-
-    /**
-     * Returns a serialisable reasoner for the given semantics.
-     * @param semantics a semantics
-     * @return a serialisable reasoner for the given semantics
-     */
-    public static SerialisableReasoner getSerialisableReasonerForSemantics(Semantics semantics){
-        return new SerialisableReasoner(semantics);
     }
 
     @Override
@@ -156,11 +145,11 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
         Collection<SerialisationSequence> result = new HashSet<>();
 
         // check whether the current state is acceptable, if yes add to results
-        if (this.terminationFunction.execute(theory, parentSequence.getExtension())) {
+        if (this.isTerminal(theory, parentSequence.getExtension())) {
             result.add(parentSequence);
         }
         Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(theory);
-        Collection<Extension<DungTheory>> candidateSets = this.selectionFunction.execute((Set<Extension<DungTheory>>) initialSets.get(UA), (Set<Extension<DungTheory>>) initialSets.get(UC), (Set<Extension<DungTheory>>) initialSets.get(C));
+        Collection<Extension<DungTheory>> candidateSets = this.getSelection(initialSets.get(UA), initialSets.get(UC), initialSets.get(C));
         // iterate depth-first through all initial sets (and hence their induced states) and add all found serialisation sequences
         for (Extension<DungTheory> set: candidateSets) {
             DungTheory reduct = theory.getReduct(set);
@@ -191,5 +180,13 @@ public class SerialisableReasoner extends AbstractExtensionReasoner {
      */
     public Semantics getSemantics() {
         return semantics;
+    }
+
+    public Collection<Extension<DungTheory>> getSelection(Collection<Extension<DungTheory>> ua, Collection<Extension<DungTheory>> uc, Collection<Extension<DungTheory>> c) {
+        return this.selectionFunction.execute((Set<Extension<DungTheory>>) ua, (Set<Extension<DungTheory>>) uc, (Set<Extension<DungTheory>>) c);
+    }
+
+    public boolean isTerminal(DungTheory theory, Extension<DungTheory> extension) {
+        return this.terminationFunction.execute(theory, extension);
     }
 }
