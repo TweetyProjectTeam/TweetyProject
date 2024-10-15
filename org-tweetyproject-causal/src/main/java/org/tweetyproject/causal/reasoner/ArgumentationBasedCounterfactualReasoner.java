@@ -1,4 +1,4 @@
-package org.tweetyproject.arg.dung.causal.reasoner;
+package org.tweetyproject.causal.reasoner;
 
 public class ArgumentationBasedCounterfactualReasoner {
 }

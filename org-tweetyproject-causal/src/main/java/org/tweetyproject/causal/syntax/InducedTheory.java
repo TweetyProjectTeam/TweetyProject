@@ -16,7 +16,7 @@
  *
  * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.causal.syntax;
+package org.tweetyproject.causal.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -16,10 +16,10 @@
 *
 * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
 */
-package org.tweetyproject.arg.dung.causal.semantics;
+package org.tweetyproject.causal.semantics;
 
-import org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase;
-import org.tweetyproject.arg.dung.causal.syntax.InducedTheory;
+import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.causal.syntax.InducedTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
