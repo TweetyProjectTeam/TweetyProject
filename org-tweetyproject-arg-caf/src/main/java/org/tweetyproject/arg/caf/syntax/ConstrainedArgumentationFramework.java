@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TreeSet;
 
+import org.tweetyproject.arg.caf.reasoner.SimpleCAFAdmissibleReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -258,20 +260,42 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	        if (this.isAcceptable(argument, extension)) {
 	            // Check if the possible extension satisfies the completion criteria (C)
 	            if (isCompletion(possExt)) {
-	                
-	                //Ensure that fcaf is monotone
-	                if (possExt.containsAll(newExtension)) {
-	                    // Add the current argument to the new extension
-	                    newExtension.add(argument);
-	                } else {
-	                    // fcaf is not monotone
-	                    return null;
-	                }
+	            	newExtension.add(argument);
 	            }
 	        }
 	    }
 	    return newExtension;
 	}
+	
+	
+	/**
+	 * Checks whether the characteristic function of the given CAF is monotonic with respect to a collection of admissible extensions.
+	 * If the characteristic function is monotone and the set of admissible Extension of the CAF has a least element, then it has a C-grounded extension.
+	 * 
+	 * @return true if fcaf is monotonic over the admissible extensions, false otherwise
+	 */
+    public boolean hasMonotoneFcafA() {
+    	SimpleCAFAdmissibleReasoner admReas = new SimpleCAFAdmissibleReasoner();
+    	Collection<Extension<DungTheory>> cAdmSets = admReas.getModels(this);
+        cAdmSets = new TreeSet<>(cAdmSets);
+
+        for (Extension<DungTheory> extA : cAdmSets) {
+            Extension<DungTheory> fcafA = this.fcaf(extA);
+            for (Extension<DungTheory> extB : cAdmSets) {
+                if (!extA.equals(extB)) {
+                    // Check if extA is a subset of extB
+                    if (extA.containsAll(extB)) {
+                        Extension<DungTheory> fcafB = this.fcaf(extB);                       
+                        // Check monotonicity: fcaf(extA) must be a subset of fcaf(extB)
+                        if (!fcafA.containsAll(fcafB)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
 	
 	// Misc methods

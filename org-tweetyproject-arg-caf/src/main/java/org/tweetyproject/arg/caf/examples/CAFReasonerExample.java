@@ -21,14 +21,17 @@ package org.tweetyproject.arg.caf.examples;
 import java.util.Collection;
 
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFAdmissibleReasoner;
+import org.tweetyproject.arg.caf.reasoner.SimpleCAFGroundedReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFPreferredReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFStableReasoner;
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
+import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
+ * Example Class on how to perform inference on constrained argumentation frameworks.
  * @author Sandra Hoffmann
  *
  */
@@ -46,6 +49,7 @@ public class CAFReasonerExample {
 		Argument e = new Argument("e");
 		Argument f = new Argument("f");
 		String propForm = "!a || !d || !e";
+
 		DungTheory af = new DungTheory();
 		
 		af.add(a);
@@ -57,13 +61,13 @@ public class CAFReasonerExample {
 		
 		af.addAttack(a,b);
 		af.addAttack(a,c);
-		af.addAttack(b,d);
+		af.addAttack(b,d);	
 		af.addAttack(c,e);
 		af.addAttack(e,f);
-		af.addAttack(f,e);	
+		af.addAttack(f,e);
+	
 		
-		ConstrainedArgumentationFramework caf = new ConstrainedArgumentationFramework(af, propForm);
-		
+		ConstrainedArgumentationFramework caf = new ConstrainedArgumentationFramework(af, propForm);		
 		
 		System.out.println("The CAF: \n"+ caf.prettyPrint() +"\n\nhas the following C-extensions:\n");
 		
@@ -71,16 +75,22 @@ public class CAFReasonerExample {
 		SimpleCAFAdmissibleReasoner cafAdmR = new SimpleCAFAdmissibleReasoner();
 		Collection<Extension<DungTheory>> cAdmSets = cafAdmR.getModels(caf);
 		System.out.println(cAdmSets);
-
+		
+		
+		SimpleCAFGroundedReasoner cafGr = new SimpleCAFGroundedReasoner();
+		System.out.println("C-Grounded Extension:");
+		System.out.println(cafGr.getModel(caf));
+		
+		System.out.println("Weak C-Extension:");
+		System.out.println(cafGr.getWeakModel(caf));
+		
 		System.out.println("\nC-Preferred Extensions:");
 		SimpleCAFPreferredReasoner cafPrefR = new SimpleCAFPreferredReasoner();
-		Collection<Extension<DungTheory>> cPrSets = cafPrefR.getModels(caf);
-		System.out.println(cPrSets);
+		System.out.println(cafPrefR.getModels(caf));
 		
 		System.out.println("\nC-Stable Extensions:");
 		SimpleCAFStableReasoner cafStR = new SimpleCAFStableReasoner();
-		Collection<Extension<DungTheory>> cStSets = cafStR.getModels(caf);
-		System.out.println(cStSets);
+		System.out.println(cafStR.getModels(caf));
 	
 	}
 

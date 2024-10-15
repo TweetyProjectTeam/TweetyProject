@@ -34,7 +34,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFAdmissibleReasoner {
+public class SimpleCAFAdmissibleReasoner{
 
 	/**
 	 * Computes all C-admissible extensions for the given constrained argumentation framework.
