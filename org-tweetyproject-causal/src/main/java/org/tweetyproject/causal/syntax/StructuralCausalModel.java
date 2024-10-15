@@ -79,24 +79,17 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         }
         atoms.removeAll(explainable);
 
-        System.out.println(atoms);
-        System.out.println(explainable);
-
         // construct new model from equations
         this.addBackgroundAtoms(atoms);
         Queue<Proposition> remaining = new ArrayDeque<>(explainable);
         while (!remaining.isEmpty()) {
-            boolean changed = false;
-
             Proposition prop = remaining.poll();
             try {
-                changed |= this.addExplainableAtom(prop, formulas.get(prop));
+                this.addExplainableAtom(prop, formulas.get(prop));
             } catch (CyclicDependencyException ignored) {
                 remaining.add(prop);
             }
-            //if (!changed) throw new CyclicDependencyException("The given set contains formulas with cyclic dependencies.");
         }
-        System.out.println(getExplainableAtoms());
     }
 
     /**

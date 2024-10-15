@@ -34,18 +34,15 @@ public class CausalReasoningExample1 {
         model.addExplainableAtom(chills, fever);
         model.addExplainableAtom(shortOfBreath, new Conjunction(covid, atRisk));
 
-        // Define set of assumptions
-        Collection<PlFormula> assumptions = new HashSet<>();
-        assumptions.add(new Negation(corona));
-        assumptions.add(new Negation(influenza));
-        assumptions.add(new Negation(atRisk));
-        assumptions.add(atRisk);
-
         // Initialize causal knowledge base
-        CausalKnowledgeBase kbase = new CausalKnowledgeBase(model, assumptions);
+        CausalKnowledgeBase kbase = new CausalKnowledgeBase(model);
+        // Add assumptions
+        kbase.addAssumption(new Negation(corona));
+        kbase.addAssumption(new Negation(influenza));
+        kbase.addAssumption(new Negation(atRisk));
+        kbase.addAssumption(atRisk);
 
         System.out.println(kbase);
-
         // TODO
     }
 }
