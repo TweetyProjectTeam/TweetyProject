@@ -14,13 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.causal.syntax;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.syntax.Negation;
@@ -28,19 +24,22 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
- * This class describes a causal knowledge base.
+ * This class describes a causal knowledge base which consists of a {@link StructuralCausalModel} and a set of background assumptions.
  *
  * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, 'Argumentation-based Causal and Counterfactual Reasoning', 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), 2022"
  *
- * @author Julian Sander, Lars Bengel
+ * @author Julian Sander
+ * @author Lars Bengel
  */
 public class CausalKnowledgeBase extends PlBeliefSet {
 	
-	/**
-	 * Explicit storage of causal model of this causal knowledge base
-	 */
+	/** Explicit storage of causal model of this causal knowledge base */
 	protected StructuralCausalModel model;
+	/** The set of background assumptions */
 	protected Collection<PlFormula> assumptions;
 
 	public CausalKnowledgeBase(StructuralCausalModel model) {
@@ -49,13 +48,12 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	}
 
 	/**
-	 * Initializes a new causal knowledge base
+	 * Initialize a new causal knowledge base
 	 * @param model some causal model
 	 * @param assumptions Set of assumptions about the background atoms of the causal model.
 	 */
 	public CausalKnowledgeBase(StructuralCausalModel model, Collection<PlFormula> assumptions) {
 		this(model);
-		//this.formulas.addAll(model);
 		for(PlFormula assumption : assumptions) {
 			this.addAssumption(assumption);
 		}
@@ -106,19 +104,10 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	 *
 	 * @return the set of structural equations
 	 */
-	public Collection<PlFormula> getBeliefs(){
+	public Collection<PlFormula> getBeliefs() {
 		Collection<PlFormula> result = new HashSet<>(formulas);
 		result.addAll(model.getStructuralEquations());
 		return result;
-	}
-	
-    /**
-     * Retrieves all propositional formulas of this knowledge base excluding the structural equations.
-     * 
-     * @return a set of beliefs without structural equations
-     */
-	public Collection<PlFormula> getObservations(){
-		return new HashSet<>(formulas);
 	}
 
 	/**
@@ -138,10 +127,10 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	/**
 	 * Returns all 1-atom-conclusions of this instance if the specified set of formulas is
 	 * used as premises.
-	 * @param premises Set of formulas which are added to this knowledge base to get to the returned conlusions.
+	 * @param premises Set of formulas which are added to this knowledge base to get to the returned conclusions.
 	 * @return Set of formulas, that can be concluded from this knowledge base, if the specified formulas are added.
 	 */
-	public Collection<PlFormula> getSingleAtomConclusions(Collection<PlFormula> premises){
+	public Collection<PlFormula> getSingleAtomConclusions(Collection<PlFormula> premises) {
 		Collection<PlFormula> conclusions = new HashSet<>();
 		for(PlFormula formula : this.model.getStructuralEquations()) {
 			for(Proposition atom : formula.getAtoms()) {

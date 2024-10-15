@@ -16,11 +16,9 @@
  *
  * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.causal.syntax;
 
 import org.tweetyproject.commons.BeliefBase;
-import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.logics.pl.syntax.*;
 
@@ -46,6 +44,15 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         explainableAtoms = new HashMap<>();
     }
 
+    /**
+     * Initializes a causal model based on the given structural equations.
+     * Every structural equation must be a logical equivalence of the form: {@code e <=> f(...)}
+     * where 'e' is a literal and f(...) is some logical formula representing the 'cause' of 'e'.
+     * The equations must be non-cyclic.
+     *
+     * @param equations the set of structural equations
+     * @throws CyclicDependencyException iff the equations are cyclic
+     */
     public StructuralCausalModel(Collection<PlFormula> equations) throws CyclicDependencyException {
         this();
         Map<PlFormula, PlFormula> formulas = new HashMap<>();
@@ -79,20 +86,36 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         }
     }
 
+    /**
+     * Returns the set of background atoms of the causal model
+     * @return the set of background atoms
+     */
     public Collection<Proposition> getBackgroundAtoms() {
         return new HashSet<>(backgroundAtoms);
     }
 
+    /**
+     * Returns the set of explainable atoms of the causal model
+     * @return the set of background atoms
+     */
     public Collection<Proposition> getExplainableAtoms() {
         return new HashSet<>(explainableAtoms.keySet());
     }
 
+    /**
+     * Returns the set of all atoms of the causal model
+     * @return the set of all atoms
+     */
     public Collection<Proposition> getAtoms() {
         Collection<Proposition> result = new HashSet<>(getBackgroundAtoms());
         result.addAll(getExplainableAtoms());
         return result;
     }
 
+    /**
+     * Returns the structural equations of the causal model
+     * @return the structural equations
+     */
     public Collection<PlFormula> getStructuralEquations() {
         Collection<PlFormula> result = new HashSet<>();
         for (Proposition atom : explainableAtoms.keySet()) {
@@ -101,22 +124,45 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         return result;
     }
 
+    /**
+     * Get the cause of the given atom
+     * @param atom some atom of the causal model
+     * @return the cause of the atom
+     */
     public PlFormula getCause(Proposition atom) {
         return explainableAtoms.get(atom);
     }
 
+    /**
+     * Adds a background atom to the model
+     * @param atom some new background atom
+     * @return true iff added successfully
+     */
     public boolean addBackgroundAtom(Proposition atom) {
         return backgroundAtoms.add(atom);
     }
 
+    /**
+     * Add new background atoms to the model
+     * @param atoms a set of new background atoms
+     * @return true iff added successfully
+     */
     public boolean addBackgroundAtoms(Collection<Proposition> atoms) {
         return backgroundAtoms.addAll(atoms);
     }
 
+    /**
+     * Adds a new explainable atom together with its cause to the causal model
+     * @param atom  some new explainable atom
+     * @param cause the cause of the new atom
+     * @return true iff added successfully
+     * @throws CyclicDependencyException iff the new equation introduces a cyclic dependency
+     */
     public boolean addExplainableAtom(PlFormula atom, PlFormula cause) throws CyclicDependencyException {
         if (!atom.isLiteral() || atom instanceof Negation) throw new IllegalArgumentException("Atom must be a proposition");
         Proposition prop = (Proposition) atom;
-        if (cause.getAtoms().contains(prop)) throw new IllegalArgumentException("Causal relation cannot be cyclic. 'cause' must not contain variable.");
+        if (explainableAtoms.containsKey(prop)) throw new IllegalArgumentException("Atom already exists in the model");
+        if (cause.getAtoms().contains(prop)) throw new CyclicDependencyException("Causal relation cannot be cyclic. 'cause' must not contain variable.");
 
         if (!getAtoms().containsAll(cause.getAtoms())) throw new CyclicDependencyException("Cause contains atoms that are not yet part of the causal model.");
 
@@ -128,7 +174,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
      * Constructs the twin model for this causal model, i.e., it creates for each structural equation a copy where all
      * explainable atoms X are replaced by a twin version X*
      *
-     * @return The twin model
+     * @return the twin model
      */
     public StructuralCausalModel getTwinModel() {
         Collection<PlFormula> structuralEquations = this.getStructuralEquations();
@@ -179,16 +225,18 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
      * @param v some explainable atom
      * @param x Truth value of the intervention
      */
-    public void intervene(Proposition v, boolean x) {
+    public StructuralCausalModel intervene(Proposition v, boolean x) {
         if(!this.explainableAtoms.containsKey(v)){
             throw new IllegalArgumentException("The specified variable has to be an explainable atom of the causal model");
         }
 
-        if(x) {
-            this.explainableAtoms.put(v, new Tautology());
-        }else {
-            this.explainableAtoms.put(v, new Contradiction());
+        StructuralCausalModel newModel = this.clone();
+        if (x) {
+            newModel.explainableAtoms.put(v, new Tautology());
+        } else {
+            newModel.explainableAtoms.put(v, new Contradiction());
         }
+        return newModel;
     }
 
     @Override

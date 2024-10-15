@@ -32,13 +32,9 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * This class describes an interventional causal statement like:
  * given phi, if v would be x then rho would be true
  * 
- * Reference: "Argumentation-based Causal and Counterfactual Reasoning" by
- * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, published at 1st International Workshop on Argumentation
- * for eXplainable AI (ArgXAI, co-located with COMMA ’22), September 12, 2022
+ * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm 'Argumentation-based Causal and Counterfactual Reasoning' 1st International Workshop on Argumentation for eXplainable AI, 2022"
  * 
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public class InterventionalStatement extends CausalStatement {
 

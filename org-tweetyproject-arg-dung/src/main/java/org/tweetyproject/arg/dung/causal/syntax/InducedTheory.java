@@ -14,14 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.causal.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -29,42 +31,37 @@ import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * This class describes an {@link DungTheory abstract argumentation framework} that was induced by a {@link CausalKnowledgeBase}
+ * This class describes an {@link DungTheory argumentation framework} that was induced by a {@link CausalKnowledgeBase}
  *
  * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm, 'Argumentation-based Causal and Counterfactual Reasoning', 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), 2022"
  *
  * @see DungTheory
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
+ * @author Lars Bengel
  */
 public class InducedTheory extends DungTheory {
 
 	private CausalKnowledgeBase knowledgeBase;
 
 	/**
-	 * Creates an abstract argumentation framework, which was induced from a specified causal knowledge base
-	 * @param knowledgeBase The causal knowledge base, which was the origin for this framework.
+	 * Induces an argumentation framework from a causal knowledge base
+	 * @param knowledgeBase some causal knowledge base
 	 */
 	public InducedTheory(CausalKnowledgeBase knowledgeBase) {
 		this.knowledgeBase = knowledgeBase;
 
-		for(var subSetAssumptions : new SetTools<PlFormula>().subsets(knowledgeBase.getAssumptions())) {
-			for(var conclusion : knowledgeBase.getSingleAtomConclusions(subSetAssumptions)) {
-				try {
-					var argument = new InducedArgument(knowledgeBase, subSetAssumptions, conclusion);
-					this.add(argument);
-				}catch(IllegalArgumentException e) {
-					// not possible
-					continue;
-				}
+		// TODO fix argument construction (minimality, relevance?)
+		for(Set<PlFormula> subSetAssumptions : new SetTools<PlFormula>().subsets(knowledgeBase.getAssumptions())) {
+			for(PlFormula conclusion : knowledgeBase.getSingleAtomConclusions(subSetAssumptions)) {
+				this.add(new InducedArgument(subSetAssumptions, conclusion));
 			}
 		}
 
-		for(var arg1 : this.getNodes()) {
-			var cArg1 = (InducedArgument) arg1;
-			for(var arg2 : this.getNodes()) {
-				var cArg2 = (InducedArgument) arg2;
+		for(Argument arg1 : this.getNodes()) {
+			InducedArgument cArg1 = (InducedArgument) arg1;
+			for(Argument arg2 : this.getNodes()) {
+				InducedArgument cArg2 = (InducedArgument) arg2;
 				if(this.checkUndercut(cArg1, cArg2)) {
 					this.addAttack(cArg1, cArg2);
 				}
@@ -75,21 +72,22 @@ public class InducedTheory extends DungTheory {
 	@Override
 	public boolean add(Argument argument) {
 		if(argument instanceof InducedArgument) {
-			if(((InducedArgument) argument).getKnowledgeBase().equals(this.knowledgeBase)) {
-				return super.add(argument);
-			}
-			else {
-				throw new IllegalArgumentException("argument is not defined on the same KnowledgeBase as the framework");
-			}
-		}else {
-			throw new IllegalArgumentException("argument is not of type CausalArgument");
+			if (!this.knowledgeBase.getAssumptions().containsAll(((InducedArgument) argument).getPremises())) {
+				throw new IllegalArgumentException("Argument contains invalid assumptions");
+			} else if (!this.knowledgeBase.entails(((InducedArgument) argument).getPremises(), ((InducedArgument) argument).getConclusion())) {
+				throw new IllegalArgumentException("Argument has invalid conclusion");
+			} // TODO check minimality
+
+			return super.add(argument);
+		} else {
+			throw new IllegalArgumentException("Argument has wrong type");
 		}
 	}
 
 	@Override
 	public boolean addAttack(Argument attacker, Argument attacked) {
 		if(!((attacker instanceof InducedArgument) && (attacked instanceof InducedArgument))) {
-			throw new IllegalArgumentException("argument is not of type CausalArgument");
+			throw new IllegalArgumentException("Argument has wrong type");
 		}
 
 		return this.addAttack((InducedArgument) attacker, (InducedArgument) attacked);
@@ -97,33 +95,34 @@ public class InducedTheory extends DungTheory {
 
 	/**
 	 * Adds an attack from the first argument to the second to this theory.
+	 *
 	 * @param attacker Argument which undercuts the second argument.
 	 * @param attacked Argument which is undercut by the first argument.
-	 * @return TRUE iff the set of attacks was changed. 
-	 * FALSE if the attack was already element of the set.
+	 * @return TRUE iff the set of attacks was changed
 	 */
 	public boolean addAttack(InducedArgument attacker, InducedArgument attacked) {
 		if(!this.checkUndercut(attacker, attacked)) {
-			throw new IllegalArgumentException("the attacking argument does not undercut the attacked argument");
+			throw new IllegalArgumentException("The attacking argument does not undercut the attacked argument");
 		}
 
 		return super.addAttack(attacker, attacked);
 	}
 	
 	/**
-	 * This method checks if a specified fomula can be concluded from this instance, 
-	 * by checking if all stable extension contain at least one argument with the conclusion to check.
-	 * @param conclusion Formula, which is in question to be a conclusion of this instance.
+	 * This method checks if a specified formula can be concluded from this instance,
+	 * by checking whether all stable extensions contain at least one argument with the given conclusion.
+	 *
+	 * @param conclusion some formula, which is in question to be a conclusion of this instance.
 	 * @return TRUE iff the conclusion can be drawn from this instance. FALSE if not.
 	 */
 	public boolean entails(PlFormula conclusion) {
-		var reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ST);
-		var extensions = reasoner.getModels(this);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ST);
+		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
 		
 		boolean allExtContainConclusion = true;
-		for(var ext : extensions) {
+		for(Extension<DungTheory> ext : extensions) {
 			boolean hasConclusion = false;
-			for(var argument : ext) {
+			for(Argument argument : ext) {
 				if(((InducedArgument) argument).getConclusion().equals(conclusion)) {
 					hasConclusion = true;
 					break;
@@ -142,7 +141,7 @@ public class InducedTheory extends DungTheory {
      * 
      * @return A set of all InducedArguments within this theory.
      */
-	public Set<InducedArgument> getArguments(){
+	public Collection<InducedArgument> getArguments(){
 		var output = new HashSet<InducedArgument>();
 		for(var argument : this.getNodes()) {
 			output.add((InducedArgument) argument);
@@ -162,12 +161,12 @@ public class InducedTheory extends DungTheory {
     /**
      * Checks if one argument undercuts another based on the conclusions and premises.
      * 
-     * @param attacker The argument that potentially undercuts.
-     * @param victim The argument that is potentially undercut.
-     * @return true if the attacker undercuts the victim, otherwise false.
+     * @param attacker 	The argument that potentially undercuts.
+     * @param victim 	The argument that is potentially undercut.
+     * @return true iff the attacker undercuts the victim, otherwise false.
      */
 	private boolean checkUndercut(InducedArgument attacker, InducedArgument victim) {
-		for(var premise : victim.getPremises()) {
+		for(PlFormula premise : victim.getPremises()) {
 			if(attacker.getConclusion().complement().equals(premise)) {
 				return true;
 			}

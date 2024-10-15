@@ -29,8 +29,6 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * This class describes a causal statement, such as an interventional or counterfactual statement.
  * 
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
  */
 public abstract class CausalStatement {
 	private HashSet<PlFormula> conclusions;

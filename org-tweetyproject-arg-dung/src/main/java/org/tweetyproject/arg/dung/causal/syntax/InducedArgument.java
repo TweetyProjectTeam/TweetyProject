@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.causal.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,41 +26,32 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * This class is responsible for the representation of an {@link Argument} that was induced from a {@link CausalKnowledgeBase}
+ * This class represents a logical {@link Argument} induced from a {@link CausalKnowledgeBase}
+ * An Argument consists of a set of assumptions (premises) and a conclusion
  *
  * @author Julian Sander
- * @version TweetyProject 1.23
- *
+ * @author Lars Bengel
  */
 public class InducedArgument extends Argument {
-
-	private static String generateName(Set<PlFormula> premises, PlFormula conclusion) {
-		return "(" + premises.toString() + "," + conclusion.toString() + ")";
-	}
-
-	private CausalKnowledgeBase knowledgeBase;
-
-	private HashSet<PlFormula> premises;
-
-	private PlFormula conclusion;
+	/** Premises of the argument */
+	private final Collection<PlFormula> premises;
+	/** Conclusion of the argument */
+	private final PlFormula conclusion;
 
 	/**
-	 * Creates a causal argument
-	 * @param knowledgeBase The causal knowledge base based on which this argument is created.
-	 * @param premises Set of formulas which have to be added to the knowledge base to be able to come to the the specified conclusion.
-	 * @param conclusion Formula that concludes from the knowledge base, if the specified premises are added to the base.
+	 * Initialize a new argument
+	 * @param premises the set of premises of the argument
+	 * @param conclusion the conclusion of the argument
 	 */
-	public InducedArgument(CausalKnowledgeBase knowledgeBase, Set<PlFormula> premises, PlFormula conclusion) {
-		super(InducedArgument.generateName(premises, conclusion));
-		this.checkCorrectForm(knowledgeBase, premises, conclusion);
+	public InducedArgument(Collection<PlFormula> premises, PlFormula conclusion) {
+		super(String.format("(%s, %s)", premises.toString(), conclusion.toString()));
 
-		this.knowledgeBase = knowledgeBase;
 		this.premises = new HashSet<>(premises);
 		this.conclusion = conclusion;
 	}
 
     /**
-     * Returns the conclusion of this induced argument.
+     * Returns the conclusion of this argument.
      * 
      * @return The conclusion that can be drawn from the knowledge base given the premises.
      */
@@ -68,44 +60,11 @@ public class InducedArgument extends Argument {
 	}
 
     /**
-     * Returns the causal knowledge base associated with this argument.
-     * 
-     * @return The causal knowledge base from which this argument is derived.
-     */
-	public CausalKnowledgeBase getKnowledgeBase() {
-		return this.knowledgeBase;
-	}
-
-    /**
-     * Returns the premises of this induced argument.
+     * Returns the premises of this argument.
      * 
      * @return A set containing all the premises required for deriving the conclusion in this argument.
      */
-	public HashSet<PlFormula> getPremises() {
+	public Collection<PlFormula> getPremises() {
 		return new HashSet<>(this.premises);
 	}
-
-	@Override
-	public String toString() {
-		return InducedArgument.generateName(this.premises, this.conclusion);
-	}
-
-	private void checkCorrectForm(CausalKnowledgeBase knowledgeBase, Set<PlFormula> premises, PlFormula conclusion) {
-		for(var formula : premises) {
-			if(!knowledgeBase.getAssumptions().contains(formula)) {
-				throw new IllegalArgumentException("premises is not a subset of the assumptions");
-			}
-
-			var lessPremises = new HashSet<>(premises);
-			lessPremises.remove(formula);
-			if(knowledgeBase.entails( lessPremises, conclusion)) {
-				throw new IllegalArgumentException("premises is not the minimal set of assumptions");
-			}
-		}
-
-		if(!knowledgeBase.entails( premises, conclusion)) {
-			throw new IllegalArgumentException("conclusion can not be infered from this knowledge base using this premises");
-		}
-	}
-
 }

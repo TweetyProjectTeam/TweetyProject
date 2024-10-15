@@ -32,10 +32,8 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * given phi, if v had been x then rho would be true
  * 
  * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm 'Argumentation-based Causal and Counterfactual Reasoning' 1st International Workshop on Argumentation for eXplainable AI, 2022"
- * 
- * @author Julian Sander
- * @version TweetyProject 1.23
  *
+ * @author Julian Sander
  */
 public class CounterfactualStatement extends InterventionalStatement {
 
