@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisability.semantics;
 
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -47,14 +48,13 @@ public class SerialisationGraph implements Graph<SerialisationState> {
 
 
     /**
-     * Construct a serialisation graph for the given argumentation framework and set of serialisation sequences
+     * Construct a serialisation graph for the given argumentation framework and serialisation reasoner
      * @param theory some argumentation framework
-     * @param sequences the set of serialisation sequences
-     * @param semantics the semantics
+     * @param reasoner some serialised reasoner
      */
-    public SerialisationGraph(DungTheory theory, Collection<SerialisationSequence> sequences, Semantics semantics) {
-        this.semantics = semantics;
-        SerialisedExtensionReasoner reasoner = new SerialisedExtensionReasoner(semantics);
+    public SerialisationGraph(DungTheory theory, SerialisedExtensionReasoner reasoner) {
+        Collection<SerialisationSequence> sequences = reasoner.getSequences(theory);
+        this.semantics = reasoner.getSemantics();
         SerialisationState root = new SerialisationState(theory, new Extension<>(), reasoner.isTerminal(theory, new Extension<>()));
         this.add(root);
         SerialisationState predecessor = root;
@@ -75,10 +75,10 @@ public class SerialisationGraph implements Graph<SerialisationState> {
     /**
      * Construct a serialisation graph for the given argumentation framework and semantics
      * @param theory some argumentation framework
-     * @param semantics some semantics
+     * @param semantics some serialisable semantics
      */
     public SerialisationGraph(DungTheory theory, Semantics semantics) {
-        this(theory, new SerialisedExtensionReasoner(semantics).getSequences(theory), semantics);
+        this(theory, new SerialisedExtensionReasoner(semantics));
     }
 
     /** Pretty print of the graph.

@@ -63,7 +63,7 @@ public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
      * @param beta some termination function
      */
     public SerialisedExtensionReasoner(SelectionFunction alpha, TerminationFunction beta) {
-        this(alpha, beta, null);
+        this(alpha, beta, Semantics.diverse);
     }
 
     /**
@@ -170,8 +170,7 @@ public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
      * @return Graph representing the serialisation sequences
      */
     public SerialisationGraph getSerialisationGraph(DungTheory bbase) {
-        Collection<SerialisationSequence> sequences = this.getSequences(bbase);
-        return new SerialisationGraph(bbase, sequences, getSemantics());
+        return new SerialisationGraph(bbase, this);
     }
 
     /**

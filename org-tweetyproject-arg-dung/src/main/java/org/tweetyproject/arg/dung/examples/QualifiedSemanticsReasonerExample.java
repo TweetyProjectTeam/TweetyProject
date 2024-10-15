@@ -31,6 +31,10 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class QualifiedSemanticsReasonerExample {
+    /**
+     * Execute the example
+     * @param args cmdline arguments
+     */
     public static void main(String[] args) {
         Semantics semantics = Semantics.CO;
         DungTheory theory = example2();
@@ -39,9 +43,9 @@ public class QualifiedSemanticsReasonerExample {
         Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory);
         Collection<Extension<DungTheory>> exts_q = new QualifiedReasoner(semantics).getModels(theory);
         Collection<Extension<DungTheory>> exts_sq = new SemiQualifiedReasoner(semantics).getModels(theory);
-        System.out.printf("%s: %s", semantics.description(), exts);
-        System.out.printf("qualified %s: %s", semantics.description(), exts_q);
-        System.out.printf("semi-qualified %s: %s", semantics.description(), exts_sq);
+        System.out.printf("%s: %s%n", semantics.description(), exts);
+        System.out.printf("qualified %s: %s%n", semantics.description(), exts_q);
+        System.out.printf("semi-qualified %s: %s%n", semantics.description(), exts_sq);
     }
 
     public static DungTheory example1() {

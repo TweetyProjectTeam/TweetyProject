@@ -20,62 +20,58 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
+import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisedExtensionReasoner}
  * for different types of serialisable semantics.
  *
- * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation', Argument & Computation (2022)"
+ * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation', Argument & Computation, (2022)"
  *
- * @see "Lars Bengel and Matthias Thimm. 'Serialisable Semantics for Abstract
- * Argumentation', Proceedings of COMMA'22 (2022)"
+ * @see "Lars Bengel and Matthias Thimm. 'Serialisable Semantics for Abstract Argumentation', Proceedings of COMMA'22, (2022)"
  *
  * @author Julian Sander
  * @author Lars Bengel
  */
 public class SerialisedExtensionReasonerExample {
-
+	/**
+	 * Execute the example
+	 * @param args cmdline arguments
+	 */
 	public static void main(String[] args) {
-		Collection<DungTheory> examples = List.of(new DungTheory[]{example1(), example2(), example3()});
-
+		// Use a serialised reasoner for admissible sets
 		SerialisedExtensionReasoner admReasoner = new SerialisedExtensionReasoner(Semantics.ADM);
-		executeExamples(admReasoner, examples);
+		executeExample(admReasoner, example1());
 
-		SerialisedExtensionReasoner coReasoner = new SerialisedExtensionReasoner(Semantics.CO);
-		executeExamples(coReasoner, examples);
+		// Define a serialised reasoner for a novel semantics
+		SerialisedExtensionReasoner novelReasoner = new SerialisedExtensionReasoner(SelectionFunction.ADMISSIBLE, TerminationFunction.UNCHALLENGED);
+		executeExample(novelReasoner, example2());
 
-		SerialisedExtensionReasoner grReasoner = new SerialisedExtensionReasoner(Semantics.GR);
-		executeExamples(grReasoner, examples);
-
-		SerialisedExtensionReasoner prReasoner = new SerialisedExtensionReasoner(Semantics.PR);
-		executeExamples(prReasoner, examples);
-
-		SerialisedExtensionReasoner stReasoner = new SerialisedExtensionReasoner(Semantics.ST);
-		executeExamples(stReasoner, examples);
-
-		SerialisedExtensionReasoner ucReasoner = new SerialisedExtensionReasoner(Semantics.UC);
-		executeExamples(ucReasoner, examples);
+		// Define a serialised reasoner via novel selection and termination functions
+		// e.g. only select challenged initial sets and terminate iff reduct has no self-attacks
+		SerialisedExtensionReasoner novelReasoner2 = new SerialisedExtensionReasoner(
+				(ua,uc,c) -> new HashSet<>(c),
+				(theory,extension) -> !theory.hasSelfLoops()
+		);
+		executeExample(novelReasoner2, example3());
 	}
 
 	/**
-	 * Execute the given reasoner for all given examples
-	 * @param reasoner    some serialisation reasoner
-	 * @param examples    exemplary argumentation frameworks
+	 * Execute the given reasoner for the given example
+	 * @param reasoner	some serialisation reasoner
+	 * @param theory    exemplary argumentation framework
 	 */
-	protected static void executeExamples(SerialisedExtensionReasoner reasoner, Collection<DungTheory> examples) {
+	protected static void executeExample(SerialisedExtensionReasoner reasoner, DungTheory theory) {
 		System.out.println(reasoner.getSemantics().description() + ":");
-		for (DungTheory theory : examples) {
-			System.out.println("AF: " + theory);
-			System.out.println("Extensions: " + reasoner.getModels(theory));
-			System.out.println("Sequences: " + reasoner.getSequences(theory));
-			System.out.println("Serialisation:\n" + reasoner.getSerialisationGraph(theory).prettyPrint());
-		}
-		System.out.println("======================================================================================================\n");
+		System.out.println("AF: " + theory);
+		System.out.println("Extensions: " + reasoner.getModels(theory));
+		System.out.println("Sequences: " + reasoner.getSequences(theory));
+		System.out.println("Serialisation:\n" + reasoner.getSerialisationGraph(theory).prettyPrint());
 	}
 
 	/**

@@ -14,12 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.principles.Principle;
-import org.tweetyproject.arg.dung.reasoner.*;
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
@@ -30,19 +31,18 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Example code for checking principles for argumentation semantics
+ * Example code for checking (non-)satisfaction of {@link Principle} for argumentation semantics
  *
  * @author Lars Bengel
  */
 public class PrincipleExample {
-    private static Collection<Principle> all_principles;
-
     /**
-     * 
-     * @param args arguments
+     * Execute the example
+     * @param args cmdline arguments
      */
     public static void main(String[] args) {
-        all_principles = new HashSet<>();
+        // Initialize a list of all principles to be checked
+        Collection<Principle> all_principles = new HashSet<>();
         all_principles.add(Principle.CONFLICT_FREE);
         all_principles.add(Principle.ADMISSIBILITY);
         all_principles.add(Principle.NAIVETY);
@@ -63,86 +63,14 @@ public class PrincipleExample {
         all_principles.add(Principle.NON_INTERFERENCE);
         all_principles.add(Principle.SEMI_DIRECTIONALITY);
 
-        AdmissibleExample();
-        GroundedExample();
-        CompleteExample();
-        PreferredExample();
-        StableExample();
-        NaiveExample();
-        CF2Example();
+        // Evaluate the given reasoner wrt to specified principles
+        evaluateReasoner(new SimpleAdmissibleReasoner(), all_principles);
     }
 
-    /**
-     * AdmissibleExample
-     */
-    public static void AdmissibleExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimpleAdmissibleReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    /**
-     * GroundedExample
-     */
-    public static void GroundedExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimpleGroundedReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    /**
-     * CompleteExample
-     */
-    public static void CompleteExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimpleCompleteReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    /**
-     * PreferredExample
-     */
-    public static void PreferredExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimplePreferredReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    /**
-     * StableExample
-     */
-    public static void StableExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimpleStableReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    /**
-     * NaiveExample
-     */
-    public static void NaiveExample() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SimpleNaiveReasoner());
-        evaluator.addAllPostulates(all_principles);
-        System.out.println(evaluator.evaluate(4000, false).prettyPrint());
-    }
-
-    private static void CF2Example() {
-        DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new SccCF2Reasoner());
-        evaluator.addAllPostulates(all_principles);
+    public static void evaluateReasoner(AbstractExtensionReasoner reasoner, Collection<Principle> principles) {
+        DungTheoryGenerator generator = new EnumeratingDungTheoryGenerator();
+        PostulateEvaluator<Argument,DungTheory> evaluator = new PostulateEvaluator<>(generator, reasoner);
+        evaluator.addAllPostulates(principles);
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
