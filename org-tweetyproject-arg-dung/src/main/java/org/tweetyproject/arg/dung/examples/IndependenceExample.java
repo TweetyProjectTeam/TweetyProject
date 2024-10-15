@@ -16,7 +16,6 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.independence.Independence;
@@ -25,22 +24,46 @@ import org.tweetyproject.arg.dung.syntax.*;
 import java.util.*;
 
 /**
- * Example usage of the Independence class
- * <p>
- * example theory taken from:
- * Rienstra, Tjitze, et al. "Independence and D-separation in Abstract Argumentation." Proceedings of the International
- * Conference on Principles of Knowledge Representation and Reasoning. Vol. 17. No. 1. 2020.
+ * Example usage of the {@link Independence} class
  *
  * @author Lars Bengel
  */
 
 public class IndependenceExample {
 	/**
-	 * 
-	 * @param args string
+	 * execute the example
+	 * @param args cmdline arguments
 	 */
     public static void main(String[] args) {
-        // create theory from figure 2
+        DungTheory theory = example1();
+        System.out.println(theory.prettyPrint());
+
+        // specify three sets A, B, C to compute: I(A B| C)
+        // first set
+        Collection<Argument> A = new HashSet<>();
+        A.add(new Argument("e"));
+        // second set
+        Collection<Argument> B = new HashSet<>();
+        B.add(new Argument("h"));
+        // third set
+        Collection<Argument> C = new HashSet<>();
+
+        // compute independence of A and B, given C
+        System.out.print("Independence of " + A + " and " + B + " given " + C + ": ");
+        System.out.println(Independence.isIndependent(theory, A, B, C));
+
+        // find the smallest set C, for which A and B are independent
+        System.out.print(A + " and " + B + " are independent, given: ");
+        System.out.println(Independence.isIndependentGiven(theory, A, B));
+    }
+
+    /**
+     * Example AF from Figure 2
+     * @see "Tjitze Rienstra, et al. 'Independence and D-separation in Abstract Argumentation', Proceedings of KR'20, (2020)"
+     *
+     * @return the example dung theory
+     */
+    public static DungTheory example1() {
         DungTheory theory = new DungTheory();
         Argument a = new Argument("a");
         Argument b = new Argument("b");
@@ -50,15 +73,7 @@ public class IndependenceExample {
         Argument f = new Argument("f");
         Argument g = new Argument("g");
         Argument h = new Argument("h");
-        theory.add(a);
-        theory.add(b);
-        theory.add(c);
-        theory.add(d);
-        theory.add(e);
-        theory.add(f);
-        theory.add(g);
-        theory.add(h);
-
+        theory.add(a,b,c,d,e,f,g,h);
         theory.addAttack(a, b);
         theory.addAttack(b, a);
         theory.addAttack(c, d);
@@ -70,27 +85,6 @@ public class IndependenceExample {
         theory.addAttack(d, e);
         theory.addAttack(d, h);
 
-        System.out.println(theory.prettyPrint());
-
-        // specify three sets A, B, C to compute: I(A B| C)
-
-        // first set
-        Collection<Argument> A = new HashSet<>();
-        A.add(e);
-
-        // second set
-        Collection<Argument> B = new HashSet<>();
-        B.add(h);
-
-        // third set
-        Collection<Argument> C = new HashSet<>();
-
-        // compute independence of A and B, given C
-        System.out.print("Independence of " + A + " and " + B + " given " + C + ": ");
-        System.out.println(Independence.isIndependent(theory, A, B, C));
-
-        // find smallest set C, for which A and B are independent
-        System.out.print(A + " and " + B + " are independent, given: ");
-        System.out.println(Independence.isIndependentGiven(theory, A, B));
+        return theory;
     }
 }
