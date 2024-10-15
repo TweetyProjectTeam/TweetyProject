@@ -14,27 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.reasoner;
 
-import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.arg.dung.syntax.*;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
 
 /**
- * Reasoner for qualified sigma-semantics. If sigma is a scc-decomposable semantics this reasoner will compute the
- * qualified extensions for the semantics. In qualified semantics a undecided argument x is treated as out. This means
- * an argument y attacked by x and in a different scc can still be accepted(in).
+ * Reasoner for qualified sigma-semantics. If sigma is a {@link org.tweetyproject.arg.dung.principles.SccDecomposabilityPrinciple scc-decomposable}
+ * semantics this reasoner will compute the qualified extensions for the semantics.
+ * Under qualified semantics an UNDECIDED argument x is treated as OUT.
+ * This means an argument y attacked by x and in a different scc can still be IN.
  *
- * see: TODO add reference
+ * @see "Jeremie Dauphin, Tjitze Rienstra, and Leendert Van Der Torre. 'A principle-based analysis of weakly admissible semantics', Proceedings of COMMA'20, (2020)"
  *
  * @author Lars Bengel
  */
 public class QualifiedReasoner extends AbstractExtensionReasoner {
-    private AbstractExtensionReasoner baseReasoner;
+    private final AbstractExtensionReasoner baseReasoner;
 
     /**
      * initialize reasoner with the given semantics as base function.
@@ -56,7 +58,7 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
 
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory) bbase).getStronglyConnectedComponents());
+        List<Collection<Argument>> sccs = new ArrayList<>(bbase.getStronglyConnectedComponents());
         // order SCCs in a DAG
         boolean[][] dag = new boolean[sccs.size()][sccs.size()];
         for(int i = 0; i < sccs.size(); i++){
@@ -66,10 +68,10 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
         for(int i = 0; i < sccs.size(); i++)
             for(int j = 0; j < sccs.size(); j++)
                 if(i != j)
-                    if(((DungTheory) bbase).isAttacked(new Extension<DungTheory>(sccs.get(i)), new Extension<DungTheory>(sccs.get(j))))
+                    if(bbase.isAttacked(new Extension<>(sccs.get(i)), new Extension<>(sccs.get(j))))
                         dag[i][j] = true;
         // order SCCs topologically
-        List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
+        List<Collection<Argument>> sccs_ordered = new ArrayList<>();
         while(sccs_ordered.size() < sccs.size()){
             for(int i = 0; i < sccs.size();i++){
                 if(sccs_ordered.contains(sccs.get(i)))
@@ -87,7 +89,7 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
                 }
             }
         }
-        return this.computeExtensionsViaSccs((DungTheory) bbase, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
+        return this.computeExtensionsViaSccs(bbase, sccs_ordered, 0, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     @Override
@@ -109,7 +111,7 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
     private Set<Extension<DungTheory>> computeExtensionsViaSccs(DungTheory theory, List<Collection<Argument>> sccs, int idx, Collection<Argument> in, Collection<Argument> out, Collection<Argument> undec) {
         if (idx >= sccs.size()) {
             Set<Extension<DungTheory>> result = new HashSet<>();
-            result.add(new Extension<DungTheory>(in));
+            result.add(new Extension<>(in));
             return result;
         }
 
@@ -147,11 +149,4 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
         }
         return result;
     }
-    /**
-     * this method always returns true because the solver is native
-     */
-	@Override
-	public boolean isInstalled() {
-		return true;
-	}
 }
