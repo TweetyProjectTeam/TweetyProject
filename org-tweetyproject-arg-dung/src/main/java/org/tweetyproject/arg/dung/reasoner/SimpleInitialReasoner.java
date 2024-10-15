@@ -31,30 +31,30 @@ import java.util.Map;
  * Basic Implementation of a reasoner for initial sets
  * A set of arguments S is considered initial iff it is non-empty and minimal among the non-empty admissible sets
  *
- *  Ref: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
+ * @see "Yuming Xu and Claudette Cayrol. 'Initial sets in abstract argumentation frameworks' (2016)"
+ * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation' Argument & Computation (2022)"
  *
  * @author Lars Bengel
  */
 public class SimpleInitialReasoner extends AbstractExtensionReasoner {
 
 /**
- * The {@code Initial} enum represents the initial status of arguments in a Dung theory.
- * Each enum constant corresponds to a specific status, with a full description and an abbreviation.
+ * The {@code Initial} enum represents the three different types of initial sets
  */
 public enum Initial {
 
     /**
-     * Indicates that the argument is unattacked.
+     * Unattacked initial sets
      */
     UA("unattacked", "ua"),
 
     /**
-     * Indicates that the argument is unchallenged.
+     * Unchallenged initial sets
      */
     UC("unchallenged", "uc"),
 
     /**
-     * Indicates that the argument is challenged.
+     * Challenged initial sets
      */
     C("challenged", "c");
 
@@ -108,7 +108,7 @@ public enum Initial {
     }
 
     /**
-     * A set S is called unattacked if there is no attacker of S in F
+     * An initial set S is called unattacked iff there is no attacker of S in F
      * @param ext an extension S of theory
      * @param theory a dung theory F
      * @return true if S is unattacked in F
@@ -118,26 +118,13 @@ public enum Initial {
     }
 
     /**
-     * An initial set S is called unchallenged in F iff there is no other initial set of F which attacks S
+     * An initial set S is called unchallenged in F iff S is not unattacked and there is no other initial set of F which attacks S
      * @param ext an extension S of theory
      * @param theory a dung theory F
      * @return true if S is unchallenged in F
      */
     public boolean isUnchallenged(Extension<DungTheory> ext, DungTheory theory) {
-        Collection<Extension<DungTheory>> initExtensions = this.getModels(theory);
-
-        // method is only supposed to be used with initial sets
-        if (!initExtensions.contains(ext)) {
-            throw new IllegalArgumentException("Extensions must be an initial set of theory");
-        }
-
-        for (Extension<DungTheory> ext2: initExtensions) {
-            if (theory.isAttacked(ext, ext2)) {
-                return false;
-            }
-        }
-        return true;
-
+        return !isUnattacked(ext, theory) && !isChallenged(ext, theory);
     }
 
     /**
@@ -147,12 +134,24 @@ public enum Initial {
      * @return true if S is challenged in F
      */
     public boolean isChallenged(Extension<DungTheory> ext, DungTheory theory) {
-        return !this.isUnchallenged(ext, theory);
+        Collection<Extension<DungTheory>> initExtensions = this.getModels(theory);
+
+        // method is only supposed to be used with initial sets
+        if (!initExtensions.contains(ext)) {
+            throw new IllegalArgumentException("Extensions must be an initial set of theory");
+        }
+
+        for (Extension<DungTheory> ext2: initExtensions) {
+            if (theory.isAttacked(ext, ext2)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Helper function that computed the initial sets of F and labels them in three categories
-     * @param theory some argumentation theory F
+     * Helper function that computes the initial sets of F and labels them in three categories
+     * @param theory some argumentation theory
      * @return a map contain the three groups of initial sets
      */
     public static Map<Initial,Collection<Extension<DungTheory>>> partitionInitialSets(DungTheory theory) {

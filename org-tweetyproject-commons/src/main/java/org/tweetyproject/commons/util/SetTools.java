@@ -226,6 +226,19 @@ public class SetTools<E> {
 	}
 
 	/**
+	 * Returns the union of the set of sets.
+	 * @param sets some set of sets
+	 * @return the union of the set.
+	 */
+	@SafeVarargs
+	public final Set<E> getUnion(Set<E>... sets){
+		Set<E> result = new HashSet<E>();
+		for(Set<E> s: sets)
+			result.addAll(s);
+		return result;
+	}
+
+	/**
 	 * Computes every bipartition of the given set, e.g. for
 	 * a set {a,b,c,d,e,f} this method returns a set containing for example
 	 * {{a,b,c,d,e},{f}} and {{a,b,c,},{d,e,f}} and {{a,b,c,d,e,f},{}}
