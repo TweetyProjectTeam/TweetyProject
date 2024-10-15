@@ -1,11 +1,18 @@
 package org.tweetyproject.arg.dung.causal.reasoner;
 
 import org.tweetyproject.arg.dung.causal.semantics.CausalStatement;
+import org.tweetyproject.arg.dung.causal.syntax.InducedTheory;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 import java.util.Collection;
 
 public class ArgumentationBasedCausalReasoner {
+
+    public InducedTheory getInducedTheory(Collection<PlFormula> observations) {
+        // TODO incorporate observations into argument construction
+        // Utilise DeductiveArgumentation package ??
+        return null;
+    }
     public boolean query(CausalStatement statement) {
         return true;
     }

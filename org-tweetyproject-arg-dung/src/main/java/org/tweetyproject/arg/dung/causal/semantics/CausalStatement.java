@@ -14,64 +14,66 @@
 * You should have received a copy of the GNU Lesser General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
-* Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+* Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
 */
 package org.tweetyproject.arg.dung.causal.semantics;
-
-import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.arg.dung.causal.syntax.InducedTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
- * This class describes a causal statement, such as an interventional or counterfactual statement.
- * 
+ * This class describes a basic causal statement wrt. some {@link CausalKnowledgeBase} of the form:<br>
+ * "Given phi, it follows that psi holds"
+ *
  * @author Julian Sander
+ * @author Lars Bengel
  */
-public abstract class CausalStatement {
-	private HashSet<PlFormula> conclusions;
+public class CausalStatement {
+	private Collection<PlFormula> conclusions;
 	
-	private HashSet<PlFormula> premises;
+	private Collection<PlFormula> observations;
 
 	/**
-	 * Creates a new causal statement.
-	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
-	 * @param premises PlFormulas which have to be true, so that the conclusions can be drawn.
+	 * Initializes a new causal statement.
+	 *
+	 * @param conclusions 	conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
+	 * @param premises 		observations of the causal atoms
 	 */
-	public CausalStatement(HashSet<PlFormula> conclusions, HashSet<PlFormula> premises) {
+	public CausalStatement(Collection<PlFormula> conclusions, Collection<PlFormula> premises) {
 		super();
 		this.conclusions = conclusions;
-		this.premises = premises;
+		this.observations = premises;
 	}
 
     /**
      * Retrieves the conclusions of this causal statement.
-     * 
      * @return A new HashSet containing all the conclusions of this causal statement.
      */
-	public HashSet<PlFormula> getConclusions(){
-		return new HashSet<PlFormula>(this.conclusions);
+	public Collection<PlFormula> getConclusions(){
+		return new HashSet<>(this.conclusions);
 	}
 	
     /**
-     * Retrieves the premises of this causal statement.
-     * 
+     * Retrieves the observations of this causal statement.
      * @return A new HashSet containing all the premises required for the conclusions to hold.
      */
-	public HashSet<PlFormula> getPremises(){
-		return new HashSet<PlFormula>(this.premises);
+	public Collection<PlFormula> getObservations(){
+		return new HashSet<>(this.observations);
 	}	
 	
 	/**
 	 * Checks if this instance holds in the specified knowledge base.
-	 * @param cKbase Causal knowledge base
+	 * @param ckbase Causal knowledge base
 	 * @return TRUE iff this instance holds in the specified knowledge base.
 	 */
-	public boolean holds(CausalKnowledgeBase cKbase) {
+	public boolean holds(CausalKnowledgeBase ckbase) {
 		for(var conclusion : this.getConclusions()) {
-			if(!checkStatement(cKbase, conclusion)) {
+			if(!ckbase.entails(this.getObservations(), conclusion)) {
 				return false;
 			}
 		}
@@ -89,19 +91,8 @@ public abstract class CausalStatement {
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
 	{
 		var causalKnowledgeBaseCopy = cKbase.clone();
-		causalKnowledgeBaseCopy.addAll(this.getPremises());
+		causalKnowledgeBaseCopy.addAll(this.getObservations());
 		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getPremises().toString() + " \n Conclusions: " + this.getConclusions().toString());
-	}
-	
-	    /**
-     * Helper method to check if a single conclusion is entailed by the premises in the given causal knowledge base.
-     * 
-     * @param cKbase The causal knowledge base in which the conclusion is to be checked.
-     * @param conclusion The conclusion to check against the premises.
-     * @return true if the causal knowledge base entails the conclusion given the premises, otherwise false.
-     */
-	private boolean checkStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
-		return cKbase.entails(this.getPremises(), conclusion);
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getObservations().toString() + " \n Conclusions: " + this.getConclusions().toString());
 	}
 }

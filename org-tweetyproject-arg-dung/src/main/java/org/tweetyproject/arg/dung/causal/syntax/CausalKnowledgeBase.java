@@ -42,6 +42,10 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	/** The set of background assumptions */
 	protected Collection<PlFormula> assumptions;
 
+	/**
+	 * Initializes a causal knowledge from the given causal model without assumptions
+	 * @param model some causal model
+	 */
 	public CausalKnowledgeBase(StructuralCausalModel model) {
 		this.model = model.clone();
 		this.assumptions = new HashSet<>();
@@ -63,6 +67,14 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 				throw new IllegalArgumentException("There must be at least one assumption for each background atom");
 			}
 		}
+	}
+
+	/**
+	 * Initializes an empty causal knowledge base
+	 */
+	public CausalKnowledgeBase() {
+		this.model = new StructuralCausalModel();
+		this.assumptions = new HashSet<>();
 	}
 
 	/**
