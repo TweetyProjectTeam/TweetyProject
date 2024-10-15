@@ -158,7 +158,12 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 		}
 		return conclusions;
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.format("(%s, %s)", getCausalModel(), getAssumptions());
+	}
+
 	@Override
 	public CausalKnowledgeBase clone() {
         return new CausalKnowledgeBase(this.model, this.getAssumptions());

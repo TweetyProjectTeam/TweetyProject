@@ -31,9 +31,14 @@ import java.util.*;
  *
  * @author Julian Sander
  * @author Lars Bengel
+ *
+ * TODO explainableAtoms needs to store somehow whether the atom is to be negated in the equation
+ * TODO or the equation must be transformed before storing
  */
 public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> {
+    /** The background atoms of the causal model */
     private Collection<Proposition> backgroundAtoms;
+    /** Explainable atoms and their causes */
     private Map<Proposition, PlFormula> explainableAtoms;
 
     /**
@@ -61,29 +66,37 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         for (PlFormula formula : equations) {
             if (formula instanceof Equivalence) {
                 Equivalence equation = (Equivalence) formula;
-                if (!equation.getFormulas().getFirst().isLiteral()) {
+                PlFormula left = equation.getFormulas().getFirst();
+                if (!left.isLiteral()) {
                     throw new IllegalArgumentException("Left side of Structural Equation must be literal!");
                 }
-                explainable.addAll(equation.getFormulas().getFirst().getAtoms());
+                explainable.addAll(left.getAtoms());
                 atoms.addAll(equation.getAtoms());
-                formulas.put(equation.getFormulas().getFirst(), equation.getFormulas().getSecond());
+                formulas.put(left, equation.getFormulas().getSecond());
             } else {
                 throw new IllegalArgumentException("Structural Equations must be Equivalences");
             }
         }
         atoms.removeAll(explainable);
+
+        System.out.println(atoms);
+        System.out.println(explainable);
+
+        // construct new model from equations
         this.addBackgroundAtoms(atoms);
-        while (!formulas.isEmpty()) {
+        Queue<Proposition> remaining = new ArrayDeque<>(explainable);
+        while (!remaining.isEmpty()) {
             boolean changed = false;
-            for (PlFormula lit : formulas.keySet()) {
-                try {
-                    changed |= this.addExplainableAtom(lit, formulas.get(lit));
-                    formulas.remove(lit);
-                } catch (CyclicDependencyException ignored) {
-                }
+
+            Proposition prop = remaining.poll();
+            try {
+                changed |= this.addExplainableAtom(prop, formulas.get(prop));
+            } catch (CyclicDependencyException ignored) {
+                remaining.add(prop);
             }
-            if (!changed) throw new CyclicDependencyException("The given set contains formulas with cyclic dependencies.");
+            //if (!changed) throw new CyclicDependencyException("The given set contains formulas with cyclic dependencies.");
         }
+        System.out.println(getExplainableAtoms());
     }
 
     /**
@@ -164,7 +177,9 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         if (explainableAtoms.containsKey(prop)) throw new IllegalArgumentException("Atom already exists in the model");
         if (cause.getAtoms().contains(prop)) throw new CyclicDependencyException("Causal relation cannot be cyclic. 'cause' must not contain variable.");
 
-        if (!getAtoms().containsAll(cause.getAtoms())) throw new CyclicDependencyException("Cause contains atoms that are not yet part of the causal model.");
+        if (!getAtoms().containsAll(cause.getAtoms())) {
+            throw new CyclicDependencyException("Cause contains atoms that are not yet part of the causal model.");
+        }
 
         PlFormula ret = explainableAtoms.put(prop, cause);
         return !cause.equals(ret);
@@ -237,6 +252,21 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
             newModel.explainableAtoms.put(v, new Contradiction());
         }
         return newModel;
+    }
+
+    public String prettyPrint() {
+        StringBuilder s = new StringBuilder();
+        s.append("Background atoms: ").append(getBackgroundAtoms()).append("\n");
+        s.append("Structural Equations:\n");
+        for (Proposition atom : getExplainableAtoms()) {
+            s.append(String.format("%s<=> %s%n", atom, explainableAtoms.get(atom)));
+        }
+        return s.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getStructuralEquations().toString();
     }
 
     @Override

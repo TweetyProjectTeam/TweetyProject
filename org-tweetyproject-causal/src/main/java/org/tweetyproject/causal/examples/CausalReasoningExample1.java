@@ -24,7 +24,7 @@ public class CausalReasoningExample1 {
         // Construct Causal Model
         StructuralCausalModel model = new StructuralCausalModel();
         // Add background atoms
-        model.addBackgroundAtom(covid);
+        model.addBackgroundAtom(corona);
         model.addBackgroundAtom(influenza);
         model.addBackgroundAtom(atRisk);
         // Add structural equations
@@ -43,6 +43,8 @@ public class CausalReasoningExample1 {
 
         // Initialize causal knowledge base
         CausalKnowledgeBase kbase = new CausalKnowledgeBase(model, assumptions);
+
+        System.out.println(kbase);
 
         // TODO
     }
