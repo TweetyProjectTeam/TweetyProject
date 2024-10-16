@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This reasoner for constrained Dung theories (CAF) performs inference on the C-grounded extension.
@@ -35,7 +34,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFGroundedReasoner {
+public class SimpleCAFGroundedReasoner extends AbstractCAFReasoner {
 	SimpleCAFAdmissibleReasoner admReas;
 	
 	/** Default Constructor */
@@ -49,8 +48,8 @@ public class SimpleCAFGroundedReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return A collection containing the c-grounded extension (if one exists).
 	 */
-	public Collection<Extension<DungTheory>> getModels(ConstrainedArgumentationFramework bbase) {
-		Collection<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
+	public Collection<Extension<ConstrainedArgumentationFramework>> getModels(ConstrainedArgumentationFramework bbase) {
+		Collection<Extension<ConstrainedArgumentationFramework>> extensions = new HashSet<Extension<ConstrainedArgumentationFramework>>();
 		extensions.add(this.getModel(bbase));
 		return extensions;
 	}
@@ -61,10 +60,10 @@ public class SimpleCAFGroundedReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return The c-grounded extension (if one exists).
 	 */
-    public Extension<DungTheory> getModel(ConstrainedArgumentationFramework bbase){
-    	Extension<DungTheory> leastElem = new Extension<>();
+    public Extension<ConstrainedArgumentationFramework> getModel(ConstrainedArgumentationFramework bbase){
+    	Extension<ConstrainedArgumentationFramework> leastElem = new Extension<>();
     	//check if admissibleSets has least element
-		Collection<Extension<DungTheory>> cAdmSets = admReas.getModels(bbase);
+		Collection<Extension<ConstrainedArgumentationFramework>> cAdmSets = admReas.getModels(bbase);
 		try {
 			leastElem = getLeastElement(cAdmSets);
 		} catch (RuntimeException e){
@@ -87,8 +86,8 @@ public class SimpleCAFGroundedReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return A collection containing the weak C-extension (if one exists).
 	 */
-	public Collection<Extension<DungTheory>> getWeakModels(ConstrainedArgumentationFramework bbase) {
-		Collection<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
+	public Collection<Extension<ConstrainedArgumentationFramework>> getWeakModels(ConstrainedArgumentationFramework bbase) {
+		Collection<Extension<ConstrainedArgumentationFramework>> extensions = new HashSet<Extension<ConstrainedArgumentationFramework>>();
 		extensions.add(this.getWeakModel(bbase));
 		return extensions;
 	}
@@ -99,10 +98,10 @@ public class SimpleCAFGroundedReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return The weak C-extension (if one exists).
 	 */
-    public Extension<DungTheory> getWeakModel(ConstrainedArgumentationFramework bbase){
-    	Extension<DungTheory> leastElem = new Extension<>();
+    public Extension<ConstrainedArgumentationFramework> getWeakModel(ConstrainedArgumentationFramework bbase){
+    	Extension<ConstrainedArgumentationFramework> leastElem = new Extension<>();
     	//check if admissibleSets has least element
-		Collection<Extension<DungTheory>> cAdmSets = admReas.getModels(bbase);
+		Collection<Extension<ConstrainedArgumentationFramework>> cAdmSets = admReas.getModels(bbase);
 		try {
 			leastElem = getLeastElement(cAdmSets);
 		} catch (RuntimeException e){
@@ -113,17 +112,17 @@ public class SimpleCAFGroundedReasoner {
     }
     
     
-    private Extension<DungTheory> getLeastElement (Collection<Extension<DungTheory>> sets){
+    private Extension<ConstrainedArgumentationFramework> getLeastElement (Collection<Extension<ConstrainedArgumentationFramework>> sets){
     	//check if the empty set is in sets (in this case it is the least element)
-    	Extension<DungTheory> emptySet = new Extension<>();
+    	Extension<ConstrainedArgumentationFramework> emptySet = new Extension<>();
 		if(sets.contains(emptySet)) {
 			return emptySet;
 		} else {
-			for (Extension<DungTheory> set : sets) {
+			for (Extension<ConstrainedArgumentationFramework> set : sets) {
 		        boolean isLeast = true;
 		        
 		        // Compare the set with all others to check if it's a subset of all other sets
-		        for (Extension<DungTheory> otherSet : sets) {
+		        for (Extension<ConstrainedArgumentationFramework> otherSet : sets) {
 		            if (!set.equals(otherSet) && !otherSet.containsAll(set)) {
 		                isLeast = false;
 		                break;
@@ -142,23 +141,23 @@ public class SimpleCAFGroundedReasoner {
     
 
 	//helper function to compute the grounded C-extension
-	private Extension<DungTheory> fcafRestricted(ConstrainedArgumentationFramework caf, Extension<DungTheory> extension, Collection<Extension<DungTheory>> restriction){
+	private Extension<ConstrainedArgumentationFramework> fcafRestricted(ConstrainedArgumentationFramework caf, Extension<ConstrainedArgumentationFramework> extension, Collection<Extension<ConstrainedArgumentationFramework>> restriction){
 		if (!restriction.contains(extension))
 			return null;
 		return caf.fcaf(extension);
 	}
 	
 	//helper function to compute the grounded C-extension
-    private Extension<DungTheory> fcafIteration(ConstrainedArgumentationFramework caf, Extension<DungTheory> S, Collection<Extension<DungTheory>> A) {
+    private Extension<ConstrainedArgumentationFramework> fcafIteration(ConstrainedArgumentationFramework caf, Extension<ConstrainedArgumentationFramework> S, Collection<Extension<ConstrainedArgumentationFramework>> A) {
     	//compute F^0_CAF<A(S)
 		if (!A.contains(S))
 			return null;
-    	Extension<DungTheory> currentSet = S;
-        Set<Extension<DungTheory>> seenSets = new HashSet<>();
+    	Extension<ConstrainedArgumentationFramework> currentSet = S;
+        Set<Extension<ConstrainedArgumentationFramework>> seenSets = new HashSet<>();
 
     	//compute F^i_CAF<A(S)     
         while (true) {
-            Extension<DungTheory> nextSet;
+            Extension<ConstrainedArgumentationFramework> nextSet;
             nextSet = fcafRestricted(caf,currentSet, A);
 
             if (nextSet == null || seenSets.contains(nextSet)) {

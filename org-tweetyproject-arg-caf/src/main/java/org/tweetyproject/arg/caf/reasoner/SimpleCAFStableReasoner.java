@@ -34,7 +34,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFStableReasoner{
+public class SimpleCAFStableReasoner extends AbstractCAFReasoner{
 	
 	/**
 	 * Computes all C-stable extensions for the given constrained argumentation framework.
@@ -42,12 +42,12 @@ public class SimpleCAFStableReasoner{
 	 * @param bbase the constrained argumentation framework
 	 * @return A collection of all c-stable extensions.
 	 */
-	public Collection<Extension<DungTheory>> getModels(ConstrainedArgumentationFramework bbase) {
+	public Collection<Extension<ConstrainedArgumentationFramework>> getModels(ConstrainedArgumentationFramework bbase) {
 		//get all C-Admissible Sets
-		Collection<Extension<DungTheory>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
-		Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
+		Collection<Extension<ConstrainedArgumentationFramework>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
+		Set<Extension<ConstrainedArgumentationFramework>> result = new HashSet<Extension<ConstrainedArgumentationFramework>>();
 		//check which Sets are also stable
-		for(Extension<DungTheory> e: cAmdSets)
+		for(Extension<ConstrainedArgumentationFramework> e: cAmdSets)
 			if(((DungTheory)bbase).isAttackingAllOtherArguments(e))
 				result.add(e);
 		return result;	
@@ -59,10 +59,10 @@ public class SimpleCAFStableReasoner{
 	 * @param bbase the constrained argumentation framework
 	 * @return A c-stable extension.
 	 */
-	public Extension<DungTheory> getModel(ConstrainedArgumentationFramework bbase) {
+	public Extension<ConstrainedArgumentationFramework> getModel(ConstrainedArgumentationFramework bbase) {
 		// returns the first found C-stable extension
-		Collection<Extension<DungTheory>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
-		for(Extension<DungTheory> e: cAmdSets)
+		Collection<Extension<ConstrainedArgumentationFramework>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
+		for(Extension<ConstrainedArgumentationFramework> e: cAmdSets)
 			if(((DungTheory)bbase).isAttackingAllOtherArguments(e))
 				return e;
 		return null;	

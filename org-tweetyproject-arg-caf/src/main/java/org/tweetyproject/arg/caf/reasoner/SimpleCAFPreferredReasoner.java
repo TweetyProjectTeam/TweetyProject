@@ -33,7 +33,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFPreferredReasoner {
+public class SimpleCAFPreferredReasoner extends AbstractCAFReasoner{
 
 	/**
 	 * Computes all C-preferred extensions for the given constrained argumentation framework.
@@ -41,13 +41,13 @@ public class SimpleCAFPreferredReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return A collection of all c-preferred extensions.
 	 */
-	public Collection<Extension<DungTheory>> getModels(ConstrainedArgumentationFramework bbase) {
+	public Collection<Extension<ConstrainedArgumentationFramework>> getModels(ConstrainedArgumentationFramework bbase) {
 		//get all C-Admissible Sets
-		Collection<Extension<DungTheory>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
-		Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
+		Collection<Extension<ConstrainedArgumentationFramework>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
+		Set<Extension<ConstrainedArgumentationFramework>> result = new HashSet<Extension<ConstrainedArgumentationFramework>>();
 
 		//check which sets are C-Preferred extensions
-		for (Extension<DungTheory> admSet : cAmdSets) {
+		for (Extension<ConstrainedArgumentationFramework> admSet : cAmdSets) {
 			if (bbase.isPreferredCExtension(admSet)) result.add(admSet);
 		}
 		return result;
@@ -59,10 +59,10 @@ public class SimpleCAFPreferredReasoner {
 	 * @param bbase the constrained argumentation framework
 	 * @return A c-preferred extension.
 	 */
-	public Extension<DungTheory> getModel(ConstrainedArgumentationFramework bbase) {
+	public Extension<ConstrainedArgumentationFramework> getModel(ConstrainedArgumentationFramework bbase) {
 		// return the first found C-preferred extension
-		Collection<Extension<DungTheory>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
-		for (Extension<DungTheory> admSet : cAmdSets) {
+		Collection<Extension<ConstrainedArgumentationFramework>> cAmdSets = new SimpleCAFAdmissibleReasoner().getModels(bbase);
+		for (Extension<ConstrainedArgumentationFramework> admSet : cAmdSets) {
 			if (bbase.isPreferredCExtension(admSet)) return admSet;
 		}
 		// this should not happen

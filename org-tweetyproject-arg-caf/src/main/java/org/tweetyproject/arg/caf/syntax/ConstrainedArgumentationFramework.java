@@ -151,7 +151,7 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 * @param ext The extension (set of arguments) to be checked for completion.
 	 * @return true if the extension satisfies the framework's constraint, false otherwise.
 	 */
-	public boolean isCompletion(Extension<DungTheory> ext) {
+	public boolean isCompletion(Extension<ConstrainedArgumentationFramework> ext) {
 		// build Belief base from AF and ext, all Args in ext are set to true, all other args set to false
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		Collection<PlFormula> literals = new ArrayList<>();
@@ -179,8 +179,10 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 * @param ext The extension to be checked for C-admissibility.
 	 * @return true if the extension is C-admissible, false otherwise.
 	 */
-	public boolean isCAdmissibleSet(Extension<DungTheory> ext) {
-		return super.isAdmissible(ext) && isCompletion(ext);
+	public boolean isCAdmissibleSet(Extension<ConstrainedArgumentationFramework> ext) {
+		Extension<DungTheory> dungExt = new Extension<>();
+		dungExt.addAll(ext);
+		return super.isAdmissible(dungExt) && isCompletion(ext);
 	}
 	
 	/**
@@ -193,7 +195,9 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 		SimpleAdmissibleReasoner amdReasoner = new SimpleAdmissibleReasoner();
 		Collection<Extension<DungTheory>> admSets = amdReasoner.getModels(this);
 		//check if one of them is C-admissible
-		for(Extension<DungTheory> ext : admSets) {
+		for(Extension<DungTheory> dungExt : admSets) {
+			Extension<ConstrainedArgumentationFramework> ext = new Extension<>();
+			ext.addAll(dungExt);
 			if(isCAdmissibleSet(ext)) return true;
 		}
 		return false;
@@ -205,19 +209,19 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 * @param ext The extension (set of arguments) to be checked for being a preferred C-extension.
 	 * @return true if the extension is a preferred C-extension, false otherwise.
 	 */
-	public boolean isPreferredCExtension(Extension<DungTheory> ext) {
+	public boolean isPreferredCExtension(Extension<ConstrainedArgumentationFramework> ext) {
 		//check if ext is C-Admissible
 		if(!isCAdmissibleSet(ext)) return false;
 		
 		//Check whether adding ext is a maximal admissible set by subsequently adding remaining arguments and checking whether the resulting set is C-Admissible
-		Extension<DungTheory> remaining = new Extension<>();
+		Extension<ConstrainedArgumentationFramework> remaining = new Extension<>();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()) {
 			remaining.add(it.next());
 		}
 		remaining.removeAll(ext);
 		for(Argument arg:remaining) {
-	        Extension<DungTheory> newExt = new Extension<>();
+	        Extension<ConstrainedArgumentationFramework> newExt = new Extension<>();
 	        newExt.addAll(ext); 
 			newExt.add(arg);
 			if(isCAdmissibleSet(newExt)) return false;
@@ -232,8 +236,10 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 * @param ext The extension (set of arguments) to be checked for being a stable C-extension.
 	 * @return true if the extension is a stable C-extension, false otherwise.
 	 */
-	public boolean isStableCExtension(Extension<DungTheory> ext) {
-		return isCAdmissibleSet(ext) && isStable(ext);
+	public boolean isStableCExtension(Extension<ConstrainedArgumentationFramework> ext) {
+		Extension<DungTheory> dungExt = new Extension<>();
+		dungExt.addAll(ext);
+		return isCAdmissibleSet(ext) && isStable(dungExt);
 	}
 	
 
@@ -245,19 +251,22 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 * @return a new extension containing arguments that are acceptable with respect to the given extension 
 	 *         and where S ∪ {a} satisfies C, or null if F_CAF(S) is not a monotone function.
 	 */
-	public Extension<DungTheory> fcaf(Extension<DungTheory> extension){
-	    Extension<DungTheory> newExtension = new Extension<>();
+	public Extension<ConstrainedArgumentationFramework> fcaf(Extension<ConstrainedArgumentationFramework> extension){
+	    Extension<ConstrainedArgumentationFramework> newExtension = new Extension<>();
 	    Iterator<Argument> it = this.iterator();
 
 	    while (it.hasNext()) {
 	        Argument argument = it.next();
-	        Extension<DungTheory> possExt = new Extension<>();
+	        Extension<ConstrainedArgumentationFramework> possExt = new Extension<>();
 	        
 	        possExt.addAll(extension); 
 	        possExt.add(argument);
 	        
+			Extension<DungTheory> dungExt = new Extension<>();
+			dungExt.addAll(extension);
+	        
 	        // Check if the current argument is acceptable w.r.t the given extension
-	        if (this.isAcceptable(argument, extension)) {
+	        if (this.isAcceptable(argument, dungExt)) {
 	            // Check if the possible extension satisfies the completion criteria (C)
 	            if (isCompletion(possExt)) {
 	            	newExtension.add(argument);
@@ -276,16 +285,16 @@ public class ConstrainedArgumentationFramework extends DungTheory {
 	 */
     public boolean hasMonotoneFcafA() {
     	SimpleCAFAdmissibleReasoner admReas = new SimpleCAFAdmissibleReasoner();
-    	Collection<Extension<DungTheory>> cAdmSets = admReas.getModels(this);
+    	Collection<Extension<ConstrainedArgumentationFramework>> cAdmSets = admReas.getModels(this);
         cAdmSets = new TreeSet<>(cAdmSets);
 
-        for (Extension<DungTheory> extA : cAdmSets) {
-            Extension<DungTheory> fcafA = this.fcaf(extA);
-            for (Extension<DungTheory> extB : cAdmSets) {
+        for (Extension<ConstrainedArgumentationFramework> extA : cAdmSets) {
+            Extension<ConstrainedArgumentationFramework> fcafA = this.fcaf(extA);
+            for (Extension<ConstrainedArgumentationFramework> extB : cAdmSets) {
                 if (!extA.equals(extB)) {
                     // Check if extA is a subset of extB
                     if (extA.containsAll(extB)) {
-                        Extension<DungTheory> fcafB = this.fcaf(extB);                       
+                        Extension<ConstrainedArgumentationFramework> fcafB = this.fcaf(extB);                       
                         // Check monotonicity: fcaf(extA) must be a subset of fcaf(extB)
                         if (!fcafA.containsAll(fcafB)) {
                             return false;

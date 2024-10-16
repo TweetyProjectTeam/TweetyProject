@@ -25,6 +25,7 @@ import java.util.Set;
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -34,7 +35,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFAdmissibleReasoner{
+public class SimpleCAFAdmissibleReasoner extends AbstractCAFReasoner{
 
 	/**
 	 * Computes all C-admissible extensions for the given constrained argumentation framework.
@@ -42,15 +43,17 @@ public class SimpleCAFAdmissibleReasoner{
 	 * @param bbase the constrained argumentation framework
 	 * @return A collection of all c-admissible extensions.
 	 */
-	public Collection<Extension<DungTheory>> getModels(ConstrainedArgumentationFramework bbase) {
+	public Collection<Extension<ConstrainedArgumentationFramework>> getModels(ConstrainedArgumentationFramework bbase) {
 		//get all admissible Sets of the underlying DungTheory
 		SimpleAdmissibleReasoner dungReasoner = new SimpleAdmissibleReasoner();
-		Set<Extension<DungTheory>> admExtensions = (Set<Extension<DungTheory>>) dungReasoner.getModels(bbase);
-		Set<Extension<DungTheory>> cafAdmExtensions = new HashSet<>();
+		Collection<Extension<DungTheory>> admExtensions = dungReasoner.getModels(bbase);
+		Collection<Extension<ConstrainedArgumentationFramework>> cafAdmExtensions = new HashSet<>();
 		
 		//find sets that are also C-Admissible
 		for (Extension<DungTheory> admSet : admExtensions) {
-			if (bbase.isCompletion(admSet)) cafAdmExtensions.add(admSet);
+			 Extension<ConstrainedArgumentationFramework> cafExtension = new Extension<>();
+			 cafExtension.addAll(admSet);
+			 if (bbase.isCompletion(cafExtension)) cafAdmExtensions.add(cafExtension);
 		}
 		return cafAdmExtensions;
 	}
@@ -61,16 +64,20 @@ public class SimpleCAFAdmissibleReasoner{
 	 * @param bbase the constrained argumentation framework
 	 * @return A c-admissible extension.
 	 */
-	public Extension<DungTheory> getModel(ConstrainedArgumentationFramework bbase) {
+	public Extension<ConstrainedArgumentationFramework> getModel(ConstrainedArgumentationFramework bbase) {
 		// return the first C-Admissible Set
 		//get all admissible Sets of the underlying DungTheory
 		SimpleAdmissibleReasoner dungReasoner = new SimpleAdmissibleReasoner();
-		Set<Extension<DungTheory>> admExtensions = (Set<Extension<DungTheory>>) dungReasoner.getModels(bbase);
+		Collection<Extension<DungTheory>> admExtensions = dungReasoner.getModels(bbase);
 		
 		//find sets that are also C-Admissible
 		for (Extension<DungTheory> admSet : admExtensions) {
-			if (bbase.isCompletion(admSet)) return admSet;
+			 Extension<ConstrainedArgumentationFramework> cafExtension = new Extension<>();
+			 cafExtension.addAll(admSet);
+			 if (bbase.isCompletion(cafExtension)) return cafExtension;
+			
 		}
 		throw new RuntimeException("No C-Admissible Extension found.");
 	}
+
 }

@@ -20,15 +20,18 @@ package org.tweetyproject.arg.caf.examples;
 
 import java.util.Collection;
 
+import org.tweetyproject.arg.caf.reasoner.AbstractCAFReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFAdmissibleReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFGroundedReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFPreferredReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFStableReasoner;
+import org.tweetyproject.arg.caf.semantics.CAFSemantics;
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.InferenceMode;
 
 /**
  * Example Class on how to perform inference on constrained argumentation frameworks.
@@ -66,17 +69,23 @@ public class CAFReasonerExample {
 		af.addAttack(e,f);
 		af.addAttack(f,e);
 	
-		
+		//Create CAF
 		ConstrainedArgumentationFramework caf = new ConstrainedArgumentationFramework(af, propForm);		
 		
 		System.out.println("The CAF: \n"+ caf.prettyPrint() +"\n\nhas the following C-extensions:\n");
 		
 		System.out.println("C-Admissible Extensions:");
-		SimpleCAFAdmissibleReasoner cafAdmR = new SimpleCAFAdmissibleReasoner();
-		Collection<Extension<DungTheory>> cAdmSets = cafAdmR.getModels(caf);
+		
+		//Reasoners can be created using the abstract superclass
+		AbstractCAFReasoner cafReasoner = AbstractCAFReasoner.getSimpleReasonerForSemantics(CAFSemantics.CAF_ADM);
+		Collection<Extension<ConstrainedArgumentationFramework>> cAdmSets = cafReasoner.getModels(caf);
 		System.out.println(cAdmSets);
-		
-		
+		System.out.println("Credulous justification status of each argument under admissibility:");
+		for(Argument arg: caf) {
+			System.out.println(arg +": " + cafReasoner.query(caf, arg, InferenceMode.CREDULOUS));
+		}
+
+		//Or by instantiating a reasoner for the required semantics
 		SimpleCAFGroundedReasoner cafGr = new SimpleCAFGroundedReasoner();
 		System.out.println("C-Grounded Extension:");
 		System.out.println(cafGr.getModel(caf));
@@ -87,6 +96,10 @@ public class CAFReasonerExample {
 		System.out.println("\nC-Preferred Extensions:");
 		SimpleCAFPreferredReasoner cafPrefR = new SimpleCAFPreferredReasoner();
 		System.out.println(cafPrefR.getModels(caf));
+		System.out.println("Skeptical justification status of each argument under admissibility:");
+		for(Argument arg: caf) {
+			System.out.println(arg +": " + cafPrefR.query(caf, arg));
+		}
 		
 		System.out.println("\nC-Stable Extensions:");
 		SimpleCAFStableReasoner cafStR = new SimpleCAFStableReasoner();
