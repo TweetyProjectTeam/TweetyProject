@@ -39,37 +39,13 @@ public class CounterfactualStatement extends InterventionalStatement {
 
 	/**
 	 * Initializes a new counterfactual causal statement.
-	 * @param conclusions 	Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
+	 * @param conclusion 	Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param interventions Maps explainable atoms to boolean values.
 	 * @param premises 		PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
 	public CounterfactualStatement(PlFormula conclusion, Map<Proposition, Boolean> interventions, Collection<PlFormula> premises) {
 		super(conclusion, interventions, premises);
 	}
-
-	/*
-	@Override
-	public boolean holds(CausalKnowledgeBase ckbase) {
-		for(PlFormula conclusion : this.getConclusions()) {
-			if(!checkCounterFactualStatement(ckbase, conclusion)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	 */
-	
-	/*@Override
-	public void VisualizeHolds(CausalKnowledgeBase cKbase) {
-		var causalKnowledgeBaseCopy = getIntervenedTwinModel(cKbase);
-		causalKnowledgeBaseCopy.addAll(this.getObservations());
-		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
-				"Premises: " + this.getObservations().toString()
-				+ " \n Interventions: " + this.getInterventions().toString()
-				+ " \n Conclusions: " + this.getConclusions().toString());
-	}*/
 
 	/*
 	private boolean checkCounterFactualStatement(CausalKnowledgeBase ckbase, PlFormula conclusion) {

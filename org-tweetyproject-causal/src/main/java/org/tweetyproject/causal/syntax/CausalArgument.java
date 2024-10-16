@@ -26,7 +26,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * This class represents a logical {@link Argument} induced from a {@link CausalKnowledgeBase}
- * An Argument consists of a set of assumptions (premises) and a conclusion
+ * Such an Argument consists of a set of assumptions (premises) and a causal conclusion
  *
  * @author Julian Sander
  * @author Lars Bengel

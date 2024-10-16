@@ -42,7 +42,7 @@ public class InterventionalStatement extends CausalStatement {
 	/**
 	 * Initializes a new interventional causal statement.
 	 *
-	 * @param conclusions	 Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
+	 * @param conclusion	 Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param interventions	 Maps explainable atoms to boolean values.
 	 * @param observations	 PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
@@ -51,39 +51,15 @@ public class InterventionalStatement extends CausalStatement {
 		this.interventions = interventions;
 	}
 
-
     /**
      * Retrieves the interventions of this causal statement.
-     * @return A HashMap containing the interventions mapped from explainable atoms to their respective boolean values.
+     * @return A Msp containing the interventions mapped from explainable atoms to their respective boolean values.
      */
-	/*
+
 	public Map<Proposition, Boolean> getInterventions(){
 		return new HashMap<>(this.interventions);
 	}
 
-	@Override
-	public boolean holds(CausalKnowledgeBase ckbase) {
-		for(var conclusion : this.getConclusions()) {
-			if(!checkInterventionalStatement(ckbase, conclusion)) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	*/
-	
-	/*@Override
-	public void VisualizeHolds(CausalKnowledgeBase cKbase)
-	{
-		var causalKnowledgeBaseCopy = getIntervenedCopy(cKbase);
-		causalKnowledgeBaseCopy.addAll(this.getObservations());
-		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
-				"Premises: " + this.getObservations().toString()
-				+ " \n Interventions: " + this.getInterventions().toString()
-				+ " \n Conclusions: " + this.getConclusions().toString());
-	}*/
 	/*
 	private boolean checkInterventionalStatement(CausalKnowledgeBase ckbase, PlFormula conclusion) {
 		CausalKnowledgeBase newBase = ckbase.clone();

@@ -39,7 +39,7 @@ public class CausalStatement {
 	/**
 	 * Initializes a new causal statement.
 	 *
-	 * @param conclusions 	conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
+	 * @param conclusion 	conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param premises 		observations of the causal atoms
 	 */
 	public CausalStatement(PlFormula conclusion, Collection<PlFormula> premises) {
@@ -62,41 +62,5 @@ public class CausalStatement {
      */
 	public Collection<PlFormula> getObservations(){
 		return new HashSet<>(this.observations);
-	}	
-	
-	/**
-	 * Checks if this instance holds in the specified knowledge base.
-	 * @param ckbase Causal knowledge base
-	 * @return TRUE iff this instance holds in the specified knowledge base.
-	 */
-	/*
-	public boolean holds(CausalKnowledgeBase ckbase) {
-		for(var conclusion : this.getConclusions()) {
-			if(!ckbase.entails(this.getObservations(), conclusion)) {
-				return false;
-			}
-		}
-		
-		return true;
 	}
-
-	 */
-	
-    /**
-     * Visualizes this causal statement within a given causal knowledge base. This method generates a visual representation
-     * of the argument framework induced by adding the premises of this statement to the causal knowledge base, highlighting
-     * the conclusions.
-     * 
-     * @param cKbase The causal knowledge base used for visualization.
-     */
-	/*
-	public void VisualizeHolds(CausalKnowledgeBase cKbase)
-	{
-		var causalKnowledgeBaseCopy = cKbase.clone();
-		causalKnowledgeBaseCopy.addAll(this.getObservations());
-		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getObservations().toString() + " \n Conclusions: " + this.getConclusion().toString());
-	}
-
-	 */
 }

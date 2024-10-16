@@ -1,6 +1,7 @@
 package org.tweetyproject.causal.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.causal.reasoner.ArgumentationBasedCausalReasoner;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
@@ -69,5 +70,9 @@ public class CausalReasoningExampleVirus {
         System.out.println("Observing 'fever' implies 'not shortOfBreath': " + reasoner.query(cbase, observations, new Negation(shortOfBreath)));
 
         System.out.printf("Possible Conclusions of observing '%2$s': %1$s", reasoner.getConclusions(cbase, observations), observations);
+
+
+        // Visualisation of the induced argumentation framework
+        //DungTheoryPlotter.plotFramework(theory, 3000, 2000, "Premises: " + observations + " \n Conclusion: " + shortOfBreath);
     }
 }
