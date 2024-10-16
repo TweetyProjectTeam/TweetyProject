@@ -46,15 +46,17 @@ public class InterventionalStatement extends CausalStatement {
 	 * @param interventions	 Maps explainable atoms to boolean values.
 	 * @param observations	 PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
-	public InterventionalStatement(Collection<PlFormula> conclusions, Map<Proposition, Boolean> interventions, Collection<PlFormula> observations) {
-		super(conclusions, observations);
+	public InterventionalStatement(PlFormula conclusion, Map<Proposition, Boolean> interventions, Collection<PlFormula> observations) {
+		super(conclusion, observations);
 		this.interventions = interventions;
 	}
-	
+
+
     /**
      * Retrieves the interventions of this causal statement.
      * @return A HashMap containing the interventions mapped from explainable atoms to their respective boolean values.
      */
+	/*
 	public Map<Proposition, Boolean> getInterventions(){
 		return new HashMap<>(this.interventions);
 	}
@@ -69,6 +71,7 @@ public class InterventionalStatement extends CausalStatement {
 		
 		return true;
 	}
+	*/
 	
 	/*@Override
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
@@ -81,7 +84,7 @@ public class InterventionalStatement extends CausalStatement {
 				+ " \n Interventions: " + this.getInterventions().toString()
 				+ " \n Conclusions: " + this.getConclusions().toString());
 	}*/
-	
+	/*
 	private boolean checkInterventionalStatement(CausalKnowledgeBase ckbase, PlFormula conclusion) {
 		CausalKnowledgeBase newBase = ckbase.clone();
 		for (Proposition atom : interventions.keySet()) {
@@ -89,4 +92,6 @@ public class InterventionalStatement extends CausalStatement {
 		}
 		return newBase.entails(this.getObservations(), conclusion);
 	}
+
+	 */
 }

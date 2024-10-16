@@ -18,35 +18,144 @@
  */
 package org.tweetyproject.causal.reasoner;
 
-import org.tweetyproject.arg.deductive.syntax.DeductiveKnowledgeBase;
-import org.tweetyproject.causal.semantics.CausalStatement;
-import org.tweetyproject.causal.syntax.InducedTheory;
-import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.syntax.CausalArgument;
+import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.logics.pl.reasoner.AbstractPlReasoner;
+import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
+import org.tweetyproject.logics.pl.syntax.*;
 
 import java.util.Collection;
+import java.util.HashSet;
 
-public class ArgumentationBasedCausalReasoner {
+/**
+ * Implements the approach to argumentation-based causal reasoning as described in<br>
+ * <br>
+ * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm,
+ * 'Argumentation-based Causal and Counterfactual Reasoning',
+ * 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), (2022)
+ *
+ *
+ * @author Lars Bengel
+ */
+public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
+    /** Internal reasoner */
+    protected final AbstractPlReasoner reasoner = new SimplePlReasoner();
+    protected final AbstractExtensionReasoner stableReasoner = new SimpleStableReasoner();
 
-    public InducedTheory getInducedTheory(Collection<PlFormula> observations) {
+    /**
+     * Constructs a logical argumentation framework from a given causal knowledge base and some observations
+     *
+     * @param cbase        some causal knowledge base
+     * @param observations  some logical formulae representing the observations of causal atoms
+     * @return the argumentation framework induced from the causal knowledge base and the observations
+     */
+    public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        PlBeliefSet base = new PlBeliefSet(cbase.getBeliefs());
+        base.addAll(observations);
 
-        DeductiveKnowledgeBase knowledgeBase = new DeductiveKnowledgeBase();
-        // TODO incorporate observations into argument construction
-        // Utilise DeductiveArgumentation package ??
-        return null;
+        Collection<PlFormula> literals = new HashSet<>();
+        for (Proposition atom : base.getSignature()) {
+            literals.add(atom);
+            literals.add(new Negation(atom));
+        }
+        // Construct all possible arguments
+        // TODO enhance arguments by adding all applied rules (see AbstractPlReasoner.getKernels())
+        DungTheory theory = new DungTheory();
+        for (PlFormula literal : literals) {
+            if (reasoner.query(base, literal)) {
+                // follows from observations directly
+                CausalArgument argument = new CausalArgument(new HashSet<>(), literal);
+                //System.out.printf("%s: %s%n",literal,reasoner.getKernels(base, literal));
+                theory.add(argument);
+                continue;
+            }
+            // Compute all sets of assumptions that entail the atom
+            // TODO optimise using {@link SubsetIterator}
+            Collection<Collection<PlFormula>> candidates = new HashSet<>();
+            for (Collection<PlFormula> assumptions : new SetTools<PlFormula>().subsets(cbase.getAssumptions())) {
+                if (reasoner.query(new PlBeliefSet(assumptions), new Contradiction())) continue;
+                PlBeliefSet knowledge = new PlBeliefSet(base);
+                knowledge.addAll(assumptions);
+                if (reasoner.query(knowledge, new Contradiction())) continue;
+                if (reasoner.query(knowledge, literal)) {
+                    candidates.add(assumptions);
+                }
+            }
+
+            // Find the minimal sets
+            for (Collection<PlFormula> a1 : candidates) {
+                boolean isMinimal = true;
+                for (Collection<PlFormula> a2: candidates) {
+                    if (a1.equals(a2)) continue;
+                    if (a1.containsAll(a2)) {
+                        isMinimal = false;
+                        break;
+                    }
+                }
+                if (isMinimal) {
+                    CausalArgument argument = new CausalArgument(a1, literal);
+                    theory.add(argument);
+                }
+            }
+        }
+
+        // Construct undercut attacks
+        for (Argument arg1 : theory) {
+            for (Argument arg2 : theory) {
+                for(PlFormula premise : ((CausalArgument) arg2).getPremises()) {
+                    if(((CausalArgument) arg1).getConclusion().complement().equals(premise)) {
+                        theory.addAttack(arg1, arg2);
+                        break;
+                    }
+                }
+            }
+        }
+        return theory;
     }
-    public boolean query(CausalStatement statement) {
+
+    @Override
+    public boolean query(CausalKnowledgeBase cbase, Collection<PlFormula> observations, PlFormula effect) {
+        DungTheory theory = getInducedTheory(cbase, observations);
+        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
+
+        //System.out.println(extensions);
+        for (Extension<DungTheory> extension : extensions) {
+            boolean concludesEffect = false;
+            for (Argument argument : extension) {
+                if (((CausalArgument) argument).getConclusion().equals(effect)) {
+                    concludesEffect = true;
+                    break;
+                }
+            }
+            if (!concludesEffect) {
+                return false;
+            }
+        }
         return true;
     }
 
-    public boolean query(Collection<PlFormula> observations, PlFormula effect) {
-        return true;
-    }
-
-    public Collection<PlFormula> getConclusions(PlFormula observation) {
-        return null;
-    }
-
-    public Collection<PlFormula> getConclusions(Collection<PlFormula> observations) {
-        return null;
+    @Override
+    public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        Collection<PlFormula> result = new HashSet<>();
+        for (Proposition prop : cbase.getSignature()) {
+            result.add(prop);
+            result.add(new Negation(prop));
+        }
+        DungTheory theory = getInducedTheory(cbase, observations);
+        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
+        for (Extension<DungTheory> extension : extensions) {
+            Collection<PlFormula> conclusions = new HashSet<>();
+            for (Argument argument : extension) {
+                conclusions.add(((CausalArgument) argument).getConclusion());
+            }
+            result.retainAll(conclusions);
+        }
+        return result;
     }
 }

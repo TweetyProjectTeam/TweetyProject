@@ -47,6 +47,7 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	 * @param model some causal model
 	 */
 	public CausalKnowledgeBase(StructuralCausalModel model) {
+		super(model);
 		this.model = model.clone();
 		this.assumptions = new HashSet<>();
 	}
@@ -93,9 +94,10 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	 * Removes an assumption from this knowledge base.
 	 *
 	 * @param assumption The assumption to be removed.
-	 * @return true if the assumption was successfully removed, false if it was not found in the set.
+	 * @return true if the assumption was successfully removed, false otherwise.
 	 */
 	public boolean removeAssumption(PlFormula assumption) {
+		// TODO cannot remove the only assumption for a background atom
 		return this.assumptions.remove(assumption);
 	}
 
@@ -120,43 +122,6 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 		Collection<PlFormula> result = new HashSet<>(formulas);
 		result.addAll(model.getStructuralEquations());
 		return result;
-	}
-
-	/**
-	 * Determines whether the specified conclusion can be inferred from the given premises via this knowledge base.
-	 *
-	 * @param premises Set of formulas, which will be added to this knowledge base
-	 * @param conclusion Formula, which is checked to be a conclusion of the combination of this instance and the specified premises or not
-	 * @return "True" iff the specified formula is a conclusion of this knowledge base and the specified set of premises.
-	 */
-	public boolean entails(Collection<PlFormula> premises, PlFormula conclusion) {
-		Collection<PlFormula> beliefs = this.getBeliefs();
-		beliefs.addAll(premises);
-		PlBeliefSet beliefSet = new PlBeliefSet(beliefs);
-		return new SimplePlReasoner().query(beliefSet, conclusion);
-	}
-
-	/**
-	 * Returns all 1-atom-conclusions of this instance if the specified set of formulas is
-	 * used as premises.
-	 * @param premises Set of formulas which are added to this knowledge base to get to the returned conclusions.
-	 * @return Set of formulas, that can be concluded from this knowledge base, if the specified formulas are added.
-	 */
-	public Collection<PlFormula> getSingleAtomConclusions(Collection<PlFormula> premises) {
-		Collection<PlFormula> conclusions = new HashSet<>();
-		for(PlFormula formula : this.model.getStructuralEquations()) {
-			for(Proposition atom : formula.getAtoms()) {
-				if (this.entails(premises, atom)) {
-					conclusions.add(atom);
-				} else {
-					PlFormula negAtom = new Negation(atom);
-					if(this.entails(premises, negAtom)){
-						conclusions.add(negAtom);
-					}
-				}
-			}
-		}
-		return conclusions;
 	}
 
 	@Override

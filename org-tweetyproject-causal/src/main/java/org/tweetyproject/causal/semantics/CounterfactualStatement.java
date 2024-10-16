@@ -43,10 +43,11 @@ public class CounterfactualStatement extends InterventionalStatement {
 	 * @param interventions Maps explainable atoms to boolean values.
 	 * @param premises 		PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
-	public CounterfactualStatement(Collection<PlFormula> conclusions, Map<Proposition, Boolean> interventions, Collection<PlFormula> premises) {
-		super(conclusions, interventions, premises);
+	public CounterfactualStatement(PlFormula conclusion, Map<Proposition, Boolean> interventions, Collection<PlFormula> premises) {
+		super(conclusion, interventions, premises);
 	}
 
+	/*
 	@Override
 	public boolean holds(CausalKnowledgeBase ckbase) {
 		for(PlFormula conclusion : this.getConclusions()) {
@@ -56,6 +57,8 @@ public class CounterfactualStatement extends InterventionalStatement {
 		}
 		return true;
 	}
+
+	 */
 	
 	/*@Override
 	public void VisualizeHolds(CausalKnowledgeBase cKbase) {
@@ -67,7 +70,8 @@ public class CounterfactualStatement extends InterventionalStatement {
 				+ " \n Interventions: " + this.getInterventions().toString()
 				+ " \n Conclusions: " + this.getConclusions().toString());
 	}*/
-	
+
+	/*
 	private boolean checkCounterFactualStatement(CausalKnowledgeBase ckbase, PlFormula conclusion) {
 		StructuralCausalModel twinModel = ckbase.getCausalModel().getTwinModel();
 		for (Proposition atom : this.interventions.keySet()) {
@@ -75,4 +79,6 @@ public class CounterfactualStatement extends InterventionalStatement {
 		}
 		return new CausalKnowledgeBase(twinModel, ckbase.getAssumptions()).entails(this.getObservations(), conclusion);
 	}
+
+	 */
 }

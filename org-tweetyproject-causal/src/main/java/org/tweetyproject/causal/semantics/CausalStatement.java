@@ -19,8 +19,6 @@
 package org.tweetyproject.causal.semantics;
 
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
-import org.tweetyproject.causal.syntax.InducedTheory;
-import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 import java.util.Collection;
@@ -34,7 +32,7 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class CausalStatement {
-	private Collection<PlFormula> conclusions;
+	private PlFormula conclusion;
 	
 	private Collection<PlFormula> observations;
 
@@ -44,9 +42,9 @@ public class CausalStatement {
 	 * @param conclusions 	conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param premises 		observations of the causal atoms
 	 */
-	public CausalStatement(Collection<PlFormula> conclusions, Collection<PlFormula> premises) {
+	public CausalStatement(PlFormula conclusion, Collection<PlFormula> premises) {
 		super();
-		this.conclusions = conclusions;
+		this.conclusion = conclusion;
 		this.observations = premises;
 	}
 
@@ -54,8 +52,8 @@ public class CausalStatement {
      * Retrieves the conclusions of this causal statement.
      * @return A new HashSet containing all the conclusions of this causal statement.
      */
-	public Collection<PlFormula> getConclusions(){
-		return new HashSet<>(this.conclusions);
+	public PlFormula getConclusion(){
+		return this.conclusion;
 	}
 	
     /**
@@ -71,6 +69,7 @@ public class CausalStatement {
 	 * @param ckbase Causal knowledge base
 	 * @return TRUE iff this instance holds in the specified knowledge base.
 	 */
+	/*
 	public boolean holds(CausalKnowledgeBase ckbase) {
 		for(var conclusion : this.getConclusions()) {
 			if(!ckbase.entails(this.getObservations(), conclusion)) {
@@ -80,6 +79,8 @@ public class CausalStatement {
 		
 		return true;
 	}
+
+	 */
 	
     /**
      * Visualizes this causal statement within a given causal knowledge base. This method generates a visual representation
@@ -88,11 +89,14 @@ public class CausalStatement {
      * 
      * @param cKbase The causal knowledge base used for visualization.
      */
+	/*
 	public void VisualizeHolds(CausalKnowledgeBase cKbase)
 	{
 		var causalKnowledgeBaseCopy = cKbase.clone();
 		causalKnowledgeBaseCopy.addAll(this.getObservations());
 		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
-		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getObservations().toString() + " \n Conclusions: " + this.getConclusions().toString());
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getObservations().toString() + " \n Conclusions: " + this.getConclusion().toString());
 	}
+
+	 */
 }

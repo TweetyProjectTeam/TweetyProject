@@ -31,7 +31,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Julian Sander
  * @author Lars Bengel
  */
-public class InducedArgument extends Argument {
+public class CausalArgument extends Argument {
 	/** Premises of the argument */
 	private final Collection<PlFormula> premises;
 	/** Conclusion of the argument */
@@ -42,8 +42,8 @@ public class InducedArgument extends Argument {
 	 * @param premises the set of premises of the argument
 	 * @param conclusion the conclusion of the argument
 	 */
-	public InducedArgument(Collection<PlFormula> premises, PlFormula conclusion) {
-		super(String.format("(%s, %s)", premises.toString(), conclusion.toString()));
+	public CausalArgument(Collection<PlFormula> premises, PlFormula conclusion) {
+		super(String.format("(%s -> %s)", premises.toString(), conclusion.toString()));
 
 		this.premises = new HashSet<>(premises);
 		this.conclusion = conclusion;
