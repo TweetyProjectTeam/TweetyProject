@@ -37,25 +37,54 @@ import java.util.Map;
  * @author Lars Bengel
  */
 public class InterventionalStatement extends CausalStatement {
-
+	/** Interventions of this causal statement */
 	protected Map<Proposition, Boolean> interventions;
+
 	/**
-	 * Initializes a new interventional causal statement.
+	 * Initializes a new interventional causal statement
 	 *
-	 * @param conclusion	 Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
-	 * @param interventions	 Maps explainable atoms to boolean values.
-	 * @param observations	 PlFormulas which have to be true, so that the conclusions can be drawn.
+	 * @param observations	 Observations of causal atoms
+	 * @param interventions	 A set of interventions on causal atoms
+	 * @param conclusion	 Conclusion of the causal statement
 	 */
-	public InterventionalStatement(PlFormula conclusion, Map<Proposition, Boolean> interventions, Collection<PlFormula> observations) {
-		super(conclusion, observations);
-		this.interventions = interventions;
+	public InterventionalStatement(Collection<PlFormula> observations, Map<Proposition, Boolean> interventions, PlFormula conclusion) {
+		super(observations, conclusion);
+		this.interventions = new HashMap<>(interventions);
+	}
+
+	/**
+	 * Initializes a new interventional causal statement without interventions
+	 *
+	 * @param observations	Observations of causal atoms
+	 * @param conclusion	Conclusion of the causal statement
+	 */
+	public InterventionalStatement(Collection<PlFormula> observations, PlFormula conclusion) {
+		super(observations, conclusion);
+		this.interventions = new HashMap<>();
+	}
+
+	/**
+	 * Initializes a new empty interventional causal statement
+	 */
+	public InterventionalStatement() {
+		super();
+		this.interventions = new HashMap<>();
+	}
+
+	/**
+	 * Add a new intervention which sets the given atom to the given truth value to the causal statement
+	 * @param atom	some causal atom
+	 * @param value	some truth value
+	 * @return TRUE iff the intervention is added successfully
+	 */
+	public boolean addIntervention(Proposition atom, boolean value) {
+		return Boolean.TRUE.equals(this.interventions.put(atom, value));
 	}
 
     /**
      * Retrieves the interventions of this causal statement.
      * @return A Msp containing the interventions mapped from explainable atoms to their respective boolean values.
      */
-
 	public Map<Proposition, Boolean> getInterventions(){
 		return new HashMap<>(this.interventions);
 	}

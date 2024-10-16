@@ -232,6 +232,8 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
      * Removes the original cause of the atom and thus permanently changes the causal model
      * @param v some explainable atom
      * @param x Truth value of the intervention
+     *
+     * TODO should this be in-place instead?
      */
     public StructuralCausalModel intervene(Proposition v, boolean x) {
         if(!this.explainableAtoms.containsKey(v)){
@@ -252,7 +254,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         s.append("Background atoms: ").append(getBackgroundAtoms()).append("\n");
         s.append("Structural Equations:\n");
         for (Proposition atom : getExplainableAtoms()) {
-            s.append(String.format("%s<=> %s%n", atom, explainableAtoms.get(atom)));
+            s.append(String.format("%s <=> %s%n", atom, explainableAtoms.get(atom)));
         }
         return s.toString();
     }
@@ -354,8 +356,17 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         throw new UnsupportedOperationException("Not Implemented");
     }
 
+    /**
+     * Thrown to indicate that the structural equations of a causal model contain a cyclic dependency
+     */
     public static class CyclicDependencyException extends Throwable {
-        public CyclicDependencyException(String string) {
+        /**
+         * Constructs a CyclicDependencyException with the specified detail message
+         *
+         * @param message the detail message
+         */
+        public CyclicDependencyException(String message) {
+            super(message);
         }
     }
 }

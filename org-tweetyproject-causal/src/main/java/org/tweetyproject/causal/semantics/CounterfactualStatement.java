@@ -19,7 +19,6 @@
 package org.tweetyproject.causal.semantics;
 
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
-import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
@@ -34,17 +33,46 @@ import java.util.Map;
  * @see "Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm 'Argumentation-based Causal and Counterfactual Reasoning' 1st International Workshop on Argumentation for eXplainable AI, 2022"
  *
  * @author Julian Sander
+ * @author Lars Bengel
  */
 public class CounterfactualStatement extends InterventionalStatement {
+	/**
+	 * Initializes a new counterfactual causal statement
+	 *
+	 * @param observations	 Observations of causal atoms
+	 * @param interventions	 A set of interventions on causal atoms
+	 * @param conclusion	 Conclusion of the causal statement
+	 */
+	public CounterfactualStatement(Collection<PlFormula> observations, Map<Proposition, Boolean> interventions, PlFormula conclusion) {
+		super(observations, interventions, conclusion);
+	}
 
 	/**
-	 * Initializes a new counterfactual causal statement.
-	 * @param conclusion 	Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
-	 * @param interventions Maps explainable atoms to boolean values.
-	 * @param premises 		PlFormulas which have to be true, so that the conclusions can be drawn.
+	 * Initializes a new counterfactual causal statement without interventions
+	 *
+	 * @param observations	 Observations of causal atoms
+	 * @param conclusion	 Conclusion of the causal statement
 	 */
-	public CounterfactualStatement(PlFormula conclusion, Map<Proposition, Boolean> interventions, Collection<PlFormula> premises) {
-		super(conclusion, interventions, premises);
+	public CounterfactualStatement(Collection<PlFormula> observations, PlFormula conclusion) {
+		super(observations, conclusion);
+	}
+
+	/**
+	 * Initializes a new empty counterfactual causal statement
+	 */
+	public CounterfactualStatement() {
+		super();
+	}
+
+	/**
+	 * Add a new intervention which sets the counterfactual copy of the given atom to the given truth value
+	 * @param atom	some causal atom
+	 * @param value	some truth value
+	 * @return TRUE iff the intervention is added successfully
+	 */
+	public boolean addCounterfactualIntervention(Proposition atom, boolean value) {
+		Proposition cAtom = new Proposition(atom.getName()+"*");
+		return Boolean.TRUE.equals(this.interventions.put(cAtom, value));
 	}
 
 	/*

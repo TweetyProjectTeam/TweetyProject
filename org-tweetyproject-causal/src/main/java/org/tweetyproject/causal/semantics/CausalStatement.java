@@ -32,33 +32,59 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class CausalStatement {
+	/** Conclusion or effect of the causal statement */
 	private PlFormula conclusion;
-	
+	/** Observations or premises of the causal statement */
 	private Collection<PlFormula> observations;
 
 	/**
-	 * Initializes a new causal statement.
-	 *
-	 * @param conclusion 	conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
-	 * @param premises 		observations of the causal atoms
+	 * Initializes a new empty causal statement
 	 */
-	public CausalStatement(PlFormula conclusion, Collection<PlFormula> premises) {
-		super();
+	public CausalStatement() {
+		this.observations = new HashSet<>();
+		this.conclusion = null;
+	}
+
+	/**
+	 * Initializes a new causal statement
+	 *
+	 * @param observations 	observations of the causal atoms
+	 * @param conclusion 	the conclusion of the causal statement
+	 */
+	public CausalStatement(Collection<PlFormula> observations, PlFormula conclusion) {
 		this.conclusion = conclusion;
-		this.observations = premises;
+		this.observations = new HashSet<>(observations);
+	}
+
+	/**
+	 * Add a new observation to the causal statement
+	 *
+	 * @param observation some observation of a causal atom
+	 * @return TRUE iff observation is added successfully
+	 */
+	public boolean addObservation(PlFormula observation) {
+		return this.observations.add(observation);
+	}
+
+	/**
+	 * Set a new conclusion of the causal statement
+	 * @param conclusion the new conclusion
+	 */
+	public void setConclusion(PlFormula conclusion) {
+		this.conclusion = conclusion;
 	}
 
     /**
-     * Retrieves the conclusions of this causal statement.
-     * @return A new HashSet containing all the conclusions of this causal statement.
+     * Retrieves the conclusion of this causal statement
+     * @return The conclusion of this causal statement.
      */
 	public PlFormula getConclusion(){
 		return this.conclusion;
 	}
 	
     /**
-     * Retrieves the observations of this causal statement.
-     * @return A new HashSet containing all the premises required for the conclusions to hold.
+     * Retrieves the observations of this causal statement
+     * @return A copy of the observations of this causal statement
      */
 	public Collection<PlFormula> getObservations(){
 		return new HashSet<>(this.observations);

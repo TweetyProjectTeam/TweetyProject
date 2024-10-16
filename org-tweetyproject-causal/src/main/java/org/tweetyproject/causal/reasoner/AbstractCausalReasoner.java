@@ -90,7 +90,7 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
      * Computes the set of all literal expressions that can be concluded from the causal knowledge base and observation
      *
      * @param cbase         some causal knowledge base
-     * @param observation  some logical formula over atoms of the causal knowledge base
+     * @param observation   some logical formula over atoms of the causal knowledge base
      * @return the set of expressions that can be concluded from the given knowledge
      */
     public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, PlFormula observation) {
