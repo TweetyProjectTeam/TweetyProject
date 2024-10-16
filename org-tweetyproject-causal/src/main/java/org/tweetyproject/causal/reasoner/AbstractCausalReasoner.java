@@ -18,22 +18,25 @@
  */
 package org.tweetyproject.causal.reasoner;
 
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.causal.semantics.CausalStatement;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.commons.Interpretation;
+import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.QualitativeReasoner;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * General abstract reasoner for basic causal reasoning with {@link CausalKnowledgeBase}
  *
  * @author Lars Bengel
  */
-public abstract class AbstractCausalReasoner implements QualitativeReasoner<CausalKnowledgeBase,PlFormula> {
-
+public abstract class AbstractCausalReasoner implements QualitativeReasoner<CausalKnowledgeBase,PlFormula>, ModelProvider<PlFormula,CausalKnowledgeBase, Interpretation<CausalKnowledgeBase,PlFormula>> {
     /**
      * Determines whether the given effect is entailed by the causal knowledge base together with the observations
      *
@@ -48,7 +51,7 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
      * Determines whether the given effect is entailed by the causal knowledge base together with the observation
      *
      * @param cbase         some causal knowledge base
-     * @param observation  some logical formula over atoms of the causal knowledge base
+     * @param observation   some logical formula over atoms of the causal knowledge base
      * @param effect        some logical formula over atoms of the causal knowledge base
      * @return TRUE iff the causal knowledge base together with the observation logically entails the effect
      */
@@ -56,11 +59,6 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
         Collection<PlFormula> observations = new HashSet<>();
         observations.add(observation);
         return query(cbase, observations, effect);
-    }
-
-    @Override
-    public Boolean query(CausalKnowledgeBase cbase, PlFormula effect) {
-        return query(cbase, new HashSet<>(), effect);
     }
 
     /**
@@ -74,19 +72,26 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
         return query(cbase, statement.getObservations(), statement.getConclusion());
     }
 
+    @Override
+    public Boolean query(CausalKnowledgeBase cbase, PlFormula effect) {
+        return query(cbase, new HashSet<>(), effect);
+    }
+
     /**
+     * Computes the set of all literal expressions that can be concluded from the causal knowledge base and observations
      *
-     * @param cbase
-     * @param observations
-     * @return
+     * @param cbase         some causal knowledge base
+     * @param observations  some logical formulae over atoms of the causal knowledge base
+     * @return the set of expressions that can be concluded from the given knowledge
      */
     public abstract Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, Collection<PlFormula> observations);
 
     /**
+     * Computes the set of all literal expressions that can be concluded from the causal knowledge base and observation
      *
-     * @param cbase
-     * @param observation
-     * @return
+     * @param cbase         some causal knowledge base
+     * @param observation  some logical formula over atoms of the causal knowledge base
+     * @return the set of expressions that can be concluded from the given knowledge
      */
     public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, PlFormula observation) {
         Collection<PlFormula> observations = new HashSet<>();
@@ -95,12 +100,25 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
     }
 
     /**
+     * Computes the set of all literal expressions that can be concluded from the causal knowledge base
      *
-     * @param cbase
-     * @return
+     * @param cbase some causal knowledge base
+     * @return the set of expressions that can be concluded from the given knowledge
      */
     public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase) {
         return getConclusions(cbase, new HashSet<>());
+    }
+
+    @Override
+    public Collection<Interpretation<CausalKnowledgeBase, PlFormula>> getModels(CausalKnowledgeBase bbase) {
+        // TODO implement
+        return List.of();
+    }
+
+    @Override
+    public Interpretation<CausalKnowledgeBase, PlFormula> getModel(CausalKnowledgeBase bbase) {
+        // TODO implement
+        return null;
     }
 
     @Override
