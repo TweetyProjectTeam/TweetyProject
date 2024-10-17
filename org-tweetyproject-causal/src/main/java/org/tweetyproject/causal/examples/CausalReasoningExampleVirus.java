@@ -56,21 +56,22 @@ public class CausalReasoningExampleVirus {
         System.out.println("Causal Knowledge Base: " + cbase);
 
         Collection<PlFormula> observations = new HashSet<>();
-        observations.add(fever);
+        //observations.add(fever);
 
         // Initialize Causal Reasoner and induce an argumentation framework
         ArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();
-        DungTheory theory = reasoner.getInducedTheory(cbase, observations);
+        DungTheory theory = reasoner.getInducedTheory(cbase,observations);
 
         System.out.println("Induced Argumentation Framework:");
         System.out.println(theory.prettyPrint());
 
         // Do some causal reasoning
-        System.out.println("Observing 'fever' implies 'shortOfBreath': " + reasoner.query(cbase, observations, shortOfBreath));
-        System.out.println("Observing 'fever' implies 'not shortOfBreath': " + reasoner.query(cbase, observations, new Negation(shortOfBreath)));
+        System.out.printf("Observing '%1$s' implies 'shortOfBreath': %2$s%n", observations, reasoner.query(cbase, observations, shortOfBreath));
+        System.out.printf("Observing '%1$s' implies 'not shortOfBreath': %2$s%n", observations, reasoner.query(cbase, observations, new Negation(shortOfBreath)));
 
-        System.out.printf("Possible Conclusions of observing '%2$s': %1$s", reasoner.getConclusions(cbase, observations), observations);
+        System.out.printf("Possible Conclusions of observing '%2$s': %1$s%n", reasoner.getConclusions(cbase, observations), observations);
 
+        System.out.printf("Models: %s%n", reasoner.getModels(cbase, observations));
 
         // Visualisation of the induced argumentation framework
         //DungTheoryPlotter.plotFramework(theory, 3000, 2000, "Premises: " + observations + " \n Conclusion: " + shortOfBreath);

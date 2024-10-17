@@ -23,8 +23,10 @@ import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.semantics.CausalInterpretation;
 import org.tweetyproject.causal.syntax.CausalArgument;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.commons.Interpretation;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.pl.reasoner.AbstractPlReasoner;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
@@ -40,12 +42,12 @@ import java.util.HashSet;
  * 'Argumentation-based Causal and Counterfactual Reasoning',
  * 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), (2022)
  *
- *
  * @author Lars Bengel
  */
 public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
     /** Internal reasoner */
     protected final AbstractPlReasoner reasoner = new SimplePlReasoner();
+    /** Internal reasoner for stable semantics */
     protected final AbstractExtensionReasoner stableReasoner = new SimpleStableReasoner();
 
     /**
@@ -140,6 +142,8 @@ public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
         return true;
     }
 
+
+
     @Override
     public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
         Collection<PlFormula> result = new HashSet<>();
@@ -155,6 +159,24 @@ public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
                 conclusions.add(((CausalArgument) argument).getConclusion());
             }
             result.retainAll(conclusions);
+        }
+        return result;
+    }
+
+    @Override
+    public Collection<Interpretation<CausalKnowledgeBase, PlFormula>> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        Collection<Interpretation<CausalKnowledgeBase,PlFormula>> result = new HashSet<>();
+        DungTheory theory = getInducedTheory(cbase, observations);
+        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
+        for (Extension<DungTheory> extension : extensions) {
+            CausalInterpretation interpretation = new CausalInterpretation();
+            for (Argument argument : extension) {
+                PlFormula conclusion = ((CausalArgument) argument).getConclusion();
+                if (conclusion instanceof Proposition) {
+                    interpretation.add((Proposition) conclusion);
+                }
+            }
+            result.add(interpretation);
         }
         return result;
     }
