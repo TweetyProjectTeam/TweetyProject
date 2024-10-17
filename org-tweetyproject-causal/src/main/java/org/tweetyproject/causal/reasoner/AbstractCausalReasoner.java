@@ -108,17 +108,6 @@ public abstract class AbstractCausalReasoner implements QualitativeReasoner<Caus
     }
 
     /**
-     * Determines whether the given causal statements holds under the causal knowledge base
-     *
-     * @param cbase      some causal knowledge base
-     * @param statement  some causal statement
-     * @return TRUE iff the causal statement holds under the causal knowledge base
-     */
-    public boolean query(CausalKnowledgeBase cbase, CausalStatement statement) {
-        return query(cbase, statement.getObservations(), statement.getConclusion());
-    }
-
-    /**
      * Computes the set of all interpretations that can be concluded from the causal knowledge base and observation
      *
      * @param cbase         some causal knowledge base

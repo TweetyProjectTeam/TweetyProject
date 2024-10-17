@@ -24,6 +24,7 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.causal.semantics.CausalInterpretation;
+import org.tweetyproject.causal.semantics.CausalStatement;
 import org.tweetyproject.causal.syntax.CausalArgument;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.commons.util.SetTools;
@@ -43,7 +44,7 @@ import java.util.HashSet;
  *
  * @author Lars Bengel
  */
-public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
+public class ArgumentationBasedCausalReasoner extends AbstractArgumentationBasedCausalReasoner {
     /** Internal reasoner */
     protected final AbstractPlReasoner reasoner = new SimplePlReasoner();
     /** Internal reasoner for stable semantics */
@@ -136,5 +137,16 @@ public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
             result.add(interpretation);
         }
         return result;
+    }
+
+    /**
+     * Determines whether the given causal statements holds under the causal knowledge base
+     *
+     * @param cbase      some causal knowledge base
+     * @param statement  some causal statement
+     * @return TRUE iff the causal statement holds under the causal knowledge base
+     */
+    public boolean query(CausalKnowledgeBase cbase, CausalStatement statement) {
+        return query(cbase, statement.getObservations(), statement.getConclusion());
     }
 }

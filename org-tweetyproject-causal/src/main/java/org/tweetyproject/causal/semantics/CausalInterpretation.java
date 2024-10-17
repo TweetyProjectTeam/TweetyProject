@@ -50,11 +50,11 @@ public class CausalInterpretation extends InterpretationSet<Proposition, CausalK
 
     @Override
     public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
-        return false;
+        return this.contains(formula);
     }
 
     @Override
     public boolean satisfies(CausalKnowledgeBase beliefBase) throws IllegalArgumentException {
-        return false;
+        throw new IllegalArgumentException("Satisfaction of belief bases by causal interpretations is undefined.");
     }
 }

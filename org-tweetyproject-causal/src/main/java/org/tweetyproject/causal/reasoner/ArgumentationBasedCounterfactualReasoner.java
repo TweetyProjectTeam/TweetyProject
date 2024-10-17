@@ -1,34 +1,41 @@
+/*
+ * This file is part of "TweetyProject", a collection of Java libraries for
+ * logical aspects of artificial intelligence and knowledge representation.
+ *
+ * TweetyProject is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.causal.reasoner;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.semantics.CausalInterpretation;
+import org.tweetyproject.causal.semantics.CausalStatement;
 import org.tweetyproject.causal.semantics.CounterfactualStatement;
-import org.tweetyproject.causal.syntax.CausalArgument;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  */
-public class ArgumentationBasedCounterfactualReasoner {
-    /** Internal reasoner for stable semantics of the induced AF */
-    protected AbstractExtensionReasoner stableReasoner = new SimpleStableReasoner();
+public class ArgumentationBasedCounterfactualReasoner extends AbstractArgumentationBasedCausalReasoner {
 
-    /**
-     *
-     * @param cbase
-     * @param observations
-     * @param interventions
-     * @return
-     */
     public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
         StructuralCausalModel twinModel = cbase.getCausalModel();
         for (Proposition atom : interventions.keySet()) {
@@ -37,28 +44,29 @@ public class ArgumentationBasedCounterfactualReasoner {
         return new ArgumentationBasedCausalReasoner().getInducedTheory(new CausalKnowledgeBase(twinModel, cbase.getAssumptions()), observations);
     }
 
-    /**
-     *
-     * @param cbase
-     * @param statement
-     * @return
-     */
-    public boolean query(CausalKnowledgeBase cbase, CounterfactualStatement statement) {
-        DungTheory theory = getInducedTheory(cbase, statement.getObservations(), statement.getInterventions());
-        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
+    @Override
+    public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        return getInducedTheory(cbase, observations, new HashMap<>());
+    }
 
-        for (Extension<DungTheory> extension : extensions) {
-            boolean concludesEffect = false;
-            for (Argument argument : extension) {
-                if (((CausalArgument) argument).getConclusion().equals(statement.getConclusion())) {
-                    concludesEffect = true;
-                    break;
-                }
-            }
-            if (!concludesEffect) {
-                return false;
-            }
-        }
-        return true;
+
+    @Override
+    public Collection<CausalInterpretation> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        return null;
+    }
+
+    public boolean query(CausalKnowledgeBase cbase, CounterfactualStatement statement) {
+        return query(cbase, statement.getObservations(), statement.getInterventions(), statement.getConclusion());
+    }
+
+    /**
+     * Determines whether the given causal statements holds under the causal knowledge base
+     *
+     * @param cbase      some causal knowledge base
+     * @param statement  some causal statement
+     * @return TRUE iff the causal statement holds under the causal knowledge base
+     */
+    public boolean query(CausalKnowledgeBase cbase, CausalStatement statement) {
+        return query(cbase, statement.getObservations(), statement.getConclusion());
     }
 }
