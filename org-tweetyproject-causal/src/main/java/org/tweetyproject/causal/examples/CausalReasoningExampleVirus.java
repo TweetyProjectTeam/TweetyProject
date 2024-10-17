@@ -56,7 +56,7 @@ public class CausalReasoningExampleVirus {
         System.out.println("Causal Knowledge Base: " + cbase);
 
         Collection<PlFormula> observations = new HashSet<>();
-        //observations.add(fever);
+        observations.add(fever);
 
         // Initialize Causal Reasoner and induce an argumentation framework
         ArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();

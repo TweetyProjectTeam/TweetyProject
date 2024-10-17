@@ -26,7 +26,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.causal.semantics.CausalInterpretation;
 import org.tweetyproject.causal.syntax.CausalArgument;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
-import org.tweetyproject.commons.Interpretation;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.pl.reasoner.AbstractPlReasoner;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
@@ -48,13 +47,13 @@ public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
     /** Internal reasoner */
     protected final AbstractPlReasoner reasoner = new SimplePlReasoner();
     /** Internal reasoner for stable semantics */
-    protected final AbstractExtensionReasoner stableReasoner = new SimpleStableReasoner();
+    protected final AbstractExtensionReasoner extensionReasoner = new SimpleStableReasoner();
 
     /**
      * Constructs a logical argumentation framework from a given causal knowledge base and some observations
      *
      * @param cbase        some causal knowledge base
-     * @param observations  some logical formulae representing the observations of causal atoms
+     * @param observations some logical formulae representing the observations of causal atoms
      * @return the argumentation framework induced from the causal knowledge base and the observations
      */
     public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
@@ -122,52 +121,10 @@ public class ArgumentationBasedCausalReasoner extends AbstractCausalReasoner {
     }
 
     @Override
-    public boolean query(CausalKnowledgeBase cbase, Collection<PlFormula> observations, PlFormula effect) {
+    public Collection<CausalInterpretation> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
+        Collection<CausalInterpretation> result = new HashSet<>();
         DungTheory theory = getInducedTheory(cbase, observations);
-        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
-
-        //System.out.println(extensions);
-        for (Extension<DungTheory> extension : extensions) {
-            boolean concludesEffect = false;
-            for (Argument argument : extension) {
-                if (((CausalArgument) argument).getConclusion().equals(effect)) {
-                    concludesEffect = true;
-                    break;
-                }
-            }
-            if (!concludesEffect) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-
-    @Override
-    public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
-        Collection<PlFormula> result = new HashSet<>();
-        for (Proposition prop : cbase.getSignature()) {
-            result.add(prop);
-            result.add(new Negation(prop));
-        }
-        DungTheory theory = getInducedTheory(cbase, observations);
-        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
-        for (Extension<DungTheory> extension : extensions) {
-            Collection<PlFormula> conclusions = new HashSet<>();
-            for (Argument argument : extension) {
-                conclusions.add(((CausalArgument) argument).getConclusion());
-            }
-            result.retainAll(conclusions);
-        }
-        return result;
-    }
-
-    @Override
-    public Collection<Interpretation<CausalKnowledgeBase, PlFormula>> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
-        Collection<Interpretation<CausalKnowledgeBase,PlFormula>> result = new HashSet<>();
-        DungTheory theory = getInducedTheory(cbase, observations);
-        Collection<Extension<DungTheory>> extensions = stableReasoner.getModels(theory);
+        Collection<Extension<DungTheory>> extensions = extensionReasoner.getModels(theory);
         for (Extension<DungTheory> extension : extensions) {
             CausalInterpretation interpretation = new CausalInterpretation();
             for (Argument argument : extension) {
