@@ -25,26 +25,20 @@ import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 /**
- * This reasoner for constrained Dung theories (CAF) performs inference on the C-grounded extension.
- * Extensions are determined by checking whether the CAF has a least element as well as whether its characteristic function is
- * monotone.
+ * This reasoner for constrained Dung theories (CAF) performs inference on the weak grounded extension.
+ * Extensions are determined by checking whether the CAF has a least element.
  * 
  * @author Sandra Hoffmann
  *
  */
-public class SimpleCAFGroundedReasoner extends AbstractCAFReasoner {
-	SimpleCAFAdmissibleReasoner admReas;
+public class SimpleCAFWeakGroundedReasoner extends AbstractCAFReasoner {
 	
-	/** Default Constructor */
-	public SimpleCAFGroundedReasoner() {
-		admReas = new SimpleCAFAdmissibleReasoner();
-	}
 	
 	/**
-	 * Computes the C-grounded extension for the given constrained argumentation framework if it exists.
+	 * Computes the Weak C-extension for the given constrained argumentation framework if it exists.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return A collection containing the c-grounded extension (if one exists).
+	 * @return A collection containing the weak C-extension (if one exists).
 	 */
 	public Collection<Extension<ConstrainedArgumentationFramework>> getModels(ConstrainedArgumentationFramework bbase) {
 		Collection<Extension<ConstrainedArgumentationFramework>> extensions = new HashSet<Extension<ConstrainedArgumentationFramework>>();
@@ -53,33 +47,21 @@ public class SimpleCAFGroundedReasoner extends AbstractCAFReasoner {
 	}
 	
 	/**
-	 * Computes the C-grounded extension for the given constrained argumentation framework if it exists.
+	 * Computes the Weak C-extension for the given constrained argumentation framework if it exists.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return The c-grounded extension (if one exists).
+	 * @return The weak C-extension (if one exists).
 	 */
     public Extension<ConstrainedArgumentationFramework> getModel(ConstrainedArgumentationFramework bbase){
     	Extension<ConstrainedArgumentationFramework> leastElem = new Extension<>();
-    	//check if admissibleSets has least element
+    	//check if CAF has least element
 		try {
 			leastElem = bbase.getLeastElement();
 		} catch (RuntimeException e){
-			//There is no least element, so there is no grounded ext.
+			//There is no least element, so there is no weak c-ext.
 			return null;
 		}
-		//check if characteristic function is monotone
-		if (!bbase.hasMonotoneFcafA()) {
-			//The CAF has no c-grounded but a c-weak extension
-			return null;
-		} else {
-			//Compute grounded extension
-			return bbase.fcafIteration(leastElem);
-		}
+		return bbase.fcafIteration(leastElem);
     }
-    
 
-    
-    
-
-	
 }

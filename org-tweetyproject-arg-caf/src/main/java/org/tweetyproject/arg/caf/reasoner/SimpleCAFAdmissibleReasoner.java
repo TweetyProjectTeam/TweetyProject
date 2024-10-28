@@ -20,12 +20,10 @@ package org.tweetyproject.arg.caf.reasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**

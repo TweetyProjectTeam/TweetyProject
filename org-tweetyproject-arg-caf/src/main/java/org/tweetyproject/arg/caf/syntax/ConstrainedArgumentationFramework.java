@@ -22,7 +22,9 @@ package org.tweetyproject.arg.caf.syntax;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFAdmissibleReasoner;
@@ -56,7 +58,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 public class ConstrainedArgumentationFramework extends DungTheory {
 
 	private PlFormula constraint;		
-	private PlParser parser = new PlParser();	
+	private PlParser parser = new PlParser();
 	
 
 	/**
@@ -304,6 +306,88 @@ public class ConstrainedArgumentationFramework extends DungTheory {
             }
         }
         return true;
+    }
+    
+    
+    /**
+     * Determines the least element of the admissible sets of this CAF.
+     * 
+     * @return The least element of the admissible sets of this CAF, if one exists.
+     * @throws RuntimeException if no least element can be determined.
+     */
+    public Extension<ConstrainedArgumentationFramework> getLeastElement(){
+		SimpleCAFAdmissibleReasoner admReas = new SimpleCAFAdmissibleReasoner();
+		Collection<Extension<ConstrainedArgumentationFramework>> sets = admReas.getModels(this);
+    	//check if the empty set is in sets (in this case it is the least element)
+    	Extension<ConstrainedArgumentationFramework> emptySet = new Extension<>();
+		if(sets.contains(emptySet)) {
+			return emptySet;
+		} else {
+			for (Extension<ConstrainedArgumentationFramework> set : sets) {
+		        boolean isLeast = true;
+		        
+		        // Compare the set with all others to check if it's a subset of all other sets
+		        for (Extension<ConstrainedArgumentationFramework> otherSet : sets) {
+		            if (!set.equals(otherSet) && !otherSet.containsAll(set)) {
+		                isLeast = false;
+		                break;
+		            }
+		        }
+		        
+		        if (isLeast) {
+		            return set;
+		        }
+		    } 
+		}
+		//no least Element found
+		throw new RuntimeException("No least Element found");
+    }
+    
+    
+
+	//helper function to compute the grounded C-extension
+	private Extension<ConstrainedArgumentationFramework> fcafRestricted( Extension<ConstrainedArgumentationFramework> extension, Collection<Extension<ConstrainedArgumentationFramework>> restriction){
+		if (!restriction.contains(extension))
+			return null;
+		return this.fcaf(extension);
+	}
+	
+
+	/**
+	 * Determines the least fixed point of the C-characteristic function of the CAF, starting from extension S. 
+	 *
+	 * @param S Initial extension
+	 * @return The least fixed point of Fcaf, or null if S is inadmissible.
+	 */
+    public Extension<ConstrainedArgumentationFramework> fcafIteration(Extension<ConstrainedArgumentationFramework> S) {
+		SimpleCAFAdmissibleReasoner admReas = new SimpleCAFAdmissibleReasoner();
+		Collection<Extension<ConstrainedArgumentationFramework>> A = admReas.getModels(this);
+    	//compute F^0_CAF<A(S)
+		if (!A.contains(S))
+			return null;
+    	Extension<ConstrainedArgumentationFramework> currentSet = S;
+        Set<Extension<ConstrainedArgumentationFramework>> seenSets = new HashSet<>();
+
+    	//compute F^i_CAF<A(S)     
+        while (true) {
+            Extension<ConstrainedArgumentationFramework> nextSet;
+            nextSet = fcafRestricted(currentSet, A);
+
+            if (nextSet == null || seenSets.contains(nextSet)) {
+                // If the function result is undefined or a fixed point is reached
+                return currentSet; 
+            }
+
+            seenSets.add(currentSet);
+
+            if (nextSet.equals(currentSet)) {
+                // Fixed point reached
+                return currentSet;
+            }
+
+            // Update the current set for the next iteration
+            currentSet = nextSet;
+        }
     }
 
 	

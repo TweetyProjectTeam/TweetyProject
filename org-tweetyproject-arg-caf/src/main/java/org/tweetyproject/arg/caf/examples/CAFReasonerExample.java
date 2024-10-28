@@ -21,13 +21,12 @@ package org.tweetyproject.arg.caf.examples;
 import java.util.Collection;
 
 import org.tweetyproject.arg.caf.reasoner.AbstractCAFReasoner;
-import org.tweetyproject.arg.caf.reasoner.SimpleCAFAdmissibleReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFGroundedReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFPreferredReasoner;
 import org.tweetyproject.arg.caf.reasoner.SimpleCAFStableReasoner;
+import org.tweetyproject.arg.caf.reasoner.SimpleCAFWeakGroundedReasoner;
 import org.tweetyproject.arg.caf.semantics.CAFSemantics;
 import org.tweetyproject.arg.caf.syntax.ConstrainedArgumentationFramework;
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -90,8 +89,9 @@ public class CAFReasonerExample {
 		System.out.println("C-Grounded Extension:");
 		System.out.println(cafGr.getModel(caf));
 		
+		SimpleCAFWeakGroundedReasoner cafWGr = new SimpleCAFWeakGroundedReasoner();
 		System.out.println("Weak C-Extension:");
-		System.out.println(cafGr.getWeakModel(caf));
+		System.out.println(cafWGr.getModel(caf));
 		
 		System.out.println("\nC-Preferred Extensions:");
 		SimpleCAFPreferredReasoner cafPrefR = new SimpleCAFPreferredReasoner();
