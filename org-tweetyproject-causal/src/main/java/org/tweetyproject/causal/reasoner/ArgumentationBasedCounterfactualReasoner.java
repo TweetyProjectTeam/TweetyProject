@@ -19,8 +19,6 @@
 package org.tweetyproject.causal.reasoner;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.causal.semantics.CausalInterpretation;
-import org.tweetyproject.causal.semantics.CausalStatement;
 import org.tweetyproject.causal.semantics.CounterfactualStatement;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
@@ -28,45 +26,26 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Implements the approach to argumentation-based counterfactual reasoning as described in<br>
+ * <br>
+ * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm,
+ * 'Argumentation-based Causal and Counterfactual Reasoning',
+ * 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), (2022)
  *
+ * @author Lars Bengel
  */
 public class ArgumentationBasedCounterfactualReasoner extends AbstractArgumentationBasedCausalReasoner {
 
+    @Override
     public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
-        StructuralCausalModel twinModel = cbase.getCausalModel();
-        for (Proposition atom : interventions.keySet()) {
-            twinModel = twinModel.intervene(atom, interventions.get(atom));
-        }
-        return new ArgumentationBasedCausalReasoner().getInducedTheory(new CausalKnowledgeBase(twinModel, cbase.getAssumptions()), observations);
-    }
-
-    @Override
-    public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
-        return getInducedTheory(cbase, observations, new HashMap<>());
-    }
-
-
-    @Override
-    public Collection<CausalInterpretation> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations) {
-        return null;
+        StructuralCausalModel twinModel = cbase.getCausalModel().getTwinModel();
+        return new ArgumentationBasedCausalReasoner().getInducedTheory(new CausalKnowledgeBase(twinModel, cbase.getAssumptions()), observations, interventions);
     }
 
     public boolean query(CausalKnowledgeBase cbase, CounterfactualStatement statement) {
         return query(cbase, statement.getObservations(), statement.getInterventions(), statement.getConclusion());
-    }
-
-    /**
-     * Determines whether the given causal statements holds under the causal knowledge base
-     *
-     * @param cbase      some causal knowledge base
-     * @param statement  some causal statement
-     * @return TRUE iff the causal statement holds under the causal knowledge base
-     */
-    public boolean query(CausalKnowledgeBase cbase, CausalStatement statement) {
-        return query(cbase, statement.getObservations(), statement.getConclusion());
     }
 }
