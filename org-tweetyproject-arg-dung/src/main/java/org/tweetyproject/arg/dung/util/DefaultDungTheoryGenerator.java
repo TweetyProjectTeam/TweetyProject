@@ -47,6 +47,19 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		this.params = params;
 	}
 	
+	/**
+	 * Creates a new generator with the given parameters.
+	 * @param numberOfArguments the number of arguments.
+	 * @param attackProbability the probability that there is an attack between any two arguments
+	 */
+	public DefaultDungTheoryGenerator(int numberOfArguments, double attackProbability){
+		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
+		params.numberOfArguments = numberOfArguments;
+		params.attackProbability = attackProbability;
+		params.avoidSelfAttacks = false;
+		this.params = params;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.util.DungTheoryGenerator#next()
 	 */
