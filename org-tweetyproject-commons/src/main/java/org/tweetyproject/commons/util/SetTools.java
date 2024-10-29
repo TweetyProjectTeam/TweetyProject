@@ -359,4 +359,33 @@ public class SetTools<E> {
 	    }
 	    return sets;
 	}
+	
+	/**
+	 * <p>Generates all combinations of sets in the following sense:</p>
+	 * <p>Example input: {  {{a,b,c},{d,e}}  ,  {{f},{g,h},{i,j}}  ,  {{k}}  }</p>
+	 * <p>Example output: { {a,b,c,f,k}, {a,b,c,g,h,k}, {a,b,c,i,j,k}, {d,e,f,k}, {d,e,g,h,k}, {d,e,i,j,k} }  
+	 * <p>WARNING: input will be modified</p>
+	 * @param <E> the type of elements
+	 * @param sets some set of sets of sets of E
+	 * @return all combinations of sets from each set.
+	 */
+	public static <E> Collection<Collection<E>> combinations(Collection<Collection<Collection<E>>> sets){
+		Collection<Collection<E>> result = new HashSet<>();
+		if(sets.size() == 0)
+			return result;
+		if(sets.size() == 1) 
+			return sets.iterator().next();
+		Collection<Collection<E>> set = sets.iterator().next();
+		sets.remove(set);
+		Collection<Collection<E>> sub_result = SetTools.combinations(sets);
+		for(Collection<E> elem: set) {
+			for(Collection<E> elem_sub: sub_result) {
+				Collection<E> new_set = new HashSet<>();
+				new_set.addAll(elem);
+				new_set.addAll(elem_sub);
+				result.add(new_set);
+			}
+		}
+		return result;
+	}
 }
