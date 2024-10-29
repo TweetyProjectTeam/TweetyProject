@@ -19,13 +19,16 @@
 package org.tweetyproject.causal.reasoner;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.semantics.CausalInterpretation;
 import org.tweetyproject.causal.semantics.CounterfactualStatement;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
+import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -41,11 +44,44 @@ public class ArgumentationBasedCounterfactualReasoner extends AbstractArgumentat
 
     @Override
     public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
-        StructuralCausalModel twinModel = cbase.getCausalModel().getTwinModel();
-        return new ArgumentationBasedCausalReasoner().getInducedTheory(new CausalKnowledgeBase(twinModel, cbase.getAssumptions()), observations, interventions);
+        return new ArgumentationBasedCausalReasoner().getInducedTheory(cbase, observations, interventions);
     }
 
     public boolean query(CausalKnowledgeBase cbase, CounterfactualStatement statement) {
         return query(cbase, statement.getObservations(), statement.getInterventions(), statement.getConclusion());
+    }
+
+    @Override
+    public Collection<CausalInterpretation> getModels(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
+        return super.getModels(cbase.getTwinVersion(), observations, interventions);
+    }
+
+    @Override
+    public Collection<PlFormula> getConclusions(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
+        Collection<PlFormula> result = new HashSet<>();
+        Collection<CausalInterpretation> models = getModels(cbase, observations, interventions);
+
+        cbase = cbase.getTwinVersion();
+
+        for (Proposition prop : cbase.getSignature()) {
+            result.add(prop);
+            result.add(new Negation(prop));
+        }
+        for (CausalInterpretation model : models) {
+            for (Proposition prop : cbase.getSignature()) {
+                if (model.contains(prop)) {
+                    if (!result.contains(prop) && result.contains(new Negation(prop))) {
+                        result.remove(prop);
+                    }
+                    result.remove(new Negation(prop));
+                } else {
+                    if (result.contains(prop) && !result.contains(new Negation(prop))) {
+                        result.remove(new Negation(prop));
+                    }
+                    result.remove(prop);
+                }
+            }
+        }
+        return result;
     }
 }

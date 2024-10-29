@@ -112,6 +112,10 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 		return this.model.clone();
 	}
 
+	public CausalKnowledgeBase getTwinVersion() {
+        return new CausalKnowledgeBase(this.getCausalModel().getTwinModel(), this.getAssumptions());
+	}
+
 	/**
 	 * Returns all propositional formulas of this knowledge base, i.e.,
 	 * the structural equations of the corresponding causal model

@@ -210,7 +210,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         assert model != null;
 
         // create twin copy for each structural equation
-        Map<PlFormula, PlFormula> twinEquations = new HashMap<>();
+        Map<Proposition, PlFormula> twinEquations = new HashMap<>();
         for (PlFormula equation : structuralEquations) {
             PlFormula atom = ((Equivalence) equation).getFormulas().getFirst();
             PlFormula cause = ((Equivalence) equation).getFormulas().getSecond();
@@ -219,7 +219,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
                 PlFormula twinCause = cause.clone();
                 for (Proposition prop : cause.getAtoms()) {
                     if (model.getBackgroundAtoms().contains(prop)) continue;
-                    twinCause = twinCause.replace(prop, getCounterfactualCopy((Proposition) atom), cause.numberOfOccurrences(prop));
+                    twinCause = twinCause.replace(prop, getCounterfactualCopy(prop), twinCause.numberOfOccurrences(prop));
                 }
                 twinEquations.put(twinAtom, twinCause);
             } else {
@@ -228,16 +228,15 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         }
 
         // add twin equations
-        while (!twinEquations.isEmpty()) {
-            for (PlFormula lit : twinEquations.keySet()) {
-                try {
-                    this.addExplainableAtom(lit, twinEquations.get(lit));
-                    twinEquations.remove(lit);
-                } catch (CyclicDependencyException ignored) {
-                }
+        Queue<Proposition> remaining = new ArrayDeque<>(twinEquations.keySet());
+        while (!remaining.isEmpty()) {
+            Proposition prop = remaining.poll();
+            try {
+                model.addExplainableAtom(prop, twinEquations.get(prop));
+            } catch (CyclicDependencyException ignored) {
+                remaining.add(prop);
             }
         }
-
         return model;
     }
 
@@ -281,7 +280,9 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
     @Override
     public StructuralCausalModel clone() {
         try {
-            return new StructuralCausalModel(this.getStructuralEquations());
+            StructuralCausalModel model = new StructuralCausalModel(this.getStructuralEquations());
+            model.addBackgroundAtoms(this.getBackgroundAtoms());
+            return model;
         } catch (CyclicDependencyException ignored) {
             // will never happen
         }
