@@ -74,15 +74,4 @@ public class CounterfactualStatement extends InterventionalStatement {
 		Proposition cAtom = new Proposition(atom.getName()+"*");
 		return Boolean.TRUE.equals(this.interventions.put(cAtom, value));
 	}
-
-	/*
-	private boolean checkCounterFactualStatement(CausalKnowledgeBase ckbase, PlFormula conclusion) {
-		StructuralCausalModel twinModel = ckbase.getCausalModel().getTwinModel();
-		for (Proposition atom : this.interventions.keySet()) {
-			twinModel = twinModel.intervene(new Proposition(atom.getName()+"*"), interventions.get(atom));
-		}
-		return new CausalKnowledgeBase(twinModel, ckbase.getAssumptions()).entails(this.getObservations(), conclusion);
-	}
-
-	 */
 }

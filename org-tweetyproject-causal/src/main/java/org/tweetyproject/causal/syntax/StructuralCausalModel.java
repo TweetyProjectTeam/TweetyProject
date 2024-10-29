@@ -67,7 +67,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
             if (formula instanceof Equivalence) {
                 Equivalence equation = (Equivalence) formula;
                 PlFormula left = equation.getFormulas().getFirst();
-                if (!left.isLiteral()) {
+                if (!(left instanceof Proposition)) { // TODO allow literal here
                     throw new IllegalArgumentException("Left side of Structural Equation must be literal!");
                 }
                 explainable.addAll(left.getAtoms());
