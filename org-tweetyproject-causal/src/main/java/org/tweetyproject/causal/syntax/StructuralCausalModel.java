@@ -178,6 +178,21 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
     }
 
     /**
+     * Converts the given causal atom to a counterfactual copy
+     * @param proposition some causal atom
+     * @return the counterfactual copy of the given causal atom
+     */
+    public Proposition getCounterfactualCopy(Proposition proposition) {
+        if (this.getBackgroundAtoms().contains(proposition)) {
+            return proposition;
+        } else if (this.getExplainableAtoms().contains(proposition)) {
+            return new Proposition(proposition.getName() + "*");
+        } else {
+            throw new IllegalArgumentException("Proposition is not contained in causal model");
+        }
+    }
+
+    /**
      * Constructs the twin model for this causal model, i.e., it creates for each structural equation a copy where all
      * explainable atoms X are replaced by a twin version X*
      *
@@ -200,11 +215,11 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
             PlFormula atom = ((Equivalence) equation).getFormulas().getFirst();
             PlFormula cause = ((Equivalence) equation).getFormulas().getSecond();
             if (atom instanceof Proposition) {
-                Proposition twinAtom = new Proposition(((Proposition) atom).getName() + "*");
+                Proposition twinAtom = getCounterfactualCopy((Proposition) atom);
                 PlFormula twinCause = cause.clone();
                 for (Proposition prop : cause.getAtoms()) {
                     if (model.getBackgroundAtoms().contains(prop)) continue;
-                    twinCause = twinCause.replace(prop, new Proposition(((Proposition) atom).getName() + "*"), cause.numberOfOccurrences(prop));
+                    twinCause = twinCause.replace(prop, getCounterfactualCopy((Proposition) atom), cause.numberOfOccurrences(prop));
                 }
                 twinEquations.put(twinAtom, twinCause);
             } else {
