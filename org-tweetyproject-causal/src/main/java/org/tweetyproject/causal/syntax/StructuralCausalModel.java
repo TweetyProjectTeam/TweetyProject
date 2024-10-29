@@ -31,7 +31,6 @@ import java.util.*;
  *
  * @author Julian Sander
  * @author Lars Bengel
- *
  * TODO explainableAtoms needs to store somehow whether the atom is to be negated in the equation
  * TODO or the equation must be transformed before storing
  */

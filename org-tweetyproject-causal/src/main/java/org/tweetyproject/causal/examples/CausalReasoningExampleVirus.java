@@ -11,7 +11,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
+ * Example usage of the {@link ArgumentationBasedCausalReasoner} based on the example from <br>
+ * <br>
+ * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm,
+ * 'Argumentation-based Causal and Counterfactual Reasoning',
+ * 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), (2022)
  *
+ * @author Lars Bengel
  */
 public class CausalReasoningExampleVirus {
     /**
@@ -55,8 +61,13 @@ public class CausalReasoningExampleVirus {
 
         System.out.println("Causal Knowledge Base: " + cbase);
 
+
+        // Define variables for the example
         Collection<PlFormula> observations = new HashSet<>();
         observations.add(fever);
+
+        PlFormula conclusion1 = shortOfBreath;
+        PlFormula conclusion2 = new Negation(shortOfBreath);
 
         // Initialize Causal Reasoner and induce an argumentation framework
         ArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();
@@ -66,11 +77,9 @@ public class CausalReasoningExampleVirus {
         System.out.println(theory.prettyPrint());
 
         // Do some causal reasoning
-        System.out.printf("Observing '%1$s' implies 'shortOfBreath': %2$s%n", observations, reasoner.query(cbase, observations, shortOfBreath));
-        System.out.printf("Observing '%1$s' implies 'not shortOfBreath': %2$s%n", observations, reasoner.query(cbase, observations, new Negation(shortOfBreath)));
-
-        System.out.printf("Possible Conclusions of observing '%2$s': %1$s%n", reasoner.getConclusions(cbase, observations), observations);
-
+        System.out.printf("Observing '%1$s' implies '%2$s': %3$s%n", observations, conclusion1, reasoner.query(cbase, observations, conclusion1));
+        System.out.printf("Observing '%1$s' implies '%2$s': %3$s%n", observations, conclusion2, reasoner.query(cbase, observations, conclusion2));
+        System.out.printf("Possible Conclusions of observing '%1$s': %2$s%n", observations, reasoner.getConclusions(cbase, observations));
         System.out.printf("Models: %s%n", reasoner.getModels(cbase, observations));
 
         // Visualisation of the induced argumentation framework
