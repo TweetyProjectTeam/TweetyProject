@@ -86,7 +86,7 @@ public class CounterfactualReasoningExample {
 
         // Define variables for the example
         Collection<PlFormula> observations = new HashSet<>();
-        observations.add(shortOfBreath);
+        observations.add(fever);
 
         PlFormula conclusion1 = model.getCounterfactualCopy(fever);
         PlFormula conclusion2 = new Negation(model.getCounterfactualCopy(fever));
@@ -96,16 +96,17 @@ public class CounterfactualReasoningExample {
 
 
         // Example usage
-        DungTheory theory = reasoner.getInducedTheory(cbase,observations, interventions);
-        System.out.println("Induced Argumentation Framework:\n" + theory.prettyPrint());
-
         System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion1, reasoner.query(cbase, observations, interventions, conclusion1));
         System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion2, reasoner.query(cbase, observations, interventions, conclusion2));
 
         // modify observations
         observations.add(shortOfBreath);
 
-        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion1, reasoner.query(cbase, observations, interventions, conclusion1));
+        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion2, reasoner.query(cbase, observations, interventions, conclusion2));
 
+        DungTheory theory = reasoner.getInducedTheory(cbase.getTwinVersion(), observations, interventions);
+        System.out.println("Induced Argumentation Framework:\n" + theory.prettyPrint());
+        System.out.println(reasoner.getModels(cbase, observations, interventions));
+        System.out.println(reasoner.getConclusions(cbase, observations));
     }
 }
