@@ -19,17 +19,20 @@
 package org.tweetyproject.causal.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
+import org.tweetyproject.causal.reasoner.AbstractArgumentationBasedCausalReasoner;
 import org.tweetyproject.causal.reasoner.ArgumentationBasedCausalReasoner;
+import org.tweetyproject.causal.reasoner.ArgumentationBasedCounterfactualReasoner;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
- * Example usage of the {@link ArgumentationBasedCausalReasoner} based on the example from <br>
+ * Example usage of the {@link ArgumentationBasedCounterfactualReasoner} based on the example from <br>
  * <br>
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm,
  * 'Argumentation-based Causal and Counterfactual Reasoning',
@@ -37,7 +40,7 @@ import java.util.HashSet;
  *
  * @author Lars Bengel
  */
-public class CausalReasoningExampleVirus {
+public class CounterfactualReasoningExample {
     /**
      *
      * @param args cmdline arguments (unused)
@@ -75,32 +78,34 @@ public class CausalReasoningExampleVirus {
         cbase.addAssumption(new Negation(influenza));
         cbase.addAssumption(new Negation(atRisk));
         cbase.addAssumption(atRisk);
-        //cbase.addAssumption(influenza);
 
         System.out.println("Causal Knowledge Base: " + cbase);
 
+        // Initialize Causal Reasoner and induce an argumentation framework
+        AbstractArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCounterfactualReasoner();
 
         // Define variables for the example
         Collection<PlFormula> observations = new HashSet<>();
-        observations.add(fever);
+        observations.add(shortOfBreath);
 
-        PlFormula conclusion1 = shortOfBreath;
-        PlFormula conclusion2 = new Negation(shortOfBreath);
+        PlFormula conclusion1 = model.getCounterfactualCopy(fever);
+        PlFormula conclusion2 = new Negation(model.getCounterfactualCopy(fever));
 
-        // Initialize Causal Reasoner and induce an argumentation framework
-        ArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();
-        DungTheory theory = reasoner.getInducedTheory(cbase,observations);
+        Map<Proposition,Boolean> interventions = new HashMap<>();
+        interventions.put(model.getCounterfactualCopy(covid), false);
 
-        System.out.println("Induced Argumentation Framework:");
-        System.out.println(theory.prettyPrint());
 
-        // Do some causal reasoning
-        System.out.printf("Observing '%1$s' implies '%2$s': %3$s%n", observations, conclusion1, reasoner.query(cbase, observations, conclusion1));
-        System.out.printf("Observing '%1$s' implies '%2$s': %3$s%n", observations, conclusion2, reasoner.query(cbase, observations, conclusion2));
-        System.out.printf("Possible Conclusions of observing '%1$s': %2$s%n", observations, reasoner.getConclusions(cbase, observations));
-        System.out.printf("Models: %s%n", reasoner.getModels(cbase, observations));
+        // Example usage
+        DungTheory theory = reasoner.getInducedTheory(cbase,observations, interventions);
+        System.out.println("Induced Argumentation Framework:\n" + theory.prettyPrint());
 
-        // Visualisation of the induced argumentation framework
-        //DungTheoryPlotter.plotFramework(theory, 3000, 2000, "Premises: " + observations + " \n Conclusion: " + shortOfBreath);
+        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion1, reasoner.query(cbase, observations, interventions, conclusion1));
+        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion2, reasoner.query(cbase, observations, interventions, conclusion2));
+
+        // modify observations
+        observations.add(shortOfBreath);
+
+        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion1, reasoner.query(cbase, observations, interventions, conclusion1));
+
     }
 }

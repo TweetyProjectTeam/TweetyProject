@@ -19,80 +19,89 @@
 package org.tweetyproject.causal.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.reasoner.AbstractArgumentationBasedCausalReasoner;
 import org.tweetyproject.causal.reasoner.ArgumentationBasedCausalReasoner;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Example usage of the {@link ArgumentationBasedCausalReasoner} based on the example from <br>
  * <br>
  * Lars Bengel, Lydia Blümel, Tjitze Rienstra and Matthias Thimm,
- * 'Argumentation-Based Probabilistic Causal Reasoning',
- * Conference on Advances in Robust Argumentation Machines, (2024)
+ * 'Argumentation-based Causal and Counterfactual Reasoning',
+ * 1st International Workshop on Argumentation for eXplainable AI (ArgXAI), (2022)
  *
  * @author Lars Bengel
  */
-public class CausalReasoningExampleSurfer {
+public class InterventionalCausalReasoningExample {
     /**
      *
      * @param args cmdline arguments (unused)
      */
     public static void main(String[] args) throws StructuralCausalModel.CyclicDependencyException {
         // Background atoms
-        Proposition giantWave = new Proposition("giant-wave");
-        Proposition strongCurrent = new Proposition("strong-current");
-        Proposition jellyfish = new Proposition("jellyfish");
+        Proposition corona = new Proposition("corona");
+        Proposition influenza = new Proposition("influenza");
+        Proposition atRisk = new Proposition("at-risk");
 
         // Explainable atoms
-        Proposition brokenBoard = new Proposition("broken-board");
-        Proposition submersion = new Proposition("submersion");
-        Proposition cramp = new Proposition("cramp");
-        Proposition drowning = new Proposition("drowning");
+        Proposition covid = new Proposition("covid");
+        Proposition flu = new Proposition("flu");
+        Proposition shortOfBreath = new Proposition("short-of-breath");
+        Proposition fever = new Proposition("fever");
+        Proposition chills = new Proposition("chills");
 
         // Construct Causal Model
         StructuralCausalModel model = new StructuralCausalModel();
         // Add background atoms
-        model.addBackgroundAtom(giantWave);
-        model.addBackgroundAtom(strongCurrent);
-        model.addBackgroundAtom(jellyfish);
+        model.addBackgroundAtom(corona);
+        model.addBackgroundAtom(influenza);
+        model.addBackgroundAtom(atRisk);
         // Add structural equations
-        model.addExplainableAtom(brokenBoard, giantWave);
-        model.addExplainableAtom(submersion, new Conjunction(giantWave, strongCurrent));
-        model.addExplainableAtom(cramp, new Disjunction(strongCurrent, jellyfish));
-        model.addExplainableAtom(drowning, new Disjunction(cramp, submersion));
+        model.addExplainableAtom(covid, corona);
+        model.addExplainableAtom(flu, influenza);
+        model.addExplainableAtom(fever, new Disjunction(covid, flu));
+        model.addExplainableAtom(chills, fever);
+        model.addExplainableAtom(shortOfBreath, new Conjunction(covid, atRisk));
 
         // Initialize causal knowledge base
         CausalKnowledgeBase cbase = new CausalKnowledgeBase(model);
         // Add assumptions
-        cbase.addAssumption(new Negation(strongCurrent));
-        cbase.addAssumption(strongCurrent);
-        cbase.addAssumption(giantWave);
-        cbase.addAssumption(jellyfish);
+        cbase.addAssumption(new Negation(corona));
+        cbase.addAssumption(new Negation(influenza));
+        cbase.addAssumption(new Negation(atRisk));
+        cbase.addAssumption(atRisk);
 
         System.out.println("Causal Knowledge Base: " + cbase);
 
+        // Initialize Causal Reasoner and induce an argumentation framework
+        AbstractArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();
+
         // Define variables for the example
         Collection<PlFormula> observations = new HashSet<>();
-        observations.add(drowning);
+        observations.add(shortOfBreath);
 
-        PlFormula conclusion1 = submersion;
-        PlFormula conclusion2 = new Negation(submersion);
+        PlFormula conclusion1 = chills;
+        PlFormula conclusion2 = new Negation(chills);
 
-        // Initialize Causal Reasoner and induce an argumentation framework
-        ArgumentationBasedCausalReasoner reasoner = new ArgumentationBasedCausalReasoner();
-        DungTheory theory = reasoner.getInducedTheory(cbase, observations);
+        Map<Proposition,Boolean> interventions = new HashMap<>();
+        interventions.put(fever, false);
 
-        System.out.println("Induced Argumentation Framework:");
-        System.out.println(theory.prettyPrint());
+        // Example usage
+        DungTheory theory = reasoner.getInducedTheory(cbase,observations,interventions);
+        System.out.println("Induced Argumentation Framework:\n" + theory.prettyPrint());
 
-        // Do some causal reasoning
-        System.out.printf("Observing '%s' implies '%s': %s%n", observations, conclusion1, reasoner.query(cbase, observations, conclusion1));
-        System.out.printf("Observing '%s' implies '%s': %s%n", observations, conclusion2, reasoner.query(cbase, observations, conclusion2));
+        System.out.printf("Observing '%1$s' implies '%2$s': %3$s%n", observations, conclusion1, reasoner.query(cbase, observations, conclusion1));
+        System.out.printf("Observing '%1$s' and intervening '%2$s' implies '%3$s': %4$s%n", observations, interventions, conclusion2, reasoner.query(cbase, observations, interventions, conclusion2));
+
         System.out.printf("Possible Conclusions of observing '%1$s': %2$s%n", observations, reasoner.getConclusions(cbase, observations));
         System.out.printf("Models: %s%n", reasoner.getModels(cbase, observations));
+
     }
 }
