@@ -295,6 +295,11 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		return true;
 	}
 
+	@Override
+	public Collection<Collection<T>> getConnectedComponents() {
+		return DefaultGraph.<T>getConnectedComponents(this);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 *
@@ -344,6 +349,37 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		return idx;
 	}
 
+	/**
+	 * Returns the set of (simple) connected components of this graph.
+	 * A set of nodes is connected, if there is some path (ignoring edge
+	 * directions) from each node to each other. It is a connected component
+	 * if it is connected and maximal wrt. set inclusion.
+	 * @param <S> a node
+	 * @param g some graph
+	 * @return the connected components of the graph
+	 */
+	public static <S extends Node> Collection<Collection<S>> getConnectedComponents(Graph<S> g) {
+		Collection<S> remaining = new HashSet<>(g.getNodes());
+		Collection<Collection<S>> components = new HashSet<>();
+		while(!remaining.isEmpty()) {
+			Collection<S> component = new HashSet<>();
+			Stack<S> stack = new Stack<S>();
+			S node = remaining.iterator().next();
+			stack.push(node);
+			while(!stack.isEmpty()) {
+				node = stack.pop();
+				if(component.contains(node))
+					continue;
+				component.add(node);
+				remaining.remove(node);
+				stack.addAll(g.getChildren(node));
+				stack.addAll(g.getParents(node));				
+			}
+			components.add(component);
+		}
+		return components;
+	}
+	
 	/**
 	 * 	 * Returns the strongly connected components of the given graph. A set of nodes
 	 * is strongly connected, if there is a path from each node to each other. A set

@@ -215,6 +215,12 @@ public class PetriNet implements Graph<PetriNetNode>{
 	}
 
 	@Override
+	public Collection<Collection<PetriNetNode>> getConnectedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public Collection<Collection<PetriNetNode>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub
 		return null;

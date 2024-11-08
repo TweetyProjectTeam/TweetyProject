@@ -383,6 +383,11 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
     }
 
     @Override
+    public Collection<Collection<Argument>> getConnectedComponents() {
+        throw new UnsupportedOperationException("Not supported");
+    }
+    
+    @Override
     public Collection<Collection<Argument>> getStronglyConnectedComponents() {
         throw new UnsupportedOperationException("Not supported");
     }

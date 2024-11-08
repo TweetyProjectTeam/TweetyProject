@@ -261,6 +261,12 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
         return null;
     }
 
+    
+    @Override
+    public Collection<Collection<Argument>> getConnectedComponents() {
+        return List.of();
+    }
+    
     @Override
     public Collection<Collection<Argument>> getStronglyConnectedComponents() {
         return List.of();

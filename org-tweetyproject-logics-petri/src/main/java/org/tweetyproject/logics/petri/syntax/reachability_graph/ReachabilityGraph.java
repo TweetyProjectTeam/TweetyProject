@@ -392,6 +392,12 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 
 	@Override
+	public Collection<Collection<Marking>> getConnectedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public Collection<Collection<Marking>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub
 		return null;

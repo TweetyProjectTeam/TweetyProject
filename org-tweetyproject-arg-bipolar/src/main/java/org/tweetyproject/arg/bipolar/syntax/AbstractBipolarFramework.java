@@ -416,6 +416,11 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
     public Graph<BArgument> getComplementGraph(int i) {
         throw new UnsupportedOperationException();
     }
+    
+    @Override
+    public Collection<Collection<BArgument>> getConnectedComponents() {
+        return DefaultGraph.getConnectedComponents(this);
+    }
 
     @Override
     public Collection<Collection<BArgument>> getStronglyConnectedComponents() {

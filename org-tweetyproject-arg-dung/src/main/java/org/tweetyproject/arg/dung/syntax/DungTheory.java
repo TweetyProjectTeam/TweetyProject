@@ -851,6 +851,19 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
     			restriction.add(a);        
         return (DungTheory) this.getRestriction(restriction);
     }
+    
+    
+    /**
+     * computes the reduct of this wrt. arg
+     * ie. removes arg and all arguments attacked by arg
+	 * @param arg some argument
+	 * @return the reduct
+     */
+    public DungTheory getReduct(Argument arg) {
+    	Collection<Argument> args = new HashSet<>();
+    	args.add(arg);
+    	return this.getReduct(args);
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -1032,6 +1045,11 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return false;
 	}
 
+	@Override
+	public Collection<Collection<Argument>> getConnectedComponents() {
+		return DefaultGraph.getConnectedComponents(this);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.graphs.Graph#getStronglyConnectedComponents()
 	 */

@@ -151,6 +151,11 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	}
 
 	@Override
+	public Collection<Collection<BpmnNode>> getConnectedComponents() {
+		return null;
+	}
+	
+	@Override
 	public Collection<Collection<BpmnNode>> getStronglyConnectedComponents() {
 		return null;
 	}

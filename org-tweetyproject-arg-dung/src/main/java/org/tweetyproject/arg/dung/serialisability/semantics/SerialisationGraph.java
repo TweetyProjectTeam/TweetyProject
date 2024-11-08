@@ -251,6 +251,11 @@ public class SerialisationGraph implements Graph<SerialisationState> {
     }
 
     @Override
+    public Collection<Collection<SerialisationState>> getConnectedComponents() {
+        throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
+    }
+    
+    @Override
     public Collection<Collection<SerialisationState>> getStronglyConnectedComponents() {
         throw new UnsupportedOperationException("Operation not supported for serialisation graphs");
     }

@@ -298,6 +298,13 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 
 	@Override
+	public Collection<Collection<T>> getConnectedComponents() {
+		// TODO Auto-generated method stub
+		//algorithm yet to be implemented, not important for the next time
+		throw new UnsupportedOperationException("not yet implemented");
+	}
+	
+	@Override
 	public Collection<Collection<T>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub
 		//algorithm yet to be implemented, not important for the next time
