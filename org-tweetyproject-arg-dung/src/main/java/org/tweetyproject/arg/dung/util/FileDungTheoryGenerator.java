@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.util;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.util.NoSuchElementException;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -42,6 +43,23 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	private int idx;
 	/** Whether to loop the files indefinitely*/
 	private boolean loop;
+	
+	/**
+	 * Creates a new theory generator for all files in the given folder
+	 * with the given suffix, which
+	 * can be parsed by the given parser.
+	 * @param path a string to a path with AAF files
+	 * @param suffix the file suffix of the files
+	 * @param parser a parser for the files.
+	 * @param loop whether to loop the files indefinitely.
+	 */
+	public FileDungTheoryGenerator(String path, String suffix, Parser<DungTheory,?> parser, boolean loop){
+		this(new File(path).listFiles(new FilenameFilter() {
+		    public boolean accept(File f, String name) {
+		        return name.toLowerCase().endsWith(suffix);
+		    }
+		}),parser,loop);		
+	}
 	
 	/**
 	 * Creates a new theory generator for the given files, which
