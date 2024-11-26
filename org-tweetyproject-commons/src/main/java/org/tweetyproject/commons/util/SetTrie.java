@@ -21,7 +21,9 @@ package org.tweetyproject.commons.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +40,11 @@ import java.util.Map;
  *
  * Note that the removal of sets is not supported in this implementation.
  *
- * @param <T> The type of elements in the sets stored in the trie. Elements must be comparable.
+ * @param <T> The type of elements in the sets stored in the trie. Elements must be comparable or a comparator must be provided.
  *
  * @author Matthias Thimm
  */
-public class SetTrie<T extends Comparable<T>> {
+public class SetTrie<T> {
 
     /**
      * This class represents a node in the set-trie. Each node contains a map of child nodes and
@@ -60,6 +62,24 @@ public class SetTrie<T extends Comparable<T>> {
         public SetTrieNode(SetTrieNode parent) {
             this.marked = false;
             this.children = new HashMap<>();
+        }
+        
+        /**
+         * Returns the set of all sets represented by this node
+         * @return the set of all sets represented by this node
+         */
+        public Collection<Collection<T>> sets(){
+        	Collection<Collection<T>> sets = new HashSet<>();
+        	for(T child: this.children.keySet()) {
+        		Collection<Collection<T>> sub_sets = this.children.get(child).sets();
+        		for(Collection<T> set: sub_sets) {
+        			set.add(child);
+        			sets.add(set);
+        		}
+        	}
+        	if(this.marked)
+        		sets.add(new HashSet<>());
+        	return sets;
         }
 
         /**
@@ -98,6 +118,20 @@ public class SetTrie<T extends Comparable<T>> {
                 return this.marked;
             }
             return this.children.containsKey(set.get(index)) && this.children.get(set.get(index)).contains(set, index + 1);
+        }
+        
+        /**
+         * Checks if this node contains a set with the given element.
+         * @param elem some element
+         * @return true iff this node contains a set with the given element.
+         */
+        public boolean containsElement(T elem) {
+        	if(this.children.keySet().contains(elem))
+        		return true;
+        	for(T child: this.children.keySet())
+        		if(this.children.get(child).containsElement(elem))
+        			return true;
+        	return false;
         }
 
         /**
@@ -144,18 +178,19 @@ public class SetTrie<T extends Comparable<T>> {
                 n += node.numberOfNodes();
             }
             return n;
-        }
+        }       
     }
 
     private SetTrieNode root;
     private boolean onlyForSubsetTests;
     private int size;
+    private Comparator<T> comp;
 
     /**
      * Creates a new empty set-trie.
      */
     public SetTrie() {
-        this(false);
+        this(false,null);
     }
 
     /**
@@ -165,9 +200,40 @@ public class SetTrie<T extends Comparable<T>> {
      *                           will not be added, and supersets will be replaced by smaller sets.
      */
     public SetTrie(boolean onlyForSubsetTests) {
-        this.root = new SetTrieNode(null);
+        this(onlyForSubsetTests, null);
+    }
+    
+    /**
+     * Creates a new empty set-trie, where elements are compared wrt. the given comparator
+     *
+     * @param comp a comparator for elements of type T.
+     */
+    public SetTrie(Comparator<T> comp) {
+    	this(false,comp);
+    }
+    
+    /**
+     * Creates a new empty set-trie, where elements are compared wrt. the given comparator, optionally configured for minimal subset storage.
+     *
+     * @param comp a comparator for elements of type T.
+     * @param onlyForSubsetTests If true, the trie only stores minimal sets. Sets that have subsets in the trie
+     *                           will not be added, and supersets will be replaced by smaller sets.
+     */
+    public SetTrie(boolean onlyForSubsetTests, Comparator<T> comp) {
+    	this.root = new SetTrieNode(null);
         this.onlyForSubsetTests = onlyForSubsetTests;
         this.size = 0;
+        // if no comparator is provided, we use the natural order of the type
+        // if the type does not implement Comparable, this will give runtime
+        // errors
+        if(comp == null) {
+        	this.comp = new Comparator<T>(){
+				@SuppressWarnings("unchecked")
+				@Override
+				public int compare(T o1, T o2) {
+					return ((Comparable<T>)o1).compareTo(o2);
+				}};
+        }else this.comp = comp;
     }
 
     /**
@@ -196,7 +262,7 @@ public class SetTrie<T extends Comparable<T>> {
     public int numberOfNodes() {
         return this.root.numberOfNodes();
     }
-
+    
     /**
      * Adds a set to the trie.
      *
@@ -208,7 +274,8 @@ public class SetTrie<T extends Comparable<T>> {
             return false;
         }
         List<T> sorted = new ArrayList<>(set);
-        Collections.sort(sorted);
+        Collections.sort(sorted,this.comp);
+        
         boolean added = this.root.add(sorted, 0, this.onlyForSubsetTests);
         if (added) {
             this.size++;
@@ -224,7 +291,7 @@ public class SetTrie<T extends Comparable<T>> {
      */
     public boolean contains(Collection<T> set) {
         List<T> sorted = new ArrayList<>(set);
-        Collections.sort(sorted);
+        Collections.sort(sorted,this.comp);
         return this.root.contains(sorted, 0);
     }
 
@@ -236,7 +303,27 @@ public class SetTrie<T extends Comparable<T>> {
      */
     public boolean containsSubsetOf(Collection<T> set) {
         List<T> sorted = new ArrayList<>(set);
-        Collections.sort(sorted);
+        Collections.sort(sorted,this.comp);
         return this.root.containsSubsetOf(sorted, 0);
+    }
+    
+    /**
+     * Checks if the trie contains a set with the given element.
+     * @param elem some element
+     * @return true iff the trie contains a set with the given element.
+     */
+    public boolean containsElement(T elem) {
+    	return this.root.containsElement(elem);
+    }
+    
+    /**
+     * Returns the set of all sets represented by this set trie
+     * @return the set of all sets represented by this set trie
+     */
+    public Collection<Collection<T>> sets(){
+    	Collection<Collection<T>> sets = this.root.sets();
+    	if(this.root.marked)
+    		sets.add(new HashSet<>());
+    	return sets;
     }
 }
