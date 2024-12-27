@@ -2,21 +2,21 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.tweetyproject.arg</groupId>
   <artifactId>weighted</artifactId>
-  
+
   <name>TweetyProject (Weighted Argumentation Library)</name>
-  
+
     <parent>
     <groupId>org.tweetyproject</groupId>
     <artifactId>parent-pom</artifactId>
 	    <version>1.27-SNAPSHOT</version>
 	    <relativePath>..</relativePath>
   </parent>
-  
+
     <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
       	<dependency>
@@ -45,6 +45,6 @@
   		<version>1.27-SNAPSHOT</version>
   	</dependency>
   </dependencies>
-  
+
 </project>
 

@@ -16,14 +16,14 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>org.tweetyproject.lp</groupId>
     	<artifactId>asp</artifactId>
     	<version>1.27-SNAPSHOT</version>
-    </dependency>        
+    </dependency>
     <dependency>
     	<groupId>org.tweetyproject.lp</groupId>
     	<artifactId>nlp</artifactId>
