@@ -33,6 +33,7 @@ import java.util.*;
 public class QualifiedSemanticsReasonerExample {
     /**
      * Execute the example
+     *
      * @param args cmdline arguments
      */
     public static void main(String[] args) {
@@ -40,7 +41,8 @@ public class QualifiedSemanticsReasonerExample {
         DungTheory theory = example2();
 
         System.out.println(theory.prettyPrint());
-        Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory);
+        Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics)
+                .getModels(theory);
         Collection<Extension<DungTheory>> exts_q = new QualifiedReasoner(semantics).getModels(theory);
         Collection<Extension<DungTheory>> exts_sq = new SemiQualifiedReasoner(semantics).getModels(theory);
         System.out.printf("%s: %s%n", semantics.description(), exts);
@@ -48,12 +50,22 @@ public class QualifiedSemanticsReasonerExample {
         System.out.printf("semi-qualified %s: %s%n", semantics.description(), exts_sq);
     }
 
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     * <p>
+     * This example consists of three arguments: {@code a}, {@code b}, and
+     * {@code c}.
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
     public static DungTheory example1() {
         Argument a = new Argument("a");
         Argument b = new Argument("b");
         Argument c = new Argument("c");
         DungTheory theory = new DungTheory();
-        theory.add(a,b,c);
+        theory.add(a, b, c);
         theory.addAttack(a, a);
         theory.addAttack(a, b);
         theory.addAttack(b, c);
@@ -61,13 +73,20 @@ public class QualifiedSemanticsReasonerExample {
         return theory;
     }
 
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
     public static DungTheory example2() {
         Argument d = new Argument("d");
         Argument e = new Argument("e");
         Argument f = new Argument("f");
         Argument g = new Argument("g");
         DungTheory theory = new DungTheory();
-        theory.add(d,e,f,g);
+        theory.add(d, e, f, g);
         theory.addAttack(d, e);
         theory.addAttack(e, d);
         theory.addAttack(d, f);
@@ -77,6 +96,14 @@ public class QualifiedSemanticsReasonerExample {
         return theory;
     }
 
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     * <p>
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
     public static DungTheory example3() {
         Argument h = new Argument("h");
         Argument i = new Argument("i");
@@ -84,7 +111,7 @@ public class QualifiedSemanticsReasonerExample {
         Argument k = new Argument("k");
         Argument l = new Argument("l");
         DungTheory theory = new DungTheory();
-        theory.add(h,i,j,k,l);
+        theory.add(h, i, j, k, l);
         theory.addAttack(i, h);
         theory.addAttack(h, j);
         theory.addAttack(j, i);

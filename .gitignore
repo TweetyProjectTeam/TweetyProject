@@ -31,8 +31,8 @@ bin/
 .metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log
 .metadata/version.ini
 *.resources
-constructor.json
-skipped_files.txt
-warnings.json
+testBuild
 
-*.txt
+
+gurobi-9.1.0.jar
+isula-1.1.1.jar

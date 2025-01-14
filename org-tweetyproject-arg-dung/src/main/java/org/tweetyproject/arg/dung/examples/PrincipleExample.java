@@ -31,13 +31,15 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Example code for checking (non-)satisfaction of {@link Principle} for argumentation semantics
+ * Example code for checking (non-)satisfaction of {@link Principle} for
+ * argumentation semantics
  *
  * @author Lars Bengel
  */
 public class PrincipleExample {
     /**
      * Execute the example
+     *
      * @param args cmdline arguments
      */
     public static void main(String[] args) {
@@ -67,9 +69,29 @@ public class PrincipleExample {
         evaluateReasoner(new SimpleAdmissibleReasoner(), all_principles);
     }
 
+    /**
+     * Evaluates a given abstract extension reasoner against a collection of
+     * principles (postulates).
+     * <p>
+     * This method uses a {@link DungTheoryGenerator} to generate Dung argumentation
+     * frameworks
+     * and evaluates how well the provided {@link AbstractExtensionReasoner}
+     * satisfies the given principles.
+     * The evaluation is conducted using a {@link PostulateEvaluator}, which applies
+     * the principles to
+     * generated frameworks and assesses the reasoner's performance.
+     * </p>
+     *
+     * @param reasoner   The {@link AbstractExtensionReasoner} to be evaluated. This
+     *                   reasoner
+     *                   provides extensions for argumentation frameworks.
+     * @param principles A collection of {@link Principle} objects representing the
+     *                   postulates
+     *                   against which the reasoner will be evaluated.
+     */
     public static void evaluateReasoner(AbstractExtensionReasoner reasoner, Collection<Principle> principles) {
         DungTheoryGenerator generator = new EnumeratingDungTheoryGenerator();
-        PostulateEvaluator<Argument,DungTheory> evaluator = new PostulateEvaluator<>(generator, reasoner);
+        PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(generator, reasoner);
         evaluator.addAllPostulates(principles);
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }

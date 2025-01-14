@@ -12,14 +12,36 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+
+/**
+ * Represents the Sigma-Compatibility postulate for ranking-based argumentation frameworks.
+ *
+ *
+ * @see RankingPostulate
+ * @see AbstractExtensionReasoner
+ * @see Semantics
+ */
 public class RaSigmaCompatibility extends RankingPostulate {
 
+        /**
+     * The extension-based reasoner used to derive extensions of the argumentation framework.
+     */
     AbstractExtensionReasoner reasoner;
 
+    /**
+     * Constructs a {@code RaSigmaCompatibility} postulate with the specified extension reasoner.
+     *
+     * @param reasoner The {@link AbstractExtensionReasoner} used to compute extensions of the argumentation framework.
+     */
     public RaSigmaCompatibility(AbstractExtensionReasoner reasoner) {
         this.reasoner = reasoner;
     }
 
+    /**
+     * Constructs a {@code RaSigmaCompatibility} postulate using a specified semantics.
+     *
+     * @param semantics The {@link Semantics} defining the reasoning approach for argument evaluation.
+     */
     public RaSigmaCompatibility(Semantics semantics) {
         this(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics));
     }
