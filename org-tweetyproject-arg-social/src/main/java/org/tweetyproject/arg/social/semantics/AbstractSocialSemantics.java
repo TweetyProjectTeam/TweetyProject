@@ -26,22 +26,30 @@ import java.util.Comparator;
  * abstract argumentation frameworks, cf. [Leite, Martins; IJCAI 2011, Def. 3]
  * @author Matthias Thimm
  *
- * @param <L> The set used for valuations 
+ * @param <L> The set used for valuations
  */
 public abstract class AbstractSocialSemantics<L extends Object> implements Comparator<L> {
-	
+
+	/**
+     * Default constructor for creating an instance of AbstractSocialSemantics.
+
+     */
+    public AbstractSocialSemantics() {
+        super();
+    }
+
 	/**
 	 * Returns the bottom element of this semantics.
 	 * @return the bottom element of this semantics.
 	 */
 	public abstract L bottomElement();
-	
+
 	/**
 	 * Returns the top element of this semantics.
 	 * @return the top element of this semantics.
 	 */
 	public abstract L topElement();
-	
+
 	/**
 	 * The vote aggregation function
 	 * @param pos the number of positive votes
@@ -49,7 +57,7 @@ public abstract class AbstractSocialSemantics<L extends Object> implements Compa
 	 * @return the social support aggregated from the votes.
 	 */
 	public abstract L supp(int pos, int neg);
-	
+
 	/**
 	 * The AND-operation on L in this framework
 	 * @param arg1 some value in L
@@ -57,7 +65,7 @@ public abstract class AbstractSocialSemantics<L extends Object> implements Compa
 	 * @return the AND of the both values
 	 */
 	public abstract L and(L arg1, L arg2);
-	
+
 	/**
 	 * The OR-operation on L in this framework
 	 * @param arg1 some value in L
@@ -65,14 +73,14 @@ public abstract class AbstractSocialSemantics<L extends Object> implements Compa
 	 * @return the OR of the both values
 	 */
 	public abstract L or(L arg1, L arg2);
-	
+
 	/**
 	 * The NEG-operation on L in this framework
 	 * @param arg some value in L
 	 * @return the negation of the given value.
 	 */
 	public abstract L neg(L arg);
-	
+
 	/** The AND-operation on all given arguments
 	 * @param arg some values in L
 	 * @return The AND of all given arguments
@@ -85,7 +93,7 @@ public abstract class AbstractSocialSemantics<L extends Object> implements Compa
 		}
 		return result;
 	}
-	
+
 	/** The OR-operation on all given arguments
 	 * @param arg some values in L
 	 * @return The OR of all given arguments
@@ -98,8 +106,14 @@ public abstract class AbstractSocialSemantics<L extends Object> implements Compa
 		}
 		return result;
 	}
-	
-	/* (non-Javadoc)
+
+	/**
+	 * Compares two `Double` values according to the specific social semantics implemented by this class.
+	 *
+	 * @param arg0 the first `Double` value to be compared.
+	 * @param arg1 the second `Double` value to be compared.
+	 * @return a negative integer, zero, or a positive integer as the first argument (`arg0`)
+	 *         is less than, equal to, or greater than the second (`arg1`), respectively.
 	 * @see org.tweetyproject.arg.social.semantics.AbstractSocialSemantics#compare(java.lang.Double, java.lang.Double)
 	 */
 	public abstract int compare(Double arg0, Double arg1);

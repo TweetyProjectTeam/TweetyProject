@@ -21,26 +21,62 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTRule} class represents a node in the abstract syntax tree (AST)
+ * for a rule in the context of Answer Set Programming (ASP). This class extends
+ * {@code SimpleNode} and is used by the ASP parser to handle and represent rules
+ * within an ASP program.
+ */
 public class ASTRule extends SimpleNode {
-	public boolean hasLevel;
 
-	public ASTRule(int id) {
-		super(id);
-	}
+    /**
+     * Indicates whether this rule has an associated level.
+     * A level may be used to denote priorities or other hierarchical
+     * properties of the rule within the program.
+     */
+    public boolean hasLevel;
 
-	public ASTRule(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTRule} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTRule(int id) {
+        super(id);
+    }
 
-	public void hasLevel(boolean b) {
-		hasLevel = b;
-	}
+    /**
+     * Constructs a new {@code ASTRule} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTRule(ASPParser p, int id) {
+        super(p, id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Sets whether this rule has an associated level.
+     *
+     * @param b {@code true} if the rule has a level, {@code false} otherwise.
+     */
+    public void hasLevel(boolean b) {
+        hasLevel = b;
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=6b8b1e42a9b629b058b2c80e49a444f4 (do not edit this
  * line)

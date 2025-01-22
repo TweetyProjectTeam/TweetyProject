@@ -62,4 +62,7 @@ public abstract class BeliefStateConfiguration {
 			return false;
 		return true;
 	}
+
+    /** Default Constructor */
+    public BeliefStateConfiguration(){}
 }

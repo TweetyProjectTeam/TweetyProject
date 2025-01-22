@@ -29,58 +29,132 @@ import org.tweetyproject.arg.adf.syntax.pl.Clauses.ClauseN;
 import org.tweetyproject.arg.adf.syntax.pl.Clauses.ExtendedClause;
 
 /**
- * @author Mathias Hofer
+ * The {@code Clause} interface represents a logical clause, which is a disjunction (OR) of literals in propositional logic.
+ * Clauses are fundamental components in SAT solvers and are used to encode constraints and logical formulas.
  *
+ * @author Mathias Hofer
  */
 public interface Clause extends Iterable<Literal> {
 
-	Stream<Literal> stream();
+    /**
+     * Returns a stream of literals contained in this clause.
+     *
+     * @return a {@code Stream} of literals in the clause
+     */
+    Stream<Literal> stream();
 
-	int size();
+    /**
+     * Returns the number of literals in this clause.
+     *
+     * @return the size of the clause
+     */
+    int size();
 
-	static Clause of() {
-		return Clause0.INSTANCE;
-	}
+    /**
+     * Creates a clause with no literals. This represents an empty clause.
+     *
+     * @return a clause with no literals
+     */
+    static Clause of() {
+        return Clause0.INSTANCE;
+    }
 
-	static Clause of(Literal l) {
-		return new Clause1(l);
-	}
+    /**
+     * Creates a clause with a single literal.
+     *
+     * @param l the single literal
+     * @return a clause containing the given literal
+     */
+    static Clause of(Literal l) {
+        return new Clause1(l);
+    }
 
-	static Clause of(Literal l1, Literal l2) {
-		return new Clause2(l1, l2);
-	}
+    /**
+     * Creates a clause with two literals.
+     *
+     * @param l1 the first literal
+     * @param l2 the second literal
+     * @return a clause containing the given literals
+     */
+    static Clause of(Literal l1, Literal l2) {
+        return new Clause2(l1, l2);
+    }
 
-	static Clause of(Literal l1, Literal l2, Literal l3) {
-		return new Clause3(l1, l2, l3);
-	}
+    /**
+     * Creates a clause with three literals.
+     *
+     * @param l1 the first literal
+     * @param l2 the second literal
+     * @param l3 the third literal
+     * @return a clause containing the given literals
+     */
+    static Clause of(Literal l1, Literal l2, Literal l3) {
+        return new Clause3(l1, l2, l3);
+    }
 
-	static Clause of(Clause c, Literal l) {
-		return new ExtendedClause(c, l);
-	}
+    /**
+     * Creates a clause by extending an existing clause with an additional literal.
+     *
+     * @param c the existing clause
+     * @param l the additional literal
+     * @return a new clause that is the extension of the given clause with the additional literal
+     */
+    static Clause of(Clause c, Literal l) {
+        return new ExtendedClause(c, l);
+    }
 
-	static Clause of(Collection<? extends Literal> literals) {
-		return new ClauseN(literals.toArray(new Literal[0]));
-	}
+    /**
+     * Creates a clause from a collection of literals.
+     *
+     * @param literals a collection of literals
+     * @return a clause containing the literals from the collection
+     */
+    static Clause of(Collection<? extends Literal> literals) {
+        return new ClauseN(literals.toArray(new Literal[0]));
+    }
 
-	static Clause of(Collection<? extends Literal> literals, Literal l) {
-		Literal[] array = literals.toArray(new Literal[literals.size() + 1]);
-		array[array.length - 1] = l;
-		return new ClauseN(array);
-	}
+    /**
+     * Creates a clause from a collection of literals and an additional literal.
+     *
+     * @param literals a collection of literals
+     * @param l the additional literal
+     * @return a new clause containing the literals from the collection plus the additional literal
+     */
+    static Clause of(Collection<? extends Literal> literals, Literal l) {
+        Literal[] array = literals.toArray(new Literal[literals.size() + 1]);
+        array[array.length - 1] = l;
+        return new ClauseN(array);
+    }
 
-	static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2) {
-		Literal[] array = literals.toArray(new Literal[literals.size() + 2]);
-		array[array.length - 2] = l1;
-		array[array.length - 1] = l2;
-		return new ClauseN(array);
-	}
+    /**
+     * Creates a clause from a collection of literals and two additional literals.
+     *
+     * @param literals a collection of literals
+     * @param l1 the first additional literal
+     * @param l2 the second additional literal
+     * @return a new clause containing the literals from the collection plus the additional literals
+     */
+    static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2) {
+        Literal[] array = literals.toArray(new Literal[literals.size() + 2]);
+        array[array.length - 2] = l1;
+        array[array.length - 1] = l2;
+        return new ClauseN(array);
+    }
 
-	static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2, Literal l3) {
-		Literal[] array = literals.toArray(new Literal[literals.size() + 3]);
-		array[array.length - 3] = l1;
-		array[array.length - 2] = l2;
-		array[array.length - 1] = l3;
-		return new ClauseN(array);
-	}
-
+    /**
+     * Creates a clause from a collection of literals and three additional literals.
+     *
+     * @param literals a collection of literals
+     * @param l1 the first additional literal
+     * @param l2 the second additional literal
+     * @param l3 the third additional literal
+     * @return a new clause containing the literals from the collection plus the additional literals
+     */
+    static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2, Literal l3) {
+        Literal[] array = literals.toArray(new Literal[literals.size() + 3]);
+        array[array.length - 3] = l1;
+        array[array.length - 2] = l2;
+        array[array.length - 1] = l3;
+        return new ClauseN(array);
+    }
 }

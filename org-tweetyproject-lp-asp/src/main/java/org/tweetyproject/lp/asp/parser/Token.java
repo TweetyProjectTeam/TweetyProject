@@ -61,45 +61,68 @@ public class Token implements java.io.Serializable {
   public Token specialToken;
 
   /**
-   * An optional attribute value of the Token.
-   * Tokens which are not used as syntactic sugar will often contain
-   * meaningful values that will be used later on by the compiler or
-   * interpreter. This attribute value is often different from the image.
-   * Any subclass of Token that actually wants to return a non-null value can
-   * override this method as appropriate.
-   */
-  public Object getValue() {
-    return null;
+     * An optional attribute value of the token.
+     * <p>
+     * Tokens that are not just syntactic sugar often contain meaningful values
+     * that will be used later by the compiler or interpreter. This attribute value
+     * is often different from the token's image. Subclasses of {@code Token} can
+     * override this method to return a meaningful value.
+     * </p>
+     *
+     * @return The value associated with this token, or {@code null} by default.
+     */
+    public Object getValue() {
+      return null;
   }
 
   /**
-   * No-argument constructor
+   * Constructs a new {@code Token} with no initial kind or image.
+   * <p>
+   * This is a no-argument constructor that initializes the token with default values.
+   * </p>
    */
   public Token() {}
 
   /**
-   * Constructs a new token for the specified Image.
+   * Constructs a new {@code Token} with the specified kind.
+   * <p>
+   * The kind parameter typically represents the type of token, such as an identifier,
+   * keyword, or operator. This constructor initializes the token with the given kind
+   * and a {@code null} image.
+   * </p>
+   *
+   * @param kind The kind of token.
    */
-  public Token(int kind)
-  {
-    this(kind, null);
+  public Token(int kind) {
+      this(kind, null);
   }
 
   /**
-   * Constructs a new token for the specified Image and Kind.
+   * Constructs a new {@code Token} with the specified kind and image.
+   * <p>
+   * This constructor initializes the token with the given kind and image, which represents
+   * the textual representation of the token.
+   * </p>
+   *
+   * @param kind The kind of token.
+   * @param image The string representation of the token.
    */
-  public Token(int kind, String image)
-  {
-    this.kind = kind;
-    this.image = image;
+  public Token(int kind, String image) {
+      this.kind = kind;
+      this.image = image;
   }
 
   /**
-   * Returns the image.
+   * Returns the image of the token.
+   * <p>
+   * The image is the string representation of the token as it appears in the source code.
+   * </p>
+   *
+   * @return The string representation of the token.
    */
-  public String toString()
-  {
-    return image;
+  @Override
+  public String toString() {
+      return image;
   }
 
   /**
@@ -114,18 +137,41 @@ public class Token implements java.io.Serializable {
    * to the following switch statement. Then you can cast matchedToken
    * variable to the appropriate type and use sit in your lexical actions.
    */
-  public static Token newToken(int ofKind, String image)
-  {
-    switch(ofKind)
-    {
+  /**
+ * Creates and returns a new {@code Token} object with the specified kind and image.
+ * <p>
+ * This method allows for the creation of tokens with specific characteristics, such as
+ * their kind (type) and their image (string representation). By default, it returns an
+ * instance of the {@code Token} class. However, this method can be customized to return
+ * different subclasses of {@code Token} depending on the value of {@code ofKind}.
+ * </p>
+ *
+ * @param ofKind The kind of token to be created, typically representing a specific type
+ *               such as an identifier, keyword, or operator.
+ * @param image The string representation of the token. This may be {@code null} if the
+ *              token does not require a specific image.
+ * @return A new {@code Token} object with the specified kind and image.
+ */
+public static Token newToken(int ofKind, String image) {
+  switch(ofKind) {
       default : return new Token(ofKind, image);
-    }
   }
+}
 
-  public static Token newToken(int ofKind)
-  {
-    return newToken(ofKind, null);
-  }
+/**
+* Creates and returns a new {@code Token} object with the specified kind and a {@code null} image.
+* <p>
+* This method is a convenience method for creating tokens when no specific image is required.
+* It calls {@link #newToken(int, String)} with {@code null} as the image.
+* </p>
+*
+* @param ofKind The kind of token to be created, typically representing a specific type
+*               such as an identifier, keyword, or operator.
+* @return A new {@code Token} object with the specified kind and a {@code null} image.
+*/
+public static Token newToken(int ofKind) {
+  return newToken(ofKind, null);
+}
 
 }
 /* JavaCC - OriginalChecksum=5f0e2369a79e1e41a9bebe4722c558fd (do not edit this line) */

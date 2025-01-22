@@ -35,14 +35,17 @@ import org.tweetyproject.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 
 /**
- * 
+ *
  * Abstract class that models common properties of aba syntax elements.
- * 
+ *
  * @author Anna Gessler
  * @param <T> the type of formula
  *
  */
 public abstract class AbaElement<T extends Formula> implements ComplexLogicalFormula {
+	/** Default */
+	public AbaElement() {
+	}
 
 	public abstract AbaElement<T> clone();
 
@@ -50,7 +53,6 @@ public abstract class AbaElement<T extends Formula> implements ComplexLogicalFor
 	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
 		return !getTerms(cls).isEmpty();
 	}
-
 
 	@Override
 	public abstract AbaElement<T> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
@@ -81,7 +83,7 @@ public abstract class AbaElement<T extends Formula> implements ComplexLogicalFor
 	/**
 	 * Computes all possible substitutions, i.e. maps from variables to terms, of
 	 * unbound variables of this formula's inner fol formulas to terms in "terms".
-	 * 
+	 *
 	 * @param terms a set of terms.
 	 * @return a set of maps from variables to terms.
 	 * @throws IllegalArgumentException if there is an unbound variable in this
@@ -114,7 +116,7 @@ public abstract class AbaElement<T extends Formula> implements ComplexLogicalFor
 	 * Computes all ground instances of all inner fol formulas wrt. the given set of
 	 * constants, i.e. every formula where each occurrence of some unbound variable
 	 * is replaced by some constant.
-	 * 
+	 *
 	 * @param constants a set of constants
 	 * @return a set of ground instances of this formula
 	 * @throws IllegalArgumentException if there is an unbound variable in this
@@ -129,6 +131,11 @@ public abstract class AbaElement<T extends Formula> implements ComplexLogicalFor
 		return result;
 	}
 
+	/**
+	 *
+	 * Return unbound variables
+	 * @return unbound variables
+	 */
 	public Set<Variable> getUnboundVariables() {
 		return this.getTerms(Variable.class);
 	}

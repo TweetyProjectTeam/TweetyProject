@@ -31,7 +31,8 @@ import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.Visitor;
 
 /**
- * 
+ * AbstractTransformer class
+ *
  * @author Mathias Hofer
  *
  * @param <U> the information that is passed bottom-up during the transformation
@@ -44,7 +45,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.tweetyproject.arg.adf.transform.Transformer#transform(org.tweetyproject.arg.
 	 * adf.syntax.acc.AcceptanceCondition)
@@ -55,41 +56,135 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 		U bottomUpData = transform(acc, userObject);
 		return finish(bottomUpData, userObject);
 	}
-	
+
+	/**
+	 * Transform
+	 * @param acc condition
+	 * @param userObject object
+	 * @return transformed
+	 */
 	protected U transform(AcceptanceCondition acc, D userObject) {
 		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity(), userObject));
 	}
-	
+
+	/**
+	 *
+	 * Return topLevelPolarity
+	 * @return topLevelPolarity
+	 */
 	protected int topLevelPolarity() {
 		return 1;
 	}
 
 	/**
 	 * Provides the initial top-down data.
-	 * 
+	 *
 	 * @return the initial top-down data
 	 */
 	protected abstract D initialize();
 
-	protected abstract R finish(U bottomUpData, D topDownData);
+/**
+ * Finalizes the transformation process and returns the result.
+ *
+ * @param bottomUpData The data accumulated during the bottom-up traversal.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @return The final result of the transformation process, of type {@code R}.
+ */
+protected abstract R finish(U bottomUpData, D topDownData);
 
-	protected abstract U transformDisjunction(U left, U right, D topDownData, int polarity);
+/**
+ * Transforms a disjunction of two sub-expressions.
+ *
+ * @param left         The transformed result of the left sub-expression.
+ * @param right        The transformed result of the right sub-expression.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the disjunction, of type {@code U}.
+ */
+protected abstract U transformDisjunction(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformConjunction(U left, U right, D topDownData, int polarity);
+/**
+ * Transforms a conjunction of two sub-expressions.
+ *
+ * @param left         The transformed result of the left sub-expression.
+ * @param right        The transformed result of the right sub-expression.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the conjunction, of type {@code U}.
+ */
+protected abstract U transformConjunction(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformImplication(U left, U right, D topDownData, int polarity);
+/**
+ * Transforms an implication between two sub-expressions.
+ *
+ * @param left         The transformed result of the left sub-expression.
+ * @param right        The transformed result of the right sub-expression.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the implication, of type {@code U}.
+ */
+protected abstract U transformImplication(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformEquivalence(U left, U right, D topDownData, int polarity);
+/**
+ * Transforms an equivalence between two sub-expressions.
+ *
+ * @param left         The transformed result of the left sub-expression.
+ * @param right        The transformed result of the right sub-expression.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the equivalence, of type {@code U}.
+ */
+protected abstract U transformEquivalence(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformExclusiveDisjunction(U left, U right, D topDownData, int polarity);
+/**
+ * Transforms an exclusive disjunction (XOR) between two sub-expressions.
+ *
+ * @param left         The transformed result of the left sub-expression.
+ * @param right        The transformed result of the right sub-expression.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the exclusive disjunction, of type {@code U}.
+ */
+protected abstract U transformExclusiveDisjunction(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformNegation(U child, D topDownData, int polarity);
+/**
+ * Transforms a negation of a sub-expression.
+ *
+ * @param child        The transformed result of the sub-expression being negated.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the negation, of type {@code U}.
+ */
+protected abstract U transformNegation(U child, D topDownData, int polarity);
 
-	protected abstract U transformArgument(Argument argument, D topDownData, int polarity);
+/**
+ * Transforms an argument within the logical structure.
+ *
+ * @param argument     The argument to be transformed.
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the argument, of type {@code U}.
+ */
+protected abstract U transformArgument(Argument argument, D topDownData, int polarity);
 
-	protected abstract U transformContradiction(D topDownData, int polarity);
+/**
+ * Transforms a contradiction in the logical structure.
+ *
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the contradiction, of type {@code U}.
+ */
+protected abstract U transformContradiction(D topDownData, int polarity);
 
-	protected abstract U transformTautology(D topDownData, int polarity);
+/**
+ * Transforms a tautology in the logical structure.
+ *
+ * @param topDownData  The data provided during the top-down traversal.
+ * @param polarity     The polarity (e.g., positive or negative) to guide the transformation.
+ * @return The result of transforming the tautology, of type {@code U}.
+ */
+protected abstract U transformTautology(D topDownData, int polarity);
+
 
 	/**
 	 * We encapsulate the Visitor in a separate private class s.t. we do not
@@ -99,7 +194,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.TautologyAcceptanceCondition, java.lang.Object)
@@ -111,7 +206,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ContradictionAcceptanceCondition, java.lang.Object)
@@ -123,7 +218,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ConjunctionAcceptanceCondition, java.lang.Object)
@@ -137,7 +232,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.DisjunctionAcceptanceCondition, java.lang.Object)
@@ -151,7 +246,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.EquivalenceAcceptanceCondition, java.lang.Object)
@@ -165,7 +260,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ExclusiveDisjunctionAcceptanceCondition, java.lang.Object)
@@ -179,7 +274,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.ImplicationAcceptanceCondition, java.lang.Object)
@@ -194,7 +289,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.acc.NegationAcceptanceCondition, java.lang.Object)
@@ -207,7 +302,7 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * org.tweetyproject.arg.adf.syntax.acc.Visitor#visit(org.tweetyproject.arg.adf.
 		 * syntax.Argument, java.lang.Object)

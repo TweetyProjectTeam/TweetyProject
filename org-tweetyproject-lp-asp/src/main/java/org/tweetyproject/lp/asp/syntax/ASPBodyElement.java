@@ -51,4 +51,7 @@ public abstract class ASPBodyElement extends ASPElement {
 	
 	@Override
 	public abstract ASPBodyElement substitute(Term<?> t, Term<?> v);
+
+    /** Default Constructor */
+    public ASPBodyElement(){}
 }

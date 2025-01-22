@@ -7,18 +7,18 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.25-SNAPSHOT</version>
+  	<version>1.27-SNAPSHOT</version>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.25-SNAPSHOT</version>
+  		<version>1.27-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>plugin</artifactId>
-  		<version>1.25-SNAPSHOT</version>
+  		<version>1.27-SNAPSHOT</version>
   	</dependency>
   	<dependency>
 	  <groupId>org.hamcrest</groupId>

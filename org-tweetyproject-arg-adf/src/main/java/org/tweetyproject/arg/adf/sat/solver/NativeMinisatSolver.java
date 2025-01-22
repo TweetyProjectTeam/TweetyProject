@@ -33,6 +33,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
+ * NativeMinisatSolver class
  * @author Mathias Hofer
  *
  */
@@ -57,7 +58,7 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see net.sf.tweety.arg.adf.sat.IncrementalSatSolver#createState()
 	 */
 	@Override
@@ -93,7 +94,7 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 
 	/**
 	 * Calls solve() by itself before returning a witness.
-	 * 
+	 *
 	 * @param handle
 	 * @return
 	 */
@@ -111,7 +112,7 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 	private static final class IndexedMinisatSolverState implements IndexedSatSolverState {
 
 		private final long handle;
-		
+
 		private IndexedMinisatSolverState(long handle) {
 			this.handle = init();
 		}

@@ -40,18 +40,24 @@ import org.tweetyproject.logics.qbf.syntax.ForallQuantifiedFormula;
  * "+" | "-" | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" | <br>
  * <br>
  * VARIABLENAME is a sequence of characters excluding |,&amp;,!,(,),=,&lt;,&gt; and whitespace
- * characters. 
- * 
+ * characters.
+ *
  * @author Anna Gessler
  * @author Matthias Thimm
  *
  */
 public class QbfParser extends PlParser {
+
+
+	/** Default */
+	public QbfParser(){
+		super();
+	}
 	/**
 	 * Keeps track of variables defined.
 	 */
 	private PlSignature variables;
-	
+
 	public PlBeliefSet parseBeliefBase(Reader reader) throws ParserException {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		String s = "";
@@ -89,7 +95,7 @@ public class QbfParser extends PlParser {
 	/**
 	 * This method reads one token from the given reader and appropriately
 	 * constructs a propositional formula from the stream.
-	 * 
+	 *
 	 * @param stack a stack used for monitoring the read items.
 	 * @param c     a token from a stream.
 	 * @throws ParserException in case of parser errors.
@@ -98,9 +104,9 @@ public class QbfParser extends PlParser {
 		try {
 			String s = Character.toString((char) c);
 			if (s.equals(" ")) {
-				//If the last 6 consumed tokens spell "forall" or "exists", remove them from the stack 
+				//If the last 6 consumed tokens spell "forall" or "exists", remove them from the stack
 				//and re-add them as a single string.
-				if(stack.size() >= 6){					
+				if(stack.size() >= 6){
 					if(stack.get(stack.size()-6).equals("f") &&
 							stack.get(stack.size()-5).equals("o") &&
 							stack.get(stack.size()-4).equals("r") &&
@@ -127,7 +133,7 @@ public class QbfParser extends PlParser {
 						stack.pop();
 						stack.pop();
 						stack.push("exists");
-					}					
+					}
 				}
 			} else if (s.equals(")")) {
 				if (!stack.contains("("))
@@ -168,7 +174,7 @@ public class QbfParser extends PlParser {
 			throw new ParserException(e);
 		}
 	}
-		
+
 	/**
 	 * Parses a quantification
 	 * @param l list of terms
@@ -177,9 +183,9 @@ public class QbfParser extends PlParser {
 	private PlFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(LogicalSymbols.EXISTSQUANTIFIER()) || l.contains(LogicalSymbols.FORALLQUANTIFIER()))) 
-			return this.parseEquivalence(l); 
-		
+		if(!(l.contains(LogicalSymbols.EXISTSQUANTIFIER()) || l.contains(LogicalSymbols.FORALLQUANTIFIER())))
+			return this.parseEquivalence(l);
+
 		//If the quantification is not the first conjunct/disjunct/subformula of
 		//the formula, split list at position of first non-quantor operator
 		if (!(l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())||l.get(0).equals(LogicalSymbols.FORALLQUANTIFIER()))) {
@@ -189,25 +195,25 @@ public class QbfParser extends PlParser {
 			int i4 = l.indexOf(LogicalSymbols.IMPLICATION());
 			int[] indices = {i1,i2,i3,i4};
 			Arrays.sort(indices);
-			
+
 			for (int i = 0; i < indices.length; i++) {
 				if (indices[i]!=-1) {
 					List<Object> leftl = new ArrayList<Object>(l.subList(0, indices[i]));
 					List<Object> rightl = new ArrayList<Object>(l.subList(indices[i]+1, l.size()));
-					if (indices[i]==i1) 
+					if (indices[i]==i1)
 						return new Conjunction(parseQuantification(leftl), parseQuantification(rightl));
-					else if (indices[i]==i2) 
+					else if (indices[i]==i2)
 						return new Disjunction(parseQuantification(leftl), parseQuantification(rightl));
-					else if (indices[i]==i3) 
+					else if (indices[i]==i3)
 						return new Equivalence(parseQuantification(leftl), parseQuantification(rightl));
-					else if (indices[i]==i4) 
+					else if (indices[i]==i4)
 						return new Implication(parseQuantification(leftl), parseQuantification(rightl));
 					else
-						throw new ParserException("Unrecognized formula type '" + indices[i] + "'."); 
+						throw new ParserException("Unrecognized formula type '" + indices[i] + "'.");
 				}
-			}	
+			}
 		}
-	
+
 		String var = "";
 		int idx = 1;
 		while(!l.get(idx).equals(":")){
@@ -216,53 +222,53 @@ public class QbfParser extends PlParser {
 		}
 
 		PlFormula formula;
-		if (l.get(idx+1) instanceof PlFormula) 
+		if (l.get(idx+1) instanceof PlFormula)
 			formula = (PlFormula) l.get(idx+1);
-		else  
-			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'."); 
-		
+		else
+			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
+
 		List<Proposition> bVars = new ArrayList<Proposition>();;
 		for(Proposition v: formula.getAtoms()){
 			if(v.getName().equals(var))
 					bVars.add(v);
 		}
-		
+
 		if(bVars.isEmpty())
 			throw new ParserException("Variable(s) '" + var + "' not found in quantification.");
-		
+
 		Set<Proposition> vars = new HashSet<Proposition>();
-		
+
 		int j = 0; //This index is used later to determine if there are more elements in the list to the right of the quantified formula
 		for (int i = 0; i < bVars.size(); i++) {
-			vars.add(bVars.get(i)); 
+			vars.add(bVars.get(i));
 			j += (bVars.get(i).getName().length());
 		}
 		j += bVars.size();
-		
+
 		this.variables.remove(var);
-	
+
 		PlFormula result;
-		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())) 
+		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER()))
 			result = new ExistsQuantifiedFormula(formula,vars);
-		else 
+		else
 			result = new ForallQuantifiedFormula(formula,vars);
-		
+
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 2+j) {
-			if (l.get(2+j).equals(LogicalSymbols.CONJUNCTION())) 
+			if (l.get(2+j).equals(LogicalSymbols.CONJUNCTION()))
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j).equals(LogicalSymbols.DISJUNCTION())) 
+			else if (l.get(2+j).equals(LogicalSymbols.DISJUNCTION()))
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else if (l.get(2+j).equals(LogicalSymbols.EQUIVALENCE()))
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else if (l.get(2+j).equals(LogicalSymbols.IMPLICATION()))
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else 
+			else
 				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
 		}
-		return result;	
+		return result;
 	}
-	
+
 	private PlFormula parseEquivalence(List<Object> l) {
 		if (l.isEmpty())
 			throw new ParserException("Empty parentheses.");
@@ -282,7 +288,7 @@ public class QbfParser extends PlParser {
 		}
 		return new Equivalence(parseQuantification(left), parseQuantification(right));
 	}
-	
+
 	private PlFormula parseImplication(List<Object> l) {
 		if (l.isEmpty())
 			throw new ParserException("Empty parentheses.");

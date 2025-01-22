@@ -21,11 +21,11 @@ package org.tweetyproject.math.algebra;
 
 /**
  * This class represents a Weighted Semiring, where elements are interpreted as weights or costs.
- * 
+ *
  * In this semiring, the multiplication operation corresponds to finding the minimum of two weights,
  * the addition operation corresponds to adding weights, Double.POSITIVE_INFINITY represents the
  * additive identity, and 0.0 represents the multiplicative identity.
- * 
+ *
  * @author Sandra Hoffmann
  */
 public class WeightedSemiring extends Semiring<Double> {
@@ -39,19 +39,20 @@ public class WeightedSemiring extends Semiring<Double> {
         maxValue = Double.POSITIVE_INFINITY;
         //maxValue = Double.MAX_VALUE - 1;
     }
-    
+
     /**
      * Constructs a WeightedSemiring instance with a max weight.
+     * @param maxWeight the max weight
      */
     public WeightedSemiring(double maxWeight) {
         super((a, b) -> Math.min(a, b), (a, b) -> a + b, maxWeight, 0.0);
         maxValue = maxWeight;
     }
-    
-    
+
+
     /**
      * Validates and returns the given value if valid.
-     * 
+     *
      * @param value The value to be validated.
      * @return The validated value.
      * @throws IllegalArgumentException If the value is outside the valid range [0.0, maxValue].
@@ -71,7 +72,7 @@ public class WeightedSemiring extends Semiring<Double> {
      */
     @Override
 	public Double getRandomElement() {
-		return 0.0;//random.nextDouble(maxValue);
+		return random.nextDouble() * maxValue;
 	}
 
     /**
@@ -92,6 +93,6 @@ public class WeightedSemiring extends Semiring<Double> {
 		}
 
 	}
-	
+
 }
 

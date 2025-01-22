@@ -31,7 +31,7 @@ import org.tweetyproject.math.opt.problem.*;
 
 /**
  * This class implements a KnapSack problem
- * 
+ *
  * @author Sebastian Franke
  */
 public class KnapSack extends CombinatoricsProblem {
@@ -55,12 +55,17 @@ public class KnapSack extends CombinatoricsProblem {
 	}
 	/**version nr*/
 	private static final long serialVersionUID = 1L;
-
+	/**maxWeight*/
 	Term maxWeight;
+	/** holds the current solution*/
 	ArrayList<ElementOfCombinatoricsProb> currSol1 = new ArrayList<ElementOfCombinatoricsProb>();
+	/**holds the best solution*/
 	ArrayList<ElementOfCombinatoricsProb> bestSol;
 
 	/**
+	 * Return the weight of a certain element
+	 * @param i index
+	 * @param sol solution
 	 * @return the weight of a certain element
 	 */
 	Term weight(int i, ArrayList<ElementOfCombinatoricsProb> sol) {
@@ -68,6 +73,9 @@ public class KnapSack extends CombinatoricsProblem {
 	}
 
 	/**
+	 * Return the value of a certain element
+	 * @param i index
+	 * @param sol solution
 	 * @return the value of a certain element
 	 */
 	Term value(int i, ArrayList<ElementOfCombinatoricsProb> sol) {

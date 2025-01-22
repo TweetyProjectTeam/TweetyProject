@@ -39,11 +39,11 @@ public class Transition extends PetriNetNode {
 	 *  Specify whether a transition is "final", that is, it fixes the final state
 	 */
 	private boolean isFinal;
-	
+
 	/**
 	 * Create a new transition
 	 * @param id a unique identifier
-	 */	
+	 */
 	public Transition(String id) {
 		super(id);
 	}
@@ -52,11 +52,11 @@ public class Transition extends PetriNetNode {
 	 * Create a new transition
 	 * @param id a unique identifier
 	 * @param name a pretty name
-	 */	
+	 */
 	public Transition(String id, String name) {
 		super(id, name);
 	}
-	
+
 	/**
 	 * Add a new incoming ark to this transition
 	 * @param ark the incoming ark
@@ -72,8 +72,9 @@ public class Transition extends PetriNetNode {
 	public void addOutgoingArk(Ark ark) {
 		this.outgoingArks.add(ark);
 	}
-	
+
 	/**
+	 * Return true if all incoming arks and all outgoing arks of this transition can fire
 	 * @return true if all incoming arks and all outgoing arks of this transition can fire
 	 */
 	public boolean canFire() {
@@ -89,7 +90,7 @@ public class Transition extends PetriNetNode {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * fire this transition, which means firing all incoming and all outgoing arks
 	 * @throws IllegalStateException if this transition can not fire at the moment
@@ -103,9 +104,9 @@ public class Transition extends PetriNetNode {
 		}
 		for(Ark ark: this.outgoingArks) {
 			ark.fire();
-		}		
+		}
 	}
-	
+
 	/**
 	 * Reverse fire transition for purposes of depth-first graph search
 	 */
@@ -124,13 +125,13 @@ public class Transition extends PetriNetNode {
 	public void setFinal() {
 		this.isFinal = true;
 	}
-	
+
 	/**
 	 * Check if a transition is "final", that is, it fixes the final state
 	 */
 	public boolean isFinal() {
 		return this.isFinal;
 	}
-	
-	
+
+
 }

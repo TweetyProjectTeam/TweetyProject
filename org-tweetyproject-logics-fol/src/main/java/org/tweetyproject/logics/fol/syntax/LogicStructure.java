@@ -31,26 +31,36 @@ import org.tweetyproject.logics.commons.syntax.Variable;
  * @author Matthias Thimm
  */
 public abstract class LogicStructure {
+
+	/** Constructor */
+	public LogicStructure(){
+
+	}
+
 	/**
+	 * Return all constants that appear in this structure.
 	 * @return all constants that appear in this structure.
 	 */
 	public abstract Set<Constant> getConstants();
-	
+
 	/**
+	 * Return all functors that appear in this structure.
 	 * @return all functors that appear in this structure.
 	 */
 	public abstract Set<Functor> getFunctors();
-	
+
 	/**
+	 * Return all variables that appear in this structure.
 	 * @return all variables that appear in this structure.
 	 */
 	public abstract Set<Variable> getVariables();
-	
+
 	/**
+	 * Return all functional terms that appear in this structure.
 	 * @return all functional terms that appear in this structure.
 	 */
 	public abstract Set<FunctionalTerm> getFunctionalTerms();
-	
+
 	/**
 	 * Checks whether this structure contains any functional terms.
 	 * @return "true" if this structure contains a functional term.
@@ -64,5 +74,5 @@ public abstract class LogicStructure {
 	 */
 	@Override
 	public abstract String toString();
-	
+
 }

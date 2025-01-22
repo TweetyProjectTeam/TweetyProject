@@ -23,19 +23,28 @@ import java.util.*;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
-
 /**
- * This reasoner for SetAf theories performs inference on the grounded extension.
- * Computes the (unique) grounded extension, i.e., the least fixpoint of the characteristic function faf.
- * 
- * @author  Matthias Thimm, Sebastian Franke
+ * This reasoner for SetAf theories performs inference on the grounded
+ * extension.
+ * Computes the (unique) grounded extension, i.e., the least fixpoint of the
+ * characteristic function faf.
+ *
+ * @author Matthias Thimm, Sebastian Franke
  *
  */
 public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
+	/** Default */
+			public SimpleGroundedSetAfReasoner(){
+				// Default
+			}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.
+	 * tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
@@ -44,24 +53,27 @@ public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner 
 		return extensions;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.
+	 * tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public Extension<SetAf> getModel(SetAf bbase) {
 		Extension<SetAf> ext = new Extension<SetAf>();
 		int size;
-		do{
-			size = ext.size();			
-			ext = ((SetAf)bbase).faf(ext);			
-		}while(size!=ext.size());		
+		do {
+			size = ext.size();
+			ext = ((SetAf) bbase).faf(ext);
+		} while (size != ext.size());
 		return ext;
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;
 	}
-
 
 }

@@ -169,6 +169,15 @@ public interface Graph<T extends Node> extends GeneralGraph<T>{
 	public Graph<T> getComplementGraph(int selfloops);	
 	
 	/**
+	 * Returns the set of (simple) connected components of this graph.
+	 * A set of nodes is connected, if there is some path (ignoring edge
+	 * directions) from each node to each other. It is a connected component
+	 * if it is connected and maximal wrt. set inclusion. 
+	 * @return the connected components of this graph.
+	 */
+	public Collection<Collection<T>> getConnectedComponents();
+	
+	/**
 	 * Returns the strongly connected components of this graph. A set
 	 * of nodes is strongly connected, if there is a path from each
 	 * node to each other. A set of nodes is called strongly connected
@@ -177,7 +186,7 @@ public interface Graph<T extends Node> extends GeneralGraph<T>{
 	 * @return the strongly connected components of this graph.
 	 */
 	public Collection<Collection<T>> getStronglyConnectedComponents();
-	
+		
 	/**
 	 * Returns the set of sub graphs of this graph.
 	 * @return the set of sub graphs of this graph.

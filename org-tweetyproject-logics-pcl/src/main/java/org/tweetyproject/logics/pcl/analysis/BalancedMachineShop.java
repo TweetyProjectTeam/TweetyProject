@@ -38,25 +38,33 @@ import org.tweetyproject.math.probability.*;
  * @author Matthias Thimm
  */
 public class BalancedMachineShop implements BeliefBaseMachineShop {
-
+	/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+
+	/**
+	 * Constructor
+	 * @param rootFinder the rrot finder
+	 */
 	public BalancedMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/** The precision for comparing culpability values. */
 	public static final double PRECISIONCULP = 0.01;
 	/** The precision for comparing culpability values. */
 	public static final double PRECISIONOPT = 0.002;
-	
+
 	/** The culpability measure used by this machine shop. */
 	private CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure;
-	
+
+	/**
+	 * Constructor
+	 * @param culpabilityMeasure the culpabilityMeasure
+	 */
 	public BalancedMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
 		this.culpabilityMeasure = culpabilityMeasure;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -67,11 +75,11 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
-			return beliefSet;		
+			return beliefSet;
 		// get culpability values
 		Map<ProbabilisticConditional,Double> culpMeasures = new HashMap<ProbabilisticConditional,Double>();
 		for(ProbabilisticConditional pc: beliefSet)
-			culpMeasures.put(pc, this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc));		
+			culpMeasures.put(pc, this.culpabilityMeasure.culpabilityMeasure(beliefSet, pc));
 		// Do a distance minimization but incorporate conformity constraints
 		// -----------
 		// Create variables for the probability of each possible world and
@@ -88,14 +96,14 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 			if(normConstraint == null)
 				normConstraint = var;
 			else normConstraint = normConstraint.add(var);
-		}		
+		}
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
 		// For each conditional add variables eta and tau and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> etas = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> taus = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
-		i = 0;		
+		i = 0;
 		for(ProbabilisticConditional c: beliefSet){
 			FloatVariable eta = new FloatVariable("e" + i,0,1);
 			FloatVariable tau = new FloatVariable("t" + i++,0,1);
@@ -114,7 +122,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau);
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -127,7 +135,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -137,7 +145,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			problem.add(new Equation(leftSide,rightSide));			
+			problem.add(new Equation(leftSide,rightSide));
 		}
 		// add conformity constraints
 		Stack<ProbabilisticConditional> stack = new Stack<ProbabilisticConditional>();
@@ -148,7 +156,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 				// the following is equivalent to the code commented out (at least for the solution of the problem)
 				Term leftSide = etas.get(pc1).add(taus.get(pc1));//etas.get(pc1).minus(taus.get(pc1)).mult(etas.get(pc1).minus(taus.get(pc1)));
 				Term rightSide = etas.get(pc2).add(taus.get(pc2));//etas.get(pc2).minus(taus.get(pc2)).mult(etas.get(pc2).minus(taus.get(pc2)));
-				if(culpMeasures.get(pc1) > culpMeasures.get(pc2) - BalancedMachineShop.PRECISIONCULP && culpMeasures.get(pc1) < culpMeasures.get(pc2) + BalancedMachineShop.PRECISIONCULP){				
+				if(culpMeasures.get(pc1) > culpMeasures.get(pc2) - BalancedMachineShop.PRECISIONCULP && culpMeasures.get(pc1) < culpMeasures.get(pc2) + BalancedMachineShop.PRECISIONCULP){
 					problem.add(new Inequation(leftSide,rightSide.minus(new FloatConstant(BalancedMachineShop.PRECISIONOPT)),Inequation.GREATER_EQUAL));
 					problem.add(new Inequation(leftSide,rightSide.add(new FloatConstant(BalancedMachineShop.PRECISIONOPT)),Inequation.LESS_EQUAL));
 					//System.out.println(pc1 + " == " + pc2);
@@ -163,12 +171,12 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 			}
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)
-				result.add(new ProbabilisticConditional(pc,new Probability(pc.getProbability().doubleValue() + solution.get(etas.get(pc)).doubleValue() - solution.get(taus.get(pc)).doubleValue())));							
+				result.add(new ProbabilisticConditional(pc,new Probability(pc.getProbability().doubleValue() + solution.get(etas.get(pc)).doubleValue() - solution.get(taus.get(pc)).doubleValue())));
 			return result;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

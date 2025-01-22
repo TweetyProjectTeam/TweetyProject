@@ -55,4 +55,7 @@ public class ImPostulateEvaluationExample {
 		evaluator.addPostulate(ImPostulate.SAFEFORMULAINDEPENDENCE);
 		System.out.println(evaluator.evaluate(10, false).prettyPrint());
 	}
+
+    /** Default Constructor */
+    public ImPostulateEvaluationExample(){}
 }

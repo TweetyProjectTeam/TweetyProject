@@ -32,13 +32,14 @@ import org.tweetyproject.math.matrix.Matrix;
 
 /**
  * This class implements a simple directed hypergraph
- *  
+ *
+ * @param <T> A Node
  * @author Sebastian Franke, Matthias Thimm
  *
  */
 
 public class HyperGraph<T extends Node> implements Graph<T>{
-	
+
 	/** The set of nodes */
 	protected Set<T> nodes;
 
@@ -58,7 +59,8 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 
 	/**
-	 * 
+	 * Add Edge.
+	 * Return whether the operation was successful
 	 * @param edge an edge
 	 * @return whether the operation was successful
 	 */
@@ -66,7 +68,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		for(T e: edge.getNodeA())
 			if(!this.nodes.contains(e))
 				throw new IllegalArgumentException("The edge connects node that are not in this graph.");
-		
+
 		if (!this.nodes.contains(edge.getNodeB()))
 			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
 		return this.edges.add((HyperDirEdge<T>) edge);
@@ -81,7 +83,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	public int getNumberOfNodes() {
 		return this.nodes.size();
 	}
-	
+
 	@Override
 	public int getNumberOfEdges() {
 		return this.edges.size();
@@ -104,7 +106,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		return null;
 	}
 	/**
-	 * 
+	 * Get a directed edge.
 	 * @param node1 a set of nodes (attacker)
 	 * @param b a node (attacked)
 	 * @return a directed Hyper Edge
@@ -154,7 +156,8 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		return null;
 	}
 	/**
-	 * 
+	 *
+	 * Return the children of the node
 	 * @param node a node
 	 * @return the children of the node
 	 */
@@ -166,7 +169,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 			}
 		}
 		return result;
-		
+
 	}
 
 	/**
@@ -184,7 +187,8 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 
 	/**
-	 * 
+	 *
+	 * Checks if there is a direct path from node 1 to node 2
 	 * @param hyperGraph a hypergraph
 	 * @param node1 1st node
 	 * @param node2 2nd node
@@ -209,12 +213,12 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean existsDirectedPath(T node1, T node2) {
 		return this.existsDirectedPath(this, node1, node2);
 	}
-	
+
 
 
 	@Override
@@ -236,9 +240,9 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		// A matrix representation o a hypergraph is not known to me
 		return null;
 	}
-	
+
 	/**
-	 * 
+	 * Return a powerset.
 	 * @param originalSet original set
 	 * @return the powerset of @param originalSet
 	 */
@@ -250,25 +254,25 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	    }
 	    ArrayList<T> list = new ArrayList<T>(originalSet);
 	    T head = list.get(0);
-	    HashSet<T> rest = new HashSet<T>(list.subList(1, list.size())); 
+	    HashSet<T> rest = new HashSet<T>(list.subList(1, list.size()));
 	    for (Set<T> set : powerSet(rest)) {
 	        Set<T> newSet = new HashSet<T>();
 	        newSet.add(head);
 	        newSet.addAll(set);
 	        sets.add(newSet);
 	        sets.add(set);
-	    }  
+	    }
 
 	    return sets;
-	}  
+	}
 
-	
+
 	@Override
 	public HyperGraph<T> getComplementGraph(int selfloops) {
 		//very inefficient
 		Set<Set<T>> myPowerSet = new HashSet<Set<T>>();
 		myPowerSet = powerSet(this.nodes);
-		
+
 		HyperGraph<T> comp = new HyperGraph<T>();
 		for (T node : this.nodes)
 			comp.add(node);
@@ -279,8 +283,8 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 			for (T node2 : this.nodes)
 				if (node1.contains(node2)) {
 					if (selfloops == HyperGraph.INVERT_SELFLOOPS) {
-						if (this.getDirEdge(node1, node2) != null) 						
-							comp.add(new HyperDirEdge<T>(node1, node2)); 
+						if (this.getDirEdge(node1, node2) != null)
+							comp.add(new HyperDirEdge<T>(node1, node2));
 					} else if (selfloops == HyperGraph.IGNORE_SELFLOOPS) {
 						if (this.getDirEdge(node1, node2) != null)
 							comp.add(new HyperDirEdge<T>(node1, node2));
@@ -294,30 +298,37 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 
 	@Override
+	public Collection<Collection<T>> getConnectedComponents() {
+		// TODO Auto-generated method stub
+		//algorithm yet to be implemented, not important for the next time
+		throw new UnsupportedOperationException("not yet implemented");
+	}
+	
+	@Override
 	public Collection<Collection<T>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub
 		//algorithm yet to be implemented, not important for the next time
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.graphs.GeneralGraph#getSubgraphs()
 	 */
 	public Collection<Graph<T>> getSubgraphs() {
 		return this.getSubgraphs(this);
 	}
-	
+
 	/**
 	 * Returns the set of sub graphs of the given graph.
 	 * @param g a graph
-	 * 
+	 *
 	 * @return the set of sub graphs of the given graph.
 	 */
 	public Collection<Graph<T>> getSubgraphs(HyperGraph<T> g) {
-		
+
 		// not very efficient but will do for now
 		Collection<Graph<T>> result = new HashSet<Graph<T>>();
 		Set<Set<T>> subNodes = new SetTools<T>().subsets(g.getNodes());
@@ -331,7 +342,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 				result.add(newg);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -364,7 +375,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

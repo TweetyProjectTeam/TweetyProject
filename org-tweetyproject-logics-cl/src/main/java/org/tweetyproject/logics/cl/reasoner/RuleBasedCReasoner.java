@@ -38,20 +38,20 @@ import org.tweetyproject.logics.pl.semantics.NicePossibleWorld;
 /**
  * This is a reasoner using c-representation and rules to solve these c-representations.
  * It contains a list of rules whereby the first rule is the rule with the highest priorization,
- * that means it is applied first. 
- *  
+ * that means it is applied first.
+ *
  * @author Tim Janus
  * @author Matthias Thimm
  */
 public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
-	
-	/** 
+
+	/**
 	 * A rule that is applicable by the {@link RuleBasedCReasoner} to reason a
 	 * c-representation given a conditional belief base. Implementation of
 	 * this interface can be added to the {@link RuleBasedCReasoner} to adapt
 	 * its behavior, such that a {@link RuleBasedCReasoner} can use different rules
 	 * if it can make different assumptions on the underlying belief base.
-	 * 
+	 *
 	 * @author Tim Janus
 	 */
 	public static interface Rule {
@@ -61,43 +61,47 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 		 * @param cs a conditional structure
 		 */
 		void setConditonalStructure(ConditionalStructure cs);
-		
+
 		/**
 		 * Sets the Collection of {@link KappaValue} that is used as data basis
-		 * for the rule 
+		 * for the rule
 		 * @param kappas a set of kappa values
 		 */
 		void setKappas(Collection<KappaValue> kappas);
-		
-		/** 
+
+		/**
 		 * Applies the rule
 		 * @return true if a change occured, false otherwise
 		 */
 		boolean apply();
 	}
-	
-	/** 
+
+	/**
 	 * a flag indicating if a human friend processing shall be used, that means
 	 * everything is calculated no fast-evaluation, such that a human can better
 	 * follow the algorithm.
 	 */
 	private boolean humanFriendly;
-	
+
 	/**
 	 * A prioritized list of rules, the first rule is applied first and so on.
 	 * If a progress is caused by applying the rule then the first rule is applied
 	 * next again.
 	 */
 	private List<Rule> rules = new ArrayList<RuleBasedCReasoner.Rule>();
-	
+
+	/** Constructor */
 	public RuleBasedCReasoner() {
 		this(true);
 	}
-	
+
+	/** Constructor
+	 * @param humanFriendly is humanFriendly
+	*/
 	public RuleBasedCReasoner( boolean humanFriendly) {
 		this.humanFriendly = humanFriendly;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.cl.reasoner.AbstractConditionalLogicReasoner#getModel(org.tweetyproject.logics.cl.syntax.ClBeliefSet)
 	 */
@@ -106,13 +110,13 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 		ConditionalStructure cs = new ConditionalStructure(beliefset);
 		ConditionalStructureKappaBuilder builder = new ConditionalStructureKappaBuilder(!humanFriendly);
 		HashMap<Conditional, KappaValue> kappas = new HashMap<Conditional, KappaValue>(builder.build(cs));
-		
+
 		// todo: Move rule creation somewhere else and make it more dynamic
 		EvaluateRule rule = new EvaluateRule();
 		rule.setConditonalStructure(cs);
 		rule.setKappas(kappas.values());
 		rules.add(rule);
-		
+
 		RankingFunction rfunc = new RankingFunction(beliefset.getMinimalSignature());
 		for(NicePossibleWorld npw : cs.getPossibleWorlds()) {
 			int weight = 0;
@@ -122,9 +126,9 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 			}
 			rfunc.setRank(npw.getOptimizedWorld(), weight);
 		}
-		return rfunc;	
+		return rfunc;
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

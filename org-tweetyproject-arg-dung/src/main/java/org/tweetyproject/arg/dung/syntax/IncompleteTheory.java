@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
- 
+
  /**
   * implementation of incomplete argumentation frameworks
   *
@@ -72,7 +72,7 @@ import java.util.Set;
 	 public void addPossibleArgument(Argument arg) {
 		 this.uncertainArgument.add(arg);
 	 }
- 
+
 	 /**
 	  * adds uncertain argument
 	  * @param arg1 argument 1
@@ -80,9 +80,9 @@ import java.util.Set;
 	  */
 	 public void addPossibleAttack(Argument arg1, Argument arg2) {
 		 this.uncertainAttacks.add(new Attack(arg1, arg2));
- 
+
 	 }
- 
+
 	 /**
 	  * adds definite attack
 	  * @param arg1 argument 1
@@ -105,10 +105,10 @@ import java.util.Set;
 			 System.out.println("error case");
 			 return;
 		 }
- 
+
 		 for(Attack att : this.getAttacks())
 			 this.remove(att);
- 
+
 		 this.clear();
 
 		 this.addAll(this.definiteArguments);
@@ -128,7 +128,7 @@ import java.util.Set;
 	  * @param theories the theories to merge
 	  */
 	 public void merge(HashSet<DungTheory> theories) {
- 
+
 		 for(Argument arg : theories.iterator().next()) {
 			 boolean isInAllTheories = true;
 			 for(DungTheory theory  : theories) {
@@ -142,7 +142,7 @@ import java.util.Set;
 			 else
 				 this.uncertainArgument.add(arg);
 		 }
- 
+
 		 Set<Attack> attacks = theories.iterator().next().getAttacks();
 		 for(Attack att : attacks) {
 			 boolean isInAllTheories = true;
@@ -182,8 +182,8 @@ import java.util.Set;
 		 }
 		 return sets;
 	 }
- 
- 
+
+
 	 /**
 	  * constructs optimistic completion (all attacks from and to set s are instantiated and no other possible attacks)
 	  * @param s a set of arguments
@@ -195,9 +195,9 @@ import java.util.Set;
 					 (this.definiteArguments.contains(att.getAttacked()) || s.contains(att.getAttacked()))) {
 				 usedAttacks.add(att);
 			 }
- 
+
 		 }
- 
+
 		 this.instantiate(s, usedAttacks);
 	 }
 	 /**
@@ -211,13 +211,19 @@ import java.util.Set;
 					 !(this.definiteArguments.contains(att.getAttacked()) || s.contains(att.getAttacked()))) {
 				 usedAttacks.add(att);
 			 }
- 
+
 		 }
 		 HashSet<Argument> newArgs = new HashSet<>(this.uncertainArgument);
 		 newArgs.removeAll(s);
 		 this.instantiate(newArgs, usedAttacks);
 	 }
- 
+
+
+	 /**
+ * Generates all possible completions of the current Dung theory based on uncertain arguments and attacks.
+ *
+ * @return A collection of {@code DungTheory} objects representing all possible completions of the current theory.
+ */
 	 public Collection<DungTheory> getAllCompletions() {
 		 Collection<DungTheory> theories = new HashSet<>();
 		 Collection<Collection<Argument>> powerSet = this.powerSet(this.uncertainArgument);
@@ -242,4 +248,3 @@ import java.util.Set;
 		 return theories;
 	 }
  }
- 

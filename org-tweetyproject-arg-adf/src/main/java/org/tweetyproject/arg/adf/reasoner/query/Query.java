@@ -21,30 +21,33 @@ package org.tweetyproject.arg.adf.reasoner.query;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 
 /**
- * 
- * 
- * @author Mathias Hofer
  *
+ * Query class
+ * @author Mathias Hofer
+ * @param <T> type
  */
 public interface Query<T> {
 
 	/**
-	 * 
+	 *
+	 * Return execute
 	 * @return execute
 	 */
 	T execute();
 
 	/**
 	 * Computes the query in parallel.
-	 * 
+	 *
 	 * Note: this is only recommended for "hard"
 	 * queries, otherwise the parallelization overhead exceeds the solving time.
-	 * 
+	 *
 	 * @return return
 	 */
 	T executeParallel();
 
 	/**
+	 *
+	 * Return a copy of this query but with the new configuration applied
 	 * @param configuration configuration
 	 * @return a copy of this query but with the new configuration applied
 	 */

@@ -25,14 +25,14 @@ import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
- * This class models an existential restriction in description logics, 
+ * This class models an existential restriction in description logics,
  * i.e. an expression of the form "exists R.C" for a role R and a concept C.
- * 
+ *
  * @author Anna Gessler
  *
  */
 public class ExistentialRestriction extends ComplexConcept  {
-	
+
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
@@ -41,7 +41,7 @@ public class ExistentialRestriction extends ComplexConcept  {
 	/**
 	 * Creates a new ALC existential restriction with the given role
 	 * and concept.
-	 * 
+	 *
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
@@ -51,6 +51,10 @@ public class ExistentialRestriction extends ComplexConcept  {
 		formulas.setSecond(c);
 	}
 
+	/**
+	 * Constructor
+	 * @param f pair of role and concept
+	 */
 	public ExistentialRestriction(Pair<AtomicRole, ComplexConcept> f) {
 		formulas = new Pair<AtomicRole,ComplexConcept>();
 		formulas.setSecond(f.getSecond());
@@ -58,20 +62,23 @@ public class ExistentialRestriction extends ComplexConcept  {
 	}
 
 	/**
+	 * Return the (atomic) role and the concept that are part of the existential restriction.
 	 * @return the (atomic) role and the concept that are part of the existential restriction.
 	 */
 	public Pair<AtomicRole,ComplexConcept> getFormulas() {
-	 return this.formulas;	
+	 return this.formulas;
 	}
-	
+
 	/**
+	 * Return the (atomic) role of the existential restriction.
 	 * @return the (atomic) role of the existential restriction.
 	 */
 	public AtomicRole getRole() {
 		return this.formulas.getFirst();
 	}
-	
+
 	/**
+	 * Return the concept of the existential restriction.
 	 * @return the concept of the existential restriction.
 	 */
 	public ComplexConcept getConcept() {
@@ -85,7 +92,7 @@ public class ExistentialRestriction extends ComplexConcept  {
 		sig.add(this.formulas.getSecond());
 		return sig;
 	}
-	
+
 	public String toString() {
 		return "(exists " + " " + this.formulas.getFirst().toString() + " " + this.getFormulas().getSecond().toString() +")";
 	}
@@ -139,5 +146,5 @@ public class ExistentialRestriction extends ComplexConcept  {
 			return false;
 		return true;
 	}
-	
+
 }

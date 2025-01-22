@@ -19,7 +19,7 @@
 package org.tweetyproject.arg.adf.transform.processor;
 
 /**
- * 
+ * Processor interface
  * @author Mathias Hofer
  *
  * @param <I> the input
@@ -28,6 +28,11 @@ package org.tweetyproject.arg.adf.transform.processor;
 @FunctionalInterface
 public interface Processor<I,O> {
 
+	/**
+	 * Process
+	 * @param in input
+	 * @return output
+	 */
 	O process(I in);
-	
+
 }

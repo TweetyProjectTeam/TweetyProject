@@ -30,8 +30,8 @@ import org.tweetyproject.logics.fol.syntax.*;
 import org.tweetyproject.logics.rpcl.semantics.*;
 import org.tweetyproject.math.probability.*;
 
-/*
- * This class implements a parser for condensed relational probability distributions. The BNF for 
+/**
+ * This class implements a parser for condensed relational probability distributions. The BNF for
  * condensed relational probability distributions is given by (start symbol is DISTRIBUTION)
  * <br>
  * <br>DISTRIBUTION				::== (PROBABILITYASSIGNMENT)*
@@ -47,276 +47,446 @@ import org.tweetyproject.math.probability.*;
 @SuppressWarnings("all")
 public class RpclCondensedProbabilityDistributionParser implements RpclCondensedProbabilityDistributionParserConstants {
 
-        /*
-     * The semantics used for the distribution to be read. 
-     */
-        private RpclSemantics semantics;
+  /**
+   * The semantics used for the distribution to be read.
+   */
+  private RpclSemantics semantics;
 
-        /*
-	 * The signature for this parser (if one has been given)
-	 */
-        private FolSignature signature = null;
+  /**
+   * The signature for this parser (if one has been given)
+   */
+  private FolSignature signature = null;
 
-        public RpclCondensedProbabilityDistributionParser(){
-        }
+  /** Cnnstructor */
+  public RpclCondensedProbabilityDistributionParser() {
+  }
 
-        public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics){
-                this(semantics,null);
-        }
+  /**
+   * Constructor
+   *
+   * @param semantics a semantics
+   */
+  public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics) {
+    this(semantics, null);
+  }
 
-        public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature){
-                this.semantics = semantics;
-                this.signature = signature;
-        }
+  /**
+   * Constructor
+   *
+   * @param semantics a semantics
+   * @param signature a signature
+   */
+  public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature) {
+    this.semantics = semantics;
+    this.signature = signature;
+  }
 
-        public void setSemantics(RpclSemantics semantics){
-                this.semantics = semantics;
-        }
+  /**
+   * setter semantics
+   *
+   * @param semantics the semantics
+   */
+  public void setSemantics(RpclSemantics semantics) {
+    this.semantics = semantics;
+  }
 
-        public void setSignature(FolSignature signature){
-                this.signature = signature;
-        }
+  /**
+   * setter signature
+   * @param signature the signature
+   */
+  public void setSignature(FolSignature signature) {
+    this.signature = signature;
+  }
 
-        public CondensedProbabilityDistribution parseCondensedProbabilityDistribution(Reader reader) throws ParserException{
-                try
-                {
-                        RpclCondensedProbabilityDistributionParser theParser = new RpclCondensedProbabilityDistributionParser(reader);
-                        return RpclCondensedProbabilityDistributionParser.Distribution(this.semantics, this.signature);
-                }catch(ParseException e){
-                        throw new ParserException(e);
-                }
-        }
+  /**
+   *
+   * Return parsed CondensedProbabilityDistribution
+   *
+   * @param reader the reader
+   * @return parsed CondensedProbabilityDistribution
+   * @throws ParserException parse exception
+   */
+  public CondensedProbabilityDistribution parseCondensedProbabilityDistribution(Reader reader) throws ParserException {
+    try {
+      RpclCondensedProbabilityDistributionParser theParser = new RpclCondensedProbabilityDistributionParser(reader);
+      return RpclCondensedProbabilityDistributionParser.Distribution(this.semantics, this.signature);
+    } catch (ParseException e) {
+      throw new ParserException(e);
+    }
+  }
 
-  static final public CondensedProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature) throws ParseException {
-        Set<Pair<ReferenceWorld,Probability>> assignments = new HashSet<Pair<ReferenceWorld,Probability>>();
-        Pair<ReferenceWorld,Probability> assignment;
-                if(signature == null)
-                        signature = new FolSignature();
-    label_1:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 9:
-        ;
-        break;
-      default:
-        jj_la1[0] = jj_gen;
-        break label_1;
+  /**
+   * Create a distribution
+   *
+   * @param semantics the semantics
+   * @param signature the signiture
+   * @return a distribution
+   * @throws ParseException error
+   */
+  static final public CondensedProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature)
+      throws ParseException {
+    Set<Pair<ReferenceWorld, Probability>> assignments = new HashSet<Pair<ReferenceWorld, Probability>>();
+    Pair<ReferenceWorld, Probability> assignment;
+    if (signature == null)
+      signature = new FolSignature();
+    label_1: while (true) {
+      switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+        case 9:
+          ;
+          break;
+        default:
+          jj_la1[0] = jj_gen;
+          break label_1;
       }
       assignment = ProbabilityAssignment(signature);
-                assignments.add(assignment);
+      assignments.add(assignment);
     }
     jj_consume_token(0);
-        CondensedProbabilityDistribution distribution = new CondensedProbabilityDistribution(semantics,signature);
-        for(Pair<ReferenceWorld,Probability> a: assignments)
-                distribution.put(a.getFirst(),a.getSecond());
-        {if (true) return distribution;}
-    throw new Error("Missing return statement in function");
-  }
-
-  static final public Pair<ReferenceWorld,Probability> ProbabilityAssignment(FolSignature signature) throws ParseException {
-        ReferenceWorld world;
-        Token probability;
-    // NOTE: probability might be "0" or "1" => maybe parse as multiplicator
-            world = Interpretation(signature);
-    jj_consume_token(8);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case PROBABILITY:
-      probability = jj_consume_token(PROBABILITY);
-      break;
-    case MULTIPLICATOR:
-      probability = jj_consume_token(MULTIPLICATOR);
-      break;
-    default:
-      jj_la1[1] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    CondensedProbabilityDistribution distribution = new CondensedProbabilityDistribution(semantics, signature);
+    for (Pair<ReferenceWorld, Probability> a : assignments)
+      distribution.put(a.getFirst(), a.getSecond());
+    {
+      if (true)
+        return distribution;
     }
-                {if (true) return new Pair<ReferenceWorld,Probability>(world,new Probability(new Double(token.image)));}
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * Parses a probability assignment from the input stream.
+   * <p>
+   * This method processes a {@link ReferenceWorld} followed by a probability
+   * value (which could either be
+   * a probability or a multiplicator). The method combines the parsed
+   * {@link ReferenceWorld} with the probability
+   * and returns them as a {@link Pair}.
+   * </p>
+   *
+   * @param signature The {@link FolSignature} to which the constants in the
+   *                  {@link ReferenceWorld} belong.
+   *                  If a constant is not found in the signature, it is added to
+   *                  it.
+   * @return A {@link Pair} containing the parsed {@link ReferenceWorld} and its
+   *         associated {@link Probability}.
+   * @throws ParseException If there is an error during the parsing process.
+   */
+  static final public Pair<ReferenceWorld, Probability> ProbabilityAssignment(FolSignature signature)
+      throws ParseException {
+    ReferenceWorld world;
+    Token probability;
+    // NOTE: probability might be "0" or "1" => maybe parse as multiplicator
+    world = Interpretation(signature);
+    jj_consume_token(8);
+    switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+      case PROBABILITY:
+        probability = jj_consume_token(PROBABILITY);
+        break;
+      case MULTIPLICATOR:
+        probability = jj_consume_token(MULTIPLICATOR);
+        break;
+      default:
+        jj_la1[1] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+    }
+    {
+      if (true)
+        return new Pair<ReferenceWorld, Probability>(world, new Probability(new Double(token.image)));
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  /**
+   * Parses an {@link Interpretation} (specifically, a {@link ReferenceWorld})
+   * from the input stream
+   *
+   * @param signature The {@link FolSignature} to which the parsed constants and
+   *                  predicates belong.
+   *                  If a constant or predicate is not found in the signature, it
+   *                  is added to it.
+   * @return A {@link ReferenceWorld} that contains the predicates and their
+   *         instance assignments.
+   * @throws ParseException If there is an error during the parsing process.
+   */
   static final public ReferenceWorld Interpretation(FolSignature signature) throws ParseException {
-        Set<InstanceAssignment> assignments = new HashSet<InstanceAssignment>();
-        InstanceAssignment assignment;
-        Collection<? extends Collection<? extends Constant>> equivalenceClasses = new HashSet<Collection<Constant>>();
-        Set<Predicate> predicates = new HashSet<Predicate>();
+    Set<InstanceAssignment> assignments = new HashSet<InstanceAssignment>();
+    InstanceAssignment assignment;
+    Collection<? extends Collection<? extends Constant>> equivalenceClasses = new HashSet<Collection<Constant>>();
+    Set<Predicate> predicates = new HashSet<Predicate>();
     jj_consume_token(9);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 12:
-      assignment = InstanceAssignment(signature);
-                assignments.add(assignment);
-                equivalenceClasses = assignment.keySet();
-                predicates.add(assignment.getPredicate());
-      label_2:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 10:
-          ;
-          break;
-        default:
-          jj_la1[2] = jj_gen;
-          break label_2;
-        }
-        jj_consume_token(10);
+    switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+      case 12:
         assignment = InstanceAssignment(signature);
-                assignments.add(assignment);
-                predicates.add(assignment.getPredicate());
-      }
-      break;
-    default:
-      jj_la1[3] = jj_gen;
-      ;
+        assignments.add(assignment);
+        equivalenceClasses = assignment.keySet();
+        predicates.add(assignment.getPredicate());
+        label_2: while (true) {
+          switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+            case 10:
+              ;
+              break;
+            default:
+              jj_la1[2] = jj_gen;
+              break label_2;
+          }
+          jj_consume_token(10);
+          assignment = InstanceAssignment(signature);
+          assignments.add(assignment);
+          predicates.add(assignment.getPredicate());
+        }
+        break;
+      default:
+        jj_la1[3] = jj_gen;
+        ;
     }
     jj_consume_token(11);
-                ReferenceWorld world = new ReferenceWorld(equivalenceClasses,predicates);
-                for(InstanceAssignment a: assignments)
-                        world.put(a.getPredicate(),a);
-                {if (true) return world;}
+    ReferenceWorld world = new ReferenceWorld(equivalenceClasses, predicates);
+    for (InstanceAssignment a : assignments)
+      world.put(a.getPredicate(), a);
+    {
+      if (true)
+        return world;
+    }
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * Parses an {@link InstanceAssignment} from the input stream.
+   * <p>
+   * This method processes the predicate, constants, and multiplicators, and
+   * constructs an {@link InstanceAssignment}.
+   * The predicate is either retrieved from the given {@link FolSignature} if it
+   * exists, or a new one is created and
+   * added to the signature. The method then parses multiple sets of constants and
+   * their associated multiplicators,
+   * adding them to the {@link InstanceAssignment}.
+   * </p>
+   *
+   * @param signature The {@link FolSignature} to which the constants and
+   *                  predicates belong. If a constant or predicate
+   *                  is not found in the signature, it is added to it.
+   * @return An {@link InstanceAssignment} containing the parsed predicate and
+   *         associated constants with their multiplicators.
+   * @throws ParseException If there is an error during the parsing process.
+   */
   static final public InstanceAssignment InstanceAssignment(FolSignature signature) throws ParseException {
-        Token predicate;
-        Token multiplicator;
-        Set<Constant> constantSet;
-        InstanceAssignment assignment;
+    Token predicate;
+    Token multiplicator;
+    Set<Constant> constantSet;
+    InstanceAssignment assignment;
     jj_consume_token(12);
     predicate = jj_consume_token(STRUCTURENAME);
-                if(signature.containsPredicate(predicate.image)){
-                        Predicate p = signature.getPredicate(predicate.image);
-                        assignment = new InstanceAssignment(p);
-                }else{
-                        Predicate p = new Predicate(predicate.image);
-                        signature.add(p);
-                        assignment = new InstanceAssignment(p);
-                }
+    if (signature.containsPredicate(predicate.image)) {
+      Predicate p = signature.getPredicate(predicate.image);
+      assignment = new InstanceAssignment(p);
+    } else {
+      Predicate p = new Predicate(predicate.image);
+      signature.add(p);
+      assignment = new InstanceAssignment(p);
+    }
     jj_consume_token(10);
     jj_consume_token(9);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 9:
-      constantSet = ConstantSet(signature);
-      jj_consume_token(8);
-      multiplicator = jj_consume_token(MULTIPLICATOR);
-                assignment.put(constantSet, new Integer(multiplicator.image));
-      label_3:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 10:
-          ;
-          break;
-        default:
-          jj_la1[4] = jj_gen;
-          break label_3;
-        }
-        jj_consume_token(10);
+    switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+      case 9:
         constantSet = ConstantSet(signature);
         jj_consume_token(8);
         multiplicator = jj_consume_token(MULTIPLICATOR);
-                assignment.put(constantSet, new Integer(multiplicator.image));
-      }
-      break;
-    default:
-      jj_la1[5] = jj_gen;
-      ;
+        assignment.put(constantSet, new Integer(multiplicator.image));
+        label_3: while (true) {
+          switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+            case 10:
+              ;
+              break;
+            default:
+              jj_la1[4] = jj_gen;
+              break label_3;
+          }
+          jj_consume_token(10);
+          constantSet = ConstantSet(signature);
+          jj_consume_token(8);
+          multiplicator = jj_consume_token(MULTIPLICATOR);
+          assignment.put(constantSet, new Integer(multiplicator.image));
+        }
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        ;
     }
     jj_consume_token(11);
     jj_consume_token(13);
-                {if (true) return assignment;}
-    throw new Error("Missing return statement in function");
-  }
-
-  static final public Set<Constant> ConstantSet(FolSignature signature) throws ParseException {
-        Token constantName;
-        Set<Constant> constants = new HashSet<Constant>();
-    jj_consume_token(9);
-    constantName = jj_consume_token(STRUCTURENAME);
-                if(signature.containsConstant(constantName.image)){
-                        constants.add(signature.getConstant(constantName.image));
-                }else{
-                        Constant c = new Constant(constantName.image);
-                        signature.add(c);
-                        constants.add(c);
-                }
-    label_4:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 10:
-        ;
-        break;
-      default:
-        jj_la1[6] = jj_gen;
-        break label_4;
-      }
-      jj_consume_token(10);
-      constantName = jj_consume_token(STRUCTURENAME);
-                if(signature.containsConstant(constantName.image)){
-                        constants.add(signature.getConstant(constantName.image));
-                }else{
-                        Constant c = new Constant(constantName.image);
-                        signature.add(c);
-                        constants.add(c);
-                }
+    {
+      if (true)
+        return assignment;
     }
-    jj_consume_token(11);
-                {if (true) return constants;}
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * Parses a set of constants from the input and adds them to the specified
+   * {@link FolSignature}.
+   *
+   * @param signature The {@link FolSignature} to which the constants belong. If a
+   *                  constant is not found in the signature,
+   *                  it is added to it.
+   * @return A {@link Set} of {@link Constant} objects that were parsed from the
+   *         input.
+   * @throws ParseException If there is an error during the parsing process.
+   */
+  static final public Set<Constant> ConstantSet(FolSignature signature) throws ParseException {
+    Token constantName;
+    Set<Constant> constants = new HashSet<Constant>();
+    jj_consume_token(9); // Consumes the opening token
+    constantName = jj_consume_token(STRUCTURENAME);
+
+    // Check if the constant is already in the signature, otherwise add it
+    if (signature.containsConstant(constantName.image)) {
+      constants.add(signature.getConstant(constantName.image));
+    } else {
+      Constant c = new Constant(constantName.image);
+      signature.add(c);
+      constants.add(c);
+    }
+
+    // Repeatedly parse more constants if available
+    label_4: while (true) {
+      switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+        case 10:
+          ;
+          break;
+        default:
+          jj_la1[6] = jj_gen;
+          break label_4;
+      }
+      jj_consume_token(10); // Consume separator token
+      constantName = jj_consume_token(STRUCTURENAME);
+
+      if (signature.containsConstant(constantName.image)) {
+        constants.add(signature.getConstant(constantName.image));
+      } else {
+        Constant c = new Constant(constantName.image);
+        signature.add(c);
+        constants.add(c);
+      }
+    }
+
+    jj_consume_token(11);
+    {
+      if (true)
+        return constants;
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  /** jj_initialized_once */
   static private boolean jj_initialized_once = false;
-  /* Generated Token Manager. */
+  /** Generated Token Manager. */
   static public RpclCondensedProbabilityDistributionParserTokenManager token_source;
+  /** Input stream */
   static SimpleCharStream jj_input_stream;
-  /* Current token. */
+  /** Current token. */
   static public Token token;
-  /* Next token. */
+  /** Next token. */
   static public Token jj_nt;
+  /** Next token. */
   static private int jj_ntk;
+  /** Next token. */
   static private int jj_gen;
+  /** Next token. */
   static final private int[] jj_la1 = new int[7];
+  /** Next token. */
   static private int[] jj_la1_0;
   static {
-      jj_la1_init_0();
-   }
-   private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x200,0xc0,0x400,0x1000,0x400,0x200,0x400,};
-   }
-
-  /* Constructor with InputStream. */
-  public RpclCondensedProbabilityDistributionParser(java.io.InputStream stream) {
-     this(stream, null);
+    jj_la1_init_0();
   }
-  /* Constructor with InputStream and supplied encoding */
+
+  /**
+   * jj_la1_init_0
+   */
+  private static void jj_la1_init_0() {
+    jj_la1_0 = new int[] { 0x200, 0xc0, 0x400, 0x1000, 0x400, 0x200, 0x400, };
+  }
+
+  /**
+   * Constructor for {@code RpclCondensedProbabilityDistributionParser} that takes
+   * an {@code InputStream} as input.
+   *
+   * @param stream The input stream to be parsed.
+   */
+  public RpclCondensedProbabilityDistributionParser(java.io.InputStream stream) {
+    this(stream, null);
+  }
+
+  /**
+   * Constructs a new {@code RpclCondensedProbabilityDistributionParser} using the
+   * specified input stream
+   * and character encoding.
+   *
+   * @param stream   The input stream to be parsed.
+   * @param encoding The character encoding to be used for reading the input
+   *                 stream.
+   * @throws RuntimeException If the specified encoding is unsupported.
+   * @throws Error            If this constructor is called more than once when
+   *                          the JavaCC {@code STATIC} option is enabled.
+   */
   public RpclCondensedProbabilityDistributionParser(java.io.InputStream stream, String encoding) {
     if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser.  ");
+      System.out.println("ERROR: Second call to constructor of static parser.");
       System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
       System.out.println("       during parser generation.");
       throw new Error();
     }
     jj_initialized_once = true;
-    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    try {
+      jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
+    } catch (java.io.UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
     token_source = new RpclCondensedProbabilityDistributionParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /**
+   * Reinitializes the parser with a new input stream using the default character
+   * encoding.
+   *
+   * @param stream The new input stream for the parser.
+   * @see #ReInit(java.io.InputStream, String) ReInit(InputStream, String) for
+   *      more control over encoding.
+   */
   static public void ReInit(java.io.InputStream stream) {
-     ReInit(stream, null);
+    ReInit(stream, null);
   }
-  /* Reinitialise. */
+
+  /**
+   * Reinitializes the parser with a new input stream and character encoding.
+   *
+   * @param stream   The new input stream for the parser.
+   * @param encoding The character encoding of the input stream.
+   * @throws RuntimeException If the specified encoding is not supported.
+   */
   static public void ReInit(java.io.InputStream stream, String encoding) {
-    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    try {
+      jj_input_stream.ReInit(stream, encoding, 1, 1);
+    } catch (java.io.UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
     RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
-  /* Constructor. */
+  /**
+   * Constructor.
+   *
+   * @param stream the reader
+   */
   public RpclCondensedProbabilityDistributionParser(java.io.Reader stream) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -330,20 +500,30 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /**
+   * Reinitialise
+   *
+   * @param stream the reader
+   */
   static public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
-  /* Constructor with generated Token Manager. */
+  /**
+   * Constructor with generated Token Manager.
+   *
+   * @param tm the tokenmanager
+   */
   public RpclCondensedProbabilityDistributionParser(RpclCondensedProbabilityDistributionParserTokenManager tm) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -356,22 +536,38 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
-  /* Reinitialise. */
+  /**
+   * Reinitialise.
+   *
+   * @param tm the tokenmanager
+   */
   public void ReInit(RpclCondensedProbabilityDistributionParserTokenManager tm) {
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 7; i++)
+      jj_la1[i] = -1;
   }
 
+  /**
+   * Consumes the next token from the input stream if it matches the expected
+   * token kind.
+   *
+   * @param kind The expected token kind that the next token should match.
+   * @return The consumed {@link Token} if it matches the expected kind.
+   * @throws ParseException If the next token does not match the expected kind.
+   */
   static private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
-    if ((oldToken = token).next != null) token = token.next;
-    else token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
+    if ((oldToken = token).next != null)
+      token = token.next;
+    else
+      token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
@@ -382,38 +578,79 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     throw generateParseException();
   }
 
-
-/* Get the next Token. */
+  /**
+   * Retrieves the next token from the input stream.
+   *
+   * @return the next {@link Token} in the input stream
+   */
   static final public Token getNextToken() {
-    if (token.next != null) token = token.next;
-    else token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
+    if (token.next != null)
+      token = token.next;
+    else
+      token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     jj_ntk = -1;
     jj_gen++;
     return token;
   }
 
-/* Get the specific Token. */
+  /**
+   * Get the specific Token.
+   *
+   * @param index the index
+   * @return the token
+   */
   static final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
-      if (t.next != null) t = t.next;
-      else t = t.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
+      if (t.next != null)
+        t = t.next;
+      else
+        t = t.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
     }
     return t;
   }
 
+  /**
+   * Determines and returns the kind of the next token in the input stream.
+   *
+   * <p>
+   * This method retrieves the next token in the input stream if it has not yet
+   * been processed.
+   * If the next token is null, it calls the token manager to fetch the next
+   * token,
+   * sets it as the next token, and returns its kind (the type of token).
+   * Otherwise, it simply returns the kind of the next token.
+   * </p>
+   *
+   * @return The kind of the next token in the input stream, represented as an
+   *         integer.
+   */
   static private int jj_ntk() {
-    if ((jj_nt=token.next) == null)
-      return (jj_ntk = (token.next=RpclCondensedProbabilityDistributionParserTokenManager.getNextToken()).kind);
-    else
-      return (jj_ntk = jj_nt.kind);
-  }
-
+	    if ((jj_nt=token.next) == null)
+	      return (jj_ntk = (token.next=RpclCondensedProbabilityDistributionParserTokenManager.getNextToken()).kind);
+	    else
+	      return (jj_ntk = jj_nt.kind);
+	  }
+  /**
+   * A list of entries representing expected token sequences during parsing.
+   */
   static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+
+  /**
+   * An array representing a single expected token sequence.
+   */
   static private int[] jj_expentry;
+
+  /**
+   * The kind of the current token that caused a parsing error.
+   */
   static private int jj_kind = -1;
 
-  /* Generate ParseException. */
+  /**
+   * Generate ParseException.
+   *
+   * @return a ParseException
+   */
   static public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[14];
@@ -424,7 +661,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
-          if ((jj_la1_0[i] & (1<<j)) != 0) {
+          if ((jj_la1_0[i] & (1 << j)) != 0) {
             la1tokens[j] = true;
           }
         }
@@ -444,11 +681,11 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /* Enable tracing. */
+  /** Enable tracing. */
   static final public void enable_tracing() {
   }
 
-  /* Disable tracing. */
+  /** Disable tracing. */
   static final public void disable_tracing() {
   }
 

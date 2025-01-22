@@ -29,12 +29,18 @@ import java.util.List;
  *
  * @param <T> the type of belief bases
  * @param <S> the type of formulas
- * 
+ *
  * @author Matthias Thimm
  * @author Anna Gessler
  */
 public abstract class Parser<T extends BeliefBase, S extends Formula> {
-	
+	/**
+	 * Deafult Constructor
+	 */
+	public Parser(){
+		//deafult
+	}
+
 	/**
 	 * Regular expression that contains symbols that appear in formulas and cannot be used as separators
 	 * for belief bases.
@@ -43,7 +49,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the file of the given filename into a belief base of the given type.
-	 * 
+	 *
 	 * @param filename the name of a file
 	 * @return a belief base
 	 * @throws FileNotFoundException if the file is not found
@@ -59,7 +65,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the given text into a belief base of the given type.
-	 * 
+	 *
 	 * @param text a string
 	 * @return a belief base.
 	 * @throws IOException     if some IO issue occurred.
@@ -71,7 +77,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the given reader into a belief base of the given type.
-	 * 
+	 *
 	 * @param reader a reader
 	 * @return a belief base
 	 * @throws IOException     if some IO issue occurred.
@@ -82,7 +88,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	/**
 	 * Parses the file of the given filename into a list of belief bases of the given type. Belief
 	 * bases are separated by three consecutive newline characters ("\n\n\n").
-	 * 
+	 *
 	 * @param filename a string
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
@@ -94,11 +100,11 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 		List<T> bs = this.parseListOfBeliefBases(text);
 		return bs;
 	}
-	
+
 	/**
 	 * Parses the file of the given filename into a list of belief bases of the given type. Belief
 	 * bases are separated by the given delimiter.
-	 * 
+	 *
 	 * @param filename a string
 	 * @param delimiter for separating belief bases
 	 * @return a list of belief bases in the order in which they appear in the input
@@ -111,12 +117,12 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 		List<T> bs = this.parseListOfBeliefBases(text, delimiter);
 		return bs;
 	}
-	
-	
+
+
 	/**
 	 * Parses the given text into a list of belief bases of the given type. Belief
 	 * bases are separated by three consecutive newline characters ("\n\n\n").
-	 * 
+	 *
 	 * @param text a string
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
@@ -132,11 +138,11 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 		}
 		return kbs;
 	}
-	
+
 	/**
 	 * Parses the given text into a list of belief bases of the given type. Belief
 	 * bases are separated by the given delimiter.
-	 * 
+	 *
 	 * @param text a string
 	 * @param delimiter for separating belief bases
 	 * @return a list of belief bases in the order in which they appear in the input
@@ -158,7 +164,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the file of the given filename into a formula of the given type.
-	 * 
+	 *
 	 * @param filename the name of a file
 	 * @return a formula
 	 * @throws FileNotFoundException if the file is not found
@@ -174,7 +180,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the given text into a formula of the given type.
-	 * 
+	 *
 	 * @param text a string
 	 * @return a formula
 	 * @throws IOException     if some IO issue occurred.
@@ -186,7 +192,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Parses the given reader into a formula of the given type.
-	 * 
+	 *
 	 * @param reader a reader
 	 * @return a formula
 	 * @throws IOException     if some IO issue occurred.
@@ -196,7 +202,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Checks whether the given string is a number.
-	 * 
+	 *
 	 * @param str some string
 	 * @return "true" if the given string can be parsed as a number
 	 */

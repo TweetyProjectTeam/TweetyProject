@@ -23,15 +23,34 @@ import org.tweetyproject.logics.commons.syntax.Constant;
 /**
  * This class models an individual in description logic, also known as an
  * object. Individuals correspond to constants in first-order logic.
- * 
+ *
+ * <p>Individuals are used to represent specific entities or objects in the domain
+ * of discourse. In description logic, individuals are treated as constants with
+ * fixed interpretations.</p>
+ *
+ * @see Constant
+ * @see org.tweetyproject.logics.dl.syntax.ConceptAssertion
+ * @see org.tweetyproject.logics.dl.syntax.RoleAssertion
+ *
  * @author Anna Gessler
  *
  */
 public class Individual extends Constant {
+
+	/**
+	 * Constructs a new individual with the given name.
+	 *
+	 * @param name the name of the individual
+	 */
 	public Individual(String name) {
 		super(name);
 	}
 
+	/**
+	 * Constructs a new individual by copying another constant.
+	 *
+	 * @param other the constant to copy
+	 */
 	public Individual(Constant other) {
 		super(other);
 	}

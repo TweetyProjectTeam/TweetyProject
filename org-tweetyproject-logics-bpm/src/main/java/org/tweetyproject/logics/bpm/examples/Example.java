@@ -154,4 +154,7 @@ public class Example {
 	}
 	
 	
+
+    /** Default Constructor */
+    public Example(){}
 }

@@ -24,45 +24,49 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 /**
- * This class is responsible for the behavior of a plotter with multiple frames. 
+ * This class is responsible for the behavior of a plotter with multiple frames.
  * Closing one frame shall only exit the application, iff it was the last frame.
- * 
+ *
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
 public class PlotterMultiFrame extends Plotter {
 	private static int s_openedFrames = 0;
-	
+
+	/** Default Constructor*/
+	public PlotterMultiFrame(){
+		super();
+	}
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void createFrame(int frameWidth, int frameHeight) {
 		super.createFrame(frameWidth, frameHeight);
-		
-		
+
+
 		this.frame.addWindowListener(new WindowListener() {
-			
+
 			@Override
 			public void windowOpened(WindowEvent e) {
 			}
-			
+
 			@Override
 			public void windowIconified(WindowEvent e) {
 			}
-			
+
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 			}
-			
+
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 			}
-			
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 			}
-			
+
 			@Override
 			public void windowClosed(WindowEvent e) {
 				s_openedFrames--;
@@ -70,13 +74,13 @@ public class PlotterMultiFrame extends Plotter {
 					System.exit(0);
 				}
 			}
-			
+
 			@Override
 			public void windowActivated(WindowEvent e) {
 			}
 		});
 	}
-	
+
 	@Override
 	public void show() {
 		super.show();

@@ -22,8 +22,25 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.SerialisableRankingReasoner;
-
+/**
+ * An example class that demonstrates the usage of the {@link SerialisableRankingReasoner}.
+ *
+ * <p>
+ * This class constructs an argumentation framework (AAF) using the {@link DungTheory} class.
+ * Several arguments and attacks between them are added to the framework.
+ * The {@link SerialisableRankingReasoner} is then used to compute and display the ranking of the arguments.
+ * </p>
+ *
+ * @author Name
+ */
 public class SerialisableRankingReasonerExample {
+
+    /**
+     * The main method that constructs the argumentation framework and invokes the
+     * {@link SerialisableRankingReasoner} to compute the ranking of the arguments.
+     *
+     * @param args Command line arguments (not used)
+     */
 	public static void main(String[] args) {
 		// Construct AAF
 		DungTheory aaf = new DungTheory();
@@ -36,6 +53,8 @@ public class SerialisableRankingReasonerExample {
 		Argument f = new Argument("f");
 		Argument g = new Argument("g");
 		Argument h = new Argument("h");
+
+		// Add arguments to the theory
 		aaf.add(a);
 		aaf.add(b1);
 		aaf.add(b2);
@@ -45,20 +64,26 @@ public class SerialisableRankingReasonerExample {
 		aaf.add(f);
 		aaf.add(g);
 		aaf.add(h);
-		aaf.add(new Attack(a,b1));
-		aaf.add(new Attack(a,b2));
-		aaf.add(new Attack(b1,c));
-		aaf.add(new Attack(b2,c));
-		aaf.add(new Attack(c,d));
-		aaf.add(new Attack(d,a));
-		aaf.add(new Attack(c,e));
-		aaf.add(new Attack(e,f));
-		aaf.add(new Attack(g,h));
-		aaf.add(new Attack(h,f));
-		
-		
+
+		// Add attacks between arguments
+		aaf.add(new Attack(a, b1));
+		aaf.add(new Attack(a, b2));
+		aaf.add(new Attack(b1, c));
+		aaf.add(new Attack(b2, c));
+		aaf.add(new Attack(c, d));
+		aaf.add(new Attack(d, a));
+		aaf.add(new Attack(c, e));
+		aaf.add(new Attack(e, f));
+		aaf.add(new Attack(g, h));
+		aaf.add(new Attack(h, f));
+
+		// Instantiate the reasoner and compute the ranking model
 		SerialisableRankingReasoner reasoner = new SerialisableRankingReasoner();
-		
 		System.out.println(reasoner.getModel(aaf));
 	}
+
+    /** Default Constructor */
+    public SerialisableRankingReasonerExample() {
+    }
 }
+

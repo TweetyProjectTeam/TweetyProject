@@ -34,11 +34,11 @@ import org.tweetyproject.lp.asp.syntax.Program;
 import org.tweetyproject.lp.asp.writer.ClingoWriter;
 
 /**
- * 
+ *
  * Invokes Clingo (Part of the <a href="https://potassco.org/">Potassco
  * project</a>), an ASP system that grounds and solves logic programs, and
  * returns computed answer sets.
- * 
+ *
  * @author Nils Geilen
  * @author Matthias Thimm
  * @author Anna Gessler
@@ -73,11 +73,11 @@ public class ClingoSolver extends ASPSolver {
 	 * stored in this parameter.
 	 */
 	private String optimum = null;
-	
+
 	/**
 	 * Returns the optimum of the previously solved program,
 	 * if there is one.
-	 * 
+	 *
 	 * @return optimum of previously solved program in string format, i.e. numbers separated
 	 * by spaces
 	 * @throws SolverException  SolverException
@@ -92,7 +92,7 @@ public class ClingoSolver extends ASPSolver {
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * The maximum number of models that Clingo will compute is set
 	 * to the default value (see {@link org.tweetyproject.lp.asp.reasoner.ASPSolver#maxNumOfModels}).
-	 * 
+	 *
 	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 * @param bash        shell to run commands
@@ -106,7 +106,7 @@ public class ClingoSolver extends ASPSolver {
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * The maximum number of models that Clingo will compute is set
 	 * to the default value (see {@link org.tweetyproject.lp.asp.reasoner.ASPSolver#maxNumOfModels}).
-	 * 
+	 *
 	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 */
@@ -115,7 +115,7 @@ public class ClingoSolver extends ASPSolver {
 		this.bash = Shell.getNativeShell();
 	}
 	/**
-	 * 
+	 *
 	 * @param p problem to be solved
 	 * @return optima
 	 */
@@ -148,7 +148,7 @@ public class ClingoSolver extends ASPSolver {
     }
 	/**
 	 * Constructs a new instance pointing to a specific Clingo solver.
-	 * 
+	 *
 	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 * @param maxNOfModels the maximum number of models that Clingo will compute. Set it to 0 if
@@ -177,7 +177,7 @@ public class ClingoSolver extends ASPSolver {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public List<AnswerSet> getModels(Program p) {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
@@ -223,10 +223,10 @@ public class ClingoSolver extends ASPSolver {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Parses output from Clingo solver to AnswerSetList.
-	 * 
+	 *
 	 * @param output the output string
 	 * @return AnswerSetList
 	 * @throws SolverException if the solver had an issue
@@ -259,15 +259,15 @@ public class ClingoSolver extends ASPSolver {
 		String[] finalAs = as[as.length - 1].split("\n");
 		AnswerSet a = ASPParser.parseAnswerSet(finalAs[0]);
 		result.add(a);
-		
+
 		return result;
 	}
-	
+
 
 	/**
 	 * Computes the optimum of a program that contains optimization statements, if there is
 	 * one.
-	 * 
+	 *
 	 * Note: This methods calculates only the optimum and returns no answer sets.
 	 *
 	 * @param p ASP program
@@ -285,7 +285,7 @@ public class ClingoSolver extends ASPSolver {
 			this.outputData = output;
 			if (!output.contains("OPTIMUM FOUND")) {
 				this.optimum = null;
-				throw new SolverException("Clingo found no optimum.", 1); 
+				throw new SolverException("Clingo found no optimum.", 1);
 			}
 			String[] as = output.split("Optimization : ");
 			int endOfLine = as[1].indexOf("\n");
@@ -302,8 +302,8 @@ public class ClingoSolver extends ASPSolver {
 
 	/**
 	 * Parses the result of a program that contains optimization statements. The optimal
-	 * answer set (if found) is the first entry of the returned list. 
-	 * 
+	 * answer set (if found) is the first entry of the returned list.
+	 *
 	 * @param output clingo output string
 	 * @return list of answer sets, the first answer set is the optimum
 	 * @throws ParseException
@@ -316,13 +316,13 @@ public class ClingoSolver extends ASPSolver {
 		AnswerSet a = ASPParser.parseAnswerSet(optLines[0]);
 		this.optimum = optLines[1].substring(optLines[1].indexOf(":") + 2);
 		result.add(a);
-		
+
 		//Add other models
 		for (int i = 1; i < as.length - 1; i++) {
 			String [] asLines = as[i].split("\n");
 			result.add(ASPParser.parseAnswerSet(asLines[0]));
 		}
-		
+
 		return result;
 	}
 
@@ -330,29 +330,50 @@ public class ClingoSolver extends ASPSolver {
 	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
+/**
+ * Evaluates a query on the given belief base using the specified inference mode.
+ * <p>
+ * This method checks whether the given formula is entailed by the belief base
+ * under the specified inference mode. It retrieves the answer sets of the belief base
+ * and checks the presence of the formula in these sets based on the chosen inference
+ * mode, either skeptical or credulous.
+ * </p>
+ *
+ * @param beliefbase The program representing the belief base to query.
+ * @param formula The formula (literal) to be checked within the answer sets.
+ * @param inferenceMode The mode of inference, either skeptical or credulous.
+ * @return {@code true} if the formula is entailed by the belief base under the
+ *         specified inference mode, {@code false} otherwise.
+ */
+public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
+    Collection<AnswerSet> answerSets = this.getModels(beliefbase);
 
-	public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
-		Collection<AnswerSet> answerSets = this.getModels(beliefbase);
-		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
-			for (AnswerSet e : answerSets)
-				if (!e.contains(formula))
-					return false;
-			return true;
-		}
-		// credulous semantics
-		for (AnswerSet e : answerSets) {
-			if (e.contains(formula))
-				return true;
-		}
-		return false;
-	}
+    if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+        for (AnswerSet e : answerSets) {
+            if (!e.contains(formula)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Credulous semantics
+    for (AnswerSet e : answerSets) {
+        if (e.contains(formula)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 	/**
 	 * Activates or deactivates the option to use a whitelist of predicates. If
 	 * activated, answer sets will only contain atoms over predicates that are part
 	 * of the whitelist. This corresponds to the #show statement of the clingo input
 	 * language.
-	 * 
+	 *
 	 * @param b whether to use a whitelist of predicate
 	 */
 	public void toggleOutputWhitelist(boolean b) {
@@ -361,7 +382,7 @@ public class ClingoSolver extends ASPSolver {
 
 	/**
 	 * Set the command line options for Clingo.
-	 * 
+	 *
 	 * @param options a string of options in the correct
 	 * format, e.g. in the form "--opt" and separated
 	 * by spaces
@@ -372,7 +393,7 @@ public class ClingoSolver extends ASPSolver {
 
 	/**
 	 * Sets the location of the Clingo solver on the hard drive.
-	 * 
+	 *
 	 * @param path path to Clingo
 	 */
 	public void setPathToClingo(String path) {
@@ -381,7 +402,7 @@ public class ClingoSolver extends ASPSolver {
 
 	@Override
 	public boolean isInstalled() {
-		
+
 	    try {
 	            String cmd = pathToSolver + "/clingo --version";
 				bash.run(cmd);
@@ -389,7 +410,7 @@ public class ClingoSolver extends ASPSolver {
 	    } catch (Exception e) {
 	            return false;
 	    }
-		
+
 	}
 
 }

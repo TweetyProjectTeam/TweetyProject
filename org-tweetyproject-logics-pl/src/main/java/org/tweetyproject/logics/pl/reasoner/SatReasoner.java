@@ -48,4 +48,7 @@ public class SatReasoner extends AbstractPlReasoner {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public SatReasoner(){}
 }

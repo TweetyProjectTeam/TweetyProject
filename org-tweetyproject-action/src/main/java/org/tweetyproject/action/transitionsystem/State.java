@@ -27,7 +27,7 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
 /**
  * Represents a state in an action transition system, which is a representation
  * of an interpretation of all fluent names in an action description.
- * 
+ *
  * @author Sebastian Homann
  */
 public class State {
@@ -35,7 +35,7 @@ public class State {
 
 	/**
 	 * Creates a new State with a set of fluents that are mapped to true.
-	 * 
+	 *
 	 * @param fluents The fluents which are mapped to true by this state.
 	 */
 	public State(Set<FolAtom> fluents) {
@@ -44,7 +44,7 @@ public class State {
 
 	/**
 	 * Returns true iff the fluent given is mapped to true by this state.
-	 * 
+	 *
 	 * @param fluent an FOL atom
 	 * @return true iff the fluent given is mapped to true by this state.
 	 */
@@ -55,6 +55,7 @@ public class State {
 	}
 
 	/**
+	 * Creates a set of fluent atoms
 	 * @return the set of fluent atoms that are mapped to true by this state.
 	 */
 	public Set<FolAtom> getPositiveFluents() {
@@ -63,7 +64,7 @@ public class State {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -73,7 +74,7 @@ public class State {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -83,7 +84,7 @@ public class State {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

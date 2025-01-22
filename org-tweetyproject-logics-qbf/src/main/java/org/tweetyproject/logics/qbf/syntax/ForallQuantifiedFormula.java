@@ -33,7 +33,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class represents universal quantification for boolean formulas.
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -42,12 +42,12 @@ public class ForallQuantifiedFormula extends PlFormula {
 	 * The quantified formula.
 	 */
 	private PlFormula innerFormula;
-	
+
 	/**
 	 * The quantifier variables.
 	 */
 	private Set<Proposition> quantifier_variables;
-	
+
 	/**
 	 * Create a new universal boolean quantification.
 	 * @param f inner formula
@@ -57,7 +57,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 		this.innerFormula = f;
 		this.quantifier_variables = variables;
 	}
-	
+
 	/**
 	 * Create a new universal boolean quantification.
 	 * @param f inner formula
@@ -69,7 +69,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 		variables.add(variable);
 		this.quantifier_variables = variables;
 	}
-	
+
 	/**
 	 * Create a new existential boolean quantification.
 	 * @param other other universal quantified formula
@@ -80,6 +80,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 	}
 
 	/**
+	 * Return the quantified variables (propositions)
 	 * @return the quantified variables (propositions)
 	 */
 	public Set<Proposition> getQuantifierVariables() {
@@ -87,6 +88,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 	}
 
 	/**
+	 * Return the quantified formula
 	 * @return the quantified formula
 	 */
 	public PlFormula getFormula() {
@@ -124,7 +126,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 	}
 
 	/**
-	 * In this case, this method returns this quantified boolean formula's 
+	 * In this case, this method returns this quantified boolean formula's
 	 * cnf kernel.
 	 */
 	@Override
@@ -142,7 +144,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 			for (int i = 2; i < n; i++)
 				result_tautology = result_tautology.replace(p, new Tautology(), i);
 			models_p = result_tautology.getModels();
-			
+
 			PlFormula result_contra = this.innerFormula.replace(p, new Tautology(), 1);
 			for (int i = 2; i < n; i++)
 				result_contra = result_contra.replace(p, new Tautology(), i);
@@ -198,7 +200,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 	public PlFormula clone() {
 		return new ForallQuantifiedFormula(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = LogicalSymbols.FORALLQUANTIFIER() + " ";
@@ -210,7 +212,7 @@ public class ForallQuantifiedFormula extends PlFormula {
 		s += ": (" + this.getFormula() + ")";
 		return s;
 	}
-	
+
 	@Override
 	public PlSignature getSignature() {
 		PlSignature sig = this.innerFormula.getSignature();

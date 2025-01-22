@@ -21,7 +21,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * ASTBody class
  * @author Anna Gessler
  *
  */
@@ -29,14 +29,14 @@ public class ASTBody extends SimpleNode {
 	/**nafneg*/
 	protected boolean nafneg;
 	/**
-	 * 
+	 * Constructor
 	 * @param id ID
 	 */
 	public ASTBody(int id) {
 		super(id);
 	}
 /**
- * 
+ * Constrcutor
  * @param p parer
  * @param id ID
  */
@@ -45,12 +45,12 @@ public class ASTBody extends SimpleNode {
 	}
 
 	/** Accept the visitor. **/
-	
+
 	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}
 /**
- * 
+ * Set nafneg
  * @param b nafneg
  */
 	public void nafneg(boolean b) {

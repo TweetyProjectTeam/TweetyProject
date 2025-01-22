@@ -38,25 +38,32 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * - the transformation function is credulous
  * - the accumulator used for deductive argumentation is the simple accumulator
  * - the categorizer used for deductive argumentation is the classical categorizer
- * 
+ *
  * @author Matthias Thimm
  */
 public class ArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<PlFormula>{
+
+	    /**
+     * Default constructor
+     */
+    public ArgumentativeRevisionOperator() {
+        // Default constructor
+    }
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<PlFormula> revise(Collection<PlFormula> base, Collection<PlFormula> formulas) {		
+	public Collection<PlFormula> revise(Collection<PlFormula> base, Collection<PlFormula> formulas) {
 		MultipleBaseRevisionOperator<PlFormula> kernelRevision = new LeviMultipleBaseRevisionOperator<PlFormula>(
 				new RandomKernelContractionOperator(),
-				new DefaultMultipleBaseExpansionOperator<PlFormula>());		
+				new DefaultMultipleBaseExpansionOperator<PlFormula>());
 		MultipleTransformationFunction<PlFormula> transFunc = new ArgumentativeTransformationFunction(
 				new ClassicalCategorizer(),
 				new SimpleAccumulator(),
 				new PlBeliefSet(base),
-				false);		
-		MultipleSelectiveRevisionOperator<PlFormula> rev = new MultipleSelectiveRevisionOperator<PlFormula>(transFunc, kernelRevision);		
+				false);
+		MultipleSelectiveRevisionOperator<PlFormula> rev = new MultipleSelectiveRevisionOperator<PlFormula>(transFunc, kernelRevision);
 		return rev.revise(base, formulas);
 	}
 

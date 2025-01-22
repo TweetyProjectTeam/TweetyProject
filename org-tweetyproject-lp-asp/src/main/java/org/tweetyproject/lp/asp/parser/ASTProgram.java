@@ -21,20 +21,46 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 
+/**
+ * The {@code ASTProgram} class represents a node in the abstract syntax tree (AST)
+ * for a program in the context of Answer Set Programming (ASP). This class
+ * extends {@code SimpleNode} and is used by the ASP parser to encapsulate an entire
+ * ASP program, which may consist of rules, facts, and other constructs.
+ */
 public class ASTProgram extends SimpleNode {
-	public ASTProgram(int id) {
-		super(id);
-	}
 
-	public ASTProgram(ASPParser p, int id) {
-		super(p, id);
-	}
+    /**
+     * Constructs a new {@code ASTProgram} node with the specified identifier.
+     *
+     * @param id The node identifier.
+     */
+    public ASTProgram(int id) {
+        super(id);
+    }
 
-	/** Accept the visitor. **/
-	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
-		return visitor.visit(this, data);
-	}
+    /**
+     * Constructs a new {@code ASTProgram} node with the specified parser and identifier.
+     *
+     * @param p  The {@code ASPParser} that is constructing this node.
+     * @param id The node identifier.
+     */
+    public ASTProgram(ASPParser p, int id) {
+        super(p, id);
+    }
+
+    /**
+     * Accepts a visitor object, which implements the {@code ASPParserVisitor} interface,
+     * and allows it to process this node in the AST.
+     *
+     * @param visitor The visitor object that processes this node.
+     * @param data    Additional data that might be needed for the visitor's processing.
+     * @return The result of the visitor's processing, typically dependent on the visitor's implementation.
+     */
+    public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+        return visitor.visit(this, data);
+    }
 }
+
 /*
  * JavaCC - OriginalChecksum=8d7508eb77c6926d942967f6a2ed1fc9 (do not edit this
  * line)

@@ -30,6 +30,23 @@ import org.tweetyproject.arg.social.syntax.SocialAbstractArgumentationFramework;
  *
  */
 public class SafExample {
+
+	/**
+     * Default constructor for creating an instance of SimulationParameters.
+     * This constructor initializes a new instance of the Hashtable.
+     */
+    public SafExample() {
+        super();
+    }
+
+
+	/**
+	 * Demonstrates the use of a social abstract argumentation framework (SAF) and
+	 * reasoning over it using social semantics.
+	 *
+	 *
+	 * @param args command-line arguments (not used in this example).
+	 */
 	public static void main(String[] args){
 		SocialAbstractArgumentationFramework saf = new SocialAbstractArgumentationFramework();
 		Argument a = new Argument("A");
@@ -44,7 +61,7 @@ public class SafExample {
 		saf.add(new Attack(b,c));
 		saf.add(new Attack(c,b));
 		saf.add(new Attack(c,d));
-		
+
 		saf.voteUp(a,3);
 		saf.voteUp(b,2);
 		saf.voteUp(c,2);
@@ -52,11 +69,11 @@ public class SafExample {
 		saf.voteDown(a);
 		saf.voteDown(c,5);
 		saf.voteDown(d,1);
-		
+
 		System.out.println(saf);
-		
+
 		IssReasoner reasoner = new IssReasoner(new SimpleProductSemantics(0.01),0.001);
-		
+
 		System.out.println(reasoner.getModel(saf));
-	}	
+	}
 }

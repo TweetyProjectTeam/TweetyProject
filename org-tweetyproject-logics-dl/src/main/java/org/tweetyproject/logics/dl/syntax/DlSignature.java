@@ -33,14 +33,14 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * This class models a description logic signature. A signature for a
  * description logic consists of concept names (unary predicates, e.g.
  * "Male(X)"), role names (binary predicates, e.g. "DaughterOf(X,Y)") and
- * individuals (constants, e.g. "Alice"). 
- * 
+ * individuals (constants, e.g. "Alice").
+ *
  * @author Bastian Wolf
  * @author Anna Gessler
  *
  */
 public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, Individual> {
-	
+
 	/**
 	 * Creates an empty signature.
 	 */
@@ -50,7 +50,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 
 	/**
 	 * Creates a signature with the given concept names, role names and individuals.
-	 * 
+	 *
 	 * @param concepts    atomic concepts of the signature
 	 * @param roles       atomic roles of the signature
 	 * @param individuals individuals of the signature
@@ -65,7 +65,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	/**
 	 * Creates a signature with the given objects (individuals, concepts, roles or
 	 * formulas).
-	 * 
+	 *
 	 * @param c a collection of items to be added.
 	 * @throws IllegalArgumentException if at least one of the given objects is
 	 *                                  neither an individual, a concept, a role or
@@ -75,7 +75,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 		this();
 		this.addAll(c);
 	}
-	
+
 	/**
 	 * Get the atomic concepts of the signature. A concept is an unary (arity 1)
 	 * predicate.
@@ -104,6 +104,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	}
 
 	/**
+	 * Return all predicates of this signature.
 	 * @return all predicates of this signature.
 	 */
 	public Set<Predicate> getPredicates() {
@@ -153,7 +154,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 
 	/**
 	 * Checks whether the signature contains an individual of the given name.
-	 * 
+	 *
 	 * @param s the name of the Individual
 	 * @return true if the the signature contains an individual of the given name,
 	 *         false otherwise
@@ -164,7 +165,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 
 	/**
 	 * Checks whether the signature contains an atomic concept of the given name.
-	 * 
+	 *
 	 * @param s the name of the atomic concept
 	 * @return true if the the signature contains an atomic concept of the given
 	 *         name, false otherwise
@@ -175,7 +176,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 
 	/**
 	 * Checks whether the signature contains an atomic role of the given name.
-	 * 
+	 *
 	 * @param s the name of the atomic role
 	 * @return true if the the signature contains a role of the given name, false
 	 *         otherwise
@@ -187,7 +188,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	/**
 	 * Returns the signature as a string in the order individuals - concept names - role
 	 * names.
-	 * 
+	 *
 	 * @return a String
 	 */
 	public String toString() {
@@ -195,10 +196,10 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	}
 
 	/**
-	 * Translates this DlSignature to a FolSignature, i.e. concept names 
+	 * Translates this DlSignature to a FolSignature, i.e. concept names
 	 * and role names are added as predicates and individuals are added as
 	 * constants.
-	 * 
+	 *
 	 * @return the corresponding FolSignature
 	 */
 	public FolSignature getCorrespondingFolSignature() {
@@ -211,12 +212,12 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 			sig.add(new Constant(i.get()));
 		return sig;
 	}
-	
+
 	/**
 	 * Adds single objects to this signature, iff the object is an appropriate
 	 * concept, role or individual or a formula. For a formula (complex concept) all
 	 * individuals, concepts and roles of this formula are added to the signature.
-	 * 
+	 *
 	 * @param obj an object to be added
 	 * @throws IllegalArgumentException if the object is not an individual, a
 	 *                                  concept, a role or a DlFormula.
@@ -348,7 +349,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 			throw new IllegalArgumentException(
 					"Class " + obj.getClass() + " of parameter is unsupported and cannot be removed from the signature.");
 	}
-	
+
 	@Override
 	public DlSignature clone() {
 		DlSignature copy = new DlSignature();

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
 package org.tweetyproject.arg.dung.examples;
@@ -31,61 +31,93 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class QualifiedSemanticsReasonerExample {
-	/**
-	 * 
-	 * @param args arguments
-	 */
+    /**
+     * Execute the example
+     *
+     * @param args cmdline arguments
+     */
     public static void main(String[] args) {
-        //initialize examples
-        DungTheory ex1 = new DungTheory();
-        DungTheory ex2 = new DungTheory();
-        DungTheory ex3 = new DungTheory();
+        Semantics semantics = Semantics.CO;
+        DungTheory theory = example2();
 
+        System.out.println(theory.prettyPrint());
+        Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics)
+                .getModels(theory);
+        Collection<Extension<DungTheory>> exts_q = new QualifiedReasoner(semantics).getModels(theory);
+        Collection<Extension<DungTheory>> exts_sq = new SemiQualifiedReasoner(semantics).getModels(theory);
+        System.out.printf("%s: %s%n", semantics.description(), exts);
+        System.out.printf("qualified %s: %s%n", semantics.description(), exts_q);
+        System.out.printf("semi-qualified %s: %s%n", semantics.description(), exts_sq);
+    }
+
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     * <p>
+     * This example consists of three arguments: {@code a}, {@code b}, and
+     * {@code c}.
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
+    public static DungTheory example1() {
         Argument a = new Argument("a");
         Argument b = new Argument("b");
         Argument c = new Argument("c");
+        DungTheory theory = new DungTheory();
+        theory.add(a, b, c);
+        theory.addAttack(a, a);
+        theory.addAttack(a, b);
+        theory.addAttack(b, c);
+
+        return theory;
+    }
+
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
+    public static DungTheory example2() {
         Argument d = new Argument("d");
         Argument e = new Argument("e");
         Argument f = new Argument("f");
         Argument g = new Argument("g");
+        DungTheory theory = new DungTheory();
+        theory.add(d, e, f, g);
+        theory.addAttack(d, e);
+        theory.addAttack(e, d);
+        theory.addAttack(d, f);
+        theory.addAttack(e, f);
+        theory.addAttack(f, g);
+
+        return theory;
+    }
+
+    /**
+     * Creates and returns an example of a Dung argumentation framework (Dung
+     * Theory).
+     * <p>
+     *
+     * @return A {@link DungTheory} object representing the defined argumentation
+     *         framework.
+     */
+    public static DungTheory example3() {
         Argument h = new Argument("h");
         Argument i = new Argument("i");
         Argument j = new Argument("j");
         Argument k = new Argument("k");
         Argument l = new Argument("l");
-        ex1.add(a);
-        ex1.add(b);
-        ex1.add(c);
-        ex2.add(d);
-        ex2.add(e);
-        ex2.add(f);
-        ex2.add(g);
-        ex3.add(h);
-        ex3.add(i);
-        ex3.add(j);
-        ex3.add(k);
-        ex3.add(l);
-        ex1.addAttack(a, a);
-        ex1.addAttack(a, b);
-        ex1.addAttack(b, c);
-        ex2.addAttack(d, e);
-        ex2.addAttack(e, d);
-        ex2.addAttack(d, f);
-        ex2.addAttack(e, f);
-        ex2.addAttack(f, g);
-        ex3.addAttack(i, h);
-        ex3.addAttack(h, j);
-        ex3.addAttack(j, i);
-        ex3.addAttack(j, k);
-        ex3.addAttack(k, l);
+        DungTheory theory = new DungTheory();
+        theory.add(h, i, j, k, l);
+        theory.addAttack(i, h);
+        theory.addAttack(h, j);
+        theory.addAttack(j, i);
+        theory.addAttack(j, k);
+        theory.addAttack(k, l);
 
-        // complete semantics
-        System.out.println(ex2.prettyPrint());
-        Collection<Extension<DungTheory>> exts_c = new SimpleSccCompleteReasoner().getModels(ex2);
-        Collection<Extension<DungTheory>> exts_q_c = new QualifiedReasoner(Semantics.CO).getModels(ex2);
-        Collection<Extension<DungTheory>> exts_sq_c = new SemiQualifiedReasoner(Semantics.CO).getModels(ex2);
-        System.out.println("complete Extensions: " + exts_c);
-        System.out.println("q-complete Extensions: " + exts_q_c);
-        System.out.println("sq-complete Extensions: " + exts_sq_c);
+        return theory;
     }
 }

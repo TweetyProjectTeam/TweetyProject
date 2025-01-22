@@ -36,18 +36,18 @@ import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
  *
  */
 public class ConverterADF2CL {
-	
+
 	/**
-	 * Translate "Acceptance Condition" into "PlFormula" 
+	 * Translate "Acceptance Condition" into "PlFormula"
 	 * Recursive function: Case distinction by class name
 	 * @param ac 			= Acceptance Condition
 	 * @return PlFormula 	= translated propositional logic formula
 	 */
 	public PlFormula getFormulaFromAcc(AcceptanceCondition ac) {
-		
+
 		PlFormula result = null;
 		String class_type = ac.getClass().getName();
-		
+
 		// Base (= terminating) cases (A)-(C)
 		// (A) Proposition (self-referencing)
 		if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.Argument")) {
@@ -59,12 +59,12 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition")) {
 			//System.out.println(ac + " is a Tautology");
 			result = new Tautology();
-		}		
-		// (C) Contradiction 
+		}
+		// (C) Contradiction
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition")) {
 			//System.out.println(ac + " is a Contradiction");
 			result = new Contradiction();
-		}		
+		}
 		// Recursive cases (1)-(6)
 		// (1) Negation
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.NegationAcceptanceCondition")) {
@@ -76,7 +76,7 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition")) {
 			//System.out.println(ac + " is a Conjunction");
 			ConjunctionAcceptanceCondition ac_con = (ConjunctionAcceptanceCondition)ac;
-			
+
 			PlFormula f_temp = null;
 			PlFormula f = null;
 			int counter = 0;
@@ -97,7 +97,7 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition")) {
 			//System.out.println(ac + " is a Disjunction");
 			DisjunctionAcceptanceCondition ac_dis = (DisjunctionAcceptanceCondition)ac;
-			
+
 			PlFormula f_temp = null;
 			PlFormula f = null;
 			int counter = 0;
@@ -118,7 +118,7 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition")) {
 			//System.out.println(ac + " is an exclusive Disjunction");
 			ExclusiveDisjunctionAcceptanceCondition ac_exc = (ExclusiveDisjunctionAcceptanceCondition)ac;
-			
+
 			PlFormula f_temp = null;
 			PlFormula f = null;
 			int counter = 0;
@@ -139,7 +139,7 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.ImplicationAcceptanceCondition")) {
 			//System.out.println(ac + " is an Implication");
 			ImplicationAcceptanceCondition ac_imp = (ImplicationAcceptanceCondition)ac;
-			
+
 			PlFormula f_temp = null;
 			PlFormula f = null;
 			int counter = 0;
@@ -160,7 +160,7 @@ public class ConverterADF2CL {
 		else if (class_type.contentEquals("org.tweetyproject.arg.adf.syntax.acc.EquivalenceAcceptanceCondition")) {
 			//System.out.println(ac + " is an Equivalence");
 			EquivalenceAcceptanceCondition ac_equ = (EquivalenceAcceptanceCondition)ac;
-			
+
 			PlFormula f_temp = null;
 			PlFormula f = null;
 			int counter = 0;
@@ -179,7 +179,7 @@ public class ConverterADF2CL {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Creates a conditional belief base using the provided ADF "adf" and Translation Function "theta"
 	 * @param adf 			= Abstract Dialectical Framework
@@ -187,28 +187,28 @@ public class ConverterADF2CL {
 	 * @return ClBeliefSet 	= Belief base based on input ADF
 	 */
 	public ClBeliefSet getBeliefSetFromADF(AbstractDialecticalFramework adf, int theta) {
-		
+
 		Set<Argument> arguments = adf.getArguments();
 		Iterator<Argument> argument_iterator = arguments.iterator();
-		Argument ar; 
+		Argument ar;
 		AcceptanceCondition ac;
 		PlFormula premise;
 		PlFormula conclusion;
 		ClBeliefSet bs = new ClBeliefSet();
 		System.out.println("----------------------------------------");
-		
+
 		// Iterate over all Arguments and corresponding Acceptance Conditions:
 		while(argument_iterator.hasNext()) {
-			
+
 			// reset premise and conclusion
 			premise = null;
 			conclusion = null;
-					
+
 			ar = argument_iterator.next();
 			System.out.println("Argument: \t\t " + ar);
 			ac = adf.getAcceptanceCondition(ar);
 			System.out.println("Acceptance Condition \t" + ac);
-			
+
 			// Calculate conditionals based on input function Theta and add them to knowledge base "bs"
 			switch (theta) {
 				// Theta 1
@@ -246,12 +246,12 @@ public class ConverterADF2CL {
 			default:
 					throw new IllegalArgumentException("Unknown Theta Function specified!");
 			}
-			
+
 			System.out.println("----------------------------------------");
 		}
 		return bs;
 	}
-	
+
 	/**
 	 * Compare the inference behavior of ADF "adf" and Ranking function "kappa"
 	 * @param adf adf
@@ -259,29 +259,29 @@ public class ConverterADF2CL {
 	 * @param kappa kappa
 	 */
 	public void compareInference(AbstractDialecticalFramework adf, AbstractDialecticalFrameworkReasoner reasoner_adf, RankingFunction kappa) {
-		
+
 		// Calculate ADF extensions
 		Collection<Interpretation> extensions = reasoner_adf.getModels(adf);
 		System.out.println(extensions);
-		
+
 		// Iterate over all arguments
 		Set<Argument> arguments = adf.getArguments();
 		//System.out.println("Arguments contained in ADF: " + arguments);
 		Iterator<Argument> argument_iterator = arguments.iterator();
-		Argument ar; 
+		Argument ar;
 		Proposition prop = null;
 		boolean bool_adf;
 		boolean bool_ocf;
 		boolean translation_successful = true;
-		
+
 		while(argument_iterator.hasNext()) {
 			ar = argument_iterator.next();
 			prop = new Proposition(ar.getName());
 			System.out.print("Argument: \t" + ar + "\t");
-			
+
 			bool_adf = reasoner_adf.skepticalQuery(adf, ar);
 			bool_ocf = kappa.satisfies(new Conditional(new Tautology(),prop));
-			
+
 			if (bool_adf == bool_ocf) {
 				System.out.println("Inferences coincide (" + bool_adf + ")");
 			}
@@ -297,4 +297,7 @@ public class ConverterADF2CL {
 			System.out.println("Translation failed!");
 		}
 	}
+
+    /** Default Constructor */
+    public ConverterADF2CL(){}
 }

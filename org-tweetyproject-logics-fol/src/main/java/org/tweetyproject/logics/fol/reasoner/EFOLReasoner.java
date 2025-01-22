@@ -30,9 +30,9 @@ import org.tweetyproject.logics.fol.writer.FolWriter;
 import org.tweetyproject.logics.fol.writer.TPTPWriter;
 
 /**
- * Invokes E (<a href="http://eprover.org">http://eprover.org</a>), 
+ * Invokes E (<a href="http://eprover.org">http://eprover.org</a>),
  * an automated theorem prover for first-order logic, and returns its results.
- * 
+ *
  * @author Bastian Wolf
  * @author Nils Geilen
  * @author Matthias Thimm
@@ -41,23 +41,23 @@ import org.tweetyproject.logics.fol.writer.TPTPWriter;
 public class EFOLReasoner extends FolReasoner {
 
 	/**
-	 *  String representation of the EProver binary path. 
+	 *  String representation of the EProver binary path.
 	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
-	
+
 	/**
-	 * Additional arguments for the call to the EProver binary 
+	 * Additional arguments for the call to the EProver binary
 	 * (Default value is "--auto-schedule" which seems to be working
 	 * best in general)
 	 * */
 	private String additionalArguments = "--auto-schedule";
-	
+
 	/**
 	 * Shell to run EProver
 	 */
 	private Shell bash;
-	
+
 	/**
 	 * Constructs a new instance pointing to a specific EProver.
 	 * @param binaryLocation location of the EProver executable on the hard drive
@@ -71,13 +71,13 @@ public class EFOLReasoner extends FolReasoner {
 	}
 
 	/**
-	 * Constructs a new instance pointing to a specific EProver. 
+	 * Constructs a new instance pointing to a specific EProver.
 	 * @param binaryLocation location of the Eprover executable on the hard drive
 	 */
 	public EFOLReasoner(String binaryLocation) {
 		this(binaryLocation,Shell.getNativeShell());
 	}
-	
+
 	/**
 	 * Sets the additional arguments given to the call of the
 	 * EProver binary (Default value is "--auto-schedule").
@@ -95,7 +95,7 @@ public class EFOLReasoner extends FolReasoner {
 	public String getAdditionalArguments(){
 		return this.additionalArguments;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.fol.reasoner.FolReasoner#query(org.tweetyproject.logics.fol.syntax.FolBeliefSet, org.tweetyproject.logics.fol.syntax.FolFormula)
 	 */
@@ -108,7 +108,7 @@ public class EFOLReasoner extends FolReasoner {
 			printer.printBase(kb);
 			printer.printQuery((FolFormula) query);
 			printer.close();
-			
+
 			String cmd = binaryLocation +" " + this.additionalArguments + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			String output = bash.run(cmd);
 
@@ -119,9 +119,9 @@ public class EFOLReasoner extends FolReasoner {
 			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
 		}catch(Exception e){
 			return false;
-		}	
+		}
 	}
-	
+
 /*
  * (non-Javadoc)
  * @see org.tweetyproject.logics.fol.prover.FolTheoremProver#equivalent(org.tweetyproject.logics.fol.FolBeliefSet, org.tweetyproject.logics.fol.syntax.FolFormula, org.tweetyproject.logics.fol.syntax.FolFormula)
@@ -134,7 +134,7 @@ public class EFOLReasoner extends FolReasoner {
 			printer.printBase(kb);
 			printer.printEquivalence(a,b);
 			printer.close();
-			
+
 			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			String output = bash.run(cmd);
 
@@ -146,10 +146,11 @@ public class EFOLReasoner extends FolReasoner {
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
-		}	
+		}
 	}
 
 	/**
+	 * Return the path of the EProver binary
 	 * @return the path of the EProver binary
 	 */
 	public String getBinaryLocation() {

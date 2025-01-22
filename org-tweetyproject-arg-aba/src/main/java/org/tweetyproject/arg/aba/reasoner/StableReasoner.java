@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- package org.tweetyproject.arg.aba.reasoner;
+package org.tweetyproject.arg.aba.reasoner;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,34 +29,41 @@ import org.tweetyproject.commons.Formula;
 
 /**
  * This reasoner for ABA theories performs inference on the stable extensions.
- * @param <T>	the language of the underlying ABA theory
- * 
+ *
+ * @param <T> the language of the underlying ABA theory
+ *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
 public class StableReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
+	/** Default */
+	public StableReasoner() {
+	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModels(org.tweetyproject.arg.aba.syntax.ABATheory)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModels(org.
+	 * tweetyproject.arg.aba.syntax.ABATheory)
 	 */
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
-		Collection<AbaExtension<T>>result = new HashSet<>();
+		Collection<AbaExtension<T>> result = new HashSet<>();
 		Collection<Collection<Assumption<T>>> exts = abat.getAllExtensions();
-		for(Collection<Assumption<T>> ext : exts) {
-			if(!abat.isConflictFree(ext)) 
+		for (Collection<Assumption<T>> ext : exts) {
+			if (!abat.isConflictFree(ext))
 				continue;
-			if (!abat.isClosed(ext)) 
+			if (!abat.isClosed(ext))
 				continue;
-			for(Assumption<T> a: abat.getAssumptions()) {
-				if(!abat.attacks(ext, Arrays.asList(a)))
+			for (Assumption<T> a : abat.getAssumptions()) {
+				if (!abat.attacks(ext, Arrays.asList(a)))
 					continue;
 			}
 			result.add(new AbaExtension<T>(ext));
 		}
 		return result;
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

@@ -33,6 +33,11 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
+		/** Default */
+		public SimpleCompleteSetAfReasoner(){
+			// Default
+		}
+
 	@Override
 	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
 		Extension<SetAf> groundedExtension = new SimpleGroundedSetAfReasoner().getModel(bbase);
@@ -48,7 +53,7 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 		// as the grounded extension is also complete, we return that one
 		return new SimpleGroundedSetAfReasoner().getModel(bbase);
 	}
-		
+
 	/**
 	 * Auxiliary method to compute all complete extensions
 	 * @param setafTheory a SetAf theory
@@ -71,9 +76,9 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 				extensions.addAll(this.getCompleteExtensions(dungTheory,ext2, remaining2));
 			}
 		}
-		return extensions;		
+		return extensions;
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;

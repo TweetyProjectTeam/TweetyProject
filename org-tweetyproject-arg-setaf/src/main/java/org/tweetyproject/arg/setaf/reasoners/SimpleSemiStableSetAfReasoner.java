@@ -35,6 +35,12 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  */
 public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
+
+		/** Default */
+		public SimpleSemiStableSetAfReasoner(){
+			// Default
+		}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */

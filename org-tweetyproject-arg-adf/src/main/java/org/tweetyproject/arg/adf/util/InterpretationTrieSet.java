@@ -30,34 +30,62 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
- * This is a monotone collection, hence you can only add elements to it, but not remove them.
- * 
+ * This is a monotone collection, hence you can only add elements to it, but not
+ * remove them.
+ *
  * @author Mathias Hofer
  * @deprecated Was written for failed experiments and is not maintained anymore.
  */
 public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 
 	private Argument[] order;
-	
+
 	private final Node root = new InnerNode();
-	
+
 	private int size = 0;
-	
-	public InterpretationTrieSet() {}
-	
+
+	/**
+	 * Constructs an empty {@code InterpretationTrieSet}.
+	 *
+	 * <p>
+	 * This constructor initializes an empty trie set, which can be populated with
+	 * interpretations
+	 * using methods like {@code add} or {@code addAll}.
+	 */
+	public InterpretationTrieSet() {
+	}
+
+	/**
+	 * Constructs an {@code InterpretationTrieSet} and populates it with the given
+	 * list of interpretations.
+	 *
+	 * <p>
+	 * This constructor adds all the interpretations from the provided list to the
+	 * trie set,
+	 * organizing them in the trie structure for efficient operations.
+	 *
+	 * @param interpretations A list of {@code Interpretation} objects to be added
+	 *                        to the set.
+	 *                        If the list is empty, the trie set will be initialized
+	 *                        as empty.
+	 */
 	public InterpretationTrieSet(List<Interpretation> interpretations) {
 		addAll(interpretations);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractCollection#iterator()
 	 */
 	@Override
 	public Iterator<Interpretation> iterator() {
 		throw new UnsupportedOperationException();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractCollection#add(java.lang.Object)
 	 */
 	@Override
@@ -70,31 +98,39 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractCollection#size()
 	 */
 	@Override
 	public int size() {
 		return size;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractCollection#remove(java.lang.Object)
 	 */
 	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractSet#removeAll(java.util.Collection)
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.AbstractCollection#contains(java.lang.Object)
 	 */
 	@Override
@@ -105,7 +141,27 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Returns a list of arguments that are decided in the given interpretation,
+	 * ordered according to the specified array.
+	 *
+	 * <p>
+	 * This method iterates over the provided order of arguments and collects those
+	 * that are decided
+	 * (i.e., not undecided) in the specified interpretation. The resulting list
+	 * maintains the order of the arguments
+	 * as given in the {@code order} array.
+	 *
+	 * @param interpretation The {@code Interpretation} from which to retrieve the
+	 *                       decided arguments.
+	 * @param order          An array of {@code Argument} objects specifying the
+	 *                       desired order of arguments.
+	 * @return A {@code List<Argument>} containing the decided arguments in the
+	 *         specified order.
+	 * @throws IllegalArgumentException if the interpretation has no decided
+	 *                                  arguments.
+	 */
 	public static List<Argument> orderedDecided(Interpretation interpretation, Argument[] order) {
 		if (interpretation.numDecided() <= 0) {
 			throw new IllegalArgumentException("Interpretation must have decided arguments!");
@@ -115,14 +171,14 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 			if (!interpretation.undecided(arg)) {
 				orderedDecided.add(arg);
 			}
-		}		
+		}
 		return orderedDecided;
 	}
-	
+
 	/**
 	 * Creates an array of the arguments in <code>interpretation</code> but
 	 * orders them s.t. the undecided ones are at the end.
-	 * 
+	 *
 	 * @param interpretation
 	 * @return the arguments as an array and in a more efficient order
 	 */
@@ -140,20 +196,20 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 		}
 		return arguments;
 	}
-	
+
 	private interface Node {
-		
+
 		void add(Interpretation interpretation, List<Argument> orderedDecided);
-		
+
 		boolean contains(Interpretation interpretation, List<Argument> orderedDecided);
 	}
-	
+
 	private static final class InnerNode implements Node {
-		
+
 		private final Map<Argument, Node> trueNodes = new HashMap<>();
-		
+
 		private final Map<Argument, Node> falseNodes = new HashMap<>();
-		
+
 		public void add(Interpretation interpretation, List<Argument> orderedDecided) {
 			Argument decided = orderedDecided.get(0);
 			if (orderedDecided.size() > 1) {
@@ -172,7 +228,7 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 				}
 			}
 		}
-		
+
 		public boolean contains(Interpretation interpretation, List<Argument> orderedDecided) {
 			Argument decided = orderedDecided.get(0);
 			Node next = null;
@@ -181,7 +237,7 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 			} else {
 				next = falseNodes.get(decided);
 			}
-			
+
 			if (next == null) {
 				return true;
 			} else if (orderedDecided.size() > 1) {
@@ -189,27 +245,35 @@ public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 			}
 			return true;
 		}
-		
-		
+
 	}
-	
+
 	private static enum LeafNode implements Node {
 		INSTANCE;
 
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.InterpretationTrieSet.Node#add(org.tweetyproject.arg.adf.semantics.interpretation.Interpretation, java.util.List)
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see org.tweetyproject.arg.adf.util.InterpretationTrieSet.Node#add(org.
+		 * tweetyproject.arg.adf.semantics.interpretation.Interpretation,
+		 * java.util.List)
 		 */
 		@Override
-		public void add(Interpretation interpretation, List<Argument> orderedDecided) {}
+		public void add(Interpretation interpretation, List<Argument> orderedDecided) {
+		}
 
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.InterpretationTrieSet.Node#contains(org.tweetyproject.arg.adf.semantics.interpretation.Interpretation, java.util.List)
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see org.tweetyproject.arg.adf.util.InterpretationTrieSet.Node#contains(org.
+		 * tweetyproject.arg.adf.semantics.interpretation.Interpretation,
+		 * java.util.List)
 		 */
 		@Override
 		public boolean contains(Interpretation interpretation, List<Argument> orderedDecided) {
 			return true;
 		}
-		
+
 	}
-	
+
 }

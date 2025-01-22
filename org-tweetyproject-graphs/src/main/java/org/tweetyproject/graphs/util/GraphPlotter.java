@@ -193,77 +193,122 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	 */
 	protected abstract double getVertexWidth();
 
-	private void buildGraph() {
-		final mxGraphComponent graphComponent = new mxGraphComponent(this.graphPlot);
-		int hgap = this.plotter.getHGap();
-		int vgap = this.plotter.getVGap();
-		this.panel.setLayout( new FlowLayout(FlowLayout.LEFT, hgap, vgap) );
-		this.panel.add(graphComponent);
-		this.plotter.add(this.panel);
-	}
-	private void buildLayout(boolean isVertical) {
-		if(isVertical) {
-			this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.NORTH);
-		}
-		else {
-			this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.WEST);
-		}
+	/**
+ * Builds the graph component by setting up the layout and adding it to the panel.
+ * The method configures the panel layout with the horizontal and vertical gaps
+ * provided by the plotter and adds the graph component to it.
+ */
+private void buildGraph() {
+    final mxGraphComponent graphComponent = new mxGraphComponent(this.graphPlot);
+    int hgap = this.plotter.getHGap();
+    int vgap = this.plotter.getVGap();
+    this.panel.setLayout(new FlowLayout(FlowLayout.LEFT, hgap, vgap));
+    this.panel.add(graphComponent);
+    this.plotter.add(this.panel);
+}
 
-		setVertexSpacing();
-		this.layout.execute(this.graphPlot.getDefaultParent());
-		this.graphPlot.getModel().endUpdate();
-	}
+/**
+ * Builds the layout of the graph depending on whether the layout should be vertical or horizontal.
+ * If vertical, a NORTH-oriented hierarchical layout is used; otherwise, a WEST-oriented layout is applied.
+ * The method also executes the layout and finalizes updates to the graph model.
+ *
+ * @param isVertical Determines whether the layout should be vertical (true) or horizontal (false).
+ */
+private void buildLayout(boolean isVertical) {
+    if (isVertical) {
+        this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.NORTH);
+    } else {
+        this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.WEST);
+    }
 
+    setVertexSpacing();
+    this.layout.execute(this.graphPlot.getDefaultParent());
+    this.graphPlot.getModel().endUpdate();
+}
 
-	protected void setVertexSpacing() {
-		this.layout.setIntraCellSpacing(this.vertexSpacing);
-	}
+/**
+ * Sets the spacing between vertices (nodes) in the graph layout.
+ * This method configures the intra-cell spacing in the layout.
+ */
+protected void setVertexSpacing() {
+    this.layout.setIntraCellSpacing(this.vertexSpacing);
+}
 
-	private void buildPanel() {
-		this.panel = new JPanel();
-		int width = this.plotter.getFrame().getMaximumSize().width;
-		int height = this.plotter.getFrame().getMaximumSize().height;
-		this.panel.setSize(width, height);
-	}
+/**
+ * Builds the panel that contains the graph by initializing it and setting its size
+ * based on the maximum size of the plotter's frame.
+ */
+private void buildPanel() {
+    this.panel = new JPanel();
+    int width = this.plotter.getFrame().getMaximumSize().width;
+    int height = this.plotter.getFrame().getMaximumSize().height;
+    this.panel.setSize(width, height);
+}
 
+/**
+ * Retrieves the parent object of the graph, and begins an update process in the graph model.
+ *
+ * @return The parent object of the graph's default parent.
+ */
+private Object getParentOfGraph() {
+    Object parent = this.graphPlot.getDefaultParent();
+    this.graphPlot.getModel().beginUpdate();
+    return parent;
+}
 
-	private Object getParentOfGraph() {
-		Object parent = this.graphPlot.getDefaultParent();
-		this.graphPlot.getModel().beginUpdate();
-		return parent;
-	}
+/**
+ * Inserts edges into the graph based on the provided parent object, vertex mappings,
+ * and node labels. Each edge connects two nodes (vertices) in the graph,
+ * and the edges are labeled accordingly.
+ *
+ * @param parent         The parent object of the graph to which the edges are added.
+ * @param vertexObjects  A mapping of vertex names to their corresponding graph objects.
+ * @param objectLabels   A mapping of nodes to their respective vertex labels.
+ */
+private void insertEdgesInGraph(Object parent, Map<String, Object> vertexObjects,
+        Map<Node, String> objectLabels) {
+    this.edges.forEach(edge -> {
+        Node nodeA = ((Edge) edge).getNodeA();
+        Node nodeB = ((Edge) edge).getNodeB();
+        String vertexNameA = objectLabels.get(nodeA);
+        String vertexNameB = objectLabels.get(nodeB);
+        Object vertexObjectA = vertexObjects.get(vertexNameA);
+        Object vertexObjectB = vertexObjects.get(vertexNameB);
+        String edgeLabel = this.getPrettyName(edge);
+        this.graphPlot.insertEdge(parent, null, edgeLabel, vertexObjectA, vertexObjectB);
+    });
+}
 
+/**
+ * Inserts a single node into the graph by adding it to the vertex and label mappings.
+ *
+ * @param vertexObjects  A mapping of vertex names to their corresponding graph objects.
+ * @param objectLabels   A mapping of nodes to their respective vertex labels.
+ * @param node           The node to be inserted into the graph.
+ * @param vertexName     The label or name of the vertex.
+ * @param vertexObject   The graphical object representing the vertex in the graph.
+ */
+private void insertNode(Map<String, Object> vertexObjects, Map<Node, String> objectLabels, T node,
+        String vertexName, Object vertexObject) {
+    vertexObjects.put(vertexName, vertexObject);
+    objectLabels.put(node, vertexName);
+}
 
-	private void insertEdgesInGraph(Object parent, Map<String, Object> vertexObjects,
-			Map<Node, String> objectLabels) {
-		this.edges.forEach(edge -> {
-			Node nodeA = ((Edge) edge).getNodeA();
-			Node nodeB = ((Edge) edge).getNodeB();
-			String vertexNameA = objectLabels.get(nodeA);
-			String vertexNameB = objectLabels.get(nodeB);
-			Object vertexObjectA = vertexObjects.get(vertexNameA);
-			Object vertexObjectB = vertexObjects.get(vertexNameB);
-			String edgeLabel = this.getPrettyName(edge);
-			this.graphPlot.insertEdge(parent, null, edgeLabel, vertexObjectA, vertexObjectB);
-		});
-	}
-
-
-	private void insertNode(Map<String, Object> vertexObjects, Map<Node, String> objectLabels, T node,
-			String vertexName, Object vertexObject) {
-		vertexObjects.put(vertexName, vertexObject);
-		objectLabels.put(node, vertexName);
-	}
-
-
-	private void insertNodesInGraph(Object parent, Map<String, Object> vertexObjects,
-			Map<Node, String> objectLabels) {
-		this.nodes.forEach(node -> {
-			String vertexName = this.getPrettyName(node);
-			String style = this.getStyle(node);
-			Object vertexObject = this.graphPlot.insertVertex(parent, null, vertexName, 0, 0, this.vertexWidth, this.vertexHeight, style);
-			this.insertNode(vertexObjects, objectLabels, node, vertexName, vertexObject);
-		});
-	}
-
+/**
+ * Inserts nodes into the graph by iterating over the list of nodes and adding
+ * each one as a vertex in the graph. The nodes are styled and labeled accordingly.
+ *
+ * @param parent         The parent object of the graph to which the nodes are added.
+ * @param vertexObjects  A mapping of vertex names to their corresponding graph objects.
+ * @param objectLabels   A mapping of nodes to their respective vertex labels.
+ */
+private void insertNodesInGraph(Object parent, Map<String, Object> vertexObjects,
+        Map<Node, String> objectLabels) {
+    this.nodes.forEach(node -> {
+        String vertexName = this.getPrettyName(node);
+        String style = this.getStyle(node);
+        Object vertexObject = this.graphPlot.insertVertex(parent, null, vertexName, 0, 0, this.vertexWidth, this.vertexHeight, style);
+        this.insertNode(vertexObjects, objectLabels, node, vertexName, vertexObject);
+    });
+}
 }

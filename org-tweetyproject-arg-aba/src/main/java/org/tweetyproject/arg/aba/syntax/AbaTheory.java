@@ -37,13 +37,18 @@ import org.tweetyproject.commons.Signature;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
- * 
+ *
  * An implementation of Assumption Based Argumentation.
  *
  * @param <T> is the type of the language that the ABA theory's rules range over
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  */
 public class AbaTheory<T extends Formula> implements BeliefBase {
+
+	/** Default */
+	public AbaTheory() {
+	}
+
 
 	/**
 	 * The inference rules
@@ -61,6 +66,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	private Collection<Negation<T>> negations = new HashSet<>();
 
 	/**
+	 * Return all deductions that can be derived from this theory
 	 * @return all deductions that can be derived from this theory
 	 */
 	public Collection<Deduction<T>> getAllDeductions() {
@@ -68,6 +74,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Return all deductions that can be derived from this theory
 	 * @param assumptions the set of assumptions used for the derivation
 	 * @return all deductions that can be derived from this theory
 	 */
@@ -127,7 +134,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	/**
 	 * A closure is the set of assumptions that can be derived from a set of
 	 * assumptions via inference rules.
-	 * 
+	 *
 	 * @param assumptions a set of assumptions
 	 * @return the closure of assumptions
 	 */
@@ -147,7 +154,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * A set of assumptions is closed iff it equals its closure.
-	 * 
+	 *
 	 * @param assumptions a set of assumptions
 	 * @return true iff the set of assumptions is closed under this argumentation
 	 *         theory
@@ -160,7 +167,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * An ABA theory is flat iff all subsets of its argumentation set are closed
-	 * 
+	 *
 	 * @return true iff the theory is flat
 	 */
 	public boolean isFlat() {
@@ -174,7 +181,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Computes the power set of a collection
-	 * 
+	 *
 	 * @param set a collection
 	 * @return a power set
 	 */
@@ -190,6 +197,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Add to theory
 	 * @param rule an assumption or an inference rule or a negation that is added to
 	 *             the theory
 	 */
@@ -202,8 +210,8 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 		else if (rule instanceof Negation)
 			negations.add((Negation<T>) rule);
 	}
-	
-	/**
+
+	/** Add to theory
 	 * @param rules assumptions or inference rules or negations that are added to the theory
 	 */
 	public void add(Formula... rules) {
@@ -212,6 +220,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Add assumption to theory
 	 * @param assumption a formula that is used as an assumption in the theory
 	 */
 	public void addAssumption(T assumption) {
@@ -220,7 +229,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Adds a negation of form not formula = negation
-	 * 
+	 *
 	 * @param formula  a formula
 	 * @param negation it's complement
 	 */
@@ -230,7 +239,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Checks whether the given two formulas are negations of each other
-	 * 
+	 *
 	 * @param formula  a formula
 	 * @param negation a formula
 	 * @return true iff the two formulas are negations of each other
@@ -240,6 +249,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Check if attacker attacks attacked
 	 * @param atter the attacking deduction
 	 * @param atted the attacked assumption
 	 * @return true iff atter attacks atted
@@ -249,6 +259,8 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 *
+	 * Return the rules
 	 * @return the rules
 	 */
 	public Collection<InferenceRule<T>> getRules() {
@@ -256,6 +268,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Return the assumptions
 	 * @return the assumptions
 	 */
 	public Collection<Assumption<T>> getAssumptions() {
@@ -263,6 +276,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Return the negations
 	 * @return the negations
 	 */
 	public Collection<Negation<T>> getNegations() {
@@ -312,6 +326,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Set Assumption
 	 * @param assumptions the assumptions to set
 	 */
 	public void setAssumptions(Collection<Assumption<T>> assumptions) {
@@ -320,7 +335,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Checks whether a set of assumptions attacks another set of assumptions.
-	 * 
+	 *
 	 * @param attackers set of assumptions
 	 * @param attackeds set of assumptions
 	 * @return true iff the first set of assumptions attacks the second set
@@ -337,7 +352,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Checks whether a set of arguments defends an argument.
-	 * 
+	 *
 	 * @param defendor the defending set
 	 * @param defended the assumption which shall be defended
 	 * @return true iff defendor defends defended
@@ -353,7 +368,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Checks whether a set of arguments is conflict-free.
-	 * 
+	 *
 	 * @param ext a set of arguments
 	 * @return true iff ext is conflict-free
 	 */
@@ -363,7 +378,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Computes all possible extensions.
-	 * 
+	 *
 	 * @return the powerset of the assumptions
 	 */
 	public Collection<Collection<Assumption<T>>> getAllExtensions() {
@@ -372,7 +387,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Computes all context-free extensions.
-	 * 
+	 *
 	 * @return all context-free extensions
 	 */
 	public Collection<Collection<Assumption<T>>> getAllConflictFreeExtensions() {
@@ -386,7 +401,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Checks whether a set of arguments is admissible.
-	 * 
+	 *
 	 * @param ext the set
 	 * @return true iff ext is admissible
 	 */
@@ -404,7 +419,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * Computes all admissible extensions.
-	 * 
+	 *
 	 * @return all admissible extensions
 	 */
 	public Collection<AbaExtension<T>> getAllAdmissbleExtensions() {
@@ -419,7 +434,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.BeliefBase#getSignature()
 	 */
 	@Override
@@ -444,6 +459,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Return a Dung Theory derived from this ABA theory
 	 * @return a Dung Theory derived from this ABA theory
 	 */
 	public DungTheory asDungTheory() {
@@ -471,7 +487,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

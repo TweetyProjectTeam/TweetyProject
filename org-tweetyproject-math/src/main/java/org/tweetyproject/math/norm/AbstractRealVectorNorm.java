@@ -24,17 +24,21 @@ import org.tweetyproject.math.term.Term;
 
 /**
  * Abstract class for real vector norms.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public abstract class AbstractRealVectorNorm implements RealVectorNorm {
-		
+	/** Default */
+	public AbstractRealVectorNorm(){
+
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#normTerm(java.util.Vector)
 	 */
 	public abstract Term normTerm(Vector<Term> obj);
-		
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#normTerm(org.tweetyproject.math.term.Term[])
 	 */
@@ -44,12 +48,12 @@ public abstract class AbstractRealVectorNorm implements RealVectorNorm {
 			v.add(t);
 		return this.normTerm(v);
 	}
-		
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#distanceTerm(java.util.Vector, java.util.Vector)
 	 */
 	public abstract Term distanceTerm(Vector<Term> obj1, Vector<Term> obj2);
-		
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.norm.RealVectorNorm#distanceTerm(org.tweetyproject.math.term.Term[], org.tweetyproject.math.term.Term[])
 	 */
@@ -61,6 +65,6 @@ public abstract class AbstractRealVectorNorm implements RealVectorNorm {
 		for(Term t: obj2)
 			v2.add(t);
 		return this.distanceTerm(v1,v2);
-		
+
 	}
 }

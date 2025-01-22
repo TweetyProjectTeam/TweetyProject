@@ -49,6 +49,7 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
+ * ParallelExecution class
  * @author Mathias Hofer
  *
  */
@@ -66,7 +67,7 @@ public final class ParallelExecution implements Execution {
 
 	private final BlockingQueue<Interpretation> interpretations;
 /**
- * 
+ *
  * @param semantics Semantics
  * @param satSolver IncrementalSatSolver
  * @param parallelism int

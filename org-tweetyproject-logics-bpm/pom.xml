@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.tweetyproject</groupId>
 		<artifactId>parent-pom</artifactId>
-		<version>1.25-SNAPSHOT</version>
+		<version>1.27-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>bpm</artifactId>
@@ -14,34 +14,34 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.9</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.tweetyproject</groupId>
 			<artifactId>commons</artifactId>
-			<version>1.25-SNAPSHOT</version>
+			<version>1.27-SNAPSHOT</version>
 		</dependency>
 		<dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>commons</artifactId>
-    		<version>1.25-SNAPSHOT</version>
+    		<version>1.27-SNAPSHOT</version>
     	</dependency>
 		<dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>petri</artifactId>
-    		<version>1.25-SNAPSHOT</version>
-    	</dependency>    	
+    		<version>1.27-SNAPSHOT</version>
+    	</dependency>
 		<dependency>
 			<groupId>org.tweetyproject</groupId>
 			<artifactId>graphs</artifactId>
-			<version>1.25-SNAPSHOT</version>
+			<version>1.27-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.tweetyproject</groupId>
 			<artifactId>math</artifactId>
-			<version>1.25-SNAPSHOT</version>
-		</dependency>		
+			<version>1.27-SNAPSHOT</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-ext -->
 		<dependency>
     		<groupId>org.jgrapht</groupId>
@@ -49,7 +49,7 @@
     		<version>1.5.0</version>
 		</dependency>
 	</dependencies>
-	
+
 	<name>TweetyProject (Business Process Modelling)</name>
 	<url>https://github.com/TweetyProjectTeam/TweetyProject</url>
 	<groupId>org.tweetyproject.logics</groupId>
@@ -65,7 +65,7 @@
         </plugin>
     </plugins>
 </build>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

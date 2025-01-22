@@ -34,10 +34,26 @@ import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
  * More examples for testing ModalParser and ModalReasoner. Shows how to
  * construct a modal logic knowledge base programmatically and how to query it
  * using the SPASS reasoner.
- * 
+ *
  * @author Matthias Thimm
  */
 public class MlExample2 {
+
+	/**
+	 * Default Constructor
+	 */
+	public MlExample2(){
+		super();
+	}
+
+	/**
+	 * Demonstrates the creation and reasoning over a modal logic belief set using the `MlParser`
+	 * and `AbstractMlReasoner` classes.
+	 *
+	 * @param args command-line arguments (not used in this example).
+	 * @throws ParserException if there is an error during parsing of the formulas.
+	 * @throws IOException if there is an error accessing resources (e.g., the SPASS reasoner).
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		MlBeliefSet bs = new MlBeliefSet();
 		MlParser parser = new MlParser();

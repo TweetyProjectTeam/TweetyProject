@@ -31,6 +31,13 @@ import org.tweetyproject.logics.pcl.syntax.ProbabilisticConditional;
  */
 public class RepairExample {
 
+    /**
+     * Main method demonstrating the repair of an inconsistent probabilistic conditional logic belief set.
+     *
+     * @param args Command line arguments (not used)
+     * @throws ParserException If an error occurs while parsing the probabilistic conditionals
+     * @throws IOException If an I/O error occurs during the repair process
+     */
 	public static void main(String[] args) throws ParserException, IOException{
 		// TODO set solver
 		// Solver.setDefaultGeneralSolver(...);
@@ -53,4 +60,7 @@ public class RepairExample {
 		GeneralizedMeMachineShop gm = new GeneralizedMeMachineShop(2);
 		System.out.println(gm.repair(kb));
 	}
+
+    /** Default Constructor */
+    public RepairExample(){}
 }

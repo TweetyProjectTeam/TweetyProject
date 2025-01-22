@@ -26,6 +26,10 @@ import java.util.List;
  */
 public class AverageAggregator implements AggregationFunction {
 
+	/** Constructor */
+	public AverageAggregator() {
+	}
+
 	private static final long serialVersionUID = -3619001311014631332L;
 
 	/* (non-Javadoc)

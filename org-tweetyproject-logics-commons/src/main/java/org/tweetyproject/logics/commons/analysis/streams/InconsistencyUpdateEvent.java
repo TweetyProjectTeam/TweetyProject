@@ -22,17 +22,31 @@ import org.tweetyproject.commons.Formula;
 
 /**
  * An event that is thrown when an inconsistency value
- * has been updated. 
- * 
+ * has been updated.
+ *
  * @author Matthias Thimm
  */
 public class InconsistencyUpdateEvent {
+/**
+     * The inconsistency measure used to evaluate the inconsistency of a formula.
+     */
+    protected StreamBasedInconsistencyMeasure<?> measure;
 
-	protected StreamBasedInconsistencyMeasure<?> measure;
-	protected InconsistencyMeasurementProcess<?> process;
-	protected Double inconsistencyValue;
-	protected Formula f;
-	
+    /**
+     * The process object that manages the inconsistency measurement.
+     */
+    protected InconsistencyMeasurementProcess<?> process;
+
+    /**
+     * The value of the inconsistency as computed by the process.
+     */
+    protected Double inconsistencyValue;
+
+    /**
+     * The formula whose inconsistency is being measured.
+     */
+    protected Formula f;
+
 	/**
 	 * Creates a new event with the given parameters.
 	 * @param measure a stream-based inconsistency measure
@@ -46,7 +60,7 @@ public class InconsistencyUpdateEvent {
 		this.inconsistencyValue = inconsistencyValue;
 		this.f = f;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

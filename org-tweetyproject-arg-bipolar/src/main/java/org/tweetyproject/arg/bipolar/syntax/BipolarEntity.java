@@ -30,5 +30,11 @@ import org.tweetyproject.graphs.Node;
  *
  */
 public interface BipolarEntity extends DungEntity, Node, Iterable<BArgument> {
+    /**
+     * Checks if this entity contains the specified object.
+     *
+     * @param o the object to check for containment, typically a {@link BArgument}
+     * @return {@code true} if the object is contained within this entity, {@code false} otherwise
+     */
     boolean contains(Object o);
 }

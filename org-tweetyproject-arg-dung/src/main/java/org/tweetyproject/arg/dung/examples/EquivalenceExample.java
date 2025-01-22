@@ -18,10 +18,7 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
-import org.tweetyproject.arg.dung.equivalence.Equivalence;
-import org.tweetyproject.arg.dung.equivalence.SerialisationEquivalence;
-import org.tweetyproject.arg.dung.equivalence.StandardEquivalence;
-import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
+import org.tweetyproject.arg.dung.equivalence.*;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -34,32 +31,26 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class EquivalenceExample {
     /**
      * Example for Equivalence of Argumentation Frameworks
+     * @param args args
      */
-    public static void main(String[] args) {
-
+     public static void main(String[] args) {
         // Initialize Example Argumentation Frameworks
         Argument a = new Argument("a");
         Argument b = new Argument("b");
         Argument c = new Argument("c");
 
         DungTheory theory1 = new DungTheory();
-        theory1.add(a);
-        theory1.add(b);
-        theory1.add(c);
+        theory1.add(a,b,c);
         theory1.addAttack(a, b);
         theory1.addAttack(b, c);
 
         DungTheory theory2 = new DungTheory();
-        theory2.add(a);
-        theory2.add(b);
-        theory2.add(c);
+        theory2.add(a,b,c);
         theory2.addAttack(c, b);
         theory2.addAttack(b, a);
 
         DungTheory theory3 = new DungTheory();
-        theory3.add(a);
-        theory3.add(b);
-        theory3.add(c);
+        theory3.add(a,b,c);
         theory3.addAttack(a, b);
         theory3.addAttack(b, c);
         theory3.addAttack(b, b);
@@ -70,11 +61,13 @@ public class EquivalenceExample {
         Equivalence<DungTheory> standardEquivalence = new StandardEquivalence(semantics);
         Equivalence<DungTheory> serialisationEquivalence = new SerialisationEquivalence(semantics);
         Equivalence<DungTheory> strongEquivalence = new StrongEquivalence(semantics);
+        Equivalence<DungTheory> strongExpansionEquivalence = new StrongExpansionEquivalence(semantics);
 
         System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", standardEquivalence.getName(), semantics.description(), standardEquivalence.isEquivalent(theory1, theory2));
         System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", serialisationEquivalence.getName(), semantics.description(), serialisationEquivalence.isEquivalent(theory1, theory2));
         System.out.printf("%s wrt. %s for F_1 and F_2: %s%n", strongEquivalence.getName(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory2));
         System.out.printf("%s wrt. %s for F_1 and F_3: %s%n", strongEquivalence.getName(), semantics.description(), strongEquivalence.isEquivalent(theory1, theory3));
+        System.out.printf("%s wrt. %s for F_1 and F_3: %s%n", strongExpansionEquivalence.getName(), semantics.description(), strongExpansionEquivalence.isEquivalent(theory1, theory3));
 
     }
 }

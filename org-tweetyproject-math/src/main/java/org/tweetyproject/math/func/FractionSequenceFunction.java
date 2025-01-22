@@ -19,11 +19,17 @@
 package org.tweetyproject.math.func;
 
 /**
- * The function 1/x. 
- * 
+ * The function 1/x.
+ *
  * @author Matthias Thimm
  */
 public class FractionSequenceFunction implements SimpleFunction<Double,Double>{
+
+	/** Constructor */
+	public FractionSequenceFunction() {
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.SimpleFunction#eval(java.lang.Object)
 	 */
@@ -31,5 +37,5 @@ public class FractionSequenceFunction implements SimpleFunction<Double,Double>{
 	public Double eval(Double x) {
 		if(x != 0) return 1/x;
 		throw new RuntimeException("Division by zero");
-	}		
+	}
 }

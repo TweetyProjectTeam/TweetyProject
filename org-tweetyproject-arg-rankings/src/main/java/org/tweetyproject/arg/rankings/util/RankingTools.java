@@ -33,15 +33,15 @@ import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
  * This class contains common utility methods for ranking reasoners.
- * 
+ *
  * @author Anna Gessler
  */
 public class RankingTools {
-	
+
 	/**
 	 * Given a set of argument paths of length i-1, this method returns a set of
 	 * argument paths of length i for the given DungTheory.
-	 * 
+	 *
 	 * @param oldPaths set of paths of length i-1
 	 * @param base      the DungTheory
 	 * @return a set of paths of length i
@@ -59,10 +59,10 @@ public class RankingTools {
 		}
 		return new_paths;
 	}
-	
+
 	/**
 	 * Rounds values in the given numerical argument ranking to n decimals.
-	 * 
+	 *
 	 * @param ranking a NumericalArgumentRanking
 	 * @param n       decimals
 	 * @return rounded NumericalArgumentRanking
@@ -78,10 +78,10 @@ public class RankingTools {
 		}
 		return roundedRanking;
 	}
-	
+
 	/**
 	 * Rounds a double value to n decimals.
-	 * 
+	 *
 	 * @param value a double value
 	 * @param n     number of decimals
 	 * @return value rounded to n decimals
@@ -93,5 +93,8 @@ public class RankingTools {
 		bd = bd.setScale(n, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
-	
+
+
+    /** Default Constructor */
+    public RankingTools(){}
 }

@@ -19,10 +19,13 @@
 package org.tweetyproject.machinelearning;
 
 /**
- * @author Matthias Thimm
+ * The `Trainer` interface represents a generic trainer that can train a classifier
+ * on a given set of observations and categories.
  *
  * @param <S> The type of the observations.
  * @param <T> The type of the categories.
+ *
+ * @author Matthias Thimm
  */
 public interface Trainer<S extends Observation, T extends Category> {
 
@@ -32,7 +35,7 @@ public interface Trainer<S extends Observation, T extends Category> {
 	 * @return a classifier
 	 */
 	public Classifier train(TrainingSet<S,T> trainingSet);
-	
+
 	/**
 	 * Trains a classifier on the given training set with the given parameters
 	 * @param trainingSet some training set.
@@ -40,14 +43,14 @@ public interface Trainer<S extends Observation, T extends Category> {
 	 * @return a classifier
 	 */
 	public Classifier train(TrainingSet<S,T> trainingSet, ParameterSet params);
-	
+
 	/**
 	 * Returns the set of parameters for this trainer.
 	 * @return the set of parameters for this trainer.
 	 */
 	public ParameterSet getParameterSet();
-	
-	/** 
+
+	/**
 	 * Sets the parameters for this trainer (calling this
 	 * method must ensure that the next time <code>train(TrainingSet&lt;S,T&gt; trainingSet)</code>
 	 * is used it uses these parameters.

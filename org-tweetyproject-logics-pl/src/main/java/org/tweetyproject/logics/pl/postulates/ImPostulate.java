@@ -29,13 +29,13 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 /**
  * An abstract postulate for inconsistency measures in propositional
  * logic; the ancestor of all concrete postulates.
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public abstract class ImPostulate implements Postulate<PlFormula>{
 
-	
+
 	/** The MONOTONY postulate **/
 	public static final ImPostulate MONOTONY = new ImMonotony();
 	/** The DOMINANCE postulate **/
@@ -72,7 +72,7 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	public static final ImPostulate CONTRADICTION = new ImContradiction();
 	/** The WEAKDOMINANCE postulate **/
 	public static final ImPostulate WEAKDOMINANCE = new ImWeakDominance();
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */
@@ -88,18 +88,19 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 			return this.isSatisfied(kb, (BeliefSetInconsistencyMeasure<PlFormula>) ev);
 		throw new RuntimeException("PostulateEvaluatable of type InconsistencyMeasure<PlBeliefSet> expected.");
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
 	 */
 	/**
-	 * 
+	 *
+	 * Return whether the formulas are satisfied
 	 * @param kb collection of formulas
 	 * @param ev BeliefSet Inconsistency Measure
 	 * @return whether the formulas are satisfied
 	 */
 	public abstract boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev);
-	
+
 	/**
 	 * Comparator for sorting MUS by comparing hash codes.
 	 */
@@ -108,4 +109,7 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 			return mus1.hashCode() - mus2.hashCode();
 		}
 	}
+
+    /** Default Constructor */
+    public ImPostulate(){}
 }

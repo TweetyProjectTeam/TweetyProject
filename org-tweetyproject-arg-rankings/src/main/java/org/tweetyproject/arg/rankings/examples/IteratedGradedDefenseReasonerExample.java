@@ -26,14 +26,18 @@ import org.tweetyproject.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 /**
  * Example code for using the iterated graded semantics from
  * [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015].
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public class IteratedGradedDefenseReasonerExample {
 
+	/**
+	 * Main method to show example
+	 * @param args cmd line args
+	 */
 	public static void main(String[] args){
-		// Taken from Figure 3 in 
+		// Taken from Figure 3 in
 		// [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
@@ -57,11 +61,14 @@ public class IteratedGradedDefenseReasonerExample {
 		theory.add(new Attack(e,b));
 		theory.add(new Attack(f,e));
 		theory.add(new Attack(g,e));
-		
+
 		IteratedGradedDefenseReasoner reasoner = new IteratedGradedDefenseReasoner();
-		
+
 		for(int m = 1; m < theory.size(); m++)
 			for(int n = 1; n < theory.size(); n++)
 				System.out.println(m + "," + n + " : " + reasoner.getAllMNCompleteExtensions(theory,m, n));
 	}
+
+	/** Default Constructor */
+    public IteratedGradedDefenseReasonerExample(){}
 }

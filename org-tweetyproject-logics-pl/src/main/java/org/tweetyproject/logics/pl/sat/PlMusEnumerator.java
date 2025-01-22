@@ -186,4 +186,7 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<PlFormula>{
 	 */
 	@Override
 	public abstract Collection<Collection<PlFormula>> minimalInconsistentSubsets(Collection<PlFormula> formulas);
+
+    /** Default Constructor */
+    public PlMusEnumerator(){}
 }

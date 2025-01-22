@@ -74,4 +74,7 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 
+
+    /** Default Constructor */
+    public RaAttackVsFullDefense(){}
 }

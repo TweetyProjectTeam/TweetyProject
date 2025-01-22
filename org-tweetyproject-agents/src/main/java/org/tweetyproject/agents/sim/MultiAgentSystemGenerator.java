@@ -22,21 +22,26 @@ import org.tweetyproject.agents.Agent;
 import org.tweetyproject.agents.MultiAgentSystem;
 
 /**
- * @author Matthias Thimm
+ * This interface defines a generator for multi-agent systems within a simulation framework.
+ * It provides methods for generating a new multi-agent system and for setting a seed to
+ * ensure reproducibility across different runs of the simulation.
+ *
  *
  * @param <T> The type of the agent in the multi-agent system.
  * @param <S> The type of the multi-agent system.
+ *
+ * @author Matthias Thimm
  */
 public interface MultiAgentSystemGenerator<T extends Agent, S extends MultiAgentSystem<T>> {
-	
+
 	/**
 	 * Generates a new multi-agent system.
 	 * @param params this object can be used for sharing parameters across
 	 *  the generating components of a simulation.
 	 * @return a multi-agent system.
 	 */
-	public S generate(SimulationParameters params);	
-	
+	public S generate(SimulationParameters params);
+
 	/**
 	 * Set the seed for the generation. Every two
 	 * runs of generations with the same seed

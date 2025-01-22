@@ -21,20 +21,20 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * ASTChoiceElement class
  * @author Anna Gessler
  *
  */
 public class ASTChoiceElement extends SimpleNode {
 	/**
-	 * 
+	 * Constructor
 	 * @param id ID
 	 */
 	public ASTChoiceElement(int id) {
 		super(id);
 	}
 /**
- * 
+ * constructor
  * @param p parser
  * @param id ID
  */

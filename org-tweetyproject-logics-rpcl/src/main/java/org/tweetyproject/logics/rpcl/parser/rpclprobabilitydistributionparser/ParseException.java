@@ -38,12 +38,15 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /*
-   * This constructor is used by the method "generateParseException"
-   * in the generated parser.  Calling this constructor generates
-   * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
-   */
+/**
+ * Constructs a new {@code ParseException} with detailed information about the parsing error.
+ * @param currentTokenVal The current token at the point where the error occurred. This provides context
+ *                        for the error, including the position in the input stream.
+ * @param expectedTokenSequencesVal An array of arrays, where each inner array represents a sequence of tokens
+ *                                  that the parser expected to encounter at the point of the error.
+ * @param tokenImageVal An array of strings representing the image of each token. Each index corresponds to
+ *                      a token kind, providing a textual representation of the token.
+ */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
@@ -69,7 +72,9 @@ public class ParseException extends Exception {
     super();
   }
 
-  /* Constructor with message. */
+  /** Constructor with message.
+   * @param message the message
+  */
   public ParseException(String message) {
     super(message);
   }
@@ -96,7 +101,7 @@ public class ParseException extends Exception {
    */
   public String[] tokenImage;
 
-  /*
+  /**
    * It uses "currentToken" and "expectedTokenSequences" to generate a parse
    * error message and returns it.  If this object has been created
    * due to a parse error, and you do not catch it (it gets thrown
@@ -151,7 +156,7 @@ public class ParseException extends Exception {
    */
   protected String eol = System.getProperty("line.separator", "\n");
 
-  /*
+  /**
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.

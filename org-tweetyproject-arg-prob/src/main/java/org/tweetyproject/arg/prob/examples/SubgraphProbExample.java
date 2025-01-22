@@ -24,12 +24,38 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.prob.lotteries.SubgraphProbabilityFunction;
 
 /**
- * Example code for showing how to work with subgraph probability distributions and updates.
+ * Example code for showing how to work with subgraph probability distributions
+ * and updates.
+ *
  * @author Matthias Thimm
  *
  */
 public class SubgraphProbExample {
-	public static void main(String[] args){
+
+	/** Default */
+	public SubgraphProbExample() {
+	}
+
+	/**
+	 * This method demonstrates the use of a Dung argumentation framework (AAF) and
+	 * a subgraph probability function.
+	 * It includes the following steps:
+	 *
+	 * 1. Creating a Dung argumentation theory with three arguments (a, b, and c)
+	 * and multiple attacks.
+	 * 2. Initializing and printing the subgraph probability function for the
+	 * theory.
+	 * 3. Performing a rough update of the subgraph probability function by
+	 * modifying the argumentation theory.
+	 * 4. Printing the updated subgraph probability function and checking if the
+	 * updated probability distribution is normalized.
+	 *
+	 * The method provides a basic example of how to use the TweetyProject libraries
+	 * to work with argumentation frameworks and probabilistic reasoning.
+	 *
+	 * @param args Command-line arguments (not used in this example).
+	 */
+	public static void main(String[] args) {
 		// create some Dung theory
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
@@ -37,26 +63,26 @@ public class SubgraphProbExample {
 		Argument c = new Argument("c");
 		theory.add(a);
 		theory.add(b);
-		theory.add(c);		
-		theory.add(new Attack(a,b));
-		theory.add(new Attack(b,a));
-		theory.add(new Attack(c,b));
-		
+		theory.add(c);
+		theory.add(new Attack(a, b));
+		theory.add(new Attack(b, a));
+		theory.add(new Attack(c, b));
+
 		System.out.println(theory);
 		System.out.println();
-		
+
 		SubgraphProbabilityFunction prob = new SubgraphProbabilityFunction(theory);
-		
-		for(DungTheory key: prob.keySet())
+
+		for (DungTheory key : prob.keySet())
 			System.out.println(key + "\t" + prob.probability(key));
 		System.out.println();
-		
+
 		DungTheory upd = new DungTheory();
 		upd.add(a);
-		
+
 		prob = prob.roughUpdate(upd);
-		
-		for(DungTheory key: prob.keySet())
+
+		for (DungTheory key : prob.keySet())
 			System.out.println(key + "\t" + prob.probability(key));
 		System.out.println(prob.isNormalized());
 	}

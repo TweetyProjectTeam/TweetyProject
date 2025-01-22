@@ -145,6 +145,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 
 	/**
+	 * Return the petriNet
 	 * @return the petriNet
 	 */
 	public PetriNet getPetriNet() {
@@ -152,6 +153,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 
 	/**
+	 * Setter petriNet
 	 * @param petriNet the petriNet to set
 	 */
 	public void setPetriNet(PetriNet petriNet) {
@@ -389,6 +391,12 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 		return null;
 	}
 
+	@Override
+	public Collection<Collection<Marking>> getConnectedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public Collection<Collection<Marking>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub

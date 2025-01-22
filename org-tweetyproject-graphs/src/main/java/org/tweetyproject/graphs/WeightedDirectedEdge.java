@@ -17,42 +17,57 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.graphs;
+
 /**
- * 
- * @author Lars Bengel, Sebastian Franke
+ * The `WeightedDirectedEdge` class represents a directed edge between two nodes in a graph,
+ * with an associated weight.
  *
- * @param <S> a Node
- * @param <T> a number
+ * <p>
+ * This class extends the `DirectedEdge` class and implements the `WeightedEdge` interface,
+ * providing support for weighted directed edges. The weight of the edge is of type `T`,
+ * which is constrained to be a subtype of `Number`, allowing for numeric weights such as
+ * integers, floats, or doubles.
+ * </p>
+ *
+ * @param <S> the type of nodes connected by this edge, which must extend `Node`.
+ * @param <T> the type of the weight, which must extend `Number`.
+ *
+ * @author Lars Bengel, Sebastian Franke
  */
-public class WeightedDirectedEdge<S extends Node,T extends Number> extends DirectedEdge<S> implements WeightedEdge<S,T>{
+public class WeightedDirectedEdge<S extends Node, T extends Number> extends DirectedEdge<S> implements WeightedEdge<S, T> {
 
-	/** The weight of this edge. */
-	private T weight;
-	
-	/**
-	 * Creates a new weighted direct edge.
-	 * @param nodeA some node
-	 * @param nodeB some node
-	 * @param weight some weight
-	 */
-	public WeightedDirectedEdge(S nodeA, S nodeB, T weight) {
-		super(nodeA, nodeB);
-		this.weight = weight;
-	}
+    /** The weight of this edge. */
+    private T weight;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.WeightedEdge#getWeight()
-	 */
-	@Override
-	public T getWeight() {
-		return this.weight;
-	}
-	
-	/**
-	 * 
-	 * @param number a number for the weight
-	 */
-	public void setWeight(T number) {
-		this.weight = number;
-	}
+    /**
+     * Creates a new weighted directed edge connecting two nodes with a given weight.
+     *
+     * @param nodeA the starting node of the edge.
+     * @param nodeB the ending node of the edge.
+     * @param weight the weight of the edge.
+     */
+    public WeightedDirectedEdge(S nodeA, S nodeB, T weight) {
+        super(nodeA, nodeB);
+        this.weight = weight;
+    }
+
+    /**
+     * Returns the weight of this edge.
+     *
+     * @return the weight of this edge.
+     */
+    @Override
+    public T getWeight() {
+        return this.weight;
+    }
+
+    /**
+     * Sets the weight of this edge to the specified value.
+     *
+     * @param number the new weight of the edge.
+     */
+    public void setWeight(T number) {
+        this.weight = number;
+    }
 }
+

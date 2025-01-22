@@ -34,14 +34,32 @@ import org.tweetyproject.logics.fol.syntax.*;
  */
 public class DialecticalTree{
 
-	public enum Mark {
-        DEFEATED,
-        UNDEFEATED;
-        @Override
-        public String toString() {
-            return name().substring(0,1); // first character as String
-        }
+/**
+ * Enumeration representing the status of an entity in terms of defeat or victory.
+ */
+public enum Mark {
+
+    /** Represents the state of being defeated. */
+    DEFEATED,
+
+    /** Represents the state of being undefeated. */
+    UNDEFEATED;
+
+    /**
+     * Returns a single-character string representation of the {@code Mark}.
+     * <p>
+     * This method returns the first character of the name of the enum constant.
+     * For example, it returns "D" for {@code DEFEATED} and "U" for {@code UNDEFEATED}.
+     * </p>
+     *
+     * @return A string containing the first character of the enum constant's name.
+     */
+    @Override
+    public String toString() {
+        return name().substring(0, 1); // First character as String
     }
+}
+
 
 	/**
      * The argument in this node
@@ -94,7 +112,7 @@ public class DialecticalTree{
         //gather attacks of last argument in the line
         Set<DelpArgument> attacks = new HashSet<>();
         for (FolFormula lit : attackOpportunities) {
-        	attacks.addAll(DelpReasoner.getArgumentsWithConclusion(delp, lit));            
+        	attacks.addAll(DelpReasoner.getArgumentsWithConclusion(delp, lit));
         }
 
 		//for each attacker check acceptability

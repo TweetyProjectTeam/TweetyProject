@@ -21,29 +21,29 @@ package org.tweetyproject.arg.adf.syntax.acc;
 import java.util.Objects;
 import java.util.Set;
 /**
- * 
+ * NegationAcceptanceCondition class
  * @author Sebastian
  *
  */
 public final class NegationAcceptanceCondition implements AcceptanceCondition {
 
 	private final AcceptanceCondition child;
-	
+
 	/**
-	 * 
+	 *
 	 * @param child the child of the negation
 	 */
 	public NegationAcceptanceCondition(AcceptanceCondition child) {
 		this.child = Objects.requireNonNull(child);
 	}
-	
+
 	/**
 	 * @return the child
 	 */
 	public AcceptanceCondition getChild() {
 		return child;
 	}
-	
+
 	@Override
 	public Set<AcceptanceCondition> getChildren() {
 		return Set.of(child);
@@ -73,7 +73,7 @@ public final class NegationAcceptanceCondition implements AcceptanceCondition {
 		NegationAcceptanceCondition other = (NegationAcceptanceCondition) obj;
 		return Objects.equals(child, other.child);
 	}
-	
+
 	@Override
 	public String toString() {
 		return new StringBuilder("neg(")

@@ -90,4 +90,7 @@ public class RaStrictCounterTransitivity extends RankingPostulate {
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		return true;
 	}
+
+    /** Default Constructor */
+    public RaStrictCounterTransitivity(){}
 }

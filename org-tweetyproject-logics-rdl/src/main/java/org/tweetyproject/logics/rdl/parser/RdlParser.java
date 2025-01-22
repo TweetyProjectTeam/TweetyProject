@@ -36,11 +36,18 @@ import org.tweetyproject.logics.rdl.syntax.DefaultRule;
 import org.tweetyproject.logics.rdl.syntax.DefaultTheory;
 
 /**
- * This class implements a parser for default logic. 
+ * This class implements a parser for default logic.
  * @author Nils Geilen
  *
  */
 public class RdlParser extends Parser<DefaultTheory,Formula> {
+
+	/**
+	 * Default Constructor
+	 */
+	public RdlParser(){
+		super();
+	}
 
 	/**
 	 * parser to parse knowledge base
@@ -52,7 +59,7 @@ public class RdlParser extends Parser<DefaultTheory,Formula> {
 	 */
 	private final String DIV_COLON = "::", DIV_COMMA = ";", DIV_SLASH = "/";
 
-	
+
 	/**
 	 * regexes for parsing a default and the justifications
 	 */

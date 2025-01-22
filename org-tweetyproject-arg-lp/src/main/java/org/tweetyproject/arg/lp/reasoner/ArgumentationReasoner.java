@@ -33,28 +33,35 @@ import org.tweetyproject.commons.QualitativeReasoner;
  * the fixpoint semantics from [1] parameterised by a notion of attack x for the opponent
  * and another notion of attack y as a defense for the proponent. This base implementation
  * only allows to query whether an argument A is x/y-justified in a ELP P.
- * A is called x/y-acceptable wrt. a set of arguments S if for every argument B in P such 
- * that (B,A) \in x there exists an argument C \in S such that (C,B) \in y. 
+ * A is called x/y-acceptable wrt. a set of arguments S if for every argument B in P such
+ * that (B,A) \in x there exists an argument C \in S such that (C,B) \in y.
  * The set of acceptable arguments for P is defined as the fixpoint J_{P,x/y} of the function
  *  F_{P,x/y}(S) = { A | A is x/y-acceptable with regard to S}
- *  
+ *
  *  In [1] it is shown that J_{a/u} equals Dung's grounded semantics, J_{u/su} equals the
  *  well founded semantics for normal logic programs and J_{u/a} equals the well-founded
  *  semantics for logic programs with explicit negation.
- *  
- * 
- * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of 
- * Argumentation Semantics for Extended Logic Programming and its 
- * Application to the Well-founded Semantics. 
+ *
+ *
+ * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of
+ * Argumentation Semantics for Extended Logic Programming and its
+ * Application to the Well-founded Semantics.
  * In: Theory and Practice of Logic Programming, 5(1-2):207-242, 2003.
- * 
+ *
  * @author Sebastian Homann
  */
 public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationKnowledgeBase,Argument> {
-	
-	protected AttackStrategy attackStrategy;
-	protected AttackStrategy defenceStrategy;
-	
+
+    /**
+     * The strategy used for attacks.
+     */
+    protected AttackStrategy attackStrategy;
+
+    /**
+     * The strategy used for defenses.
+     */
+    protected AttackStrategy defenceStrategy;
+
 	/**
 	 * Creates a new ArgumentationReasoner parameterised
 	 * by a notion of attack for the opponent and another notion of attack for the defense
@@ -66,7 +73,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 		this.defenceStrategy = defence;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
@@ -74,12 +81,12 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	public Boolean query(ArgumentationKnowledgeBase kb, Argument query) {
 		return getJustifiedArguments(kb).contains(query);
 	}
-	
+
 	/**
-	 * An argument is called x/y-overruled, if it is attacked by an 
+	 * An argument is called x/y-overruled, if it is attacked by an
 	 * x/y-justified argument.
 	 * @param kb a knowledge base
-	 * 
+	 *
 	 * @param arg an argument
 	 * @return true iff arg is x-attacked by an x/y-justified argument
 	 */
@@ -102,7 +109,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	public boolean isDefensible(ArgumentationKnowledgeBase kb,Argument arg) {
 		return (! isOverruled(kb,arg) ) && (! query(kb,arg) );
 	}
-	
+
 	/**
 	 * Returns the set of x/y-justified arguments using a bottom-up fixpoint calculation
 	 *  @param kb a knowledge base
@@ -111,7 +118,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	public Set<Argument> getJustifiedArguments(ArgumentationKnowledgeBase kb) {
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
-		
+
 		// fixpoint calculation: add defended arguments until nothing changes
 		boolean changes = true;
 		while(changes) {
@@ -127,7 +134,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns the set of overruled arguments, i.e. the set of arguments,
 	 * which are attacked by a justified argument.
@@ -147,7 +154,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns the set of defensible arguments, i.e. the set of arguments,
 	 * that are neither justified nor overruled.
@@ -168,12 +175,12 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns true iff the argument toCheck is x/y-acceptable wrt. the set of defendingArguments.
-	 * A is called x/y-acceptable wrt. a set of arguments S if for every argument B in P such 
+	 * A is called x/y-acceptable wrt. a set of arguments S if for every argument B in P such
      * that (B,A) \in x there exists an argument C \in S such that (C,B) \in y.
-     *  
+     *
      * @param kb a knowledge base
 	 * @param arguments a set of arguments
 	 * @param defendingArguments a s set of defending arguments

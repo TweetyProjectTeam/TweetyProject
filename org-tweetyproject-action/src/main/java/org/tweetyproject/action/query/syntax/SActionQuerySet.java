@@ -29,10 +29,10 @@ import org.tweetyproject.logics.pl.syntax.Conjunction;
 
 /**
  * This class models a set of action queries in the language "S" which is based on
- * the query language "P" discussed in the paper: 
- * [Gelfond, Michael and Lifschitz, Vladimir: Action Languages. 
+ * the query language "P" discussed in the paper:
+ * [Gelfond, Michael and Lifschitz, Vladimir: Action Languages.
  * ETAI: Electronic Transactions on AI, 1998.]
- * 
+ *
  * @author Sebastian Homann
  */
 public class SActionQuerySet extends ActionQuerySet<SActionQuery> {
@@ -45,7 +45,7 @@ public class SActionQuerySet extends ActionQuerySet<SActionQuery> {
 
 	/**
 	 * Creates a new belief set with the given collection of queries.
-	 * 
+	 *
 	 * @param c a collection of formulae.
 	 */
 	public SActionQuerySet(Collection<SActionQuery> c) {
@@ -53,6 +53,7 @@ public class SActionQuerySet extends ActionQuerySet<SActionQuery> {
 	}
 
 	/**
+	 * Creates a new SActionQuerySet consisting of all possible groundings
 	 * @return a new SActionQuerySet consisting of all possible groundings of the
 	 *         contained queries.
 	 */
@@ -67,7 +68,7 @@ public class SActionQuerySet extends ActionQuerySet<SActionQuery> {
 	/**
 	 * Returns a conjunction of all contained queries. The resulting action query is
 	 * satisfied iff all queries contained in this query set are satisfied.
-	 * 
+	 *
 	 * @return a conjunction of all contained queries.
 	 */
 	public SActionQuery getConjunctionOfAllQueries() {

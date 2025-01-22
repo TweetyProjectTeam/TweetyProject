@@ -28,38 +28,60 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.prob.lotteries.UtilityFunction;
 import org.tweetyproject.graphs.Graph;
 
-public class UtilityBasedLotteryAgent extends AbstractLotteryAgent{
+/**
+ * A lottery agent that selects actions based on a utility function.
+ * The agent chooses the action that maximizes its utility according to the given semantics.
+ */
+public class UtilityBasedLotteryAgent extends AbstractLotteryAgent {
 
-	/** The utility function. */
-	private UtilityFunction util;
-	
-	public UtilityBasedLotteryAgent(String name, DungTheory theory, UtilityFunction util, Semantics semantics) {
-		super(name, theory, semantics);
-		this.util = util;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.agents.dialogues.lotteries.AbstractLotteryAgent#next(java.util.Collection)
-	 */
-	public ExecutableDungTheory next(Collection<? extends Perceivable> percepts) {
-		double bestUtility = Double.NEGATIVE_INFINITY;
-		DungTheory e = new DungTheory();
-		for(Graph<Argument> subgraph: this.theory.getSubgraphs()){
-			DungTheory sub = new DungTheory(subgraph);
-			Double d = this.util.getUtility(sub, this.semantics);
-			if(d > bestUtility){
-				bestUtility = d;
-				e = sub;
-			}			
-		}		
-		return new ExecutableDungTheory(e);
-	}
+    /** The utility function used by the agent to evaluate Dung theories. */
+    private UtilityFunction util;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.agents.dialogues.lotteries.AbstractLotteryAgent#getUtility(org.tweetyproject.arg.dung.DungTheory, int)
-	 */
-	public double getUtility(DungTheory theory, Semantics semantics){
-		return this.util.getUtility(theory, semantics);
-	}
-	
+    /**
+     * Constructs a new {@code UtilityBasedLotteryAgent} with the given name, Dung theory, utility function, and semantics.
+     *
+     * @param name the name of the agent
+     * @param theory the initial Dung theory of the agent
+     * @param util the utility function used by the agent to evaluate actions
+     * @param semantics the argumentation semantics used by the agent
+     */
+    public UtilityBasedLotteryAgent(String name, DungTheory theory, UtilityFunction util, Semantics semantics) {
+        super(name, theory, semantics);
+        this.util = util;
+    }
+
+    /**
+     * Chooses the next action based on the utility of subgraphs in the agent's current theory.
+     * The agent selects the subgraph that maximizes the utility according to its utility function.
+     *
+     * @param percepts the percepts received by the agent
+     * @return the {@code ExecutableDungTheory} representing the action with the highest utility
+     */
+    @Override
+    public ExecutableDungTheory next(Collection<? extends Perceivable> percepts) {
+        double bestUtility = Double.NEGATIVE_INFINITY;
+        DungTheory e = new DungTheory();
+        for (Graph<Argument> subgraph : this.theory.getSubgraphs()) {
+            DungTheory sub = new DungTheory(subgraph);
+            Double d = this.util.getUtility(sub, this.semantics);
+            if (d > bestUtility) {
+                bestUtility = d;
+                e = sub;
+            }
+        }
+        return new ExecutableDungTheory(e);
+    }
+
+    /**
+     * Returns the utility of a given Dung theory based on the agent's utility function and the specified semantics.
+     *
+     * @param theory the Dung theory whose utility is to be evaluated
+     * @param semantics the argumentation semantics used for evaluation
+     * @return the utility value of the theory according to the utility function
+     */
+    @Override
+    public double getUtility(DungTheory theory, Semantics semantics) {
+        return this.util.getUtility(theory, semantics);
+    }
 }
+

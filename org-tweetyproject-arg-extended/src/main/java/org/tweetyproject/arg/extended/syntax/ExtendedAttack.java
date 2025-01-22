@@ -29,7 +29,8 @@ import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.commons.Signature;
 
 /**
- * Represents an Extended Attack, i.e., an attack from some argument to another (extended) attack or argument
+ * Represents an Extended Attack, i.e., an attack from some argument to another
+ * (extended) attack or argument
  *
  * @author Lars Bengel
  */
@@ -38,6 +39,20 @@ public class ExtendedAttack implements DungEntity {
     private final Argument nodeA;
     private final DungEntity nodeB;
 
+    /**
+     * Constructs an {@code ExtendedAttack} object, which represents an extended
+     * attack in a Dung argumentation framework.
+     * The attack can target either an argument, a regular attack, or another
+     * extended attack.
+     *
+     * @param attacker The argument that initiates the attack.
+     * @param attacked The target of the attack, which can be either an
+     *                 {@link Argument}, an {@link Attack}, or an
+     *                 {@link ExtendedAttack}.
+     * @throws IllegalArgumentException If the target type of the attack is not
+     *                                  supported (i.e., not an Argument, Attack, or
+     *                                  ExtendedAttack).
+     */
     public ExtendedAttack(Argument attacker, DungEntity attacked) {
         this.nodeA = attacker;
         if (attacked instanceof Argument) {
@@ -46,11 +61,13 @@ public class ExtendedAttack implements DungEntity {
             this.nodeB = attacked;
         } else if (attacked instanceof ExtendedAttack) {
             this.nodeB = attacked;
-        } else throw new IllegalArgumentException("Unsupported Attack Target Type: " + attacked);
+        } else
+            throw new IllegalArgumentException("Unsupported Attack Target Type: " + attacked);
     }
 
     /**
      * Initializes an extended attack from an argument to an extended attack
+     *
      * @param attacker some argument
      * @param attacked some extended attack
      */
@@ -61,6 +78,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * Initializes an extended attack from an argument to an attack
+     *
      * @param attacker some argument
      * @param attacked some attack
      */
@@ -71,6 +89,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * Initializes an extended attack from an argument to an argument
+     *
      * @param attacker some argument
      * @param attacked some argument
      */
@@ -81,6 +100,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * get first node of the edge
+     *
      * @return the first node
      */
     public Argument getNodeA() {
@@ -89,6 +109,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * get target of edge
+     *
      * @return edge target
      */
     public DungEntity getNodeB() {
@@ -97,6 +118,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * returns the attacked element of this attack relation.
+     *
      * @return the attacked element of this attack relation.
      */
     public DungEntity getAttacked() {
@@ -105,6 +127,7 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * returns the attacking argument of this attack relation.
+     *
      * @return the attacking argument of this attack relation.
      */
     public Argument getAttacker() {
@@ -113,66 +136,82 @@ public class ExtendedAttack implements DungEntity {
 
     /**
      * Return true if the given argument is in this attack relation.
+     *
      * @param argument some argument
      * @return "true" if the given argument is in this attack relation.
      */
-    public boolean contains(Argument argument){
+    public boolean contains(Argument argument) {
         return this.getAttacked().equals(argument) || this.getAttacker().equals(argument);
     }
 
     /**
      * Determines whether the given attack is contained in this attack
+     *
      * @param attack some attack
      * @return "true" if the given attack is contained in this attack
      */
-    public boolean contains(Attack attack){
+    public boolean contains(Attack attack) {
         return this.getAttacked().equals(attack);
     }
 
     /**
      * Determines whether the given attack is contained in this attack
+     *
      * @param attack some extended attack
      * @return "true" if the given attack is contained in this attack
      */
-    public boolean contains(ExtendedAttack attack){
+    public boolean contains(ExtendedAttack attack) {
         return this.getAttacked().equals(attack);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.tweetyproject.kr.Formula#getSignature()
      */
-    public Signature getSignature(){
+    public Signature getSignature() {
         DungSignature sig = new DungSignature();
         sig.add(this.getAttacked());
         sig.add(this.getAttacker());
         return sig;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#toString()
      */
-    public String toString(){
-        return "("+this.getAttacker().toString()+","+this.getAttacked().toString()+")";
+    public String toString() {
+        return "(" + this.getAttacker().toString() + "," + this.getAttacked().toString() + ")";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        if(!o.getClass().equals(this.getClass())) return false;
-        if(!this.getAttacker().equals(((ExtendedAttack)o).getAttacker())) return false;
-        if(!this.getAttacked().equals(((ExtendedAttack)o).getAttacked())) return false;
+    public boolean equals(Object o) {
+        if (!o.getClass().equals(this.getClass()))
+            return false;
+        if (!this.getAttacker().equals(((ExtendedAttack) o).getAttacker()))
+            return false;
+        if (!this.getAttacked().equals(((ExtendedAttack) o).getAttacked()))
+            return false;
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return this.getAttacked().hashCode() + 7 * this.getAttacker().hashCode();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.tweetyproject.arg.dung.syntax.DungEntity#getLdoFormula()
      */
     @Override

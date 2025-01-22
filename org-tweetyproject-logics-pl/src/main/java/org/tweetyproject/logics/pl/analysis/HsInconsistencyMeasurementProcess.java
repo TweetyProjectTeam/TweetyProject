@@ -141,4 +141,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 		return "HSP";
 	}
 
+
+    /** Default Constructor */
+    public HsInconsistencyMeasurementProcess(){}
 }

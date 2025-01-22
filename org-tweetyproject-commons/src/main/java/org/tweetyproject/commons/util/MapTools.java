@@ -29,6 +29,10 @@ import java.util.*;
  */
 public class MapTools<E,F> {
 
+	/** Constructor*/
+	public MapTools(){
+
+	}
 	/**
 	 * Computes the complete set of maps from E to F such that the following
 	 * condition holds. For every map "m" in the result the set m.keySet()
@@ -58,10 +62,10 @@ public class MapTools<E,F> {
 		Set<Map<E,F>> result = new HashSet<Map<E,F>>();
 		for(Set<Map<E,F>> mapSet: permutations){
 			result.add(this.combine(mapSet));
-		}	
+		}
 		return result;
 	}
-	
+
 	/**
 	 * Computes the complete set of maps from E to F such that the following
 	 * condition holds. For every map "m" in the result the set m.keySet()
@@ -92,10 +96,10 @@ public class MapTools<E,F> {
 				}
 			}
 			result = newResult;
-		}	
+		}
 		return result;
 	}
-	
+
 	/** Computes all bijections from E to F.
 	 * E and F have to be of the same cardinality.
 	 * @param domain some set.
@@ -115,18 +119,18 @@ public class MapTools<E,F> {
 		E elem = domain.iterator().next();
 		Set<E> newDomain = new HashSet<E>(domain);
 		newDomain.remove(elem);
-		for(F elem2: range){			
+		for(F elem2: range){
 			Set<F> newRange = new HashSet<F>(range);
 			newRange.remove(elem2);
 			Set<Map<E,F>> subResult = this.allBijections(newDomain, newRange);
 			for(Map<E,F> map: subResult){
 				map.put(elem, elem2);
 				result.add(map);
-			}			
-		}		
+			}
+		}
 		return result;
 	}
-	
+
 	/**
 	 * This methods computes all maps from domain to range.
 	 * @param domain a set of elements.
@@ -153,13 +157,13 @@ public class MapTools<E,F> {
 					newMap.put(domelem, image);
 					Stack<E> newStack = new Stack<E>();
 					newStack.addAll(elem.getSecond());
-					stack.push(new Pair<Map<E,F>,Stack<E>>(newMap,newStack));					
+					stack.push(new Pair<Map<E,F>,Stack<E>>(newMap,newStack));
 				}
 			}
-		}		
+		}
 		return allMaps;
 	}
-	
+
 	/**
 	 * Combines all maps in singleMaps to one maps containing
 	 * every assignment of each map in singleMaps.
@@ -179,7 +183,7 @@ public class MapTools<E,F> {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Checks whether the given map is injective, i.e. whether no two different keys
 	 * are assigned the same value.

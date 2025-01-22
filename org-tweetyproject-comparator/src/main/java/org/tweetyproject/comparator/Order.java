@@ -28,25 +28,25 @@ import org.tweetyproject.graphs.Node;
 
 /**
  * This class represents an order among some objects.
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  * @param <T> The class that is being ordered.
  */
 public class Order<T> {
 
 	/** The directed defaultGraph that represents the order */
 	private DefaultGraph<OrderNode> defaultGraph;
-	
+
 	/** A bijection between objects and nodes in the defaultGraph. */
 	private Map<T,OrderNode> nodes;
-	
+
 	/**
 	 * Represents an object that is ordered.
 	 * @author Matthias Thimm
 	 */
 	private class OrderNode implements Node{ }
-	
+
 	/**
 	 * Creates a new order for the given set of objects.
 	 * @param objects some set of objects.
@@ -58,9 +58,9 @@ public class Order<T> {
 			OrderNode node = new OrderNode();
 			this.nodes.put(object, node);
 			this.defaultGraph.add(node);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Removes the given node and all of its relations.
 	 * @param n The object whose node will be removed
@@ -69,7 +69,7 @@ public class Order<T> {
 		this.nodes.remove(n);
 		defaultGraph = defaultGraph.getRestriction(this.nodes.values());
 	}
-	
+
 	/**
 	 * Adds that object1 is ordered before object2
 	 * @param object1 some object
@@ -78,9 +78,9 @@ public class Order<T> {
 	public void setOrderedBefore(T object1, T object2){
 		if(!this.nodes.containsKey(object1) || !this.nodes.containsKey(object2))
 			throw new IllegalArgumentException("Objects cannot be ordered by this order as they are not contained in the domain.");
-		this.defaultGraph.add(new DirectedEdge<OrderNode>(this.nodes.get(object1),this.nodes.get(object2)));		
+		this.defaultGraph.add(new DirectedEdge<OrderNode>(this.nodes.get(object1),this.nodes.get(object2)));
 	}
-	
+
 	/**
 	 * Checks whether object1 is ordered before object2.
 	 * @param object1 some object.
@@ -93,7 +93,9 @@ public class Order<T> {
 		return this.defaultGraph.existsDirectedPath(node1, node2);
 	}
 	/**
-	 * 
+	 *
+	 * Return whether the objects are comparable
+	 *
 	 * @param object1 1st object
 	 * @param object2 2nd object
 	 * @return whether the objects are comparable
@@ -103,7 +105,7 @@ public class Order<T> {
 		OrderNode node2 = this.nodes.get(object2);
 		return (this.defaultGraph.existsDirectedPath(node1, node2) || this.defaultGraph.existsDirectedPath(node2, node1));
 	}
-	
+
 	/**
 	 * Returns the elements appearing in this order.
 	 * @return the elements appearing in this order.
@@ -111,26 +113,28 @@ public class Order<T> {
 	public Collection<T> getElements(){
 		return this.nodes.keySet();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
 		return this.defaultGraph.toString();
 	}
-	
+
 	/**
-	 * @return the directed defaultGraph that represents the order 
+	 * Return the directed defaultGraph that represents the order
+	 * @return the directed defaultGraph that represents the order
 	 */
 	public DefaultGraph<OrderNode> getDefaultGraph() {
 		return defaultGraph;
 	}
-	
+
 	/**
+	 * Return the bijection between objects and nodes in the defaultGraph
 	 * @return the bijection between objects and nodes in the defaultGraph
 	 */
 	public Map<T, OrderNode> getNodes() {
 		return nodes;
 	}
-	
+
 }

@@ -22,11 +22,17 @@ import org.tweetyproject.math.term.Maximum;
 import org.tweetyproject.math.term.Term;
 
 /**
- * Represents the maximum-conorm in fuzzy logic, i.e., S(x,y)=max(x,y) 
- * 
+ * Represents the maximum-conorm in fuzzy logic, i.e., S(x,y)=max(x,y)
+ *
  * @author Matthias Thimm
  */
 public class MaximumCoNorm extends TCoNorm{
+
+	/** Constructor */
+	public MaximumCoNorm() {
+	}
+
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#eval(java.lang.Double, java.lang.Double)
@@ -37,7 +43,7 @@ public class MaximumCoNorm extends TCoNorm{
 			throw new IllegalArgumentException("A T-conorm is only defined for values in [0,1].");
 		return Math.max(val1,val2);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#getDualCoNorm()
 	 */
@@ -50,7 +56,7 @@ public class MaximumCoNorm extends TCoNorm{
 	 * @see org.tweetyproject.math.func.fuzzy.TCoNorm#evalTerm(org.tweetyproject.math.term.Term, org.tweetyproject.math.term.Term)
 	 */
 	@Override
-	public Term evalTerm(Term val1, Term val2) {		
+	public Term evalTerm(Term val1, Term val2) {
 		return new Maximum(val1,val2);
 	}
 

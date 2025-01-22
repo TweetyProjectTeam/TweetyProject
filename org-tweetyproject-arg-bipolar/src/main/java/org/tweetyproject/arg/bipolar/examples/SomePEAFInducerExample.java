@@ -29,7 +29,14 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+/**
+ * SomePEAFInducerExample class
+ */
 public class SomePEAFInducerExample {
+    /**
+     * Example
+     * @param args args
+     */
     public static void main(String[] args) {
         int numOfArgs = 8;
 

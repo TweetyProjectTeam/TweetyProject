@@ -194,4 +194,7 @@ public abstract class Functions<T> extends HashMap<T, Integer> {
 	 */
 	public abstract void strengthenElement(T element);
 
+
+    /** Default Constructor */
+    public Functions(){}
 }

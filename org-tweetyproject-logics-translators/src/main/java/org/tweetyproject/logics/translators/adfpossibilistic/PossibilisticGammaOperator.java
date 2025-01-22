@@ -253,4 +253,7 @@ public class PossibilisticGammaOperator {
 
 	}
 
+
+    /** Default Constructor */
+    public PossibilisticGammaOperator(){}
 }

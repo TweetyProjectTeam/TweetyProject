@@ -30,7 +30,8 @@ import java.util.*;
  */
 public class CAdmissibleReasoner {
 	/**
-	 * 
+	 *
+	 * Return models
 	 * @param bbase argumentation framework
 	 * @return models
 	 */
@@ -43,4 +44,7 @@ public class CAdmissibleReasoner {
         }
         return extensions;
     }
+
+    /** Default Constructor */
+    public CAdmissibleReasoner(){}
 }

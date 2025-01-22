@@ -31,7 +31,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
  * Models a default theory in Reiter's default logic, see [R. Reiter. A logic for default reasoning. Artificial Intelligence, 13:81–132, 1980].
- * 
+ *
  * @author Matthias Thimm, Nils Geilen
  *
  */
@@ -41,8 +41,8 @@ public class DefaultTheory implements BeliefBase{
 	private FolBeliefSet facts;
 	/** The set of default rules */
 	private Collection<DefaultRule> defaults;
-	
-	
+
+
 	/**
 	 * constructs empty default theory
 	 */
@@ -63,7 +63,7 @@ public class DefaultTheory implements BeliefBase{
 		this.defaults = new ArrayList<DefaultRule>();
 		this.defaults.addAll(defaults);
 	}
-	
+
 	/**
 	 * add facts to knowledge base
 	 * @param fact some fol formula
@@ -71,7 +71,7 @@ public class DefaultTheory implements BeliefBase{
 	void addFact(FolFormula fact){
 		facts.add(fact);
 	}
-	
+
 	/**
 	 * removes fact from knowledge base
 	 * @param fact some fol formula
@@ -79,30 +79,31 @@ public class DefaultTheory implements BeliefBase{
 	void removeFact(FolFormula fact){
 		facts.remove(fact);
 	}
-	
+
 	/**
-	 * adds default rule 
+	 * adds default rule
 	 * @param d a default rule
 	 */
 	void addDefault(DefaultRule d){
 		defaults.add(d);
 	}
-	
+
 	/**
 	 * removes default rule
-	 * @param d a default rule 
+	 * @param d a default rule
 	 */
 	void removeDefault(DefaultRule d){
 		defaults.remove(d);
 	}
-	
+
 	/**
+	 * Return all the default rules
 	 * @return all the default rules
 	 */
 	public Collection<DefaultRule> getDefaults() {
 		return defaults;
 	}
-	
+
 	/**
 	 * Removes Variables by expanding formulas
 	 * @return grounded version of the default theory
@@ -116,7 +117,7 @@ public class DefaultTheory implements BeliefBase{
 		return new DefaultTheory(facts, ds);
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.BeliefBase#getSignature()
 	 */
@@ -138,14 +139,15 @@ public class DefaultTheory implements BeliefBase{
 			result += d + "\n";
 		return result;
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return FoL formulas in default theories
 	 * @return FoL formulas in default theories
 	 */
 	public FolBeliefSet getFacts(){
 		return facts;
 	}
-	
-	
+
+
 }

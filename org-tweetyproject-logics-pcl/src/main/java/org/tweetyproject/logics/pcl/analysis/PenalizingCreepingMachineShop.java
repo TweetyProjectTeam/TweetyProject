@@ -32,37 +32,41 @@ import org.tweetyproject.math.probability.Probability;
  * This class is capable of restoring consistency of a possible inconsistent probabilistic
  * conditional belief set. Restoring consistency is performed by biased creeping of
  * the original belief set using the cuplability vector, see [Diss, Thimm] for details.
- * 
+ *
  * @author Matthias Thimm
  */
 public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 
+	/**
+	 * Constructor
+	 * @param rootFinder the rootFinder
+	 */
 	public PenalizingCreepingMachineShop(OptimizationRootFinder rootFinder) {
 		super(rootFinder);
 	}
-	
+
 	/**
 	 * The step length for the line search.
 	 */
 	public static final double STEP_LENGTH = 1;
-	
+
 	/**
 	 * The minimal step length for line search.
 	 */
 	public static final double MIN_STEP_LENGTH = 0.0000000001;
-	
+
 	/**
 	 * The culpability vector.
 	 */
 	private Map<ProbabilisticConditional,Double> culpVector;
-	
 
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
 	@Override
-	public BeliefBase repair(BeliefBase beliefBase) {	
+	public BeliefBase repair(BeliefBase beliefBase) {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
@@ -71,13 +75,13 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 		this.culpVector = new HashMap<ProbabilisticConditional,Double>();
 		for(ProbabilisticConditional pc: beliefSet){
 			this.culpVector.put(pc, agMeasure.sign(beliefSet, pc) * agMeasure.culpabilityMeasure(beliefSet, pc));
-		}	
+		}
 		double delta = this.getLowerBound();
 		double upperBound = this.getUpperBound();
 		double deltaInconMeasure = inconMeasure.inconsistencyMeasure(this.characteristicFunction(beliefSet, this.getValues(delta, beliefSet)));
 		double newDelta, newDeltaInconMeasure;
 		double stepLength = PenalizingCreepingMachineShop.STEP_LENGTH;
-		int cnt = 0;		
+		int cnt = 0;
 		while(delta <= upperBound){
 			newDelta = delta + stepLength;
 			newDeltaInconMeasure = inconMeasure.inconsistencyMeasure(this.characteristicFunction(beliefSet, this.getValues(newDelta, beliefSet)));
@@ -93,14 +97,14 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 			delta = newDelta;
 			if(newDeltaInconMeasure > deltaInconMeasure)
 				stepLength *= -0.5;
-			deltaInconMeasure = newDeltaInconMeasure;			
+			deltaInconMeasure = newDeltaInconMeasure;
 			cnt++;
 			if(cnt >= AbstractCreepingMachineShop.MAX_ITERATIONS)
 				break;
-		}		
+		}
 		throw new RuntimeException("Consistent knowledge base cannot be found for '" + beliefBase + "'.");
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.probabilisticconditionallogic.analysis.AbstractCreepingMachineShop#getLowerBound()
 	 */
@@ -141,7 +145,7 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 			values.put(pc, new Probability(this.u(pc.getProbability().getValue()+(delta*this.culpVector.get(pc)))));
 		return values;
 	}
-	
+
 	/**
 	 * Returns x iff x is in the uniform interval. Otherwise
 	 * it returns the next double from x that lies in the uniform interval.

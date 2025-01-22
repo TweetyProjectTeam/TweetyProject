@@ -24,4 +24,7 @@ package org.tweetyproject.logics.bpm.syntax;
  */
 public class Message {
 
+
+    /** Default Constructor */
+    public Message(){}
 }

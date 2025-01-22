@@ -21,7 +21,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.tweetyproject.lp.asp.parser;
 /**
- * 
+ * ASTBinop class
  * @author Anna Gessler
  *
  */
@@ -31,14 +31,14 @@ public class ASTBinop extends SimpleNode {
 	 */
 	public String operator;
 /**
- * 
+ * constructor
  * @param id ID
  */
 	public ASTBinop(int id) {
 		super(id);
 	}
 /**
- * 
+ * constructor
  * @param p parser
  * @param id ID
  */
@@ -46,7 +46,7 @@ public class ASTBinop extends SimpleNode {
 		super(p, id);
 	}
 /**
- * 
+ * setter op
  * @param op op
  */
 	public void op(String op) {

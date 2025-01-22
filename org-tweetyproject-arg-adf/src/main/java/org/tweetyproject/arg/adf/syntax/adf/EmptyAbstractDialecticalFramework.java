@@ -147,7 +147,7 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
     }
 
     @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
+    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
         return false;
     }
 
@@ -188,6 +188,11 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
 
     @Override
     public int getNumberOfNodes() {
+        return 0;
+    }
+
+    @Override
+    public int getNumberOfEdges() {
         return 0;
     }
 
@@ -256,6 +261,12 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
         return null;
     }
 
+    
+    @Override
+    public Collection<Collection<Argument>> getConnectedComponents() {
+        return List.of();
+    }
+    
     @Override
     public Collection<Collection<Argument>> getStronglyConnectedComponents() {
         return List.of();

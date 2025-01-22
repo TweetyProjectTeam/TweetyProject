@@ -19,12 +19,16 @@
 package org.tweetyproject.preferences;
 
 /**
- * This enumeration lists the possible Operations used by
- * dynamic preference aggregation updates
- * 
- * @author Bastian Wolf
- * 
+ * This enumeration lists the possible operations used in
+ * dynamic preference aggregation updates.
+ *
+ *
+ * <p><b>Authors:</b> Bastian Wolf</p>
  */
 public enum Operation {
- WEAKEN, STRENGTHEN
+    /** Operation to weaken a preference. */
+    WEAKEN,
+
+    /** Operation to strengthen a preference. */
+    STRENGTHEN
 }

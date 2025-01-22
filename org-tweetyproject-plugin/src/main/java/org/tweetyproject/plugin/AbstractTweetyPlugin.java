@@ -28,12 +28,18 @@ import org.tweetyproject.plugin.parameter.CommandParameter;
 /**
  * This abstract class implements the TweetyPlugin interface and provides a base
  * for plugin implementations in each project
- * 
+ *
  * @author Bastian Wolf
- * 
+ *
  */
 // @PluginImplementation
 public abstract class AbstractTweetyPlugin implements TweetyPlugin {
+	/**
+	 * Default Constructor
+	 */
+	public AbstractTweetyPlugin(){
+		super();
+	}
 	/**
 	 * valid parameters for this plugin
 	 */
@@ -53,7 +59,7 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 
 	/**
 	 * adds new command parameter to this plugin
-	 * 
+	 *
 	 * @param cmdParameter
 	 *            the command parameter to be added
 	 */
@@ -72,7 +78,7 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	/**
 	 * checks, whether each command parameter given with the plugin call is
 	 * valid within is this plugin
-	 * 
+	 *
 	 * @param s the given parameter string
 	 * @return a newly instantiated command parameter with the given value
 	 * @throws CloneNotSupportedException if cloning is not supported
@@ -87,11 +93,11 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This method handels instantiations with array-lists instead of a simple string (e.g. for multi-argument parameter)
 	 * @param s the ArrayList&lt;String&gt; containing the input parameter
-	 * @return the newly instantiated command parameter with the given value 
+	 * @return the newly instantiated command parameter with the given value
 	 * @throws CloneNotSupportedException if cloning is not supported
 	 */
 	public ArrayList<CommandParameter> validateParameter(ArrayList<String> s)

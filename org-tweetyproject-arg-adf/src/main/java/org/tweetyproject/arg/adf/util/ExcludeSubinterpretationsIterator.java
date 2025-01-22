@@ -20,25 +20,44 @@ package org.tweetyproject.arg.adf.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation.Builder;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
- * Iterates through all interpretations except the ones equal to or more specific than the provided ones.
- * 
+ * Iterates through all interpretations except the ones equal to or more
+ * specific than the provided ones.
+ *
  * @author Mathias Hofer
  *
  */
 public class ExcludeSubinterpretationsIterator implements Iterator<Interpretation> {
-	
+
 	private final Interpretation.Builder builder;
 
 	private final Node root;
-	
+
 	private final Argument[] order;
-	
+
+	/**
+	 * Constructs a new {@code ExcludeSubinterpretationsIterator} that iterates over
+	 * a list of interpretations,
+	 * excluding subinterpretations according to a specific order and structure.
+	 *
+	 * <p>
+	 * The constructor initializes the iterator by ordering the interpretations
+	 * based on the first interpretation
+	 * in the list. It then builds a tree-like structure rooted in an
+	 * {@code InnerNode}, where each interpretation
+	 * is added to the tree. This structure allows efficient exclusion of
+	 * subinterpretations during iteration.
+	 *
+	 * @param interpretations A list of {@code Interpretation} objects to be
+	 *                        iterated over.
+	 * @throws NoSuchElementException if the list of interpretations is empty.
+	 */
 	public ExcludeSubinterpretationsIterator(List<Interpretation> interpretations) {
 		Iterator<Interpretation> iterator = interpretations.iterator();
 		Interpretation first = iterator.next();
@@ -52,10 +71,11 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		}
 		root.addLeafs();
 	}
-	
+
 	/**
-	 * Creates an array of the arguments in <code>interpretation</code> but orders them s.t. the undecided ones are at the end.
-	 * 
+	 * Creates an array of the arguments in <code>interpretation</code> but orders
+	 * them s.t. the undecided ones are at the end.
+	 *
 	 * @param interpretation
 	 * @return the arguments as an array and in a more efficient order
 	 */
@@ -73,16 +93,20 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		}
 		return arguments;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
 		return !root.done();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
@@ -90,33 +114,33 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		root.buildNext(builder);
 		return builder.build();
 	}
-	
+
 	private interface Node {
-		
+
 		boolean done();
-				
+
 		void buildNext(Builder builder);
-		
+
 		void add(int offset, int remaining, Interpretation interpretation);
-		
+
 		void reset();
-		
+
 		void addLeafs();
-		
+
 		void addReference(int index, boolean value, Node reference);
-		
+
 	}
-	
+
 	private final class InnerNode implements Node {
-		
+
 		private final ThreeValuedBitSet bitSet;
-		
+
 		private final int index;
-		
+
 		private Node uNode;
-		
+
 		private Node fNode;
-		
+
 		private Node tNode;
 
 		/**
@@ -128,14 +152,17 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			this.index = index;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#done()
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#done()
 		 */
 		@Override
 		public boolean done() {
 			return uNode.done() && fNode.done() && tNode.done();
 		}
-		
+
 		private Node current() {
 			Boolean value = bitSet.get(index);
 			if (value == null) {
@@ -146,18 +173,25 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 				return fNode;
 			}
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator.Node#reset()
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator.Node#reset()
 		 */
 		@Override
 		public void reset() {
 			bitSet.clear(index);
 			uNode.reset();
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#build(org.tweetyproject.arg.adf.semantics.interpretation.Interpretation.Builder)
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#build(
+		 * org.tweetyproject.arg.adf.semantics.interpretation.Interpretation.Builder)
 		 */
 		@Override
 		public void buildNext(Builder builder) {
@@ -168,7 +202,7 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 				incrementIfPossible();
 			}
 		}
-		
+
 		private void incrementIfPossible() {
 			Boolean value = bitSet.get(index);
 			if (value == null || !value) {
@@ -182,8 +216,13 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#add(java.util.List, org.tweetyproject.arg.adf.semantics.interpretation.Interpretation)
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#add(
+		 * java.util.List,
+		 * org.tweetyproject.arg.adf.semantics.interpretation.Interpretation)
 		 */
 		@Override
 		public void add(int offset, int remaining, Interpretation interpretation) {
@@ -200,19 +239,23 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 				uNode = createInnerIfNecessary(newOffset, uNode);
 				fNode = createInnerIfNecessary(newOffset, fNode);
 				tNode = createInnerIfNecessary(newOffset, tNode);
-				
+
 				uNode.add(newOffset, remaining, interpretation);
 				fNode.add(newOffset, remaining, interpretation);
 				tNode.add(newOffset, remaining, interpretation);
 			}
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#addReference(int, boolean)
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator2.Node#
+		 * addReference(int, boolean)
 		 */
 		@Override
 		public void addReference(int index, boolean value, Node reference) {
-			// TODO currently not used, check if we need it or if the current undecided handling makes manual references obsolete
+			// TODO currently not used, check if we need it or if the current undecided
+			// handling makes manual references obsolete
 			if (index > 0) {
 				addReferenceIfPossible(uNode, index, value, reference);
 				addReferenceIfPossible(fNode, index, value, reference);
@@ -225,13 +268,13 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 				}
 			}
 		}
-		
+
 		private void addReferenceIfPossible(Node node, int index, boolean value, Node reference) {
 			if (node != null) {
 				node.addReference(index - 1, value, reference);
 			}
 		}
-		
+
 		private Node createInnerIfNecessary(int offset, Node node) {
 			if (node == null) {
 				return new InnerNode(bitSet, offset);
@@ -248,19 +291,19 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 			return node;
 		}
-		
+
 		@Override
 		public void addLeafs() {
 			uNode = createLeaf(uNode, null);
 			fNode = createLeaf(fNode, false);
 			tNode = createLeaf(tNode, true);
 		}
-		
+
 		private Node createLeaf(Node node, Boolean value) {
 			Node leaf = node;
 			if (leaf == null) {
 				if (index + 1 < order.length) {
-					leaf =  new TailNode(bitSet, index + 1);
+					leaf = new TailNode(bitSet, index + 1);
 				} else {
 					return new LeafNode(bitSet, value);
 				}
@@ -269,15 +312,15 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			return leaf;
 		}
 	}
-	
+
 	private final class TailNode implements Node {
-		
+
 		private final ThreeValuedBitSet bitSet;
-		
+
 		private final int offset;
-		
+
 		private boolean first = true; // do not swallow the all undecided
-		
+
 		private boolean done = false;
 
 		/**
@@ -301,7 +344,7 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 			return done;
 		}
-		
+
 		@Override
 		public void buildNext(Builder builder) {
 			if (!first) {
@@ -312,9 +355,12 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 				builder.put(order[i], bitSet.get(i));
 			}
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator.Node#reset()
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.tweetyproject.arg.adf.util.ExcludeSubinterpretationsIterator.Node#reset()
 		 */
 		@Override
 		public void reset() {
@@ -323,26 +369,28 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 			done = false;
 		}
-		
+
 		@Override
 		public void add(int offset, int remaining, Interpretation interpretation) {
 			// acts as a leaf, therefore do nothing
 		}
-		
+
 		@Override
-		public void addLeafs() {}
-		
+		public void addLeafs() {
+		}
+
 		@Override
-		public void addReference(int index, boolean value, Node reference) {}
-		
+		public void addReference(int index, boolean value, Node reference) {
+		}
+
 	}
-	
+
 	private final class LeafNode implements Node {
 
 		private final ThreeValuedBitSet bitSet;
-		
+
 		private final Boolean value;
-		
+
 		private boolean done = false;
 
 		/**
@@ -367,45 +415,52 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		}
 
 		@Override
-		public void add(int offset, int remaining, Interpretation interpretation) {}
+		public void add(int offset, int remaining, Interpretation interpretation) {
+		}
 
 		@Override
-		public void reset() {}
+		public void reset() {
+		}
 
 		@Override
-		public void addLeafs() {}
+		public void addLeafs() {
+		}
 
 		@Override
-		public void addReference(int index, boolean value, Node reference) {}
-		
+		public void addReference(int index, boolean value, Node reference) {
+		}
+
 	}
-			
+
 	private enum SinkNode implements Node {
 		INSTANCE;
-		
+
 		@Override
 		public boolean done() {
 			return true;
 		}
-		
+
 		@Override
 		public void buildNext(Builder builder) {
 			throw new AssertionError();
 		}
-		
+
 		@Override
-		public void reset() {}
-		
+		public void reset() {
+		}
+
 		@Override
 		public void add(int offset, int remaining, Interpretation interpretation) {
 			// a sinkhole for more specific interpretations
 		}
-		
+
 		@Override
-		public void addLeafs() {}
-		
+		public void addLeafs() {
+		}
+
 		@Override
-		public void addReference(int index, boolean value, Node reference) {}
+		public void addReference(int index, boolean value, Node reference) {
+		}
 	}
-	
+
 }

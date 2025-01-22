@@ -21,12 +21,13 @@ package org.tweetyproject.arg.adf.semantics.link;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
+ * Link interface
  * @author Mathias Hofer
  *
  */
 public interface Link {
 	/**
-	 * 
+	 *
 	 * @param from from
 	 * @param to to
 	 * @param type type
@@ -36,17 +37,17 @@ public interface Link {
 		return new SimpleLink(from, to, type);
 	}
 	/**
-	 * 
+	 *
 	 * @return Argument getFrom
 	 */
 	Argument getFrom();
 	/**
-	 * 
+	 *
 	 * @return Argument getTo
 	 */
 	Argument getTo();
 	/**
-	 * 
+	 *
 	 * @return LinkType getTyp
 	 */
 	LinkType getType();

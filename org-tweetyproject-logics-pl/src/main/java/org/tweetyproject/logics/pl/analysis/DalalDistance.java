@@ -49,4 +49,7 @@ public class DalalDistance extends PossibleWorldDistance {
 		}
 		return n;
 	}	
+
+    /** Default Constructor */
+    public DalalDistance(){}
 }

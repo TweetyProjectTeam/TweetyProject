@@ -29,11 +29,19 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  * Computes the set of all preferred extensions, i.e., all maximal admissible sets.
  * It does so by first computing all complete extensions and then check for
  * set maximality.
- * 
+ *
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner {	
+public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner {
+
+
+
+		/** Default */
+		public SimplePreferredSetAfReasoner(){
+			// Default
+		}
+
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
@@ -51,8 +59,8 @@ public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner
 					break;
 				}
 			if(maximal)
-				result.add(e1);			
-		}		
+				result.add(e1);
+		}
 		return result;
 	}
 
@@ -72,12 +80,12 @@ public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner
 					break;
 				}
 			if(maximal)
-				return e1;			
-		}		
+				return e1;
+		}
 		// this should not happen
 		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
 	}
-	
+
 	@Override
 	public boolean isInstalled() {
 		return true;

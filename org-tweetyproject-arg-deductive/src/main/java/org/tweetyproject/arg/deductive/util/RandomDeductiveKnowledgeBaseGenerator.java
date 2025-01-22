@@ -32,11 +32,13 @@ public class RandomDeductiveKnowledgeBaseGenerator implements BeliefSetIterator<
         this.numberOfFormulas = numberOfFormulas;
     }
 
+
+    /** Description missing */
     @Override
     public boolean hasNext() {
         return true;
     }
-
+    /** Description missing */
     @Override
     public DeductiveKnowledgeBase next() {
         DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
@@ -87,6 +89,14 @@ public class RandomDeductiveKnowledgeBaseGenerator implements BeliefSetIterator<
         return kb;
     }
 
+
+    /**
+     * Description missing
+     * @param <C> Description missing
+     * @param c Description missing
+     * @return Description missing
+     * @throws IndexOutOfBoundsException Description missing
+     */
     private static <C> C randomChoice(Collection<C> c) throws IndexOutOfBoundsException {
         try {
             int num = random.nextInt(c.size());

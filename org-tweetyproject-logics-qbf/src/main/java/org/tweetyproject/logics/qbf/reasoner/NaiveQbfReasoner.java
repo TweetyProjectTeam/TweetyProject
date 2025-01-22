@@ -28,12 +28,17 @@ import org.tweetyproject.logics.qbf.semantics.QbPossibleWorld;
 
 /**
  * Naive classical inference for quantified boolean formulas (checks all interpretations for satisfiability).
- * 
+ *
  * @author Anna Gessler
  * @author Matthias Thimm
  */
 public class NaiveQbfReasoner extends AbstractPlReasoner {
-	
+
+
+	/** Default */
+	public NaiveQbfReasoner(){
+		super();
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.pl.reasoner.AbstractPropositionalLogicReasoner#query(org.tweetyproject.logics.pl.syntax.PlBeliefSet, org.tweetyproject.logics.pl.syntax.PropositionalFormula)
 	 */

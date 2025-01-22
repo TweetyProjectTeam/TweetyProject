@@ -108,4 +108,7 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 		GeneralComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		return ranking.isStrictlyLessAcceptableThan(argClone2, argClone);
 	}
+
+    /** Default Constructor */
+    public RaIncreaseOfDefenseBranch(){}
 }

@@ -85,9 +85,9 @@ public interface ASPParserTreeConstants
   public int JJTSTRING = 37;
 
 /**
- * 
+ * names
  */
-  public String[] jjtNodeName = {
+public String[] jjtNodeName = {
     "AnswerSet",
     "Program",
     "RuleList",

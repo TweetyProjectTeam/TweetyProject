@@ -30,9 +30,9 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * Prints ASP programs and single rules to the Clingo input format
  * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
  * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
- * 
+ *
  * @see org.tweetyproject.lp.asp.reasoner.ClingoSolver
- * 
+ *
  * @author Anna Gessler
  */
 
@@ -48,7 +48,7 @@ public class ClingoWriter {
 
 	/**
 	 * Create a new ClingoWriter with the given writer.
-	 * 
+	 *
 	 * @param writer a writer
 	 */
 	public ClingoWriter(Writer writer) {
@@ -64,8 +64,8 @@ public class ClingoWriter {
 
 	/**
 	 * Create a new ClingoWriter with the given writer and options.
-	 * 
-	 * @param writer
+	 *
+	 * @param writer the writer
 	 * @param usePredicateWhitelist if set to true, irrelevant atoms are hidden from
 	 *                              the output using clingo's #show statement.
 	 */
@@ -76,7 +76,7 @@ public class ClingoWriter {
 
 	/**
 	 * Prints the given program in clingo format.
-	 * 
+	 *
 	 * @param p a program
 	 * @throws IOException if an IO issue occurs.
 	 */
@@ -85,9 +85,9 @@ public class ClingoWriter {
 			if (cmd.startsWith("#const"))
 				writer.write(cmd + ".");
 		}
-		
+
 		for (ASPRule r : p) {
-			writer.write(printRule(r) + "\n"); 
+			writer.write(printRule(r) + "\n");
 		}
 
 		// Optionally suppress irrelevant atoms from output.
@@ -95,13 +95,13 @@ public class ClingoWriter {
 			for (Predicate pr : p.getOutputWhitelist())
 				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
 		}
-		
+
 		writer.flush();
 	}
 
 	/**
 	 * Creates string representation of a single rule in clingo format.
-	 * 
+	 *
 	 * @param r an ASP rule
 	 * @return String representation of the rule
 	 */
@@ -109,10 +109,18 @@ public class ClingoWriter {
 		return r.printToClingo();
 	}
 
+	/**
+	 * close writer
+	 * @throws IOException error
+	 */
 	public void close() throws IOException {
 		this.writer.close();
 	}
 
+	/**
+	 *  set usePredicateWhitelist
+	 * @param b boolean
+	 */
 	public void usePredicateWhitelist(boolean b) {
 		this.usePredicateWhitelist = b;
 	}

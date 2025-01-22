@@ -52,7 +52,7 @@ public class Marking implements Node, Comparable<Marking> {
 
 	/**
 	 * Create a new instance
-	 * 
+	 *
 	 * @param places the places that this marking does describe
 	 */
 	public Marking(List<Place> places) {
@@ -63,6 +63,7 @@ public class Marking implements Node, Comparable<Marking> {
 	}
 
 	/**
+	 * Return the id
 	 * @return the id
 	 */
 	public String getId() {
@@ -70,6 +71,7 @@ public class Marking implements Node, Comparable<Marking> {
 	}
 
 	/**
+	 * Setter id
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
@@ -77,6 +79,7 @@ public class Marking implements Node, Comparable<Marking> {
 	}
 
 	/**
+	 * Return the tokens at the place at this marking
 	 * @param place the place of interest
 	 * @return the tokens at the place at this marking
 	 */
@@ -86,17 +89,18 @@ public class Marking implements Node, Comparable<Marking> {
 
 	/**
 	 * Specify the number of tokens at the place at this marking
-	 * 
+	 *
 	 * @param place the id of the place
 	 * @param token   the token
 	 */
-	
+
 	public void putTokens(Place place, int token) {
 		this.tokensByPlace.put(place, token);
 	}
 
 	/**
-	 * 
+	 *
+	 * Return hasPlace
 	 * @param place hasPlace
 	 * @return hasPlace
 	 */
@@ -105,7 +109,8 @@ public class Marking implements Node, Comparable<Marking> {
 	}
 
 	/**
-	 * 
+	 *
+	 * Return getPlaces
 	 * @return getPlaces
 	 */
 	public Set<Place> getPlaces() {
@@ -131,7 +136,7 @@ public class Marking implements Node, Comparable<Marking> {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Retrieve the number of tokens at the specified place at this marking
 	 * @param place the place
@@ -143,7 +148,7 @@ public class Marking implements Node, Comparable<Marking> {
 
 	@Override
 	/**
-	 * Marking implements Comparable in order to have a fixed (but arbitrary) order among all edges 
+	 * Marking implements Comparable in order to have a fixed (but arbitrary) order among all edges
 	 * For that purpose we just use the hash code.
 	 */
 	public int compareTo(Marking that) {

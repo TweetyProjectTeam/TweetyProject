@@ -37,9 +37,13 @@ public class AbaReasonerCalleeFactory {
      * Enumeration of supported commands for ABA reasoner.
      */
     public enum Command {
+        /** get models */
         GET_MODELS("get_models", "Get all models"),
+        /** query */
         QUERY("query", "Query ABA framework"),
+        /** get model */
         GET_MODEL("get_model", "Get some model");
+
 
         /** Identifier for the command */
         public String id;

@@ -232,5 +232,8 @@ public class PreferredRevisionerADF {
 		System.out.println("Possible 3-valued worlds in extensions after revision: " + worlds_after_revision);
 		
 	}
+
+    /** Default Constructor */
+    public PreferredRevisionerADF(){}
 }
 

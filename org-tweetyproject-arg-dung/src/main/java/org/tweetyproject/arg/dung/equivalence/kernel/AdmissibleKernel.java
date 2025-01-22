@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel AK = (A, R') for strong equivalence wrt. admissible, preferred, unchallenged, ideal, semi-stable and eager semantics
- * <p> defined as:
- * R' = R \ { (a, b) | a!=b, (a,a) in R, (b,a) in R || (b,b) in R }
+ * Kernel AK for strong equivalence wrt. admissible, preferred, unchallenged, ideal, semi-stable and eager semantics
+ * <p>
+ * An attack (a,b) is redundant iff: a!=b, (a,a) in R, and ((b,a) in R or (b,b) in R)
  *
  * @author Lars Bengel
  */
@@ -37,12 +37,11 @@ public class AdmissibleKernel extends EquivalenceKernel {
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
-            if (theory.isAttackedBy(a, a)) {
-                for (Argument b : theory) {
-                    if (a != b) {
-                        if (theory.isAttackedBy(b, b) || theory.isAttackedBy(a, b)) {
-                            attacks.add(new Attack(a, b));
-                        }
+            for (Argument b : theory.getAttacked(a)) {
+                if (a.equals(b)) continue;
+                if (theory.isAttackedBy(a, a)) {
+                    if (theory.isAttackedBy(b, b) || theory.isAttackedBy(a, b)) {
+                        attacks.add(new Attack(a, b));
                     }
                 }
             }

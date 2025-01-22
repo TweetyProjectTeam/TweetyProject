@@ -30,30 +30,24 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * Example usage of the reasoner for weak semantics
+ * Example usage of the reasoners for weak semantics
  *
  * @author Lars Bengel
  */
 public class WeakSemanticsExample {
 	/**
-	 * 
-	 * @param args arguments
+	 * Execute the example
+	 * @param args cmdline arguments
 	 */
     public static void main(String[] args) {
         //initialize example
         DungTheory ex1 = new DungTheory();
-
         Argument a = new Argument("a");
         Argument b = new Argument("b");
         Argument c = new Argument("c");
         Argument d = new Argument("d");
         Argument e = new Argument("e");
-        ex1.add(a);
-        ex1.add(b);
-        ex1.add(c);
-        ex1.add(d);
-        ex1.add(e);
-
+        ex1.add(a,b,c,d,e);
         ex1.addAttack(a, b);
         ex1.addAttack(b, a);
         ex1.addAttack(b, c);
@@ -61,7 +55,7 @@ public class WeakSemanticsExample {
         ex1.addAttack(d, e);
         ex1.addAttack(e, c);
 
-        // show extensions for all weak semantics
+        // Compute extensions for all weak semantics
         System.out.println(ex1.prettyPrint());
         Collection<Extension<DungTheory>> exts_wad = new WeaklyAdmissibleReasoner().getModels(ex1);
         Collection<Extension<DungTheory>> exts_wco = new WeaklyCompleteReasoner().getModels(ex1);

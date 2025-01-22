@@ -36,27 +36,48 @@ import org.tweetyproject.logics.rcl.syntax.RclBeliefSet;
  */
 public class RclExample {
 
+	/**
+     * Default constructor for creating an instance of RclExample.
+     */
+    public RclExample() {
+        super();
+    }
+
+
+
+
+    /**
+     * The main method serves as the entry point for the example application.
+     *
+     * @param args Command line arguments. The first argument is the path to the
+     *             file containing the belief base, and the second argument (optional)
+     *             is the path to the file containing the queries.
+     * @throws FileNotFoundException if the belief base or query file is not found
+     * @throws ParserException if there is an error while parsing the belief base
+     *                         or the queries
+     * @throws IOException if an I/O error occurs while reading the files
+     */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 
-		
+
 		RclParser parser = new RclParser();
 		RclBeliefSet bs = (RclBeliefSet) parser.parseBeliefBaseFromFile(args[0]);
 		System.out.println("Knowledge base:\n " + bs);
-		
+
 		RelationalRankingFunction kappa = new SimpleRelationalCReasoner(true).getModel(bs,parser.getSignature());
-		System.out.println("Simple c-representation:\n" + kappa);		
-		
+		System.out.println("Simple c-representation:\n" + kappa);
+
 		System.out.println();
 		System.out.println("Queries: ");
-		
+
 		FolParser pars = new FolParser();
 		pars.setSignature(parser.getSignature());
-		
+
 		if(args[1] != null && !args[1].equals("")){
 			BufferedReader in = new BufferedReader(new FileReader(args[1]));
 			String line = null;
 			while ((line = in.readLine()) != null) {
-				System.out.println(line + "\t:\t" + kappa.rank((FolFormula)pars.parseFormula(line)));				
+				System.out.println(line + "\t:\t" + kappa.rank((FolFormula)pars.parseFormula(line)));
 			}
 			in.close();
 		}

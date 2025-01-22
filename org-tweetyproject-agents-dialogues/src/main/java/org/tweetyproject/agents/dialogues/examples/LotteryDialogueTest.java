@@ -46,32 +46,96 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
 
 /**
- * 
+ *
  * Shows how a simulation of a multi-agent system can be set up. It defines a
  * dialogue game between different agents, in particular one based on an action
  * selection strategy using lotteries.
- * 
+ *
  * @author Matthias Thimm
- * 
+ *
  */
 public class LotteryDialogueTest {
 
 	// Global parameters for simulation
-	public static int frameworkSize;
-	public static double attackProbability;
-	public static boolean enforceTreeShape;
-	public static int timeout = 60 * 60 * 72; // timeout of 72 hours
 
+	/**
+	 * The size of the argumentation framework being used in the simulation.
+	 * Represents the number of arguments in the framework.
+	 */
+	public static int frameworkSize;
+
+	/**
+	 * The probability that an attack exists between any two arguments in the
+	 * argumentation framework.
+	 * The value should be between 0.0 and 1.0, where 0.0 means no attacks, and 1.0
+	 * means all possible attacks are present.
+	 */
+	public static double attackProbability;
+
+	/**
+	 * A flag indicating whether the framework should enforce a tree shape
+	 * structure.
+	 * If true, the argumentation framework will be constructed as a tree (no
+	 * cycles).
+	 */
+	public static boolean enforceTreeShape;
+
+	/**
+	 * The timeout duration for each simulation run in seconds.
+	 * Default is set to 72 hours (259200 seconds).
+	 */
+	public static int timeout = 60 * 60 * 72; // 72 hours
+
+	/**
+	 * The number of simulation runs to be executed for each experiment.
+	 * Default is set to 100 runs.
+	 */
 	public static int numberOfRunsEach = 100;
 
+	/**
+	 * The semantics to be used for evaluating the argumentation framework in the
+	 * simulation.
+	 * Default is set to GROUNDED_SEMANTICS.
+	 */
 	public static Semantics semantics = Semantics.GROUNDED_SEMANTICS;
 
-	// to ensure comparability
+	// Seeds for ensuring comparability between runs
+
+	/**
+	 * A fixed random seed to ensure comparability of simulation results.
+	 */
 	public static long RANDOM_SEED1 = 435844589l;
+
+	/**
+	 * A fixed random seed to ensure comparability of simulation results.
+	 */
 	public static long RANDOM_SEED2 = 96421389l;
+
+	/**
+	 * A fixed random seed to ensure comparability of simulation results.
+	 */
 	public static long RANDOM_SEED3 = 6477568l;
+
+	/**
+	 * A fixed random seed to ensure comparability of simulation results.
+	 */
 	public static long RANDOM_SEED4 = 2136455579l;
 
+	/**
+	 * Runs a simulation of the multi-agent system where agents engage in a dialogue
+	 * game based on a Dung theory. The simulation is repeated for a number of runs
+	 * and the results are aggregated. The simulation runs with a set timeout, and
+	 * if it exceeds the timeout, it is aborted.
+	 *
+	 * @param baseline a flag to indicate whether the baseline agent
+	 *                 (UtilityBasedAgent)
+	 *                 or the probabilistic lottery agent
+	 *                 (ProbabilisticLotteryAgent)
+	 *                 should be used in the simulation.
+	 *
+	 * @throws ProtocolTerminatedException if the protocol ends prematurely during
+	 *                                     the simulation.
+	 */
 	public static void runSimulation(boolean baseline) throws ProtocolTerminatedException {
 		// We generate Dung theories with the given number of arguments and attack
 		// probability.
@@ -123,6 +187,12 @@ public class LotteryDialogueTest {
 		executor.shutdownNow();
 	}
 
+	/**
+	 * LotteryDialogue test main method
+	 *
+	 * @param args the args
+	 * @throws ProtocolTerminatedException error
+	 */
 	public static void main(String[] args) throws ProtocolTerminatedException {
 		LotteryDialogueTest.attackProbability = 0.3;
 		LotteryDialogueTest.frameworkSize = 10;
@@ -132,5 +202,8 @@ public class LotteryDialogueTest {
 		// actual agent
 		LotteryDialogueTest.runSimulation(false);
 	}
-}
 
+	/** Default Constructor */
+	public LotteryDialogueTest() {
+	}
+}

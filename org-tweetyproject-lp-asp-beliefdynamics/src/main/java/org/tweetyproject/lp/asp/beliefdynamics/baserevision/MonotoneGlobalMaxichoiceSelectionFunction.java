@@ -65,4 +65,7 @@ public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunct
 		return null;
 	}
 
+
+    /** Default Constructor */
+    public MonotoneGlobalMaxichoiceSelectionFunction(){}
 }

@@ -25,9 +25,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Kernel SK = (A, R') for strong equivalence wrt. stable semantics
- * <p> defined as:
- * R' = R \ { (a, b) | a!=b, (a,a) in R }
+ * Kernel SK for strong equivalence wrt. stable semantics.
+ * Also the Kernel for strong expansion equivalence wrt. stable semantics.
+ * <p>
+ * An attack (a,b) is redundant iff: a!=b, (a,a) in R
  *
  * @author Lars Bengel
  */
@@ -37,11 +38,10 @@ public class StableKernel extends EquivalenceKernel {
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: theory) {
-            if (theory.isAttackedBy(a, a)) {
-                for (Argument b : theory) {
-                    if (a != b) {
-                        attacks.add(new Attack(a, b));
-                    }
+            if (!theory.isAttackedBy(a, a)) continue;
+            for (Argument b : theory) {
+                if (!a.equals(b)) {
+                    attacks.add(new Attack(a, b));
                 }
             }
         }

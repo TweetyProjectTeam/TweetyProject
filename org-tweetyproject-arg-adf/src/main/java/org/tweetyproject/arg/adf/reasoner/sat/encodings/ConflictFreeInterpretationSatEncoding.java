@@ -31,33 +31,59 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
- * @author Mathias Hofer
+ * This class implements a SAT encoding for conflict-free interpretations in an Abstract Dialectical Framework (ADF).
+ * It ensures that no argument is both satisfied and unsatisfied simultaneously, and properly links arguments
+ * with their acceptance conditions using Tseitin transformation.
+ * <p>
+ * The encoding also supports both absolute and relative encoding based on the current interpretation.
+ * </p>
  *
+ * @author Mathias Hofer
  */
 public class ConflictFreeInterpretationSatEncoding implements SatEncoding, RelativeSatEncoding {
-	
+
+	/** The Abstract Dialectical Framework (ADF) that this encoding is based on. */
 	private final AbstractDialecticalFramework adf;
-	
+
+	/** The propositional mapping used to map arguments and links to propositional literals. */
 	private final PropositionalMapping mapping;
-	
+
 	/**
-	 * @param adf adf
-	 * @param mapping mapping
+	 * Constructs a new ConflictFreeInterpretationSatEncoding for the given Abstract Dialectical Framework (ADF)
+	 * and propositional mapping.
+	 *
+	 * @param adf the Abstract Dialectical Framework for which the SAT encoding is created, must not be null
+	 * @param mapping the propositional mapping for the arguments and links, must not be null
 	 */
 	public ConflictFreeInterpretationSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
 	}
 
+	/**
+	 * Encodes the conflict-free interpretation of the given ADF into a set of SAT clauses.
+	 * These clauses ensure that no argument is both satisfied and unsatisfied at the same time
+	 * and links arguments to their acceptance conditions.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 */
 	@Override
 	public void encode(Consumer<Clause> consumer) {
 		for (Argument s : adf.getArguments()) {
 			handleUnfixed(consumer, s);
 		}
 	}
-	
+
+	/**
+	 * Encodes the conflict-free interpretation of the given ADF into a set of SAT clauses
+	 * based on the provided interpretation. This method adapts the encoding depending on
+	 * whether an argument is satisfied, unsatisfied, or undecided.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 * @param interpretation the current interpretation of the ADF
+	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {		
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
 		for (Argument s : adf.getArguments()) {
 			if (interpretation.satisfied(s)) {
 				handleSatisfied(consumer, s);
@@ -70,22 +96,30 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 			}
 		}
 	}
-	
+
+	/**
+	 * Handles the case where an argument is unfixed (i.e., it has not been determined whether
+	 * the argument is satisfied or unsatisfied). It creates the appropriate SAT clauses linking
+	 * the argument to its acceptance condition and ensures that no conflicting assignments are made.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 * @param s the argument being processed
+	 */
 	private void handleUnfixed(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-		
+
 		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
 		Literal accName = transformer.collect(acc, consumer);
-		
-		// the propositions represent the assignment of s
+
+		// The propositions represent the assignment of s
 		Literal trueRepr = mapping.getTrue(s);
 		Literal falseRepr = mapping.getFalse(s);
 
-		// link the arguments to their acceptance conditions
+		// Link the arguments to their acceptance conditions
 		consumer.accept(Clause.of(trueRepr.neg(), accName));
 		consumer.accept(Clause.of(falseRepr.neg(), accName.neg()));
 
-		// draw connection between argument and outgoing links
+		// Ensure that no conflicting assignments are made
 		for (Link relation : adf.linksFrom(s)) {
 			Literal linkRepr = mapping.getLink(relation);
 
@@ -93,45 +127,71 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 			consumer.accept(Clause.of(falseRepr.neg(), linkRepr.neg()));
 		}
 
-		// make sure that we never satisfy s_t and s_f at the same time
+		// Ensure that both trueRepr and falseRepr cannot be true at the same time
 		consumer.accept(Clause.of(trueRepr.neg(), falseRepr.neg()));
 	}
-	
+
+	/**
+	 * Handles the case where an argument is satisfied in the interpretation.
+	 * It creates the appropriate SAT clauses that link the argument's satisfaction
+	 * to its acceptance condition and outgoing links.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 * @param s the satisfied argument being processed
+	 */
 	private void handleSatisfied(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-		
+
 		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), true);
 		Literal accName = transformer.collect(acc, consumer);
 
+		// Generate clauses for satisfied argument
 		consumer.accept(Clause.of(accName));
-		
 		consumer.accept(Clause.of(mapping.getTrue(s)));
 		consumer.accept(Clause.of(mapping.getFalse(s).neg()));
-		
+
+		// Link outgoing relations
 		for (Link relation : adf.linksFrom(s)) {
 			consumer.accept(Clause.of(mapping.getLink(relation)));
 		}
 	}
-	
+
+	/**
+	 * Handles the case where an argument is unsatisfied in the interpretation.
+	 * It creates the appropriate SAT clauses that link the argument's unsatisfaction
+	 * to its acceptance condition and outgoing links.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 * @param s the unsatisfied argument being processed
+	 */
 	private void handleUnsatisfied(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-		
+
 		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(r -> mapping.getLink(r, s), true);
 		Literal accName = transformer.collect(acc, consumer);
 
+		// Generate clauses for unsatisfied argument
 		consumer.accept(Clause.of(accName.neg()));
-		
 		consumer.accept(Clause.of(mapping.getTrue(s).neg()));
 		consumer.accept(Clause.of(mapping.getFalse(s)));
-		
+
+		// Link outgoing relations
 		for (Link relation : adf.linksFrom(s)) {
 			consumer.accept(Clause.of(mapping.getLink(relation).neg()));
 		}
 	}
-	
+
+	/**
+	 * Handles the case where an argument is undecided in the interpretation.
+	 * It creates the appropriate SAT clauses indicating that both the satisfied
+	 * and unsatisfied literals are negated.
+	 *
+	 * @param consumer the consumer that accepts the generated SAT clauses
+	 * @param s the undecided argument being processed
+	 */
 	private void handleUndecided(Consumer<Clause> consumer, Argument s) {
 		consumer.accept(Clause.of(mapping.getTrue(s).neg()));
 		consumer.accept(Clause.of(mapping.getFalse(s).neg()));
 	}
-
 }
+

@@ -72,4 +72,7 @@ public class RaQualityPrecedence extends RankingPostulate {
 	}
 
 
+
+    /** Default Constructor */
+    public RaQualityPrecedence(){}
 }

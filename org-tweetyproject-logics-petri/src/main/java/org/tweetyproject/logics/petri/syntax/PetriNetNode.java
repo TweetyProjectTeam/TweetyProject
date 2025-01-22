@@ -25,7 +25,7 @@ import org.tweetyproject.graphs.Node;
  * @author Benedikt Knopp
  */
 public abstract class PetriNetNode implements Node {
-	
+
 	/**
 	 * a unique identifier
 	 */
@@ -34,7 +34,7 @@ public abstract class PetriNetNode implements Node {
 	 * a pretty name
 	 */
 	String name;
-	
+
 	/**
 	 * Create a new instance
 	 * @param id a unique identifier
@@ -42,7 +42,7 @@ public abstract class PetriNetNode implements Node {
 	public PetriNetNode(String id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Create a new instance
 	 * @param id a unique identifier
@@ -54,6 +54,7 @@ public abstract class PetriNetNode implements Node {
 	}
 
 	/**
+	 * Teturn the id
 	 * @return the id
 	 */
 	public String getId() {
@@ -61,6 +62,7 @@ public abstract class PetriNetNode implements Node {
 	}
 
 	/**
+	 * Setter id
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
@@ -68,6 +70,7 @@ public abstract class PetriNetNode implements Node {
 	}
 
 	/**
+	 * Return the name
 	 * @return the name
 	 */
 	public String getName() {
@@ -75,17 +78,18 @@ public abstract class PetriNetNode implements Node {
 	}
 
 	/**
+	 * Setter name
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return true iff this node is final
 	 * @return true iff this node is final
 	 */
 	protected abstract boolean isFinal();
-	
+
 }
-	

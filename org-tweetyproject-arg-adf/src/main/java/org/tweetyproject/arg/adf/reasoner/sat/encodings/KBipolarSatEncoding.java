@@ -39,32 +39,49 @@ import org.tweetyproject.arg.adf.transform.FixPartialTransformer;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
- * @author Mathias Hofer
+ * The {@code KBipolarSatEncoding} class provides an encoding of a bipolar argumentation framework into a
+ * propositional formula for SAT solving. It implements the {@link SatEncoding} interface and processes
+ * the Abstract Dialectical Framework (ADF) along with a propositional mapping of arguments.
+ * The encoding considers the undecided arguments and uses Tseitin transformation to generate the
+ * propositional formula that is fed into a SAT solver.
  *
+ * @author Mathias Hofer
  */
 public final class KBipolarSatEncoding implements SatEncoding {
-	
+
+	/** The abstract dialectical framework containing arguments and links. */
 	private final AbstractDialecticalFramework adf;
-	
+
+	/** The propositional mapping of arguments and their corresponding literals. */
 	private final PropositionalMapping mapping;
-	
+
 	/**
-	 * @param adf adf
-	 * @param mapping mapping
+	 * Constructs a {@code KBipolarSatEncoding} instance with the given ADF and propositional mapping.
+	 *
+	 * @param adf the abstract dialectical framework, must not be null
+	 * @param mapping the propositional mapping used for the encoding, must not be null
+	 * @throws NullPointerException if {@code adf} or {@code mapping} is null
 	 */
 	public KBipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
 	}
 
+	/**
+	 * Encodes the acceptance conditions of the arguments in the ADF into a SAT formula using a given consumer.
+	 * The encoding involves generating clauses based on the undecided arguments and their dependencies,
+	 * and applying Tseitin transformation to handle complex acceptance conditions.
+	 *
+	 * @param consumer the consumer to accept the generated SAT clauses
+	 */
 	@Override
 	public void encode(Consumer<Clause> consumer) {
 		for (Argument to : adf.getArguments()) {
 			Set<Argument> undecidedDependees = dependsOn(to);
 
-			if (!undecidedDependees.isEmpty()) {				
+			if (!undecidedDependees.isEmpty()) {
 				Iterator<Interpretation> completionIterator = new TwoValuedInterpretationIterator(List.copyOf(undecidedDependees));
-				
+
 				while (completionIterator.hasNext()) {
 					Interpretation completion = completionIterator.next();
 
@@ -73,8 +90,8 @@ public final class KBipolarSatEncoding implements SatEncoding {
 
 					TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(from -> mapping.getLink(from, to), false);
 					Literal accName = transformer.collect(simplified, consumer);
-									
-					// the condition when the checks are active, they are trivially satisfied if the current interpretation does not match the completion
+
+					// The condition when the checks are active, they are trivially satisfied if the current interpretation does not match the completion
 					Collection<Literal> condition = new ArrayList<>();
 					for(Argument from : completion.arguments()) {
 						if (completion.satisfied(from)) {
@@ -84,20 +101,22 @@ public final class KBipolarSatEncoding implements SatEncoding {
 						}
 					}
 
-					// the check for s^t
+					// The check for s^t
 					consumer.accept(Clause.of(condition, mapping.getTrue(to).neg(), accName));
-					
-					// the check for s^f
+
+					// The check for s^f
 					consumer.accept(Clause.of(condition, mapping.getFalse(to).neg(), accName.neg()));
 				}
 			}
 		}
-
 	}
 
 	/**
-	 * @param s
-	 * @return the arguments r s.t. there exists a dependent link (r,s)
+	 * Finds and returns the set of arguments on which the given argument depends.
+	 * An argument depends on another argument if there exists a dependent link between them.
+	 *
+	 * @param s the argument whose dependencies are to be found
+	 * @return a set of arguments that the given argument depends on, based on the dependent links
 	 */
 	private Set<Argument> dependsOn(Argument s) {
 		return adf.linksTo(s).stream()
@@ -105,5 +124,5 @@ public final class KBipolarSatEncoding implements SatEncoding {
 				.map(Link::getFrom)
 				.collect(Collectors.toSet());
 	}
-
 }
+

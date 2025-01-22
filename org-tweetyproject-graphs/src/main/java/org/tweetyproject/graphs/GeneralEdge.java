@@ -17,12 +17,32 @@
  *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-package org.tweetyproject.graphs;
-/**
- * 
- * @author Sebastian Franke
- */
+ package org.tweetyproject.graphs;
 
-public abstract class GeneralEdge<T> {
+ /**
+  * The `GeneralEdge` class represents a general structure for edges in a graph.
+  *
+  * <p>
+  * This abstract class is parameterized with the type `T`, which represents the type of nodes
+  * connected by this edge. Subclasses of `GeneralEdge` should provide implementations
+  * that define specific types of edges in a graph, such as directed or undirected edges.
+  * </p>
+  *
+  * <p>
+  * Since this class is abstract, it cannot be instantiated directly. It is intended to be
+  * extended by more specific edge types, which will define additional properties and
+  * behaviors of edges in a graph.
+  * </p>
+  *
+  * @param <T> the type of nodes connected by this edge.
+  *
+  * @author Sebastian Franke
+  */
+ public abstract class GeneralEdge<T> {
+    /** Default Constructor */
+    public GeneralEdge(){
+        //default
+    }
 
-}
+ }
+

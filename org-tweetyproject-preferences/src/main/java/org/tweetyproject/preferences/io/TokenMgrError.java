@@ -61,105 +61,119 @@ public class TokenMgrError extends Error
    */
   int errorCode;
 
-  /*
-   * Replaces unprintable characters by their escaped (or unicode escaped)
-   * equivalents in the given string
-   */
-  protected static final String addEscapes(String str) {
-    StringBuffer retval = new StringBuffer();
-    char ch;
-    for (int i = 0; i < str.length(); i++) {
-      switch (str.charAt(i))
-      {
-        case 0 :
-          continue;
-        case '\b':
-          retval.append("\\b");
-          continue;
-        case '\t':
-          retval.append("\\t");
-          continue;
-        case '\n':
-          retval.append("\\n");
-          continue;
-        case '\f':
-          retval.append("\\f");
-          continue;
-        case '\r':
-          retval.append("\\r");
-          continue;
-        case '\"':
-          retval.append("\\\"");
-          continue;
-        case '\'':
-          retval.append("\\\'");
-          continue;
-        case '\\':
-          retval.append("\\\\");
-          continue;
-        default:
-          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
-            String s = "0000" + Integer.toString(ch, 16);
-            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-          } else {
-            retval.append(ch);
+  /**
+     * Replaces unprintable characters in the given string with their escaped
+     * or unicode escaped equivalents.
+     *
+     * @param str the input string to process.
+     * @return a new string with unprintable characters replaced by their escaped equivalents.
+     */
+    protected static final String addEscapes(String str) {
+      StringBuffer retval = new StringBuffer();
+      char ch;
+      for (int i = 0; i < str.length(); i++) {
+          switch (str.charAt(i)) {
+              case 0:
+                  continue;
+              case '\b':
+                  retval.append("\\b");
+                  continue;
+              case '\t':
+                  retval.append("\\t");
+                  continue;
+              case '\n':
+                  retval.append("\\n");
+                  continue;
+              case '\f':
+                  retval.append("\\f");
+                  continue;
+              case '\r':
+                  retval.append("\\r");
+                  continue;
+              case '\"':
+                  retval.append("\\\"");
+                  continue;
+              case '\'':
+                  retval.append("\\\'");
+                  continue;
+              case '\\':
+                  retval.append("\\\\");
+                  continue;
+              default:
+                  if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+                      String s = "0000" + Integer.toString(ch, 16);
+                      retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+                  } else {
+                      retval.append(ch);
+                  }
+                  continue;
           }
-          continue;
       }
-    }
-    return retval.toString();
-  }
-
-  /*
-   * Returns a detailed message for the Error when it is thrown by the
-   * token manager to indicate a lexical error.
-   * Parameters :
-   *    EOFSeen     : indicates if EOF caused the lexical error
-   *    curLexState : lexical state in which this error occurred
-   *    errorLine   : line number when the error occurred
-   *    errorColumn : column number when the error occurred
-   *    errorAfter  : prefix that was seen before this error occurred
-   *    curchar     : the offending character
-   * Note: You can customize the lexical error message by modifying this method.
-   */
-  protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
-    return("Lexical error at line " +
-          errorLine + ", column " +
-          errorColumn + ".  Encountered: " +
-          (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
-          "after : \"" + addEscapes(errorAfter) + "\"");
+      return retval.toString();
   }
 
   /**
-   * You can also modify the body of this method to customize your error messages.
-   * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not
-   * of end-users concern, so you can return something like :
+   * Generates a detailed message for a lexical error encountered by the token manager.
    *
-   *     "Internal Error : Please file a bug report .... "
+   * <p>
+   * This method can be customized to modify the format or content of the error message.
+   * </p>
    *
-   * from this method for such cases in the release version of your parser.
+   * @param EOFSeen indicates if the end of file (EOF) caused the lexical error.
+   * @param lexState the lexical state in which the error occurred.
+   * @param errorLine the line number where the error occurred.
+   * @param errorColumn the column number where the error occurred.
+   * @param errorAfter the string that was seen before this error occurred.
+   * @param curChar the offending character that caused the error.
+   * @return a detailed error message describing the lexical error.
    */
-  public String getMessage() {
-    return super.getMessage();
+  protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
+      return ("Lexical error at line " +
+              errorLine + ", column " +
+              errorColumn + ".  Encountered: " +
+              (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
+              "after : \"" + addEscapes(errorAfter) + "\"");
   }
 
-  /*
-   * Constructors of various flavors follow.
+  /**
+   * Returns a detailed message about the error. This method can be customized to
+   * change the content of error messages, especially for internal errors.
+   *
+   * @return the error message as a string.
    */
+  @Override
+  public String getMessage() {
+      return super.getMessage();
+  }
 
-  /** No arg constructor. */
+  /** No-argument constructor for {@code TokenMgrError}. */
   public TokenMgrError() {
   }
 
-  /* Constructor with message and reason. */
+  /**
+   * Constructor for {@code TokenMgrError} with a specified message and reason code.
+   *
+   * @param message the detailed error message.
+   * @param reason the reason code indicating the type of error.
+   */
   public TokenMgrError(String message, int reason) {
-    super(message);
-    errorCode = reason;
+      super(message);
+      this.errorCode = reason;
   }
 
-  /* Full Constructor. */
+  /**
+   * Full constructor for {@code TokenMgrError}, generating a detailed lexical error message.
+   *
+   * @param EOFSeen indicates if the end of file (EOF) caused the lexical error.
+   * @param lexState the lexical state in which the error occurred.
+   * @param errorLine the line number where the error occurred.
+   * @param errorColumn the column number where the error occurred.
+   * @param errorAfter the string that was seen before this error occurred.
+   * @param curChar the offending character that caused the error.
+   * @param reason the reason code indicating the type of error.
+   */
   public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
-    this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
+      this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
   }
 }
 /* JavaCC - OriginalChecksum=d486d74a96e581d77ca973bf160fa544 (do not edit this line) */

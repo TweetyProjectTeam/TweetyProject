@@ -18,46 +18,50 @@
  */
 package org.tweetyproject.math.algebra;
 
+import java.util.function.BinaryOperator;
 /**
  * This class represents an example for a non numeric semiring. This implementation uses an example semiring from the following paper: Bistarelli, Stefano, and Francesco Santini. "Weighted Argumentation." FLAP 8.6 (2021): 1589-1622.
  * @author Sandra Hoffmann
  *
  */
-import java.util.function.BinaryOperator;
-
-
-
 public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.NonNumericSemiring.SemiringElement> {
 
     /**
      * Enum representing the elements in the non-numeric semiring: BAD, FAIR, and GOOD.
      */
 	public enum SemiringElement {
-	    BAD, FAIR, GOOD
+        /** BAD */
+	    BAD,
+        /** FAIR */
+        FAIR,
+
+        /** GOOD */
+        GOOD
 	}
 
     // Define the total ordering
+    /**  Define the total ordering*/
     private static final BinaryOperator<SemiringElement> TOTAL_ORDERING = (a, b) -> {
         if (a == SemiringElement.BAD || (a == SemiringElement.FAIR && b == SemiringElement.GOOD))
             return b;
         return a;
     };
 
- // Define the multiplication operation
+ /** Define the multiplication operation*/
     private static final BinaryOperator<SemiringElement> MULTIPLICATION = (a, b) -> {
         if (a == SemiringElement.BAD || (a == SemiringElement.FAIR && b == SemiringElement.GOOD))
             return a;
         return b;
     };
-    
+
     /**
      * Constructs a NonNumericSemiring with the specified total ordering, multiplication, and identity elements.
      */
     public NonNumericSemiring() {
         super(TOTAL_ORDERING, MULTIPLICATION, SemiringElement.GOOD, SemiringElement.BAD);
     }
-    
-    
+
+
     /**
      * Generates a random element from the semiring.
      *
@@ -70,7 +74,7 @@ public class NonNumericSemiring extends Semiring<org.tweetyproject.math.algebra.
         int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
     }
-    
+
 
     /**
      * Converts a non-numeric weight to its numerical representation.

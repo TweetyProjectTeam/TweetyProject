@@ -37,9 +37,9 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * allows the usage of choice atoms as heads. Choice
  * atoms consist of choice elements and a binary operator
  * and term.
- * 
+ *
  * {@link org.tweetyproject.lp.asp.syntax.ChoiceElement}
- * 
+ *
  * @author Anna Gessler
  */
 public class ChoiceHead extends ASPHead {
@@ -48,35 +48,35 @@ public class ChoiceHead extends ASPHead {
 	 * The choice elements of this choice atom.
 	 */
 	private List<ChoiceElement> elements;
-	
+
 	/**
 	 * The (optional) left binary relation of this choice atom.
 	 */
 	private ASPOperator.BinaryOperator leftOp;
-	
+
 	/**
 	 * The right binary relation of this choice atom.
 	 * Default is ">=".
 	 */
 	private ASPOperator.BinaryOperator rightOp;
-	
+
 	/**
 	 * The left comparison term of this choice atom.
 	 */
 	private Term<?> leftGuard;
-	
+
 	/**
 	 * The right comparison term of this choice atom.
 	 * Default is "0".
 	 */
 	private Term<?> rightGuard;
-	
-	
+
+
 	 /*
 	 * Create a new ChoiceHead with the given choice elements C, binary operators l and r and
 	 * comparison terms l and r, forming a choice atom l      l C      r r.
 	 */
-	 /** 
+	 /**
 	 * @param elements list of ChoiceElements
 	 * @param leftOp a BinaryOperator
 	 * @param leftTerm left Term
@@ -90,11 +90,11 @@ public class ChoiceHead extends ASPHead {
 		this.rightOp = rightOp;
 		this.rightGuard = rightTerm;
 	}
-	
+
 	/*
 	 * Create a new ChoiceHead C with the given choice elements and right binary operator  and
 	 * comparison term t, forming a choice atom C     t.
-	 */ 
+	 */
 	 /**
 	  *  @param elements list of ChoiceElements
 	 * @param rightOp a BinaryOperator
@@ -107,13 +107,13 @@ public class ChoiceHead extends ASPHead {
 		this.leftOp = null;
 		this.leftGuard = null;
 	}
-	
+
 	/*
 	 * Create a new ChoiceHead C with the given choice element
 	 * and the default operator and term, forming a
 	 * choice atom C >= 0.
 	 */
-	 /** 
+	 /**
 	 * @param e list of ChoiceElements
 	 */
 	public ChoiceHead(ChoiceElement e) {
@@ -124,7 +124,7 @@ public class ChoiceHead extends ASPHead {
 		this.leftOp = null;
 		this.leftGuard = null;
 	}
-	
+
 	/*
 	 * Create a new ChoiceHead C with the given choice elements
 	 * and the default operator and term, forming a
@@ -139,12 +139,12 @@ public class ChoiceHead extends ASPHead {
 		this.leftOp = null;
 		this.leftGuard = null;
 	}
-	
+
 	/*
 	 * Create a new ChoiceHead C with the given choice element, binary operator <> and
 	 * comparison term l, forming the choice atom "C <> l".
 	 * */
-	 /** 
+	 /**
 	 * @param e a ChoiceElement
 	 * @param rightOp a BinaryOperator
 	 * @param rightTerm a term
@@ -242,8 +242,9 @@ public class ChoiceHead extends ASPHead {
 			atoms.addAll(e.getLiterals());
 		return atoms;
 	}
-	
+
 	/**
+	 * Return the choice elements of this choice atom
 	 * @return the choice elements of this choice atom
 	 */
 	public List<ChoiceElement> getElements() {
@@ -252,13 +253,14 @@ public class ChoiceHead extends ASPHead {
 
 	/**
 	 * Set the choice elements of this choice atom.
-	 * @param elements
+	 * @param elements the elements
 	 */
 	public void setElements(List<ChoiceElement> elements) {
 		this.elements = elements;
 	}
 
 	/**
+	 * Return the left comparison operator.
 	 * @return the left comparison operator.
 	 */
 	public ASPOperator.BinaryOperator getLeftOperator() {
@@ -267,13 +269,14 @@ public class ChoiceHead extends ASPHead {
 
 	/**
 	 * Set the left comparison operator.
-	 * @param leftOp
+	 * @param leftOp left operator
 	 */
 	public void setLeftOperator(ASPOperator.BinaryOperator leftOp) {
 		this.leftOp = leftOp;
 	}
 
 	/**
+	 * Return the right comparison operator.
 	 * @return the right comparison operator.
 	 */
 	public ASPOperator.BinaryOperator getRightOperator() {
@@ -289,21 +292,23 @@ public class ChoiceHead extends ASPHead {
 	}
 
 	/**
+	 *Return the left guard (comparison term)
 	 * @return the left guard (comparison term)
 	 */
 	public Term<?> getLeftGuard() {
 		return leftGuard;
 	}
-	
+
 	/**
 	 * Set the left guard (comparison term)
-	 * @param leftTerm
+	 * @param leftTerm left term
 	 */
 	public void setLeftGuard(Term<?> leftTerm) {
 		this.leftGuard = leftTerm;
 	}
 
 	/**
+	 * Return the right guard (comparison term)
 	 * @return the right guard (comparison term)
 	 */
 	public Term<?> getRightGuard() {
@@ -312,12 +317,12 @@ public class ChoiceHead extends ASPHead {
 
 	/**
 	 * Set the right guard (comparison term)
-	 * @param rightTerm
+	 * @param rightTerm the right term
 	 */
 	public void setRightGuard(Term<?> rightTerm) {
 		this.rightGuard = rightTerm;
 	}
-	
+
 	@Override
 	public String toString() {
 		String result = "";
@@ -329,14 +334,14 @@ public class ChoiceHead extends ASPHead {
 		}
 		result = result.substring(0, result.length()-2);
 		result += "}";
-		
+
 		if (this.rightOp != ASPOperator.BinaryOperator.GEQ || !this.rightGuard.equals(new NumberTerm(0)))
 			return result + this.rightOp + this.rightGuard;
 		else return result;
 	}
-	
+
 	@Override
-	public String printToClingo() { 
+	public String printToClingo() {
 		String result = "";
 		if (leftOp != null)
 			result += leftGuard + leftOp.toString();
@@ -347,7 +352,7 @@ public class ChoiceHead extends ASPHead {
 		result = result.substring(0, result.length()-1);
 		return result + "}";
 	}
-	
+
 	@Override
 	public String printToDLV() {
 		throw new IllegalArgumentException("Choice Rules are not supported by DLV.");
@@ -370,5 +375,5 @@ public class ChoiceHead extends ASPHead {
 		return Objects.equals(elements, other.elements) && Objects.equals(leftGuard, other.leftGuard)
 				&& leftOp == other.leftOp && Objects.equals(rightGuard, other.rightGuard) && rightOp == other.rightOp;
 	}
-	
+
 }

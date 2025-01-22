@@ -31,14 +31,16 @@ import org.tweetyproject.lp.asp.syntax.Program;
 /**
  * An answer set is a belief set which only contains literals and represents the
  * deductive belief set of an extended logic program under the answer set
- * semantic. 
- * 
+ * semantic.
+ *
  * @author Thomas Vengels
  * @author Tim Janus
  * @author Anna Gessler
  */
 public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
+	/** level */
 	public final int level;
+	/**weight */
 	public final int weight;
 
 	/**
@@ -63,7 +65,7 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 
 	/**
 	 * Copy-Constructor
-	 * 
+	 *
 	 * @param other another answer set
 	 */
 	public AnswerSet(AnswerSet other) {
@@ -74,7 +76,7 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 
 	/**
 	 * Returns all literals of a given name in the AnswerSet.
-	 * 
+	 *
 	 * @param name the name of the literal
 	 * @return set of literals
 	 */
@@ -130,5 +132,5 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 		AnswerSet other = (AnswerSet) obj;
 		return level == other.level && weight == other.weight;
 	}
-	
+
 }

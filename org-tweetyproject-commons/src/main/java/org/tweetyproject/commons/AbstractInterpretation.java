@@ -27,11 +27,18 @@ import java.util.Collection;
  * @param <S> the type of formulas
  */
 public abstract class AbstractInterpretation<B extends BeliefBase, S extends Formula> implements Interpretation<B,S> {
-	
+
+	/**
+	 * Default Constructor
+	 */
+	public AbstractInterpretation(){
+
+	}
+
 	/**
 	 * Checks whether this interpretation satisfies all given formulas.
 	 * @param formulas a collection of formulas.
-	 * @return "true" if this interpretation satisfies all given formulas. 
+	 * @return "true" if this interpretation satisfies all given formulas.
 	 * @throws IllegalArgumentException if at least one formula does not correspond
 	 * 		to the expected language.
 	 */

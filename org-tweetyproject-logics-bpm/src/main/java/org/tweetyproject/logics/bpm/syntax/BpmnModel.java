@@ -35,7 +35,7 @@ import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
 
 /**
- * A class to represent a BPMN Model 
+ * A class to represent a BPMN Model
  * @author Benedikt Knopp, Matthias Thimm
  */
 public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
@@ -44,22 +44,22 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	 * (sub) processes of this BPMN model
 	 */
 	private Set<Process> processes = new HashSet<>();
-	
+
 	/**
 	 * the nodes in this BPMN model
 	 */
 	private Set<BpmnNode> nodes = new HashSet<>();
-	
+
 	/**
 	 * the edges in this BPMN model
 	 */
 	private Set <Edge<BpmnNode>> edges = new HashSet<>();
-	
+
 	@Override
 	public Signature getMinimalSignature() {
 		return null;
 	}
-	
+
 
 	@Override
 	public boolean add(BpmnNode node) {
@@ -70,7 +70,12 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	public boolean add(GeneralEdge<BpmnNode> edge) {
 		return this.edges.add((Edge) edge);
 	}
-	
+
+	/**
+	 * Add a process
+	 * @param process the proces to add
+	 * @return status
+	 */
 	public boolean add(Process process) {
 		return this.processes.add(process);
 	}
@@ -84,7 +89,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	public int getNumberOfNodes() {
 		return this.nodes.size();
 	}
-	
+
 	@Override
 	public int getNumberOfEdges() {
 		return this.edges.size();
@@ -146,6 +151,11 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	}
 
 	@Override
+	public Collection<Collection<BpmnNode>> getConnectedComponents() {
+		return null;
+	}
+	
+	@Override
 	public Collection<Collection<BpmnNode>> getStronglyConnectedComponents() {
 		return null;
 	}
@@ -169,7 +179,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	public boolean isWeightedGraph() {
 		return false;
 	}
-	
+
 	/**
 	 * retrieve all nodes in this BPMN model that are Activities
 	 * @return the model's Activities
@@ -183,7 +193,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		}
 		return activities;
 	}
-	
+
 	/**
 	 * retrieve all edges in this BPMN model that are Sequence Flows
 	 * @return the model's Sequence Flows
@@ -197,7 +207,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		}
 		return sequenceFlows;
 	}
-	
+
 	/**
 	 * Retrieve all nodes in this model that are instances of a certain class
 	 * @param c the class of interest
@@ -209,7 +219,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 				//.map(node -> (c) node)
 				.collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * For one particular nodes, retrieve all successors in the sequence flow of the BPMN model
 	 * @param node the node of interest
@@ -218,12 +228,12 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	public Set<BpmnNode> getSequenceFlowSuccessors(BpmnNode node){
 		return this.edges.stream()
 				.filter(edge -> isInstanceOf(edge, SequenceFlow.class)
-							&& edge.getNodeA() != null 
+							&& edge.getNodeA() != null
 							&& edge.getNodeA().equals(node))
 				.map(edge -> edge.getNodeB())
 				.collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * Determine whether an object is an instance of a particular class
 	 * @param object the object
@@ -234,22 +244,28 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return theClass.isAssignableFrom(object.getClass());
 	}
 	/**
-	 * 
+	 *
 	 * @author Matthias Thimm
 	 *
 	 */
 	public enum BpmnNodeType {
 		/** START_EVENT */
+		START_EVENT,
 		/** END_EVENT */
+		END_EVENT,
 		/** EVENT */
+		EVENT,
 		/** ACTIVITY */
+		ACTIVITY,
 		/** EXCLUSIVE_GATEWAY */
+		EXCLUSIVE_GATEWAY,
 		/** INCLUSIVE_GATEWAY */
-		START_EVENT, END_EVENT, EVENT, ACTIVITY, EXCLUSIVE_GATEWAY, INCLUSIVE_GATEWAY
+		 INCLUSIVE_GATEWAY
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * Return getSortedNodes
 	 * @return getSortedNodes
 	 */
 	public Map<BpmnNodeType, Set<BpmnNode>> getSortedNodes() {
@@ -263,7 +279,7 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		});
 		return sortedNodes;
 	}
-	
+
 	private BpmnNodeType getType(BpmnNode node) {
 		if(StartEvent.class.isAssignableFrom(node.getClass())) {
 			return BpmnNodeType.START_EVENT;
@@ -285,5 +301,8 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		}
 		return null;
 	}
-	
+
+
+    /** Default Constructor */
+    public BpmnModel(){}
 }

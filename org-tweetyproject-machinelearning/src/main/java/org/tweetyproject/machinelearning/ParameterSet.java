@@ -21,12 +21,17 @@ package org.tweetyproject.machinelearning;
 import java.util.ArrayList;
 
 /**
- * A set of parameters that can be given to a trainer to 
+ * A set of parameters that can be given to a trainer to
  * specifiy the training task.
  * @author Matthias Thimm
  */
 public class ParameterSet extends ArrayList<TrainingParameter>{
-
+	/**
+	 * Default Constructor
+	 */
+	public ParameterSet(){
+		// default
+	}
 	/** For serialization. */
 	private static final long serialVersionUID = 1198936758760287517L;
 
@@ -43,7 +48,7 @@ public class ParameterSet extends ArrayList<TrainingParameter>{
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * Returns the parameter of this set with the same name as the given
 	 * parameter (or throws an IllegalArgumentException)
@@ -58,5 +63,5 @@ public class ParameterSet extends ArrayList<TrainingParameter>{
 		throw new IllegalArgumentException("Parameter not contained in this set");
 	}
 
-	
+
 }

@@ -26,12 +26,19 @@ import java.util.*;
  * @param <E> the type of elements
  */
 public class SetTools<E> {
-	
+
 	/**
-	 * For randomisation 
+	 * Default Constructor
+	 */
+	public SetTools(){
+
+	}
+
+	/**
+	 * For randomisation
 	 */
 	private static Random rand = new Random();
-	
+
 	/**
 	 * This method computes all subsets of the given set of elements
 	 * of class "E".
@@ -39,24 +46,24 @@ public class SetTools<E> {
 	 * @return all subsets of "elements".
 	 */
 	public Set<Set<E>> subsets(Collection<? extends E> elements){
-		Set<Set<E>> subsets = new HashSet<Set<E>>();		
+		Set<Set<E>> subsets = new HashSet<Set<E>>();
 		if(elements.size() == 0){
 			subsets.add(new HashSet<E>());
 		}else{
 			E element = elements.iterator().next();
-			
+
 			Set<E> remainingElements = new HashSet<E>(elements);
 			remainingElements.remove(element);
 			Set<Set<E>> subsubsets = this.subsets(remainingElements);
 			for(Set<E> subsubset: subsubsets){
 				subsets.add(new HashSet<E>(subsubset));
 				subsubset.add(element);
-				subsets.add(new HashSet<E>(subsubset));				
-			}				
+				subsets.add(new HashSet<E>(subsubset));
+			}
 		}
 		return subsets;
-	}	
-	
+	}
+
 	/**
 	 * This method computes all subsets of the given set of elements
 	 * of class "E" with the given size.
@@ -67,24 +74,24 @@ public class SetTools<E> {
 	public Set<Set<E>> subsets(Collection<? extends E> elements, int size){
 		if(size < 0)
 			throw new IllegalArgumentException("Size must be at least zero.");
-		Set<Set<E>> subsets = new HashSet<Set<E>>();		
+		Set<Set<E>> subsets = new HashSet<Set<E>>();
 		if(size == 0){
 			subsets.add(new HashSet<E>());
 			return subsets;
-		}		
+		}
 		if(elements.size() < size)
-			return subsets;		
+			return subsets;
 		if(elements.size() == size){
 			subsets.add(new HashSet<E>(elements));
 			return subsets;
-		}			
+		}
 		if(size == 1){
 			for(E e: elements){
 				Set<E> set = new HashSet<E>();
 				set.add(e);
 				subsets.add(set);
 			}
-			return subsets;				
+			return subsets;
 		}
 		E element = elements.iterator().next();
 		Set<E> remainingElements = new HashSet<E>(elements);
@@ -92,14 +99,14 @@ public class SetTools<E> {
 		Set<Set<E>> subsubsets = this.subsets(remainingElements,size-1);
 		for(Set<E> subsubset: subsubsets){
 			subsubset.add(element);
-			subsets.add(new HashSet<E>(subsubset));				
+			subsets.add(new HashSet<E>(subsubset));
 		}
 		subsubsets = this.subsets(remainingElements,size);
-		for(Set<E> subsubset: subsubsets)		
-			subsets.add(new HashSet<E>(subsubset));		
+		for(Set<E> subsubset: subsubsets)
+			subsets.add(new HashSet<E>(subsubset));
 		return subsets;
-	}	
-	
+	}
+
 	/**
 	 * Computes all permutations of elements in partitions as follows.
 	 * For any set A in the result and any set B in partitions it holds,
@@ -110,7 +117,7 @@ public class SetTools<E> {
 	 * @param partitions a set of sets of E.
 	 * @return a set of sets of E.
 	 */
-	public Set<Set<E>> permutations(Set<Set<E>> partitions){		
+	public Set<Set<E>> permutations(Set<Set<E>> partitions){
 		if(partitions.size() == 0){
 			partitions.add(new HashSet<E>());
 			return partitions;
@@ -125,12 +132,12 @@ public class SetTools<E> {
 				Set<E> newSet = new HashSet<E>();
 				newSet.addAll(subresultset);
 				newSet.add(item);
-				result.add(newSet);				
+				result.add(newSet);
 			}
-		}			
-		return result;						
-	}		
-	
+		}
+		return result;
+	}
+
 	/**
 	 * Computes the set of irreducible hitting sets of "sets". A hitting set
 	 * H is a set that has a non-empty intersection with every set in "sets".
@@ -154,14 +161,14 @@ public class SetTools<E> {
 				h.add(e);
 				result.add(h);
 			}
-			return result;	
+			return result;
 		}
 		// if more than one set is to be hit, we recursively build up hitting sets
 		Set<E> current = sets.iterator().next();
 		Set<Set<E>> new_sets = new HashSet<Set<E>>();
 		new_sets.addAll(sets);
 		new_sets.remove(current);
-		// recursively solve the problem 
+		// recursively solve the problem
 		result = irreducibleHittingSets(new_sets);
 		// now check whether the current set is already hit; if not add some element
 		Set<E> tmp;
@@ -193,7 +200,7 @@ public class SetTools<E> {
 		}
 		return result;
 	}
-	
+
 	/** Checks whether the given set of sets has an empty intersection
 	 * @param sets some set of sets
 	 * @return true iff the all sets have an empty intersection.
@@ -203,9 +210,9 @@ public class SetTools<E> {
 		i.addAll(sets.iterator().next());
 		for(Set<E> s: sets)
 			i.retainAll(s);
-		return i.isEmpty();		
+		return i.isEmpty();
 	}
-	
+
 	/**
 	 * Returns the union of the set of sets.
 	 * @param sets some set of sets
@@ -217,12 +224,25 @@ public class SetTools<E> {
 			result.addAll(s);
 		return result;
 	}
-		
+
+	/**
+	 * Returns the union of the set of sets.
+	 * @param sets some set of sets
+	 * @return the union of the set.
+	 */
+	@SafeVarargs
+	public final Set<E> getUnion(Set<E>... sets){
+		Set<E> result = new HashSet<E>();
+		for(Set<E> s: sets)
+			result.addAll(s);
+		return result;
+	}
+
 	/**
 	 * Computes every bipartition of the given set, e.g. for
 	 * a set {a,b,c,d,e,f} this method returns a set containing for example
 	 * {{a,b,c,d,e},{f}} and {{a,b,c,},{d,e,f}} and {{a,b,c,d,e,f},{}}
-	 * and {{a,d,e},{b,c,f}}.   
+	 * and {{a,d,e},{b,c,f}}.
 	 * @param set a set of E
 	 * @return the set of all bipartitions of the given set.
 	 */
@@ -239,7 +259,7 @@ public class SetTools<E> {
 		}
 		return bipartitions;
 	}
-	
+
 	/**
 	 * Returns the symmetric difference of the two sets s and t, i.e.
 	 * it returns (s \cup t) \setminus (s \cap t).
@@ -256,13 +276,13 @@ public class SetTools<E> {
 		result.removeAll(isec);
 		return result;
 	}
-	
+
 	/**
 	 * Returns all independent sets of the given cardinality of the given set of sets.
 	 * A set M={M1,...,Mk} is an independent set of N={N1,...,Nl} if M\subseteq N and
 	 * for all i,j, i\neq j, Mi\cap Mj=\emptyset.  <br>
 	 * This method uses a brute force approach to determine these sets.
-	 * 
+	 *
 	 * @param sets a set of sets
 	 * @param cardinality an int
 	 * @return all independent sets of the given cardinality of the given set of sets
@@ -275,7 +295,7 @@ public class SetTools<E> {
 				result.add(candidate);
 		return result;
 	}
-	
+
 	/**
 	 * Checks whether the given set of sets is independent, i.e. whether
 	 * all pairs of sets are disjoint.
@@ -291,7 +311,7 @@ public class SetTools<E> {
 							return false;
 		return true;
 	}
-	
+
 	/**
 	 * Picks one element uniformly at random from the set (not very efficient).
 	 * @param set some set
@@ -306,7 +326,21 @@ public class SetTools<E> {
 		}
 		return it.next();
 	}
-	
+	/**
+ * Generates the power set of a given set. The power set of a set is the set of all possible
+ * subsets, including the empty set and the set itself.
+ *
+ * <p>
+ * For example, the power set of `{a, b, c}` is `{{}, {a}, {b}, {c}, {a, b}, {a, c}, {b, c}, {a, b, c}}`.
+ * </p>
+ *
+ * <p><b>Note:</b> The method uses recursion to generate the power set, so it may not be suitable
+ * for very large sets due to potential stack overflow or performance concerns.</p>
+ *
+ * @param <E> the type of elements in the original set.
+ * @param originalSet the original set for which the power set is to be generated.
+ * @return a set of sets representing the power set of the original set.
+ */
 	public static <E> Set<Set<E>> powerSet(Set<E> originalSet) {
 	    Set<Set<E>> sets = new HashSet<Set<E>>();
 	    if (originalSet.isEmpty()) {
@@ -315,14 +349,43 @@ public class SetTools<E> {
 	    }
 	    List<E> list = new ArrayList<E>(originalSet);
 	    E head = list.get(0);
-	    Set<E> rest = new HashSet<E>(list.subList(1, list.size())); 
+	    Set<E> rest = new HashSet<E>(list.subList(1, list.size()));
 	    for (Set<E> set : powerSet(rest)) {
 	        Set<E> newSet = new HashSet<E>();
 	        newSet.add(head);
 	        newSet.addAll(set);
 	        sets.add(newSet);
 	        sets.add(set);
-	    }       
+	    }
 	    return sets;
-	} 
+	}
+	
+	/**
+	 * <p>Generates all combinations of sets in the following sense:</p>
+	 * <p>Example input: {  {{a,b,c},{d,e}}  ,  {{f},{g,h},{i,j}}  ,  {{k}}  }</p>
+	 * <p>Example output: { {a,b,c,f,k}, {a,b,c,g,h,k}, {a,b,c,i,j,k}, {d,e,f,k}, {d,e,g,h,k}, {d,e,i,j,k} }  
+	 * <p>WARNING: input will be modified</p>
+	 * @param <E> the type of elements
+	 * @param sets some set of sets of sets of E
+	 * @return all combinations of sets from each set.
+	 */
+	public static <E> Collection<Collection<E>> combinations(Collection<Collection<Collection<E>>> sets){
+		Collection<Collection<E>> result = new HashSet<>();
+		if(sets.size() == 0)
+			return result;
+		if(sets.size() == 1) 
+			return sets.iterator().next();
+		Collection<Collection<E>> set = sets.iterator().next();
+		sets.remove(set);
+		Collection<Collection<E>> sub_result = SetTools.combinations(sets);
+		for(Collection<E> elem: set) {
+			for(Collection<E> elem_sub: sub_result) {
+				Collection<E> new_set = new HashSet<>();
+				new_set.addAll(elem);
+				new_set.addAll(elem_sub);
+				result.add(new_set);
+			}
+		}
+		return result;
+	}
 }

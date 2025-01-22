@@ -28,10 +28,16 @@ import org.tweetyproject.arg.deductive.semantics.DeductiveArgumentNode;
  * <br>
  * Philippe Besnard and Anthony Hunter. A logic-based theory of deductive arguments.
  * In Artificial Intelligence, 128(1-2):203-235, 2001.
- * 
+ *
  * @author Matthias Thimm
  */
 public class HCategorizer implements Categorizer{
+	/**
+	 * Defautl Constructor
+	 */
+	public HCategorizer(){
+		//default
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.argumentation.deductive.categorizer.Categorizer#categorize(org.tweetyproject.argumentation.deductive.semantics.ArgumentTree)
@@ -40,7 +46,7 @@ public class HCategorizer implements Categorizer{
 	public double categorize(ArgumentTree argumentTree) {
 		return this.categorize(argumentTree,null,argumentTree.getRoot());
 	}
-	
+
 	/**
 	 * Categorizes the node in the given tree.
 	 * @param argumentTree some argument tree.

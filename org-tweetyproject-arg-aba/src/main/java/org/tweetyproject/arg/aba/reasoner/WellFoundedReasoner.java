@@ -17,7 +17,7 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
  /**
- * 
+ *
  */
 package org.tweetyproject.arg.aba.reasoner;
 
@@ -32,11 +32,15 @@ import org.tweetyproject.commons.Formula;
 /**
  * This reasoner for ABA theories performs inference on the ideal extension.
  * @param <T>	the language of the underlying ABA theory
- * 
+ *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
 public class WellFoundedReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
+
+	/** Default */
+	public WellFoundedReasoner() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.aba.reasoner.GeneralABAReasoner#getModels(org.tweetyproject.arg.aba.syntax.ABATheory)
@@ -53,7 +57,7 @@ public class WellFoundedReasoner<T extends Formula> extends GeneralAbaReasoner<T
 		result.add(ext);
 		return result;
 	}
-	
+
 	/**
 	 * the solver is natively installed and is therefore always installed
 	 */

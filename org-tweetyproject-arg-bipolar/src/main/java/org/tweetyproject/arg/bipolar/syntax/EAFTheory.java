@@ -56,7 +56,7 @@ public class EAFTheory extends AbstractEAFTheory<Support> {
      * Creates a new EAFTheory from an PEAFTheory (the probabilities are eliminated)
      *
      * @param peafTheory PEAFTheory object
-     * @return
+     * @return a new EAFTheory
      */
     public static EAFTheory newEAFTheory(PEAFTheory peafTheory) {
         EAFTheory eafTheory = new EAFTheory();
@@ -86,7 +86,7 @@ public class EAFTheory extends AbstractEAFTheory<Support> {
         return new BArgument(name);
     }
 
-  
+
 
 
     /**
@@ -210,7 +210,7 @@ public class EAFTheory extends AbstractEAFTheory<Support> {
         }
         return dungTheory;
     }
-    
+
 
 
     /**

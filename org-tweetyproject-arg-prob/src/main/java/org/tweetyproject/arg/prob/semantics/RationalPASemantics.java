@@ -34,6 +34,11 @@ import org.tweetyproject.math.term.FloatVariable;
  */
 public class RationalPASemantics extends AbstractPASemantics {
 
+
+	/** Default */
+	public RationalPASemantics(){
+		super();
+	}
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.semantics.AbstractPASemantics#satisfies(org.tweetyproject.arg.prob.semantics.ProbabilisticExtension, org.tweetyproject.arg.dung.DungTheory)
 	 */
@@ -43,7 +48,7 @@ public class RationalPASemantics extends AbstractPASemantics {
 			if(p.probability(att.getAttacker()).doubleValue() > 0.5 + Probability.PRECISION)
 				if(p.probability(att.getAttacked()).doubleValue() > 0.5 + Probability.PRECISION)
 					return false;
-		}		
+		}
 		return true;
 	}
 

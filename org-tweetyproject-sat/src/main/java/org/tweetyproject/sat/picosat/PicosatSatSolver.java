@@ -2,15 +2,44 @@ package org.tweetyproject.sat.picosat;
 
 import org.tweetyproject.sat.SatSolver;
 
+/**
+ * This class provides an implementation of the `SatSolver` interface using
+ * the PicoSAT SAT solver. PicoSAT is a popular and efficient solver for
+ * boolean satisfiability problems.
+ *
+ * <p>
+ * The class manages interactions with the native PicoSAT solver via bindings,
+ * allowing for the creation of variables, addition of clauses, and checking of
+ * satisfiability.
+ * </p>
+ *
+ */
 public final class PicosatSatSolver implements SatSolver {
 
-	private final long handle;
-	
-	private int currentVar = 1;
+    /**
+     * A handle to the internal PicoSAT solver instance.
+     * This handle is used to interact with the PicoSAT solver through native bindings.
+     */
+    private final long handle;
 
-	public PicosatSatSolver() {
-		this.handle = Binding.init();
-	}
+    /**
+     * Tracks the current variable index for generating new variables.
+     * The index starts at 1.
+     */
+    private int currentVar = 1;
+
+    /**
+     * Initializes a new instance of the PicoSAT SAT solver.
+     *
+     * <p>
+     * This constructor initializes the PicoSAT solver instance by calling the native
+     * `init` method through the `Binding` class. The handle to the PicoSAT instance
+     * is stored in the `handle` field, and the variable index is initialized to `1`.
+     * </p>
+     */
+    public PicosatSatSolver() {
+        this.handle = Binding.init();
+    }
 
 	@Override
 	public boolean satisfiable(int[] assumptions) {
@@ -37,7 +66,7 @@ public final class PicosatSatSolver implements SatSolver {
 		}
 		Binding.add(handle, 0); // 0 indicates end of clause
 	}
-	
+
 	@Override
 	public int newVar() {
 		return currentVar++;

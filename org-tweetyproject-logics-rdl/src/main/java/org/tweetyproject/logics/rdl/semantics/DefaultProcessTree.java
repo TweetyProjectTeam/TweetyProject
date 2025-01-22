@@ -28,22 +28,22 @@ import org.tweetyproject.logics.rdl.syntax.DefaultTheory;
 
 /**
  * Computes the extensions of a default theory
- * 
+ *
  * @author Nils Geilen
  * @author Matthias Thimm
  */
 public class DefaultProcessTree {
-	
+
 	/**
 	 * all processes of the process tree
 	 */
 	Collection<DefaultSequence> processes = new ArrayList<>();
-	
+
 	/**
 	 * all extensions of the process tree
 	 */
 	Collection<Extension> extensions = new HashSet<>();
-	
+
 	/**
 	 * constructs a default process tree out of the default theory t
 	 * @param t a default theory
@@ -59,7 +59,7 @@ public class DefaultProcessTree {
 					DefaultSequence seq_new = seq_old.app(d);
 					if(seq_new.isProcess())
 					if(seq_new.isSuccessful())
-						if(seq_new.isClosed(t)) 
+						if(seq_new.isClosed(t))
 							processes.add(seq_new);
 						else
 							seqs_new.add(seq_new);
@@ -70,24 +70,27 @@ public class DefaultProcessTree {
 		}
 		for(DefaultSequence seq: processes)
 			extensions.add(new Extension(seq.getIn()));
-		
+
 	}
 
 	/**
+	 * Return all processes (sequences of defaults from root to leaf)
 	 * @return all processes (sequences of defaults from root to leaf)
 	 */
+
 	public Collection<DefaultSequence> getProcesses() {
 		return processes;
 	}
 
 	/**
+	 * Return all extensions (possible sets of facts)
 	 * @return all extensions (possible sets of facts)
 	 */
 	public Collection<Extension> getExtensions() {
 		return extensions;
 	}
 
-	
+
 
 
 }

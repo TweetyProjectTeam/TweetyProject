@@ -35,7 +35,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * This class represents an element of an optimization statement, meaning
  * a term-literal tuple that is associated with a weight and optionally
  * a priority (level).
- * 
+ *
  * @author Anna Gessler
  *
  */
@@ -51,7 +51,7 @@ public class OptimizationElement extends ASPElement {
 	private Term<?> level = null;
 
 	/**
-	 * The term tuple of the aggregate element. 
+	 * The term tuple of the aggregate element.
 	 */
 	private List<Term<?>> left = new ArrayList<Term<?>>();
 
@@ -63,7 +63,7 @@ public class OptimizationElement extends ASPElement {
 	/**
 	 * Creates a new optimization element with the given weight, terms and
 	 * literals.
-	 * 
+	 *
 	 * @param weight weight
 	 * @param terms terms
 	 * @param literals literals
@@ -77,7 +77,7 @@ public class OptimizationElement extends ASPElement {
 	/**
 	 * Creates a new optimization element with the given single weight, term and
 	 * literal.
-	 * 
+	 *
 	 * @param weight weight
 	 * @param term term
 	 * @param literal literal
@@ -87,11 +87,11 @@ public class OptimizationElement extends ASPElement {
 		this.left.add(term);
 		this.right.add(literal);
 	}
-	
+
 	/**
 	 * Creates a new optimization element with the given single term and
 	 * literal.
-	 * 
+	 *
 	 * @param term term
 	 * @param literal literal
 	 */
@@ -103,7 +103,7 @@ public class OptimizationElement extends ASPElement {
 	/**
 	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
-	 * 
+	 *
 	 * @param weight weight
 	 * @param priority an integer
 	 * @param terms terms
@@ -119,7 +119,7 @@ public class OptimizationElement extends ASPElement {
 	/**
 	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
-	 * 
+	 *
 	 * @param weight weight
 	 * @param priority priority
 	 * @param terms terms
@@ -164,7 +164,7 @@ public class OptimizationElement extends ASPElement {
 	@Override
 	public Set<Predicate> getPredicates() {
 		Set<Predicate> res = new HashSet<Predicate>();
-		for (ASPBodyElement e : right) 
+		for (ASPBodyElement e : right)
 			res.addAll(e.getPredicates());
 		return res;
 	}
@@ -185,9 +185,9 @@ public class OptimizationElement extends ASPElement {
 		FolSignature sig = new FolSignature();
 		sig.add(weight);
 		sig.add(level);
-		for (Term<?> t : left) 
+		for (Term<?> t : left)
 			sig.add(t);
-		for (ASPBodyElement e : right) 
+		for (ASPBodyElement e : right)
 			sig.add(e.getSignature());
 		return sig;
 	}
@@ -195,7 +195,7 @@ public class OptimizationElement extends ASPElement {
 	@Override
 	public Set<ASPAtom> getAtoms() {
 		Set<ASPAtom> atoms = new HashSet<ASPAtom>();
-		for (ASPBodyElement e : right) 
+		for (ASPBodyElement e : right)
 			atoms.addAll(e.getAtoms());
 		return atoms;
 	}
@@ -231,7 +231,7 @@ public class OptimizationElement extends ASPElement {
 
 	/**
 	 * Sets the term tuple of this optimization element.
-	 * @param terms
+	 * @param terms the terms
 	 */
 	public void setOptTerms(List<Term<?>> terms) {
 		this.left = terms;
@@ -239,13 +239,14 @@ public class OptimizationElement extends ASPElement {
 
 	/**
 	 * Sets the literals tuple of this optimization element.
-	 * @param literals
+	 * @param literals the literals
 	 */
 	public void setOptLiterals(List<ASPBodyElement> literals) {
 		this.right = literals;
 	}
 
 	/**
+	 * Return the weight of this optimization element.
 	 * @return the weight of this optimization element.
 	 */
 	public Term<?> getWeight() {
@@ -253,6 +254,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
+	 * Return level (priority) of this optimization element.
 	 * @return level (priority) of this optimization element.
 	 */
 	public Term<?> getLevel() {
@@ -260,6 +262,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
+	 * Return the term tuple of this optimization element.
 	 * @return the term tuple of this optimization element.
 	 */
 	public List<Term<?>> getOptTerms() {
@@ -267,12 +270,17 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
+	 * Return the literals tuple of this optimization element.
 	 * @return the literals tuple of this optimization element.
 	 */
 	public List<ASPBodyElement> getOptLiterals() {
 		return this.right;
 	}
-	
+
+	/**
+	 * Getter
+	 * @return sorted literals
+	 */
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
 		for (ASPBodyElement t : right)

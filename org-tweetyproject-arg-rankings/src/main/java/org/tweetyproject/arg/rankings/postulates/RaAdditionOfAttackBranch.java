@@ -99,4 +99,7 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 		return ranking.isStrictlyLessAcceptableThan(argClone, argOld);
 	}
 
+
+    /** Default Constructor */
+    public RaAdditionOfAttackBranch(){}
 }

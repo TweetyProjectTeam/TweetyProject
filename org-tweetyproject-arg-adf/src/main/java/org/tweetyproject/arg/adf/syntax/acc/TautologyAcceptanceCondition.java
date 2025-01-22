@@ -23,14 +23,14 @@ import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 /**
- * 
+ * TautologyAcceptanceCondition enum
  * @author Sebastian
  *
  */
 public enum TautologyAcceptanceCondition implements AcceptanceCondition {
 	/**Instance*/
 	INSTANCE;
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(org.tweetyproject.arg.adf.syntax.Argument)
 	 */
@@ -39,10 +39,10 @@ public enum TautologyAcceptanceCondition implements AcceptanceCondition {
 		Objects.requireNonNull(arg);
 		return false;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#children()
 	 */
 	@Override

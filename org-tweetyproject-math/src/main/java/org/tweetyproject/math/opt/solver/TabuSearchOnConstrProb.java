@@ -52,7 +52,7 @@ public class TabuSearchOnConstrProb extends Solver{
 	private Random rand = new Random();
 	/** The magnitude of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
-	
+
 	/**
 	 * Constructor
 	 * @param maxIteration max iterations
@@ -64,7 +64,7 @@ public class TabuSearchOnConstrProb extends Solver{
 		this.tabuSize = tabuSize;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
-	
+
 	/**
 	 * creates one new solution that changes every variable of the inital solution a bit in a positive or negative direction
 	 * @param ind: the initial solution used as a strating point
@@ -72,16 +72,16 @@ public class TabuSearchOnConstrProb extends Solver{
 	 */
 	private Map<Variable,Term> createNewSol(Map<Variable,Term> ind){
 		Map<Variable,Term> mutant = new HashMap<Variable,Term>();
-		
+
 		int numberOfFailedTries = 0;
 		boolean mutantSuccessful = false; //iterate through all variables
-		
+
 		while(numberOfFailedTries < 5000 && mutantSuccessful == false)
 		{
 			for(Variable v: ind.keySet()){
-	
+
 					// decide if there is a positive or negative mutation
-					if(rand.nextBoolean()){			
+					if(rand.nextBoolean()){
 						double val = ind.get(v).doubleValue();
 						val = val + rand.nextDouble() * VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
 						mutant.put(v, new FloatConstant(val));
@@ -91,17 +91,17 @@ public class TabuSearchOnConstrProb extends Solver{
 						mutant.put(v, new FloatConstant(val));
 					}
 			}
-			
+
 			mutantSuccessful = true;
 			l1: for(OptProbElement s : this.prob)
 			{
-				
+
 				if(((Statement) s).isValid(((Statement) s).replaceAllTerms(mutant)) == false)
 				{
 					numberOfFailedTries++;
 					mutantSuccessful = false;
 					break l1;
-					
+
 				}
 
 			}
@@ -109,15 +109,17 @@ public class TabuSearchOnConstrProb extends Solver{
 		if(numberOfFailedTries == 5000) {
 			return ind;
 		}
-			
+
 		return mutant;
 	}
-	
+
 	/**
+	 * Return the best solution that was found and is a mutant of currSol
 	 * @param minIterations: the minimum amount of solutions to be created
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
+	 * @param t the term
 	 * @return the best solution that was found and is a mutant of currSol
 	 */
 	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term t)
@@ -151,7 +153,7 @@ public class TabuSearchOnConstrProb extends Solver{
 
 		return result;
 	}
-	
+
 	@Override
 	public Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) {
 		// only optimization problems
@@ -162,24 +164,24 @@ public class TabuSearchOnConstrProb extends Solver{
 		if(((OptimizationProblem) prob).getType() == 1)
 			minT = ((OptimizationProblem) prob).getTargetFunction().mult(new FloatConstant(-1));
 		else minT = ((OptimizationProblem) prob).getTargetFunction();
-		
+
 		/**the current solution for the n-th iteration*/
 		Map<Variable, Term> currSol = new HashMap<Variable, Term>();
 		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables()) {
 			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() + i.getLowerBound() / 2)));
-			
+
 		}
 
 
-		
+
 		Map<Variable, Term> bestSol = null;
 		double bestQual = Double.MAX_VALUE;
-		 
+
 
 		double currQual = minT.replaceAllTerms(currSol).doubleValue();
-		
 
-		
+
+
 		Integer cnt = 0;
 		int smthHappened = 0;
 		//break if max amount of iterations is reached or if there are no better solutions fund in maxStepsWithNoImprove steps
@@ -189,19 +191,19 @@ public class TabuSearchOnConstrProb extends Solver{
 			//check which one of the neighborhood is the best
 			currSol = newSol;
 			currQual = minT.replaceAllTerms(currSol).doubleValue();
-			//update the tabu list			
+			//update the tabu list
 			tabu.add(currSol);
 			if(tabu.size() > tabuSize)
 				tabu.remove(0);
 			if(currQual < bestQual) {
 				smthHappened = -1;
-				bestSol = currSol;			
+				bestSol = currSol;
 			}
-			
+
 			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
-			
+
 		}
 		System.out.println("number of iterations: " +cnt);
 		System.out.println("best quality is: " +bestQual);

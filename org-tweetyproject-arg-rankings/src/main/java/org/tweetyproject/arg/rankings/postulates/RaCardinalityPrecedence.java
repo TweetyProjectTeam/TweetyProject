@@ -65,4 +65,7 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 		return true;
 	}
 
+
+    /** Default Constructor */
+    public RaCardinalityPrecedence(){}
 }

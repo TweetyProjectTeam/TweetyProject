@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
 package org.tweetyproject.arg.dung.principles;
@@ -30,14 +30,14 @@ import java.util.HashSet;
 /**
  * Semi-Qualified Admissibility Principle
  * <p>
- * A semantics s satisfies semi-qualified admissibility iff for every AF F and every s-extension E we have:
- * For all arguments 'a' in E: if an argument 'b' attacks 'a' and 'b' is in any s-extension, then E attacks 'b'
+ * A semantics s satisfies semi-qualified admissibility iff for every AF F and every s-extension E the following holds:
+ * For all 'a' in E, if an argument 'b' attacks 'a' and 'b' is in any s-extension, then E attacks 'b'
  *
- * @see "Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. 'A Principle-Based Analysis of Weakly Admissible Semantics.' 2020"
+ * @see "Jeremie Dauphin, Tjitze Rienstra, and Leendert Van Der Torre. 'A principle-based analysis of weakly admissible semantics', Proceedings of COMMA'20, (2020)"
  *
  * @author Lars Bengel
  */
-public class SemiQualifiedAdmissibilityPrinciple extends Principle{
+public class SemiQualifiedAdmissibilityPrinciple extends Principle {
     @Override
     public String getName() {
         return "Semi-Qualified Admissibility";

@@ -55,4 +55,7 @@ public class MaMeasureExample {
 		System.out.println("Ma: " + ma.inconsistencyMeasure(kb));
 		
 	}
+
+    /** Default Constructor */
+    public MaMeasureExample(){}
 }

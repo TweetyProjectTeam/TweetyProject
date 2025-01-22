@@ -29,8 +29,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * JustificationAnalysisExample class
+ */
 public class JustificationAnalysisExample {
+    /**
+     * Example
+     * @param s string array
+     */
     public static void main(String[] s) {
         int numOfArgs = 7;
         PEAFTheory peafTheory = new PEAFTheory();

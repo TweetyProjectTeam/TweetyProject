@@ -49,10 +49,17 @@ import org.tweetyproject.logics.qbf.syntax.ForallQuantifiedFormula;
  * VAR and GVAR are sequences of characters of symbols from
  * {a,...,z,A,...,Z,0,...,9,_}. <br>
  * Additionally, lines starting with "#" (comments) will be ignored.
- * 
+ *
  * @author Anna Gessler
  */
 public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
+
+
+	/** Default */
+	public QCirParser(){
+		super();
+	}
+
 	/**
 	 * Keeps track of the formulas that are assigned to specific gate variables.
 	 */
@@ -74,6 +81,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 	private Proposition output;
 
 	/**
+	 * Return the output gate of this QCir problem.
 	 * @return the output gate of this QCir problem.
 	 */
 	public PlFormula getOutputVariable() {
@@ -181,7 +189,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 	 * Parses the quantifier block at the beginning of the file. The free variables
 	 * declaration is ignored as free variables are not currently saved in this
 	 * parser.
-	 * 
+	 *
 	 * @param s string containing the quantifier block
 	 */
 	private void parseQuantifierBlock(String s) {
@@ -222,7 +230,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 	/**
 	 * This method parses a gate formula, meaning a conjunction, disjunction,
 	 * quantification, xor-construct or if-then-else-construct.
-	 * 
+	 *
 	 * @param formula the input formula as a String
 	 * @return the parsed quantified boolean formula
 	 */
@@ -261,7 +269,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 
 	/**
 	 * Parses variables and their negations.
-	 * 
+	 *
 	 * @param literal            the input variable as a string
 	 * @param parseGateVariables if set to true, gate variables are also parsed,
 	 *                           meaning they are replaced with the formulas that
@@ -291,7 +299,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 
 	/**
 	 * Parses an associative formula, i.e. a conjunction or disjunction.
-	 * 
+	 *
 	 * @param prefix       the full formula with its prefix "and" or "or"
 	 * @param innerFormula the inner formula without the prefix or parentheses
 	 * @return the parsed quantified boolean formula
@@ -323,7 +331,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 
 	/**
 	 * Parses a quantified formula.
-	 * 
+	 *
 	 * @param prefix       the full formula with its prefix "forall" or "exists"
 	 * @param innerFormula the inner formula without the prefix or parentheses
 	 * @return the parsed quantified boolean formula
@@ -353,7 +361,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 
 	/**
 	 * Parses an if-then-else construct.
-	 * 
+	 *
 	 * @param innerFormula the inner formula without the "ite" prefix or parentheses
 	 * @return the parsed quantified boolean formula
 	 */
@@ -380,7 +388,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 
 	/**
 	 * Parses an xor construct.
-	 * 
+	 *
 	 * @param innerFormula the inner formula without the "xor" prefix or parentheses
 	 * @return the parsed quantified boolean formula
 	 */

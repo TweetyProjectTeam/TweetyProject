@@ -40,13 +40,13 @@ import org.tweetyproject.preferences.Relation;
 /**
  * This class is meant to provide leveling functions to given preference orders
  * and vice versa.
- * 
+ *
  * TODO exception handling for invalid preference orders (total preorder)
- * 
+ *
  * @author Bastian Wolf
  * @param <T>
  *            the generic type used for this leveling function
- * 
+ *
  */
 
 public class LevelingFunction<T> extends Functions<T> {
@@ -64,7 +64,7 @@ public class LevelingFunction<T> extends Functions<T> {
 	/**
 	 * this constructor creates a leveling function using a given preference
 	 * order
-	 * 
+	 *
 	 * @param po
 	 *            the given preference order
 	 */
@@ -153,7 +153,7 @@ public class LevelingFunction<T> extends Functions<T> {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 
 		// } catch (StringIndexOutOfBoundsException e){
 		// System.err.println("You're input preference order seems to be invalid, please check it.");
@@ -163,15 +163,16 @@ public class LevelingFunction<T> extends Functions<T> {
 
 	/**
 	 * returns this leveling function
-	 * 
+	 *
 	 * @return this leveling function
 	 */
 	public Map<T, Integer> getLevelingFunction() {
 		return this;
 	}
 
-	/*
+	/**
 	 * returns a new RankingFunction based on this LevelingFunction
+	 * @return a new RankingFunction based on this LevelingFunction
 	 */
 	public RankingFunction<T> getRankingFunction() {
 		return new RankingFunction<T>(this);
@@ -179,7 +180,7 @@ public class LevelingFunction<T> extends Functions<T> {
 
 	/**
 	 * this method returns a preference order made out of this leveling function
-	 * 
+	 *
 	 * @return a preference order out of a given leveling function
 	 */
 	public PreferenceOrder<T> generatePreferenceOrder() {
@@ -210,7 +211,7 @@ public class LevelingFunction<T> extends Functions<T> {
 
 	/**
 	 * weakens the given element in the leveling function
-	 * 
+	 *
 	 * @param element
 	 *            the element being weakened
 	 */
@@ -238,7 +239,7 @@ public class LevelingFunction<T> extends Functions<T> {
 
 	/**
 	 * strengthens the given element in the leveling function
-	 * 
+	 *
 	 * @param element
 	 *            the element being strengthened
 	 */

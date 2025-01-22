@@ -16,7 +16,6 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.independence;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
@@ -28,23 +27,22 @@ import org.tweetyproject.graphs.*;
 import java.util.*;
 
 /**
- * This class implements methods for computing conditional independence of sets of arguments in abstract argumentation
+ * This class implements the concepts of conditional independence for sets of arguments in abstract argumentation frameworks
  *
- * Rienstra, Tjitze, et al. "Independence and D-separation in Abstract Argumentation." Proceedings of the International
- * Conference on Principles of Knowledge Representation and Reasoning. Vol. 17. No. 1. 2020.
+ * @see "Tjitze Rienstra, et al. 'Independence and D-separation in Abstract Argumentation', Proceedings of KR'20, (2020)"
  *
  * @author Lars Bengel
  */
 public class Independence {
 
     /**
-     * compute whether args and argsB are independent given argsC in the given AF
+     * Compute whether argsA and argsB are independent given argsC in the given AF
      * argsA, argsB and argsC are disjoint
      * @param theory a dung theory
      * @param argsA a set of arguments
      * @param argsB a set of arguments
      * @param argsC a set of arguments
-     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned. default=false
+     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned
      * @return true iff argsA and argsB are independent given argsC in theory
      */
     public static boolean isIndependent(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, Collection<Argument> argsC, boolean pruneOutAttacks) {
@@ -57,7 +55,7 @@ public class Independence {
         SimpleGraph<Argument> dGraph = Independence.computeDGraph(theory);
 
         // compute d-separation, following the idea from:
-        // Darwiche, Adnan. Modeling and reasoning with Bayesian networks. Cambridge university press, 2009
+        // Adnan Darwiche. 'Modeling and reasoning with Bayesian networks', Cambridge university press, (2009)
         // prune the d-graph and convert to undirected graph
         SimpleGraph<Argument> prunedDGraph = Independence.pruneDGraph(dGraph, argsA, argsB, argsC);
         prunedDGraph = prunedDGraph.toUndirectedGraph();
@@ -67,7 +65,7 @@ public class Independence {
     }
 
     /**
-     * compute whether args and argsB are independent given argsC in the given AF
+     * Compute whether argsA and argsB are independent given argsC in the given AF
      * argsA, argsB and argsC are disjoint
      * @param theory a dung theory
      * @param argsA a set of arguments
@@ -80,12 +78,12 @@ public class Independence {
     }
 
     /**
-     * compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
+     * Compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
      * argsA and argsB are disjoint
      * @param theory a dung theory
      * @param argsA a set of arguments
      * @param argsB a set of arguments
-     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned. default=false
+     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned
      * @return the smallest set of arguments which we need to observe so that argsA and argsB are independent
      */
     public static Collection<Collection<Argument>> isIndependentGiven(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, boolean pruneOutAttacks) {
@@ -117,7 +115,7 @@ public class Independence {
     }
 
     /**
-     * compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
+     * Compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
      * argsA and argsB are disjoint
      * @param theory a dung theory
      * @param argsA a set of arguments
@@ -129,7 +127,7 @@ public class Independence {
     }
 
     /**
-     * transform the given AF into a DAG (D-graph) by adding new meta argument for each strongly connected component
+     * Transform the given AF into a DAG (D-graph) by adding new meta argument for each strongly connected component
      * @param theory a dung theory
      * @return the d-graph of the given AF
      */
@@ -157,7 +155,6 @@ public class Independence {
                             dGraph.add(parent);
                             dGraph.add(new DirectedEdge<>(parent, lccVar));
                         }
-
                     }
                 }
             }
@@ -166,13 +163,13 @@ public class Independence {
     }
 
     /**
-     * prune the given AF by removing all attacks from arguments which are attacked by unattacked arguments
+     * Prune the given AF by removing all attacks from arguments which are attacked by unattacked arguments
      * i.e. remove attacks from arguments that are out in the grounded labeling of the AF
      * @param theory a dung theory
      * @return the pruned theory
      */
     private static DungTheory pruneTheory(DungTheory theory) {
-        Extension grounded = new SimpleGroundedReasoner().getModel(theory);
+        Extension<DungTheory> grounded = new SimpleGroundedReasoner().getModel(theory);
         Labeling groundedLabeling = new Labeling(theory, grounded);
 
         // copy theory
@@ -186,12 +183,11 @@ public class Independence {
                 prunedTheory.remove(new Attack(arg, b));
             }
         }
-
         return prunedTheory;
     }
 
     /**
-     * prune the given DAG by removing all leaf nodes, which are not in any of the given sets and removing
+     * Prune the given DAG by removing all leaf nodes, which are not in any of the given sets and removing
      * all outgoing edges from nodes in argsC
      * @param dGraph a DAG
      * @param argsA a set of arguments
@@ -233,6 +229,4 @@ public class Independence {
         }
         return prunedDAG;
     }
-
-
 }

@@ -38,7 +38,7 @@ public class BpmnModelParser {
 	 * the class instance where the parsed content goes
 	 */
 	private BpmnModel parsedElement;
-	
+
 	/**
 	 * Creates a new parser for the given BPMN model
 	 * @param rootParser the root parser of the BPMN model
@@ -47,8 +47,9 @@ public class BpmnModelParser {
 		this.rootParser = rootParser;
 		this.parsedElement = new BpmnModel();
 	}
-	
+
 	/**
+	 * Parse the model
 	 * @param rootNode the root of the XML tree representing the BPMN model
 	 * @throws IllegalArgumentException if the name of the root node is not 'definitions'
 	 */
@@ -65,7 +66,7 @@ public class BpmnModelParser {
 		}
 		return;
 	};
-	
+
 	/**
 	 * handle tag attributes and assign to the parsed element
 	 * @param attribute the attribute
@@ -86,14 +87,14 @@ public class BpmnModelParser {
 			return;
 		}
 	}
-	
+
 
 	/**
-	 * retrieve the parsed instance of the BpmnModel class 
-	 * @return the parsed BPMN Model 
+	 * retrieve the parsed instance of the BpmnModel class
+	 * @return the parsed BPMN Model
 	 */
 	public BpmnModel get() {
 		return this.parsedElement;
 	}
-	
+
 }

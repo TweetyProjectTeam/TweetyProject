@@ -18,13 +18,6 @@
  */
 package org.tweetyproject.arg.adf.syntax.adf;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
@@ -36,13 +29,18 @@ import org.tweetyproject.arg.adf.util.AbstractUnmodifiableCollection;
 import org.tweetyproject.arg.adf.util.LazyMap;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.GeneralGraph;
 import org.tweetyproject.graphs.Graph;
-import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Internally represented as a graph-like structure. This allows for efficient
@@ -251,10 +249,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
         return this.index.keySet().containsAll(c);
     }
 
-    @Override
-    public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> ext) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
 
     @Override
     public boolean addAll(Collection<? extends Argument> c) {
@@ -288,12 +282,17 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 
     @Override
     public Collection<Argument> getNodes() {
-        return new HashSet<>(this.index.keySet());
+        return this;
     }
 
     @Override
     public int getNumberOfNodes() {
         return this.index.keySet().size();
+    }
+
+    @Override
+    public int getNumberOfEdges() {
+        return this.getEdges().size();
     }
 
     @Override
@@ -383,6 +382,11 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
         throw new UnsupportedOperationException("Not supported");
     }
 
+    @Override
+    public Collection<Collection<Argument>> getConnectedComponents() {
+        throw new UnsupportedOperationException("Not supported");
+    }
+    
     @Override
     public Collection<Collection<Argument>> getStronglyConnectedComponents() {
         throw new UnsupportedOperationException("Not supported");
@@ -583,5 +587,10 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
             return new GraphAbstractDialecticalFramework(this);
         }
     }
+
+	@Override
+	public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework<?>> ext) {
+		throw new UnsupportedOperationException("Not supported");
+	}
 
 }

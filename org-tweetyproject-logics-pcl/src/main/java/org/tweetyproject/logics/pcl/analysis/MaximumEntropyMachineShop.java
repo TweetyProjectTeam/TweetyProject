@@ -38,17 +38,21 @@ import org.tweetyproject.math.probability.*;
 /**
  * This consistency restorer uses the idea of the upper approximative distance minimization inconsistency measure to compute a
  * ME-probability distribution and adjust the probabilities of the conditionals accordingly.
- * 
+ *
  * @author Matthias Thimm
  */
 public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 
+	/** rootFinder */
 	private OptimizationRootFinder rootFinder;
-	
+	/**
+	 * Constructor
+	 * @param rootFinder the rootfinder
+	 */
 	public MaximumEntropyMachineShop(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
 	 */
@@ -73,14 +77,14 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			if(normConstraint == null)
 				normConstraint = var;
 			else normConstraint = normConstraint.add(var);
-		}		
+		}
 		problem.add(new Equation(normConstraint, new IntegerConstant(1)));
 		// For each conditional add variables mu and nu and
 		// add constraints implied by the conditionals
 		Map<ProbabilisticConditional,Variable> mus = new HashMap<ProbabilisticConditional,Variable>();
 		Map<ProbabilisticConditional,Variable> nus = new HashMap<ProbabilisticConditional,Variable>();
 		Term targetFunction = null;
-		i = 0;		
+		i = 0;
 		for(ProbabilisticConditional c: beliefSet){
 			FloatVariable mu = new FloatVariable("m" + i,0,1);
 			FloatVariable nu = new FloatVariable("n" + i++,0,1);
@@ -99,7 +103,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 						else leftSide = leftSide.add(worlds2vars.get(w));
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
-			}else{				
+			}else{
 				PlFormula body = c.getPremise().iterator().next();
 				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
@@ -112,7 +116,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 						if(rightSide == null)
 							rightSide = worlds2vars.get(w);
 						else rightSide = rightSide.add(worlds2vars.get(w));
-					}					
+					}
 				}
 				if(rightSide == null)
 					rightSide = new FloatConstant(0);
@@ -125,10 +129,10 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 				leftSide = new FloatConstant(0);
 			if(rightSide == null)
 				rightSide = new FloatConstant(0);
-			problem.add(new Equation(leftSide,rightSide));			
+			problem.add(new Equation(leftSide,rightSide));
 		}
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// insert the mu/nu solution into the optimization problem
 			for(ProbabilisticConditional pc: beliefSet){
@@ -152,90 +156,98 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)
-				result.add(new ProbabilisticConditional(pc,meDistribution.conditionalProbability(pc)));							
-			return result;			
+				result.add(new ProbabilisticConditional(pc,meDistribution.conditionalProbability(pc)));
+			return result;
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
 		}
 	}
 
+	/**
+	 * Example
+	 * @param args the args
+	 * @throws FileNotFoundException error
+	 * @throws ParserException error
+	 * @throws IOException error
+	 * @throws GeneralMathException error
+	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException, GeneralMathException{
 		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R4.pcl");
 		System.out.println("INITIAL: " + kb);
-		
 
-		
+
+
 		System.out.println();
 		System.out.println();
-		
+
 		System.out.println("RESULT: " + new DistanceMinimizationMachineShop(2).repair(kb));
-		
+
 		//ConvexAggregatingMaxConsMeMachineShop mshop = new ConvexAggregatingMaxConsMeMachineShop();
-		
-		//System.out.println("RESULT: " + mshop.repair(kb));		
-		
-		
+
+		//System.out.println("RESULT: " + mshop.repair(kb));
+
+
 //		FloatVariable[] p1 = new FloatVariable[8];
 //		FloatVariable[] p2 = new FloatVariable[8];
-//		
+//
 //		for(int i = 0; i< 8; i++){
 //			p1[i] = new FloatVariable("p1_" + i,0.001,1);
 //			p2[i] = new FloatVariable("p2_" + i,0.001,1);
 //		}
-//		
+//
 //		OptimizationProblem csp = new OptimizationProblem();
 //		csp.add(new Equation(p1[0].add(p1[1]).add(p1[2]).add(p1[3]).add(p1[4]).add(p1[5]).add(p1[6]).add(p1[7]),new FloatConstant(1)));
 //		csp.add(new Equation(p2[0].add(p2[1]).add(p2[2]).add(p2[3]).add(p2[4]).add(p2[5]).add(p2[6]).add(p2[7]),new FloatConstant(1)));
-//	
+//
 //		FloatVariable cp1_1 = new FloatVariable("cp1_1",0,1);
 //		FloatVariable cp1_2 = new FloatVariable("cp1_2",0,1);
 //		FloatVariable cp2_1 = new FloatVariable("cp2_1",0,1);
 //		FloatVariable cp2_2 = new FloatVariable("cp2_2",0,1);
-//		
+//
 //		csp.add(new Equation(p1[0].add(p1[1]),cp1_1.mult(p1[0].add(p1[1]).add(p1[2]).add(p1[3]))));
 //		csp.add(new Equation(p2[0].add(p2[1]),cp2_1.mult(p2[0].add(p2[1]).add(p2[2]).add(p2[3]))));
-//		
+//
 //		csp.add(new Equation(p1[1].add(p1[2]),cp1_2.mult(p1[1].add(p1[2]).add(p1[4]).add(p1[5]))));
 //		csp.add(new Equation(p2[1].add(p2[2]),cp2_2.mult(p2[1].add(p2[2]).add(p2[4]).add(p2[5]))));
-//		
+//
 //		FloatConstant d1 = new FloatConstant(0.1);
 //		FloatConstant d2 = new FloatConstant(0.02);
-//		
+//
 //		csp.add(new Equation(cp1_1.minus(d1).mult(cp1_1.minus(d1)).add(cp1_2.minus(d2).mult(cp1_2.minus(d2))),cp2_1.minus(d1).mult(cp2_1.minus(d1)).add(cp2_2.minus(d2).mult(cp2_2.minus(d2)))   ));
 //		csp.setTargetFunction(p1[0]);
 //		System.out.println(csp);
 //		OpenOptSolver solver = new OpenOptSolver(csp);
 //		solver.solver = "ralg";
-//		
+//
 //		Map<Variable,Term> sol = solver.solve();
 //		for(Variable v: sol.keySet())
 //			System.out.println(v + "\t" + sol.get(v));
 //		System.out.println("-----");
 //		double f1 = (sol.get(cp1_1).doubleValue() - d1.doubleValue()) * (sol.get(cp1_1).doubleValue() - d1.doubleValue()) + (sol.get(cp1_2).doubleValue() - d2.doubleValue()) * (sol.get(cp1_2).doubleValue() - d2.doubleValue());
 //		double f2 = (sol.get(cp2_1).doubleValue() - d1.doubleValue()) * (sol.get(cp2_1).doubleValue() - d1.doubleValue()) + (sol.get(cp2_2).doubleValue() - d2.doubleValue()) * (sol.get(cp2_2).doubleValue() - d2.doubleValue());
-//		
-//		System.out.println(f1 + "\t" + f2);		
+//
+//		System.out.println(f1 + "\t" + f2);
 //		System.out.println("-----");
 //		System.out.println();
-//		
+//
 //		double[] p3 = new double[8];
-//		
+//
 //		for(double delta = 0.01; delta < 1; delta += 0.01 ){
 //			for(int i = 0; i < 8; i++)
 //				p3[i] = delta * sol.get(p1[i]).doubleValue() + (1-delta) * sol.get(p2[i]).doubleValue();
-//			
+//
 //			double cp3_1 = (p3[0] + p3[1])/(p3[0] + p3[1] + p3[2] + p3[3]);
 //			double cp3_2 = (p3[1] + p3[2])/(p3[1] + p3[2] + p3[4] + p3[5]);
-//			
+//
 //			double func = (cp3_1-d1.doubleValue())*(cp3_1-d1.doubleValue()) + (cp3_2-d2.doubleValue())*(cp3_2-d2.doubleValue());
-//			
+//
 //			System.out.println(cp3_1 + "\t" + cp3_2 + "\t" + func);
-//			
-//			
+//
+//
 //		}
-		
+
 	}
-	
-	
+
+
 }

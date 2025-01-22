@@ -27,6 +27,11 @@ import org.tweetyproject.arg.bipolar.syntax.*;
  * More examples for evidential argumentation frameworks.
  */
 public class EvidentialArgumentation {
+
+    /**
+     * Example
+     * @param args the args
+     */
     public static void main(String[] args) {
         // Example from Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014
         EvidentialArgumentationFramework et = new EvidentialArgumentationFramework();
@@ -72,4 +77,7 @@ public class EvidentialArgumentation {
         System.out.println("Preferred extensions: " + new PreferredReasoner().getModels(et));
         System.out.println("Stable extensions: " + new StableReasoner().getModels(et));
     }
+
+    /** Default Constructor */
+    public EvidentialArgumentation(){}
 }
