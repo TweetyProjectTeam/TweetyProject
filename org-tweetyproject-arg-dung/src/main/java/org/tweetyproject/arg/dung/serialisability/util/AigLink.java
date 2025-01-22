@@ -1,21 +1,18 @@
 package org.tweetyproject.arg.dung.serialisability.util;
 
-public class AigLink {
-    private final int sourceId;
-    private final int targetId;
-    private String label;
+import org.tweetyproject.graphs.DirectedEdge;
+
+public class AigLink extends DirectedEdge<AigNode> {
 
     private boolean deletable = true;
     private boolean labelEditable = true;
 
-    public AigLink(int sourceId, int targetId) {
-        this(sourceId, targetId, "");
+    public AigLink(AigNode source, AigNode target) {
+        super(source, target);
     }
 
-    public AigLink(int sourceId, int targetId, String label) {
-        this.sourceId = sourceId;
-        this.targetId = targetId;
-        this.label = label;
+    public AigLink(AigNode source, AigNode target, String label) {
+        super(source, target, label);
     }
 
     public String toJson(boolean deletable, boolean labelEditable) {
@@ -29,7 +26,11 @@ public class AigLink {
         s.append(String.format("sourceId: %s, ", getSourceId()));
         s.append(String.format("targetId: %s, ", getTargetId()));
 
-        s.append(String.format("label: \"%s\", ", getLabel()));
+        if (getLabel() != null) {
+            s.append(String.format("label: \"%s\", ", getLabel()));
+        } else {
+            s.append("label: \"\", ");
+        }
 
         if (!isDeletable())
             s.append("deletable: false, ");
@@ -42,19 +43,11 @@ public class AigLink {
     }
 
     public int getSourceId() {
-        return sourceId;
+        return getNodeA().getId();
     }
 
     public int getTargetId() {
-        return targetId;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+        return getNodeB().getId();
     }
 
     public boolean isDeletable() {

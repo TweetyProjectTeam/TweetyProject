@@ -1,8 +1,12 @@
 package org.tweetyproject.arg.dung.serialisability.util;
 
-public class AigNode {
+import org.tweetyproject.graphs.Node;
+
+public class AigNode implements Node {
+    private static int ID = 0;
+
     private final int id;
-    private String label;
+    private String name;
     private int x = -1;
     private int y = -1;
     private String color;
@@ -13,15 +17,24 @@ public class AigNode {
     private boolean fixedPositionX = false;
     private boolean fixedPositionY = false;
 
-    public AigNode(int id, String label) {
+    public AigNode(int id, String name) {
         this.id = id;
-        this.label = label;
+        this.name = name;
     }
 
-    public String toJson(boolean deletable, boolean labelEditable, boolean allowOutgoingLinks, boolean fixedPositionX, boolean fixedPositionY) {
+    public AigNode(int id, Node node) {
+        this.id = id;
+        this.name = node.toString();
+    }
+
+    public AigNode(Node node) {
+        this.id = ID++;
+        this.name = node.toString();
+    }
+
+    public String toJson(boolean deletable, boolean labelEditable, boolean fixedPositionX, boolean fixedPositionY) {
         this.setDeletable(deletable);
         this.setLabelEditable(labelEditable);
-        this.setAllowOutgoingLinks(allowOutgoingLinks);
         this.setFixedPositionX(fixedPositionX);
         this.setFixedPositionY(fixedPositionY);
         return this.toJson();
@@ -30,7 +43,7 @@ public class AigNode {
     public String toJson() {
         StringBuilder s = new StringBuilder("{");
         s.append(String.format("id: %s, ", getId()));
-        s.append(String.format("label: \"%s\", ", getLabel()));
+        s.append(String.format("label: \"%s\", ", getName()));
 
         if (getX() != -1)
             s.append(String.format("x: %s, ", getX()));
@@ -62,12 +75,12 @@ public class AigNode {
         return id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getX() {
@@ -132,5 +145,10 @@ public class AigNode {
 
     public void setFixedPositionY(boolean fixedPositionY) {
         this.fixedPositionY = fixedPositionY;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }
