@@ -32,6 +32,9 @@ import org.tweetyproject.arg.dung.parser.FileFormat;
 public abstract class AbstractCafWriter {
 	
 	
+	/**
+	 * standard constructor
+	 */
 	public AbstractCafWriter() {
 		super();
 	}
@@ -54,7 +57,7 @@ public abstract class AbstractCafWriter {
 	
 	/**
 	 * Writes the given file into an abstract argumentation framework
-	 * @param aaf an abstract argumentation framework
+	 * @param caf an abstract argumentation framework
 	 * @param f the file that will be overwritten. 
 	 * @throws IOException for all errors concerning file reading/writing.
 	 */

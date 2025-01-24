@@ -70,8 +70,9 @@ public class CafTheoryGenerator {
 		this.generator = generator;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.util.DungTheoryGenerator#hasNext()
+	/**
+	 * Checks whether there is a next element.
+	 * @return whether there is a next element
 	 */
 	public boolean hasNext() {
 		return true;

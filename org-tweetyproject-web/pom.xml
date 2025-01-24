@@ -1,5 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -8,7 +11,7 @@
     <parent>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>parent-pom</artifactId>
-  		<version>1.27-SNAPSHOT</version>
+  		<version>1.28-SNAPSHOT</version>
         <relativePath>..</relativePath>
   	</parent>
 
@@ -101,22 +104,22 @@
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>commons</artifactId>
-    		<version>1.27-SNAPSHOT</version>
+    		<version>1.28-SNAPSHOT</version>
 	    </dependency>
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>pl</artifactId>
-    		<version>1.27-SNAPSHOT</version>
+    		<version>1.28-SNAPSHOT</version>
 	    </dependency>
 	    <dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>delp</artifactId>
-    		<version>1.27-SNAPSHOT</version>
+    		<version>1.28-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>aba</artifactId>
-    		<version>1.27-SNAPSHOT</version>
+    		<version>1.28-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
 		    <groupId>org.json</groupId>
@@ -151,7 +154,8 @@
 		<maven.compiler.release>15</maven.compiler.release>
         <jersey.version>2.35</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>org.tweetyproject.web.services.RestServiceCorsApplication</start-class>
+        <start-class
+        >org.tweetyproject.web.services.RestServiceCorsApplication</start-class>
     </properties>
 
 <build>

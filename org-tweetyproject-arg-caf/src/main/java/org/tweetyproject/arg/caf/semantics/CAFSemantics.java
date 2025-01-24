@@ -46,12 +46,13 @@ public enum CAFSemantics {
      */
     private final String abbreviation;
 
-    /**
-     * Static constants for each of the semantics types
-     */
+    /** Static constants for grounded semantics */
     public static final CAFSemantics CAF_GROUNDED_SEMANTICS = CAF_GR;
+    /** Static constants for stable semantics */
     public static final CAFSemantics CAF_STABLE_SEMANTICS = CAF_ST;
+        /** Static constants for preferred semantics */
     public static final CAFSemantics CAF_PREFERRED_SEMANTICS = CAF_PR;
+    /** Static constants for admissible semantics */
     public static final CAFSemantics CAF_ADMISSIBLE_SEMANTICS = CAF_ADM;
 
     /**

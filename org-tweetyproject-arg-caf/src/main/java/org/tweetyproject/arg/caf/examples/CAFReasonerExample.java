@@ -40,7 +40,8 @@ import org.tweetyproject.commons.InferenceMode;
 public class CAFReasonerExample {
 
 	/**
-	 * @param args
+	 * Main method
+	 * @param args unused
 	 */
 	public static void main(String[] args) {
 		

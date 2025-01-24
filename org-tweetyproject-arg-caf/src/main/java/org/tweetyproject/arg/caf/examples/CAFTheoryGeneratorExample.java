@@ -32,6 +32,7 @@ import org.tweetyproject.arg.dung.util.KwtDungTheoryGenerator;
 
 /**
  *  CAFTheoryGeneratorExample class
+ *  
  * @author Sandra Hoffmann
  *
  */
@@ -46,6 +47,7 @@ public class CAFTheoryGeneratorExample  {
 	/**
 	 * Example main method
 	 * @param args the args
+	 * @throws IOException in case of IO error
 	 */
 	public static void main(String[] args) throws IOException {
 		

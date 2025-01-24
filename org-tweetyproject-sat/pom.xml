@@ -1,11 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>sat</artifactId>
   <name>TweetyProject (SAT Library)</name>
   <parent>
     <groupId>org.tweetyproject</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.27-SNAPSHOT</version>
+    <version>1.28-SNAPSHOT</version>
   </parent>
   <dependencies>
     <dependency>

@@ -1,3 +1,15 @@
+23.01.2025 - TweetyProject 1.28
+  New libraries: 
+    - org.tweetyproject.arg.caf: constrained argumentation frameworks
+  New functionalities: 
+    - Added methods to check for strong expansion equivalence in abstract argumentation 
+      frameworks (org.tweetyproject.arg.dung)
+    - Added reasoner for k-admissibility (org.tweetyproject.arg.dung)
+    - Added method to retrieve connected components of graphs
+  Minor changes:
+    - Fixed JavaDoc
+    - Minor bugfixes    
+
 03.09.2024 - TweetyProject 1.27
   New libraries: 
     - org.tweetyproject.arg.weighted: weighted argumentation frameworks

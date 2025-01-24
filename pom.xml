@@ -1,15 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
   <name>TweetyProject (Parent POM)</name>
-  <version>1.27-SNAPSHOT</version>
+  <version>1.28-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <description>TweetyProject is a collection of various Java libraries that implement approaches to different areas of
+  <description
+    >TweetyProject is a collection of various Java libraries that implement approaches to different areas of
     artificial intelligence. In particular, it provides a general interface layer for doing research and working
     with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic
     logics, and argumentation. Furthermore, TweetyProject contains libraries for dealing with agents, multi-agent
@@ -21,8 +25,10 @@
 
   <scm>
     <url>https://github.com/TweetyProjectTeam/TweetyProject</url>
-    <connection>scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</connection>
-    <developerConnection>scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</developerConnection>
+    <connection
+        >scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</connection>
+    <developerConnection
+        >scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</developerConnection>
   </scm>
 
   <developers>
@@ -102,7 +108,8 @@
         </executions>
         <configuration>
           <outputDirectory>../testBuild</outputDirectory>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+          <finalName
+                    >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
       </plugin>
       <plugin>
@@ -119,7 +126,8 @@
         </executions>
         <configuration>
           <outputDirectory>../testBuild</outputDirectory>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+          <finalName
+                    >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
       </plugin>
       <plugin>
@@ -127,7 +135,8 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+          <finalName
+                    >${project.groupId}.${project.artifactId}-${project.version}</finalName>
           <outputDirectory>../testBuild</outputDirectory>
         </configuration>
       </plugin>
@@ -213,6 +222,7 @@
     <module>org-tweetyproject-arg-aspic</module>
     <module>org-tweetyproject-arg-aba</module>
     <module>org-tweetyproject-arg-bipolar</module>
+    <module>org-tweetyproject-arg-caf</module>
     <module>org-tweetyproject-arg-deductive</module>
     <module>org-tweetyproject-arg-extended</module>
     <module>org-tweetyproject-arg-lp</module>
