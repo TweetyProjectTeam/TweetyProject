@@ -22,7 +22,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.causal.semantics.CausalInterpretation;
 import org.tweetyproject.causal.semantics.CounterfactualStatement;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
-import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
