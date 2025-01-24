@@ -2,8 +2,6 @@ package org.tweetyproject.arg.dung.serialisability.util;
 
 import org.tweetyproject.graphs.Node;
 
-import java.util.Objects;
-
 public class AigNode implements Node, Comparable<AigNode> {
     private static int ID = 0;
 

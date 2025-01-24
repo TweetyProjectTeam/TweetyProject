@@ -1,7 +1,29 @@
+/*
+ * This file is part of "TweetyProject", a collection of Java libraries for
+ * logical aspects of artificial intelligence and knowledge representation.
+ *
+ * TweetyProject is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.serialisability.util;
 
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
 import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationState;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 
 import java.io.IOException;
@@ -13,7 +35,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AigGraphWriter<G extends Graph<N>, N extends Node> {
+/**
+ * Writes a given graph into the AIG-Graph JSON-Format
+ *
+ * @author Lars Bengel
+ */
+public class AigGraphWriter {
     // General options
     protected boolean enableLatex = true;
     protected boolean toggleZoom = true;
@@ -40,7 +67,37 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
     protected String nodeColor;
     protected String linkColor;
 
-    public String writeLeveledGraph(G graph, N root) {
+    public void showSerialisation(DungTheory theory, Semantics semantics) {
+        SerialisedExtensionReasoner reasoner = new SerialisedExtensionReasoner(semantics);
+
+        SerialisationGraph graph = reasoner.getSerialisationGraph(theory);
+        SerialisationState root = new SerialisationState(theory, new Extension<>(), reasoner.isTerminal(theory, new Extension<>()));
+
+        showDoubleGraph(writeGraph(theory), writeLeveledGraph(graph, root));
+    }
+
+    public void showDoubleGraph(Graph<? extends Node> graph1, Graph<? extends Node> graph2) {
+        showDoubleGraph(writeGraph(graph1), writeGraph(graph2));
+    }
+
+    public void showDoubleGraph(String graph1, String graph2) {
+        Path outputPath = Paths.get("index.html");
+
+        try {
+            String template = Files.readString(Paths.get(getResource("aiggraph/serialisation.template")));
+            String output = String.format(template,
+                    graph1, graph2,
+                    getResource("aiggraph/favicon.ico"), getResource("aiggraph/style.css"),
+                    getResource("aiggraph/load-mathjax.js"), getResource("aiggraph/graph-component.js")
+            );
+
+            Files.writeString(outputPath, output);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String writeLeveledGraph(Graph<? extends Node> graph, Node root) {
         Graph<AigNode> aigGraph = convertGraph(graph);
         AigNode aigRoot = null;
         for (AigNode node : aigGraph) {
@@ -97,7 +154,7 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
      * Show graph in graph tool in the web-browser
      * @param graph some graph
      */
-    public void showGraph(G graph) {
+    public void showGraph(Graph<? extends Node> graph) {
         showGraph(writeGraphInternal(convertGraph(graph)));
     }
 
@@ -109,7 +166,7 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
         Path outputPath = Paths.get("index.html");
 
         try {
-            String template = Files.readString(Paths.get(getResource("aiggraph/index_template.html")));
+            String template = Files.readString(Paths.get(getResource("aiggraph/graph.template")));
             String output = String.format(template,
                     toggleZoom, toggleNodePhysics, toggleFixedLinkDistance, toggleGraphEditingInGUI,
                     toggleNodeLabels, toggleLinkLabels,

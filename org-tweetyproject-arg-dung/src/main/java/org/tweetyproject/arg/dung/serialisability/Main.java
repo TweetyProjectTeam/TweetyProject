@@ -1,33 +1,28 @@
 package org.tweetyproject.arg.dung.serialisability;
 
+import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationState;
 import org.tweetyproject.arg.dung.serialisability.util.AigGraphWriter;
-import org.tweetyproject.arg.dung.serialisability.util.AigJsonWriter;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
-import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
-import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Main {
-    public static void main(String[] args) {
-        DungTheory theory = new DungTheory();
-        Argument a = new Argument("a");
-        Argument b = new Argument("b");
-        Argument c = new Argument("c");
-        Argument d = new Argument("d");
-        theory.add(a,b,c,d);
-        theory.addAttack(a,b);
-        theory.addAttack(b,c);
-        theory.addAttack(c,d);
-        theory.addAttack(d,c);
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        DungTheory theory = new DefaultDungTheoryGenerator(9, 0.2).next();
 
-        System.out.println(AigJsonWriter.writeTheory(theory));
+        AigGraphWriter writer = new AigGraphWriter();
 
-        DungTheory theory1 = new DefaultDungTheoryGenerator(9, 0.2).next();
-        System.out.println(AigJsonWriter.writeTheory(theory1, true));
-        System.out.println(AigJsonWriter.writeSerialisation(theory1, Semantics.ADMISSIBLE_SEMANTICS));
+        writer.showSerialisation(theory, Semantics.CO);
 
-        System.out.println(new AigGraphWriter<DungTheory, Argument>().writeGraph(theory1));
+        File htmlFile = new File("index.html");
+        //Desktop.getDesktop().browse(htmlFile.toURI());
     }
 }
