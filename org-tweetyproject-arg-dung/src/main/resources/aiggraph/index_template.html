@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" href='%8$s' />
+        <link rel="stylesheet" href='%9$s' />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Graph Editor</title>
+        <!-- MathJax for TeX notation -->
+        <script src='%10$s' async></script>
+    </head>
+    <body style="margin: 0; padding: 0">
+    <div style='display: flex; position: relative; height: 100vh'>
+        <graph-component id='gc1' style='flex: 1; position: relative'></graph-component>
+    </div>
+    <script src='%11$s'></script>
+    <script type="text/javascript">
+        let graph = %7$s;
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function getGraphComponentById(id) {
+            await sleep(0);
+            let instance = document.getElementById(id)._instance.exposed;
+            instance.toggleZoom(%1$s)
+            instance.toggleNodePhysics(%2$s)
+            instance.toggleFixedLinkDistance(%3$s)
+            instance.toggleGraphEditingInGUI(%4$s);
+            instance.toggleNodeLabels(%5$s);
+            instance.toggleLinkLabels(%6$s);
+
+            instance.setGraph(graph);
+        }
+
+        getGraphComponentById('gc1');
+    </script>
+    </body>
+</html>

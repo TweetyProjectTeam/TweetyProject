@@ -2,7 +2,9 @@ package org.tweetyproject.arg.dung.serialisability.util;
 
 import org.tweetyproject.graphs.Node;
 
-public class AigNode implements Node {
+import java.util.Objects;
+
+public class AigNode implements Node, Comparable<AigNode> {
     private static int ID = 0;
 
     private final int id;
@@ -150,5 +152,23 @@ public class AigNode implements Node {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AigNode) {
+            return getName().equals(((AigNode) obj).getName());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode()*17 + getId();
+    }
+
+    @Override
+    public int compareTo(AigNode o) {
+        return this.name.compareTo(o.name);
     }
 }

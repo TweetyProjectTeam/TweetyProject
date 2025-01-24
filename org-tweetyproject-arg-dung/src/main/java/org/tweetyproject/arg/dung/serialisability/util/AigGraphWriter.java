@@ -1,15 +1,28 @@
 package org.tweetyproject.arg.dung.serialisability.util;
 
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationState;
 import org.tweetyproject.graphs.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AigGraphWriter<G extends Graph<N>, N extends Node> {
     // General options
     protected boolean enableLatex = true;
+    protected boolean toggleZoom = true;
+    protected boolean toggleNodePhysics = true;
+    protected boolean toggleFixedLinkDistance = false;
+    protected boolean toggleGraphEditingInGUI = true;
+    protected boolean toggleNodeLabels = true;
+    protected boolean toggleLinkLabels = true;
+
 
     // Node options
     protected boolean nodeDeletable = true;
@@ -27,10 +40,112 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
     protected String nodeColor;
     protected String linkColor;
 
-
-    private String writeGraphInternal(Graph<AigNode> graph) {
+    public String writeLeveledGraph(G graph, N root) {
+        Graph<AigNode> aigGraph = convertGraph(graph);
+        AigNode aigRoot = null;
+        for (AigNode node : aigGraph) {
+            if (node.equals(new AigNode(0, convert(root.toString())))) {
+                aigRoot = node;
+                break;
+            }
+        }
+        return writeLeveledGraphInternal(aigGraph, aigRoot);
+    }
+    private String writeLeveledGraphInternal(Graph<AigNode> graph, AigNode root) {
         StringBuilder s = new StringBuilder();
 
+        // Write Nodes
+        s.append("{\nnodes: [\n");
+        Stack<AigNode> frontier = new Stack<>();
+        frontier.push(root);
+        int level = 0;
+        int levelDistance = 300;
+        while (!frontier.isEmpty()) {
+            Collection<AigNode> states = new HashSet<>(frontier);
+            frontier.clear();
+            for (AigNode node : states) {
+                frontier.addAll(graph.getChildren(node));
+                node.setX(levelDistance + (level * levelDistance));
+                node.setColor(nodeColor);
+                s.append(node.toJson(nodeDeletable, nodeLabelEditable, true, nodeFixedPositionY)).append(",\n");
+            }
+            level++;
+        }
+
+        // Write Links
+        s.append("],\nlinks: [\n");
+        for (GeneralEdge<? extends AigNode> edge : graph.getEdges()) {
+            if (edge instanceof AigLink) {
+                ((AigLink) edge).setColor(linkColor);
+                s.append(((AigLink) edge).toJson(linkDeletable, linkLabelEditable)).append(",\n");
+            }
+        }
+
+        s.append("]\n}\n");
+        return s.toString();
+    }
+
+    /**
+     * Show graph in graph tool in the web-browser
+     * @param graph JSON-String of a graph
+     */
+    public void showGraph(String graph) {
+        showGraphInternal(graph);
+    }
+
+    /**
+     * Show graph in graph tool in the web-browser
+     * @param graph some graph
+     */
+    public void showGraph(G graph) {
+        showGraph(writeGraphInternal(convertGraph(graph)));
+    }
+
+    /**
+     * Show graph in graph tool in the web-browser
+     * @param graph an aig graph
+     */
+    private void showGraphInternal(String graph) {
+        Path outputPath = Paths.get("index.html");
+
+        try {
+            String template = Files.readString(Paths.get(getResource("aiggraph/index_template.html")));
+            String output = String.format(template,
+                    toggleZoom, toggleNodePhysics, toggleFixedLinkDistance, toggleGraphEditingInGUI,
+                    toggleNodeLabels, toggleLinkLabels,
+                    graph,
+                    getResource("aiggraph/favicon.ico"), getResource("aiggraph/style.css"),
+                    getResource("aiggraph/load-mathjax.js"), getResource("aiggraph/graph-component.js")
+            );
+
+            Files.writeString(outputPath, output);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Extract relative path to resource file
+     * @param name name of resource file
+     * @return relative path to resource file
+     */
+    private static String getResource(String name) {
+        Path workingDir = Paths.get(System.getProperty("user.dir"));
+        try {
+            Path resourcePath = Paths.get(Objects.requireNonNull(AigGraphWriter.class.getClassLoader().getResource(name)).toURI());
+            return workingDir.relativize(resourcePath).toString().replace("\\", "/");
+        } catch (URISyntaxException | NullPointerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Writes a graph into a JSON-string for the AIG graph tool
+     * @param graph an aig graph
+     * @return JSON-String of the given graph
+     */
+    private String writeGraphInternal(Graph<AigNode> graph) {
+        StringBuilder s = new StringBuilder();
 
         // Write Nodes
         s.append("{\nnodes: [\n");
@@ -43,7 +158,7 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
         s.append("],\nlinks: [\n");
         for (GeneralEdge<? extends AigNode> edge : graph.getEdges()) {
             if (edge instanceof AigLink) {
-                // TODO implement link color
+                ((AigLink) edge).setColor(linkColor);
                 s.append(((AigLink) edge).toJson(linkDeletable, linkLabelEditable)).append(",\n");
             }
         }
@@ -52,17 +167,27 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
         return s.toString();
     }
 
+    /**
+     * Writes a graph into a JSON-string for the AIG graph tool
+     * @param graph some graph
+     * @return JSON-String of the given graph
+     */
     public String writeGraph(Graph<? extends Node> graph) {
         return writeGraphInternal(convertGraph(graph));
     }
 
+    /**
+     * Converts any graph into an aig graph
+     * @param graph some graph
+     * @return the corresponding aig graph
+     */
     private Graph<AigNode> convertGraph(Graph<? extends Node> graph) {
         Map<Node,AigNode> nodeToInt = new HashMap<>();
         Graph<AigNode> aigGraph = new DefaultGraph<>();
         int id = 0;
         for (Node node : graph.getNodes()) {
             if (enableLatex) {
-                nodeToInt.put(node, new AigNode(id++, ArgumentationLatexWriter.writeArgument(node.toString())));
+                nodeToInt.put(node, new AigNode(id++, convert(node.toString())));
             } else {
                 nodeToInt.put(node, new AigNode(id++, node));
             }
@@ -71,11 +196,31 @@ public class AigGraphWriter<G extends Graph<N>, N extends Node> {
         for (GeneralEdge<? extends Node> edge : graph.getEdges()) {
             if (edge instanceof DirectedEdge<?>) {
                 DirectedEdge<?> dirEdge = (DirectedEdge<?>) edge;
-                aigGraph.add(new AigLink(nodeToInt.get(dirEdge.getNodeA()), nodeToInt.get(dirEdge.getNodeB()), dirEdge.getLabel())); // TODO edge label latex
+                aigGraph.add(new AigLink(nodeToInt.get(dirEdge.getNodeA()), nodeToInt.get(dirEdge.getNodeB()), convert(dirEdge.getLabel())));
             } else if (edge instanceof UndirectedEdge<?>) {
                 throw new IllegalArgumentException("AigGraphWriter currently only supports directed graphs.");
             } else throw new IllegalArgumentException("AigGraphWriter currently only supports directed graphs.");
         }
         return aigGraph;
+    }
+
+    public static String convert(String input) {
+        if (input == null) return "";
+
+        String latexMath = input.replace("{", "\\\\{").replace("}", "\\\\}");
+
+        Pattern pattern = Pattern.compile("([a-zA-Z])(\\d+)"); // Match letter followed by number(s)
+        Matcher matcher = pattern.matcher(latexMath);
+
+        // Replace each match with the LaTeX subscript format
+        StringBuilder result = new StringBuilder();
+        while (matcher.find()) {
+            String replacement = matcher.group(1) + "_{" + matcher.group(2) + "}";
+            matcher.appendReplacement(result, replacement);
+        }
+        matcher.appendTail(result);
+
+        // Wrap the output in math mode delimiters
+        return "$" + result + "$";
     }
 }
