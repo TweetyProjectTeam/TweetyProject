@@ -1,32 +1,83 @@
-package org.tweetyproject.arg.dung.serialisability.util;
+/*
+ * This file is part of "TweetyProject", a collection of Java libraries for
+ * logical aspects of artificial intelligence and knowledge representation.
+ *
+ * TweetyProject is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+package org.tweetyproject.graphs.util;
 
 import org.tweetyproject.graphs.DirectedEdge;
 
+/**
+ * Representation of a link/edge in a graph.
+ * Implements and handles all options relevant for the aig-graph-component
+ *
+ * @see <a href="https://github.com/aig-hagen/aig_graph_component">AIG Graph Component</a>
+ *
+ * @author Lars Bengel
+ */
 public class AigLink extends DirectedEdge<AigNode> {
 
+    /** whether the link is deletable via the GUI */
     private boolean deletable = true;
+    /** whether the link label is editable via the GUI */
     private boolean labelEditable = true;
 
+    /** the color of this link */
     private String color;
 
+    /**
+     * Initializes a new link for the given two nodes
+     * @param source some node
+     * @param target some node
+     */
     public AigLink(AigNode source, AigNode target) {
         super(source, target);
     }
 
+    /**
+     * Initializes a new link for the given two nodes with the label
+     * @param source some node
+     * @param target some node
+     * @param label some link label
+     */
     public AigLink(AigNode source, AigNode target, String label) {
         super(source, target, label);
     }
 
+    /**
+     * Converts the link to a JSON-String while overriding the options with the given values
+     * @param deletable whether the link should be deletable
+     * @param labelEditable whether the link label should be editable
+     * @return JSON-String representation of this link
+     */
     public String toJson(boolean deletable, boolean labelEditable) {
         this.setDeletable(deletable);
         this.setLabelEditable(labelEditable);
         return toJson();
     }
+
+    /**
+     * Converts the link to a JSON-String
+     * @return JSON-String representation of this link
+     */
     public String toJson() {
         StringBuilder s = new StringBuilder("{");
 
-        s.append(String.format("sourceId: %s, ", getSourceId()));
-        s.append(String.format("targetId: %s, ", getTargetId()));
+        s.append(String.format("sourceId: %s, ", getNodeA().getId()));
+        s.append(String.format("targetId: %s, ", getNodeB().getId()));
 
         if (color != null) {
             s.append(String.format("color: %s, ", getColor()));
@@ -46,14 +97,6 @@ public class AigLink extends DirectedEdge<AigNode> {
 
         s.append("}");
         return s.toString();
-    }
-
-    public int getSourceId() {
-        return getNodeA().getId();
-    }
-
-    public int getTargetId() {
-        return getNodeB().getId();
     }
 
     public boolean isDeletable() {
