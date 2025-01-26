@@ -225,6 +225,7 @@
     <module>org-tweetyproject-arg-caf</module>
     <module>org-tweetyproject-arg-deductive</module>
     <module>org-tweetyproject-arg-extended</module>
+    <module>org-tweetyproject-arg-explanations</module>
     <module>org-tweetyproject-arg-lp</module>
     <module>org-tweetyproject-arg-delp</module>
     <module>org-tweetyproject-arg-setaf</module>
