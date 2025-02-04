@@ -248,5 +248,10 @@
     	<artifactId>caf</artifactId>
     	<version>1.28-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>org.tweetyproject.arg</groupId>
+    	<artifactId>eaf</artifactId>
+    	<version>1.28-SNAPSHOT</version>
+    </dependency>
 </dependencies>
 </project>
