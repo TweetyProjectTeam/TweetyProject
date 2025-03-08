@@ -28,13 +28,27 @@ import org.tweetyproject.graphs.util.AigGraphPlotter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * Example Usage of the {@link AigGraphPlotter} which renders a given graph via html in the webbrowser
+ *
+ * @author Lars Bengel
+ */
 public class GraphPlotterExample {
     public static void main(String[] args) throws URISyntaxException, IOException {
         DungTheory theory = new DefaultDungTheoryGenerator(9, 0.2).next();
 
-        AigGraphPlotter<DungTheory, Argument> plotter = new AigGraphPlotter<>(theory);
-        //plotter.show();
+        // Initialize plotter for argumentation framework
+        AigGraphPlotter<DungTheory,Argument> plotter = new AigGraphPlotter<>(theory);
 
-        AigSerialisationPlotter.showSerialisation(theory, Semantics.CO);
+        // Set options for rendering of the graph, eg
+        plotter.setLinkDeletable(false);
+
+        // Render graph
+        plotter.show();
+
+        // Plot an argumentation framework and its serialisation wrt. complete semantics
+        //AigSerialisationPlotter.showSerialisation(theory, Semantics.CO);
+
+
     }
 }
