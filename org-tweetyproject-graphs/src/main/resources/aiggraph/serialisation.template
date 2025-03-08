@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" href='%3$s' />
+        <link rel="stylesheet" href='%4$s' />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Graph Editor</title>
+        <!-- MathJax for TeX notation -->
+        <script src='%5$s' async></script>
+    </head>
+    <body style="margin: 0; padding: 0">
+    <div style='display: flex; position: relative; height: 100vh'>
+        <graph-component id='gc1' style='flex: 1; position: relative'></graph-component>
+        <graph-component id='gc2' style='flex: 1; position: relative'></graph-component>
+    </div>
+    <script src='%6$s'></script>
+    <script type="text/javascript">
+        let graph1 = %1$s;
+        let graph2 = %2$s;
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function getGraphComponentById() {
+            await sleep(0);
+            let instance1 = document.getElementById("gc1")._instance.exposed;
+            instance1.toggleZoom(true);
+            instance1.toggleNodePhysics(true);
+            instance1.toggleFixedLinkDistance(true);
+            instance1.toggleGraphEditingInGUI(false);
+            instance1.toggleNodeLabels(true);
+            instance1.toggleLinkLabels(false);
+
+            instance1.setGraph(graph1);
+
+
+            let instance2 = document.getElementById("gc2")._instance.exposed;
+            instance2.toggleZoom(true);
+            instance2.toggleNodePhysics(true);
+            instance2.toggleFixedLinkDistance(false);
+            instance2.toggleGraphEditingInGUI(false);
+            instance2.toggleNodeLabels(true);
+            instance2.toggleLinkLabels(true);
+
+            instance2.setGraph(graph2);
+        }
+
+        getGraphComponentById();
+    </script>
+    </body>
+</html>
