@@ -31,8 +31,6 @@ import java.util.*;
  *
  * @author Julian Sander
  * @author Lars Bengel
- * TODO explainableAtoms needs to store somehow whether the atom is to be negated in the equation
- * TODO or the equation must be transformed before storing
  */
 public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> {
     /** The background atoms of the causal model */
@@ -66,7 +64,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
             if (formula instanceof Equivalence) {
                 Equivalence equation = (Equivalence) formula;
                 PlFormula left = equation.getFormulas().getFirst();
-                if (!(left instanceof Proposition)) { // TODO allow literal here
+                if (!(left instanceof Proposition)) {
                     throw new IllegalArgumentException("Left side of Structural Equation must be literal!");
                 }
                 explainable.addAll(left.getAtoms());

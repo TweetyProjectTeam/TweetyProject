@@ -19,7 +19,9 @@
 package org.tweetyproject.causal.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.causal.reasoner.AbstractCausalReasoner;
 import org.tweetyproject.causal.reasoner.ArgumentationBasedCausalReasoner;
+import org.tweetyproject.causal.reasoner.SimpleCausalReasoner;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.*;
@@ -94,5 +96,7 @@ public class CausalReasoningExampleSurfer {
         System.out.printf("Observing '%s' implies '%s': %s%n", observations, conclusion2, reasoner.query(cbase, observations, conclusion2));
         System.out.printf("Possible Conclusions of observing '%1$s': %2$s%n", observations, reasoner.getConclusions(cbase, observations));
         System.out.printf("Models: %s%n", reasoner.getModels(cbase, observations));
+
+
     }
 }

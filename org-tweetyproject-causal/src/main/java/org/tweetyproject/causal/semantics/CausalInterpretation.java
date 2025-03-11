@@ -20,8 +20,7 @@ package org.tweetyproject.causal.semantics;
 
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.commons.InterpretationSet;
-import org.tweetyproject.logics.pl.syntax.PlFormula;
-import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.syntax.*;
 
 import java.util.Collection;
 
@@ -29,7 +28,6 @@ import java.util.Collection;
  * Representation of a propositional interpretation of a causal knowledge base
  *
  * @author Lars Bengel
- * TODO add explicit encoding of rejected atoms
  */
 public class CausalInterpretation extends InterpretationSet<Proposition, CausalKnowledgeBase, PlFormula> {
 
@@ -50,7 +48,29 @@ public class CausalInterpretation extends InterpretationSet<Proposition, CausalK
 
     @Override
     public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
-        return this.contains(formula);
+        if(formula instanceof Contradiction)
+            return false;
+        if(formula instanceof Tautology)
+            return true;
+        if(formula instanceof Proposition)
+            return this.contains(formula);
+        if(formula instanceof Negation)
+            return !this.satisfies(((Negation)formula).getFormula());
+        if(formula instanceof Conjunction){
+            Conjunction c = (Conjunction) formula;
+            for(PlFormula f : c)
+                if(!this.satisfies(f))
+                    return false;
+            return true;
+        }
+        if(formula instanceof Disjunction){
+            Disjunction d = (Disjunction) formula;
+            for(PlFormula f: d)
+                if(this.satisfies(f))
+                    return true;
+            return false;
+        }
+        throw new IllegalArgumentException("Propositional formula " + formula + " is of unsupported type.");
     }
 
     @Override
