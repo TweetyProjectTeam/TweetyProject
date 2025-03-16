@@ -3,6 +3,7 @@
 - What if: Create arguments based on CKB alone (without observations) + arguments based on observations: Is this still correct? would create more interesting AFs
     - Or probably better: argument premise must only be consistent with CM, not the observations
     - Could also handle observations like assumptions (?) Probably not sensible
+- add explicit encoding of negative atoms in causalInterpretation
 
 - Parser
 - Writer
