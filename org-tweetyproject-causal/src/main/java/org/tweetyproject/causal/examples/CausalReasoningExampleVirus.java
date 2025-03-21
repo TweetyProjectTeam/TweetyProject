@@ -21,6 +21,7 @@ package org.tweetyproject.causal.examples;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.causal.reasoner.ArgumentationBasedCausalReasoner;
+import org.tweetyproject.causal.reasoner.SimpleCausalReasoner;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.logics.pl.syntax.*;
@@ -74,8 +75,10 @@ public class CausalReasoningExampleVirus {
         cbase.addAssumption(new Negation(corona));
         cbase.addAssumption(new Negation(influenza));
         cbase.addAssumption(new Negation(atRisk));
+        //cbase.addAssumption(corona);
         cbase.addAssumption(atRisk);
         //cbase.addAssumption(influenza);
+
 
         System.out.println("Causal Knowledge Base: " + cbase);
 

@@ -75,6 +75,8 @@ public class CausalReasoningExampleSurfer {
         cbase.addAssumption(giantWave);
         cbase.addAssumption(jellyfish);
 
+        //System.out.println(new SimpleCausalReasoner().getConclusions(cbase, new Negation(drowning)));
+
         System.out.println("Causal Knowledge Base: " + cbase);
 
         // Define variables for the example
