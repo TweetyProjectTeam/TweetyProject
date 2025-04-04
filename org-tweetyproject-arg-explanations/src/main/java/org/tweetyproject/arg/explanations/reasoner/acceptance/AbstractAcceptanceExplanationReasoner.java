@@ -7,7 +7,9 @@ import org.tweetyproject.arg.explanations.semantics.Explanation;
 import java.util.Collection;
 
 public abstract class AbstractAcceptanceExplanationReasoner {
-    public abstract Explanation getExplanation(DungTheory theory, Argument argument);
+    public Explanation getExplanation(DungTheory theory, Argument argument) {
+        return getExplanations(theory, argument).iterator().next();
+    }
 
     public abstract Collection<Explanation> getExplanations(DungTheory theory, Argument argument);
 }

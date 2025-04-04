@@ -1,23 +1,26 @@
 package org.tweetyproject.arg.explanations.reasoner.acceptance;
 
+import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.explanations.semantics.Explanation;
+import org.tweetyproject.arg.explanations.semantics.SetExplanation;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
 
 public class SufficientExplanationReasoner extends AbstractAcceptanceExplanationReasoner {
-
-    @Override
-    public Explanation getExplanation(DungTheory theory, Argument argument) {
-        return null;
-    }
-
     @Override
     public Collection<Explanation> getExplanations(DungTheory theory, Argument argument) {
-        return null;
+        Collection<Explanation> result = new HashSet<>();
+        for (Extension<DungTheory> admSet : new SimpleAdmissibleReasoner().getModels(theory)) {
+            if (!admSet.contains(argument)) continue;
+            if (!isRelevantFor(theory, admSet, argument)) continue;
+            result.add(new SetExplanation(admSet));
+        }
+        return result;
     }
 
     /**
