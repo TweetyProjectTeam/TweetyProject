@@ -107,7 +107,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
@@ -125,7 +125,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
@@ -137,7 +137,7 @@
         <configuration>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
         </configuration>
       </plugin>
       <!--
