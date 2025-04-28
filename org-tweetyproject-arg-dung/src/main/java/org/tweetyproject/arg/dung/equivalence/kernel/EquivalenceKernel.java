@@ -50,6 +50,8 @@ public abstract class EquivalenceKernel {
     public static final EquivalenceKernel SE_COMPLETE = new StrongExpansionCompleteKernel();
     /** Strong Expansion GROUNDED kernel */
     public static final EquivalenceKernel SE_GROUNDED = new StrongExpansionGroundedKernel();
+    /** Local Expansion COMPLETE kernel */
+    public static final EquivalenceKernel LE_COMPLETE = new LocalExpansionCompleteKernel();
 
     /**
      * Computes the kernel of the given AF

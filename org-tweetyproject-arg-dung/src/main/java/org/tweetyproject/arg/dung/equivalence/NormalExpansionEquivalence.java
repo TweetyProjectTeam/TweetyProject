@@ -50,4 +50,9 @@ public class NormalExpansionEquivalence extends StrongEquivalence {
     public NormalExpansionEquivalence(EquivalenceKernel kernel) {
         super(kernel);
     }
+
+    @Override
+    public String getName() {
+        return "Normal Expansion Equivalence";
+    }
 }
