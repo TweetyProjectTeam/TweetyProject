@@ -25,8 +25,10 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.eaf.reasoner.AbstractEAFReasoner;
-import org.tweetyproject.arg.eaf.reasoner.SimpleEAFStableReasoner;
+import org.tweetyproject.arg.eaf.reasoner.SimpleEAFPreferredReasoner;
+import org.tweetyproject.arg.eaf.reasoner.SimpleEAFGroundedReasoner;
 import org.tweetyproject.arg.eaf.semantics.EAFSemantics;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 import org.tweetyproject.commons.InferenceMode;
@@ -55,6 +57,7 @@ public class EafReasonerExample {
 		String constEAF3 = "<>(c)=>[](a)";
 		String constEAF4 = "(<>(c)=>[](a)) && [](d)";
 		String constEAF5 = "(<>(c)=>[](a)) && [](d) && [](!a)";
+		String constEAF6 = "[](und(b))";
 
 
 		DungTheory af = new DungTheory();
@@ -78,32 +81,64 @@ public class EafReasonerExample {
 		EpistemicArgumentationFramework eaf3 = new EpistemicArgumentationFramework(af, constEAF3);
 		EpistemicArgumentationFramework eaf4 = new EpistemicArgumentationFramework(af, constEAF4);
 		EpistemicArgumentationFramework eaf5 = new EpistemicArgumentationFramework(af, constEAF5);
+		EpistemicArgumentationFramework eaf6 = new EpistemicArgumentationFramework(af, constEAF6);
 		
 		//Get epistemic labelling sets for specified semantics
 		
-		System.out.println("The EAF: \n"+ eaf1.prettyPrint() +"\n\nhas the following stable labelling set:\n");
+		System.out.print("The EAF: \n"+ eaf1.prettyPrint() +"\n\nhas the following stable labelling set:");
 		System.out.println(eaf1.getWEpistemicLabellingSets(Semantics.ST));
+		System.out.print("and the following grounded labelling set:");
+		System.out.println(eaf1.getWEpistemicLabellingSets(Semantics.GR));
 		
-		System.out.println("\nThe EAF with the same underlying AF and the constraint "+ eaf2.getConstraint()+" has the following stable labelling sets:\n");
+		System.out.print("\nThe EAF with the same underlying AF and the constraint "+ eaf2.getConstraint()+" has the following stable labelling sets:");
 		System.out.println(eaf2.getWEpistemicLabellingSets(Semantics.ST));
+		System.out.print("and the following grounded labelling set:");
+		System.out.println(eaf2.getWEpistemicLabellingSets(Semantics.GR));
 		
-		System.out.println("\nThe EAF with the same underlying AF and the constraint "+ eaf3.getConstraint()+" has the following stable labelling sets:\n");
+		System.out.print("\nThe EAF with the same underlying AF and the constraint "+ eaf3.getConstraint()+" has the following stable labelling sets:");
 		System.out.println(eaf3.getWEpistemicLabellingSets(Semantics.ST));
+		System.out.print("and the following grounded labelling set:");
+		System.out.println(eaf3.getWEpistemicLabellingSets(Semantics.GR));
+		
+		System.out.print("\nThe EAF with the same underlying AF and the constraint "+ eaf4.getConstraint()+" has the following stable labelling sets:");
+		System.out.println(eaf4.getWEpistemicLabellingSets(Semantics.ST));
+		System.out.print("and the following grounded labelling set:");
+		System.out.println(eaf4.getWEpistemicLabellingSets(Semantics.GR));
+		
+		System.out.print("\nThe EAF with the same underlying AF and the constraint "+ eaf5.getConstraint()+" has the following stable labelling sets:");
+		System.out.println(eaf5.getWEpistemicLabellingSets(Semantics.ST));
+		
+		System.out.println("\nLabeling an Argument with und(arg) in the constraint will translate the constraint to (arg)|| (!arg) and result in epistemic labellings where arg is labelled 'undecided'.");
+		System.out.print("The EAF with the same underlying AF and the constraint "+ eaf6.getConstraint()+" has the following preferred labelling sets:");
+		System.out.println(eaf6.getWEpistemicLabellingSets(Semantics.PR));
 		
 		
+		System.out.println("\n\nSimple Reasoners for different semantics can be used to find extensions, that satisfy the underlying constraint of an EAF.");
+		System.out.println("Note that Reasoners do not return epistemic labelling sets.");
 		//Reasoners can be created using the abstract superclass
 		AbstractEAFReasoner eafReasoner = AbstractEAFReasoner.getSimpleReasonerForSemantics(EAFSemantics.EAF_PR);
+		//Or by instantiating a reasoner for the required semantics
+		SimpleEAFPreferredReasoner eafPr = new SimpleEAFPreferredReasoner();
 		Collection<Extension<EpistemicArgumentationFramework>> eafPrSets = eafReasoner.getModels(eaf1);
+		System.out.print("The extensions the EAF that satisfy its constraint "+ eaf1.getConstraint()+" are:");
 		System.out.println(eafPrSets);
+		System.out.println("\nSimple Reasoners can also be used to compute the acceptance status of an argument");
 		System.out.println("Credulous justification status of each argument under preferred semantics:");
 		for(Argument arg: eaf1) {
-			System.out.println(arg +": " + eafReasoner.query(eaf1, arg, InferenceMode.CREDULOUS));
+			System.out.println(arg +": " + eafPr.query(eaf1, arg, InferenceMode.CREDULOUS));
 		}
 		
-		//Or by instantiating a reasoner for the required semantics
-		SimpleEAFStableReasoner eafSt = new SimpleEAFStableReasoner();
-		System.out.println("Stable Extension:");
-		System.out.println(eafSt.getModel(eaf4));
+		//You can check whether a constraint is stronger, than the underlying constraint of an eaf.
+		//A constraint φ₁ is stronger than φ₂ if it holds that whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
+		System.out.print("\n\nThe constraint " + constEAF5 +" is stronger than " + eaf4.getConstraint()+":");
+		System.out.println(eaf4.isStrongerConstraint(constEAF5, Semantics.ST));
+		System.out.println("Introducing a stronger constraint thus eliminates elements of epistemic labeling sets");
+		System.out.print("\nThe EAF with the weaker constraint "+ eaf4.getConstraint()+" has the following stable labelling sets:");
+		System.out.println(eaf4.getWEpistemicLabellingSets(Semantics.ST));
+		System.out.print("The EAF with the stronger constraint "+ eaf5.getConstraint()+" has the following stable labelling sets:");
+		System.out.println(eaf5.getWEpistemicLabellingSets(Semantics.ST));
+
+		
 	}
 
 }

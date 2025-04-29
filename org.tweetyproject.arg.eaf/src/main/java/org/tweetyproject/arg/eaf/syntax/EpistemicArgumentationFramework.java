@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
@@ -67,7 +69,8 @@ import org.tweetyproject.logics.fol.syntax.Tautology;
  */
 public class EpistemicArgumentationFramework extends DungTheory{
 	
-	private FolFormula constraint;	
+	private FolFormula constraint;
+	private ArrayList<String> undecidedArguments = new ArrayList<>();
 	private FolSignature sig = new FolSignature();
 	private MlParser parser = new MlParser();
 	
@@ -153,10 +156,16 @@ public class EpistemicArgumentationFramework extends DungTheory{
 		try {
 			//get all arguments from graph to set signature for parser
 			Collection<Argument> arguments = this.getNodes();
-			for (Argument arg :arguments){
-				sig.add(new Predicate(arg.getName(), 0));
-			}
-			parser.setSignature(sig);
+	        Set<String> validArgumentNames = new HashSet<>();
+	        
+	        for (Argument arg : arguments) {
+	            String argName = arg.getName();
+	            validArgumentNames.add(argName);
+	            sig.add(new Predicate(argName, 0));
+	        }
+	        parser.setSignature(sig);
+	        // Process the constraint string to handle und() substrings
+	        constraint = processUndecidedSubstrings(constraint, validArgumentNames);
 			this.constraint = convertToDnf((FolFormula) parser.parseFormula(constraint));
 			return true;
 		} catch (ParserException | IOException e) {
@@ -164,6 +173,34 @@ public class EpistemicArgumentationFramework extends DungTheory{
 		}
 	}
 	
+	private String processUndecidedSubstrings(String input, Set<String> validArgumentNames) 
+	        throws IllegalArgumentException {
+	    // Pattern to match und(var) where var can be any sequence of non-parenthesis characters
+	    Pattern pattern = Pattern.compile("und\\(([^)]+)\\)");
+	    Matcher matcher = pattern.matcher(input);
+	    StringBuffer result = new StringBuffer();
+	    
+	    while (matcher.find()) {
+	        String variable = matcher.group(1);
+	        
+	        // Throw error if the variable is not a valid argument name
+	        if (!validArgumentNames.contains(variable)) {
+	            throw new IllegalArgumentException("Invalid argument '" + variable + "' in und() expression.");
+	        }
+	        
+	        // Add the variable to undecidedArguments if not already there
+	        if (!undecidedArguments.contains(variable)) {
+	            undecidedArguments.add(variable);
+	        }
+	        
+	        // Replace und(var) with <>(var) || <>(!var)
+	        String replacement = "(" + variable + ") || (!" + variable + ")";
+	        matcher.appendReplacement(result, replacement);
+	    }
+	    matcher.appendTail(result);
+	    
+	    return result.toString();
+	}
 	
 	/**
 	 * Retrieves the current epistemic constraint of the framework.
@@ -400,13 +437,19 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * @return true if the extension satisfies the constraint, false otherwise
 	 */
 	public boolean satisfiesConstraint(Extension<DungTheory> ext) {
-		MlBeliefSet kb = createEpistemicKnowledgeBase(ext);
+	    MlBeliefSet kb = createEpistemicKnowledgeBase(ext);
 	    // If formula is a disjunction, check if any disjunct is satisfied
 	    if (this.constraint instanceof Disjunction) {
 	        Disjunction disj = (Disjunction) this.constraint;
 	        for (RelationalFormula disjunct : disj) {
-	            if (satisfiesConjunction(kb, (Conjunction) disjunct)) {
-	                return true;
+	            if (disjunct instanceof Conjunction) {
+	                if (satisfiesConjunction(kb, (Conjunction) disjunct)) {
+	                    return true;
+	                }
+	            } else { // Handle single necessity/possibility
+	                if (satisfiesModalFormula(kb, disjunct)) {
+	                    return true;
+	                }
 	            }
 	        }
 	        return false;
@@ -484,6 +527,9 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	        return true;
 	    }
 	    else if (formula instanceof Possibility) {
+	    	//handle special case of empty set
+	    	if (beliefSet.isEmpty()) return true;
+	    	
 	        // For <>φ (possibility), φ must be true in at least one extension
 	        Possibility poss = (Possibility) formula;
 	        FolFormula innerFormula = (FolFormula) poss.getFormula();
@@ -576,7 +622,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	
 	/**
-	 * Computes alle epistemic extension sets under the given semantics.
+	 * Computes all epistemic extension sets under the given semantics.
 	 *
 	 * @param w the semantics used to compute the extensions
 	 * @return a set containing all epistemic extenion sets
@@ -585,6 +631,24 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	    // Get all extensions
 	    AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
 	    Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
+	    
+		//If there is an argument arg that should be undecided, we make sure that only extensions that will lead to an
+	    //undecided Labelling for arg
+	    if(this.undecidedArguments != null) {
+		    DungTheory afTemp = new DungTheory(this);
+		    
+		    for(String arg: this.undecidedArguments) {
+		    	Argument undecidedArg =  new Argument(arg);
+			    //get all args that need to be removed because they are attacking undecidedArg
+			    Set<Argument> argsToRemove = afTemp.getAttackers(undecidedArg);
+			    for(Argument attacker : argsToRemove) {
+				    afTemp.remove(attacker);
+			    }
+			    afTemp.remove(undecidedArg);
+		    }
+		    
+		    extensions = reasoner.getModels(afTemp);	
+	    }
 	    
 	    // Find maximal satisfying sets
 	    Set<Set<Extension<DungTheory>>> maximalSets = findMaximalSatisfyingSets(new HashSet<>(extensions));
