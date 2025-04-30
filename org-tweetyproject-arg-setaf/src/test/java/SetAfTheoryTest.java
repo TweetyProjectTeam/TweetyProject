@@ -17,10 +17,7 @@
  *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-
-
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +33,7 @@ import org.tweetyproject.arg.setaf.reasoners.*;
  * Examples of SetAf Theorys and their semantics
  * 
  * @author Sebastian Franke
+ * @author Oleksandr Dzhychko
  *
  */
 public class SetAfTheoryTest {
@@ -69,12 +67,10 @@ public class SetAfTheoryTest {
 		String grS = gr.getModel(s).toString();
 		String adS = ad.getModels(s).toString();
 		String prS = pr.getModels(s).toString();
-		
-		assertTrue(grS.equals("{b,d}"));
-		assertTrue(adS.equals("[{b}, {d}, {b,d}, {}]"));
-		assertTrue(prS.equals("[{b,d}]"));
 
-
+        assertEquals("{b,c,d}", grS);
+        assertEquals("[{b}, {d}, {b,d}, {b,c,d}, {}]", adS);
+        assertEquals("[{b,c,d}]", prS);
 	}
 
 }
