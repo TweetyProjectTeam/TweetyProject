@@ -50,11 +50,11 @@ public class EafReasonerExample {
 		Argument c = new Argument("c");
 		Argument d = new Argument("d");
 
-		String constEAF1 = "<>(b)";
-		String constEAF2 = "[](a)||[](b)";
-		String constEAF3 = "<>(c)=>[](a)";
-		String constEAF4 = "(<>(c)=>[](a)) && [](d)";
-		String constEAF5 = "(<>(c)=>[](a)) && [](d) && [](!a)";
+		String constEAF1 = "<>(in(b))";
+		String constEAF2 = "[](in(a))||[](in(b))";
+		String constEAF3 = "<>(in(c))=>[](in(a))";
+		String constEAF4 = "(<>(in(c))=>[](in(a))) && [](in(d))";
+		String constEAF5 = "(<>(in(c))=>[](in(a))) && [](in(d)) && [](out(a))";
 		String constEAF6 = "[](und(b))";
 
 
@@ -106,7 +106,6 @@ public class EafReasonerExample {
 		System.out.print("\nThe EAF with the same underlying AF and the constraint "+ eaf5.getConstraint()+" has the following stable labelling sets:");
 		System.out.println(eaf5.getWEpistemicLabellingSets(Semantics.ST));
 		
-		System.out.println("\nLabeling an Argument with und(arg) in the constraint will translate the constraint to (arg)|| (!arg) and result in epistemic labellings where arg is labelled 'undecided'.");
 		System.out.print("The EAF with the same underlying AF and the constraint "+ eaf6.getConstraint()+" has the following preferred labelling sets:");
 		System.out.println(eaf6.getWEpistemicLabellingSets(Semantics.PR));
 		
@@ -118,7 +117,7 @@ public class EafReasonerExample {
 		//Or by instantiating a reasoner for the required semantics
 		SimpleEAFPreferredReasoner eafPr = new SimpleEAFPreferredReasoner();
 		Collection<Extension<EpistemicArgumentationFramework>> eafPrSets = eafReasoner.getModels(eaf1);
-		System.out.print("The extensions the EAF that satisfy its constraint "+ eaf1.getConstraint()+" are:");
+		System.out.print("The extensions of the EAF that satisfy its constraint "+ eaf1.getConstraint()+" are:");
 		System.out.println(eafPrSets);
 		System.out.println("\nSimple Reasoners can also be used to compute the acceptance status of an argument");
 		System.out.println("Credulous justification status of each argument under preferred semantics:");
@@ -126,9 +125,10 @@ public class EafReasonerExample {
 			System.out.println(arg +": " + eafPr.query(eaf1, arg, InferenceMode.CREDULOUS));
 		}
 		
+		
 		//You can check whether a constraint is stronger, than the underlying constraint of an eaf.
 		//A constraint φ₁ is stronger than φ₂ if it holds that whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
-		System.out.print("\n\nThe constraint " + constEAF5 +" is stronger than " + eaf4.getConstraint()+":");
+		System.out.print("\n\nThe constraint " + constEAF5 +" is stronger than " + constEAF4+":");
 		System.out.println(eaf4.isStrongerConstraint(constEAF5, Semantics.ST));
 		System.out.println("Introducing a stronger constraint thus eliminates elements of epistemic labeling sets");
 		System.out.print("\nThe EAF with the weaker constraint "+ eaf4.getConstraint()+" has the following stable labelling sets:");

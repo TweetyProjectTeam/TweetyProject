@@ -20,15 +20,11 @@ package org.tweetyproject.arg.eaf.syntax;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -39,11 +35,14 @@ import org.tweetyproject.arg.dung.semantics.Labeling;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.graphs.Graph;
+import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.RelationalFormula;
+import org.tweetyproject.logics.commons.syntax.Sort;
+import org.tweetyproject.logics.commons.syntax.interfaces.Atom;
+import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.ml.parser.MlParser;
 import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
-import org.tweetyproject.logics.ml.syntax.MlFormula;
 import org.tweetyproject.logics.ml.syntax.Necessity;
 import org.tweetyproject.logics.ml.syntax.Possibility;
 import org.tweetyproject.logics.fol.syntax.Conjunction;
@@ -138,73 +137,62 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	
 	/**
-	 * Sets a new constraint by parsing a string representing an epistemic formula.
+	 * Sets a new epistemic constraint by parsing a string representation of a formula.
 	 * 
-	 * The constraint is provided as a string and parsed into an epistemic formula.
-	 * For example, a valid epistemic string is: "<>(c)=>[](a)".
-	 *
-	 * Note: The parser does not support negated modal operators directly. 
-	 * If you need to use them, please convert as follows:
-	 *   - Convert "¬M φ" to "K ¬φ".
-	 *   - Convert "¬K φ" to "M ¬φ".
-	 *
+	 * This method initializes the parser with the appropriate signature, including:
+	 * - All arguments from the underlying argumentation framework as 0-arity predicates.
+	 * - Modal predicates: in(x), out(x), and und(x) as 1-arity predicates.
 	 * 
-	 * @param constraint A string representing the epistemic constraint to be parsed.
-	 * @return true if the constraint is successfully set, false if an error occurs during parsing.
+	 * The constraint string is then parsed and internally converted into disjunctive normal form (DNF).
+	 * 
+	 * 
+	 * Notes:
+	 * - The parser does not support negated modal operators (e.g., !M) directly.
+	 *   Use the following rewrites:
+	 *     - ¬M φ → K(¬φ)
+	 *     - ¬K φ → M(¬φ)
+	 * - Argument names must match those in the framework, and modal operators must be applied to them as terms.
+	 *
+	 * @param constraint the constraint string to parse (e.g., "K(in(a)) ∨ K(out(a))")
+	 * @return true if the constraint was successfully parsed and set; false if parsing fails
 	 */
+
 	public boolean setConstraint(String constraint) {
-		try {
-			//get all arguments from graph to set signature for parser
-			Collection<Argument> arguments = this.getNodes();
+	    try {
+	        // Get all arguments from the graph to set the signature for the parser
+	        Collection<Argument> arguments = this.getNodes();
 	        Set<String> validArgumentNames = new HashSet<>();
-	        
+
 	        for (Argument arg : arguments) {
 	            String argName = arg.getName();
 	            validArgumentNames.add(argName);
-	            sig.add(new Predicate(argName, 0));
+
+	            Constant constant = new Constant(argName);
+	            sig.add(constant);
+//	            // Optionally: add argName as a 0-arity predicate (not strictly needed for modal logic)
+//	            sig.add(new Predicate(argName, 0));
 	        }
+
+	        // Add modal label predicates (in, out, und) with arity 1
+	        sig.add(new Predicate("in", 1));
+	        sig.add(new Predicate("out", 1));
+	        sig.add(new Predicate("und", 1));
+
 	        parser.setSignature(sig);
-	        // Process the constraint string to handle und() substrings
-	        constraint = processUndecidedSubstrings(constraint, validArgumentNames);
-			this.constraint = convertToDnf((FolFormula) parser.parseFormula(constraint));
-			return true;
-		} catch (ParserException | IOException e) {
-			return false;
-		}
-	}
-	
-	private String processUndecidedSubstrings(String input, Set<String> validArgumentNames) 
-	        throws IllegalArgumentException {
-	    // Pattern to match und(var) where var can be any sequence of non-parenthesis characters
-	    Pattern pattern = Pattern.compile("und\\(([^)]+)\\)");
-	    Matcher matcher = pattern.matcher(input);
-	    StringBuffer result = new StringBuffer();
-	    
-	    while (matcher.find()) {
-	        String variable = matcher.group(1);
-	        
-	        // Throw error if the variable is not a valid argument name
-	        if (!validArgumentNames.contains(variable)) {
-	            throw new IllegalArgumentException("Invalid argument '" + variable + "' in und() expression.");
-	        }
-	        
-	        // Add the variable to undecidedArguments if not already there
-	        if (!undecidedArguments.contains(variable)) {
-	            undecidedArguments.add(variable);
-	        }
-	        
-//	        // Replace und(var) with ((var) || (!var))
-//	        String replacement = "(" + variable + ")||(!" + variable + ")";
-	        
-	        
-	        //Var is undecided if it is not in extension 
-	        String replacement = "(" + variable + ")||(!" + variable + ")";
-	        matcher.appendReplacement(result, replacement);
+
+	        // Preprocess the constraint to handle und(...) replacements, etc.
+	        //constraint = processUndecidedSubstrings(constraint, validArgumentNames);
+
+	        // Parse and convert to DNF
+	        this.constraint = convertToDnf((FolFormula) parser.parseFormula(constraint));
+	        return true;
+
+	    } catch (ParserException | IOException e) {
+	    	System.out.println(("Failed to parse constraint string: \"" + constraint + "\". Reason: " + e.getMessage()));
+	        return false;
 	    }
-	    matcher.appendTail(result);
-	    
-	    return result.toString();
 	}
+
 	
 	/**
 	 * Retrieves the current epistemic constraint of the framework.
@@ -244,7 +232,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 			if (!this.isComplete(ext)) return false;
 			extSet.add(ext);
 		}
-		if(!satisfiesConstraint(createEpistemicKnowledgeBase(extSet))) return false; 
+		if(!satisfiesConstraint(createEpistemicKnowledgeBaseFromExtensions(extSet))) return false; 
 	    // Check whether the given labeling is maximal
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CO);
 		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
@@ -279,7 +267,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 			if (!this.isStable(ext)) return false;
 			extSet.add(ext);
 		}
-		if(!satisfiesConstraint(createEpistemicKnowledgeBase(extSet))) return false; 
+		if(!satisfiesConstraint(createEpistemicKnowledgeBaseFromExtensions(extSet))) return false; 
 	    // Check whether the given labeling is maximal
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ST);
 		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
@@ -349,7 +337,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 			if (!this.isPreferred(ext)) return false;
 			extSet.add(ext);
 		}
-		if(!satisfiesConstraint(createEpistemicKnowledgeBase(extSet))) return false; 
+		if(!satisfiesConstraint(createEpistemicKnowledgeBaseFromExtensions(extSet))) return false; 
 	    // Check whether the given labeling is maximal
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.PR);
 		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
@@ -366,11 +354,11 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	        }
 	        
 	        // Form the union of the current extensions with the candidate.
-	        Set<Extension<DungTheory>> extendedSet = new HashSet<>(extSet);
+	        Collection<Extension<DungTheory>> extendedSet = new HashSet<>(extSet);
 	        extendedSet.add(candidateExt);
 	        
 	        // If the extended set satisfies the constraint, then labSet is not maximal.
-	        if (satisfiesConstraint(createEpistemicKnowledgeBase(extendedSet))) {
+	        if (satisfiesConstraint(createEpistemicKnowledgeBaseFromExtensions(extendedSet))) {
 	            return false;
 	        }
 	    }    
@@ -378,6 +366,21 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	}
 	
 	
+	/**
+	 * @param extendedSet
+	 * @return
+	 */
+	private MlBeliefSet createEpistemicKnowledgeBaseFromExtensions(Collection<Extension<DungTheory>> extensions) {
+	    // Convert to labeling sets
+	    Set<Labeling> labelings = new HashSet<>();
+	    for(Extension<DungTheory> ext : extensions) {
+            Labeling lab = new Labeling(this, ext);
+            labelings.add(lab);
+	    }
+		
+		return createEpistemicKnowledgeBase(labelings);
+	}
+
 	/**
 	 * Returns the epistemic knowledge base consisting of propositional formulas based on 
 	 * all extensions of a given semantics.
@@ -391,43 +394,62 @@ public class EpistemicArgumentationFramework extends DungTheory{
 		//get all Extensions
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
 		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
-		return createEpistemicKnowledgeBase(extensions);
+		
+	    // Convert to labeling sets
+	  Collection<Labeling> labellings = new HashSet<>();
+	    for(Extension<DungTheory> ext : extensions) {
+            Labeling lab = new Labeling(this, ext);
+            labellings.add(lab);;
+	    }
+		
+		return createEpistemicKnowledgeBase(labellings);
 	}
 	
-	private MlBeliefSet createEpistemicKnowledgeBase(Collection<Extension<DungTheory>> extensions) {
+	
+	private MlBeliefSet createEpistemicKnowledgeBase(Collection<Labeling> labelings) {
 		MlBeliefSet beliefSet = new MlBeliefSet();
-		// build Belief base from AF and ext, all Args in ext are set to true, all other args set to false
-		for (Extension<DungTheory>ext : extensions) {
-				beliefSet.add(new Conjunction(createFolFormula(ext)));
+		// build Belief base from AF and labeling
+		for (Labeling lab : labelings) {
+				beliefSet.add(new Conjunction(createFolFormula(lab)));
 		}
 		return beliefSet;
 	}
 	
-	private MlBeliefSet createEpistemicKnowledgeBase(Extension<DungTheory> extension) {
+	private MlBeliefSet createEpistemicKnowledgeBase(Labeling labeling) {
 		MlBeliefSet beliefSet = new MlBeliefSet();
-		// build Belief base from AF and ext, all Args in ext are set to true, all other args set to false
-		beliefSet.add(new Conjunction(createFolFormula(extension)));
+		beliefSet.add(new Conjunction(createFolFormula(labeling)));
 		return beliefSet;
 	}
 	
-	private Collection<FolFormula> createFolFormula(Extension<DungTheory> ext) {
-		Collection<FolFormula> literals = new ArrayList<>();
-		Iterator<Argument> it = this.iterator();
-		while(it.hasNext()) {
-			Argument arg = it.next();
-			if (ext.contains(arg)){
-				 literals.add(new FolAtom(new Predicate(arg.getName())));				
-			} else {
-				literals.add(new Negation(new FolAtom(new Predicate(arg.getName()))));				
-			}
-		}	
-		return literals;
-	}
-	
 	private Collection<FolFormula> createFolFormula(Labeling lab) {
-		Extension<DungTheory> ext = (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
-		return createFolFormula(ext);
+	    Collection<FolFormula> literals = new ArrayList<>();
+
+	    for (Argument arg : this.getNodes()) {
+	        String argName = arg.getName();
+
+	        ArgumentStatus status = lab.get(arg);
+	        Predicate p;
+	        switch (status) {
+	            case IN:
+	                p = new Predicate("in", 1);
+	                break;
+	            case OUT:
+	                p = new Predicate("out", 1);
+	                break;
+	            case UNDECIDED:
+	                p = new Predicate("und", 1);
+	                break;
+	            default:
+	                throw new IllegalStateException("Unknown label status: " + status);
+	        }
+
+	        Constant constArg = new Constant(argName, Sort.THING); 
+	        literals.add(new FolAtom(p, constArg));
+	    }
+
+	    return literals;
 	}
+
 	
 	public boolean satisfiesConstraint(Labeling lab) {
 		Extension<DungTheory> ext = (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
@@ -441,7 +463,10 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * @return true if the extension satisfies the constraint, false otherwise
 	 */
 	public boolean satisfiesConstraint(Extension<DungTheory> ext) {
-	    MlBeliefSet kb = createEpistemicKnowledgeBase(ext);
+		//Translate extentension into labeling
+		Labeling lab = new Labeling(this, ext);
+		
+	    MlBeliefSet kb = createEpistemicKnowledgeBase(lab);
 	    // If formula is a disjunction, check if any disjunct is satisfied
 	    if (this.constraint instanceof Disjunction) {
 	        Disjunction disj = (Disjunction) this.constraint;
@@ -591,37 +616,29 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	        Conjunction conj = (Conjunction) extension;
 	        for (RelationalFormula literal : conj) {
 	            if (literal instanceof FolAtom) {
-	                if (((FolAtom) literal).getPredicate().getName().equals(
-	                    atom.getPredicate().getName())) {
+	                if (literal.equals(atom)) {
 	                    return true;
 	                }
 	            }
 	        }
+	    } else if (extension instanceof FolAtom) {
+	        // Handle case where the formula is a single atom, not a conjunction
+	        return extension.equals(atom);
 	    }
 	    return false;
 	}
 	
 	/**
-	 * Computes alle epistemic labeling sets under the given semantics.
+	 * Computes all epistemic labeling sets under the given semantics.
 	 *
 	 * @param w the semantics used to compute the extensions
 	 * @return a set containing all epistemic labeling sets
 	 */
-	public Set<Collection<Labeling>> getWEpistemicLabellingSets(Semantics w) {
-		Set<Set<Extension<DungTheory>>>maximalSets = getWEpistemicExtensionSets(w);
+	public Set<Set<Labeling>> getWEpistemicLabellingSets(Semantics w) {
+		Set<Set<Labeling>>maximalSets = getWEpistemicExtensionSets(w);
 	    
-	    // Convert to labeling sets
-	    Set<Collection<Labeling>> labellingSets = new HashSet<>();
-	    for(Set<Extension<DungTheory>> extensionSet : maximalSets) {
-	        Set<Labeling> labSet = new HashSet<>();
-	        for(Extension<DungTheory> ext : extensionSet) {
-	            Labeling lab = new Labeling(this, ext);
-	            labSet.add(lab);
-	        }
-	        labellingSets.add(labSet);
-	    }
-	    
-	    return labellingSets;
+    
+	    return maximalSets;
 	}
 	
 	
@@ -631,82 +648,89 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * @param w the semantics used to compute the extensions
 	 * @return a set containing all epistemic extension sets
 	 */
-	public Set<Set<Extension<DungTheory>>> getWEpistemicExtensionSets(Semantics w) {
+	public Set<Set<Labeling>> getWEpistemicExtensionSets(Semantics w) {
 	    // Get all extensions
 	    AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
 	    Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
-	    Collection<Extension<DungTheory>> filteredExtensions = new ArrayList<>(extensions);
+	    
 
-	    // If there is an argument arg that should be undecided, we make sure that only extensions that will lead to an
-	    // undecided Labelling for arg are considered
-	    if(this.undecidedArguments != null && !this.undecidedArguments.isEmpty()) {
-	        DungTheory afTemp = new DungTheory(this);
-	        
-	        for(String argName: this.undecidedArguments) {
-	            // Temporary collection to store extensions to keep
-	            Collection<Extension<DungTheory>> validExtensions = new ArrayList<>();
-	            
-	            Argument undecidedArg = new Argument(argName);
-	            
-	            // get all args that need to be removed because they are attacking undecidedArg
-	            Set<Argument> attackers = afTemp.getAttackers(undecidedArg);
-	            
-	            // For each extension, we need to check if it contains any attacker of the undecided argument
-	            for(Extension<DungTheory> ext : filteredExtensions) {
-	                boolean containsAttacker = false;
-	                
-	                // Check if extension contains any attacker
-	                for(Argument attacker : attackers) {
-	                    if(ext.contains(attacker)) {
-	                        containsAttacker = false;
-	                        break;
-	                    }
-	                }
-	                
-	                // Only keep extensions that don't contain any attacker of the undecided argument
-	                if(!containsAttacker) {
-	                    // Create a new extension without the undecided argument
-	                    Extension<DungTheory> cleanedExtension = new Extension<>();
-	                    for(Argument arg : ext) {
-	                        // Add all arguments except the undecided one
-	                        if(!arg.equals(undecidedArg)) {
-	                            cleanedExtension.add(arg);
-	                        }
-	                    }
-	                    validExtensions.add(cleanedExtension);
-	                }
-	            }
-	            
-	            // Update filtered extensions
-	            filteredExtensions = validExtensions;
+	    //if any of the args in the constraint are und(arg) we include a reduction of the AF to caculate
+	    //extension that have arg as undecided
+	    //we create a copy of the underlying AF and then remove the undecided arg and all its attackers
+	    //then we compute the extensions again and add them to the existing extensions
+	    
+	    
+	    Set<String> undecidedArgs = extractUndecidedArgsFromConstraint();
+
+	    // Step 3: For each und(x), reduce AF and recompute extensions
+	    for (String argName : undecidedArgs) {
+	        Argument arg = new Argument(argName);
+
+	        // Build reduced AF
+	        DungTheory reduced = new DungTheory(this);
+	        if (reduced.contains(arg)) {
+	            reduced.remove(arg);
 	        }
-	    }
 
+	        // Remove all arguments that attack or are attacked by arg
+	        for (Argument attacker : this.getAttackers(arg)) {
+	            reduced.remove(attacker);
+	        }
+
+	        // Compute new extensions from reduced AF
+	        Collection<Extension<DungTheory>> reducedExtensions = reasoner.getModels(reduced);
+	        extensions.addAll(reducedExtensions);
+	    }
+	    // Convert to labeling sets
+	    Set<Labeling> labelings = new HashSet<>();
+	    for(Extension<DungTheory> ext : extensions) {
+            Labeling lab = new Labeling(this, ext);
+            labelings.add(lab);
+	    }
+	    
+	    
 	    // Find maximal satisfying sets
-	    Set<Set<Extension<DungTheory>>> maximalSets = findMaximalSatisfyingSets(new HashSet<>(filteredExtensions));
+	    Set<Set<Labeling>> maximalSets = findMaximalSatisfyingSets(labelings);
 
 	    return maximalSets;
 	}
+	
+	private Set<String> extractUndecidedArgsFromConstraint() {
+	    Set<String> result = new HashSet<>();
+	    if (this.constraint == null)
+	        return result;
 
-	private Set<Set<Extension<DungTheory>>> findMaximalSatisfyingSets(Set<Extension<DungTheory>> extensions) {
-	    Set<Set<Extension<DungTheory>>> maximalSets = new HashSet<>();
+	    for (Atom atom : this.constraint.getAtoms()) {
+	        Predicate p = atom.getPredicate();
+	        if (p.getName().equals("und") && atom.getArguments().size() == 1) {
+	            Term<?> term = atom.getArguments().get(0);
+	            if (term instanceof Constant) {
+	                result.add(((Constant) term).get());
+	            }
+	        }
+	    }
+	    return result;
+	}
+
+	private Set<Set<Labeling>> findMaximalSatisfyingSets(Set<Labeling> labelings) {
+		Set<Set<Labeling>> maximalSets = new HashSet<>();
 	    
 	    // Try the full set first
-	    if (satisfiesConstraint(createEpistemicKnowledgeBase(extensions))) {
-	        maximalSets.add(extensions);
+	    if (satisfiesConstraint(createEpistemicKnowledgeBase(labelings))) {
+	        maximalSets.add(labelings);
 	        return maximalSets;
 	    }
 	    
 	    // If full set doesn't satisfy, try removing one extension at a time
-	    findMaximalSetsRecursive(extensions, new HashSet<>(), maximalSets, new HashSet<>(extensions));
+	    findMaximalSetsRecursive(labelings, new HashSet<>(), maximalSets, new HashSet<>(labelings));
 	    
 	    return maximalSets;
 	}
 
-	private void findMaximalSetsRecursive(Set<Extension<DungTheory>> currentSet, 
-            Set<Extension<DungTheory>> excluded,
-            Set<Set<Extension<DungTheory>>> maximalSets,
-            Set<Extension<DungTheory>> remaining) {
+	private void findMaximalSetsRecursive(Set<Labeling> currentSet, 
+            Set<Labeling> excluded,
+            Set<Set<Labeling>> maximalSets,
+            Set<Labeling> remaining) {
 		// Base case: if there is an already found satisfying set that is a strict superset of currentSet, stop exploring.
 		if (maximalSets.stream().anyMatch(existing -> 
 			existing.containsAll(currentSet) && existing.size() > currentSet.size())) {
@@ -728,15 +752,15 @@ public class EpistemicArgumentationFramework extends DungTheory{
 		}
 		
 		// Continue exploring by trying to remove one extension at a time
-		for (Extension<DungTheory> ext : remaining) {
+		for (Labeling ext : remaining) {
 			if (!excluded.contains(ext)) {
-				Set<Extension<DungTheory>> newSet = new HashSet<>(currentSet);
+				Set<Labeling> newSet = new HashSet<>(currentSet);
 				newSet.remove(ext);
 				
-				Set<Extension<DungTheory>> newExcluded = new HashSet<>(excluded);
+				Set<Labeling> newExcluded = new HashSet<>(excluded);
 				newExcluded.add(ext);
 				
-				Set<Extension<DungTheory>> newRemaining = new HashSet<>(remaining);
+				Set<Labeling> newRemaining = new HashSet<>(remaining);
 				newRemaining.remove(ext);
 				
 				findMaximalSetsRecursive(newSet, newExcluded, maximalSets, newRemaining);
@@ -757,8 +781,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 			constraint2 = convertToDnf((FolFormula) parser.parseFormula(newConstraint));
 			return isStrongerConstraint(constraint2,w);
 		} catch (ParserException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(("Failed to parse constraint string: \"" + newConstraint + "\". Reason: " + e.getMessage()));
 		}
 		return false;
 	}
@@ -772,42 +795,21 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * @return w the semantics for which to test if constraint is stronger
 	 */
 	public boolean isStrongerConstraint(FolFormula newConstraint, Semantics w) {
-		
-		//get all Extensions
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
-		Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
-				
-	    // For each possible set of Extensions
-	    for (Set<Extension<DungTheory>> extSubset : generatePowerSet(extensions)) {
-	        if (extSubset.isEmpty()) continue;
-	        
-	        //build knowledgebase
-	        MlBeliefSet mb = createEpistemicKnowledgeBase(extSubset);
-	        
-	        // If subset satisfies newConstraint but not the underlying constraint of the EAF, then newConstraint is not stronger
-	        if (satisfiesConstraint(mb, newConstraint) && 
-	            !satisfiesConstraint(mb)) {
-	            return false;
+	    // Create temporary EAF for the new constraint
+	    EpistemicArgumentationFramework tempEAF1 = new EpistemicArgumentationFramework(this, newConstraint);
+
+	    // Compute ω-epistemic labelling sets for the new constraint
+	    Set<Set<Labeling>> labelSets1 = tempEAF1.getWEpistemicLabellingSets(w);
+
+	    // Check whether each set also satisfies the original constraint
+	    for (Collection<Labeling> sl : labelSets1) {
+	        MlBeliefSet kb = createEpistemicKnowledgeBase(sl);
+	        if (!satisfiesConstraint(kb)) {
+	            return false; // φ₁ ⊭ φ₂
 	        }
 	    }
-	    return true;
-	}
 
-	// Helper method to get all possible subsets
-	private Set<Set<Extension<DungTheory>>> generatePowerSet(Collection<Extension<DungTheory>> extensions) {
-	    Set<Set<Extension<DungTheory>>> powerSet = new HashSet<>();
-	    powerSet.add(new HashSet<>()); // empty set
-
-	    for (Extension<DungTheory> ext : extensions) {
-	        Set<Set<Extension<DungTheory>>> newSets = new HashSet<>();
-	        for (Set<Extension<DungTheory>> set : powerSet) {
-	            Set<Extension<DungTheory>> newSet = new HashSet<>(set);
-	            newSet.add(ext);
-	            newSets.add(newSet);
-	        }
-	        powerSet.addAll(newSets);
-	    }
-	    return powerSet;
+	    return true; // All sets satisfying φ₁ also satisfy φ₂
 	}
 
 	
@@ -961,7 +963,6 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	    return new Disjunction(resultDisjuncts);
 	}
-	
 	
 	
 	private static RelationalFormula applyEpistemicTransformations(RelationalFormula formula) {

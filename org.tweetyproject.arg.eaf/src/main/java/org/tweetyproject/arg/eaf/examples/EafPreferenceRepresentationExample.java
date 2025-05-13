@@ -33,6 +33,9 @@ public class EafPreferenceRepresentationExample {
 	 */
 	public static void main(String[] args) {
 		Argument a = new Argument("a");
+		Argument b = new Argument("b");
+		Argument c = new Argument("c");
+		Argument d = new Argument("d");
 		Argument r = new Argument("r");
 		
 		DungTheory af = new DungTheory();
@@ -44,19 +47,27 @@ public class EafPreferenceRepresentationExample {
 		af.addAttack(r,a);
 
 
-		String constEAF1 = "[]((a)=>(r))";
+		String constEAF1 = "[](in(a)=>in(r))";
 		EpistemicArgumentationFramework eaf1 = new EpistemicArgumentationFramework(af, constEAF1);	
 		
-		System.out.println("Preference over arguments can be represented using the implication operator, where []((a)=>(r)) means that the preferred argument r should be accepted, whenever a is accepted.");
+		System.out.println("Preference over arguments can be represented using the implication operator, where [](in(a)=>in(r)) means that the preferred argument r should be accepted, whenever a is accepted.");
 		System.out.print("The EAF: \n"+ eaf1.prettyPrint() +"\n\nhas the following stable labelling set:");
 		System.out.println(eaf1.getWEpistemicLabellingSets(Semantics.ST));
 		System.out.print("This EAF has the following complete labelling set:");
 		System.out.println(eaf1.getWEpistemicLabellingSets(Semantics.CO));
 		System.out.println();
-		String constEAF2 = "[]((a)||und(a)=>(r))";
+		String constEAF2 = "[](in(a)||und(a)=>in(r))";
 		EpistemicArgumentationFramework eaf2 = new EpistemicArgumentationFramework(af, constEAF2);
 		System.out.print("This EAF has the following complete labelling set:");
 		System.out.println(eaf2.getWEpistemicLabellingSets(Semantics.CO));
+		
+		System.out.println("Preference over justification states can be represented using the implication operator.");
+		System.out.println("For example, [](in(a) => und(a)) means that the less preferred justification state in(a) is only acceptable if the preferred state und(a) is also accepted.");
+		String constEAF3 = "[](in(a)=>und(a)) && [](out(a)=>und(a)) && [](in(r)=>und(r)) && [](out(r)=>und(r))";
+		EpistemicArgumentationFramework eaf3 = new EpistemicArgumentationFramework(af, constEAF3);
+		
+		System.out.print("The EAF with the constraint " + constEAF3 +" has the following complete labelling set:");
+		System.out.println(eaf3.getWEpistemicLabellingSets(Semantics.CO));
 
 	}
 

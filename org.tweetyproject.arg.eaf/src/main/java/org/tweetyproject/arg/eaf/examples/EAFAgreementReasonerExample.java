@@ -47,7 +47,7 @@ public class EAFAgreementReasonerExample {
 		af.addAttack(r,a);
 
 
-		String constEAF1 = "[](a)";
+		String constEAF1 = "[](in(a))";
 		String constEAF2 = "[](und(a))";
 		EpistemicArgumentationFramework eaf1 = new EpistemicArgumentationFramework(af, constEAF1);
 		EpistemicArgumentationFramework eaf2 = new EpistemicArgumentationFramework(af, constEAF2);	
@@ -64,9 +64,9 @@ public class EAFAgreementReasonerExample {
 		
 		//Majority Voting
 		
-		String constEAF3 = "[](a) || [](!a)";
+		String constEAF3 = "[](!und(a))";
 		agreementReasoner.addEAF(constEAF3);
-		System.out.println(agreementReasoner.majorityVote("in(a)", InferenceMode.SKEPTICAL, Semantics.CO));
+		System.out.println(agreementReasoner.majorityVote("in(a)", InferenceMode.CREDULOUS, Semantics.CO));
 		
 
 	}

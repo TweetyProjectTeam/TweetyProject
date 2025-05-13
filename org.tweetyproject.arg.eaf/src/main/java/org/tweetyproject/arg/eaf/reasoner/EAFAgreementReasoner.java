@@ -191,7 +191,7 @@ public class EAFAgreementReasoner {
         if (mode == InferenceMode.CREDULOUS) {
             // Credulous agreement: each EAF has at least one labelling set contains queryNode
             for (EpistemicArgumentationFramework eaf : eafs) {
-                Set<Collection<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
+                Set<Set<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
                 boolean eafSatisfies = false;
                 
                 // Check if any labelling set satisfies the formula (M formula)
@@ -211,7 +211,7 @@ public class EAFAgreementReasoner {
         } else {
             // Skeptical agreement: all labelling sets of all EAFs contain queryNode
             for (EpistemicArgumentationFramework eaf : eafs) {
-                Set<Collection<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
+                Set<Set<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
                 
                 // Check if all labelling sets satisfy the formula in all labellings (K formula)
                 for (Collection<Labeling> labellingSet : eafLabellingSets) {
@@ -331,7 +331,7 @@ public class EAFAgreementReasoner {
         String argName = matcher.group(2);
 
         for (EpistemicArgumentationFramework eaf : eafs) {
-            Set<Collection<Labeling>> labellingSets = eaf.getWEpistemicLabellingSets(sem);
+            Set<Set<Labeling>> labellingSets = eaf.getWEpistemicLabellingSets(sem);
             for (String label : labels) {
                 String candidateQuery = label + "(" + argName + ")";
                 boolean satisfied = false;
