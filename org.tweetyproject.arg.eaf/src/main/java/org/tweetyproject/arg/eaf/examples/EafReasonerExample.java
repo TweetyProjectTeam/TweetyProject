@@ -25,10 +25,8 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.eaf.reasoner.AbstractEAFReasoner;
 import org.tweetyproject.arg.eaf.reasoner.SimpleEAFPreferredReasoner;
-import org.tweetyproject.arg.eaf.reasoner.SimpleEAFGroundedReasoner;
 import org.tweetyproject.arg.eaf.semantics.EAFSemantics;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 import org.tweetyproject.commons.InferenceMode;
@@ -136,9 +134,7 @@ public class EafReasonerExample {
 		System.out.print("\nThe EAF with the weaker constraint "+ eaf4.getConstraint()+" has the following stable labelling sets:");
 		System.out.println(eaf4.getWEpistemicLabellingSets(Semantics.ST));
 		System.out.print("The EAF with the stronger constraint "+ eaf5.getConstraint()+" has the following stable labelling sets:");
-		System.out.println(eaf5.getWEpistemicLabellingSets(Semantics.ST));
-
-		
+		System.out.println(eaf5.getWEpistemicLabellingSets(Semantics.ST));		
 	}
 
 }

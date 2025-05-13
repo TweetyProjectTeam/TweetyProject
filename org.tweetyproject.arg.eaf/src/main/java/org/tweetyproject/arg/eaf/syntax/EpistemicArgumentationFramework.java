@@ -193,8 +193,12 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	            undecidedArguments.add(variable);
 	        }
 	        
-	        // Replace und(var) with <>(var) || <>(!var)
-	        String replacement = "(" + variable + ") || (!" + variable + ")";
+//	        // Replace und(var) with ((var) || (!var))
+//	        String replacement = "(" + variable + ")||(!" + variable + ")";
+	        
+	        
+	        //Var is undecided if it is not in extension 
+	        String replacement = "(" + variable + ")||(!" + variable + ")";
 	        matcher.appendReplacement(result, replacement);
 	    }
 	    matcher.appendTail(result);
@@ -625,34 +629,62 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * Computes all epistemic extension sets under the given semantics.
 	 *
 	 * @param w the semantics used to compute the extensions
-	 * @return a set containing all epistemic extenion sets
+	 * @return a set containing all epistemic extension sets
 	 */
 	public Set<Set<Extension<DungTheory>>> getWEpistemicExtensionSets(Semantics w) {
 	    // Get all extensions
 	    AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
 	    Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
-	    
-		//If there is an argument arg that should be undecided, we make sure that only extensions that will lead to an
-	    //undecided Labelling for arg
-	    if(this.undecidedArguments != null) {
-		    DungTheory afTemp = new DungTheory(this);
-		    
-		    for(String arg: this.undecidedArguments) {
-		    	Argument undecidedArg =  new Argument(arg);
-			    //get all args that need to be removed because they are attacking undecidedArg
-			    Set<Argument> argsToRemove = afTemp.getAttackers(undecidedArg);
-			    for(Argument attacker : argsToRemove) {
-				    afTemp.remove(attacker);
-			    }
-			    afTemp.remove(undecidedArg);
-		    }
-		    
-		    extensions = reasoner.getModels(afTemp);	
+	    Collection<Extension<DungTheory>> filteredExtensions = new ArrayList<>(extensions);
+
+	    // If there is an argument arg that should be undecided, we make sure that only extensions that will lead to an
+	    // undecided Labelling for arg are considered
+	    if(this.undecidedArguments != null && !this.undecidedArguments.isEmpty()) {
+	        DungTheory afTemp = new DungTheory(this);
+	        
+	        for(String argName: this.undecidedArguments) {
+	            // Temporary collection to store extensions to keep
+	            Collection<Extension<DungTheory>> validExtensions = new ArrayList<>();
+	            
+	            Argument undecidedArg = new Argument(argName);
+	            
+	            // get all args that need to be removed because they are attacking undecidedArg
+	            Set<Argument> attackers = afTemp.getAttackers(undecidedArg);
+	            
+	            // For each extension, we need to check if it contains any attacker of the undecided argument
+	            for(Extension<DungTheory> ext : filteredExtensions) {
+	                boolean containsAttacker = false;
+	                
+	                // Check if extension contains any attacker
+	                for(Argument attacker : attackers) {
+	                    if(ext.contains(attacker)) {
+	                        containsAttacker = false;
+	                        break;
+	                    }
+	                }
+	                
+	                // Only keep extensions that don't contain any attacker of the undecided argument
+	                if(!containsAttacker) {
+	                    // Create a new extension without the undecided argument
+	                    Extension<DungTheory> cleanedExtension = new Extension<>();
+	                    for(Argument arg : ext) {
+	                        // Add all arguments except the undecided one
+	                        if(!arg.equals(undecidedArg)) {
+	                            cleanedExtension.add(arg);
+	                        }
+	                    }
+	                    validExtensions.add(cleanedExtension);
+	                }
+	            }
+	            
+	            // Update filtered extensions
+	            filteredExtensions = validExtensions;
+	        }
 	    }
-	    
+
 	    // Find maximal satisfying sets
-	    Set<Set<Extension<DungTheory>>> maximalSets = findMaximalSatisfyingSets(new HashSet<>(extensions));
-	    
+	    Set<Set<Extension<DungTheory>>> maximalSets = findMaximalSatisfyingSets(new HashSet<>(filteredExtensions));
+
 	    return maximalSets;
 	}
 
@@ -932,47 +964,146 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	
 	
-	 private static RelationalFormula applyEpistemicTransformations(RelationalFormula formula) {
-	        // Proposition 1 transformations
-	        
-	        // (i) ¬M φ ↔ K ¬φ
-	        if (formula instanceof Negation && 
-	            ((Negation)formula).getFormula() instanceof Possibility) {
-	            Possibility poss = (Possibility)((Negation)formula).getFormula();
-	            return new Necessity(new Negation((FolFormula)poss.getFormula()));
-	        }
-	        
-	        // (ii) ¬K φ ↔ M ¬φ
-	        if (formula instanceof Negation && 
-	            ((Negation)formula).getFormula() instanceof Necessity) {
-	            Necessity nec = (Necessity)((Negation)formula).getFormula();
-	            return new Possibility(new Negation((FolFormula)nec.getFormula()));
-	        }
-	        
-	        // (iii) M(φ ∨ ψ) ↔ M φ ∨ M ψ
-	        if (formula instanceof Possibility && 
-	            ((Possibility)formula).getFormula() instanceof Disjunction) {
-	            Disjunction disj = (Disjunction)((Possibility)formula).getFormula();
-	            List<RelationalFormula> newDisjuncts = new ArrayList<>();
-	            for (RelationalFormula f : disj) {
-	                newDisjuncts.add(new Possibility(f));
-	            }
-	            return new Disjunction(newDisjuncts);
-	        }
-	        
-	        // (iv) K(φ ∧ ψ) ↔ K φ ∧ K ψ
-	        if (formula instanceof Necessity && 
-	            ((Necessity)formula).getFormula() instanceof Conjunction) {
-	            Conjunction conj = (Conjunction)((Necessity)formula).getFormula();
-	            List<RelationalFormula> newConjuncts = new ArrayList<>();
-	            for (RelationalFormula f : conj) {
-	                newConjuncts.add(new Necessity(f));
-	            }
-	            return new Conjunction(newConjuncts);
-	        }
-	        
-	        return formula;
+	private static RelationalFormula applyEpistemicTransformations(RelationalFormula formula) {
+	    // Proposition 1 transformations
+
+	    // (i) ¬M φ ↔ K ¬φ
+	    if (formula instanceof Negation &&
+	        ((Negation)formula).getFormula() instanceof Possibility) {
+	        Possibility poss = (Possibility)((Negation)formula).getFormula();
+	        return new Necessity(new Negation((FolFormula)poss.getFormula()));
 	    }
+
+	    // (ii) ¬K φ ↔ M ¬φ
+	    if (formula instanceof Negation &&
+	        ((Negation)formula).getFormula() instanceof Necessity) {
+	        Necessity nec = (Necessity)((Negation)formula).getFormula();
+	        return new Possibility(new Negation((FolFormula)nec.getFormula()));
+	    }
+
+	    // (iii) M(φ ∨ ψ) ↔ M φ ∨ M ψ
+	    if (formula instanceof Possibility &&
+	        ((Possibility)formula).getFormula() instanceof Disjunction) {
+	        Disjunction disj = (Disjunction)((Possibility)formula).getFormula();
+	        List<RelationalFormula> newDisjuncts = new ArrayList<>();
+	        for (RelationalFormula f : disj) {
+	            newDisjuncts.add(new Possibility(f));
+	        }
+	        return new Disjunction(newDisjuncts);
+	    }
+
+	    // (iv) K(φ ∧ ψ) ↔ K φ ∧ K ψ
+	    if (formula instanceof Necessity &&
+	        ((Necessity)formula).getFormula() instanceof Conjunction) {
+	        Conjunction conj = (Conjunction)((Necessity)formula).getFormula();
+	        List<RelationalFormula> newConjuncts = new ArrayList<>();
+	        for (RelationalFormula f : conj) {
+	            newConjuncts.add(new Necessity(f));
+	        }
+	        return new Conjunction(newConjuncts);
+	    }
+
+	    // (v) K(φ → ψ) transformation
+	    if (formula instanceof Necessity &&
+	        ((Necessity)formula).getFormula() instanceof Implication) {
+	        Implication impl = (Implication)((Necessity)formula).getFormula();
+	        RelationalFormula left = impl.getFormulas().getFirst();
+	        RelationalFormula right = impl.getFormulas().getSecond();
+	        
+	        // First transform implication to ¬φ ∨ ψ
+	        List<RelationalFormula> disjuncts = new ArrayList<>();
+	        
+	        // Create ¬φ
+	        RelationalFormula negatedLeft = new Negation((FolFormula)left);
+	        
+	        // Create ¬φ ∨ ψ
+	        disjuncts.add(negatedLeft);
+	        disjuncts.add(right);
+	        Disjunction transformedImpl = new Disjunction(disjuncts);
+	        
+	        // Now apply K to the transformed formula: K(¬φ ∨ ψ)
+	        return applyEpistemicTransformations(new Necessity(transformedImpl));
+	    }
+
+	    // (vi) M(φ → ψ) transformation
+	    if (formula instanceof Possibility &&
+	        ((Possibility)formula).getFormula() instanceof Implication) {
+	        Implication impl = (Implication)((Possibility)formula).getFormula();
+	        RelationalFormula left = impl.getFormulas().getFirst();
+	        RelationalFormula right = impl.getFormulas().getSecond();
+	        
+	        // First transform implication to ¬φ ∨ ψ
+	        List<RelationalFormula> disjuncts = new ArrayList<>();
+	        
+	        // Create ¬φ
+	        RelationalFormula negatedLeft = new Negation((FolFormula)left);
+	        
+	        // Create ¬φ ∨ ψ
+	        disjuncts.add(negatedLeft);
+	        disjuncts.add(right);
+	        Disjunction transformedImpl = new Disjunction(disjuncts);
+	        
+	        // Now apply M to the transformed formula: M(¬φ ∨ ψ)
+	        return applyEpistemicTransformations(new Possibility(transformedImpl));
+	    }
+
+	    // (vii) K(φ ↔ ψ) transformation
+	    if (formula instanceof Necessity &&
+	        ((Necessity)formula).getFormula() instanceof Equivalence) {
+	        Equivalence equiv = (Equivalence)((Necessity)formula).getFormula();
+	        RelationalFormula left = equiv.getFormulas().getFirst();
+	        RelationalFormula right = equiv.getFormulas().getSecond();
+	        
+	        // Transform equivalence to (φ → ψ) ∧ (ψ → φ)
+	        // First implication: φ → ψ
+	        Implication impl1 = new Implication(left, right);
+	        
+	        // Second implication: ψ → φ
+	        Implication impl2 = new Implication(right, left);
+	        
+	        // Create conjunction: (φ → ψ) ∧ (ψ → φ)
+	        List<RelationalFormula> conjuncts = new ArrayList<>();
+	        conjuncts.add(impl1);
+	        conjuncts.add(impl2);
+	        Conjunction transformedEquiv = new Conjunction(conjuncts);
+	        
+	        // apply K to the transformed formula: K((φ → ψ) ∧ (ψ → φ))
+	        return applyEpistemicTransformations(new Necessity(transformedEquiv));
+	    }
+
+	    // (viii) M(φ ↔ ψ) transformation
+	    if (formula instanceof Possibility &&
+	        ((Possibility)formula).getFormula() instanceof Equivalence) {
+	        Equivalence equiv = (Equivalence)((Possibility)formula).getFormula();
+	        RelationalFormula left = equiv.getFormulas().getFirst();
+	        RelationalFormula right = equiv.getFormulas().getSecond();
+	        
+	        // Transform equivalence to (¬φ ∨ ψ) ∧ (¬ψ ∨ φ)
+	        
+	        // First disjunction: ¬φ ∨ ψ
+	        List<RelationalFormula> disjuncts1 = new ArrayList<>();
+	        disjuncts1.add(new Negation((FolFormula)left));
+	        disjuncts1.add(right);
+	        Disjunction disj1 = new Disjunction(disjuncts1);
+	        
+	        // Second disjunction: ¬ψ ∨ φ
+	        List<RelationalFormula> disjuncts2 = new ArrayList<>();
+	        disjuncts2.add(new Negation((FolFormula)right));
+	        disjuncts2.add(left);
+	        Disjunction disj2 = new Disjunction(disjuncts2);
+	        
+	        // Create conjunction: (¬φ ∨ ψ) ∧ (¬ψ ∨ φ)
+	        List<RelationalFormula> conjuncts = new ArrayList<>();
+	        conjuncts.add(disj1);
+	        conjuncts.add(disj2);
+	        Conjunction transformedEquiv = new Conjunction(conjuncts);
+	        
+	        // apply M to the transformed formula: M((¬φ ∨ ψ) ∧ (¬ψ ∨ φ))
+	        return applyEpistemicTransformations(new Possibility(transformedEquiv));
+	    }
+
+	    return formula;
+	}
 
 	
 		/** Pretty print of the theory.
