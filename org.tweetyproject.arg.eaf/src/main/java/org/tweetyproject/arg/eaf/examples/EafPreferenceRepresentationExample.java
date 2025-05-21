@@ -56,17 +56,18 @@ public class EafPreferenceRepresentationExample {
 		System.out.print("This EAF has the following complete labelling set:");
 		System.out.println(eaf1.getWEpistemicLabellingSets(Semantics.CO));
 		System.out.println();
+				
 		String constEAF2 = "[](in(a)||und(a)=>in(r))";
 		EpistemicArgumentationFramework eaf2 = new EpistemicArgumentationFramework(af, constEAF2);
-		System.out.print("This EAF has the following complete labelling set:");
+		System.out.print("The EAF: \n"+ eaf2.prettyPrint() +"\n\nhas the following complete labelling set:");
 		System.out.println(eaf2.getWEpistemicLabellingSets(Semantics.CO));
 		
-		System.out.println("Preference over justification states can be represented using the implication operator.");
+		System.out.println("\nPreference over justification states can be represented using the implication operator.");
 		System.out.println("For example, [](in(a) => und(a)) means that the less preferred justification state in(a) is only acceptable if the preferred state und(a) is also accepted.");
 		String constEAF3 = "[](in(a)=>und(a)) && [](out(a)=>und(a)) && [](in(r)=>und(r)) && [](out(r)=>und(r))";
 		EpistemicArgumentationFramework eaf3 = new EpistemicArgumentationFramework(af, constEAF3);
 		
-		System.out.print("The EAF with the constraint " + constEAF3 +" has the following complete labelling set:");
+		System.out.print("The EAF: \n"+ eaf3.prettyPrint() +"\n\nhas the following complete labelling set:");
 		System.out.println(eaf3.getWEpistemicLabellingSets(Semantics.CO));
 
 	}

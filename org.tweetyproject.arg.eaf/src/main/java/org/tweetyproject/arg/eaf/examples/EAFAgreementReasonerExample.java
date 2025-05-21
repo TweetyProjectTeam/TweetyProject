@@ -55,18 +55,34 @@ public class EAFAgreementReasonerExample {
 		EAFAgreementReasoner agreementReasoner = new EAFAgreementReasoner(eaf1);
 		
 		//add second EAF with the same constraint
+		System.out.println("The agreement Reasoner can identify wether multiple agents with the same underlying AF agree on the labeling status of an argument.");
 		agreementReasoner.addEAF(constEAF1);
+		System.out.println("\nFor the following AF:");
+		System.out.println(af.prettyPrint());
+		System.out.print("Two agents with the same underlying believe: ");
+		System.out.println(eaf1.getConstraint());
+		System.out.print("Believe that argument a should be credulously labelled in under complete semantics: ");
 		System.out.println(agreementReasoner.query("in(a)", InferenceMode.CREDULOUS, Semantics.CO));
 
+		System.out.println("\nThe Agreement Reasoner can list all EAFs that it contains:");
 		agreementReasoner.listEAFs();
+		System.out.println("EAFs can be added, deleted or changed.");
 		agreementReasoner.changeEAF(1, eaf2);
+		System.out.print("If one agent changes its believe to: ");
+		System.out.println(eaf2.getConstraint());
+		System.out.print("Believe that argument a should be credulously labelled in under complete semantics: ");
 		System.out.println(agreementReasoner.query("in(a)", InferenceMode.CREDULOUS, Semantics.CO));
 		
 		//Majority Voting
-		
+		System.out.println("\nThe Agreement Reasoner supports majority voting");
 		String constEAF3 = "[](!und(a))";
 		agreementReasoner.addEAF(constEAF3);
+		System.out.println("Given the following EAFs");
+		agreementReasoner.listEAFs();
+		System.out.print("Would the majority vote that a should be credulously labelled in under complete semantics: ");
 		System.out.println(agreementReasoner.majorityVote("in(a)", InferenceMode.CREDULOUS, Semantics.CO));
+		System.out.print("Would the majority also vote that a should be skeptically labelled in under complete semantics: ");
+		System.out.println(agreementReasoner.majorityVote("in(a)", InferenceMode.SKEPTICAL, Semantics.CO));
 		
 
 	}

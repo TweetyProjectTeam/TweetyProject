@@ -44,13 +44,9 @@ import org.tweetyproject.logics.ml.syntax.Possibility;
 
 
 /**
- * The EafTheoryGenerator class is responsible for generating 
- * EpistemicArgumentationFramworks(EAFs) based on a 
- * given DungTheory. The class can generate one or multiple EAFs with random
- * epistemic constraints in DNF format.
- * 
- * This generator can either use a custom {@link DungTheoryGenerator} 
- * or instantiate a default one. 
+ * The EafTheoryGenerator class is responsible for generating EpistemicArgumentationFramworks(EAFs) based on a 
+ * given DungTheory. The class can generate one or multiple EAFs with random epistemic constraints in DNF format.
+ *  
  * 
  * @author Sandra Hoffmann
  *
@@ -61,8 +57,7 @@ public class EafTheoryGenerator {
 	private Random random = new Random();
 	
     /**
-     * Default constructor. Instantiates a default {@link DungTheoryGenerator} 
-     * using the default {@link DungTheoryGenerationParameters}.
+     * Default constructor. Instantiates a default DungTheoryGenerator
      */
 	public EafTheoryGenerator() {
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
@@ -70,9 +65,9 @@ public class EafTheoryGenerator {
 	}
 	
     /**
-     * Constructor with a custom {@link DungTheoryGenerator}.
+     * Constructor with a custom DungTheoryGenerator
      * 
-     * @param generator the custom {@code DungTheoryGenerator} to use for generating Dung theories.
+     * @param generator the custom DungTheoryGenerator to use for generating Dung theories.
      */
 	public EafTheoryGenerator(DungTheoryGenerator generator) {
 		this.generator = generator;

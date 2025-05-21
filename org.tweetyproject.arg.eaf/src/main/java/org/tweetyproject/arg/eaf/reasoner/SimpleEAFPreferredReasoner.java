@@ -27,7 +27,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
 /**
+ * This reasoner for epistemic Dung theories performs inference on the preferred extension.
+ * Extensions are determined by checking for all admissible sets which set combinations satisfy the epistemic constraint.
+ * Note that this reasoner does not compute epistemic extension sets.
  * 
+ * @author Sandra Hoffmann
+ *
  */
 public class SimpleEAFPreferredReasoner extends AbstractEAFReasoner{
 

@@ -69,7 +69,6 @@ import org.tweetyproject.logics.fol.syntax.Tautology;
 public class EpistemicArgumentationFramework extends DungTheory{
 	
 	private FolFormula constraint;
-	private ArrayList<String> undecidedArguments = new ArrayList<>();
 	private FolSignature sig = new FolSignature();
 	private MlParser parser = new MlParser();
 	
@@ -96,7 +95,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * Constructor for an EAF using a given graph and constraint.
 	 *
 	 * The constraint is provided as a string and parsed into an epistemic formula.
-	 * For example, a valid epistemic string is: "<>(c)=>[](a)".
+	 * For example, a valid epistemic string is: "<>(in(c))=>[](in(a))".
 	 *
 	 * Note: The parser does not support negated modal operators directly. 
 	 * If you need to use them, please convert as follows:
@@ -138,20 +137,12 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	/**
 	 * Sets a new epistemic constraint by parsing a string representation of a formula.
+	 * The constraint string is converted disjunctive normal form (DNF).
 	 * 
-	 * This method initializes the parser with the appropriate signature, including:
-	 * - All arguments from the underlying argumentation framework as 0-arity predicates.
-	 * - Modal predicates: in(x), out(x), and und(x) as 1-arity predicates.
-	 * 
-	 * The constraint string is then parsed and internally converted into disjunctive normal form (DNF).
-	 * 
-	 * 
-	 * Notes:
-	 * - The parser does not support negated modal operators (e.g., !M) directly.
-	 *   Use the following rewrites:
-	 *     - ¬M φ → K(¬φ)
-	 *     - ¬K φ → M(¬φ)
-	 * - Argument names must match those in the framework, and modal operators must be applied to them as terms.
+	 * Note: The parser does not support negated modal operators directly. 
+	 * If you need to use them, please convert as follows:
+	 *   - Convert "¬M φ" to "K ¬φ".
+	 *   - Convert "¬K φ" to "M ¬φ".
 	 *
 	 * @param constraint the constraint string to parse (e.g., "K(in(a)) ∨ K(out(a))")
 	 * @return true if the constraint was successfully parsed and set; false if parsing fails
@@ -169,19 +160,14 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	            Constant constant = new Constant(argName);
 	            sig.add(constant);
-//	            // Optionally: add argName as a 0-arity predicate (not strictly needed for modal logic)
-//	            sig.add(new Predicate(argName, 0));
 	        }
 
-	        // Add modal label predicates (in, out, und) with arity 1
+	        // Add modal label predicates (in, out, und)
 	        sig.add(new Predicate("in", 1));
 	        sig.add(new Predicate("out", 1));
 	        sig.add(new Predicate("und", 1));
 
 	        parser.setSignature(sig);
-
-	        // Preprocess the constraint to handle und(...) replacements, etc.
-	        //constraint = processUndecidedSubstrings(constraint, validArgumentNames);
 
 	        // Parse and convert to DNF
 	        this.constraint = convertToDnf((FolFormula) parser.parseFormula(constraint));
@@ -348,12 +334,11 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	private Boolean isMaximalEpistemicLabellingSet(Collection<Extension<DungTheory>>extSet, Collection<Extension<DungTheory>> extensions) {
 	    for (Extension<DungTheory> candidateExt : extensions) {
-	        // Skip if the candidate is already in our set.
 	        if (extSet.contains(candidateExt)) {
 	            continue;
 	        }
 	        
-	        // Form the union of the current extensions with the candidate.
+	        //union of the current extensions with the candidate.
 	        Collection<Extension<DungTheory>> extendedSet = new HashSet<>(extSet);
 	        extendedSet.add(candidateExt);
 	        
@@ -366,10 +351,6 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	}
 	
 	
-	/**
-	 * @param extendedSet
-	 * @return
-	 */
 	private MlBeliefSet createEpistemicKnowledgeBaseFromExtensions(Collection<Extension<DungTheory>> extensions) {
 	    // Convert to labeling sets
 	    Set<Labeling> labelings = new HashSet<>();
@@ -383,7 +364,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	/**
 	 * Returns the epistemic knowledge base consisting of propositional formulas based on 
-	 * all extensions of a given semantics.
+	 * all extensions of a given semantics for this eaf.
 	 *
 	 *
 	 * @param w the semantics used to compute the extensions
@@ -450,10 +431,38 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	    return literals;
 	}
 
-	
+	/**
+	 * Checks whether the given labeling satisfies the epistemic constraint of the underlying AF.
+	 *
+	 * @param lab the labeling to check against the epistemic constraint
+	 * @return true if the extension satisfies the constraint, false otherwise
+	 */
 	public boolean satisfiesConstraint(Labeling lab) {
-		Extension<DungTheory> ext = (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
-		return satisfiesConstraint(ext);
+		 MlBeliefSet kb = createEpistemicKnowledgeBase(lab);
+		    // If formula is a disjunction, check if any disjunct is satisfied
+		    if (this.constraint instanceof Disjunction) {
+		        Disjunction disj = (Disjunction) this.constraint;
+		        for (RelationalFormula disjunct : disj) {
+		            if (disjunct instanceof Conjunction) {
+		                if (satisfiesConjunction(kb, (Conjunction) disjunct)) {
+		                    return true;
+		                }
+		            } else { // Handle single necessity/possibility
+		                if (satisfiesModalFormula(kb, disjunct)) {
+		                    return true;
+		                }
+		            }
+		        }
+		        return false;
+		    }
+		    // If formula is a single conjunction
+		    else if (this.constraint instanceof Conjunction) {
+		        return satisfiesConjunction(kb, (Conjunction) this.constraint);
+		    }
+		    // Handle single necessity/possibility
+		    else {
+		        return satisfiesModalFormula(kb, this.constraint);
+		    }
 	}
 	
 	/**
@@ -465,32 +474,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	public boolean satisfiesConstraint(Extension<DungTheory> ext) {
 		//Translate extentension into labeling
 		Labeling lab = new Labeling(this, ext);
-		
-	    MlBeliefSet kb = createEpistemicKnowledgeBase(lab);
-	    // If formula is a disjunction, check if any disjunct is satisfied
-	    if (this.constraint instanceof Disjunction) {
-	        Disjunction disj = (Disjunction) this.constraint;
-	        for (RelationalFormula disjunct : disj) {
-	            if (disjunct instanceof Conjunction) {
-	                if (satisfiesConjunction(kb, (Conjunction) disjunct)) {
-	                    return true;
-	                }
-	            } else { // Handle single necessity/possibility
-	                if (satisfiesModalFormula(kb, disjunct)) {
-	                    return true;
-	                }
-	            }
-	        }
-	        return false;
-	    }
-	    // If formula is a single conjunction
-	    else if (this.constraint instanceof Conjunction) {
-	        return satisfiesConjunction(kb, (Conjunction) this.constraint);
-	    }
-	    // Handle single necessity/possibility
-	    else {
-	        return satisfiesModalFormula(kb, this.constraint);
-	    }
+		return satisfiesConstraint(lab);
 	}
 	
 	/**
@@ -628,41 +612,22 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	    return false;
 	}
 	
+	
 	/**
 	 * Computes all epistemic labeling sets under the given semantics.
 	 *
-	 * @param w the semantics used to compute the extensions
+	 * @param w the semantics used to compute the labeling sets
 	 * @return a set containing all epistemic labeling sets
 	 */
 	public Set<Set<Labeling>> getWEpistemicLabellingSets(Semantics w) {
-		Set<Set<Labeling>>maximalSets = getWEpistemicExtensionSets(w);
-	    
-    
-	    return maximalSets;
-	}
-	
-	
-	/**
-	 * Computes all epistemic extension sets under the given semantics.
-	 *
-	 * @param w the semantics used to compute the extensions
-	 * @return a set containing all epistemic extension sets
-	 */
-	public Set<Set<Labeling>> getWEpistemicExtensionSets(Semantics w) {
 	    // Get all extensions
 	    AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(w);
 	    Collection<Extension<DungTheory>> extensions = reasoner.getModels(this);
 	    
 
-	    //if any of the args in the constraint are und(arg) we include a reduction of the AF to caculate
-	    //extension that have arg as undecided
-	    //we create a copy of the underlying AF and then remove the undecided arg and all its attackers
-	    //then we compute the extensions again and add them to the existing extensions
-	    
-	    
+	    //if any of the args in the constraint are und(arg), a reduction of the AF is included, to calculate extension that have arg as undecided
 	    Set<String> undecidedArgs = extractUndecidedArgsFromConstraint();
-
-	    // Step 3: For each und(x), reduce AF and recompute extensions
+	    //For each und(x), reduce AF and recompute extensions
 	    for (String argName : undecidedArgs) {
 	        Argument arg = new Argument(argName);
 
@@ -672,7 +637,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	            reduced.remove(arg);
 	        }
 
-	        // Remove all arguments that attack or are attacked by arg
+	        // Remove all arguments that attack arg (ensuring arg will be undecided in the labelling)
 	        for (Argument attacker : this.getAttackers(arg)) {
 	            reduced.remove(attacker);
 	        }
@@ -687,11 +652,9 @@ public class EpistemicArgumentationFramework extends DungTheory{
             Labeling lab = new Labeling(this, ext);
             labelings.add(lab);
 	    }
-	    
-	    
+	       
 	    // Find maximal satisfying sets
 	    Set<Set<Labeling>> maximalSets = findMaximalSatisfyingSets(labelings);
-
 	    return maximalSets;
 	}
 	
@@ -742,7 +705,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 			// Remove any previously found set that is a proper subset of currentSet.
 			maximalSets.removeIf(existing -> currentSet.containsAll(existing) && existing.size() < currentSet.size());
 		
-			// Add the current set only if it isn’t a subset of any existing satisfying set.
+			// Add the current set only if it is no subset of any existing satisfying set.
 			boolean isSubsumed = maximalSets.stream().anyMatch(existing -> 
 		      existing.containsAll(currentSet) && existing.size() > currentSet.size());
 			if (!isSubsumed) {
@@ -770,7 +733,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	
 	/**
 	 * Computes if the given newConstraint is stronger than the underlying constraint of the EAF. 
-	 * A constraint φ₁ is stronger than φ₂ if whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂. 
+	 * A constraint φ₁ is stronger than φ₂ if, whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂. 
 	 *
 	 * @param newConstraint a string representing the constraint
 	 * @return w the semantics for which to test if constraint is stronger
@@ -817,16 +780,15 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	// Misc methods
 	
 	private FolFormula convertToDnf(RelationalFormula formula) {
-	    // First handle the initial transformations as before
 	    if (formula instanceof Conjunction) {
 	        Conjunction conj = (Conjunction) formula;
-	        // Convert each conjunct to DNF first
+	        // Convert each conjunct to DNF
 	        List<RelationalFormula> dnfConjuncts = new ArrayList<>();
 	        for (RelationalFormula f : conj) {
 	            dnfConjuncts.add(convertToDnf(f));
 	        }
 	        
-	        // Now distribute conjunction over disjunction
+	        //Distribute conjunction over disjunction
 	        return distributeConjunctionOverDisjunction(dnfConjuncts);
 	    }
 

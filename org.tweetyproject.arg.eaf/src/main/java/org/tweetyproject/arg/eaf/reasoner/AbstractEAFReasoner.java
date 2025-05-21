@@ -30,6 +30,7 @@ import org.tweetyproject.commons.QualitativeReasoner;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
+ * Ancestor class for  EAF reasoners 
  * 
  * @author Sandra Hoffmann
  *

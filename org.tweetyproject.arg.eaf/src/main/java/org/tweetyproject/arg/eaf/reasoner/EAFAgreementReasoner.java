@@ -103,9 +103,7 @@ public class EAFAgreementReasoner {
      * @throws Exception if the underlying AF doesn't match
      */
     public boolean changeEAF(EpistemicArgumentationFramework oldEAF, EpistemicArgumentationFramework newEAF) throws Exception {
-        // Remove oldEAF
     	this.removeEAF(oldEAF);
-    	// Add newEAF
     	return this.addEAF(newEAF);
     }
 
@@ -120,7 +118,6 @@ public class EAFAgreementReasoner {
     public boolean changeEAF(String oldConstraint, String newConstraint) throws Exception {
     	EpistemicArgumentationFramework oldEAF = new EpistemicArgumentationFramework(this.af, oldConstraint);
     	EpistemicArgumentationFramework newEAF = new EpistemicArgumentationFramework(this.af, newConstraint);    	
-        
         return changeEAF(oldEAF, newEAF) ;
     }
     
@@ -184,10 +181,9 @@ public class EAFAgreementReasoner {
      * @param queryNode string representing the query (in(a), out(a), or und(a))
      * @param mode credulous or skeptical mode
      * @param sem the semantics to use
-     * @return true if all EAFs agree on the formula, false otherwise
-     * @throws Exception if formula parsing fails
+     * @throws IllegalArgumentException if the query format is invalid or if an argument in the query is not found in the labeling
      */
-    public Boolean query(String queryNode, InferenceMode mode, Semantics sem) throws Exception {
+    public Boolean query(String queryNode, InferenceMode mode, Semantics sem){
         if (mode == InferenceMode.CREDULOUS) {
             // Credulous agreement: each EAF has at least one labelling set contains queryNode
             for (EpistemicArgumentationFramework eaf : eafs) {
@@ -224,12 +220,8 @@ public class EAFAgreementReasoner {
         }
     }
     
-    /**
-     * Check if a formula is satisfied in any labeling of the labeling set (M formula)
-     * @param labelingSet the set of labelings
-     * @param query the query to check
-     * @return true if the query is satisfied in any labeling
-     */
+    
+   //Check if a formula is satisfied in any labeling of the labeling set (M formula)
     private boolean satisfiesQueryInAnyLabelling(Collection<Labeling> labelingSet, String query) {    
         for (Labeling labeling : labelingSet) {
             if (satisfiesQuery(labeling, query)) {
@@ -239,12 +231,8 @@ public class EAFAgreementReasoner {
         return false;
     }
     
-    /**
-     * Check if a formula is satisfied in all labelings of the labeling set (K formula)
-     * @param labelingSet the set of labelings
-     * @param query the query to check
-     * @return true if the query is satisfied in all labelings
-     */
+    
+    //Check if a formula is satisfied in all labelings of the labeling set (K formula)
     private boolean satisfiesQueryInAllLabellings(Collection<Labeling> labelingSet, String query) {
         for (Labeling labeling : labelingSet) {
             if (!satisfiesQuery(labeling, query)) {
@@ -254,12 +242,8 @@ public class EAFAgreementReasoner {
         return true;
     }
     
-    /**
-     * Check if a labeling satisfies a specific query
-     * @param labeling the labeling to check
-     * @param query the query string (format: in(a), out(a), or und(a))
-     * @return true if the labeling satisfies the query
-     */
+
+    //Check if a labeling satisfies a specific query
     private boolean satisfiesQuery(Labeling labeling, String query) {
         // Parse the query to extract argument name and label
         Pattern pattern = Pattern.compile("(in|out|und)\\(([^)]+)\\)");
@@ -366,8 +350,6 @@ public class EAFAgreementReasoner {
         }
 
         return true;
-    }
-
-    
+    }  
  
 }
