@@ -99,29 +99,60 @@ public class AigLink extends DirectedEdge<AigNode> {
         return s.toString();
     }
 
+    /**
+     * Returns whether the element is deletable.
+     *
+     * @return {@code true} if the element can be deleted; {@code false} otherwise.
+     */
     public boolean isDeletable() {
         return deletable;
     }
 
+    /**
+     * Sets whether the element is deletable.
+     *
+     * @param deletable {@code true} to allow deletion of the element; {@code false} to prevent it.
+     */
     public void setDeletable(boolean deletable) {
         this.deletable = deletable;
     }
 
+    /**
+     * Returns whether the label of the element is editable.
+     *
+     * @return {@code true} if the label can be edited; {@code false} otherwise.
+     */
     public boolean isLabelEditable() {
         return labelEditable;
     }
 
+    /**
+     * Sets whether the label of the element is editable.
+     *
+     * @param labelEditable {@code true} to make the label editable; {@code false} to make it read-only.
+     */
     public void setLabelEditable(boolean labelEditable) {
         this.labelEditable = labelEditable;
     }
 
+    /**
+     * Returns the color associated with the element.
+     *
+     * @return a {@link String} representing the color (e.g., a hex code like {@code "#FF0000"}).
+     */
     public String getColor() {
         return color;
     }
 
+    /**
+     * Sets the color associated with the element.
+     *
+     * @param color a {@link String} representing the color (e.g., a hex code like {@code "#00FF00"}).
+     */
     public void setColor(String color) {
         this.color = color;
     }
+
 
     @Override
     public String toString() {

@@ -40,12 +40,46 @@ import java.util.regex.Pattern;
  */
 public class AigGraphPlotter<G extends Graph<N>, N extends Node> {
     // General options
+    /**
+     * Enables LaTeX rendering for labels or formulas.
+     * When true, LaTeX expressions will be rendered using a compatible renderer (e.g., MathJax).
+     */
     protected boolean enableLatex = true;
+
+    /**
+     * Enables zoom functionality in the graphical interface.
+     * When true, users can zoom in and out of the graph view.
+     */
     protected boolean toggleZoom = true;
+
+    /**
+     * Enables physics-based layout for graph nodes.
+     * When true, nodes will move according to simulated physical forces (e.g., repulsion).
+     */
     protected boolean toggleNodePhysics = true;
+
+    /**
+     * Fixes the distance between linked nodes if enabled.
+     * When false, link lengths can vary; when true, all links maintain a fixed distance.
+     */
     protected boolean toggleFixedLinkDistance = false;
+
+    /**
+     * Enables interactive graph editing in the GUI.
+     * When true, users can add, remove, or modify nodes and edges through the interface.
+     */
     protected boolean toggleGraphEditingInGUI = true;
+
+    /**
+     * Toggles the display of node labels.
+     * When true, labels for each node will be shown.
+     */
     protected boolean toggleNodeLabels = true;
+
+    /**
+     * Toggles the display of edge (link) labels.
+     * When true, labels for each link/edge will be shown.
+     */
     protected boolean toggleLinkLabels = false;
 
     /** internal storage of nodes */
@@ -174,8 +208,9 @@ public class AigGraphPlotter<G extends Graph<N>, N extends Node> {
         }
     }
 
-    // Node options
+    /** Allow incomming links */
     protected boolean nodeAllowIncomingLinks = true;
+    /** Allow outgoing links */
     protected boolean nodeAllowOutgoingLinks = true;
 
 
