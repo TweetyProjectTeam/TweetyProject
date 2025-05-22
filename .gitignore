@@ -36,3 +36,4 @@ testBuild
 
 gurobi-9.1.0.jar
 isula-1.1.1.jar
+logs/server.log.lck

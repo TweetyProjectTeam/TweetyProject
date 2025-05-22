@@ -40,7 +40,7 @@
 <!-- Logging with java.util.logging -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-logging</artifactId>
+	<artifactId>spring-boot-starter-logging</artifactId>
 </dependency>
 	  	<dependency>
     		<groupId>org.openjfx</groupId>
@@ -127,7 +127,7 @@
 		    <version>20231013</version>
 		</dependency>
 
-		<!-- SLF4J API -->
+		<!-- SLF4J API
 		<dependency>
     		<groupId>org.slf4j</groupId>
     		<artifactId>slf4j-api</artifactId>
@@ -138,14 +138,14 @@
     <groupId>ch.qos.logback</groupId>
     	<artifactId>logback-core</artifactId>
     	<version>1.5.13</version>
-	</dependency>
+	</dependency> -->
 
 <!-- Logback (Logging Implementation) -->
-		<dependency>
+		<!-- <dependency>
     		<groupId>ch.qos.logback</groupId>
     		<artifactId>logback-classic</artifactId>
     		<version>1.4.12</version>
-		</dependency>
+		</dependency> -->
 
     </dependencies>
 

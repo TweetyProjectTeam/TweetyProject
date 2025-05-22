@@ -1,22 +1,18 @@
-<!-- logback.xml -->
-<!-- <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender> -->
+<configuration>
 
-    <!-- File Appender -->
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/home/jklein/dev/tweety_clean/TweetyProject/org-tweetyproject-web/src/main/resources/logs/tweety_server.logs</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-        <immediateFlush>true</immediateFlush>
-    </appender>
+  <!-- File Appender -->
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <!-- I recommend writing logs outside of src/ so they don't get packaged into your JAR -->
+    <file>logs/tweety_server.log</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    <immediateFlush>true</immediateFlush>
+  </appender>
 
-    <root level="debug">
-        <appender-ref ref="FILE" />
-    </root>
+  <!-- Root logger -->
+  <root level="DEBUG">
+    <appender-ref ref="FILE"/>
+  </root>
 
 </configuration>
