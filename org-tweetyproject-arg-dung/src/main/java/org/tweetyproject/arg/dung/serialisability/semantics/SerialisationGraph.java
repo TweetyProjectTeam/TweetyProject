@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.dung.serialisability.semantics;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -46,6 +45,8 @@ public class SerialisationGraph implements Graph<SerialisationState> {
     /** explicit storage of children for each node */
     private Map<SerialisationState, Set<SerialisationState>> children = new HashMap<>();
 
+    private Collection<GeneralEdge<SerialisationState>> edges = new HashSet<>();
+
 
     /**
      * Construct a serialisation graph for the given argumentation framework and serialisation reasoner
@@ -65,7 +66,7 @@ public class SerialisationGraph implements Graph<SerialisationState> {
                 DungTheory reduct = theory.getReduct(ext);
                 SerialisationState node = new SerialisationState(reduct, new Extension<>(ext), reasoner.isTerminal(reduct, ext));
                 this.add(node);
-                this.add(new DirectedEdge<>(predecessor, node));
+                this.add(new DirectedEdge<>(predecessor, node, set.toString()));
                 predecessor = node;
             }
             predecessor = root;
@@ -84,7 +85,7 @@ public class SerialisationGraph implements Graph<SerialisationState> {
     /** Pretty print of the graph.
      * @return the pretty print of the graph.
      */
-    public String prettyPrint(){
+    public String prettyPrint() {
         StringBuilder output = new StringBuilder();
         for (SerialisationState serialisationNode : this)
             output.append("node(").append(serialisationNode.toString()).append(").\n");
@@ -162,6 +163,7 @@ public class SerialisationGraph implements Graph<SerialisationState> {
         result |= this.add(e.getNodeB());
         result |= children.get(e.getNodeA()).add(e.getNodeB());
         result |= parents.get(e.getNodeB()).add(e.getNodeA());
+        result |= edges.add(e);
         return result;
     }
 
@@ -190,19 +192,18 @@ public class SerialisationGraph implements Graph<SerialisationState> {
 
     @Override
     public GeneralEdge<SerialisationState> getEdge(SerialisationState a, SerialisationState b) {
-        return new DirectedEdge<>(a, b);
+        for (GeneralEdge<SerialisationState> edge : edges) {
+            DirectedEdge<SerialisationState> e = (DirectedEdge<SerialisationState>) edge;
+            if (e.getNodeA().equals(a) && e.getNodeB().equals(b)) {
+                return new DirectedEdge<>(e.getNodeA(), e.getNodeB(), e.getLabel());
+            }
+        }
+        return null;
     }
 
     @Override
     public Collection<? extends GeneralEdge<? extends SerialisationState>> getEdges() {
-        Collection<DirectedEdge<SerialisationState>> edges = new HashSet<>();
-        for (SerialisationState node: this) {
-            for (SerialisationState succ: this.children.get(node)) {
-                DirectedEdge<SerialisationState> edge = new DirectedEdge<>(node, succ);
-                edges.add(edge);
-            }
-        }
-        return edges;
+        return new HashSet<>(this.edges);
     }
 
     @Override

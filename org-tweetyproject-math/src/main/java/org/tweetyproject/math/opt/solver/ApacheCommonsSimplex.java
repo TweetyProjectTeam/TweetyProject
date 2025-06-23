@@ -54,25 +54,58 @@ import org.apache.commons.math.optimization.linear.SimplexSolver;
  * @author Matthias Thimm
  */
 public class ApacheCommonsSimplex extends Solver {
+	
+	/**
+	 * The maximum number of iterations of the simplex algorithm.
+	 */
+	private int maxiterations;
+	
+	/**
+	 * The precision
+	 */
+	private double precision;
+	
+	/**
+	 * Whether only positive solutions are allowed.
+	 */
+	private boolean restrictToNonNegative;
+	
 	/** Constructor */
 	public ApacheCommonsSimplex() {
+		this(0.01);
+	}
+	
+	/** Constructor 
+	 * @param precision  Whether only positive solutions are allowed.
+	 */
+	public ApacheCommonsSimplex(boolean restrictToNonNegative) {
+		this(50000,0.01,restrictToNonNegative);
+	}
+	
+	/** Constructor 
+	 * @param precision The precision
+	 */
+	public ApacheCommonsSimplex(double precision) {
+		this(50000,precision,false);
 	}
 
+	/** Constructor 
+	 * @param maxiterations The maximum number of iterations of the simplex algorithm.
+	 * @param precision The precision
+	 * @param restrictToNonNegative Whether only positive solutions are allowed.
+	 */
+	public ApacheCommonsSimplex(int maxiterations, double precision, boolean restrictToNonNegative) {
+		this.maxiterations = maxiterations;
+		this.precision = precision;
+		this.restrictToNonNegative = restrictToNonNegative;
+	}
+		
 
 	/**
 	 * Logger.
 	 */
 	//private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);
 
-	/**
-	 * The maximum number of iterations of the simplex algorithm.
-	 */
-	public int MAXITERATIONS = 50000;
-
-	/**
-	 * Whether only positive solutions are allowed.
-	 */
-	public boolean onlyPositive = false;
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.opt.Solver#solve()
@@ -156,13 +189,13 @@ public class ApacheCommonsSimplex extends Solver {
 		// 6.) Optimize.
 		try{
 			//this.log.info("Calling the Apache Commons Simplex algorithm.");
-			SimplexSolver solver = new SimplexSolver(0.01);
-			solver.setMaxIterations(this.MAXITERATIONS);
+			SimplexSolver solver = new SimplexSolver(this.precision);
+			solver.setMaxIterations(this.maxiterations);
 			RealPointValuePair r = null;
 			if(problem instanceof OptimizationProblem){
 				int type = ((OptimizationProblem)problem).getType();
-				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), this.onlyPositive);
-			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, this.onlyPositive);
+				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), this.restrictToNonNegative);
+			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, this.restrictToNonNegative);
 			//this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
