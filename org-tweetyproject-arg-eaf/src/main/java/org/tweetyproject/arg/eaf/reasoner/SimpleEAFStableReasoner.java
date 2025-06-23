@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
@@ -37,44 +38,22 @@ import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 public class SimpleEAFStableReasoner extends AbstractEAFReasoner{
 
 	/**
-	 * Computes all stable extensions that satify the epistemic constraint of the EAF.
+	 * Computes all stable extensions that satisfy the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the epistemic argumentation framework
-	 * @return A collection of all stable extensions that satify the constraint.
+	 * @return A collection of all stable extensions that satisfy the constraint.
 	 */
 	public Collection<Extension<EpistemicArgumentationFramework>> getModels(EpistemicArgumentationFramework bbase) {
-		//get all stable Sets of the underlying DungTheory
-		SimpleStableReasoner dungReasoner = new SimpleStableReasoner();
-		Collection<Extension<DungTheory>> stExtensions = dungReasoner.getModels(bbase);
-		Collection<Extension<EpistemicArgumentationFramework>> eafStExtensions = new HashSet<>();
-		
-		//find sets that satify the constraint
-		for (Extension<DungTheory> stSet : stExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(stSet);
-			 if (bbase.satisfiesConstraint(stSet)) eafStExtensions.add(eafExtension);
-		}
-		return eafStExtensions;
+		return super.getModels(bbase, Semantics.ST);
 	}
 
 	/**
-	 * Computes one stable extension that satifies the epistemic constraint of the EAF.
+	 * Computes one stable extension that satisfies the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return An stable extension that satifies the constraint.
+	 * @return An stable extension that satisfies the constraint.
 	 */
 	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase) {
-		//get all stable Sets of the underlying DungTheory
-		SimpleStableReasoner dungReasoner = new SimpleStableReasoner();
-		Collection<Extension<DungTheory>> stExtensions = dungReasoner.getModels(bbase);
-		
-		//find a sets that satifies the constraint
-		for (Extension<DungTheory> stSet : stExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(stSet);
-			 if (bbase.satisfiesConstraint(stSet)) return eafExtension;
-			
-		}
-		throw new RuntimeException("No Stable Extension found that satisfies constraint.");
+		return super.getModel(bbase, Semantics.ST);
 	}
 }

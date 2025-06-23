@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleCompleteReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
@@ -37,45 +38,23 @@ import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 public class SimpleEAFCompleteReasoner extends AbstractEAFReasoner{
 
 	/**
-	 * Computes all complete extensions that satify the epistemic constraint of the EAF.
+	 * Computes all complete extensions that satisfy the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the epistemic argumentation framework
-	 * @return A collection of all complete extensions that satify the constraint.
+	 * @return A collection of all complete extensions that satisfy the constraint.
 	 */
 	public Collection<Extension<EpistemicArgumentationFramework>> getModels(EpistemicArgumentationFramework bbase) {
-		//get all complete Sets of the underlying DungTheory
-		SimpleCompleteReasoner dungReasoner = new SimpleCompleteReasoner();
-		Collection<Extension<DungTheory>> comExtensions = dungReasoner.getModels(bbase);
-		Collection<Extension<EpistemicArgumentationFramework>> eafComExtensions = new HashSet<>();
-		
-		//find sets that satify the constraint
-		for (Extension<DungTheory> comSet : comExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(comSet);
-			 if (bbase.satisfiesConstraint(comSet)) eafComExtensions.add(eafExtension);
-		}
-		return eafComExtensions;
+		return super.getModels(bbase, Semantics.CO);
 	}
 
 	/**
-	 * Computes one complete extension that satifies the epistemic constraint of the EAF.
+	 * Computes one complete extension that satisfies the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return A complete extension that satifies the constraint.
+	 * @return A complete extension that satisfies the constraint.
 	 */
 	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase) {
-		//get all complete Sets of the underlying DungTheory
-		SimpleCompleteReasoner dungReasoner = new SimpleCompleteReasoner();
-		Collection<Extension<DungTheory>> comExtensions = dungReasoner.getModels(bbase);
-		
-		//find a sets that satifies the constraint
-		for (Extension<DungTheory> comSet : comExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(comSet);
-			 if (bbase.satisfiesConstraint(comSet)) return eafExtension;
-			
-		}
-		throw new RuntimeException("No Complete Extension found that satisfies constraint.");
+		return super.getModel(bbase, Semantics.CO);
 	}
 
 }

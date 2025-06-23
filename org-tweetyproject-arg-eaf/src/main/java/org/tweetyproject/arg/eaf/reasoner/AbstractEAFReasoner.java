@@ -19,9 +19,13 @@
 package org.tweetyproject.arg.eaf.reasoner;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.semantics.EAFSemantics;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 import org.tweetyproject.commons.InferenceMode;
@@ -85,6 +89,51 @@ public abstract class AbstractEAFReasoner implements QualitativeReasoner<Epistem
             default -> throw new IllegalArgumentException("Unknown semantics.");
         };
     }
+    
+	/**
+	 * Computes all admissible extensions that satisfy the epistemic constraint of the EAF for the specified semantics.
+	 * 
+	 * @param bbase the epistemic argumentation framework
+	 * @param semantics the desired semantics
+	 * @return A collection of all admissible extensions that satisfy the constraint.
+	 */
+	public Collection<Extension<EpistemicArgumentationFramework>> getModels(EpistemicArgumentationFramework bbase, Semantics semantics) {
+		//get all admissible Sets of the underlying DungTheory
+		AbstractExtensionReasoner dungReasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+		Collection<Extension<DungTheory>> semExtensions = dungReasoner.getModels(bbase);
+		Collection<Extension<EpistemicArgumentationFramework>> eafSemExtensions = new HashSet<>();
+		
+		//find sets that satisfy the constraint
+		for (Extension<DungTheory> semSet : semExtensions) {
+			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
+			 eafExtension.addAll(semSet);
+			 if (bbase.satisfiesConstraint(semSet)) eafSemExtensions.add(eafExtension);
+		}
+		return eafSemExtensions;
+	}
+
+	/**
+	 * Computes one extension that satisfies the epistemic constraint of the EAF for the specified semantics.
+	 * 
+	 * @param bbase the constrained argumentation framework
+	 * @param semantics the desired semantics
+	 * @return An admissible extension that satisfies the constraint.
+	 */
+	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase, Semantics semantics) {
+		// return the first C-Admissible Set
+		//get all extensions of the underlying DungTheory based on semantics
+		AbstractExtensionReasoner dungReasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+		Collection<Extension<DungTheory>> semExtensions = dungReasoner.getModels(bbase);
+		
+		//find sets that are also C-Admissible
+		for (Extension<DungTheory> semSet : semExtensions) {
+			 Extension<EpistemicArgumentationFramework> cafExtension = new Extension<>();
+			 cafExtension.addAll(semSet);
+			 if (bbase.satisfiesConstraint(semSet)) return cafExtension;
+			
+		}
+		throw new RuntimeException("No Extension found that satisfies constraint.");
+	}
 	
 
 

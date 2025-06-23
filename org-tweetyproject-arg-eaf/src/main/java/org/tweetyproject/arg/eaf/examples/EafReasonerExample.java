@@ -112,6 +112,8 @@ public class EafReasonerExample {
 		
 		System.out.println("\n\nSimple Reasoners for different semantics can be used to find extensions, that satisfy the underlying constraint of an EAF.");
 		System.out.println("Note that Reasoners do not return epistemic labelling sets.");
+		
+
 		//Reasoners can be created using the abstract superclass
 		AbstractEAFReasoner eafReasoner = AbstractEAFReasoner.getSimpleReasonerForSemantics(EAFSemantics.EAF_PR);
 		//Or by instantiating a reasoner for the required semantics

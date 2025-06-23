@@ -49,8 +49,11 @@ public class EAFAgreementReasonerExample {
 
 		String constEAF1 = "[](in(a))";
 		String constEAF2 = "[](und(a))";
+	
+		
 		EpistemicArgumentationFramework eaf1 = new EpistemicArgumentationFramework(af, constEAF1);
-		EpistemicArgumentationFramework eaf2 = new EpistemicArgumentationFramework(af, constEAF2);	
+		EpistemicArgumentationFramework eaf2 = new EpistemicArgumentationFramework(af, constEAF2);
+
 
 		EAFAgreementReasoner agreementReasoner = new EAFAgreementReasoner(eaf1);
 		

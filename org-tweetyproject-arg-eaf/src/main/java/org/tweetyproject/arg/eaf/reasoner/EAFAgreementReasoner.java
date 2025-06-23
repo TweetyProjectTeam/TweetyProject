@@ -60,7 +60,7 @@ public class EAFAgreementReasoner {
     public boolean addEAF(EpistemicArgumentationFramework eaf) throws Exception {
         // Check whether underlying AFs are the same
         DungTheory underlyingAF = new DungTheory(eaf);
-        if (!this.af.getSignature().equals(underlyingAF.getSignature())) 
+        if (!this.af.equals(underlyingAF))
             throw new Exception("underlying AF does not match AF for this Agreement Reasoner");
         this.eafs.add(eaf);
         return true;

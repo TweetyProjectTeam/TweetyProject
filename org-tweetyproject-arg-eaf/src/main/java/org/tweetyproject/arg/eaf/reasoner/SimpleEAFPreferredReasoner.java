@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
@@ -37,44 +38,22 @@ import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 public class SimpleEAFPreferredReasoner extends AbstractEAFReasoner{
 
 	/**
-	 * Computes all preferred extensions that satify the epistemic constraint of the EAF.
+	 * Computes all preferred extensions that satisfy the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the epistemic argumentation framework
-	 * @return A collection of all preferred extensions that satify the constraint.
+	 * @return A collection of all preferred extensions that satisfy the constraint.
 	 */
 	public Collection<Extension<EpistemicArgumentationFramework>> getModels(EpistemicArgumentationFramework bbase) {
-		//get all preferred Sets of the underlying DungTheory
-		SimplePreferredReasoner dungReasoner = new SimplePreferredReasoner();
-		Collection<Extension<DungTheory>> prExtensions = dungReasoner.getModels(bbase);
-		Collection<Extension<EpistemicArgumentationFramework>> eafPrExtensions = new HashSet<>();
-		
-		//find sets that satify the constraint
-		for (Extension<DungTheory> prSet : prExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(prSet);
-			 if (bbase.satisfiesConstraint(prSet)) eafPrExtensions.add(eafExtension);
-		}
-		return eafPrExtensions;
+		return super.getModels(bbase, Semantics.PR);
 	}
 
 	/**
-	 * Computes one preferred extension that satifies the epistemic constraint of the EAF.
+	 * Computes one preferred extension that satisfies the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return A preferred extension that satifies the constraint.
+	 * @return A preferred extension that satisfies the constraint.
 	 */
 	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase) {
-		//get all preferred Sets of the underlying DungTheory
-		SimplePreferredReasoner dungReasoner = new SimplePreferredReasoner();
-		Collection<Extension<DungTheory>> prExtensions = dungReasoner.getModels(bbase);
-		
-		//find a sets that satifies the constraint
-		for (Extension<DungTheory> prSet : prExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(prSet);
-			 if (bbase.satisfiesConstraint(prSet)) return eafExtension;
-			
-		}
-		throw new RuntimeException("No Preferred Extension found that satisfies constraint.");
+		return super.getModel(bbase, Semantics.PR);
 	}
 }

@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
@@ -37,46 +38,23 @@ import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 public class SimpleEAFAdmissibleReasoner extends AbstractEAFReasoner{
 
 	/**
-	 * Computes all admissible extensions that satify the epistemic constraint of the EAF.
+	 * Computes all admissible extensions that satisfy the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the epistemic argumentation framework
-	 * @return A collection of all admissible extensions that satify the constraint.
+	 * @return A collection of all admissible extensions that satisfy the constraint.
 	 */
 	public Collection<Extension<EpistemicArgumentationFramework>> getModels(EpistemicArgumentationFramework bbase) {
-		//get all admissible Sets of the underlying DungTheory
-		SimpleAdmissibleReasoner dungReasoner = new SimpleAdmissibleReasoner();
-		Collection<Extension<DungTheory>> admExtensions = dungReasoner.getModels(bbase);
-		Collection<Extension<EpistemicArgumentationFramework>> eafAdmExtensions = new HashSet<>();
-		
-		//find sets that satify the constraint
-		for (Extension<DungTheory> admSet : admExtensions) {
-			 Extension<EpistemicArgumentationFramework> eafExtension = new Extension<>();
-			 eafExtension.addAll(admSet);
-			 if (bbase.satisfiesConstraint(admSet)) eafAdmExtensions.add(eafExtension);
-		}
-		return eafAdmExtensions;
+		return super.getModels(bbase, Semantics.ADM);
 	}
 
 	/**
-	 * Computes one admissible extension that satifies the epistemic constraint of the EAF.
+	 * Computes one admissible extension that satisfies the epistemic constraint of the EAF.
 	 * 
 	 * @param bbase the constrained argumentation framework
-	 * @return An admissible extension that satifies the constraint.
+	 * @return An admissible extension that satisfies the constraint.
 	 */
 	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase) {
-		// return the first C-Admissible Set
-		//get all admissible Sets of the underlying DungTheory
-		SimpleAdmissibleReasoner dungReasoner = new SimpleAdmissibleReasoner();
-		Collection<Extension<DungTheory>> admExtensions = dungReasoner.getModels(bbase);
-		
-		//find sets that are also C-Admissible
-		for (Extension<DungTheory> admSet : admExtensions) {
-			 Extension<EpistemicArgumentationFramework> cafExtension = new Extension<>();
-			 cafExtension.addAll(admSet);
-			 if (bbase.satisfiesConstraint(admSet)) return cafExtension;
-			
-		}
-		throw new RuntimeException("No Admissible Extension found that satisfies constraint.");
+		return super.getModel(bbase, Semantics.ADM);
 	}
 	
 }
