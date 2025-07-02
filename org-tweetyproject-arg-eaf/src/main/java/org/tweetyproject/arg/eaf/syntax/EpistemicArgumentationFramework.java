@@ -734,7 +734,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	/**
 	 * Computes if the given newConstraint is stronger than the underlying constraint of the EAF.
 	 * A constraint φ₁ is stronger than φ₂ if, whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
-	 *
+	 * @param w the semantics for which to test if constraint is stronger
 	 * @param newConstraint a string representing the constraint
 	 * @return w the semantics for which to test if constraint is stronger
 	 */
@@ -755,6 +755,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 * A constraint φ₁ is stronger than φ₂ if whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
 	 *
 	 * @param newConstraint a FolFormula representing the constraint
+	 * @param w the semantics for which to test if constraint is stronger
 	 * @return w the semantics for which to test if constraint is stronger
 	 */
 	public boolean isStrongerConstraint(FolFormula newConstraint, Semantics w) {
