@@ -31,7 +31,7 @@ import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
  * This reasoner for epistemic Dung theories performs inference on the admissible extension.
  * Extensions are determined by checking for all admissible sets which set combinations satisfy the epistemic constraint.
  * Note that this reasoner does not compute epistemic extension sets.
- * 
+ *
  * @author Sandra Hoffmann
  *
  */
@@ -39,7 +39,7 @@ public class SimpleEAFAdmissibleReasoner extends AbstractEAFReasoner{
 
 	/**
 	 * Computes all admissible extensions that satisfy the epistemic constraint of the EAF.
-	 * 
+	 *
 	 * @param bbase the epistemic argumentation framework
 	 * @return A collection of all admissible extensions that satisfy the constraint.
 	 */
@@ -49,12 +49,12 @@ public class SimpleEAFAdmissibleReasoner extends AbstractEAFReasoner{
 
 	/**
 	 * Computes one admissible extension that satisfies the epistemic constraint of the EAF.
-	 * 
+	 *
 	 * @param bbase the constrained argumentation framework
 	 * @return An admissible extension that satisfies the constraint.
 	 */
 	public Extension<EpistemicArgumentationFramework> getModel(EpistemicArgumentationFramework bbase) {
 		return super.getModel(bbase, Semantics.ADM);
 	}
-	
+
 }

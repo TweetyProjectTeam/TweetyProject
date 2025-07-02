@@ -26,39 +26,56 @@ import org.tweetyproject.arg.dung.parser.FileFormat;
 import org.tweetyproject.arg.eaf.syntax.EpistemicArgumentationFramework;
 
 /**
- * @author Sandra Hoffmann
+ * Abstract base class for writing EpistemicArgumentationFramework (EAF) instances
+ * to different file formats.
+ *
+ * Subclasses must implement the write method for specific formats.
+ * This class also provides a static factory method to retrieve a suitable writer
+ * for a given file format.
+ *
+ * Supported formats include:
+ *
+ *  - TGF - Trivial Graph Format
+ *  - APX - Argumentation Interchange Format (used by ASPARTIX)
+ *  - CNF - Conjunctive Normal Form (logic-based encoding)
+ *
+ *
+ *
+ * Author: Sandra Hoffmann
  */
 public abstract class AbstractEafWriter {
-	
-	/**
-	 * standard constructor
-	 */
-	public AbstractEafWriter() {
-		super();
-	}
-	
-	
-	/**
-	 * Retrieves the writer for the given file format.
-	 * @param f some file format
-	 * @return a writer or null if the format is not supported.
-	 */
-	public static AbstractEafWriter getWriter(FileFormat f){
-		if(f.equals(FileFormat.TGF))
-			return new EafTgfWriter();
-		if(f.equals(FileFormat.APX))
-			return new EafApxWriter();
-		if(f.equals(FileFormat.CNF))
-			return new EafCnfWriter();
-		return null;
-	}
-	
-	/**
-	 * Writes the given eaf into a file
-	 * @param eaf an abstract argumentation framework
-	 * @param f the file that will be overwritten. 
-	 * @throws IOException for all errors concerning file reading/writing.
-	 */
-	public abstract void write(EpistemicArgumentationFramework eaf, File f) throws IOException;
 
+    /**
+     * Standard constructor.
+     */
+    public AbstractEafWriter() {
+        super();
+    }
+
+    /**
+     * Returns an AbstractEafWriter instance for the specified file format.
+     *
+     * @param f the desired file format
+     * @return a writer for the format, or null if the format is not supported
+     */
+    public static AbstractEafWriter getWriter(FileFormat f) {
+        if (f.equals(FileFormat.TGF))
+            return new EafTgfWriter();
+        if (f.equals(FileFormat.APX))
+            return new EafApxWriter();
+        if (f.equals(FileFormat.CNF))
+            return new EafCnfWriter();
+        return null;
+    }
+
+    /**
+     * Writes the given epistemic argumentation framework to the specified file.
+     * If the file already exists, it will be overwritten.
+     *
+     * @param eaf the epistemic argumentation framework to be written
+     * @param f the file to write to
+     * @throws IOException if an error occurs during file writing
+     */
+    public abstract void write(EpistemicArgumentationFramework eaf, File f) throws IOException;
 }
+

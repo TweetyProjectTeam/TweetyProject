@@ -30,13 +30,13 @@ import org.tweetyproject.arg.eaf.util.EafTheoryGenerator;
 import org.tweetyproject.arg.eaf.writer.EafApxWriter;
 
 /**
- * Demonstrates the generation and export of {@link EpistemicArgumentationFramework}s (EAFs)
+ * Demonstrates the generation and export of EAFs
  * using various generation strategies.
  *
  * <p>The generated EAFs are written to `.apx` files using {@link EafApxWriter}.
  * Three approaches are shown:
  * <ul>
- *   <li>Random EAF generation using {@link DefaultDungTheoryGenerator}</li>
+ *   <li>Random EAF generation</li>
  *   <li>Controlled generation with specific structural and semantic properties using {@link KwtDungTheoryGenerator}</li>
  *   <li>Generation based on a custom, user-defined {@link DungTheory}</li>
  * </ul>
@@ -54,7 +54,7 @@ public class EafTheoryGeneratorExample {
      *
      * <p>Three types of EAF datasets are created:
      * <ul>
-     *   <li>20 randomly generated EAFs using {@link DefaultDungTheoryGenerator}</li>
+     *   <li>20 randomly generated EAFs
      *   <li>20 structured EAFs generated using {@link KwtDungTheoryGenerator}, with controlled semantic properties</li>
      *   <li>20 EAFs derived from a manually constructed {@link DungTheory}</li>
      * </ul>
