@@ -111,7 +111,7 @@ public class EAFAgreementReasoner {
      * Replace an EAF with a given constraint. This is akin to a believe change. If there are multiple EAFs with the same
      * constraint as oldConstraint, the first EAF that is found with this constraint is replaced by a new EAF with newConstraint.
      * @param oldConstraint the constraint of the existing EAF to be replaced
-     *
+     *@param newConstraint the constraint of the new EAF to replace the old one
      * @return true if replacement was successful, false otherwise
      * @throws Exception if the underlying AF doesn't match
      */
@@ -182,6 +182,7 @@ public class EAFAgreementReasoner {
      * @param mode credulous or skeptical mode
      * @param sem the semantics to use
      * @throws IllegalArgumentException if the query format is invalid or if an argument in the query is not found in the labeling
+     * @return  boolean indicating whether all EAFs agree on the query
      */
     public Boolean query(String queryNode, InferenceMode mode, Semantics sem){
         if (mode == InferenceMode.CREDULOUS) {
