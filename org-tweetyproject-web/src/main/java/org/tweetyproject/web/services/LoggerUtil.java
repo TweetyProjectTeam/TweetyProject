@@ -46,8 +46,8 @@ import java.util.logging.SimpleFormatter;
  * @see FileHandler
  * @see SimpleFormatter
  */
-
 public class LoggerUtil {
+   /** The logger instance for this utility class */
     public static final Logger logger = Logger.getLogger(LoggerUtil.class.getName());
 
     static {
