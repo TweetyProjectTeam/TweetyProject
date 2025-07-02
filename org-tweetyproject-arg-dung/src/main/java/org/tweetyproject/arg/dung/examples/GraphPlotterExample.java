@@ -29,16 +29,31 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
- * Example Usage of the {@link AigGraphPlotter} which renders a given graph via html in the webbrowser
+ * Example Usage of the {@link AigGraphPlotter} which renders a given graph via
+ * html in the webbrowser
  *
  * @author Lars Bengel
  */
 public class GraphPlotterExample {
+    /**
+     * Entry point of the program demonstrating the visualization of an
+     * argumentation framework using the {@code AigGraphPlotter}.
+     *
+     * <p>
+     * This method generates a random Dung argumentation framework with a specified
+     * number of arguments and a given attack probability. The framework is then
+     * visualized using the {@code AigGraphPlotter}.
+     * </p>
+     *
+     * @param args Command-line arguments (not used in this application).
+     * @throws URISyntaxException if a URI error occurs while loading resources.
+     * @throws IOException        if an I/O error occurs during resource handling.
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         DungTheory theory = new DefaultDungTheoryGenerator(9, 0.2).next();
 
         // Initialize plotter for argumentation framework
-        AigGraphPlotter<DungTheory,Argument> plotter = new AigGraphPlotter<>(theory);
+        AigGraphPlotter<DungTheory, Argument> plotter = new AigGraphPlotter<>(theory);
 
         // Set options for rendering of the graph, eg
         plotter.setLinkDeletable(false);
@@ -47,8 +62,7 @@ public class GraphPlotterExample {
         plotter.show();
 
         // Plot an argumentation framework and its serialisation wrt. complete semantics
-        //AigSerialisationPlotter.showSerialisation(theory, Semantics.CO);
-
+        // AigSerialisationPlotter.showSerialisation(theory, Semantics.CO);
 
     }
 }
