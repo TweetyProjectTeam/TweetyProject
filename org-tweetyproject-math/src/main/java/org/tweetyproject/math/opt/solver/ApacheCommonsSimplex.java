@@ -54,42 +54,42 @@ import org.apache.commons.math.optimization.linear.SimplexSolver;
  * @author Matthias Thimm
  */
 public class ApacheCommonsSimplex extends Solver {
-	
+
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
 	 */
 	private int maxiterations;
-	
+
 	/**
 	 * The precision
 	 */
 	private double precision;
-	
+
 	/**
 	 * Whether only positive solutions are allowed.
 	 */
 	private boolean restrictToNonNegative;
-	
+
 	/** Constructor */
 	public ApacheCommonsSimplex() {
 		this(0.01);
 	}
-	
-	/** Constructor 
-	 * @param precision  Whether only positive solutions are allowed.
+
+	/** Constructor
+	 * @param restrictToNonNegative  Whether only positive solutions are allowed.
 	 */
 	public ApacheCommonsSimplex(boolean restrictToNonNegative) {
 		this(50000,0.01,restrictToNonNegative);
 	}
-	
-	/** Constructor 
+
+	/** Constructor
 	 * @param precision The precision
 	 */
 	public ApacheCommonsSimplex(double precision) {
 		this(50000,precision,false);
 	}
 
-	/** Constructor 
+	/** Constructor
 	 * @param maxiterations The maximum number of iterations of the simplex algorithm.
 	 * @param precision The precision
 	 * @param restrictToNonNegative Whether only positive solutions are allowed.
@@ -99,7 +99,7 @@ public class ApacheCommonsSimplex extends Solver {
 		this.precision = precision;
 		this.restrictToNonNegative = restrictToNonNegative;
 	}
-		
+
 
 	/**
 	 * Logger.

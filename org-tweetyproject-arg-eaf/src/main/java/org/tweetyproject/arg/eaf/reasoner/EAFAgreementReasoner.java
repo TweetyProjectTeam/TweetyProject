@@ -42,7 +42,7 @@ public class EAFAgreementReasoner {
         // Get all arguments from graph to set signature for parser
         Collection<Argument> arguments = af.getNodes();
         Set<String> validArgumentNames = new HashSet<>();
-        
+
         for (Argument arg : arguments) {
             String argName = arg.getName();
             validArgumentNames.add(argName);
@@ -74,7 +74,7 @@ public class EAFAgreementReasoner {
     public boolean addEAF(String constraint) {
            return this.eafs.add(new EpistemicArgumentationFramework(this.af, constraint));
     }
-    
+
     /**
      * Remove a specific EAF from the reasoner
      * @param eaf the EAF to remove
@@ -111,16 +111,16 @@ public class EAFAgreementReasoner {
      * Replace an EAF with a given constraint. This is akin to a believe change. If there are multiple EAFs with the same
      * constraint as oldConstraint, the first EAF that is found with this constraint is replaced by a new EAF with newConstraint.
      * @param oldConstraint the constraint of the existing EAF to be replaced
-     * @param newEAF the new EAF to replace the old one
+     *
      * @return true if replacement was successful, false otherwise
      * @throws Exception if the underlying AF doesn't match
      */
     public boolean changeEAF(String oldConstraint, String newConstraint) throws Exception {
     	EpistemicArgumentationFramework oldEAF = new EpistemicArgumentationFramework(this.af, oldConstraint);
-    	EpistemicArgumentationFramework newEAF = new EpistemicArgumentationFramework(this.af, newConstraint);    	
+    	EpistemicArgumentationFramework newEAF = new EpistemicArgumentationFramework(this.af, newConstraint);
         return changeEAF(oldEAF, newEAF) ;
     }
-    
+
     /**
      * Remove an EAF by its index
      * @param index the index of the EAF to remove
@@ -128,15 +128,15 @@ public class EAFAgreementReasoner {
      */
     public EpistemicArgumentationFramework removeEAF(int index) {
         List<EpistemicArgumentationFramework> eafList = new ArrayList<>(this.eafs);
-        
+
         // Check if index is valid
         if (index >= 0 && index < eafList.size()) {
             // Remove and return the EAF at the specified index
             EpistemicArgumentationFramework removedEAF = eafList.remove(index);
-            
+
             // Update the original collection
             this.eafs = eafList;
-            
+
             return removedEAF;
         }
         return null;
@@ -174,7 +174,7 @@ public class EAFAgreementReasoner {
     public List<EpistemicArgumentationFramework> getEAFs() {
         return new ArrayList<>(this.eafs);
     }
-      
+
 
     /**
      * Check if all EAFs agree on a formula under the given semantics and inference mode
@@ -189,7 +189,7 @@ public class EAFAgreementReasoner {
             for (EpistemicArgumentationFramework eaf : eafs) {
                 Set<Set<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
                 boolean eafSatisfies = false;
-                
+
                 // Check if any labelling set satisfies the formula (M formula)
                 for (Collection<Labeling> labellingSet : eafLabellingSets) {
                     if (satisfiesQueryInAnyLabelling(labellingSet, queryNode)) {
@@ -197,18 +197,18 @@ public class EAFAgreementReasoner {
                         break;
                     }
                 }
-                
+
                 if (!eafSatisfies) {
                     return false; // This EAF doesn't credulous agree
                 }
             }
             return true; // All EAFs credulous agree
-            
+
         } else {
             // Skeptical agreement: all labelling sets of all EAFs contain queryNode
             for (EpistemicArgumentationFramework eaf : eafs) {
                 Set<Set<Labeling>> eafLabellingSets = eaf.getWEpistemicLabellingSets(sem);
-                
+
                 // Check if all labelling sets satisfy the formula in all labellings (K formula)
                 for (Collection<Labeling> labellingSet : eafLabellingSets) {
                     if (!satisfiesQueryInAllLabellings(labellingSet, queryNode)) {
@@ -219,10 +219,10 @@ public class EAFAgreementReasoner {
             return true; // All EAFs skeptically agree
         }
     }
-    
-    
+
+
    //Check if a formula is satisfied in any labeling of the labeling set (M formula)
-    private boolean satisfiesQueryInAnyLabelling(Collection<Labeling> labelingSet, String query) {    
+    private boolean satisfiesQueryInAnyLabelling(Collection<Labeling> labelingSet, String query) {
         for (Labeling labeling : labelingSet) {
             if (satisfiesQuery(labeling, query)) {
                 return true;
@@ -230,8 +230,8 @@ public class EAFAgreementReasoner {
         }
         return false;
     }
-    
-    
+
+
     //Check if a formula is satisfied in all labelings of the labeling set (K formula)
     private boolean satisfiesQueryInAllLabellings(Collection<Labeling> labelingSet, String query) {
         for (Labeling labeling : labelingSet) {
@@ -241,21 +241,21 @@ public class EAFAgreementReasoner {
         }
         return true;
     }
-    
+
 
     //Check if a labeling satisfies a specific query
     private boolean satisfiesQuery(Labeling labeling, String query) {
         // Parse the query to extract argument name and label
         Pattern pattern = Pattern.compile("(in|out|und)\\(([^)]+)\\)");
         Matcher matcher = pattern.matcher(query);
-        
+
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid query format. Expected in(a), out(a), or und(a)");
         }
-        
+
         String label = matcher.group(1);
         String argName = matcher.group(2);
-        
+
         // Find the argument in the labeling
         Argument arg = null;
         for (Argument a : labeling.keySet()) {
@@ -264,11 +264,11 @@ public class EAFAgreementReasoner {
                 break;
             }
         }
-        
+
         if (arg == null) {
             throw new IllegalArgumentException("Argument " + argName + " not found in the labeling");
         }
-        
+
         // Check the labeling based on the query label using the ArgumentStatus
         switch (label) {
             case "in":
@@ -296,7 +296,7 @@ public class EAFAgreementReasoner {
      * @param sem the argumentation semantics to apply
      * @return true if the query label wins the majority vote, false otherwise
      * @throws IllegalArgumentException if the query format is invalid
-     */    
+     */
     public boolean majorityVote(String query, InferenceMode mode, Semantics sem) {
         String[] labels = {"in", "out", "und"};
         Map<String, Integer> voteCounts = new HashMap<>();
@@ -350,6 +350,6 @@ public class EAFAgreementReasoner {
         }
 
         return true;
-    }  
- 
+    }
+
 }
