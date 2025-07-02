@@ -54,7 +54,7 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
 	/**
-	 *
+	 * Solves the given combinatorics problem using simulated annealing.
 	 * @param prob: the problem
 	 * @return the best solution encountered
 	 */

@@ -216,7 +216,7 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 	}
 
 	/**
-	 *
+	 * Checks if the solver is installed.
 	 * @return if solver is installed
 	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */

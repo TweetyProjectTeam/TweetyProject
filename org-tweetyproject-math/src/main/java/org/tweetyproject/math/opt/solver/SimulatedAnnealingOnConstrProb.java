@@ -116,6 +116,7 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 	}
 
 	/**
+	 * Creates a neighborhood of solutions around the current solution
 	 * @param minIterations: the minimum amount of solutions to be created
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries

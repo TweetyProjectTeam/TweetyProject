@@ -21,7 +21,7 @@ package org.tweetyproject.commons;
 /**
  * The general interface for objects that are able to query a belief base
  * with some formula and return a degree (double value) of its acceptability.
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <B> the belief base type that can be queried
@@ -29,7 +29,7 @@ package org.tweetyproject.commons;
  */
 public interface QuantitativeReasoner<B extends BeliefBase,F extends Formula> extends Reasoner<Double,B,F> {
 	/**
-	 * 
+	 *  Checks if the reasoner is installed.
 	 * @return if reasoner is installed
 	 */
 	public abstract boolean isInstalled();

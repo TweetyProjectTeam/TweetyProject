@@ -20,10 +20,18 @@ package org.tweetyproject.math.func.fuzzy;
 
 /**
  * Implements the default fuzzy negation x -&gt; x-1
- * 
+ *
  * @author Matthias Thimm
  */
 public class DefaultNegation extends FuzzyNegation{
+
+
+	/**
+     * Creates a new instance of DefaultNegation.
+     */
+    public DefaultNegation() {
+        super();
+    }
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.fuzzy.FuzzyNegation#eval(java.lang.Double)
