@@ -11,14 +11,14 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.28-SNAPSHOT</version>
+  	<version>1.29-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
 		<groupId>tw.edu.ntu.csie</groupId>

@@ -1,32 +1,41 @@
+08.07.2026 - TweetyProject v1.29
+  New libraries:
+    - org.tweetyproject.arg.eaf: epistemic argumentation frameworks
+  New functionalities:
+    - Graph rendering capabilities
+  Minor changes:
+    - Fixed JavaDoc
+    - Minor bugfixes
+
 23.01.2025 - TweetyProject 1.28
-  New libraries: 
+  New libraries:
     - org.tweetyproject.arg.caf: constrained argumentation frameworks
-  New functionalities: 
-    - Added methods to check for strong expansion equivalence in abstract argumentation 
+  New functionalities:
+    - Added methods to check for strong expansion equivalence in abstract argumentation
       frameworks (org.tweetyproject.arg.dung)
     - Added reasoner for k-admissibility (org.tweetyproject.arg.dung)
     - Added method to retrieve connected components of graphs
   Minor changes:
     - Fixed JavaDoc
-    - Minor bugfixes    
+    - Minor bugfixes
 
 03.09.2024 - TweetyProject 1.27
-  New libraries: 
+  New libraries:
     - org.tweetyproject.arg.weighted: weighted argumentation frameworks
     - org.tweetyproject.arg.extended: argumentation frameworks with recursive attacks
-  New functionalities: 
+  New functionalities:
     - Added generator for deductive knowledge bases (org.tweetyproject.arg.deductive)
     - Added minmax numbering for argumentation frameworks (org.tweetyproject.arg.dung)
     - New soft notions of stable semantics for abstract argumentation frameworks (org.tweetyproject.arg.dung)
   Minor changes:
     - Fixed JavaDoc
-    - Minor bugfixes    
+    - Minor bugfixes
 
 03.09.2024 - TweetyProject 1.26  (not officially released)
 
 18.01.2024 - TweetyProject 1.25
   New libraries: <none>
-  New functionalities: 
+  New functionalities:
     - Added functionalities for reasoning with serialisable semantics for
       abstract argumentation frameworks (org.tweetyproject.arg.dung)
     - Added equivalence testing classes for abstract argumentation frameworks,
@@ -35,19 +44,19 @@
     - Added functionalities for causal reasoning with abstract argumentation frameworks
       (org.tweetyproject.arg.dung)
     - updated web packages with Spring framework (org.tweetyproject.web)
-    - added web components for reasoning with abstract argumentation and ABA 
+    - added web components for reasoning with abstract argumentation and ABA
       (org.tweetyproject.web)
   Minor changes:
     - Improved DIMACS conversion for MaxSAT solving
-    - Minor bugfixes    
-    
+    - Minor bugfixes
+
 11.07.2023 - TweetyProject 1.24
   New libraries: <none>
   New functionalities: <none>
   Minor changes:
     - Minor bugfixes
     - Fixed JavaDoc
-    
+
 23.01.2023 - TweetyProject 1.23
   New libraries: <none>
   New functionalities:
@@ -63,7 +72,7 @@
     - Added inconsistency measure based on prime implicants (org.tweetyproject.logics.pl)
   Minor changes:
     - Fixed JavaDoc
-    
+
 25.07.2022 - TweetyProject 1.22
   New libraries:
     - org.tweetyproject.comparator: library for various comparators such as
@@ -76,7 +85,7 @@
   Minor changes:
     - Encoding optimisations for SAT-based argumentation solvers (org.tweetyproject.arg.dung)
     - Bugfix web interface (note that http://tweetyproject.org/w/ is usable again)
-    
+
 20.01.2022 - TweetyProject 1.21
   New libraries:
     - org.tweetyproject.sat: dedicated library for SAT solving
@@ -98,7 +107,7 @@
     - bugfixes in existing JUnit tests
     - refactoring of extension handling in org.tweetyproject.arg.dung
     - removed log4j security issues
-    
+
 04.08.2021 - TweetyProject 1.20
   New libraries:
     - org.tweetyproject.logics.petri: Petri nets with reasoning capabilities and
@@ -125,7 +134,7 @@
     - Bugfixes and improvements for ranking semantics for abstract argumentation
       (org.tweetyproject.arg.rankings)
     - Improved JavaDoc throughout the project
-    
+
 02.02.2021 - TweetyProject 1.19
   - The source repository of TweetyProject has now been moved to GitHub
     (https://github.com/TweetyProjectTeam/TweetyProject). As a result, the main
@@ -153,7 +162,7 @@
     - bugfixes in ordering semantics for abstract argumentation
       (org.tweetyproject.arg.dung)
     - bugfixes in the ASP library (org.tweetyproject.lp.asp)
-    
+
 29.01.2021 - TweetyProject 1.18 (not officially released)
 
 14.07.2020 - TweetyProject 1.17
@@ -183,7 +192,7 @@
     - added convenience methods for easier adding multiple formulas
       to belief bases
     - bugfixes in ASP (net.sf.tweety.lp.asp)
-    
+
 23.01.2020 - TweetyProject 1.16
   New libraries:
     - net.sf.tweety.arg.bipolar: bipolar argumentation frameworks
@@ -203,7 +212,7 @@
     - improved enumeration of deductive arguments in net.sf.tweety.arg.deductive
     - bugfixes in several ranking semantics (net.sf.tweety.arg.rankings)
     - bugfixes in ASPIC+ (net.sf.tweety.arg.aspic)
-    
+
 21.01.2020 - TweetyProject 1.15 (not officially released)
 
 18.07.2019 - TweetyProject 1.14
@@ -228,7 +237,7 @@
       logic (net.sf.tweety.logics.pl.postulates); automatic evaluation through
       postulate evaluation framework (net.sf.tweety.commons.postulates).
     - Belief base iteration from text files (with one belief base per line)
-    
+
 15.07.2019 - TweetyProject 1.13 (not officially released)
 
 23.01.2019 - TweetyProject 1.12
