@@ -34,16 +34,22 @@ import org.tweetyproject.math.term.Term;
  */
 
 public class TravelingSalesman_solvedWithIteratedLocalSearch {
+
+	/** Default constructor */
+	public TravelingSalesman_solvedWithIteratedLocalSearch() {
+		// default constructor
+	}
+
 	/**
 	 * main method
 	 * @param args arguments
 	 */
 	public static void main(String args[]) {
-		
+
 		int numberOfCities = 20;
 		//create a list of numberOfCities random cities (defined by their x- and y- coordinate)
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
-		
+
 		for(int i = 0; i < numberOfCities; i++) {
 			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
 			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
@@ -64,8 +70,8 @@ public class TravelingSalesman_solvedWithIteratedLocalSearch {
 		for(ElementOfCombinatoricsProb i : mySol)
 			System.out.print(i.components + " ");
 
-		
-			
-		
+
+
+
 	}
 }
