@@ -9,244 +9,249 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.28-SNAPSHOT</version>
+  	<version>1.29-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>action</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>agents</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>comparator</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.agents</groupId>
   		<artifactId>dialogues</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>aba</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>adf</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>bipolar</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>aspic</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>deductive</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>delp</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>dung</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>lp</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>prob</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>saf</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
         <dependency>
                 <groupId>org.tweetyproject.arg</groupId>
                 <artifactId>setaf</artifactId>
-                <version>1.28-SNAPSHOT</version>
+                <version>1.29-SNAPSHOT</version>
         </dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>social</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
 	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>rankings</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>beliefdynamics</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>cli</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>graphs</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
 	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>bpm</artifactId>
- 		<version>1.28-SNAPSHOT</version>
+ 		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>cl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
  	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>dl</artifactId>
- 		<version>1.28-SNAPSHOT</version>
+ 		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
 	  	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>ml</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>mln</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>petri</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
  		<artifactId>pcl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>pl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>qbf</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>rcl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>rdl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>rpcl</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>translators</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.lp</groupId>
   		<artifactId>asp</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.lp.asp</groupId>
   		<artifactId>beliefdynamics</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.lp</groupId>
   		<artifactId>nlp</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
  	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>machinelearning</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>plugin</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>preferences</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>web</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>sat</artifactId>
-  		<version>1.28-SNAPSHOT</version>
+  		<version>1.29-SNAPSHOT</version>
   	</dependency>
     <dependency>
     	<groupId>org.tweetyproject.arg</groupId>
     	<artifactId>weighted</artifactId>
-    	<version>1.28-SNAPSHOT</version>
+    	<version>1.29-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.tweetyproject.arg</groupId>
     	<artifactId>caf</artifactId>
-    	<version>1.28-SNAPSHOT</version>
+    	<version>1.29-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.tweetyproject.arg</groupId>
+    	<artifactId>eaf</artifactId>
+    	<version>1.29-SNAPSHOT</version>
     </dependency>
 </dependencies>
 </project>

@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class SumAggregator implements AggregationFunction {
 
+	/**Default constructor */
+	public SumAggregator() {
+		// default constructor
+	}
+
 	private static final long serialVersionUID = -8518226177117879461L;
 
 	/* (non-Javadoc)
@@ -38,7 +43,7 @@ public class SumAggregator implements AggregationFunction {
 			sum += elem;
 		return sum;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

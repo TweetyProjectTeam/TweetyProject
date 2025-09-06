@@ -37,6 +37,11 @@ import org.tweetyproject.math.term.Term;
  */
 
 public class TravelingSalesman_solvedWithAntOpt {
+
+	/** Default constructor */
+	public TravelingSalesman_solvedWithAntOpt() {
+		// default constructor
+	}
 	/**
 	 * main method
 	 * @param args arguments
@@ -45,11 +50,11 @@ public class TravelingSalesman_solvedWithAntOpt {
 	 * @throws InvalidInputException InvalidInputException
 	 */
 	public static void main(String args[]) throws IOException, ConfigurationException, InvalidInputException {
-		
+
 		int numberOfCities = 20;
 		//create a list of numberOfCities random cities (defined by their x- and y- coordinate)
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
-		
+
 		for(int i = 0; i < numberOfCities; i++) {
 			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
 			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));

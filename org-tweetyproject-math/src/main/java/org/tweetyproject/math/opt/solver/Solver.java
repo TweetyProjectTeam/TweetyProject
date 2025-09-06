@@ -30,14 +30,18 @@ import org.tweetyproject.math.term.*;
  * @author Matthias Thimm
  */
 public abstract class Solver {
-	
+
+	/** Default Constructor */
+	public Solver() {
+		// No initialization required
+	}
 	/** The default solver for non-linear (general) optimization problems. */
 	private static Solver defaultGeneralSolver = null;
 	/** The default solver for linear optimization problems. */
 	private static Solver defaultLinearSolver = null;
 	/** The default solver for integer linear problems*/
 	private static Solver defaultIntegerLinearSolver = null;
-	
+
 	/**
 	 * Sets the default solver for non-linear (general) optimization problems.
 	 * @param solver some solver
@@ -45,15 +49,15 @@ public abstract class Solver {
 	public static void setDefaultGeneralSolver(Solver solver){
 		Solver.defaultGeneralSolver = solver;
 	}
-	
+
 	/**
 	 * Sets the default solver for linear optimization problems.
 	 * @param solver some solver
 	 */
 	public static void setDefaultLinearSolver(Solver solver){
-		Solver.defaultLinearSolver = solver;		
+		Solver.defaultLinearSolver = solver;
 	}
-	
+
 	/**
 	 * Sets the default solver for integer linear optimization problems.
 	 * @param solver some solver
@@ -61,41 +65,41 @@ public abstract class Solver {
 	public static void setDefaultIntegerLinearSolver(Solver solver){
 		Solver.defaultIntegerLinearSolver = solver;
 	}
-	
+
 	/**
-	 * Returns "true" if a default solver for general optimization 
+	 * Returns "true" if a default solver for general optimization
 	 * problems is configured.
-	 * @return "true" if a default solver for general optimization 
+	 * @return "true" if a default solver for general optimization
 	 * problems is configured.
 	 */
 	public static boolean hasDefaultGeneralSolver(){
 		return Solver.defaultGeneralSolver != null;
 	}
-	
+
 	/**
-	 * Returns "true" if a default solver for linear optimization 
+	 * Returns "true" if a default solver for linear optimization
 	 * problems is configured.
-	 * @return "true" if a default solver for linear optimization 
+	 * @return "true" if a default solver for linear optimization
 	 * problems is configured.
 	 */
 	public static boolean hasDefaultLinearSolver(){
 		return Solver.defaultLinearSolver != null;
 	}
-	
+
 	/**
-	 * Returns "true" if a default solver for integer linear optimization 
+	 * Returns "true" if a default solver for integer linear optimization
 	 * problems is configured.
-	 * @return "true" if a default solver for integer linear optimization 
+	 * @return "true" if a default solver for integer linear optimization
 	 * problems is configured.
 	 */
 	public static boolean hasDefaultIntegerLinearSolver(){
 		return Solver.defaultIntegerLinearSolver != null;
 	}
-	
+
 	/**
 	 * Returns the default solver for non-linear (general) optimization problems.
 	 * If a default solver for general problems has been configured this solver
-	 * is returned by this method. If no default solver for general problems is 
+	 * is returned by this method. If no default solver for general problems is
 	 * configured, a message is printed to stderr pointing out that no default
 	 * solver is configured and the application is terminated.
 	 * @return the default solver for non-linear (general) optimization problems.
@@ -110,11 +114,11 @@ public abstract class Solver {
 		System.exit(1);
 		return null;
 	}
-	
+
 	/**
 	 * Returns the default solver for integer linear optimization problems.
 	 * If a default solver for general problems has been configured this solver
-	 * is returned by this method. If no default solver for general problems is 
+	 * is returned by this method. If no default solver for general problems is
 	 * configured, a message is printed to stderr pointing out that no default
 	 * solver is configured and the application is terminated.
 	 * @return the default solver for non-linear (general) optimization problems.
@@ -129,12 +133,12 @@ public abstract class Solver {
 		System.exit(1);
 		return null;
 	}
-		
+
 	/**
 	 * Returns the default solver for linear optimization problems.<br><br>
 	 * If a default solver for linear problems has been configured this solver
-	 * is returned by this method. If no default solver for linear problems is 
-	 * configured, the default solver for  general optimization problems is 
+	 * is returned by this method. If no default solver for linear problems is
+	 * configured, the default solver for  general optimization problems is
 	 * returned. If this one is not defined as well, the ApacheCommonsSimplex
 	 * solver (<code>org.tweetyproject.math.opt.solver.ApacheCommonsSimplex</code>)
 	 * is returned (with a default setting of 50000 number of iterations that returns
@@ -159,16 +163,16 @@ public abstract class Solver {
 				+ "for more information.");
 		return  new ApacheCommonsSimplex();
 	}
-	
+
 	/**
 	 * Computes a solution to the given constraint satisfaction or optimization problem, i.e.
 	 * a mapping from variables of the problem to terms.
 	 * @param problem the actual problem
-	 * @return a mapping from variables of the problem to terms. 
+	 * @return a mapping from variables of the problem to terms.
 	 * @throws GeneralMathException if something went wrong.
 	 */
 	public abstract Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException;
-	
+
 	/**
 	 * Checks whether the solver of this class is actually installed, i.e. whether external binaries
 	 * needed for running the solver are available and dependencies are satisfied.

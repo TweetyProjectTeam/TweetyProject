@@ -122,8 +122,7 @@ public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<Numeri
 		/*
 		 * Solve problem with simplex algorithm
 		 */
-		ApacheCommonsSimplex solver = new ApacheCommonsSimplex();
-		solver.onlyPositive = true;
+		ApacheCommonsSimplex solver = new ApacheCommonsSimplex(true);
 		try {
 			Map<Variable, Term> solution = solver.solve(problem);
 			return solution.get(targetVar).doubleValue();

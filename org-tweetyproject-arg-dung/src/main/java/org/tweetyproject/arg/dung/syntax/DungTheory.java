@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 
+import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
@@ -379,6 +380,24 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Checks whether the given extension is preferred wrt. this theory.
+	 * @param e some extension
+	 * @return "true" iff the extension is preferred.
+	 */
+	public boolean isPreferred(Extension<DungTheory> e) {
+		if(!this.isAdmissible(e)) return false;
+		SimpleAdmissibleReasoner reasoner = new SimpleAdmissibleReasoner();
+	    Collection<Extension<DungTheory>> admissibleSets = reasoner.getModels(this);
+	    for (Extension<DungTheory> candidate : admissibleSets) {
+	        // If candidate is strictly larger than e, then e is not maximal
+	        if (candidate.containsAll(e) && candidate.size() > e.size()) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 	
 	/**

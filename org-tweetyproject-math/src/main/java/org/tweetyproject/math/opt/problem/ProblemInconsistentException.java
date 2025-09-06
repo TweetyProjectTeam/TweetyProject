@@ -20,10 +20,17 @@ package org.tweetyproject.math.opt.problem;
 
 /**
  * This exception is thrown when a problem cannot be solved due to its inconsistency.
- * 
+ *
  * @author Matthias Thimm
  */
 public class ProblemInconsistentException extends RuntimeException {
+
+	/**
+	 * Creates a new instance of ProblemInconsistentException.
+	 */
+	public ProblemInconsistentException() {
+		super();
+	}
 
 	/**
 	 * For serialization.

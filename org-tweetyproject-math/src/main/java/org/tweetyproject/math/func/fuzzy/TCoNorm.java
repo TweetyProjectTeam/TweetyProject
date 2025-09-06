@@ -27,11 +27,16 @@ import org.tweetyproject.math.term.Term;
 /**
  * Represents a T-norm in fuzzy logic, i.e., a generalization of a logical
  * conjunction on values in [0,1].
- * 
+ *
  * @author Matthias Thimm
  *
  */
 public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
+
+	/** Default constructor */
+	public TCoNorm() {
+		// default constructor
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.math.func.BinaryFunction#eval(java.lang.Object, java.lang.Object)
@@ -51,7 +56,7 @@ public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
 			result = this.eval(result, d);
 		return result;
 	}
-	
+
 	/**
 	 * Gives a representation of this conorm as a mathematical term
 	 * @param val1 the term denoting the first parameter
@@ -59,7 +64,7 @@ public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
 	 * @return the term denoting this conorm evaluation on the two terms
 	 */
 	public abstract Term evalTerm(Term val1, Term val2);
-	
+
 	/**
 	 * Gives a representation of this conorm as a mathematical term.
 	 * Generalizes this conorm on sets of input parameters
@@ -73,17 +78,17 @@ public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
 			result = this.evalTerm(result,t);
 		return result;
 	}
-	
+
 	/**
 	 * Returns the dual T-norm of this T-conorm.
 	 * @return the dual T-norm of this T-conorm.
 	 */
 	public abstract TNorm getDualNorm();
-	
+
 	/**
 	 * A T-conorm is nilpotent if there are x,y&lt;1 with s(x,y)=1
 	 * @return true if the conorm is nilpotent
 	 */
 	public abstract boolean isNilpotent();
-	
+
 }

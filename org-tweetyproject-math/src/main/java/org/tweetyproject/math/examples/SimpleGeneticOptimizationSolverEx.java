@@ -39,12 +39,19 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class SimpleGeneticOptimizationSolverEx {
+
+	/**
+	 * Default constructor for SimpleGeneticOptimizationSolverEx.
+	 */
+	public SimpleGeneticOptimizationSolverEx() {
+		// No initialization required
+	}
 	/**
 	 * constructor
 	 * @return problem
 	 */
 	public static OptimizationProblem  createConstraintSatProb1() {
-		
+
 		FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
 		Equation constr1 = new Equation(m1, new IntegerConstant(10));
@@ -52,7 +59,7 @@ public class SimpleGeneticOptimizationSolverEx {
 		Equation constr3 = new Equation(m1, new IntegerConstant(0));
 		Equation constr4 = new Equation(m2, new IntegerConstant(0));
 		Equation constr5 = new Equation(m1.add(m2), new IntegerConstant(16));
-		
+
 		Collection<Statement> constraints = new ArrayList<Statement>();
 		constraints.add(constr1);
 		constraints.add(constr2);
@@ -65,14 +72,14 @@ public class SimpleGeneticOptimizationSolverEx {
 		//Target funcion = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1, new IntegerConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
-		
-		
-		
+
+
+
 		((OptimizationProblem)prob).setTargetFunction(opt);
 		return prob;
-		
+
 	}
-	
+
 	/**
 	 * main method
 	 * @param args arguments
@@ -92,8 +99,8 @@ public class SimpleGeneticOptimizationSolverEx {
 		SimpleGeneticOptimizationSolver solver = new SimpleGeneticOptimizationSolver(100, 200, 20, 100, 0.001);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
-		
-		
+
+
 	}
 }
 

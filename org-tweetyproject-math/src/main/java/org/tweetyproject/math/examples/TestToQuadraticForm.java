@@ -37,6 +37,11 @@ public class TestToQuadraticForm {
 	 * main method
 	 * @param args arguments
 	 */
+	// Default constructor
+	public TestToQuadraticForm() {
+		// Default constructor
+	}
+
 	public static void main(String[] args) {
 		IntegerVariable m1 = new IntegerVariable("Maschine_A");
 		ArrayList<Term> opts = new ArrayList<Term>();
@@ -56,15 +61,15 @@ public class TestToQuadraticForm {
 
 			//System.out.println(t.getSums().toString());
 		}
-		
+
 //		for(Term t : opts) {
 //			ArrayList<Sum> sums = new ArrayList<Sum>();
 //			sums.addAll(t.toQuadraticForm().getSums());
 //			for(Sum s : sums)
 //				System.out.println(s.toString());
 //			System.out.print("\n");
-//				
+//
 //		}
-//			
+//
 	}
 }

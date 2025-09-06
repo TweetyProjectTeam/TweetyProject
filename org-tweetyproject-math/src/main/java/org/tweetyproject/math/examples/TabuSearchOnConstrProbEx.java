@@ -38,6 +38,14 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class TabuSearchOnConstrProbEx {
+
+    /**
+     * Default constructor.
+     */
+    public TabuSearchOnConstrProbEx() {
+        // default constructor
+    }
+
 	/**
 	 * constructor
 	 * @return problem
