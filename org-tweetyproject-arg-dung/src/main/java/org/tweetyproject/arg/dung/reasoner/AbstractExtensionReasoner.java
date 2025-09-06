@@ -103,6 +103,7 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
             case UD -> new UndisputedReasoner();
             case SUD -> new StronglyUndisputedReasoner();
             case IS -> new SimpleInitialReasoner();
+            case UC -> new SerialisedExtensionReasoner(Semantics.UC);
             default -> throw new IllegalArgumentException("Unknown semantics.");
         };
     }
