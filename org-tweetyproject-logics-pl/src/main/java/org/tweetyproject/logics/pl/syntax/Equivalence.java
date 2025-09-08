@@ -30,6 +30,7 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
  * This class models equivalence of propositional logic.
  * 
  * @author Anna Gessler
+ * @author Lars Bengel
  */
 public class Equivalence extends PlFormula {
 	
@@ -138,7 +139,7 @@ public class Equivalence extends PlFormula {
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Disjunction d1 = new Disjunction(new Negation(this.formulas.getFirst()),this.formulas.getSecond());
 		Disjunction d2 = new Disjunction(new Negation(this.formulas.getSecond()),this.formulas.getFirst()); 
-		return (new Conjunction(d1,d2)).getModels();
+		return (new Conjunction(d1,d2)).getModels(sig);
 	}
 
 	@Override

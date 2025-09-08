@@ -30,6 +30,7 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
  * This class models the implication of propositional logic.
  * 
  * @author Anna Gessler
+ * @author Lars Bengel
  */
 public class Implication extends PlFormula {
 
@@ -181,7 +182,7 @@ public class Implication extends PlFormula {
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Disjunction d = new Disjunction(new Negation(this.formulas.getFirst()), this.formulas.getSecond()); // (A=>B)
-		return d.getModels();
+		return d.getModels(sig);
 	}
 
 	@Override

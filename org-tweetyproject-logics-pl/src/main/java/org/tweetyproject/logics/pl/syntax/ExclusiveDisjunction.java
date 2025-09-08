@@ -30,6 +30,7 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
  * 
  * @author Anna Gessler
  * @author Matthias Thimm
+ * @author Lars Bengel
  */
 public class ExclusiveDisjunction extends AssociativePlFormula {
 
@@ -172,7 +173,7 @@ public class ExclusiveDisjunction extends AssociativePlFormula {
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Conjunction cnf = this.toCnf();
-		return cnf.getModels();
+		return cnf.getModels(sig);
 	}
 
 	/*
