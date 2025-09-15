@@ -8,7 +8,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class SetExplanation extends Explanation {
+public class SetExplanation extends Explanation implements Collection<Argument> {
 
     protected Collection<Argument> arguments;
 

@@ -6,5 +6,5 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
 
-public abstract class Explanation extends AbstractArgumentationInterpretation<DungTheory> implements Collection<Argument>,Comparable<Explanation> {
+public abstract class Explanation extends AbstractArgumentationInterpretation<DungTheory> implements Comparable<Explanation> {
 }
