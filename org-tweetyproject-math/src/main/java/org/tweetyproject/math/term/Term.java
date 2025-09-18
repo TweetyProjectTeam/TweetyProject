@@ -29,6 +29,12 @@ import org.tweetyproject.math.*;
 public abstract class Term {
 
 	/**
+	 * Default constructor.
+	 */
+	public Term() {
+		// default constructor
+	}
+	/**
 	 * Returns the sum of this and the given term.
 	 * @param t a term
 	 * @return the sum of this and the given term.

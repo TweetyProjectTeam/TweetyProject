@@ -18,52 +18,62 @@
  */
 package org.tweetyproject.web.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import java.io.IOException;
+
 
 /**
- * Utility class for configuring a logger with console and file handlers.
+ * Utility class for configuring a Java {@link Logger} with both console and file handlers.
  *
- * The LoggerUtil class provides a static logger instance with both console and file handlers attached.
- * The log messages are formatted using SimpleFormatter. The log level is set to INFO by default but can be
- * customized. Log messages are written to both the console and a log file named "server.log" located in the
- * specified file path.
+ * <p>This logger is initialized statically and can be accessed through the public
+ * {@code logger} field. It is configured to output log messages to both the console
+ * and a rolling log file named {@code logs/server.log}.</p>
  *
- * Usage of this utility class ensures that log messages are directed to both the console and a log file
- * simultaneously, allowing for effective logging and monitoring of application activities.
+ * <p>The log file is created within a {@code logs} directory relative to the working
+ * directory. If this directory does not exist, it will be created automatically.</p>
  *
- * Note: The file handler is configured to append to the existing log file (if any) rather than overwriting it.
+ * <p>The logger uses {@link SimpleFormatter} for formatting both console and file outputs,
+ * and it is configured at {@code Level.INFO} by default.</p>
  *
- * To customize the log level or handle exceptions during configuration, users can modify the static block
- * accordingly. The logger instance is accessible as a public static field, e.g., LoggerUtil.logger.
- *
+ * <p>This utility is intended for use in TweetyProject's web services module.</p>
+ * @author Jonas Klein
  * @see Logger
  * @see ConsoleHandler
  * @see FileHandler
  * @see SimpleFormatter
  */
 public class LoggerUtil {
-    /** logger */
+   /** The logger instance for this utility class */
     public static final Logger logger = Logger.getLogger(LoggerUtil.class.getName());
 
     static {
         try {
-            // Create a console handler
-            ConsoleHandler consoleHandler = new ConsoleHandler();
-            consoleHandler.setFormatter(new SimpleFormatter());
+            // 1) Console handler
+            ConsoleHandler ch = new ConsoleHandler();
+            ch.setFormatter(new SimpleFormatter());
 
-            // Create a file handler
-            FileHandler fileHandler = new FileHandler("TweetyProject/org-tweetyproject-web/src/main/java/org/tweetyproject/web/spring_services/server.log",true);
-            fileHandler.setFormatter(new SimpleFormatter());
+            // 2) File handler — ensure parent dirs exist first
+            //    (you probably don't want to write into your src folder;
+            //     better to use a dedicated "logs" directory)
+            String logPath = "logs/server.log";
+            File logFile = new File(logPath);
+            File parent = logFile.getParentFile();
+            if (parent != null && !parent.exists()) {
+                if (!parent.mkdirs()) {
+                    System.err.println("Could not create log directory: " + parent);
+                }
+            }
 
-            // Attach handlers to the logger
-            logger.addHandler(consoleHandler);
-            logger.addHandler(fileHandler);
+            FileHandler fh = new FileHandler(logFile.getAbsolutePath(), true);
+            fh.setFormatter(new SimpleFormatter());
 
-            // Set the log level (optional, default is INFO)
+            // 3) Attach handlers & set level
+            logger.addHandler(ch);
+            logger.addHandler(fh);
             logger.setLevel(java.util.logging.Level.INFO);
 
         } catch (IOException e) {
@@ -71,4 +81,3 @@ public class LoggerUtil {
         }
     }
 }
-

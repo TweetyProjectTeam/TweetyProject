@@ -9,7 +9,7 @@
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
   <name>TweetyProject (Parent POM)</name>
-  <version>1.28-SNAPSHOT</version>
+  <version>1.29-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description
@@ -62,15 +62,8 @@
     <maven.compiler.target>15</maven.compiler.target>
   </properties>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <build>
-    <!--
+  <!--
       <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -82,7 +75,7 @@
         </includes>
       </resource>
       </resources>
-      -->
+       -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -107,7 +100,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
@@ -125,7 +118,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
@@ -137,7 +130,7 @@
         <configuration>
           <finalName
                     >${project.groupId}.${project.artifactId}-${project.version}</finalName>
-          <outputDirectory>../testBuild</outputDirectory>
+          <outputDirectory>./testBuild</outputDirectory>
         </configuration>
       </plugin>
       <!--
@@ -147,10 +140,12 @@
         <version>2.3</version>
         <configuration>
           <shadedArtifactAttached>true</shadedArtifactAttached>
-          <shadedClassifierName>${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
+          <shadedClassifierName
+                    >${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <outputDirectory>../testBuild</outputDirectory>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName>
+          <finalName
+                    >${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName>
         </configuration>
         <executions>
           <execution>
@@ -161,18 +156,17 @@
           </execution>
         </executions>
         </plugin>
-       -->
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.5</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-        </configuration>
-      </plugin>
+      -->
+       <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.8.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+           </configuration>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -224,6 +218,7 @@
     <module>org-tweetyproject-arg-bipolar</module>
     <module>org-tweetyproject-arg-caf</module>
     <module>org-tweetyproject-arg-deductive</module>
+    <module>org-tweetyproject-arg-eaf</module>
     <module>org-tweetyproject-arg-extended</module>
     <module>org-tweetyproject-arg-lp</module>
     <module>org-tweetyproject-arg-delp</module>

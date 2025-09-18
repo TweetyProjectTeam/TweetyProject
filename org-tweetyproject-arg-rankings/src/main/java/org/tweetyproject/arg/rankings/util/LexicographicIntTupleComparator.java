@@ -24,7 +24,7 @@ import java.util.Comparator;
  *  This comparator compares tuples of integers according to the lexicographic ordering as described in 
  *  [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005].
  * 
- * @author Anna Gessler
+ * @author Anna Gessler, Matthias Thimm
  *
  */
 public class LexicographicIntTupleComparator implements Comparator<int[]> {
@@ -35,18 +35,28 @@ public class LexicographicIntTupleComparator implements Comparator<int[]> {
 	public static final double PRECISION = 0.001;
 	@Override
 	public int compare(int[] o1, int[] o2) {
-		String s1 = "";
-		String s2 = "";
-		for (int i : o1) 
-			s1 += i; 
-		for (int j : o2) 
-			s2 += j; 
-		return s1.compareTo(s2);
+		int idx = 0;
+		while(true) {
+			if(o1.length == idx && o2.length == idx)
+				return 0;
+			if(o1.length == idx)
+				return -1;
+			if(o2.length == idx)
+				return 1;
+			
+			if(o1[idx] > o2[idx])
+				return 1;
+			if(o1[idx] < o2[idx])
+				return -1;
+			idx++;
+		}
+		
 	}
 
 
     /** Default Constructor */
-    public LexicographicIntTupleComparator(){}
+    public LexicographicIntTupleComparator(){}   
+    
 }
 
 
