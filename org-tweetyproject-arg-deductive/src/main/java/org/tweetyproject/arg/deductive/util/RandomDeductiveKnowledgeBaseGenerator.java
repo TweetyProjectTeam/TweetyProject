@@ -89,7 +89,6 @@ public class RandomDeductiveKnowledgeBaseGenerator implements BeliefSetIterator<
         return kb;
     }
 
-
     /**
      * Description missing
      * @param <C> Description missing
