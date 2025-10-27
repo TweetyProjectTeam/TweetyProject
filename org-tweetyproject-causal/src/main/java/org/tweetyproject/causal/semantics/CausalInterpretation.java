@@ -1,0 +1,80 @@
+/*
+ * This file is part of "TweetyProject", a collection of Java libraries for
+ * logical aspects of artificial intelligence and knowledge representation.
+ *
+ * TweetyProject is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+package org.tweetyproject.causal.semantics;
+
+import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
+import org.tweetyproject.commons.InterpretationSet;
+import org.tweetyproject.logics.pl.syntax.*;
+
+import java.util.Collection;
+
+/**
+ * Representation of a propositional interpretation of a causal knowledge base
+ *
+ * @author Lars Bengel
+ */
+public class CausalInterpretation extends InterpretationSet<Proposition, CausalKnowledgeBase, PlFormula> {
+
+    /**
+     * Initializes a new empty causal interpretation
+     */
+    public CausalInterpretation() {
+        super();
+    }
+
+    /**
+     * Initializes a new causal interpretation
+     * @param formulas the set of proposition that are true in the interpretation
+     */
+    public CausalInterpretation(Collection<Proposition> formulas) {
+        super(formulas);
+    }
+
+    @Override
+    public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
+        if(formula instanceof Contradiction)
+            return false;
+        if(formula instanceof Tautology)
+            return true;
+        if(formula instanceof Proposition)
+            return this.contains(formula);
+        if(formula instanceof Negation)
+            return !this.satisfies(((Negation)formula).getFormula());
+        if(formula instanceof Conjunction){
+            Conjunction c = (Conjunction) formula;
+            for(PlFormula f : c)
+                if(!this.satisfies(f))
+                    return false;
+            return true;
+        }
+        if(formula instanceof Disjunction){
+            Disjunction d = (Disjunction) formula;
+            for(PlFormula f: d)
+                if(this.satisfies(f))
+                    return true;
+            return false;
+        }
+        throw new IllegalArgumentException("Propositional formula " + formula + " is of unsupported type.");
+    }
+
+    @Override
+    public boolean satisfies(CausalKnowledgeBase beliefBase) throws IllegalArgumentException {
+        throw new IllegalArgumentException("Satisfaction of belief bases by causal interpretations is undefined.");
+    }
+}

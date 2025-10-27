@@ -33,15 +33,15 @@ import org.tweetyproject.math.term.Term;
  */
 public class TestToQuadraticForm {
 
-	/**
-	 * main method
-	 * @param args arguments
-	 */
 	// Default constructor
 	public TestToQuadraticForm() {
 		// Default constructor
 	}
 
+    /**
+     * main method
+     * @param args arguments
+     */
 	public static void main(String[] args) {
 		IntegerVariable m1 = new IntegerVariable("Maschine_A");
 		ArrayList<Term> opts = new ArrayList<Term>();
