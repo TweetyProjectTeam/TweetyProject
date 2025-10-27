@@ -190,6 +190,7 @@
     <module>org-tweetyproject-action</module>
     <module>org-tweetyproject-beliefdynamics</module>
     <module>org-tweetyproject-cli</module>
+    <module>org-tweetyproject-causal</module>
     <module>org-tweetyproject-graphs</module>
     <module>org-tweetyproject-preferences</module>
     <module>org-tweetyproject-machinelearning</module>
@@ -220,6 +221,7 @@
     <module>org-tweetyproject-arg-deductive</module>
     <module>org-tweetyproject-arg-eaf</module>
     <module>org-tweetyproject-arg-extended</module>
+    <module>org-tweetyproject-arg-explanations</module>
     <module>org-tweetyproject-arg-lp</module>
     <module>org-tweetyproject-arg-delp</module>
     <module>org-tweetyproject-arg-setaf</module>
