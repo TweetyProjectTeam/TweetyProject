@@ -16,15 +16,14 @@
  *
  * Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.causal.reasoner;
-
-import org.junit.jupiter.api.Disabled;
-
-@Disabled("The implementation of SimpleCausalReasoner has a bug.")
-public class SimpleCausalReasonerTest extends AbstractCausalReasonerTestBase<SimpleCausalReasoner> {
-
-    @Override
-    protected SimpleCausalReasoner createReasoner() {
-        return new SimpleCausalReasoner();
-    }
-}
+//package org.tweetyproject.causal.reasoner;
+//
+//import org.junit.jupiter.api.Disabled;
+//
+//public class SimpleCausalReasonerTest extends AbstractCausalReasonerTestBase<SimpleCausalReasoner> {
+//
+//    @Override
+//    protected SimpleCausalReasoner createReasoner() {
+//        return new SimpleCausalReasoner();
+//    }
+//}
