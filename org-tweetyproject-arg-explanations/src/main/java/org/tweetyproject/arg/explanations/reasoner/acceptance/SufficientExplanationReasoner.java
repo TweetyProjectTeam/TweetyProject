@@ -1,3 +1,22 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+
 package org.tweetyproject.arg.explanations.reasoner.acceptance;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
@@ -11,6 +30,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
 
+/**
+ * Reasoner for sufficient explanations for the acceptance of an argument
+ * a set S is a sufficient explanation for the acceptance of an argument 'a'
+ * iff S + {a} is admissible and only contains arguments relevant for 'a'
+ *
+ * @see "Borg, AnneMarie, and Floris Bex. 'Minimality, necessity and sufficiency for argumentation and explanation.' International Journal of Approximate Reasoning 168 (2024): 109143."
+ *
+ * @author Lars Bengel
+ */
 public class SufficientExplanationReasoner extends AbstractAcceptanceExplanationReasoner {
     @Override
     public Collection<Explanation> getExplanations(DungTheory theory, Argument argument) {
@@ -18,7 +46,7 @@ public class SufficientExplanationReasoner extends AbstractAcceptanceExplanation
         for (Extension<DungTheory> admSet : new SimpleAdmissibleReasoner().getModels(theory)) {
             if (!admSet.contains(argument)) continue;
             if (!isRelevantFor(theory, admSet, argument)) continue;
-            result.add(new SetExplanation(admSet));
+            result.add(new SetExplanation(argument, admSet));
         }
         return result;
     }
@@ -48,10 +76,11 @@ public class SufficientExplanationReasoner extends AbstractAcceptanceExplanation
     }
 
     /**
-     *
-     * @param theory
-     * @param argument
-     * @return
+     * Computes the set of arguments relevant for <code>argument</code> in <code>theory</code>
+     * i.e. all arguments for which there exists a directed path to <code>argument</code>
+     * @param theory some argumentation framework
+     * @param argument some argument
+     * @return the set of arguments relevant for <code>argument</code>
      */
     public Collection<Argument> getRelevantArguments(DungTheory theory, Argument argument) {
         Collection<Argument> result = new HashSet<>();
