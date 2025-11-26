@@ -87,7 +87,7 @@ public class SerialisationSequence extends AbstractArgumentationInterpretation<D
 
     @Override
     public int size() {
-        return arguments.size();
+        return sequence.size();
     }
 
     @Override

@@ -67,7 +67,7 @@ public class DialecticalSequenceExplanationReasoner extends AbstractSequenceExpl
     private Collection<Argument> getDefeated(DungTheory theory, SerialisationSequence seq, Argument a, Collection<Argument> s) {
         Collection<Argument> relevantAttackers = new HashSet<>();
         relevantAttackers.addAll(theory.getAttackers(a));
-        relevantAttackers.addAll(seq.getExtension());
+        relevantAttackers.addAll(theory.getAttackers(seq.getExtension()));
         DungTheory reduct = theory.getReduct(new SerialisationSequence(seq.subList(0, seq.indexOf(s))).getExtension());
         Collection<Argument> attacked = new HashSet<>(reduct.getAttacked(s));
         relevantAttackers.retainAll(attacked);
