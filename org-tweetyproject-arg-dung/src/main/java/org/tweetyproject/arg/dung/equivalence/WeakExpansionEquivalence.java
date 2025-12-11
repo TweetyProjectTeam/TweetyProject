@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.equivalence;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
@@ -11,10 +29,27 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 import java.util.HashSet;
 
+
+/**
+ * This class defines strong expansion equivalence for {@link DungTheory argumentation frameworks} wrt. some {@link Semantics semantics},
+ * i.e., two AFs F and G are strong expansion equivalent iff they possess the same set of
+ * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} when conjoined
+ * with some AF H that only adds arguments and attacks originating from old arguments, i.e., a weak normal expansion.
+ *
+ *
+ * @see "Ringo Baumann and Gerhard Brewka. 'The equivalence zoo for Dung-style semantics.' Journal of Logic and Computation 28.3 (2018): 477-498."
+ *
+ * @author Lars Bengel
+ */
 public class WeakExpansionEquivalence implements Equivalence<DungTheory> {
 
-    private Semantics semantics;
+    /** the semantics of this equivalence instance **/
+    private final Semantics semantics;
 
+    /**
+     * Initializes a new instance of equivalence wrt. the given semantics
+     * @param semantics some semantics
+     */
     public WeakExpansionEquivalence(Semantics semantics) {
         this.semantics = semantics;
     }

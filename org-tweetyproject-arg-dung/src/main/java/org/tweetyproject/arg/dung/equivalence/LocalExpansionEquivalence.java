@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.equivalence;
 
 import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
@@ -9,6 +27,15 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * This class defines local (expansion) equivalence for {@link DungTheory argumentation frameworks} wrt. some {@link Semantics semantics},
+ * i.e., two AFs F and G are local expansion equivalent iff they possess the same set of
+ * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} under every local expansion
+ *
+ * @see "Emilia Oikarinen and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
+ *
+ * @author Lars Bengel
+ */
 public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
 
     private final Semantics semantics;
@@ -20,7 +47,7 @@ public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
     @Override
     public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
         switch (semantics) {
-            case ADM,PR -> {
+            case ADM,PR,ID,UC,SST,EA -> {
                 return new StrongEquivalence(Semantics.ADM).isEquivalent(theory1, theory2);
             }
             case GR -> {

@@ -30,9 +30,10 @@ import java.util.*;
  * i.e., two AFs F andG are strongly equivalent iff they possess the same set of
  * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} when conjoined
  * with some arbitrary AF H.
- * Can be characterized by a syntactic kernel.
  *
- * @see "Oikarinen, Emilia, and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
+ * Can be characterized by a syntactic kernel-function.
+ *
+ * @see "Emilia Oikarinen and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
  *
  * @author Lars Bengel
  */

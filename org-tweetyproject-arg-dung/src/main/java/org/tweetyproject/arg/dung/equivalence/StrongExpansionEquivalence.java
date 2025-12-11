@@ -26,12 +26,13 @@ import java.util.Collection;
 
 /**
  * This class defines strong expansion equivalence for {@link DungTheory argumentation frameworks} wrt. some {@link Semantics semantics},
- * i.e., two AFs F andG are strong expansion equivalent iff they possess the same set of
+ * i.e., two AFs F and G are strong expansion equivalent iff they possess the same set of
  * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} when conjoined
- * with some AF H that only adds arguments and attacks originating from new arguments.
+ * with some AF H that only adds arguments and attacks originating from new arguments, i.e., a strong normal expansion.
+ *
  * Can be characterized by a syntactic kernel.
  *
- * @see "Baumann, Ringo. 'Normal and strong expansion equivalence for argumentation frameworks.' Artificial Intelligence 193 (2012): 18-44."
+ * @see "Ringo Baumann. 'Normal and strong expansion equivalence for argumentation frameworks.' Artificial Intelligence 193 (2012): 18-44."
  *
  * @author Lars Bengel
  */
@@ -55,8 +56,9 @@ public class StrongExpansionEquivalence implements Equivalence<DungTheory> {
         switch (semantics) {
             case ST -> kernel = EquivalenceKernel.STABLE;
             case CO -> kernel = EquivalenceKernel.SE_COMPLETE;
-            case GR -> kernel = EquivalenceKernel.SE_GROUNDED;
-            case ADM,PR,ID -> kernel = EquivalenceKernel.SE_ADMISSIBLE;
+            case GR,SAD -> kernel = EquivalenceKernel.SE_GROUNDED;
+            case ADM,PR,ID,UC -> kernel = EquivalenceKernel.SE_ADMISSIBLE;
+            case SST,EA -> kernel = EquivalenceKernel.ADMISSIBLE;
             default -> throw new IllegalArgumentException("Unsupported Semantics: " + semantics);
         }
     }
