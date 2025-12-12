@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.equivalence;
 
 import org.tweetyproject.arg.dung.equivalence.kernel.EquivalenceKernel;
+import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -109,10 +110,37 @@ public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
                 //}
                 if (!EquivalenceKernel.ADMISSIBLE.getKernel(theory1).equals(EquivalenceKernel.ADMISSIBLE.getKernel(theory2))) return false;
                 if (!theory1.faf(new Extension<>()).equals(theory2.faf(new Extension<>()))) return false;
-                Argument b = getBSaturated(theory1);
-                if (b == null) return false;
-                if (!b.equals(getBSaturated(theory2))) return false;
+                //Argument b = getBSaturated(theory1);
+                //if (b == null) return false;
+                //if (!b.equals(getBSaturated(theory2))) return false;
                 return true;
+            } case ST -> {
+                if (EquivalenceKernel.STABLE.getKernel(theory1).equals(EquivalenceKernel.STABLE.getKernel(theory2))) {
+                    return true;
+                }
+                if (new SimpleStableReasoner().getModels(theory1).isEmpty() && new SimpleStableReasoner().getModels(theory2).isEmpty()) {
+                    Collection<Argument> arguments = new HashSet<>(theory1);
+                    arguments.addAll(theory2);
+                    for (Argument a : arguments) {
+                        if (theory1.contains(a) && theory2.contains(a)) continue;
+                        if (!theory1.isAttackedBy(a, a) || !theory2.isAttackedBy(a, a)) {
+                            boolean notB = false;
+                            for (Argument b : arguments) {
+                                if (b.equals(a)) continue;
+                                if (!theory1.isAttackedBy(b, a) || !theory2.isAttackedBy(b, a)) {
+                                    if (theory1.isAttackedBy(b, b) && theory2.isAttackedBy(b, b)) {
+                                        notB = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (notB) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
             }
             default -> throw new IllegalArgumentException("Unsupported Semantics");
         }

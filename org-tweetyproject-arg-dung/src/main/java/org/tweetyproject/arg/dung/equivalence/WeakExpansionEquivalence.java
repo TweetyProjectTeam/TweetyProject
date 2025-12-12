@@ -57,7 +57,7 @@ public class WeakExpansionEquivalence implements Equivalence<DungTheory> {
     @Override
     public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
         switch (semantics) {
-            case ADM,PR,CO -> {
+            case ADM,PR,CO,GR -> {
                 Collection<Extension<DungTheory>> exts1 = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory1);
                 Collection<Extension<DungTheory>> exts2 = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory2);
                 if (!new HashSet<>(theory1).equals(new HashSet<>(theory2))) return false;
