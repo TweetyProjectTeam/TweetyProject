@@ -78,9 +78,7 @@ public class WeakExpansionEquivalence implements Equivalence<DungTheory> {
                 if (!new HashSet<>(theory1).equals(new HashSet<>(theory2))) return false;
                 return exts1.equals(exts2);
             }
-            default -> {
-                throw new IllegalArgumentException("Unsupported Semantics");
-            }
+            default -> throw new IllegalArgumentException("Unsupported Semantics");
         }
     }
 

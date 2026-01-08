@@ -103,9 +103,6 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
             DungTheory th2 = theory2.clone();
             th2.removeAll(subset);
             if (!reasoner.getModels(th1).equals(reasoner.getModels(th2))) {
-                //System.out.println(subset);
-                //System.out.println(th1);
-                //System.out.println(th2);
                 return false;
             }
         }

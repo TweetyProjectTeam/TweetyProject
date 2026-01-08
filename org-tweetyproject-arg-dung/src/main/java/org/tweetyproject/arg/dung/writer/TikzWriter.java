@@ -22,7 +22,6 @@ package org.tweetyproject.arg.dung.writer;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 import java.io.File;
 import java.io.IOException;
