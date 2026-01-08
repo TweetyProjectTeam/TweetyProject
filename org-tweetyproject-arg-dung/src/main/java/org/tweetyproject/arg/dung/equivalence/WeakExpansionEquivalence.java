@@ -47,7 +47,7 @@ public class WeakExpansionEquivalence implements Equivalence<DungTheory> {
     private final Semantics semantics;
 
     /**
-     * Initializes a new instance of equivalence wrt. the given semantics
+     * Initializes a new instance of this equivalence wrt. the given semantics
      * @param semantics some semantics
      */
     public WeakExpansionEquivalence(Semantics semantics) {
@@ -57,7 +57,7 @@ public class WeakExpansionEquivalence implements Equivalence<DungTheory> {
     @Override
     public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
         switch (semantics) {
-            case ADM,PR,CO,GR -> {
+            case ADM,PR,CO,GR,SAD -> {
                 Collection<Extension<DungTheory>> exts1 = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory1);
                 Collection<Extension<DungTheory>> exts2 = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(theory2);
                 if (!new HashSet<>(theory1).equals(new HashSet<>(theory2))) return false;

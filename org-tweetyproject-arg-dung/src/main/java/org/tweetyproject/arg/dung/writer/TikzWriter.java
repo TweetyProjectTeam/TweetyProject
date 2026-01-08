@@ -100,6 +100,10 @@ public class TikzWriter extends AbstractDungWriter {
         // square grid
         int width = (int) Math.ceil(Math.sqrt(aaf.size()));
         int height = (int) Math.floor(Math.sqrt(aaf.size()));
+        if (width*height < aaf.size()) {
+            height++;
+            if (width*height < aaf.size()) throw new IllegalArgumentException("Problem");
+        }
         return write(aaf, width, height);
     }
 
@@ -134,7 +138,7 @@ public class TikzWriter extends AbstractDungWriter {
                     continue;
                 }
                 if (arg_id == 1) {
-                    s.append("\t").append(writeArgument(intToArg[arg_id], arg_id, ""));
+                    s.append(writeArgument(intToArg[arg_id], arg_id, ""));
                     continue;
                 }
                 String pos;
@@ -144,13 +148,13 @@ public class TikzWriter extends AbstractDungWriter {
                         continue;
                     }
                     rel_arg_id = (i - 1) * width + j + 1;
-                    pos = "below=of arg";
+                    pos = "below=of a";
                 } else {
                     rel_arg_id = i * width + j - 1 + 1;
-                    pos = "right=of arg";
+                    pos = "right=of a";
                 }
                 pos = pos + rel_arg_id;
-                s.append("\t").append(writeArgument(intToArg[arg_id], arg_id, pos));
+                s.append(writeArgument(intToArg[arg_id], arg_id, pos));
             }
         }
         s.append("\n");
@@ -165,7 +169,7 @@ public class TikzWriter extends AbstractDungWriter {
      * @return string with tikz code
      */
     protected String writeArgument(Argument arg, int arg_id, String pos) {
-        return String.format("\t\\argument[%s]{arg%s}{$%s$}%n", pos, arg_id, writeArgument(arg));
+        return String.format("\t\\argument[%s]{%s}%n", pos, writeArgument(arg));
     }
 
     /**
@@ -204,7 +208,7 @@ public class TikzWriter extends AbstractDungWriter {
                 attacksAdded.add(att);
             }
         }
-        s.append("\n");
+        //s.append("\n");
         return s.toString();
     }
 
@@ -214,9 +218,9 @@ public class TikzWriter extends AbstractDungWriter {
 
     protected String writeAttack(int argId1, int argId2, String mode) {
         return switch (mode) {
-            case "single" -> String.format("\\attack{arg%s}{arg%s}%n", argId1, argId2);
-            case "dual" -> String.format("\\dualattack{arg%s}{arg%s}%n", argId1, argId2);
-            case "bend" -> String.format("\\attack[bend right]{arg%s}{arg%s}%n", argId1, argId2);
+            case "single" -> String.format("\\attack{a%s}{a%s}%n", argId1, argId2);
+            case "dual" -> String.format("\\dualattack{a%s}{a%s}%n", argId1, argId2);
+            case "bend" -> String.format("\\attack[bend right]{a%s}{a%s}%n", argId1, argId2);
             default -> throw new IllegalArgumentException("Unknown attack mode");
         };
     }
@@ -237,31 +241,31 @@ public class TikzWriter extends AbstractDungWriter {
                 if (i == 0) {
                     // argument in first row of grid -> print loop above
                     s.append(String.format(
-                            "\t\\selfattack[out=60,in=120,looseness=6]{arg%s}",
+                            "\t\\selfattack[out=60,in=120,looseness=6]{a%s}",
                             arg_id)
                     ).append("\n");
                 } else if (i == height - 1) {
                     // argument in last row of grid -> print below
                     s.append(String.format(
-                            "\t\\selfattack[out=240,in=300,looseness=6]{arg%s}",
+                            "\t\\selfattack[out=240,in=300,looseness=6]{a%s}",
                             arg_id)
                     ).append("\n");
                 } else if (j == width - 1) {
                     // argument on last column of grid -> print to the right
                     s.append(String.format(
-                            "\t\\selfattack[out=330,in=30,looseness=6]{arg%s}",
+                            "\t\\selfattack[out=330,in=30,looseness=6]{a%s}",
                             arg_id)
                     ).append("\n");
                 } else if (j == 0) {
                     // argument in first column of grid -> print to the left
                     s.append(String.format(
-                            "\t\\selfattack[out=150,in=210,looseness=6]{arg%s}",
+                            "\t\\selfattack[out=150,in=210,looseness=6]{a%s}",
                             arg_id)
                     ).append("\n");
                 } else {
                     // somewhere in the center -> print top-right (NOTE: likely to be overlapping with something)
                     s.append(String.format(
-                            "\t\\selfattack{arg%s}",
+                            "\t\\selfattack{a%s}",
                             arg_id)
                     ).append("\n");
                 }

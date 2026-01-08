@@ -388,4 +388,29 @@ public class SetTools<E> {
 		}
 		return result;
 	}
+
+    /**
+     * Returns the union of the set of sets.
+     * @param sets some set of sets
+     * @return the union of the set.
+     */
+    public Set<E> getIntersection(Set<Set<E>> sets){
+        Set<E> result = new HashSet<E>(sets.iterator().next());
+        for(Set<E> s: sets)
+            result.retainAll(s);
+        return result;
+    }
+
+    /**
+     * Returns the union of the set of sets.
+     * @param sets some set of sets
+     * @return the union of the set.
+     */
+    @SafeVarargs
+    public final Set<E> getIntersection(Set<E>... sets){
+        Set<E> result = new HashSet<E>(Arrays.stream(sets).iterator().next());
+        for(Set<E> s: sets)
+            result.retainAll(s);
+        return result;
+    }
 }

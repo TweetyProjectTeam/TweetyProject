@@ -29,6 +29,8 @@ import java.util.Collection;
  * i.e., two AFs are serialisation equivalent iff they possess the same set of
  * {@link org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence Serialisation Sequences} wrt. some {@link Semantics}.
  *
+ * @see "Lars Bengel, Julian Sander, Matthias Thimm. 'Characterising serialisation equivalence for abstract argumentation' ECAI24 (2024) pp. 3340–334"
+ *
  * @author Julian Sander
  * @author Lars Bengel
  */
