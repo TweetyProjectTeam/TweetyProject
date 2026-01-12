@@ -246,7 +246,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
      * Removes the original cause of the atom and thus permanently changes the causal model
      * @param v some explainable atom
      * @param x Truth value of the intervention
-     *
+     * @return newModel
      * TODO should this be in-place instead?
      */
     public StructuralCausalModel intervene(Proposition v, boolean x) {
@@ -262,7 +262,11 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
         }
         return newModel;
     }
-
+    /**
+     * Returns a human-readable string representation of this causal model.
+     *
+     * @return a pretty-printed representation
+     */
     public String prettyPrint() {
         StringBuilder s = new StringBuilder();
         s.append("Background atoms: ").append(getBackgroundAtoms()).append("\n");

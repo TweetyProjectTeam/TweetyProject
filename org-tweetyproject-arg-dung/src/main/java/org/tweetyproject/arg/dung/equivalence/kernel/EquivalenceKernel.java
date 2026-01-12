@@ -99,6 +99,14 @@ public abstract class EquivalenceKernel {
         }
     }
 
+        
+    /**
+     * Returns the strong expansion equivalence kernel for the given semantics.
+     *
+     * @param semantics the semantics
+     * @return the corresponding equivalence kernel
+     * @throws IllegalArgumentException if no kernel is defined for the given semantics
+     */
     public static EquivalenceKernel getStrongExpansionEquivalenceKernelForSemantics(Semantics semantics) {
         switch (semantics) {
             case SST,EA -> {

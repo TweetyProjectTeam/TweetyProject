@@ -38,8 +38,10 @@ import java.util.HashSet;
  */
 public class CausalReasoningExampleSurfer {
     /**
+     * Runs a demonstration of argumentation-based causal reasoning.
      *
-     * @param args cmdline arguments (unused)
+     * @param args command-line arguments (not used)
+     * @throws StructuralCausalModel.CyclicDependencyException if the causal model is cyclic
      */
     public static void main(String[] args) throws StructuralCausalModel.CyclicDependencyException {
         // Background atoms

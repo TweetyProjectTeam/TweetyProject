@@ -43,6 +43,7 @@ public class InterventionalCausalReasoningExample {
     /**
      *
      * @param args cmdline arguments (unused)
+     * @throws StructuralCausalModel.CyclicDependencyException if the causal model is cyclic
      */
     public static void main(String[] args) throws StructuralCausalModel.CyclicDependencyException {
         // Background atoms

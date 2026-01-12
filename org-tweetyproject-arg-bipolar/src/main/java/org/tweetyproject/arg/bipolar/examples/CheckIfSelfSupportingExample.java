@@ -29,11 +29,11 @@ import java.util.Set;
 
 /**
  * This class demonstrates the use of the {@link EAFTheory} class to check for self-supporting sets of arguments.
- * <p>
+ * 
  * In this example, an extended argumentation framework (EAF) is created with a set of arguments and supports/attacks between them.
  * The goal is to check whether certain sets of arguments are self-supporting using the {@code checkIsSelfSupporting} method
  * of the {@link EAFTheory} class.
- * <p>
+ * 
  * @author Your Name
  */
 public class CheckIfSelfSupportingExample {

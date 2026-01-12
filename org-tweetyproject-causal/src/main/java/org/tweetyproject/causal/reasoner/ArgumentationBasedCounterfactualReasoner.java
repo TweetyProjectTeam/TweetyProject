@@ -46,6 +46,13 @@ public class ArgumentationBasedCounterfactualReasoner extends AbstractArgumentat
         return new ArgumentationBasedCausalReasoner().getInducedTheory(cbase, observations, interventions);
     }
 
+    /**
+     * Evaluates the given counterfactual statement against the causal knowledge base.
+     *
+     * @param cbase the causal knowledge base
+     * @param statement the counterfactual statement
+     * @return {@code true} if the statement holds, {@code false} otherwise
+     */
     public boolean query(CausalKnowledgeBase cbase, CounterfactualStatement statement) {
         return query(cbase, statement.getObservations(), statement.getInterventions(), statement.getConclusion());
     }

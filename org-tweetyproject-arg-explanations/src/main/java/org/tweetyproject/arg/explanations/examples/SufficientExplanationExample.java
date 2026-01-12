@@ -29,6 +29,11 @@ import org.tweetyproject.arg.explanations.reasoner.acceptance.SufficientExplanat
  * @author Lars Bengel
  */
 public class SufficientExplanationExample {
+    /**
+     * Runs an example demonstrating sufficient explanation relevance.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         DungTheory theory = new DungTheory();
         Argument a = new Argument("a");

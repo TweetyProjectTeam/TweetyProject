@@ -99,7 +99,7 @@ public class QualifiedSemanticsReasonerExample {
     /**
      * Creates and returns an example of a Dung argumentation framework (Dung
      * Theory).
-     * <p>
+     * 
      *
      * @return A {@link DungTheory} object representing the defined argumentation
      *         framework.

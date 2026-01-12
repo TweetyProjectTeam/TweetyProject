@@ -107,10 +107,20 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 		return new HashSet<>(this.assumptions);
 	}
 
+	/**
+	 * Returns a copy of the underlying structural causal model.
+	 *
+	 * @return the causal model
+	 */
 	public StructuralCausalModel getCausalModel() {
 		return this.model.clone();
 	}
 
+	/**
+	 * Returns the twin version of this causal knowledge base.
+	 *
+	 * @return the twin causal knowledge base
+	 */
 	public CausalKnowledgeBase getTwinVersion() {
         return new CausalKnowledgeBase(this.getCausalModel().getTwinModel(), this.getAssumptions());
 	}

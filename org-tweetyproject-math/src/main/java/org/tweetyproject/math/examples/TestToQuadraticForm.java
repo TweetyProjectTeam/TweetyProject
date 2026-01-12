@@ -33,7 +33,9 @@ import org.tweetyproject.math.term.Term;
  */
 public class TestToQuadraticForm {
 
-	// Default constructor
+    /**
+	 * Default Constructor
+	 */
 	public TestToQuadraticForm() {
 		// Default constructor
 	}

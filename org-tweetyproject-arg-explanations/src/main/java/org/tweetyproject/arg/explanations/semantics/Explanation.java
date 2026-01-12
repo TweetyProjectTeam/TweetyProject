@@ -47,7 +47,12 @@ public abstract class Explanation extends AbstractArgumentationInterpretation<Du
      */
     protected Explanation(Argument argument) {
         this.argument = argument;
-    }
+    }  
 
+    /**
+     * Returns the set-based explanation.
+     *
+     * @return the explanation as a collection of arguments
+     */
     public abstract Collection<Argument> getSetExplanation();
 }

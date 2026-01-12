@@ -26,7 +26,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Literals.UnnamedAtom;
  * The {@code Literal} interface represents a logical literal, which can be either a positive or negative
  * proposition. Literals are fundamental components in propositional logic and SAT solvers. They can be
  * used to construct clauses, represent assumptions, and encode constraints.
- * <p>
+ * 
  *
  * @author Mathias Hofer
  */

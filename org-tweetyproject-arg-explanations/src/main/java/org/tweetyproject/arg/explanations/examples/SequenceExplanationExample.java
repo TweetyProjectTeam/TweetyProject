@@ -27,12 +27,18 @@ import org.tweetyproject.arg.explanations.semantics.Explanation;
 
 import java.util.Collection;
 
+
 /**
- * Example usage of sequence explanations
- *
- * @author Lars Bengel
- */
+* Runs an example demonstrating sequence explanations.
+*
+* @author Lars Bengel
+*/
 public class SequenceExplanationExample {
+    /**
+     * Runs an example demonstrating sequence explanations.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         AbstractSequenceExplanationReasoner reasoner = new DialecticalSequenceExplanationReasoner();
         DungTheory theory = new DungTheory();

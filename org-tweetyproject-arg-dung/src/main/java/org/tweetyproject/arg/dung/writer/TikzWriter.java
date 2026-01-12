@@ -39,9 +39,18 @@ import java.util.*;
  */
 public class TikzWriter extends AbstractDungWriter {
 
+    /** Mapping from integer identifiers to arguments. */
     protected Argument[] intToArg;
+
+    /** Mapping from arguments to integer identifiers. */
     protected Map<Argument, Integer> argToInt;
 
+
+    /**
+     * Initializes the internal argument–identifier mappings.
+     *
+     * @param aaf the argumentation framework
+     */
     protected void initialize(DungTheory aaf) {
         // Initialize mapping from Argument to ID and vice versa
         intToArg = new Argument[aaf.size() + 1];
@@ -54,10 +63,27 @@ public class TikzWriter extends AbstractDungWriter {
         }
     }
 
+    /**
+     * Computes a planar mapping of the given argumentation framework
+     * for a grid of the specified dimensions.
+     *
+     * @param aaf the argumentation framework
+     * @param width the grid width
+     * @param height the grid height
+    */
     protected void findPlanarMapping(DungTheory aaf, int width, int height) {
 
     }
 
+    /**
+     * Checks whether the given argumentation framework can be laid out sufficiently planar
+     * on a grid of the given dimensions.
+     *
+     * @param aaf the argumentation framework
+     * @param width the grid width
+     * @param height the grid height
+     * @return {@code true} if the layout is sufficiently planar, {@code false} otherwise
+     */
     protected boolean isSufficientlyPlanar(DungTheory aaf, int width, int height) {
         for (Argument argument : aaf) {
             Collection<Argument> neighboring = new HashSet<>();
@@ -126,7 +152,14 @@ public class TikzWriter extends AbstractDungWriter {
         writer.close();
         return out.toString();
     }
-
+    /**
+     * Writes TikZ code for the arguments arranged in a grid.
+     *
+     * @param aaf the collection of arguments
+     * @param width the grid width
+     * @param height the grid height
+     * @return a string containing the TikZ commands for arguments
+     */
     protected String writeArguments(Collection<Argument> aaf, int width, int height) {
         StringBuilder s = new StringBuilder();
         // Write arguments
@@ -190,6 +223,12 @@ public class TikzWriter extends AbstractDungWriter {
         }
     }
 
+    /**
+     * Writes TikZ code for all attacks in the given argumentation framework.
+     *
+     * @param aaf the argumentation framework
+     * @return a string containing the TikZ commands for attacks
+     */
     protected String writeAttacks(DungTheory aaf) {
         StringBuilder s = new StringBuilder();
         // Write attacks
@@ -211,10 +250,26 @@ public class TikzWriter extends AbstractDungWriter {
         return s.toString();
     }
 
+    /**
+     * Writes TikZ code for an attack between two arguments.
+     *
+     * @param argId1 the source argument identifier
+     * @param argId2 the target argument identifier
+     * @return a string containing the TikZ command for the attack
+     */
     protected String writeAttack(int argId1, int argId2) {
         return writeAttack(argId1, argId2, "single");
     }
 
+    /**
+     * Writes TikZ code for an attack between two arguments.
+     *
+     * @param argId1 the source argument identifier
+     * @param argId2 the target argument identifier
+     * @param mode the attack drawing mode
+     * @return a string containing the TikZ command for the attack
+     * @throws IllegalArgumentException if the mode is unknown
+    */
     protected String writeAttack(int argId1, int argId2, String mode) {
         return switch (mode) {
             case "single" -> String.format("\\attack{a%s}{a%s}%n", argId1, argId2);
@@ -224,6 +279,14 @@ public class TikzWriter extends AbstractDungWriter {
         };
     }
 
+    /**
+     * Writes TikZ code for self-attacks in the given argumentation framework.
+     *
+     * @param aaf the argumentation framework
+     * @param width the grid width
+     * @param height the grid height
+     * @return a string containing the TikZ commands for self-attacks
+     */
     protected String writeSelfAttacks(DungTheory aaf, int width, int height) {
         StringBuilder s = new StringBuilder();
         // Write self-attacks
