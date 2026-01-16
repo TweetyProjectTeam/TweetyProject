@@ -1,4 +1,14 @@
-08.07.2026 - TweetyProject v1.29
+16.01.2026 - TweetyProject v1.30
+  New libraries:
+    - org.tweetyproject.causal: causal reasoning approaches (based on abstract argumentation)
+    - org.tweetyproject.arg.explanations: explanation methods based on serialisability
+  New functionalities:
+    - classes for checking equivalence of abstract argumentation frameworks (org.tweetyproject.arg.dung)
+  Minor changes:
+    - Fixed JavaDoc
+    - Minor bugfixes
+
+08.07.2025 - TweetyProject v1.29
   New libraries:
     - org.tweetyproject.arg.eaf: epistemic argumentation frameworks
   New functionalities:

@@ -27,7 +27,7 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.29-SNAPSHOT</version>
+  	<version>1.30-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

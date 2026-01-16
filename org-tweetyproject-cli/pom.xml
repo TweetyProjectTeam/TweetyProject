@@ -12,14 +12,14 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.29-SNAPSHOT</version>
+  	<version>1.30-SNAPSHOT</version>
   </parent>
 
   <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>rpcl</artifactId>
-  		<version>1.29-SNAPSHOT</version>
+  		<version>1.30-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>jspf</groupId>

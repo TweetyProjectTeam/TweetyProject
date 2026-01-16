@@ -9,7 +9,7 @@
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
   <name>TweetyProject (Parent POM)</name>
-  <version>1.29-SNAPSHOT</version>
+  <version>1.30-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description
@@ -75,7 +75,7 @@
         </includes>
       </resource>
       </resources>
-       -->
+      -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
