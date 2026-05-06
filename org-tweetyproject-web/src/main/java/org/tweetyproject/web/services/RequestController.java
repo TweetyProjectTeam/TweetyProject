@@ -44,6 +44,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -79,6 +80,7 @@ import org.tweetyproject.web.services.aba.AbaReasonerCalleeFactory;
 import org.tweetyproject.web.services.aba.AbaReasonerPost;
 import org.tweetyproject.web.services.aba.AbaReasonerResponse;
 import org.tweetyproject.web.services.aba.GeneralAbaReasonerFactory;
+import org.tweetyproject.web.services.bipolar.*;
 import org.tweetyproject.web.services.causal.*;
 import org.tweetyproject.web.services.delp.DeLPCallee;
 import org.tweetyproject.web.services.delp.DeLPPost;
@@ -425,6 +427,111 @@ public class RequestController {
 		// response.setSemantics(AbstractExtensionReasonerFactory.Semantics.values());
 		return response;
 	}
+
+	/**
+	 * Handles HTTP POST requests for bipolar extension reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/bipolar" that have the specified content types
+	 * for both request and response. It takes a BipolarReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the BipolarReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a BipolarReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default BipolarReasonerResponse.</p>
+	 *
+	 * @param bipolarReasonerPost The BipolarReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/bipolar", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody BipolarReasonerPost bipolarReasonerPost) {
+
+		if (bipolarReasonerPost.getCmd().equals("info"))
+			return (Response) getBipolarInfo(bipolarReasonerPost.getEmail());
+
+		if (bipolarReasonerPost.getCmd().equals("get_models") || bipolarReasonerPost.getCmd().equals("get_model")) {
+			var semantics = BipolarSemantics.getSemantics(bipolarReasonerPost.getSemantics());
+			var bbase = AbstractBipolarFrameworkFactory.getArgumentationFramework(
+					semantics,
+					bipolarReasonerPost.getNr_of_arguments(),
+					bipolarReasonerPost.getAttacks(),
+					bipolarReasonerPost.getSupports());
+			AbstractBipolarExtensionReasoner reasoner = AbstractBipolarExtensionReasonerFactory.getReasoner(semantics);
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			BipolarReasonerResponse reasonerResponse = new BipolarReasonerResponse(
+					bipolarReasonerPost.getCmd(),
+					bipolarReasonerPost.getEmail(),
+					bipolarReasonerPost.getNr_of_arguments(),
+					bipolarReasonerPost.getAttacks(),
+					bipolarReasonerPost.getSupports(),
+					bipolarReasonerPost.getSemantics(),
+					bipolarReasonerPost.getSolver(),
+					null,
+					0,
+					bipolarReasonerPost.getUnit_timeout(),
+					"ERRORs");
+			TimeUnit unit = Utils.getTimoutUnit(bipolarReasonerPost.getUnit_timeout());
+			var command = BipolarReasonerCalleeFactory.Command.getCommand(bipolarReasonerPost.getCmd());
+			Callee callee = BipolarReasonerCalleeFactory.getCallee(command, reasoner, bbase);
+			int user_timeout = Utils.checkUserTimeout(bipolarReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
+				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(bipolarReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new BipolarReasonerResponse();
+		}
+	}
+
+	private BipolarServicesInfoResponse getBipolarInfo(String email) {
+		BipolarServicesInfoResponse response = new BipolarServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = AbstractBipolarExtensionReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.id);
+		}
+		response.setSemantics(semantics_ids);
+
+		BipolarReasonerCalleeFactory.Command[] com = BipolarReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
 
 	/**
  * Handles HTTP POST requests for Defeasible logic programming DeLP Reasoner operations.

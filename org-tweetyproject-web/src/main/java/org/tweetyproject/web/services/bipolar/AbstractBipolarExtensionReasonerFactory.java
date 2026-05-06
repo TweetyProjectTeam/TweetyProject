@@ -23,58 +23,18 @@ import org.tweetyproject.arg.bipolar.reasoner.deductive.*;
 import org.tweetyproject.arg.bipolar.reasoner.necessity.*;
 
 /**
- * Main factory for retrieving bipolar extension reasoners.
+ * Main factory for retrieving bipolar extension reasoners as supported by the web service
  * 
  * @author Lars Bengel
  */
 public abstract class AbstractBipolarExtensionReasonerFactory {
-
-	/** An enumeration of all available semantics. */
-	public enum Semantics {
-		/** General Semantics */
-		CF("cf", "Conflict-Free"),
-		SA("sa", "Safe"),
-		CL("cl", "Closed"),
-		/** Semantics for Deductive Interpretation */
-		CAD("c-ad", "c-Admissible"),
-		DAD("d-ad", "d-Admissible"),
-		/** Semantics for Necessary Interpretation */
-		NAD("n-ad", "Admissible"),
-		NCO("n-co", "Complete"),
-		NGR("n-gr", "Grounded"),
-		NPR("n-pr", "Preferred"),
-		NST("n-st", "Stable");
-
-		/** id */
-		public String id;
-		/** label */
-		public String label;
-
-		Semantics(String id, String label) {
-			this.id = id;
-			this.label = label;
-		}
-
-		/**
-		 *
-		 * @param id ID
-		 * @return the semantics
-		 */
-		public static Semantics getSemantics(String id) {
-			for (Semantics m : Semantics.values())
-				if (m.id.equals(id))
-					return m;
-			return null;
-		}
-	}
-
 	/**
 	 * Returns an array of all available semantics.
 	 *
 	 * @return An array of all available semantics.
 	 */
-	public static Semantics[] getSemantics() {
-		return Semantics.values();
+	public static BipolarSemantics[] getSemantics() {
+		return BipolarSemantics.values();
 	}
 
 	/**
@@ -84,7 +44,7 @@ public abstract class AbstractBipolarExtensionReasonerFactory {
 	 * @param sem some identifier of an semantics.
 	 * @return the requested reasoner.
 	 */
-	public static AbstractBipolarExtensionReasoner getReasoner(Semantics sem) {
+	public static AbstractBipolarExtensionReasoner getReasoner(BipolarSemantics sem) {
         return switch (sem) {
             case CF -> new ConflictFreeReasoner();
 			case SA -> new SafetyReasoner();
