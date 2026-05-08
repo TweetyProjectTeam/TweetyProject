@@ -14,70 +14,108 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.bipolar.syntax;
 
+import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
+import org.tweetyproject.arg.dung.ldo.syntax.LdoRelation;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungSignature;
+import org.tweetyproject.commons.Signature;
+import org.tweetyproject.graphs.DirectedEdge;
+
 /**
- * This interface captures common methods of different interpretations of the support relation in
+ * This class models a support between two arguments. It comprises two attributes of <code>Argument</code> and is used by
  * bipolar abstract argumentation theories.
  *
  * @author Lars Bengel
  *
  */
-public interface Support extends BipolarEntity {
+public class Support extends DirectedEdge<Argument> {
 
     /**
-     * Returns the argument that is supported by the supporter.
-     * <p>
-     * This method retrieves the argument that is being supported by the current supporter argument.
-     * </p>
-     *
-     * @return the supported argument
+     * Default constructor; initializes the two arguments used in this support relation
+     * @param supporter the supporting argument
+     * @param supported the supported argument
      */
-    BipolarEntity getSupported();
+    public Support(Argument supporter, Argument supported){
+        super(supporter, supported);
+    }
 
     /**
-     * Returns the argument that provides support to another argument.
-     * <p>
-     * This method retrieves the argument that is providing support to the current supported argument.
-     * </p>
-     *
-     * @return the supporter argument
+     * returns the supported argument of this support relation.
+     * @return the supported argument of this support relation.
      */
-    BipolarEntity getSupporter();
+    public Argument getSupported() {
+        return this.getNodeB();
+    }
 
     /**
-     * Sets the conditionality of the support, represented by a probability value.
-     * <p>
-     * The conditionality or strength of the support is represented by a conditional probability
-     * value, which reflects how strongly the supporter influences the supported argument.
-     * </p>
-     *
-     * @param c the conditional probability of the support
+     * returns the supporting argument of this support relation.
+     * @return the supporting argument of this support relation.
      */
-    void setConditionality(double c);
+    public Argument getSupporter() {
+        return this.getNodeA();
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.kr.Formula#getSignature()
+     */
+    public Signature getSignature(){
+        DungSignature sig = new DungSignature();
+        sig.add(this.getSupported());
+        sig.add(this.getSupporter());
+        return sig;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString(){
+        return "("+this.getSupporter().toString()+","+this.getSupported().toString()+")";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object o){
+        if(!o.getClass().equals(this.getClass())) return false;
+        if(!this.getSupporter().equals(((Support)o).getSupporter())) return false;
+        if(!this.getSupported().equals(((Support)o).getSupported())) return false;
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode(){
+        return this.getSupported().hashCode() + 11 * this.getSupporter().hashCode();
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.arg.dung.syntax.DungEntity#getLdoFormula()
+     */
+    public LdoFormula getLdoFormula() {
+        return new LdoRelation(this.getSupporter().getLdoFormula(), this.getSupported().getLdoFormula());
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#contains(java.lang.Object)
+     */
+    public boolean contains(Object o) {
+        return this.getSupported().equals(o) || this.getSupporter().equals(o);
+    }
 
     /**
-     * Returns the conditional probability of the support.
-     * <p>
-     * This method retrieves the conditional probability associated with the support, indicating
-     * the strength of the support.
-     * </p>
-     *
-     * @return the conditional probability of the support
+     * Value for distinguishing between different interpretations of the support relation
      */
-    double getConditionalProbability();
-
-    /**
-     * Returns a string representation of the support relation.
-     * <p>
-     * This method provides a textual description of the support relation, including information
-     * about the supporter, the supported argument, and the conditional probability.
-     * </p>
-     *
-     * @return a string representation of the support relation
-     */
-    String toString();
+    public enum Type {
+        DEFAULT,
+        SIMPLE_DEDUCTIVE,
+        DEDUCTIVE,
+        NECESSITY,
+        SIMPLE_NECESSITY,
+        EVIDENTIAL
+    }
 }

@@ -18,8 +18,8 @@
  */
 package org.tweetyproject.web.services.bipolar;
 
-import static org.tweetyproject.web.services.bipolar.BipolarArgumentationFrameworkType.DeductiveArgumentationFramework;
-import static org.tweetyproject.web.services.bipolar.BipolarArgumentationFrameworkType.NecessityArgumentationFramework;
+import org.tweetyproject.arg.bipolar.syntax.Support;
+
 
 /**
  * An enumeration of all available semantics through the web service.
@@ -31,22 +31,36 @@ public enum BipolarSemantics {
     /**
      * General Semantics
      */
-    CF("cf", "Conflict-Free", DeductiveArgumentationFramework),
-    SA("sa", "Safe", DeductiveArgumentationFramework),
-    CL("cl", "Closed", DeductiveArgumentationFramework),
+    BCF("b-cf", "Conflict-Free", Support.Type.DEFAULT),
+    BCOH("b-coh", "Coherent", Support.Type.DEFAULT),
+    BAD("b-ad", "Coherent Admissible", Support.Type.DEFAULT),
+
+    /**
+     * Coalition Semantics
+     */
+    CAD("b-coal-ad", "Coalition-Admissible", Support.Type.DEFAULT),
+    CCO("b-coal-co", "Coalition-Complete", Support.Type.DEFAULT),
+    CGR("b-coal-gr", "Coalition-Grounded", Support.Type.DEFAULT),
+    CPR("b-coal-pr", "Coalition-Preferred", Support.Type.DEFAULT),
+    CST("b-coal-st", "Coalition-Stable", Support.Type.DEFAULT),
+
     /**
      * Semantics for Deductive Interpretation
      */
-    CAD("c-ad", "c-Admissible", DeductiveArgumentationFramework),
-    DAD("d-ad", "d-Admissible", DeductiveArgumentationFramework),
+    DAD("d-ad", "Admissible", Support.Type.DEDUCTIVE),
+    DCO("d-co", "Complete", Support.Type.DEDUCTIVE),
+    DGR("d-gr", "Grounded", Support.Type.DEDUCTIVE),
+    DPR("d-pr", "Preferred", Support.Type.DEDUCTIVE),
+    DST("d-st", "Stable", Support.Type.DEDUCTIVE),
+
     /**
-     * Semantics for Necessary Interpretation
+     * Semantics for Necessity Interpretation
      */
-    NAD("n-ad", "Admissible", NecessityArgumentationFramework),
-    NCO("n-co", "Complete", NecessityArgumentationFramework),
-    NGR("n-gr", "Grounded", NecessityArgumentationFramework),
-    NPR("n-pr", "Preferred", NecessityArgumentationFramework),
-    NST("n-st", "Stable", NecessityArgumentationFramework);
+    NAD("n-ad", "Admissible", Support.Type.NECESSITY),
+    NCO("n-co", "Complete", Support.Type.NECESSITY),
+    NGR("n-gr", "Grounded", Support.Type.NECESSITY),
+    NPR("n-pr", "Preferred", Support.Type.NECESSITY),
+    NST("n-st", "Stable", Support.Type.NECESSITY);
 
     /**
      * id
@@ -59,12 +73,12 @@ public enum BipolarSemantics {
     /**
      * What type of input is expected for this semantic.
      */
-    public BipolarArgumentationFrameworkType input;
+    public Support.Type type;
 
-    BipolarSemantics(String id, String label, BipolarArgumentationFrameworkType input) {
+    BipolarSemantics(String id, String label, Support.Type input) {
         this.id = id;
         this.label = label;
-        this.input = input;
+        this.type = input;
     }
 
     /**

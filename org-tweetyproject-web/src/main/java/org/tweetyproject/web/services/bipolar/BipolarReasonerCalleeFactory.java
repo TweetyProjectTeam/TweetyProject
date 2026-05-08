@@ -19,7 +19,7 @@
 package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
-import org.tweetyproject.arg.bipolar.syntax.AbstractBipolarFramework;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.web.services.Callee;
 
 
@@ -88,7 +88,7 @@ public class BipolarReasonerCalleeFactory {
      * @return A Callee instance corresponding to the specified command
      * @throws RuntimeException If the specified command is not found
      */
-    public static Callee getCallee(Command cmd, AbstractBipolarExtensionReasoner reasoner, AbstractBipolarFramework bbase) {
+    public static Callee getCallee(Command cmd, AbstractBipolarExtensionReasoner reasoner, BipolarArgumentationFramework bbase) {
         switch (cmd) {
             case GET_MODELS:
                 return new BipolarReasonerGetModelsCallee(reasoner, bbase);
