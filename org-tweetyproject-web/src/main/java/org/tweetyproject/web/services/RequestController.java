@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -90,7 +91,6 @@ import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory;
 import org.tweetyproject.web.services.dung.DungReasonerPost;
 import org.tweetyproject.web.services.dung.DungReasonerResponse;
 import org.tweetyproject.web.services.dung.DungServicesInfoResponse;
-import org.tweetyproject.web.services.dung.AbstractExtensionReasonerFactory.Semantics;
 import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory.Command;
 import org.tweetyproject.web.services.incmes.InconsistencyGetMeasuresResponse;
 import org.tweetyproject.web.services.incmes.InconsistencyPost;
@@ -413,7 +413,7 @@ public class RequestController {
 		Semantics[] sem = AbstractExtensionReasonerFactory.getSemantics();
 		ArrayList<String> semantics_ids = new ArrayList<String>();
 		for (Semantics s : sem) {
-			semantics_ids.add(s.id);
+			semantics_ids.add(s.abbreviation());
 		}
 		response.setSemantics(semantics_ids);
 
