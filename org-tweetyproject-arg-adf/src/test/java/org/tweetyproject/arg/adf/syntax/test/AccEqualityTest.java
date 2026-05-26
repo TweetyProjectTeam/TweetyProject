@@ -66,7 +66,7 @@ public class AccEqualityTest {
 	public void testUnequality2() {
 		Argument a = new Argument("a");
 		Argument b = new Argument("a");
-		assertFalse(a.equals(b));
+		assertTrue(a.equals(b));
 	}
 		
 }

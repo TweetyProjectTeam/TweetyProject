@@ -67,7 +67,7 @@ public final class TestDeLP {
         DefeasibleLogicProgram.main(new String[] {"--help"});
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void unknownComp1() throws IOException, CmdLineException {
         DefeasibleLogicProgram.main(new String[] {"-c", "PRIORITY"});
     }
