@@ -37,7 +37,11 @@ public class DungReasonerCalleeFactory {
         /** get models */
         GET_MODELS("get_models", "Get all models"),
         /** get model */
-        GET_MODEL("get_model", "Get some model");
+        GET_MODEL("get_model", "Get some model"),
+        /** get credulously acceptable arguments */
+        GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        /** get skeptically acceptable arguments */
+        GET_SKEPTICAL("get_skeptical", "Get skeptical arguments");
 
         /** ID of the command */
         public String id;
@@ -94,6 +98,10 @@ public class DungReasonerCalleeFactory {
                 return new DungReasonerGetModelsCallee(reasoner, bbase);
             case GET_MODEL:
                 return new DungReasonerGetModelCallee(reasoner, bbase);
+            case GET_CREDULOUS:
+                return new DungReasonerGetCredulousCallee(reasoner, bbase);
+            case GET_SKEPTICAL:
+                return new DungReasonerGetSkepticalCallee(reasoner, bbase);
             default:
                 throw new RuntimeException("Command not found: " + cmd.toString());
         }

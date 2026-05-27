@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.AbstractAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
@@ -86,11 +87,7 @@ import org.tweetyproject.web.services.causal.*;
 import org.tweetyproject.web.services.delp.DeLPCallee;
 import org.tweetyproject.web.services.delp.DeLPPost;
 import org.tweetyproject.web.services.delp.DeLPResponse;
-import org.tweetyproject.web.services.dung.AbstractExtensionReasonerFactory;
-import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory;
-import org.tweetyproject.web.services.dung.DungReasonerPost;
-import org.tweetyproject.web.services.dung.DungReasonerResponse;
-import org.tweetyproject.web.services.dung.DungServicesInfoResponse;
+import org.tweetyproject.web.services.dung.*;
 import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory.Command;
 import org.tweetyproject.web.services.incmes.InconsistencyGetMeasuresResponse;
 import org.tweetyproject.web.services.incmes.InconsistencyPost;
@@ -330,20 +327,19 @@ public class RequestController {
 		if (dungReasonerPost.getCmd().equals("info"))
 			return (Response) getInfo(dungReasonerPost);
 
-		if (dungReasonerPost.getCmd().equals("get_models") || dungReasonerPost.getCmd().equals("get_model")) {
+		if (dungReasonerPost.getCmd().equals("get_models") || dungReasonerPost.getCmd().equals("get_model") || dungReasonerPost.getCmd().equals("get_credulous") || dungReasonerPost.getCmd().equals("get_skeptical")) {
 			DungTheory dungTheory = Utils.getDungTheory(dungReasonerPost.getNr_of_arguments(),
 					dungReasonerPost.getAttacks());
-
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
-					Semantics.getSemantics(dungReasonerPost.getSemantics()));
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			DungReasonerResponse reasonerResponse = new DungReasonerResponse(dungReasonerPost.getCmd(),
 					dungReasonerPost.getEmail(), dungReasonerPost.getNr_of_arguments(), dungReasonerPost.getAttacks(),
 					dungReasonerPost.getSemantics(), dungReasonerPost.getSolver(), null, 0,
 					dungReasonerPost.getUnit_timeout(), "ERRORs");
 			TimeUnit unit = Utils.getTimoutUnit(dungReasonerPost.getUnit_timeout());
-			Callee callee = DungReasonerCalleeFactory.getCallee(Command.getCommand(dungReasonerPost.getCmd()), reasoner,
-					dungTheory);
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
+					Semantics.getSemantics(dungReasonerPost.getSemantics()));
+			Callee callee = DungReasonerCalleeFactory.getCallee(
+					Command.getCommand(dungReasonerPost.getCmd()), reasoner, dungTheory);
 			int user_timeout = Utils.checkUserTimeout(dungReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
