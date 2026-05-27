@@ -21,6 +21,7 @@ package org.tweetyproject.web.services.dung;
 import org.tweetyproject.arg.dung.reasoner.AbstractAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.EeeAcceptabilityReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
@@ -64,6 +65,6 @@ public class DungReasonerGetSkepticalCallee extends Callee {
      */
     @Override
     public Collection<Argument> call() throws Exception {
-        return this.reasoner.getAcceptableArguments(this.bbase);
+        return new Extension<>(this.reasoner.getAcceptableArguments(this.bbase));
     }
 }

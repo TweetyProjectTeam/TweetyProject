@@ -193,7 +193,7 @@ class RequestControllerDungTest {
                           ],
                           "semantics": "ADM",
                           "solver": null,
-                          "answer": "[1, 3]",
+                          "answer": "{1,3}",
                           "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
@@ -235,7 +235,7 @@ class RequestControllerDungTest {
                           ],
                           "semantics": "ADM",
                           "solver": null,
-                          "answer": "[]",
+                          "answer": "{}",
                           "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
