@@ -26,6 +26,8 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 
 import java.util.*;
@@ -51,6 +53,12 @@ public class BipolarArgumentationFramework extends DungTheory {
      */
     public BipolarArgumentationFramework() {
         super();
+    }
+
+    public BipolarArgumentationFramework(BipolarArgumentationFramework graph) {
+        this.addAll(graph.getNodes());
+        this.addAllAttacks(graph.getAttacks());
+        this.addAllSupports(graph.getSupports());
     }
 
     /**
@@ -370,6 +378,22 @@ public class BipolarArgumentationFramework extends DungTheory {
         return result;
     }
 
+    /**
+     * Adds the set of supports to this framework.
+     * @param c a collection of supports
+     * @return "true" if this framework has been modified.
+     */
+    public boolean addAllSupports(Collection<? extends Support> c){
+        boolean result = false;
+        for(Support att: c)
+            result |= this.add(att);
+        return result;
+    }
+
+    /**
+     * Returns the set of supports of this framework
+     * @return the set of supports
+     */
     public Collection<Support> getSupports(){
         Collection<Support> supports = new HashSet<>();
         for(Argument a: this) {

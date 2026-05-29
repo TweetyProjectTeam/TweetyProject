@@ -82,7 +82,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			if(!children.containsKey(((Edge<? extends Argument>) e).getNodeA()))
 				children.put(((Edge<? extends Argument>) e).getNodeA(), new HashSet<Argument>());
 			children.get(((Edge<? extends Argument>) e).getNodeA()).add(((Edge<? extends Argument>) e).getNodeB());
-		}		
+		}
 	}
 	
 	public DungTheory clone() {
