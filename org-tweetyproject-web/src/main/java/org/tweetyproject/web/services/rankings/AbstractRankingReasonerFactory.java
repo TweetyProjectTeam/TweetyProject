@@ -11,9 +11,9 @@ import java.util.NoSuchElementException;
 
 public class AbstractRankingReasonerFactory {
     public enum RankingSemantics {
-        CAT("cat", "categorizer"),
-        SER("ser", "serialized"),
-        PROB("prob", "probabilistic");
+        CAT("CAT", "categorizer"),
+        SER("SER", "serialized"),
+        PROB("PROB", "probabilistic");
 
         /** The description of the semantics. */
         public final String name;

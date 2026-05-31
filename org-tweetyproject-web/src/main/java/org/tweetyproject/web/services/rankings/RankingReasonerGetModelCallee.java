@@ -3,7 +3,9 @@ package org.tweetyproject.web.services.rankings;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
+import org.tweetyproject.arg.rankings.util.RankingTools;
 import org.tweetyproject.comparator.GeneralComparator;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.web.services.Callee;
 
 public class RankingReasonerGetModelCallee extends Callee {
@@ -32,6 +34,7 @@ public class RankingReasonerGetModelCallee extends Callee {
      */
     @Override
     public GeneralComparator<Argument,DungTheory> call() throws Exception {
-        return this.reasoner.getModel(bbase);
+        GeneralComparator<Argument, DungTheory> result = this.reasoner.getModel(bbase);
+        return RankingTools.roundRanking((NumericalPartialOrder<Argument, DungTheory>) result, 2);
     }
 }

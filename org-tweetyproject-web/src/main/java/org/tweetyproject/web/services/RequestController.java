@@ -56,6 +56,7 @@ import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.commons.analysis.NaiveMusEnumerator;
 import org.tweetyproject.logics.fol.parser.FolParser;
@@ -417,8 +418,8 @@ public class RequestController {
 			int user_timeout = Utils.checkUserTimeout(rankingReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
-				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+				Future<GeneralComparator<Argument,DungTheory>> future = executor.submit(callee);
+				Pair<GeneralComparator<Argument, DungTheory>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
