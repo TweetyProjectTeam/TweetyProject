@@ -144,6 +144,12 @@
             <artifactId>bipolar</artifactId>
             <version>1.30-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.tweetyproject.arg</groupId>
+            <artifactId>rankings</artifactId>
+            <version>1.30</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- SLF4J API
         <dependency>
