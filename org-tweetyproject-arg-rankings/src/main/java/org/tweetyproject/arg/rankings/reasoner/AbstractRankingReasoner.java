@@ -20,6 +20,7 @@ package org.tweetyproject.arg.rankings.reasoner;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
@@ -45,4 +46,39 @@ public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argume
 
     /** Default Constructor */
     public AbstractRankingReasoner(){}
+
+    /**
+     * returns the corresponding reasoner for the given semantics
+     * @param semantics some ranking semantics
+     * @return the corresponding reasoner
+     */
+    public static AbstractRankingReasoner<?> getRankingReasonerForSemantics(RankingSemantics semantics) {
+        switch (semantics) {
+            case CAT -> {
+                return new CategorizerRankingReasoner();
+            } case BB -> {
+                return new BurdenBasedRankingReasoner();
+            } case CT -> {
+                throw new UnsupportedOperationException("Can currently not be initialized without a given graph.");
+            } case CO -> {
+                return new CountingRankingReasoner();
+            } case DB -> {
+                return new DiscussionBasedRankingReasoner();
+            } case IGD -> {
+                return new IteratedGradedDefenseReasoner();
+            } case SAF -> {
+                return new SAFRankingReasoner();
+            } case SER -> {
+                return new SerialisableRankingReasoner();
+            } case SB -> {
+                return new StrategyBasedRankingReasoner();
+            } case TU -> {
+                return new TuplesRankingReasoner();
+            } case PR -> {
+                throw new UnsupportedOperationException("Semantics only supports acyclic graphs");
+            } case PROB -> {
+                throw new UnsupportedOperationException("Currently not supported");
+            } default -> throw new IllegalArgumentException("Unsupported semantics.");
+        }
+    }
 }

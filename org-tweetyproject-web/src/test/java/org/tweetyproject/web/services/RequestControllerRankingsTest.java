@@ -26,6 +26,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.web.services.rankings.AbstractRankingReasonerFactory;
 
 import java.util.stream.Stream;
@@ -113,13 +114,13 @@ class RequestControllerRankingsTest {
                         """, true));
     }
 
-    private static Stream<AbstractRankingReasonerFactory.RankingSemantics> availableSemantics() {
-        return Stream.of(AbstractRankingReasonerFactory.RankingSemantics.values());
+    private static Stream<RankingSemantics> availableSemantics() {
+        return Stream.of(RankingSemantics.values());
     }
 
     @ParameterizedTest(name = "semantics {0}")
     @MethodSource("availableSemantics")
-    public void getModelsForSemantics(AbstractRankingReasonerFactory.RankingSemantics semantics) throws Exception {
+    public void getModelsForSemantics(RankingSemantics semantics) throws Exception {
         var post = post("/rankings").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content(String.format("""
@@ -131,7 +132,7 @@ class RequestControllerRankingsTest {
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
-                        """, semantics.id));
+                        """, semantics.getId()));
 
         mvc.perform(post).andExpect(status().isOk())
                 .andExpect(content().json("""

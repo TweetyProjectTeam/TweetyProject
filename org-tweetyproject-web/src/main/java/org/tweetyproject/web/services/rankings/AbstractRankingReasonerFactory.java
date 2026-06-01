@@ -1,63 +1,46 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.web.services.rankings;
 
-import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
-import org.tweetyproject.arg.rankings.reasoner.ProbabilisticRankingReasoner;
-import org.tweetyproject.arg.rankings.reasoner.SerialisableRankingReasoner;
-import org.tweetyproject.math.probability.Probability;
 
-import java.util.NoSuchElementException;
-
+/**
+ * Factory for creating reasoner for ranking semantics
+ *
+ * @author Lars Bengel
+ */
 public class AbstractRankingReasonerFactory {
-    public enum RankingSemantics {
-        CAT("CAT", "categorizer"),
-        SER("SER", "serialized"),
-        PROB("PROB", "probabilistic");
-
-        /** The description of the semantics. */
-        public final String name;
-        /** The abbreviation of the semantics. */
-        public final String id;
-
-        /**
-         * Creates a new semantics.
-         * @param id some identifier
-         * @param name the name of the semantics
-         */
-        RankingSemantics(String id, String name){
-            this.id = id;
-            this.name = name;
-        }
-
-        /**
-         * Returns the semantics whose abbreviation matched the given string.
-         * @param abbreviation Abbreviation of the semantics to return.
-         * @return Semantics with the specified abbreviation.
-         */
-        public static RankingSemantics getSemantics(String abbreviation) {
-            for (RankingSemantics element : RankingSemantics.values()) {
-                if (element.id.equals(abbreviation)) {
-                    return element;
-                }
-            }
-            throw new NoSuchElementException();
-        }
-    }
-
+    /**
+     * returns the list of all available semantics
+     * @return the list o all ranking semantics
+     */
     public static RankingSemantics[] getSemantics() {
         return RankingSemantics.values();
     }
 
+    /**
+     * returns a simple reasoner for the given semantics
+     * @param semantics some ranking semantics
+     * @return simple reasoner for the given semantics
+     */
     public static AbstractRankingReasoner<?> getReasoner(RankingSemantics semantics) {
-        switch (semantics) {
-            case CAT -> {
-                return new CategorizerRankingReasoner();
-            } case SER -> {
-                return new SerialisableRankingReasoner();
-            } case PROB -> {
-                return new ProbabilisticRankingReasoner(Semantics.GR, new Probability(0.5), false);
-            } default -> throw new IllegalArgumentException("unsupported semantics!");
-        }
+        return AbstractRankingReasoner.getRankingReasonerForSemantics(semantics);
     }
 }

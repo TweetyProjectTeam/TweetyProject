@@ -50,6 +50,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.causal.parser.CausalParser;
 import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.commons.BeliefSet;
@@ -412,7 +413,7 @@ public class RequestController {
 					rankingReasonerPost.getUnit_timeout(), "ERRORs");
 			TimeUnit unit = Utils.getTimoutUnit(rankingReasonerPost.getUnit_timeout());
 			AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(
-					AbstractRankingReasonerFactory.RankingSemantics.getSemantics(rankingReasonerPost.getSemantics()));
+					RankingSemantics.getSemantics(rankingReasonerPost.getSemantics()));
 			Callee callee = RankingReasonerCalleeFactory.getCallee(
 					RankingReasonerCalleeFactory.Command.getCommand(rankingReasonerPost.getCmd()), reasoner, dungTheory);
 			int user_timeout = Utils.checkUserTimeout(rankingReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
@@ -451,7 +452,7 @@ public class RequestController {
 		var sem = AbstractRankingReasonerFactory.getSemantics();
 		ArrayList<String> semantics_ids = new ArrayList<String>();
 		for (var s : sem) {
-			semantics_ids.add(s.id);
+			semantics_ids.add(s.getId());
 		}
 		response.setSemantics(semantics_ids);
 
