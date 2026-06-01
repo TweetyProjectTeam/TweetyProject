@@ -23,8 +23,14 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
 import org.tweetyproject.arg.rankings.util.RankingTools;
 import org.tweetyproject.comparator.GeneralComparator;
+import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.web.services.Callee;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class RankingReasonerGetModelCallee extends Callee {
     /** The AbstractRankingReasoner used for obtaining the model */
@@ -53,6 +59,55 @@ public class RankingReasonerGetModelCallee extends Callee {
     @Override
     public GeneralComparator<Argument,DungTheory> call() throws Exception {
         GeneralComparator<Argument, DungTheory> result = this.reasoner.getModel(bbase);
+        result = toNumericalRanking(result);
         return RankingTools.roundRanking((NumericalPartialOrder<Argument, DungTheory>) result, 2);
+    }
+
+    public static NumericalPartialOrder<Argument,DungTheory> toNumericalRanking(GeneralComparator<Argument,DungTheory> ranking) {
+        if (ranking instanceof NumericalPartialOrder<?,?>) {
+            return (NumericalPartialOrder<Argument, DungTheory>) ranking;
+        } else if (ranking instanceof LatticePartialOrder<?,?>) {
+            return toNumericalRanking((LatticePartialOrder<Argument, DungTheory>) ranking);
+        } else throw new IllegalArgumentException("Unsupported order type.");
+    }
+
+    public static NumericalPartialOrder<Argument,DungTheory> toNumericalRanking(LatticePartialOrder<Argument,DungTheory> ranking) {
+        NumericalPartialOrder<Argument,DungTheory> numericalRanking = new NumericalPartialOrder<>();
+        if (!ranking.containsIncomparableArguments()) {
+            List<Argument> args = new ArrayList<>(ranking.getOrder().getElements());
+            Collections.sort(args, new LatticeComparator(ranking));
+            double rank = 1;
+            numericalRanking.put(args.get(args.size()-1), rank);
+            for (int i = args.size() - 2; i >= 0; i--) {
+                Argument a = args.get(i);
+                Argument b = args.get(i + 1);
+                if (ranking.isEquallyAcceptableThan(a, b)) {
+                    numericalRanking.put(a, rank);
+                } else {
+                    numericalRanking.put(a, ++rank);
+                }
+            }
+        } else throw new IllegalArgumentException("ranking contains incomparable arguments.");
+        return numericalRanking;
+    }
+
+    private static class LatticeComparator implements Comparator<Argument> {
+        private final LatticePartialOrder<Argument,DungTheory> order;
+
+        public LatticeComparator(LatticePartialOrder<Argument,DungTheory> order) {
+            this.order = order;
+        }
+
+        @Override
+        public int compare(Argument a, Argument b) {
+            if (order.isIncomparable(a, b))
+                throw new IllegalArgumentException("Incomparable arguments " + a + ", " + b);
+            else if (order.isStrictlyLessAcceptableThan(a, b))
+                return -1;
+            else if (order.isStrictlyMoreAcceptableThan(a, b))
+                return 1;
+            else
+                return 0;
+        }
     }
 }

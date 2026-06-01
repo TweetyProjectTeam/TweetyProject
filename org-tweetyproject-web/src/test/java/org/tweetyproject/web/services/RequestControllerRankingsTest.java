@@ -27,7 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
-import org.tweetyproject.web.services.rankings.AbstractRankingReasonerFactory;
 
 import java.util.stream.Stream;
 
@@ -63,7 +62,7 @@ class RequestControllerRankingsTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CAT","SER","PROB"
+                            "CAT","SER","BB","CT","CO","DB","IGD","PR","SAF","SB","TU","PROB"
                           ],
                           "commands": [
                             "get_model"
@@ -81,7 +80,7 @@ class RequestControllerRankingsTest {
                            "cmd": "get_model",
                            "nr_of_arguments": 3,
                            "attacks": [[1, 2],[2,3]],
-                           "semantics": "CAT",
+                           "semantics": "SER",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -104,9 +103,9 @@ class RequestControllerRankingsTest {
                               3
                             ]
                           ],
-                          "semantics": "CAT",
+                          "semantics": "SER",
                           "solver": null,
-                          "answer": "{1=1.0, 2=0.5, 3=0.67}",
+                          "answer": "{1=1.0, 2=3.0, 3=2.0}",
                           "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
