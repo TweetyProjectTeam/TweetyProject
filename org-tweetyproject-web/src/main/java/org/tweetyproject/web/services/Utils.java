@@ -74,7 +74,7 @@ public final class Utils {
      * Creates a DungTheory from the given number of arguments and attack relations.
      *
      * @param nr_of_arguments The number of arguments in the DungTheory.
-     * @param atttacks        The attack relations represented as a list of lists of integers.
+     * @param attacks        The attack relations represented as a list of lists of integers.
      * @return A DungTheory constructed from the given arguments and attacks.
      */
 
