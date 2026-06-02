@@ -500,20 +500,20 @@ public class RequestController {
 			return (Response) getAdfInfo(adfReasonerPost.getEmail());
 
 		if (adfReasonerPost.getCmd().equals("get_models")) {
-			AbstractDialecticalFramework adf = Utils.getAdf(adfReasonerPost.getNr_of_arguments(),
-					adfReasonerPost.getConditions());
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			AdfReasonerResponse reasonerResponse = new AdfReasonerResponse(adfReasonerPost.getCmd(),
 					adfReasonerPost.getEmail(), adfReasonerPost.getNr_of_arguments(), adfReasonerPost.getConditions(),
 					adfReasonerPost.getSemantics(), adfReasonerPost.getSolver(), null, 0,
 					adfReasonerPost.getUnit_timeout(), "ERRORs");
 			TimeUnit unit = Utils.getTimoutUnit(adfReasonerPost.getUnit_timeout());
-			AbstractADFReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(
-					Semantics.getSemantics(adfReasonerPost.getSemantics()));
-			Callee callee = AdfReasonerCalleeFactory.getCallee(
-					AdfReasonerCalleeFactory.Command.getCommand(adfReasonerPost.getCmd()), reasoner, adf);
-			int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
+				AbstractDialecticalFramework adf = Utils.getAdf(adfReasonerPost.getNr_of_arguments(),
+						adfReasonerPost.getConditions());
+				AbstractADFReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(
+						Semantics.getSemantics(adfReasonerPost.getSemantics()));
+				Callee callee = AdfReasonerCalleeFactory.getCallee(
+						AdfReasonerCalleeFactory.Command.getCommand(adfReasonerPost.getCmd()), reasoner, adf);
+				int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 				// handle timeout
 				Future<Collection<Interpretation>> future = executor.submit(callee);
 				Pair<Collection<Interpretation>, Long> result = Utils.runServicesWithTimeout(future,
@@ -531,7 +531,6 @@ public class RequestController {
 				reasonerResponse.setTime(0.0);
 				reasonerResponse.setAnswer(null);
 				reasonerResponse.setStatus("Error");
-
 				executor.shutdownNow();
 			}
 			return reasonerResponse;
