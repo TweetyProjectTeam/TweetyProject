@@ -149,6 +149,11 @@
             <artifactId>rankings</artifactId>
             <version>1.30-SNAPSHOT</version>
         </dependency>
+	    <dependency>
+		    <groupId>org.tweetyproject.arg</groupId>
+		    <artifactId>adf</artifactId>
+		    <version>1.30-SNAPSHOT</version>
+	    </dependency>
 
 		<!-- SLF4J API
         <dependency>

@@ -44,6 +44,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -84,6 +87,7 @@ import org.tweetyproject.web.services.aba.AbaReasonerCalleeFactory;
 import org.tweetyproject.web.services.aba.AbaReasonerPost;
 import org.tweetyproject.web.services.aba.AbaReasonerResponse;
 import org.tweetyproject.web.services.aba.GeneralAbaReasonerFactory;
+import org.tweetyproject.web.services.adf.*;
 import org.tweetyproject.web.services.bipolar.*;
 import org.tweetyproject.web.services.causal.*;
 import org.tweetyproject.web.services.delp.DeLPCallee;
@@ -457,6 +461,98 @@ public class RequestController {
 		response.setSemantics(semantics_ids);
 
 		RankingReasonerCalleeFactory.Command[] com = RankingReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
+	/**
+	 * Handles HTTP POST requests for Dung Reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/dung" that have the specified content types
+	 * for both request and response. It takes a DungReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+	 *
+	 * @param adfReasonerPost The DungReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/adf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody AdfReasonerPost adfReasonerPost) {
+		if (adfReasonerPost.getCmd().equals("info"))
+			return (Response) getAdfInfo(adfReasonerPost.getEmail());
+
+		if (adfReasonerPost.getCmd().equals("get_models")) {
+			AbstractDialecticalFramework adf = Utils.getAdf(adfReasonerPost.getNr_of_arguments(),
+					adfReasonerPost.getConditions());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			AdfReasonerResponse reasonerResponse = new AdfReasonerResponse(adfReasonerPost.getCmd(),
+					adfReasonerPost.getEmail(), adfReasonerPost.getNr_of_arguments(), adfReasonerPost.getConditions(),
+					adfReasonerPost.getSemantics(), adfReasonerPost.getSolver(), null, 0,
+					adfReasonerPost.getUnit_timeout(), "ERRORs");
+			TimeUnit unit = Utils.getTimoutUnit(adfReasonerPost.getUnit_timeout());
+			AbstractADFReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(
+					Semantics.getSemantics(adfReasonerPost.getSemantics()));
+			Callee callee = AdfReasonerCalleeFactory.getCallee(
+					AdfReasonerCalleeFactory.Command.getCommand(adfReasonerPost.getCmd()), reasoner, adf);
+			int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<Collection<Interpretation>> future = executor.submit(callee);
+				Pair<Collection<Interpretation>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(adfReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new AdfReasonerResponse();
+		}
+	}
+
+	private AdfServicesInfoResponse getAdfInfo(String email) {
+		AdfServicesInfoResponse response = new AdfServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = AbstractAdfReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.abbreviation());
+		}
+		response.setSemantics(semantics_ids);
+
+		AdfReasonerCalleeFactory.Command[] com = AdfReasonerCalleeFactory.getCommands();
 		ArrayList<String> command_ids = new ArrayList<String>();
 		for (var c : com) {
 			command_ids.add(c.id);

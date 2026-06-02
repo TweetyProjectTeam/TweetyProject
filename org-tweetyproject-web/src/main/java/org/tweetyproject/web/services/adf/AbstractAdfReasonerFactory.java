@@ -1,0 +1,66 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+package org.tweetyproject.web.services.adf;
+
+import org.tweetyproject.arg.adf.reasoner.*;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+
+/**
+ * Main factory for retrieving adf extension reasoners.
+ *
+ * @author Lars Bengel
+ */
+public abstract class AbstractAdfReasonerFactory {
+    /**
+     * Returns an array of all available semantics.
+     *
+     * @return An array of all available semantics.
+     */
+    public static Semantics[] getSemantics() {
+        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA};
+    }
+
+    /**
+     * Creates a new reasoner measure of the given semantics with default
+     * settings.
+     *
+     * @param sem some identifier of a semantics.
+     * @return the requested reasoner.
+     */
+    public static AbstractADFReasoner getReasoner(Semantics sem) {
+        switch (sem) {
+            case CF -> {
+                return new ConflictFreeReasoner(new NativeMinisatSolver());
+            } case ADM -> {
+                return new AdmissibleReasoner(new NativeMinisatSolver());
+            } case CO -> {
+                return new CompleteReasoner(new NativeMinisatSolver());
+            } case PR -> {
+                return new PreferredReasoner(new NativeMinisatSolver());
+            } case GR -> {
+                return new GroundReasoner(new NativeMinisatSolver());
+            } case ST -> {
+                return new StableReasoner(new NativeMinisatSolver());
+            } case NA -> {
+                return new NaiveReasoner(new NativeMinisatSolver());
+            } default -> throw new IllegalArgumentException("unsupported semantics");
+        }
+    }
+}
