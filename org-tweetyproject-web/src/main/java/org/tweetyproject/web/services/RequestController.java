@@ -262,7 +262,7 @@ public class RequestController {
 				if (AbaReasonerPost.getCmd().equals("get_models") || AbaReasonerPost.getCmd().equals("get_model")) {
 
 					Future<Collection<AbaExtension<Formula>>> future = executor.submit(callee);
-					Pair<Collection<AbaExtension<Formula>>, Long> result = Utils.runServicesWithTimeout(future,
+					Pair<Collection<AbaExtension<Formula>>, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
 						reasonerResponse.setTime(result.getValue());
@@ -271,7 +271,7 @@ public class RequestController {
 					}
 					else if (AbaReasonerPost.getCmd().equals("query")){
 					Future<Boolean> future = executor.submit(callee);
-					Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future,
+					Pair<Boolean, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 
 					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
@@ -354,7 +354,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Extension<DungTheory>>, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -424,7 +424,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<GeneralComparator<Argument,DungTheory>> future = executor.submit(callee);
-				Pair<GeneralComparator<Argument, DungTheory>, Long> result = Utils.runServicesWithTimeout(future,
+				Pair<GeneralComparator<Argument, DungTheory>, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -516,7 +516,7 @@ public class RequestController {
 				int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 				// handle timeout
 				Future<Collection<Interpretation>> future = executor.submit(callee);
-				Pair<Collection<Interpretation>, Long> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Interpretation>, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -675,7 +675,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Extension<DungTheory>>, Double> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -778,7 +778,7 @@ public class RequestController {
 				f = folParser.parseFormula(qString);
 			Callee delpCallee = new DeLPCallee(delp, reasoner, f);
 			Future<DelpAnswer.Type> future = executor.submit(delpCallee);
-			Pair<DelpAnswer.Type, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			Pair<DelpAnswer.Type, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 
 			System.out.println(result.toString());
 
@@ -937,7 +937,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
-				Pair<Double, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+				Pair<Double, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 				val = result.getKey();
 				icmesResponse.setTime(result.getValue());
 				icmesResponse.setStatus("SUCCESS");
@@ -1043,7 +1043,7 @@ public class RequestController {
 		int timeout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_SEQUENCE_EXPLANATION, timeoutUnit);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Pair<SequenceExplanationResult, Long> resultAndExecutionTime;
+		Pair<SequenceExplanationResult, Double> resultAndExecutionTime;
 		try {
 			var future = executor.submit(() -> processCommand(request.getCmd()));
 			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timeout, timeoutUnit);
@@ -1069,7 +1069,7 @@ public class RequestController {
 			executor.shutdownNow();
 		}
 
-		long executionTime = resultAndExecutionTime.getValue();
+		double executionTime = resultAndExecutionTime.getValue();
 		var result = resultAndExecutionTime.getKey();
 		return new SequenceExplanationResponse(
 				result,
@@ -1125,7 +1125,7 @@ public class RequestController {
 		int timout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_CAUSAL, timoutUnit);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Pair<String, Long> resultAndExecutionTime;
+		Pair<String, Double> resultAndExecutionTime;
 		try {
 			var future = executor.submit(() -> processCommand(request));
 			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timout, timoutUnit);
@@ -1151,7 +1151,7 @@ public class RequestController {
 			executor.shutdownNow();
 		}
 
-		long executionTime = resultAndExecutionTime.getValue();
+		double executionTime = resultAndExecutionTime.getValue();
 		String result = resultAndExecutionTime.getKey();
 		return new CausalReasonerResponse(
 				result,
