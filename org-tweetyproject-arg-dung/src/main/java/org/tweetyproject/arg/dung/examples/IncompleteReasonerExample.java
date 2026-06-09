@@ -75,9 +75,9 @@ public class IncompleteReasonerExample {
 	        
 
 			System.out.println("Possible Credulous Conclusion 'd': " + re2.isPossibleCredulous(ex, d));
-			System.out.println("Necessary Credulous Conclusion 'c': " + re2.isNecessaryCredulous(ex, d));
-			System.out.println("Possible Skeptical Conclusion 'a': " + re2.isPossibleSkeptical(ex, d));
-			System.out.println("Necessary Skeptical Conclusion 'b': " + re2.isNecessarySkeptical(ex, d));
+			System.out.println("Necessary Credulous Conclusion 'd': " + re2.isNecessaryCredulous(ex, d));
+			System.out.println("Possible Skeptical Conclusion 'd': " + re2.isPossibleSkeptical(ex, d));
+			System.out.println("Necessary Skeptical Conclusion 'd': " + re2.isNecessarySkeptical(ex, d));
 
 
 	        SimpleCompleteReasoner re = new SimpleCompleteReasoner();
