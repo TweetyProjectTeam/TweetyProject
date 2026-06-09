@@ -20,6 +20,14 @@ package org.tweetyproject.web.services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.graphs.DefaultGraph;
+import org.tweetyproject.graphs.DirectedEdge;
+import org.tweetyproject.graphs.Graph;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main factory for retrieving abstract extension reasoners.
@@ -46,4 +54,30 @@ public abstract class AbstractExtensionReasonerFactory {
 	public static AbstractExtensionReasoner getReasoner(Semantics sem) {
 		return AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem);
 	}
+
+    /**
+     * Creates a DungTheory from the given number of arguments and attack relations.
+     *
+     * @param nr_of_arguments The number of arguments in the DungTheory.
+     * @param attacks        The attack relations represented as a list of lists of integers.
+     * @return A DungTheory constructed from the given arguments and attacks.
+     */
+
+    public static DungTheory getDungTheory(int nr_of_arguments, List<List<Integer>> attacks) {
+        Graph<Argument> af_graph = new DefaultGraph<Argument>();
+        List<Argument> arguments = new ArrayList<Argument>();
+        for (int i = 1; i <= nr_of_arguments; i++){
+            arguments.add(new Argument(Integer.toString(i)));
+        }
+
+        for (Argument arg: arguments){
+            af_graph.add(arg);
+        }
+        for (List<Integer> list : attacks) {
+            af_graph.add(new DirectedEdge<Argument>(arguments.get(list.get(0) - 1),arguments.get(list.get(1) - 1)));
+        }
+
+        DungTheory dungTheory = new DungTheory(af_graph);
+        return dungTheory;
+    }
 }

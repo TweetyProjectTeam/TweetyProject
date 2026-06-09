@@ -339,7 +339,7 @@ public class RequestController {
 			return (Response) getInfo(dungReasonerPost);
 
 		if (dungReasonerPost.getCmd().equals("get_models") || dungReasonerPost.getCmd().equals("get_model") || dungReasonerPost.getCmd().equals("get_credulous") || dungReasonerPost.getCmd().equals("get_skeptical")) {
-			DungTheory dungTheory = Utils.getDungTheory(dungReasonerPost.getNr_of_arguments(),
+			DungTheory dungTheory = AbstractExtensionReasonerFactory.getDungTheory(dungReasonerPost.getNr_of_arguments(),
 					dungReasonerPost.getAttacks());
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			DungReasonerResponse reasonerResponse = new DungReasonerResponse(dungReasonerPost.getCmd(),
@@ -409,7 +409,7 @@ public class RequestController {
 			return (Response) getRankingInfo(rankingReasonerPost.getEmail());
 
 		if (rankingReasonerPost.getCmd().equals("get_model")) {
-			DungTheory dungTheory = Utils.getDungTheory(rankingReasonerPost.getNr_of_arguments(),
+			DungTheory dungTheory = AbstractExtensionReasonerFactory.getDungTheory(rankingReasonerPost.getNr_of_arguments(),
 					rankingReasonerPost.getAttacks());
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			DungReasonerResponse reasonerResponse = new DungReasonerResponse(rankingReasonerPost.getCmd(),
@@ -508,7 +508,7 @@ public class RequestController {
 					adfReasonerPost.getUnit_timeout(), "ERRORs");
 			TimeUnit unit = Utils.getTimoutUnit(adfReasonerPost.getUnit_timeout());
 			try {
-				AbstractDialecticalFramework adf = Utils.getAdf(adfReasonerPost.getNr_of_arguments(),
+				AbstractDialecticalFramework adf = AbstractAdfReasonerFactory.getAdf(adfReasonerPost.getNr_of_arguments(),
 						adfReasonerPost.getConditions());
 				AbstractADFReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(
 						Semantics.getSemantics(adfReasonerPost.getSemantics()));

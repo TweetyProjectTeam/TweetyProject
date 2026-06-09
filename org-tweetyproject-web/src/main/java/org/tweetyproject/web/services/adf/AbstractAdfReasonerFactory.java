@@ -18,9 +18,16 @@
  */
 package org.tweetyproject.web.services.adf;
 
+import org.tweetyproject.arg.adf.io.KppADFFormatParser;
 import org.tweetyproject.arg.adf.reasoner.*;
 import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
+import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Main factory for retrieving adf extension reasoners.
@@ -61,6 +68,24 @@ public abstract class AbstractAdfReasonerFactory {
             } case NA -> {
                 return new NaiveReasoner(new NativeMinisatSolver());
             } default -> throw new IllegalArgumentException("unsupported semantics");
+        }
+    }
+
+    public static AbstractDialecticalFramework getAdf(int nr_of_arguments, List<String> conditions) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < nr_of_arguments; i++) {
+            s.append(String.format("s(%s).\n", i+1));
+        }
+        for (String condition : conditions) {
+            s.append(condition).append(".\n");
+        }
+        NativeMinisatSolver solver = new NativeMinisatSolver();
+        LinkStrategy strat = new SatLinkStrategy(solver);
+        KppADFFormatParser parser = new KppADFFormatParser(strat, true);
+        try {
+            return parser.parse(s.toString());
+        } catch (IOException ignored) {
+            throw new IllegalArgumentException("syntactical error in adf conditions");
         }
     }
 }

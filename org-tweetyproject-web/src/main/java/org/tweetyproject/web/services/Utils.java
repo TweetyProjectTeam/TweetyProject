@@ -18,22 +18,10 @@
  */
 package org.tweetyproject.web.services;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.*;
 
 
 import javafx.util.Pair;
@@ -51,50 +39,6 @@ public final class Utils {
      * Default constructor
      */
     private Utils(){}
-
-    public static AbstractDialecticalFramework getAdf(int nr_of_arguments, List<String> conditions) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < nr_of_arguments; i++) {
-            s.append(String.format("s(%s).\n", i+1));
-        }
-        for (String condition : conditions) {
-            s.append(condition).append(".\n");
-        }
-        NativeMinisatSolver solver = new NativeMinisatSolver();
-        LinkStrategy strat = new SatLinkStrategy(solver);
-        KppADFFormatParser parser = new KppADFFormatParser(strat, true);
-        try {
-            return parser.parse(s.toString());
-        } catch (IOException ignored) {
-            throw new IllegalArgumentException("syntactical error in adf conditions");
-        }
-    }
-
-    /**
-     * Creates a DungTheory from the given number of arguments and attack relations.
-     *
-     * @param nr_of_arguments The number of arguments in the DungTheory.
-     * @param attacks        The attack relations represented as a list of lists of integers.
-     * @return A DungTheory constructed from the given arguments and attacks.
-     */
-
-    public static DungTheory getDungTheory(int nr_of_arguments, List<List<Integer>> attacks) {
-        Graph<Argument> af_graph = new DefaultGraph<Argument>();
-        List<Argument> arguments = new ArrayList<Argument>();
-        for (int i = 1; i <= nr_of_arguments; i++){
-            arguments.add(new Argument(Integer.toString(i)));
-        }
-
-        for (Argument arg: arguments){
-            af_graph.add(arg);
-        }
-        for (List<Integer> list : attacks) {
-            af_graph.add(new DirectedEdge<Argument>(arguments.get(list.get(0) - 1),arguments.get(list.get(1) - 1)));
-        }
-
-        DungTheory dungTheory = new DungTheory(af_graph);
-        return dungTheory;
-    }
 
 
     /**
