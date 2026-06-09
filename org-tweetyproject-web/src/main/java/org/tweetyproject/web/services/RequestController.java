@@ -500,7 +500,7 @@ public class RequestController {
 		if (adfReasonerPost.getCmd().equals("info"))
 			return (Response) getAdfInfo(adfReasonerPost.getEmail());
 
-		if (adfReasonerPost.getCmd().equals("get_models")) {
+		if (adfReasonerPost.getCmd().equals("get_models") || adfReasonerPost.getCmd().equals("get_credulous") || adfReasonerPost.getCmd().equals("get_skeptical")) {
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			AdfReasonerResponse reasonerResponse = new AdfReasonerResponse(adfReasonerPost.getCmd(),
 					adfReasonerPost.getEmail(), adfReasonerPost.getNr_of_arguments(), adfReasonerPost.getConditions(),

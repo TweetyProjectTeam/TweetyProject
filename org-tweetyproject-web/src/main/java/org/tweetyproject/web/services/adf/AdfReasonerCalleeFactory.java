@@ -21,6 +21,7 @@ package org.tweetyproject.web.services.adf;
 
 import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
 
@@ -36,7 +37,9 @@ public class AdfReasonerCalleeFactory {
      */
     public enum Command {
         /** get models */
-        GET_MODELS("get_models", "Get all models");
+        GET_MODELS("get_models", "Get all models"),
+        GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        GET_SKEPTICAL("get_skeptical", "Get skeptical arguments.");
 
         /** ID of the command */
         public String id;
@@ -91,6 +94,10 @@ public class AdfReasonerCalleeFactory {
         switch (cmd) {
             case GET_MODELS:
                 return new AdfReasonerGetModelsCallee(reasoner, bbase);
+            case GET_CREDULOUS:
+                return new AdfReasonerQueryAllCallee(reasoner, bbase, InferenceMode.CREDULOUS);
+            case GET_SKEPTICAL:
+                return new AdfReasonerQueryAllCallee(reasoner, bbase, InferenceMode.SKEPTICAL);
             default:
                 throw new RuntimeException("Command not found: " + cmd.toString());
         }
