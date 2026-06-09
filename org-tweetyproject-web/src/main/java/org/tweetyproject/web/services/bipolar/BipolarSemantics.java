@@ -20,6 +20,8 @@ package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.syntax.Support;
 
+import java.util.NoSuchElementException;
+
 
 /**
  * An enumeration of all available semantics through the web service.
@@ -90,6 +92,6 @@ public enum BipolarSemantics {
         for (BipolarSemantics m : BipolarSemantics.values())
             if (m.id.equals(id))
                 return m;
-        return null;
+        throw new NoSuchElementException("semantics does not exist");
     }
 }

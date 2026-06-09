@@ -22,12 +22,14 @@ import org.tweetyproject.arg.bipolar.semantics.Semantics;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.QualitativeReasoner;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Abstract class for reasoners for bipolar argumentation
@@ -56,6 +58,25 @@ public abstract class AbstractBipolarExtensionReasoner implements ModelProvider<
             case BAD -> new SimpleCoherentAdmissibleReasoner();
             default -> throw new IllegalArgumentException("Unknown semantics.");
         };
+    }
+
+    /**
+     * Determine the set of acceptable arguments wrt. the given inference mode
+     * @param bbase some bipolar argumentation framework
+     * @param inferenceMode the inference mode
+     * @return the set of acceptable arguments
+     */
+    public Collection<Argument> queryAll(BipolarArgumentationFramework bbase, InferenceMode inferenceMode) {
+        Collection<Argument> result = new HashSet<>();
+        if(inferenceMode.equals(InferenceMode.CREDULOUS))
+            for(Collection<Argument> extension: this.getModels(bbase))
+                result.addAll(extension);
+        else {
+            result.addAll(bbase);
+            for(Collection<Argument> extension: this.getModels(bbase))
+                result.retainAll(extension);
+        }
+        return result;
     }
 
     /* (non-Javadoc)

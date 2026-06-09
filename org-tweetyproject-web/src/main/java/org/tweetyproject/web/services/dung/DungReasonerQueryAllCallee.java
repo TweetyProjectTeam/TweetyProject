@@ -18,9 +18,7 @@
  */
 package org.tweetyproject.web.services.dung;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.EeeAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -30,7 +28,7 @@ import org.tweetyproject.web.services.Callee;
 import java.util.Collection;
 
 /**
- * The DungReasonerGetModelCallee class represents a callee for obtaining the credulous arguments
+ * The DungReasonerQueryAllCallee class represents a callee for obtaining the credulous/skeptical arguments
  * using a specified AbstractExtensionReasoner and DungTheory.
  *
  * This class extends the Callee class and implements the call() method to execute
@@ -38,33 +36,38 @@ import java.util.Collection;
  *
  * @author Lars Bengel
  */
-public class DungReasonerGetCredulousCallee extends Callee {
+public class DungReasonerQueryAllCallee extends Callee {
 
     /** The AbstractExtensionReasoner used for obtaining the model */
-    private final AbstractAcceptabilityReasoner reasoner;
+    private final AbstractExtensionReasoner reasoner;
 
     /** The DungTheory on which the getModel operation is performed */
     private final DungTheory bbase;
+
+    /** the inference mode */
+    private final InferenceMode mode;
 
     /**
      * Constructs a new DungReasonerGetModelCallee with the specified reasoner and base DungTheory.
      *
      * @param reasoner The AbstractAcceptabilityReasoner to be used for obtaining the model
      * @param bbase    The base DungTheory on which the getModel operation is performed
+     * @param mode     The inference mode
      */
-    public DungReasonerGetCredulousCallee(AbstractExtensionReasoner reasoner, DungTheory bbase) {
-        this.reasoner = new EeeAcceptabilityReasoner(reasoner, InferenceMode.CREDULOUS);
+    public DungReasonerQueryAllCallee(AbstractExtensionReasoner reasoner, DungTheory bbase, InferenceMode mode) {
+        this.reasoner = reasoner;
         this.bbase = bbase;
+        this.mode = mode;
     }
 
     /**
-     * Executes the getModel operation using the specified reasoner and base DungTheory.
+     * Executes the queryAll operation using the specified reasoner and base DungTheory.
      *
      * @return An Extension representing the obtained model
-     * @throws Exception If an error occurs during the getModel operation
+     * @throws Exception If an error occurs during the queryAll operation
      */
     @Override
     public Collection<Argument> call() throws Exception {
-        return new Extension<>(this.reasoner.getAcceptableArguments(this.bbase));
+        return this.reasoner.queryAll(bbase, mode);
     }
 }

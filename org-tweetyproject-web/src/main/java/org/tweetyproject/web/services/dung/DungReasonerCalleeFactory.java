@@ -20,6 +20,7 @@ package org.tweetyproject.web.services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
 
@@ -99,9 +100,9 @@ public class DungReasonerCalleeFactory {
             case GET_MODEL:
                 return new DungReasonerGetModelCallee(reasoner, bbase);
             case GET_CREDULOUS:
-                return new DungReasonerGetCredulousCallee(reasoner, bbase);
+                return new DungReasonerQueryAllCallee(reasoner, bbase, InferenceMode.CREDULOUS);
             case GET_SKEPTICAL:
-                return new DungReasonerGetSkepticalCallee(reasoner, bbase);
+                return new DungReasonerQueryAllCallee(reasoner, bbase, InferenceMode.SKEPTICAL);
             default:
                 throw new RuntimeException("Command not found: " + cmd.toString());
         }

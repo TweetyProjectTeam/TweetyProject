@@ -48,6 +48,7 @@ import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
@@ -648,13 +649,11 @@ public class RequestController {
 		if (bipolarReasonerPost.getCmd().equals("info"))
 			return (Response) getBipolarInfo(bipolarReasonerPost.getEmail());
 
-		if (bipolarReasonerPost.getCmd().equals("get_models") || bipolarReasonerPost.getCmd().equals("get_model")) {
-			var semantics = BipolarSemantics.getSemantics(bipolarReasonerPost.getSemantics());
-			var bbase = AbstractBipolarFrameworkFactory.getArgumentationFramework(
-					semantics,
-					bipolarReasonerPost.getNr_of_arguments(),
+		if (bipolarReasonerPost.getCmd().equals("get_models") || bipolarReasonerPost.getCmd().equals("get_model") || bipolarReasonerPost.getCmd().equals("get_credulous") || bipolarReasonerPost.getCmd().equals("get_skeptical")) {
+			BipolarArgumentationFramework bbase = AbstractBipolarFrameworkFactory.getArgumentationFramework(bipolarReasonerPost.getNr_of_arguments(),
 					bipolarReasonerPost.getAttacks(),
 					bipolarReasonerPost.getSupports());
+			BipolarSemantics semantics = BipolarSemantics.getSemantics(bipolarReasonerPost.getSemantics());
 			AbstractBipolarExtensionReasoner reasoner = AbstractBipolarExtensionReasonerFactory.getReasoner(semantics);
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			BipolarReasonerResponse reasonerResponse = new BipolarReasonerResponse(

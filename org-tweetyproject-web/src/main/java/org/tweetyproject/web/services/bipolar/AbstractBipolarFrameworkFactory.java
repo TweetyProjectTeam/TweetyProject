@@ -34,24 +34,19 @@ public abstract class AbstractBipolarFrameworkFactory {
 
 
 	/**
-	 * Creates a new bipolar argumentation framework required fo the given semantics.
+	 * Creates a new bipolar argumentation framework.
 	 *
-	 * @param semantics specified semantics
 	 * @param numberOfArguments number of arguments
 	 * @param attacks attacks
 	 * @param supports supports
 	 * @return the requested reasoner.
 	 */
-	public static BipolarArgumentationFramework getArgumentationFramework(BipolarSemantics semantics,
-																	 int numberOfArguments,
+	public static BipolarArgumentationFramework getArgumentationFramework(int numberOfArguments,
 																	 List<List<Integer>> attacks,
 																	 List<List<Integer>> supports) {
-		var argumentationFramework = switch (semantics.type) {
-			case DEDUCTIVE,SIMPLE_DEDUCTIVE,DEFAULT,NECESSITY,SIMPLE_NECESSITY -> new BipolarArgumentationFramework();
-			case EVIDENTIAL -> throw new UnsupportedOperationException("Not implemented yet");
-		};
+		BipolarArgumentationFramework argumentationFramework = new BipolarArgumentationFramework();
 
-		var arguments = new ArrayList<Argument>();
+		List<Argument> arguments = new ArrayList<Argument>();
 		for (int i = 1; i <= numberOfArguments; i++){
 			var argument = new Argument(Integer.toString(i));
 			arguments.add(argument);
