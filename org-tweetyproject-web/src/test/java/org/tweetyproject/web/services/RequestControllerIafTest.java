@@ -67,9 +67,9 @@ class RequestControllerIafTest {
                           ],
                           "commands": [
                             "get_models_pos",
+                            "get_models_nec",
                             "get_credulous_pos",
                             "get_skeptical_pos",
-                            "get_models_nec",
                             "get_credulous_nec",
                             "get_skeptical_nec"
                           ]
@@ -206,7 +206,7 @@ class RequestControllerIafTest {
                 // language=JSON
                 .andExpect(content().json("""
                         {
-                          "reply": "get_skeptical",
+                          "reply": "get_skeptical_pos",
                           "email": null,
                           "nr_of_arguments": 4,
                           "uncertainArguments": [4],
