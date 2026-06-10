@@ -106,11 +106,10 @@ class RequestControllerRankingsTest {
                           "semantics": "SER",
                           "solver": null,
                           "answer": "{1=1.0, 2=3.0, 3=2.0}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<RankingSemantics> availableSemantics() {

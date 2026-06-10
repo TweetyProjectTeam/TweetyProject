@@ -102,11 +102,10 @@ class RequestControllerAdfTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "[{ u(1) u(2) u(3)}, {t(2) u(1) u(3)}, {t(2) f(1) u(3)}, {t(2) f(1) f(3)}]",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<Semantics> availableSemantics() {

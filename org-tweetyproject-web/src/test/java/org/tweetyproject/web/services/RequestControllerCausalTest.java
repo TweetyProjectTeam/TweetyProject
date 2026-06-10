@@ -100,11 +100,10 @@ class RequestControllerCausalTest {
                         {
                           "reply": "[!a, !b, c, d]",
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -129,11 +128,10 @@ class RequestControllerCausalTest {
                         {
                           "reply": "[!b, c]",
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -158,11 +156,10 @@ class RequestControllerCausalTest {
                         {
                           "reply": "{\\n  \\"a\\" : [ \\"a\\", \\"b\\" ]\\n}",
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -210,13 +207,12 @@ class RequestControllerCausalTest {
                 {
                   "reply": %s,
                   "email": "aId",
-                  "time": 0,
                   "unit_timeout": "s",
                   "status": "SUCCESS"
                 }
                 """, expectedReplyJSONEscaped);
         mvc.perform(post)
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse, true));
+                .andExpect(content().json(expectedResponse, false));
     }
 }

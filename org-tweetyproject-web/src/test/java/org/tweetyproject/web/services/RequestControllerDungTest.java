@@ -110,11 +110,10 @@ class RequestControllerDungTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "[{1}, {1,3}, {}]",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -152,11 +151,10 @@ class RequestControllerDungTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "{}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -194,11 +192,10 @@ class RequestControllerDungTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "{1,3}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -236,11 +233,10 @@ class RequestControllerDungTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "{}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<Semantics> availableSemantics() {

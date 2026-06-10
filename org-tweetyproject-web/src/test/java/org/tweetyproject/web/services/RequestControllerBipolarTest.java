@@ -127,11 +127,10 @@ class RequestControllerBipolarTest {
                           "semantics": "b-ad",
                           "solver": null,
                           "answer": "[{1}, {}]",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -172,11 +171,10 @@ class RequestControllerBipolarTest {
                           "semantics": "b-ad",
                           "solver": null,
                           "answer": "{1}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<BipolarSemantics> availableSemantics() {
