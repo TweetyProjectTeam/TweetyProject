@@ -125,11 +125,10 @@ class RequestControllerIafTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "[{1}, {2}, {1,3}, {}]",
-                          "time": 0.003,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -180,11 +179,10 @@ class RequestControllerIafTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "{1,2,3}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -235,11 +233,10 @@ class RequestControllerIafTest {
                           "semantics": "ADM",
                           "solver": null,
                           "answer": "{}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<Semantics> availableSemantics() {
