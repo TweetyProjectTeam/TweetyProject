@@ -49,10 +49,12 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.arg.dung.reasoner.IncompleteReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.causal.parser.CausalParser;
@@ -96,6 +98,7 @@ import org.tweetyproject.web.services.delp.DeLPPost;
 import org.tweetyproject.web.services.delp.DeLPResponse;
 import org.tweetyproject.web.services.dung.*;
 import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory.Command;
+import org.tweetyproject.web.services.iaf.*;
 import org.tweetyproject.web.services.incmes.InconsistencyGetMeasuresResponse;
 import org.tweetyproject.web.services.incmes.InconsistencyPost;
 import org.tweetyproject.web.services.incmes.InconsistencyValueResponse;
@@ -380,6 +383,99 @@ public class RequestController {
 	}
 
 	/**
+	 * Handles HTTP POST requests for Dung Reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/dung" that have the specified content types
+	 * for both request and response. It takes a DungReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+	 *
+	 * @param iafReasonerPost The DungReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/iaf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody IafReasonerPost iafReasonerPost) {
+		if (iafReasonerPost.getCmd().equals("info"))
+			return (Response) getIafInfo(iafReasonerPost.getEmail());
+
+		if (iafReasonerPost.getCmd().equals("get_models_pos") || iafReasonerPost.getCmd().equals("get_credulous_pos") || iafReasonerPost.getCmd().equals("get_skeptical_pos") || iafReasonerPost.getCmd().equals("get_models_nec") || iafReasonerPost.getCmd().equals("get_credulous_nec") || iafReasonerPost.getCmd().equals("get_skeptical_nec")) {
+			IncompleteTheory incompleteTheory = IafReasonerFactory.getIncompleteTheory(iafReasonerPost.getNr_of_arguments(),
+					iafReasonerPost.getUncertainArguments(), iafReasonerPost.getDefiniteAttacks(), iafReasonerPost.getUncertainAttacks());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			IafReasonerResponse reasonerResponse = new IafReasonerResponse(iafReasonerPost.getCmd(),
+					iafReasonerPost.getEmail(), iafReasonerPost.getNr_of_arguments(), iafReasonerPost.getUncertainArguments(),
+					iafReasonerPost.getDefiniteAttacks(), iafReasonerPost.getUncertainAttacks(),
+					iafReasonerPost.getSemantics(), iafReasonerPost.getSolver(), null, 0,
+					iafReasonerPost.getUnit_timeout(), "ERRORs");
+			TimeUnit unit = Utils.getTimoutUnit(iafReasonerPost.getUnit_timeout());
+			IncompleteReasoner reasoner = IafReasonerFactory.getReasoner(
+					Semantics.getSemantics(iafReasonerPost.getSemantics()));
+			Callee callee = IafReasonerCalleeFactory.getCallee(
+					IafReasonerCalleeFactory.Command.getCommand(iafReasonerPost.getCmd()), reasoner, incompleteTheory);
+			int user_timeout = Utils.checkUserTimeout(iafReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<Collection<Extension<IncompleteTheory>>> future = executor.submit(callee);
+				Pair<Collection<Extension<IncompleteTheory>>, Double> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(iafReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new IafReasonerResponse();
+		}
+	}
+
+	private IafServicesInfoResponse getIafInfo(String email) {
+		IafServicesInfoResponse response = new IafServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = IafReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.abbreviation());
+		}
+		response.setSemantics(semantics_ids);
+
+		IafReasonerCalleeFactory.Command[] com = IafReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
+	/**
 	 * Handles HTTP POST requests for Ranking Reasoner operations.
 	 *
 	 * <p>This method processes requests with the endpoint "/rankings" that have the specified content types
@@ -472,15 +568,15 @@ public class RequestController {
 	}
 
 	/**
-	 * Handles HTTP POST requests for Dung Reasoner operations.
+	 * Handles HTTP POST requests for ADF Reasoner operations.
 	 *
 	 * <p>This method processes requests with the endpoint "/dung" that have the specified content types
-	 * for both request and response. It takes a DungReasonerPost object as the request body and returns
+	 * for both request and response. It takes a AdfReasonerPost object as the request body and returns
 	 * a Response object as the response body.</p>
 	 *
-	 * <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+	 * <p>The method checks the command (cmd) from the AdfReasonerPost object and performs different
 	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
-	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * method. If the command is "get_models" or "get_model," it processes the request using the ADF,
 	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
 	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
 	 *

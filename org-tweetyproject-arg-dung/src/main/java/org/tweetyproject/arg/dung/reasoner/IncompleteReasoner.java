@@ -326,6 +326,20 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
 
     @Override
     public Extension<IncompleteTheory> getModel(IncompleteTheory bbase) {
-        return null;
+        return getModels(bbase).iterator().next();
+    }
+
+    public Collection<Argument> queryAll(IncompleteTheory bbase, Type type, InferenceMode inferenceMode) {
+        Collection<Argument> result = new HashSet<>();
+        Collection<Extension<IncompleteTheory>> extensions = this.getModels(bbase, type);
+        if(inferenceMode.equals(InferenceMode.CREDULOUS))
+            for(Collection<Argument> extension: extensions)
+                result.addAll(extension);
+        else {
+            result.addAll(bbase);
+            for(Collection<Argument> extension: extensions)
+                result.retainAll(extension);
+        }
+        return result;
     }
 }
