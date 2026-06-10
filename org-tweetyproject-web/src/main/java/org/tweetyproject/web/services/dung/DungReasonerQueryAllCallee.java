@@ -68,6 +68,6 @@ public class DungReasonerQueryAllCallee extends Callee {
      */
     @Override
     public Collection<Argument> call() throws Exception {
-        return this.reasoner.queryAll(bbase, mode);
+        return new Extension<>(this.reasoner.queryAll(bbase, mode));
     }
 }

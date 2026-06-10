@@ -20,6 +20,7 @@ package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.commons.InferenceMode;
@@ -68,6 +69,6 @@ public class BipolarReasonerQueryAllCallee extends Callee {
      */
     @Override
     public Collection<Argument> call() throws Exception {
-        return this.reasoner.queryAll(bbase, mode);
+        return new Extension<>(this.reasoner.queryAll(bbase, mode));
     }
 }

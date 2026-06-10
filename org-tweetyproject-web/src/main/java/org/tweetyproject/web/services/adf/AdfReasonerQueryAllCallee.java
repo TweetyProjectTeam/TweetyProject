@@ -21,6 +21,7 @@ package org.tweetyproject.web.services.adf;
 import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 

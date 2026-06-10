@@ -617,7 +617,7 @@ public class RequestController {
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
-				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setAnswer(result.getKey().toString().replace("[","{").replace("]", "}"));
 				reasonerResponse.setStatus("SUCCESS");
 			} catch (TimeoutException e) {
 				reasonerResponse.setTime(adfReasonerPost.getTimeout());
