@@ -106,6 +106,7 @@ import org.tweetyproject.web.services.rankings.AbstractRankingReasonerFactory;
 import org.tweetyproject.web.services.rankings.RankingReasonerCalleeFactory;
 import org.tweetyproject.web.services.rankings.RankingReasonerPost;
 import org.tweetyproject.web.services.rankings.RankingServicesInfoResponse;
+import org.tweetyproject.web.services.paf.*;
 import org.tweetyproject.web.services.sequenceexplanation.*;
 import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPost.GetSequenceExplanationsCmd;
 import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPost.SequenceExplanationCmd;
@@ -1354,5 +1355,93 @@ public class RequestController {
 			throw new RuntimeException(e);
 		}
 		return causalKnowledgeBase;
+	}
+
+	/**
+	 * Handles HTTP POST requests for Probabilistic Argumentation Framework (PAF) operations.
+	 *
+	 * <p>Supported commands:
+	 * <ul>
+	 *   <li>{@code info} – return supported semantics, commands, and solvers</li>
+	 *   <li>{@code get_credulous} – probability that the queried argument is credulously accepted</li>
+	 *   <li>{@code get_skeptical} – probability that the queried argument is skeptically accepted</li>
+	 * </ul>
+	 *
+	 * <p>Two solvers are available: {@code simple} (exact, enumerates all subgraphs) and
+	 * {@code montecarlo} (approximate sampling, configurable via {@code nr_of_trials}).</p>
+	 *
+	 * @param pafPost the request payload
+	 * @return a {@link Response} containing the computed probability or service info
+	 */
+	@PostMapping(value = "/paf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(@RequestBody PafReasonerPost pafPost) {
+		if (pafPost.getCmd().equals("info"))
+			return getPafInfo(pafPost.getEmail());
+
+		PafReasonerCalleeFactory.Command cmd = PafReasonerCalleeFactory.Command.getCommand(pafPost.getCmd());
+		if (cmd == null)
+			return new PafReasonerResponse();
+
+		ProbabilisticArgumentationFramework paf = AbstractPafReasonerFactory.getPaf(
+				pafPost.getNr_of_arguments(),
+				pafPost.getArgument_probabilities(),
+				pafPost.getAttacks(),
+				pafPost.getAttack_probabilities());
+		org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
+				Semantics.getSemantics(pafPost.getSemantics()),
+				pafPost.getSolver(),
+				pafPost.getNr_of_trials());
+		org.tweetyproject.arg.dung.syntax.Argument argument =
+				AbstractPafReasonerFactory.getArgument(paf, pafPost.getArgument());
+		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf, argument);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		PafReasonerResponse reasonerResponse = new PafReasonerResponse(
+				pafPost.getCmd(), pafPost.getEmail(), pafPost.getNr_of_arguments(),
+				pafPost.getArgument_probabilities(), pafPost.getAttacks(),
+				pafPost.getAttack_probabilities(), pafPost.getSemantics(),
+				pafPost.getSolver(), pafPost.getArgument(), null, 0,
+				pafPost.getUnit_timeout(), "ERROR");
+		TimeUnit unit = Utils.getTimoutUnit(pafPost.getUnit_timeout());
+		int user_timeout = Utils.checkUserTimeout(pafPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+		try {
+			Future<Double> future = executor.submit(callee);
+			Pair<Double, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			executor.shutdownNow();
+			reasonerResponse.setAnswer(result.getKey().toString());
+			reasonerResponse.setTime(result.getValue());
+			reasonerResponse.setStatus("SUCCESS");
+		} catch (TimeoutException e) {
+			reasonerResponse.setTime(pafPost.getTimeout());
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("TIMEOUT");
+			executor.shutdownNow();
+		} catch (Exception e) {
+			reasonerResponse.setTime(0.0);
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("Error");
+			executor.shutdownNow();
+		}
+		return reasonerResponse;
+	}
+
+	private PafServicesInfoResponse getPafInfo(String email) {
+		PafServicesInfoResponse response = new PafServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		Semantics[] sem = AbstractPafReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<>();
+		for (Semantics s : sem)
+			semantics_ids.add(s.abbreviation());
+		response.setSemantics(semantics_ids);
+		PafReasonerCalleeFactory.Command[] com = PafReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<>();
+		for (PafReasonerCalleeFactory.Command c : com)
+			command_ids.add(c.id);
+		response.setCommands(command_ids);
+		response.setSolvers(AbstractPafReasonerFactory.getSolvers());
+		return response;
 	}
 }
