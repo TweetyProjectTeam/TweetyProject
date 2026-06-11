@@ -55,6 +55,8 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
+import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
+import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.causal.parser.CausalParser;
@@ -1388,11 +1390,11 @@ public class RequestController {
 				pafPost.getArgument_probabilities(),
 				pafPost.getAttacks(),
 				pafPost.getAttack_probabilities());
-		org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
+		AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
 				Semantics.getSemantics(pafPost.getSemantics()),
 				pafPost.getSolver(),
 				pafPost.getNr_of_trials());
-		org.tweetyproject.arg.dung.syntax.Argument argument =
+		Argument argument =
 				AbstractPafReasonerFactory.getArgument(paf, pafPost.getArgument());
 		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf, argument);
 

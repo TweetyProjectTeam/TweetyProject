@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2024 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.web.services.paf;
 
