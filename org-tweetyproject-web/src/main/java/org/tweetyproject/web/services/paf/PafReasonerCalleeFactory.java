@@ -75,7 +75,6 @@ public class PafReasonerCalleeFactory {
      * @param cmd       the command to execute
      * @param reasoner  the PAF reasoner to use
      * @param paf       the probabilistic argumentation framework
-     * @param argument  the argument to query
      * @return the callee
      */
     public static Callee getCallee(Command cmd, AbstractPafReasoner reasoner,
