@@ -1382,7 +1382,6 @@ public class RequestController {
 			return getPafInfo(pafPost.getEmail());
 
 		PafReasonerCalleeFactory.Command cmd = PafReasonerCalleeFactory.Command.getCommand(pafPost.getCmd());
-		System.out.println("CMD " + cmd);
 		if (cmd == null)
 			return new PafReasonerResponse();
 
@@ -1391,14 +1390,11 @@ public class RequestController {
 				pafPost.getArgument_probabilities(),
 				pafPost.getAttacks(),
 				pafPost.getAttack_probabilities());
-		System.out.println(paf);
 		AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
 				Semantics.getSemantics(pafPost.getSemantics()),
 				pafPost.getSolver(),
 				pafPost.getNr_of_trials());
 		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf);
-
-		System.out.println(callee);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		PafReasonerResponse reasonerResponse = new PafReasonerResponse(
@@ -1408,7 +1404,6 @@ public class RequestController {
 				pafPost.getSolver(), pafPost.getArgument(), null, 0,
 				pafPost.getUnit_timeout(), "ERROR");
 		TimeUnit unit = Utils.getTimeoutUnit(pafPost.getUnit_timeout());
-		System.out.println(unit);
 		int user_timeout = Utils.checkUserTimeout(pafPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 		try {
 			Future<Map<Argument,Double>> future = executor.submit(callee);
