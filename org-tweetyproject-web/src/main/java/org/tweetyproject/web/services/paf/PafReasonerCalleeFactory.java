@@ -32,9 +32,9 @@ public class PafReasonerCalleeFactory {
     /** Commands supported by the PAF web service. */
     public enum Command {
         /** Query the credulous probability of an argument. */
-        GET_CREDULOUS("get_credulous", "Get credulous probability of an argument"),
+        GET_CREDULOUS("get_credulous", "Get credulous probability of all arguments"),
         /** Query the skeptical probability of an argument. */
-        GET_SKEPTICAL("get_skeptical", "Get skeptical probability of an argument");
+        GET_SKEPTICAL("get_skeptical", "Get skeptical probability of all arguments");
 
         /** String identifier used in the JSON request. */
         public final String id;
@@ -79,12 +79,12 @@ public class PafReasonerCalleeFactory {
      * @return the callee
      */
     public static Callee getCallee(Command cmd, AbstractPafReasoner reasoner,
-            ProbabilisticArgumentationFramework paf, Argument argument) {
+            ProbabilisticArgumentationFramework paf) {
         switch (cmd) {
             case GET_CREDULOUS:
-                return new PafReasonerQueryCallee(reasoner, paf, argument, InferenceMode.CREDULOUS);
+                return new PafReasonerQueryAllCallee(reasoner, paf, InferenceMode.CREDULOUS);
             case GET_SKEPTICAL:
-                return new PafReasonerQueryCallee(reasoner, paf, argument, InferenceMode.SKEPTICAL);
+                return new PafReasonerQueryAllCallee(reasoner, paf, InferenceMode.SKEPTICAL);
             default:
                 throw new RuntimeException("Command not found: " + cmd);
         }

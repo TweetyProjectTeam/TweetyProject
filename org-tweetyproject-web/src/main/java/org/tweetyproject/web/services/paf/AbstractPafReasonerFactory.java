@@ -86,17 +86,6 @@ public abstract class AbstractPafReasonerFactory {
     }
 
     /**
-     * Returns the {@link Argument} with the given 1-based index from the PAF.
-     *
-     * @param paf      the framework
-     * @param index    1-based argument index
-     * @return the corresponding argument
-     */
-    public static Argument getArgument(ProbabilisticArgumentationFramework paf, int index) {
-        return new Argument(Integer.toString(index));
-    }
-
-    /**
      * Returns the supported semantics for PAF reasoning (reuses Dung semantics).
      *
      * @return array of supported {@link Semantics}

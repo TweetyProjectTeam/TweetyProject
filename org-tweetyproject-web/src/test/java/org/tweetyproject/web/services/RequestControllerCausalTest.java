@@ -154,7 +154,7 @@ class RequestControllerCausalTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                          "reply": "{\\n  \\"a\\" : [ \\"a\\", \\"b\\" ]\\n}",
+                          "reply": "{\\n  \\"a\\" : [ \\"a\\", \\"b\\" ]\\n}\\n",
                           "email": "aId",
                           "unit_timeout": "s",
                           "status": "SUCCESS"
@@ -201,7 +201,8 @@ class RequestControllerCausalTest {
                       "defeated" : [ [ "([!b] -> !b)" ], [ ] ]
                     } ]
                   }
-                }""";
+                }
+                """;
         var expectedReplyJSONEscaped = objectMapper.writeValueAsString(expectedReplyJSON);
         var expectedResponse = String.format("""
                 {

@@ -83,7 +83,9 @@ class RequestControllerBipolarTest {
                           ],
                           "commands": [
                             "get_models",
-                            "get_model"
+                            "get_model",
+                            "get_credulous",
+                            "get_skeptical"
                           ]
                         }
                         """, true));

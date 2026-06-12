@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.web.services.adf.AbstractAdfReasonerFactory;
+import org.tweetyproject.web.services.bipolar.BipolarSemantics;
 
 import java.util.stream.Stream;
 
@@ -41,13 +41,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class RequestControllerAdfTest {
+class RequestControllerPafTest {
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getInfos() throws Exception {
-        var post = post("/adf").contentType(MediaType.APPLICATION_JSON)
+        var post = post("/paf").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content("""
                         {
@@ -63,27 +63,79 @@ class RequestControllerAdfTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","NA"
+                            "CF","ADM","CO","GR","PR","ST","STG","STG2","SST","ID","EA","CF2","SCF2","NA","SAD","IS","UC","UD","SUD","WAD","WCO","WPR","WGR","div"
                           ],
                           "commands": [
-                            "get_models",
                             "get_credulous",
                             "get_skeptical"
+                          ],
+                          "solvers": [
+                            "simple",
+                            "montecarlo"
                           ]
                         }
                         """, true));
     }
 
     @Test
-    public void getModels() throws Exception {
-        var post = post("/adf").contentType(MediaType.APPLICATION_JSON)
+    public void getCredulous() throws Exception {
+        var post = post("/paf").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content("""
                          {
-                           "cmd": "get_models",
+                           "cmd": "get_credulous",
                            "nr_of_arguments": 3,
-                           "conditions": ["ac(1,neg(2))", "ac(2,c(v))", "ac(3,or(1,neg(2)))"],
+                           "attacks": [[1, 2],[2,3]],
                            "semantics": "ADM",
+                           "argument_probabilities": [1, 0.5, 1],
+                           "attack_probabilities": [0.5, 1.0],
+                           "solver": "simple",
+                           "timeout": 10,
+                           "unit_timeout": "ms"
+                        }
+                        """);
+
+        mvc.perform(post).andExpect(status().isOk())
+                // language=JSON
+                .andExpect(content().json("""
+                        {
+                          "reply": "get_credulous",
+                          "email": null,
+                          "nr_of_arguments": 3,
+                          "attacks": [
+                            [
+                              1,
+                              2
+                            ],
+                            [
+                              2,
+                              3
+                            ]
+                          ],
+                          "semantics": "ADM",
+                          "argument_probabilities": [1.0, 0.5, 1.0],
+                          "attack_probabilities": [0.5, 1.0],
+                          "solver": "simple",
+                          "answer": "{1=1.0, 2=0.25, 3=0.75}",
+                          "unit_time": "ms",
+                          "status": "SUCCESS"
+                        }
+                        """, false));
+    }
+
+    @Test
+    public void getSkeptical() throws Exception {
+        var post = post("/paf").contentType(MediaType.APPLICATION_JSON)
+                // language=JSON
+                .content("""
+                         {
+                           "cmd": "get_skeptical",
+                           "nr_of_arguments": 3,
+                           "attacks": [[1, 2],[2,3]],
+                           "semantics": "PR",
+                           "argument_probabilities": [1, 0.5, 1],
+                           "attack_probabilities": [0.5, 1],
+                           "solver": "simple",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -93,17 +145,24 @@ class RequestControllerAdfTest {
                 // language=JSON
                 .andExpect(content().json("""
                         {
-                          "reply": "get_models",
+                          "reply": "get_skeptical",
                           "email": null,
                           "nr_of_arguments": 3,
-                          "conditions": [
-                            "ac(1,neg(2))",
-                            "ac(2,c(v))",
-                            "ac(3,or(1,neg(2)))"
+                          "attacks": [
+                            [
+                              1,
+                              2
+                            ],
+                            [
+                              2,
+                              3
+                            ]
                           ],
-                          "semantics": "ADM",
-                          "solver": null,
-                          "answer": "{{ u(1) u(2) u(3)}, {t(2) u(1) u(3)}, {t(2) f(1) u(3)}, {t(2) f(1) f(3)}}",
+                          "semantics": "PR",
+                          "argument_probabilities": [1.0, 0.5, 1.0],
+                          "attack_probabilities": [0.5, 1.0],
+                          "solver": "simple",
+                          "answer": "{1=1.0, 2=0.25, 3=0.75}",
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
@@ -111,19 +170,23 @@ class RequestControllerAdfTest {
     }
 
     private static Stream<Semantics> availableSemantics() {
-        return Stream.of(AbstractAdfReasonerFactory.getSemantics());
+        return Stream.of(Semantics.values());
     }
 
     @ParameterizedTest(name = "semantics {0}")
     @MethodSource("availableSemantics")
     public void getModelsForSemantics(Semantics semantics) throws Exception {
-        var post = post("/adf").contentType(MediaType.APPLICATION_JSON)
+        if (semantics.equals(Semantics.diverse)) return;
+        var post = post("/paf").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content(String.format("""
                          {
-                           "cmd": "get_models",
+                           "cmd": "get_credulous",
                            "nr_of_arguments": 3,
-                           "conditions": ["ac(1,neg(2))", "ac(2,c(v))", "ac(3,or(1,neg(2)))"],
+                           "attacks": [[1, 2],[2, 3]],
+                           "argument_probabilities": [1, 0.5, 1],
+                           "attack_probabilities": [1, 0.5],
+                           "solver": "simple",
                            "semantics": "%s",
                            "timeout": 10,
                            "unit_timeout": "s"

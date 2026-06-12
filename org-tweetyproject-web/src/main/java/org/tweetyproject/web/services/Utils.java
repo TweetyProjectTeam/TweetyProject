@@ -70,19 +70,17 @@ public final class Utils {
      * @param unit The string representation of the time unit ("ms" for milliseconds, "sec" for seconds).
      * @return The TimeUnit corresponding to the input string.
      */
-    public static TimeUnit getTimoutUnit(String unit){
-        switch (unit) {
-			case "ms":
-				System.out.println("Unit of timeout set to ms" );
-				return TimeUnit.MILLISECONDS;
-
-			case "sec":
-				System.out.println("Unit of timeout set to seconds" );
-				return  TimeUnit.SECONDS;
-			default:
-				System.out.println("Unit of timeout set to seconds" );
-				return TimeUnit.SECONDS;
-		}
+    public static TimeUnit getTimeoutUnit(String unit){
+        return switch (unit) {
+            case "ms" -> {
+                System.out.println("Unit of timeout set to ms");
+                yield TimeUnit.MILLISECONDS;
+            }
+            default -> {
+                System.out.println("Unit of timeout set to seconds");
+                yield TimeUnit.SECONDS;
+            }
+        };
     }
 
      /**
@@ -97,16 +95,18 @@ public final class Utils {
      * @throws ExecutionException   If the computation threw an exception.
      * @throws TimeoutException     If the computation did not complete before the timeout.
      */
-    public static <T> Pair<T,Double> runServicesWithTimeout(Future<T> future, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException{
+    public static <T> Pair<T,Long> runServicesWithTimeout(Future<T> future, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException{
         long millis = System.currentTimeMillis();
 		T result = future.get(timeout, unit);
 		millis = System.currentTimeMillis() - millis;
-		double time = millis;
+		long time = millis;
 		if (unit.equals(TimeUnit.SECONDS)){
-			time = millis / 1000.0;
+            System.out.println("converting millis to seconds");
+            time = TimeUnit.MILLISECONDS.toSeconds(millis);
+            System.out.println(time);
 		}
 
-        return new Pair<T,Double>(result, time);
+        return new Pair<>(result, time);
     }
 
     /**

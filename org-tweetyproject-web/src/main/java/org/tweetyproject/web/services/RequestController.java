@@ -141,7 +141,7 @@ import static org.tweetyproject.web.services.causal.CausalReasonerResponse.Statu
 
 
 /**
- * andles HTTP POST requests at the provided endpoints
+ * handles HTTP POST requests at the provided endpoints
  */
 @RestController
 public class RequestController {
@@ -261,7 +261,7 @@ public class RequestController {
 					AbaReasonerPost.getFol_signature(), AbaReasonerPost.getQuery_assumption(),
 					AbaReasonerPost.getSemantics(), AbaReasonerPost.getTimeout(), "", 0.0,
 					AbaReasonerPost.getUnit_timeout(), "");
-			TimeUnit unit = Utils.getTimoutUnit(AbaReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(AbaReasonerPost.getUnit_timeout());
 			int user_timeout = Utils.checkUserTimeout(AbaReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
@@ -269,7 +269,7 @@ public class RequestController {
 				if (AbaReasonerPost.getCmd().equals("get_models") || AbaReasonerPost.getCmd().equals("get_model")) {
 
 					Future<Collection<AbaExtension<Formula>>> future = executor.submit(callee);
-					Pair<Collection<AbaExtension<Formula>>, Double> result = Utils.runServicesWithTimeout(future,
+					Pair<Collection<AbaExtension<Formula>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
 						reasonerResponse.setTime(result.getValue());
@@ -278,7 +278,7 @@ public class RequestController {
 					}
 					else if (AbaReasonerPost.getCmd().equals("query")){
 					Future<Boolean> future = executor.submit(callee);
-					Pair<Boolean, Double> result = Utils.runServicesWithTimeout(future,
+					Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 
 					LoggerUtil.logger.info(String.format("Execution of command \"%s\" finished after %s %s ", AbaReasonerPost.getCmd(),result.getValue(),AbaReasonerPost.getUnit_timeout()));
@@ -352,7 +352,7 @@ public class RequestController {
 					dungReasonerPost.getEmail(), dungReasonerPost.getNr_of_arguments(), dungReasonerPost.getAttacks(),
 					dungReasonerPost.getSemantics(), dungReasonerPost.getSolver(), null, 0,
 					dungReasonerPost.getUnit_timeout(), "ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(dungReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(dungReasonerPost.getUnit_timeout());
 			AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
 					Semantics.getSemantics(dungReasonerPost.getSemantics()));
 			Callee callee = DungReasonerCalleeFactory.getCallee(
@@ -361,7 +361,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<DungTheory>>, Double> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -423,7 +423,7 @@ public class RequestController {
 					iafReasonerPost.getDefiniteAttacks(), iafReasonerPost.getUncertainAttacks(),
 					iafReasonerPost.getSemantics(), iafReasonerPost.getSolver(), null, 0,
 					iafReasonerPost.getUnit_timeout(), "ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(iafReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(iafReasonerPost.getUnit_timeout());
 			IncompleteReasoner reasoner = IafReasonerFactory.getReasoner(
 					Semantics.getSemantics(iafReasonerPost.getSemantics()));
 			Callee callee = IafReasonerCalleeFactory.getCallee(
@@ -432,7 +432,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Collection<Extension<IncompleteTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<IncompleteTheory>>, Double> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Extension<IncompleteTheory>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -515,7 +515,7 @@ public class RequestController {
 					rankingReasonerPost.getEmail(), rankingReasonerPost.getNr_of_arguments(), rankingReasonerPost.getAttacks(),
 					rankingReasonerPost.getSemantics(), rankingReasonerPost.getSolver(), null, 0,
 					rankingReasonerPost.getUnit_timeout(), "ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(rankingReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(rankingReasonerPost.getUnit_timeout());
 			AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(
 					RankingSemantics.getSemantics(rankingReasonerPost.getSemantics()));
 			Callee callee = RankingReasonerCalleeFactory.getCallee(
@@ -524,7 +524,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<GeneralComparator<Argument,DungTheory>> future = executor.submit(callee);
-				Pair<GeneralComparator<Argument, DungTheory>, Double> result = Utils.runServicesWithTimeout(future,
+				Pair<GeneralComparator<Argument, DungTheory>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -605,7 +605,7 @@ public class RequestController {
 					adfReasonerPost.getEmail(), adfReasonerPost.getNr_of_arguments(), adfReasonerPost.getConditions(),
 					adfReasonerPost.getSemantics(), adfReasonerPost.getSolver(), null, 0,
 					adfReasonerPost.getUnit_timeout(), "ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(adfReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(adfReasonerPost.getUnit_timeout());
 			try {
 				AbstractDialecticalFramework adf = AbstractAdfReasonerFactory.getAdf(adfReasonerPost.getNr_of_arguments(),
 						adfReasonerPost.getConditions());
@@ -616,7 +616,7 @@ public class RequestController {
 				int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 				// handle timeout
 				Future<Collection<Interpretation>> future = executor.submit(callee);
-				Pair<Collection<Interpretation>, Double> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Interpretation>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -766,14 +766,14 @@ public class RequestController {
 					0,
 					bipolarReasonerPost.getUnit_timeout(),
 					"ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(bipolarReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(bipolarReasonerPost.getUnit_timeout());
 			var command = BipolarReasonerCalleeFactory.Command.getCommand(bipolarReasonerPost.getCmd());
 			Callee callee = BipolarReasonerCalleeFactory.getCallee(command, reasoner, bbase);
 			int user_timeout = Utils.checkUserTimeout(bipolarReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
 				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
-				Pair<Collection<Extension<DungTheory>>, Double> result = Utils.runServicesWithTimeout(future,
+				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
 						user_timeout, unit);
 				executor.shutdownNow();
 				reasonerResponse.setTime(result.getValue());
@@ -851,7 +851,7 @@ public class RequestController {
 		DeLPResponse delpResponse = new DeLPResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(),
 				delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(), null, 0.0, delpPost.getUnit_timeout(),
 				null);
-		TimeUnit unit = Utils.getTimoutUnit(delpPost.getUnit_timeout());
+		TimeUnit unit = Utils.getTimeoutUnit(delpPost.getUnit_timeout());
 		int user_timeout = Utils.checkUserTimeout(delpPost.getTimeout(), SERVICES_TIMEOUT_DELP, unit);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		try {
@@ -876,7 +876,7 @@ public class RequestController {
 				f = folParser.parseFormula(qString);
 			Callee delpCallee = new DeLPCallee(delp, reasoner, f);
 			Future<DelpAnswer.Type> future = executor.submit(delpCallee);
-			Pair<DelpAnswer.Type, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			Pair<DelpAnswer.Type, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 
 			System.out.println(result.toString());
 
@@ -1011,7 +1011,7 @@ public class RequestController {
 
 	private InconsistencyValueResponse handleGetICMESValue(InconsistencyPost query) throws JSONException {
 		InconsistencyValueResponse icmesResponse = new InconsistencyValueResponse();
-		TimeUnit unit = Utils.getTimoutUnit(query.getUnit_timeout());
+		TimeUnit unit = Utils.getTimeoutUnit(query.getUnit_timeout());
 		int user_timeout = Utils.checkUserTimeout(query.getTimeout(), SERVICES_TIMEOUT_INCMES, unit);
 		// set sub-solvers
 		SatSolver.setDefaultSolver(new Sat4jSolver());
@@ -1035,7 +1035,7 @@ public class RequestController {
 			try {
 				// handle timeout
 				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
-				Pair<Double, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+				Pair<Double, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 				val = result.getKey();
 				icmesResponse.setTime(result.getValue());
 				icmesResponse.setStatus("SUCCESS");
@@ -1137,11 +1137,11 @@ public class RequestController {
 				request.getTimeout(),
 				request.getUnit_timeout()));
 
-		TimeUnit timeoutUnit = Utils.getTimoutUnit(request.getUnit_timeout());
+		TimeUnit timeoutUnit = Utils.getTimeoutUnit(request.getUnit_timeout());
 		int timeout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_SEQUENCE_EXPLANATION, timeoutUnit);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Pair<SequenceExplanationResult, Double> resultAndExecutionTime;
+		Pair<SequenceExplanationResult, Long> resultAndExecutionTime;
 		try {
 			var future = executor.submit(() -> processCommand(request.getCmd()));
 			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timeout, timeoutUnit);
@@ -1219,11 +1219,11 @@ public class RequestController {
 				request.getTimeout(),
 				request.getUnit_timeout()));
 
-		TimeUnit timoutUnit = Utils.getTimoutUnit(request.getUnit_timeout());
+		TimeUnit timoutUnit = Utils.getTimeoutUnit(request.getUnit_timeout());
 		int timout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_CAUSAL, timoutUnit);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Pair<String, Double> resultAndExecutionTime;
+		Pair<String, Long> resultAndExecutionTime;
 		try {
 			var future = executor.submit(() -> processCommand(request));
 			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timout, timoutUnit);
@@ -1382,6 +1382,7 @@ public class RequestController {
 			return getPafInfo(pafPost.getEmail());
 
 		PafReasonerCalleeFactory.Command cmd = PafReasonerCalleeFactory.Command.getCommand(pafPost.getCmd());
+		System.out.println("CMD " + cmd);
 		if (cmd == null)
 			return new PafReasonerResponse();
 
@@ -1390,13 +1391,14 @@ public class RequestController {
 				pafPost.getArgument_probabilities(),
 				pafPost.getAttacks(),
 				pafPost.getAttack_probabilities());
+		System.out.println(paf);
 		AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
 				Semantics.getSemantics(pafPost.getSemantics()),
 				pafPost.getSolver(),
 				pafPost.getNr_of_trials());
-		Argument argument =
-				AbstractPafReasonerFactory.getArgument(paf, pafPost.getArgument());
-		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf, argument);
+		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf);
+
+		System.out.println(callee);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		PafReasonerResponse reasonerResponse = new PafReasonerResponse(
@@ -1405,11 +1407,12 @@ public class RequestController {
 				pafPost.getAttack_probabilities(), pafPost.getSemantics(),
 				pafPost.getSolver(), pafPost.getArgument(), null, 0,
 				pafPost.getUnit_timeout(), "ERROR");
-		TimeUnit unit = Utils.getTimoutUnit(pafPost.getUnit_timeout());
+		TimeUnit unit = Utils.getTimeoutUnit(pafPost.getUnit_timeout());
+		System.out.println(unit);
 		int user_timeout = Utils.checkUserTimeout(pafPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 		try {
-			Future<Double> future = executor.submit(callee);
-			Pair<Double, Double> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			Future<Map<Argument,Double>> future = executor.submit(callee);
+			Pair<Map<Argument,Double>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 			executor.shutdownNow();
 			reasonerResponse.setAnswer(result.getKey().toString());
 			reasonerResponse.setTime(result.getValue());
