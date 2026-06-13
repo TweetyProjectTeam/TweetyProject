@@ -18,8 +18,11 @@
  */
 package org.tweetyproject.web.services.rankings;
 
+import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
  * Factory for creating reasoner for ranking semantics
@@ -42,5 +45,16 @@ public class AbstractRankingReasonerFactory {
      */
     public static AbstractRankingReasoner<?> getReasoner(RankingSemantics semantics) {
         return AbstractRankingReasoner.getRankingReasonerForSemantics(semantics);
+    }
+
+    public static String getRankingType(String semantics) {
+        RankingSemantics sem = RankingSemantics.getSemantics(semantics);
+        switch (sem) {
+            case CAT,CO,SAF,SB -> {
+                return "numerical";
+            } case BB, SER, DB, IGD, TU -> {
+                return "lattice";
+            } default -> throw new IllegalArgumentException("unsupported semantics");
+        }
     }
 }

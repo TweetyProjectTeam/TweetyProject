@@ -104,10 +104,7 @@ import org.tweetyproject.web.services.iaf.*;
 import org.tweetyproject.web.services.incmes.InconsistencyGetMeasuresResponse;
 import org.tweetyproject.web.services.incmes.InconsistencyPost;
 import org.tweetyproject.web.services.incmes.InconsistencyValueResponse;
-import org.tweetyproject.web.services.rankings.AbstractRankingReasonerFactory;
-import org.tweetyproject.web.services.rankings.RankingReasonerCalleeFactory;
-import org.tweetyproject.web.services.rankings.RankingReasonerPost;
-import org.tweetyproject.web.services.rankings.RankingServicesInfoResponse;
+import org.tweetyproject.web.services.rankings.*;
 import org.tweetyproject.web.services.paf.*;
 import org.tweetyproject.web.services.sequenceexplanation.*;
 import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPost.GetSequenceExplanationsCmd;
@@ -511,9 +508,9 @@ public class RequestController {
 			DungTheory dungTheory = AbstractExtensionReasonerFactory.getDungTheory(rankingReasonerPost.getNr_of_arguments(),
 					rankingReasonerPost.getAttacks());
 			ExecutorService executor = Executors.newSingleThreadExecutor();
-			DungReasonerResponse reasonerResponse = new DungReasonerResponse(rankingReasonerPost.getCmd(),
+			RankingReasonerResponse reasonerResponse = new RankingReasonerResponse(rankingReasonerPost.getCmd(),
 					rankingReasonerPost.getEmail(), rankingReasonerPost.getNr_of_arguments(), rankingReasonerPost.getAttacks(),
-					rankingReasonerPost.getSemantics(), rankingReasonerPost.getSolver(), null, 0,
+					rankingReasonerPost.getSemantics(), AbstractRankingReasonerFactory.getRankingType(rankingReasonerPost.getSemantics()), rankingReasonerPost.getSolver(), null, 0,
 					rankingReasonerPost.getUnit_timeout(), "ERRORs");
 			TimeUnit unit = Utils.getTimeoutUnit(rankingReasonerPost.getUnit_timeout());
 			AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(
@@ -544,7 +541,7 @@ public class RequestController {
 			}
 			return reasonerResponse;
 		} else {
-			return new DungReasonerResponse();
+			return new RankingReasonerResponse();
 		}
 	}
 

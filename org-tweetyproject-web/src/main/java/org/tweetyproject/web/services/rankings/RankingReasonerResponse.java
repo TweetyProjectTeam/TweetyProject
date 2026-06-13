@@ -45,6 +45,9 @@ public class RankingReasonerResponse extends Response {
     /** The semantics specified in the Ranking reasoner response */
     private String semantics;
 
+    /** The type of ranking computed */
+    private String rankingType;
+
     /** The solver specified in the Ranking reasoner response */
     private String solver;
 
@@ -74,6 +77,7 @@ public class RankingReasonerResponse extends Response {
      * @param nr_of_arguments The number of arguments
      * @param attacks         The attacks information
      * @param semantics       The semantics specified
+     * @param rankingType     The ranking type
      * @param solver          The solver specified
      * @param answer          The answer provided
      * @param time            The time taken for the operation
@@ -81,12 +85,13 @@ public class RankingReasonerResponse extends Response {
      * @param status          The status of the response
      */
     public RankingReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks,
-                                String semantics, String solver, String answer, double time, String unit_time, String status) {
+                                String semantics, String rankingType, String solver, String answer, double time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.nr_of_arguments = nr_of_arguments;
         this.attacks = attacks;
         this.semantics = semantics;
+        this.rankingType = rankingType;
         this.solver = solver;
         this.answer = answer;
         this.time = time;
@@ -182,6 +187,24 @@ public class RankingReasonerResponse extends Response {
      */
     public void setSemantics(String semantics) {
         this.semantics = semantics;
+    }
+
+    /**
+     * Gets the ranking type specified in the Ranking reasoner response.
+     *
+     * @return The ranking type specified in the Ranking reasoner response.
+     */
+    public String getRankingType() {
+        return rankingType;
+    }
+
+    /**
+     * Sets the ranking type specified in the Ranking reasoner response.
+     *
+     * @param rankingType The ranking type specified in the Ranking reasoner response.
+     */
+    public void setRankingType(String rankingType) {
+        this.rankingType = rankingType;
     }
 
     /**
