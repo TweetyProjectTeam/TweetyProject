@@ -30,6 +30,16 @@ import javax.validation.constraints.NotNull;
  */
 public final class CausalReasonerPost {
 
+    /**
+     * Initialize new CausalReasonerPost
+     * @param cmd               the command string
+     * @param email             user email
+     * @param kb                the causal knowledge base
+     * @param observations      the observations
+     * @param conclusionsFilter conclusion filter approach
+     * @param timeout           the timeout
+     * @param unit_timeout      unit of timeout
+     */
     public CausalReasonerPost(
             @JsonProperty(value = "cmd", required = true)
             Cmd cmd,

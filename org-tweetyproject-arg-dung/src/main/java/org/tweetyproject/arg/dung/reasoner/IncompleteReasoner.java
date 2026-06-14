@@ -41,7 +41,7 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     /**
      * the underlying Dung reasoner
      */
-    private AbstractExtensionReasoner reasoner;
+    private final AbstractExtensionReasoner reasoner;
 
     /**
      * constructor for direct initialization of reasoner
@@ -170,7 +170,6 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     public boolean isPossibleCredulous(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -199,7 +198,6 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     public boolean isNecessaryCredulous(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -228,7 +226,6 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     public boolean isPossibleSkeptical(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -257,7 +254,6 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     public boolean isNecessarySkeptical(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -282,6 +278,14 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         return query(beliefbase, formula, InferenceMode.SKEPTICAL, Type.NECESSARY);
     }
 
+    /**
+     * Determines acceptability of an argument under the given parameters
+     * @param beliefbase    some incomplete theory
+     * @param formula       some argument
+     * @param mode          the inference mode
+     * @param type          the type of inference (possible or necessary)
+     * @return "true" if the argument is acceptable wrt this reasoner under the given parameters
+     */
     public Boolean query(IncompleteTheory beliefbase, Argument formula, InferenceMode mode, Type type) {
         if (mode.equals(InferenceMode.CREDULOUS)) {
             if (type.equals(Type.POSSIBLE)) {
@@ -300,7 +304,7 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
 
     public enum Type {
         POSSIBLE,
-        NECESSARY;
+        NECESSARY
     }
 
     /**
@@ -329,6 +333,13 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         return getModels(bbase).iterator().next();
     }
 
+    /**
+     * Determines the set of arguments that is acceptable wrt this reasoner and the given parameters
+     * @param bbase         some incomplete theory
+     * @param type          the type of inference (possible or necessary)
+     * @param inferenceMode the inference mode
+     * @return The set of arguments that is acceptable wrt this reasoner and the given parameters
+     */
     public Collection<Argument> queryAll(IncompleteTheory bbase, Type type, InferenceMode inferenceMode) {
         Collection<Argument> result = new HashSet<>();
         Collection<Extension<IncompleteTheory>> extensions = this.getModels(bbase, type);

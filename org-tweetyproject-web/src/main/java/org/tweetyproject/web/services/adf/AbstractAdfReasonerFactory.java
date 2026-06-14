@@ -71,6 +71,12 @@ public abstract class AbstractAdfReasonerFactory {
         }
     }
 
+    /**
+     * Constructs a new ADF from the given information
+     * @param nr_of_arguments   the number of arguments
+     * @param conditions        the acceptance conditions as a list of KPP-strings
+     * @return An ADF inferred from the given data
+     */
     public static AbstractDialecticalFramework getAdf(int nr_of_arguments, List<String> conditions) {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < nr_of_arguments; i++) {

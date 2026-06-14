@@ -31,9 +31,16 @@ import java.util.stream.Collectors;
  * @author Oleksandr Dzhychko
  */
 public final class AttackDTO {
+    /** the attacker */
     private final @NonNull @NotNull String attacker;
+    /** the attacked argument */
     private final @NonNull @NotNull String attacked;
 
+    /**
+     * Initialize new instance from given arguments
+     * @param attacker name of attacker argument
+     * @param attacked name of attacked argument
+     */
     public AttackDTO(
             @JsonProperty(value="attacker", required = true) @NonNull @NotNull String attacker,
             @JsonProperty(value="attacked", required = true) @NonNull @NotNull String attacked) {
@@ -41,21 +48,38 @@ public final class AttackDTO {
         this.attacked = attacked;
     }
 
+    /**
+     * Serialize a collection of attacks
+     * @param attacks set of attacks
+     * @return List of serialized objects
+     */
     public static List<AttackDTO> from(Collection<Attack> attacks) {
         return attacks.stream()
                 .map(AttackDTO::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Serialize an attacks
+     * @param attack an attack
+     * @return serialized attack
+     */
     public static AttackDTO from(Attack attack) {
         return new AttackDTO(attack.getAttacker().toString(), attack.getAttacked().toString());
     }
 
-
+    /**
+     * get attacker argument name
+     * @return name of attacker argument
+     */
     public String getAttacker() {
         return attacker;
     }
 
+    /**
+     * get attacked argument name
+     * @return name of attacked argument
+     */
     public String getAttacked() {
         return attacked;
     }

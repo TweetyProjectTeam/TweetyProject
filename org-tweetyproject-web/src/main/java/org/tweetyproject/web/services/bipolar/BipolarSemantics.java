@@ -30,38 +30,41 @@ import java.util.NoSuchElementException;
  */
 public enum BipolarSemantics {
 
-    /**
-     * General Semantics
-     */
+    /** bipolar conflict-free semantics */
     BCF("b-cf", "Conflict-Free", Support.Type.DEFAULT),
+    /** bipolar coherent semantics */
     BCOH("b-coh", "Coherent", Support.Type.DEFAULT),
+    /** bipolar coherent admissible semantics */
     BAD("b-ad", "Coherent Admissible", Support.Type.DEFAULT),
-
-    /**
-     * Coalition Semantics
-     */
+    /** coalition-admissible semantics */
     CAD("b-coal-ad", "Coalition-Admissible", Support.Type.DEFAULT),
+    /** coalition-complete semantics */
     CCO("b-coal-co", "Coalition-Complete", Support.Type.DEFAULT),
+    /** coalition-grounded semantics */
     CGR("b-coal-gr", "Coalition-Grounded", Support.Type.DEFAULT),
+    /** coalition-preferred semantics */
     CPR("b-coal-pr", "Coalition-Preferred", Support.Type.DEFAULT),
+    /** coalition-stable semantics */
     CST("b-coal-st", "Coalition-Stable", Support.Type.DEFAULT),
-
-    /**
-     * Semantics for Deductive Interpretation
-     */
+    /** deductive-admissible semantics */
     DAD("d-ad", "Admissible", Support.Type.DEDUCTIVE),
+    /** deductive-complete semantics */
     DCO("d-co", "Complete", Support.Type.DEDUCTIVE),
+    /** deductive-grounded semantics */
     DGR("d-gr", "Grounded", Support.Type.DEDUCTIVE),
+    /** deductive-preferred semantics */
     DPR("d-pr", "Preferred", Support.Type.DEDUCTIVE),
+    /** deductive-stable semantics */
     DST("d-st", "Stable", Support.Type.DEDUCTIVE),
-
-    /**
-     * Semantics for Necessity Interpretation
-     */
+    /** necessary-admissible semantics */
     NAD("n-ad", "Admissible", Support.Type.NECESSITY),
+    /** necessary-complete semantics */
     NCO("n-co", "Complete", Support.Type.NECESSITY),
+    /** necessary-grounded semantics */
     NGR("n-gr", "Grounded", Support.Type.NECESSITY),
+    /** necessary-preferred semantics */
     NPR("n-pr", "Preferred", Support.Type.NECESSITY),
+    /** necessary-stable semantics */
     NST("n-st", "Stable", Support.Type.NECESSITY);
 
     /**

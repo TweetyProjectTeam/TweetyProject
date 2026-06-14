@@ -111,11 +111,17 @@ public class Support extends DirectedEdge<Argument> {
      * Value for distinguishing between different interpretations of the support relation
      */
     public enum Type {
+        /** default */
         DEFAULT,
+        /** only mediated attacks are considered */
         SIMPLE_DEDUCTIVE,
+        /** supported and mediated attacks are considered */
         DEDUCTIVE,
+        /** inverse of deductive */
         NECESSITY,
+        /** inverse of simple deductive */
         SIMPLE_NECESSITY,
+        /** arguments must be supported by evidence*/
         EVIDENTIAL
     }
 }

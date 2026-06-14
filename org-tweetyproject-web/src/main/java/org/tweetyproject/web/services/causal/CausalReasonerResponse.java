@@ -27,8 +27,13 @@ import org.springframework.lang.NonNull;
  */
 public final class CausalReasonerResponse {
 
+    /**
+     * Enum for response status
+     */
     public enum Status {
+        /** success */
         SUCCESS,
+        /** timeout */
         TIMEOUT,
     }
 
@@ -55,6 +60,14 @@ public final class CausalReasonerResponse {
      */
     private final Status status;
 
+    /**
+     * Initialize a new CausalReasonerResponse
+     * @param reply         the reply
+     * @param email         the user email
+     * @param time          the computation time
+     * @param unit_timeout  the unit of time
+     * @param status        the response status
+     */
     public CausalReasonerResponse(String reply, String email, double time, @NonNull String unit_timeout, Status status) {
         this.reply = reply;
         this.email = email;

@@ -18,11 +18,8 @@
  */
 package org.tweetyproject.web.services.rankings;
 
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.NumericalPartialOrder;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 
 /**
  * Factory for creating reasoner for ranking semantics
@@ -47,6 +44,11 @@ public class AbstractRankingReasonerFactory {
         return AbstractRankingReasoner.getRankingReasonerForSemantics(semantics);
     }
 
+    /**
+     * Determine what type of ranking the semantics computes
+     * @param semantics some ranking semantics as a string
+     * @return the  ranking type
+     */
     public static String getRankingType(String semantics) {
         RankingSemantics sem = RankingSemantics.getSemantics(semantics);
         switch (sem) {

@@ -29,22 +29,42 @@ import java.util.stream.Collectors;
  * @author Oleksandr Dzhychko
  */
 public final class ArgumentationFrameworkReply {
+    /** internal list of arguments */
     private final List<String> arguments;
+    /** internal list of attacks */
     private final List<AttackDTO> attacks;
 
+    /**
+     * Initialize a new Reply
+     * @param arguments list of argument strings
+     * @param attacks   list of attack strings
+     */
     public ArgumentationFrameworkReply(List<String> arguments, List<AttackDTO> attacks) {
         this.arguments = arguments;
         this.attacks = attacks;
     }
 
+    /**
+     * Get the list of argument strings
+     * @return the list of argument strings
+     */
     public List<String> getArguments() {
         return arguments;
     }
 
+    /**
+     * Get the list of attack strings
+     * @return the list of attack strings
+     */
     public List<AttackDTO> getAttacks() {
         return attacks;
     }
 
+    /**
+     * Infer a reply from the given dung theory
+     * @param argumentationFramework some dung theory
+     * @return a new reply instance
+     */
     public static ArgumentationFrameworkReply from(DungTheory argumentationFramework) {
         var arguments = argumentationFramework.stream()
                 .map(Argument::getName)

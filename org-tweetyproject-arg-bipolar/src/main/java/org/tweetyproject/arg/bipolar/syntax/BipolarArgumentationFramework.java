@@ -23,11 +23,8 @@ import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
-
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
-import org.tweetyproject.graphs.Edge;
-import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 
 import java.util.*;
@@ -246,6 +243,12 @@ public class BipolarArgumentationFramework extends DungTheory {
         return theory;
     }
 
+    /**
+     * Determine if there is a supported attack from arg1 to arg2
+     * @param arg1 some argument
+     * @param arg2 some argument
+     * @return "true" if there is a supported attack from arg1 to arg2
+     */
     public boolean isSupportedAttack(Argument arg1, Argument arg2) {
         if (getAttackers(arg2).contains(arg1)) return true;
         Collection<Argument> supported = getSupported(arg1);
@@ -254,6 +257,12 @@ public class BipolarArgumentationFramework extends DungTheory {
         return !attackers.isEmpty();
     }
 
+    /**
+     * Determine if there is an indirect attack from arg1 to arg2
+     * @param arg1 some argument
+     * @param arg2 some argument
+     * @return "true" if there is an indirect attack from arg1 to arg2
+     */
     public boolean isIndirectAttack(Argument arg1, Argument arg2) {
         Collection<Argument> supporters = getSupporters(arg2);
         Collection<Argument> attacked = getAttacked(arg1);
@@ -261,6 +270,12 @@ public class BipolarArgumentationFramework extends DungTheory {
         return !attacked.isEmpty();
     }
 
+    /**
+     * Determine if there is a mediated attack from arg1 to arg2
+     * @param arg1 some argument
+     * @param arg2 some argument
+     * @return "true" if there is a mediated attack from arg1 to arg2
+     */
     public boolean isMediatedAttack(Argument arg1, Argument arg2){
         if (getAttackers(arg2).contains(arg1)) return true;
         Collection<Argument> attacked = getAttacked(arg1);
@@ -269,7 +284,10 @@ public class BipolarArgumentationFramework extends DungTheory {
         return !attacked.isEmpty();
     }
 
-
+    /**
+     * Computes the set of supported attacks of this BAF
+     * @return the set of supported attacks of this BAF
+     */
     public Collection<Attack> getSupportedAttacks(){
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: this) {
@@ -282,6 +300,10 @@ public class BipolarArgumentationFramework extends DungTheory {
         return attacks;
     }
 
+    /**
+     * Computes the set of indirect attacks of this BAF
+     * @return the set of indirect attacks of this BAF
+     */
     public Collection<Attack> getIndirectAttacks() {
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: this) {
@@ -294,6 +316,10 @@ public class BipolarArgumentationFramework extends DungTheory {
         return attacks;
     }
 
+    /**
+     * Computes the set of mediated attacks of this BAF
+     * @return the set of mediated attacks of this BAF
+     */
     public Collection<Attack> getMediatedAttacks(){
         Collection<Attack> attacks = new HashSet<>();
         for (Argument a: this) {
@@ -306,6 +332,11 @@ public class BipolarArgumentationFramework extends DungTheory {
         return attacks;
     }
 
+    /**
+     * Compute the set of arguments supported by ext
+     * @param ext some set of arguments
+     * @return the set of arguments supported by ext
+     */
     public Collection<Argument> getSupported(Collection<Argument> ext){
         Collection<Argument> supported = new HashSet<>();
         Stack<Argument> unvisited = new Stack<>();
@@ -323,6 +354,11 @@ public class BipolarArgumentationFramework extends DungTheory {
         return supported;
     }
 
+    /**
+     * Compute the set of arguments supporting by ext
+     * @param ext some set of arguments
+     * @return the set of arguments supporting by ext
+     */
     public Collection<Argument> getSupporters(Collection<Argument> ext) {
         Collection<Argument> supporters = new HashSet<>();
         Stack<Argument> unvisited = new Stack<>();
@@ -340,12 +376,22 @@ public class BipolarArgumentationFramework extends DungTheory {
         return supporters;
     }
 
+    /**
+     * Compute the set of arguments supported by arg
+     * @param arg some argument
+     * @return the set of arguments supported by arg
+     */
     public Collection<Argument> getSupported(Argument arg){
         Extension<DungTheory> ext = new Extension<>();
         ext.add(arg);
         return getSupported(ext);
     }
 
+    /**
+     * Compute the set of arguments supporting by arg
+     * @param arg some argument
+     * @return the set of arguments supporting by arg
+     */
     public Collection<Argument> getSupporters(Argument arg) {
         Extension<DungTheory> ext = new Extension<>();
         ext.add(arg);
@@ -421,6 +467,10 @@ public class BipolarArgumentationFramework extends DungTheory {
         return result;
     }
 
+    /**
+     * Pretty prints this BAF
+     * @return String representation of this BAF
+     */
     public String prettyPrint(){
         StringBuilder output = new StringBuilder();
         for (Argument argument : this) output.append("argument(").append(argument.toString()).append(").\n");

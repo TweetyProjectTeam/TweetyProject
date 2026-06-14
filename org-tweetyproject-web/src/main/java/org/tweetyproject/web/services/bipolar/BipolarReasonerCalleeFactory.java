@@ -39,7 +39,9 @@ public class BipolarReasonerCalleeFactory {
         GET_MODELS("get_models", "Get all models"),
         /** get model */
         GET_MODEL("get_model", "Get some model"),
+        /** get credulous arguments */
         GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        /** get skeptical arguments */
         GET_SKEPTICAL("get_skeptical", "Get skeptical arguments");
 
         /** ID of the command */

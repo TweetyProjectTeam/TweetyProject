@@ -26,17 +26,29 @@ import java.util.NoSuchElementException;
  * @author Lars Bengel
  */
 public enum RankingSemantics {
+    /** the categorizer ranking semantics */
     CAT("CAT", "categorizer"),
+    /** the serialisability-based ranking semantics */
     SER("SER", "serialized"),
+    /** the Burden-based ranking semantics */
     BB("BB", "burden-based"),
+    /** the counter transitivity ranking semantics */
     CT("CT", "counter transitivity"),
+    /** the counting ranking semantics */
     CO("CO", "counting"),
+    /** the Discussion-based ranking semantics */
     DB("DB", "discussion-based"),
+    /** the iterated graded defense ranking semantics */
     IGD("IGD", "iterated graded defense"),
+    /** the propagation ranking semantics */
     PR("PR", "propagation"),
+    /** the Social Argumentation ranking semantics */
     SAF("SAF", "social argumentation"),
+    /** the Strategy-based ranking semantics */
     SB("SB", "strategy-based"),
+    /** the tuples ranking semantics */
     TU("TU", "tuples"),
+    /** the probabilistic ranking semantics */
     PROB("PROB", "probabilistic");
 
     /** The description of the semantics. */

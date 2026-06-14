@@ -31,10 +31,19 @@ import java.util.Map;
  */
 public class PafReasonerQueryAllCallee extends Callee {
 
+    /** the underlying PAFReasoner */
     private final AbstractPafReasoner reasoner;
+    /** the PAF */
     private final ProbabilisticArgumentationFramework paf;
+    /** the inference mode */
     private final InferenceMode inferenceMode;
 
+    /**
+     * Initialize a new QueryAll callee
+     * @param reasoner      the reasoner
+     * @param paf           some PAF
+     * @param inferenceMode the inference mode
+     */
     public PafReasonerQueryAllCallee(AbstractPafReasoner reasoner,
                                   ProbabilisticArgumentationFramework paf,
                                   InferenceMode inferenceMode) {

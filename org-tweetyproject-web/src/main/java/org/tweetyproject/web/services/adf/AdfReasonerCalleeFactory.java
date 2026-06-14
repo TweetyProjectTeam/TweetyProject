@@ -38,7 +38,9 @@ public class AdfReasonerCalleeFactory {
     public enum Command {
         /** get models */
         GET_MODELS("get_models", "Get all models"),
+        /** get credulous arguments */
         GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        /** get skeptical arguments */
         GET_SKEPTICAL("get_skeptical", "Get skeptical arguments.");
 
         /** ID of the command */
