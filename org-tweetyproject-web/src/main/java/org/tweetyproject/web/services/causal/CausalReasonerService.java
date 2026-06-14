@@ -140,10 +140,20 @@ public final class CausalReasonerService {
             this.perAtomSequenceExplanations = perAtomSequenceExplanations;
         }
 
+        /**
+         * Returns the attacks that were used to build the sequence explanations.
+         *
+         * @return set of attacks
+         */
         public Set<Attack> getAttacks() {
             return attacks;
         }
 
+        /**
+         * Returns the sequence explanations grouped by conclusion atom.
+         *
+         * @return map from proposition to sequence explanations
+         */
         public Map<Proposition, List<DialectialSequenceExplanation>> getPerAtomSequenceExplanations() {
             return perAtomSequenceExplanations;
         }

@@ -42,8 +42,28 @@ public class PafReasonerResponse extends Response {
     private String unit_time;
     private String status;
 
+    /**
+     * Creates an empty PAF reasoner response.
+     */
     public PafReasonerResponse() {}
 
+    /**
+     * Creates a PAF reasoner response with all response fields.
+     *
+     * @param reply                reply message
+     * @param email                contact email
+     * @param nr_of_arguments      number of arguments in the PAF
+     * @param argument_probabilities probabilities for each argument
+     * @param attacks              attack relation list
+     * @param attack_probabilities attack probabilities corresponding to attacks
+     * @param semantics            semantics used by the reasoner
+     * @param solver               solver used by the reasoner
+     * @param argument             queried argument index
+     * @param answer               result answer value
+     * @param time                 computation time
+     * @param unit_time            time unit for the computation time
+     * @param status               status of the reasoner response
+     */
     public PafReasonerResponse(String reply, String email, int nr_of_arguments,
             List<Double> argument_probabilities, List<List<Integer>> attacks,
             List<Double> attack_probabilities, String semantics, String solver,
@@ -63,47 +83,190 @@ public class PafReasonerResponse extends Response {
         this.status = status;
     }
 
+    /**
+     * Returns the reply message.
+     *
+     * @return reply message
+     */
     public String getReply() { return reply; }
+
+    /**
+     * Sets the reply message.
+     *
+     * @param reply reply message
+     */
     public void setReply(String reply) { this.reply = reply; }
 
+    /**
+     * Returns the contact email.
+     *
+     * @return contact email
+     */
     public String getEmail() { return email; }
+
+    /**
+     * Sets the contact email.
+     *
+     * @param email contact email
+     */
     public void setEmail(String email) { this.email = email; }
 
+    /**
+     * Returns the number of arguments in the PAF.
+     *
+     * @return number of arguments
+     */
     public int getNr_of_arguments() { return nr_of_arguments; }
+
+    /**
+     * Sets the number of arguments in the PAF.
+     *
+     * @param nr_of_arguments number of arguments
+     */
     public void setNr_of_arguments(int nr_of_arguments) { this.nr_of_arguments = nr_of_arguments; }
 
+    /**
+     * Returns the computed argument probabilities.
+     *
+     * @return argument probabilities
+     */
     public List<Double> getArgument_probabilities() { return argument_probabilities; }
+
+    /**
+     * Sets the computed argument probabilities.
+     *
+     * @param argument_probabilities argument probabilities
+     */
     public void setArgument_probabilities(List<Double> argument_probabilities) {
         this.argument_probabilities = argument_probabilities;
     }
 
+    /**
+     * Returns the attack relations.
+     *
+     * @return attack relations
+     */
     public List<List<Integer>> getAttacks() { return attacks; }
+
+    /**
+     * Sets the attack relations.
+     *
+     * @param attacks attack relations
+     */
     public void setAttacks(List<List<Integer>> attacks) { this.attacks = attacks; }
 
+    /**
+     * Returns the attack probabilities.
+     *
+     * @return attack probabilities
+     */
     public List<Double> getAttack_probabilities() { return attack_probabilities; }
+
+    /**
+     * Sets the attack probabilities.
+     *
+     * @param attack_probabilities attack probabilities
+     */
     public void setAttack_probabilities(List<Double> attack_probabilities) {
         this.attack_probabilities = attack_probabilities;
     }
 
+    /**
+     * Returns the semantics used by the reasoner.
+     *
+     * @return semantics
+     */
     public String getSemantics() { return semantics; }
+
+    /**
+     * Sets the semantics used by the reasoner.
+     *
+     * @param semantics semantics
+     */
     public void setSemantics(String semantics) { this.semantics = semantics; }
 
+    /**
+     * Returns the solver used by the reasoner.
+     *
+     * @return solver
+     */
     public String getSolver() { return solver; }
+
+    /**
+     * Sets the solver used by the reasoner.
+     *
+     * @param solver solver
+     */
     public void setSolver(String solver) { this.solver = solver; }
 
+    /**
+     * Returns the queried argument index.
+     *
+     * @return queried argument index
+     */
     public int getArgument() { return argument; }
+
+    /**
+     * Sets the queried argument index.
+     *
+     * @param argument queried argument index
+     */
     public void setArgument(int argument) { this.argument = argument; }
 
+    /**
+     * Returns the answer string.
+     *
+     * @return answer string
+     */
     public String getAnswer() { return answer; }
+
+    /**
+     * Sets the answer string.
+     *
+     * @param answer answer string
+     */
     public void setAnswer(String answer) { this.answer = answer; }
 
+    /**
+     * Returns the computation time.
+     *
+     * @return computation time
+     */
     public double getTime() { return time; }
+
+    /**
+     * Sets the computation time.
+     *
+     * @param time computation time
+     */
     public void setTime(double time) { this.time = time; }
 
+    /**
+     * Returns the time unit for the computation time.
+     *
+     * @return time unit
+     */
     public String getUnit_time() { return unit_time; }
+
+    /**
+     * Sets the time unit for the computation time.
+     *
+     * @param unit_time time unit
+     */
     public void setUnit_time(String unit_time) { this.unit_time = unit_time; }
 
+    /**
+     * Returns the response status.
+     *
+     * @return response status
+     */
     public String getStatus() { return status; }
+
+    /**
+     * Sets the response status.
+     *
+     * @param status response status
+     */
     public void setStatus(String status) { this.status = status; }
 
     @Override

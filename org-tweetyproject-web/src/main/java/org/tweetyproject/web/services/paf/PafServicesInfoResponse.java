@@ -35,24 +35,93 @@ public class PafServicesInfoResponse extends Response {
     private List<String> commands;
     private List<String> solvers;
 
+    /**
+     * Creates an empty PAF services info response.
+     */
     public PafServicesInfoResponse() {}
 
+    /**
+     * Returns the textual reply message.
+     *
+     * @return reply message
+     */
     public String getReply() { return reply; }
+
+    /**
+     * Sets the textual reply message.
+     *
+     * @param reply reply message
+     */
     public void setReply(String reply) { this.reply = reply; }
 
+    /**
+     * Returns the contact email associated with the response.
+     *
+     * @return email address
+     */
     public String getEmail() { return email; }
+
+    /**
+     * Sets the contact email associated with the response.
+     *
+     * @param email email address
+     */
     public void setEmail(String email) { this.email = email; }
 
+    /**
+     * Returns the backend timeout value.
+     *
+     * @return backend timeout in seconds
+     */
     public int getBackend_timeout() { return backend_timeout; }
+
+    /**
+     * Sets the backend timeout value.
+     *
+     * @param backend_timeout backend timeout in seconds
+     */
     public void setBackend_timeout(int backend_timeout) { this.backend_timeout = backend_timeout; }
 
+    /**
+     * Returns the supported semantics names.
+     *
+     * @return list of semantics names
+     */
     public List<String> getSemantics() { return semantics; }
+
+    /**
+     * Sets the supported semantics names.
+     *
+     * @param semantics list of semantics names
+     */
     public void setSemantics(List<String> semantics) { this.semantics = semantics; }
 
+    /**
+     * Returns the available commands supported by the service.
+     *
+     * @return list of command names
+     */
     public List<String> getCommands() { return commands; }
+
+    /**
+     * Sets the available commands supported by the service.
+     *
+     * @param commands list of command names
+     */
     public void setCommands(List<String> commands) { this.commands = commands; }
 
+    /**
+     * Returns the supported solver names.
+     *
+     * @return list of solver names
+     */
     public List<String> getSolvers() { return solvers; }
+
+    /**
+     * Sets the supported solver names.
+     *
+     * @param solvers list of solver names
+     */
     public void setSolvers(List<String> solvers) { this.solvers = solvers; }
 
     @Override
