@@ -1499,36 +1499,33 @@ public class RequestController {
 		int user_timeout = Utils.checkUserTimeout(serPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 		try {
 			String result_str;
+			Long result_time;
 			switch (cmd) {
 				case GET_SEQUENCES -> {
 					Future<Collection<SerialisationSequence>> future = executor.submit(callee);
 					Pair<Collection<SerialisationSequence>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 					result_str = result.getKey().toString();
+					result_time = result.getValue();
 				} case GET_REDUCT -> {
 					Future<DungTheory> future = executor.submit(callee);
 					Pair<DungTheory, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 					result_str = result.getKey().toString();
+					result_time = result.getValue();
 				} case IS_TERMINAL -> {
 					Future<Boolean> future = executor.submit(callee);
 					Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 					result_str = result.getKey().toString();
+					result_time = result.getValue();
 				} case GET_SELECTION,GET_MODELS -> {
 					Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
 					Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 					result_str = result.getKey().toString();
+					result_time = result.getValue();
 				} default -> throw new IllegalArgumentException("unknown command " + cmd);
-
-				/*
-
-				 */
-
             }
-			// TODO update result type; need to make distinction here i guess
-			Future<Boolean> future = executor.submit(callee);
-			Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
 			executor.shutdownNow();
 			reasonerResponse.setAnswer(result_str);
-			reasonerResponse.setTime(result.getValue());
+			reasonerResponse.setTime(result_time);
 			reasonerResponse.setStatus("SUCCESS");
 		} catch (TimeoutException e) {
 			reasonerResponse.setTime(serPost.getTimeout());
