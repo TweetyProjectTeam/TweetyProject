@@ -153,6 +153,12 @@ public class RequestController {
 	private final ObjectMapper objectMapper;
 	private final CausalReasonerService causalReasonerService;
 
+	/**
+	 * Constructor for causal reasoner service
+	 * @param sequenceExplanationService the sequence explanation service
+	 * @param objectMapper			     the object mapper
+	 * @param causalReasonerService		 the causal reasoner service
+	 */
 	@Autowired
 	public RequestController(SequenceExplanationService sequenceExplanationService,
 	                         ObjectMapper objectMapper,
@@ -1125,6 +1131,11 @@ public class RequestController {
 		return response;
 	}
 
+	/**
+	 * handler for the /sequence-explanation endpoint
+	 * @param request the sequence explanation request
+	 * @return the server response
+	 */
 	@PostMapping(value = "/sequence-explanation", produces = "application/json")
 	@ResponseBody
 	public SequenceExplanationResponse handleRequest(@Valid @RequestBody SequenceExplanationPost request) {

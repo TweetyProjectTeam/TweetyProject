@@ -42,17 +42,25 @@ public class BipolarArgumentationFramework extends DungTheory {
     /**
      * explicit listing of direct supporters and supported (for efficiency reasons)
      */
-    protected Map<Argument, Collection<Argument>> supportParents = new HashMap<>();
-    protected Map<Argument, Collection<Argument>> supportChildren = new HashMap<>();
+    protected Map<Argument, Collection<Argument>> supportParents;
+    /** the supported arguments per argument */
+    protected Map<Argument, Collection<Argument>> supportChildren;
 
     /**
      * Default constructor; initializes empty sets of arguments, attacks and supports
      */
     public BipolarArgumentationFramework() {
         super();
+        supportChildren = new HashMap<>();
+        supportParents = new HashMap<>();
     }
 
+    /**
+     * Construct new BAF from given graph
+     * @param graph some graph (must be an instance of BAF)
+     */
     public BipolarArgumentationFramework(BipolarArgumentationFramework graph) {
+        this();
         this.addAll(graph.getNodes());
         this.addAllAttacks(graph.getAttacks());
         this.addAllSupports(graph.getSupports());
@@ -451,8 +459,10 @@ public class BipolarArgumentationFramework extends DungTheory {
         return supports;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(org.tweetyproject.arg.bipolar.syntax.DeductiveArgumentationFramework)
+    /**
+     * Compare to other instance based on hash code
+     * @param o another BAF instance
+     * @return the difference in hash code
      */
     public int compareTo(BipolarArgumentationFramework o) {
         return this.hashCode() - o.hashCode();

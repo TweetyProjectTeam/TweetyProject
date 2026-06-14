@@ -76,6 +76,9 @@ public class SequenceExplanationPost {
     public interface SequenceExplanationCmd {
     }
 
+    /**
+     * helper class for sequence explanation commands
+     */
     public static class GetSequenceExplanationsCmd implements SequenceExplanationCmd {
         /** The attack relations represented as a list of lists of integers.*/
         private final @Valid @NotNull List<@NotNull AttackDTO> attacks;

@@ -32,6 +32,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Callee for getting a ranking model
+ *
+ * @author Lars Bengel
+ */
 public class RankingReasonerGetModelCallee extends Callee {
     /** The AbstractRankingReasoner used for obtaining the model */
     private AbstractRankingReasoner<?> reasoner;
@@ -63,6 +68,11 @@ public class RankingReasonerGetModelCallee extends Callee {
         return RankingTools.roundRanking((NumericalPartialOrder<Argument, DungTheory>) result, 2);
     }
 
+    /**
+     * Convert relative (lattice-based) ranking to a numerical ranking
+     * @param ranking some ranking
+     * @return the numerical ranking
+     */
     public static NumericalPartialOrder<Argument,DungTheory> toNumericalRanking(GeneralComparator<Argument,DungTheory> ranking) {
         if (ranking instanceof NumericalPartialOrder<?,?>) {
             return (NumericalPartialOrder<Argument, DungTheory>) ranking;
@@ -71,6 +81,11 @@ public class RankingReasonerGetModelCallee extends Callee {
         } else throw new IllegalArgumentException("Unsupported order type.");
     }
 
+    /**
+     * Convert relative (lattice-based) ranking to a numerical ranking
+     * @param ranking some ranking
+     * @return the numerical ranking
+     */
     public static NumericalPartialOrder<Argument,DungTheory> toNumericalRanking(LatticePartialOrder<Argument,DungTheory> ranking) {
         NumericalPartialOrder<Argument,DungTheory> numericalRanking = new NumericalPartialOrder<>();
         if (!ranking.containsIncomparableArguments()) {

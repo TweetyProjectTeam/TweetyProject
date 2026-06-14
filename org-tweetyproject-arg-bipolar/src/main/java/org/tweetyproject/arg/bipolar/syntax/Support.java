@@ -60,16 +60,6 @@ public class Support extends DirectedEdge<Argument> {
     }
 
     /* (non-Javadoc)
-     * @see org.tweetyproject.kr.Formula#getSignature()
-     */
-    public Signature getSignature(){
-        DungSignature sig = new DungSignature();
-        sig.add(this.getSupported());
-        sig.add(this.getSupporter());
-        return sig;
-    }
-
-    /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString(){
@@ -93,15 +83,11 @@ public class Support extends DirectedEdge<Argument> {
         return this.getSupported().hashCode() + 11 * this.getSupporter().hashCode();
     }
 
-    /* (non-Javadoc)
-     * @see org.tweetyproject.arg.dung.syntax.DungEntity#getLdoFormula()
-     */
-    public LdoFormula getLdoFormula() {
-        return new LdoRelation(this.getSupporter().getLdoFormula(), this.getSupported().getLdoFormula());
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#contains(java.lang.Object)
+    /**
+     * Determine whether the object is contained  in this support
+     * @param o some object
+     * @return "true" if o is contained
      */
     public boolean contains(Object o) {
         return this.getSupported().equals(o) || this.getSupporter().equals(o);

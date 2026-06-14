@@ -47,14 +47,26 @@ public final class DialectialSequenceExplanationDTO {
         this.defeated = defeated;
     }
 
+    /**
+     * return the serialized argument
+     * @return the argument
+     */
     public String getArgument() {
         return argument;
     }
 
+    /**
+     * return the serialized supporting sets
+     * @return the serialized supporting sets
+     */
     public List<List<String>> getSupporters() {
         return supporters;
     }
 
+    /**
+     * return the serialized defeated sets
+     * @return the serialized defeated sets
+     */
     public List<List<String>> getDefeated() {
         return defeated;
     }

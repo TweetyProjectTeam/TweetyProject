@@ -302,8 +302,11 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         }
     }
 
+    /** The type of inference */
     public enum Type {
+        /** possible inference (ie must be contained in one completion */
         POSSIBLE,
+        /** necessary inference (ie must be contained in all completions */
         NECESSARY
     }
 
@@ -320,6 +323,12 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         return getModels(bbase, Type.NECESSARY);
     }
 
+    /**
+     * Determine the models
+     * @param bbase some incomplete theory
+     * @param type  the inference type
+     * @return the models for the given theory and inference type
+     */
     public Collection<Extension<IncompleteTheory>> getModels(IncompleteTheory bbase, Type type) {
         if (type.equals(Type.POSSIBLE)) {
             return getPossibleModels(bbase);

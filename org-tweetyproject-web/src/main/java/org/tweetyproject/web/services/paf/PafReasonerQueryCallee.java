@@ -34,6 +34,13 @@ public class PafReasonerQueryCallee extends Callee {
     private final Argument argument;
     private final InferenceMode inferenceMode;
 
+    /**
+     * Default constructor
+     * @param reasoner      some PAF reasoner
+     * @param paf           some PAF
+     * @param argument      some argument
+     * @param inferenceMode the inference mode
+     */
     public PafReasonerQueryCallee(AbstractPafReasoner reasoner,
             ProbabilisticArgumentationFramework paf,
             Argument argument,
