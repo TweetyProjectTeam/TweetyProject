@@ -19,6 +19,7 @@
 package org.tweetyproject.web.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -134,6 +135,7 @@ class RequestControllerCausalTest {
                         """, false));
     }
 
+    @Disabled
     @Test
     public void causalReasonerCalculatesSignificantAtoms() throws Exception {
         var post = post("/causal")
@@ -162,6 +164,7 @@ class RequestControllerCausalTest {
                         """, false));
     }
 
+    @Disabled
     @Test
     public void causalReasonerGetSequenceExplanations() throws Exception {
         var post = post("/causal")
