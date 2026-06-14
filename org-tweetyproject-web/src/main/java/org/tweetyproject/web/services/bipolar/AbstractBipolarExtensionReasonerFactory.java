@@ -19,8 +19,7 @@
 package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.reasoner.*;
-import org.tweetyproject.arg.bipolar.reasoner.deductive.*;
-import org.tweetyproject.arg.bipolar.reasoner.necessity.*;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 
 /**
  * Main factory for retrieving bipolar extension reasoners as supported by the web service
@@ -41,21 +40,30 @@ public abstract class AbstractBipolarExtensionReasonerFactory {
 	 * Creates a new reasoner measure of the given semantics with default
 	 * settings.
 	 * 
-	 * @param sem some identifier of an semantics.
+	 * @param sem some identifier of a semantics.
 	 * @return the requested reasoner.
 	 */
 	public static AbstractBipolarExtensionReasoner getReasoner(BipolarSemantics sem) {
         return switch (sem) {
-            case CF -> new ConflictFreeReasoner();
-			case SA -> new SafetyReasoner();
-			case CL -> new ClosureReasoner();
-			case CAD -> new CAdmissibleReasoner();
-			case DAD -> new DAdmissibleReasoner();
-			case NAD -> new AdmissibleReasoner();
-			case NCO -> new CompleteReasoner();
-			case NGR -> new GroundedReasoner();
-			case NPR -> new PreferredReasoner();
-			case NST -> new StableReasoner();
+			case BCF -> new SimpleStronglyConflictFreeReasoner();
+			case BCOH -> new SimpleCoherentReasoner();
+			case BAD -> new SimpleCoherentAdmissibleReasoner();
+			case CAD -> new SimpleCoalitionReasoner(Semantics.ADM);
+			case CCO -> new SimpleCoalitionReasoner(Semantics.CO);
+			case CGR -> new SimpleCoalitionReasoner(Semantics.GR);
+			case CPR -> new SimpleCoalitionReasoner(Semantics.PR);
+			case CST -> new SimpleCoalitionReasoner(Semantics.ST);
+			case DAD -> new SimpleDeductiveReasoner(Semantics.ADM);
+			case DCO -> new SimpleDeductiveReasoner(Semantics.CO);
+			case DGR -> new SimpleDeductiveReasoner(Semantics.GR);
+			case DPR -> new SimpleDeductiveReasoner(Semantics.PR);
+			case DST -> new SimpleDeductiveReasoner(Semantics.ST);
+			case NAD -> new SimpleNecessityReasoner(Semantics.ADM);
+			case NCO -> new SimpleNecessityReasoner(Semantics.CO);
+			case NGR -> new SimpleNecessityReasoner(Semantics.GR);
+			case NPR -> new SimpleNecessityReasoner(Semantics.PR);
+			case NST -> new SimpleNecessityReasoner(Semantics.ST);
+
             default -> throw new RuntimeException("No reasoner found for semantics " + sem.toString());
         };
 	}

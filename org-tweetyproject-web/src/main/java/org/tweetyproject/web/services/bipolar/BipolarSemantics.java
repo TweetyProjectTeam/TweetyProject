@@ -18,8 +18,10 @@
  */
 package org.tweetyproject.web.services.bipolar;
 
-import static org.tweetyproject.web.services.bipolar.BipolarArgumentationFrameworkType.DeductiveArgumentationFramework;
-import static org.tweetyproject.web.services.bipolar.BipolarArgumentationFrameworkType.NecessityArgumentationFramework;
+import org.tweetyproject.arg.bipolar.syntax.Support;
+
+import java.util.NoSuchElementException;
+
 
 /**
  * An enumeration of all available semantics through the web service.
@@ -28,25 +30,42 @@ import static org.tweetyproject.web.services.bipolar.BipolarArgumentationFramewo
  */
 public enum BipolarSemantics {
 
-    /**
-     * General Semantics
-     */
-    CF("cf", "Conflict-Free", DeductiveArgumentationFramework),
-    SA("sa", "Safe", DeductiveArgumentationFramework),
-    CL("cl", "Closed", DeductiveArgumentationFramework),
-    /**
-     * Semantics for Deductive Interpretation
-     */
-    CAD("c-ad", "c-Admissible", DeductiveArgumentationFramework),
-    DAD("d-ad", "d-Admissible", DeductiveArgumentationFramework),
-    /**
-     * Semantics for Necessary Interpretation
-     */
-    NAD("n-ad", "Admissible", NecessityArgumentationFramework),
-    NCO("n-co", "Complete", NecessityArgumentationFramework),
-    NGR("n-gr", "Grounded", NecessityArgumentationFramework),
-    NPR("n-pr", "Preferred", NecessityArgumentationFramework),
-    NST("n-st", "Stable", NecessityArgumentationFramework);
+    /** bipolar conflict-free semantics */
+    BCF("b-cf", "Conflict-Free", Support.Type.DEFAULT),
+    /** bipolar coherent semantics */
+    BCOH("b-coh", "Coherent", Support.Type.DEFAULT),
+    /** bipolar coherent admissible semantics */
+    BAD("b-ad", "Coherent Admissible", Support.Type.DEFAULT),
+    /** coalition-admissible semantics */
+    CAD("b-coal-ad", "Coalition-Admissible", Support.Type.DEFAULT),
+    /** coalition-complete semantics */
+    CCO("b-coal-co", "Coalition-Complete", Support.Type.DEFAULT),
+    /** coalition-grounded semantics */
+    CGR("b-coal-gr", "Coalition-Grounded", Support.Type.DEFAULT),
+    /** coalition-preferred semantics */
+    CPR("b-coal-pr", "Coalition-Preferred", Support.Type.DEFAULT),
+    /** coalition-stable semantics */
+    CST("b-coal-st", "Coalition-Stable", Support.Type.DEFAULT),
+    /** deductive-admissible semantics */
+    DAD("d-ad", "Admissible", Support.Type.DEDUCTIVE),
+    /** deductive-complete semantics */
+    DCO("d-co", "Complete", Support.Type.DEDUCTIVE),
+    /** deductive-grounded semantics */
+    DGR("d-gr", "Grounded", Support.Type.DEDUCTIVE),
+    /** deductive-preferred semantics */
+    DPR("d-pr", "Preferred", Support.Type.DEDUCTIVE),
+    /** deductive-stable semantics */
+    DST("d-st", "Stable", Support.Type.DEDUCTIVE),
+    /** necessary-admissible semantics */
+    NAD("n-ad", "Admissible", Support.Type.NECESSITY),
+    /** necessary-complete semantics */
+    NCO("n-co", "Complete", Support.Type.NECESSITY),
+    /** necessary-grounded semantics */
+    NGR("n-gr", "Grounded", Support.Type.NECESSITY),
+    /** necessary-preferred semantics */
+    NPR("n-pr", "Preferred", Support.Type.NECESSITY),
+    /** necessary-stable semantics */
+    NST("n-st", "Stable", Support.Type.NECESSITY);
 
     /**
      * id
@@ -59,12 +78,12 @@ public enum BipolarSemantics {
     /**
      * What type of input is expected for this semantic.
      */
-    public BipolarArgumentationFrameworkType input;
+    public Support.Type type;
 
-    BipolarSemantics(String id, String label, BipolarArgumentationFrameworkType input) {
+    BipolarSemantics(String id, String label, Support.Type input) {
         this.id = id;
         this.label = label;
-        this.input = input;
+        this.type = input;
     }
 
     /**
@@ -76,6 +95,6 @@ public enum BipolarSemantics {
         for (BipolarSemantics m : BipolarSemantics.values())
             if (m.id.equals(id))
                 return m;
-        return null;
+        throw new NoSuchElementException("semantics does not exist");
     }
 }

@@ -28,28 +28,54 @@ import java.util.stream.Collectors;
  * @author Oleksandr Dzhychko
  */
 public final class DialectialSequenceExplanationDTO {
+    /** the argument */
     private final String argument;
+    /** the supporting sets of the sequence */
     private final List<List<String>> supporters;
+    /** the defeated counterargument-sets of the sequence */
     private final List<List<String>> defeated;
 
+    /**
+     * Initialize a new DialectialSequenceExplanationDTO
+     * @param argument      the target argument
+     * @param supporters    the supporting sets
+     * @param defeated      the defeated sets
+     */
     public DialectialSequenceExplanationDTO(String argument, List<List<String>> supporters, List<List<String>> defeated) {
         this.argument = argument;
         this.supporters = supporters;
         this.defeated = defeated;
     }
 
+    /**
+     * return the serialized argument
+     * @return the argument
+     */
     public String getArgument() {
         return argument;
     }
 
+    /**
+     * return the serialized supporting sets
+     * @return the serialized supporting sets
+     */
     public List<List<String>> getSupporters() {
         return supporters;
     }
 
+    /**
+     * return the serialized defeated sets
+     * @return the serialized defeated sets
+     */
     public List<List<String>> getDefeated() {
         return defeated;
     }
 
+    /**
+     * Serialize a dialectial sequence explanation
+     * @param explanation some explanation
+     * @return the serialized object
+     */
     public static DialectialSequenceExplanationDTO from(DialectialSequenceExplanation explanation) {
         return new DialectialSequenceExplanationDTO(
                 explanation.getArgument().toString(),
@@ -58,6 +84,11 @@ public final class DialectialSequenceExplanationDTO {
         );
     }
 
+    /**
+     * Serialize a list of dialectial sequence explanations
+     * @param explanations a list of explanations
+     * @return the serialized object
+     */
     public static List<DialectialSequenceExplanationDTO> from(List<DialectialSequenceExplanation> explanations) {
         return explanations.stream().map(DialectialSequenceExplanationDTO::from)
                 .collect(Collectors.toUnmodifiableList());

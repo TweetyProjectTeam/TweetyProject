@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -72,6 +73,25 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Determine the set of acceptable arguments wrt. the given inference mode
+     * @param bbase some dung theory
+     * @param inferenceMode the inference mode
+     * @return the set of acceptable arguments
+     */
+    public Collection<Argument> queryAll(DungTheory bbase, InferenceMode inferenceMode) {
+        Collection<Argument> result = new HashSet<>();
+        if(inferenceMode.equals(InferenceMode.CREDULOUS))
+            for(Collection<Argument> extension: this.getModels(bbase))
+                result.addAll(extension);
+        else {
+            result.addAll(bbase);
+            for(Collection<Argument> extension: this.getModels(bbase))
+                result.retainAll(extension);
+        }
+        return result;
     }
 
     /**

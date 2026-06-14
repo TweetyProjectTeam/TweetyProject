@@ -34,8 +34,13 @@ import java.util.Map;
  */
 public final class SequenceExplanationResponse {
 
+    /**
+     * Status of a sequence explanation response.
+     */
     public enum Status {
+        /** Operation completed successfully. */
         SUCCESS,
+        /** Operation timed out before completion. */
         TIMEOUT,
     }
 
@@ -45,6 +50,15 @@ public final class SequenceExplanationResponse {
     private final String unit_timeout;
     private final Status status;
 
+    /**
+     * Creates a sequence explanation response.
+     *
+     * @param reply        the response result payload
+     * @param email        the request email address
+     * @param time         execution time
+     * @param unit_timeout execution time unit
+     * @param status       response status
+     */
     public SequenceExplanationResponse(SequenceExplanationResult reply, String email, double time, @NonNull String unit_timeout, Status status) {
         this.reply = reply;
         this.email = email;
@@ -53,27 +67,55 @@ public final class SequenceExplanationResponse {
         this.unit_timeout = unit_timeout;
     }
 
+    /**
+     * Returns the response payload.
+     *
+     * @return sequence explanation result
+     */
     public SequenceExplanationResult getReply() {
         return reply;
     }
 
+    /**
+     * Returns the email associated with the request.
+     *
+     * @return request email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Returns the execution time for the request.
+     *
+     * @return execution time
+     */
     public double getTime() {
         return time;
     }
 
+    /**
+     * Returns the time unit for the execution time.
+     *
+     * @return time unit
+     */
     @NonNull
     public String getUnit_timeout() {
         return unit_timeout;
     }
 
+    /**
+     * Returns the status of the response.
+     *
+     * @return response status
+     */
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * Marker interface for sequence explanation result payloads.
+     */
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = GetSequenceExplanationsResult.class, name = "get_sequence_explanations"),
@@ -81,17 +123,36 @@ public final class SequenceExplanationResponse {
     public interface SequenceExplanationResult {
     }
 
+    /**
+     * Result wrapper for a list of sequence explanations per argument.
+     */
     public static class GetSequenceExplanationsResult implements SequenceExplanationResult {
         private final Map<String, List<DialectialSequenceExplanationDTO>> perArgumentSequenceExplanations;
 
+        /**
+         * Creates a result containing sequence explanations for each argument.
+         *
+         * @param perArgumentSequenceExplanations mapping of argument name to sequence explanations
+         */
         public GetSequenceExplanationsResult(Map<String, List<DialectialSequenceExplanationDTO>> perArgumentSequenceExplanations) {
             this.perArgumentSequenceExplanations = perArgumentSequenceExplanations;
         }
 
+        /**
+         * Returns sequence explanations grouped by argument name.
+         *
+         * @return argument-to-explanations map
+         */
         public Map<String, List<DialectialSequenceExplanationDTO>> getPerArgumentSequenceExplanations() {
             return perArgumentSequenceExplanations;
         }
 
+        /**
+         * Creates a DTO result from service-level sequence explanations.
+         *
+         * @param sequenceExplanations sequence explanations from the service
+         * @return DTO result object
+         */
         public static GetSequenceExplanationsResult from(SequenceExplanations sequenceExplanations) {
 
             var perArgumentSequenceExplanations = new LinkedHashMap<String, List<DialectialSequenceExplanationDTO>>();

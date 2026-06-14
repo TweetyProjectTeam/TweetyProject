@@ -26,19 +26,35 @@ import java.util.stream.Collectors;
 
 
 /**
+ * Methods for serializing arguments as strings
  * @author Oleksandr Dzhychko
  */
 public final class ArgumentSerialization {
+    /**
+     * Serialize argument object to string
+     * @param argument some argument
+     * @return string of argument name
+     */
     public static String from(Argument argument) {
         return argument.toString();
     }
 
+    /**
+     * Serialize a set of arguments to strings
+     * @param arguments a set of arguments
+     * @return list of argument strings
+     */
     public static List<String> fromCollection(Collection<Argument> arguments) {
         return arguments.stream()
                 .map(ArgumentSerialization::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Serialize a set of sets of arguments to strings
+     * @param collectionsOfArguments a set of sets of arguments
+     * @return corresponding list of lists of strings
+     */
     public static List<List<String>> fromCollectionOfCollections(List<Collection<Argument>> collectionsOfArguments) {
         return collectionsOfArguments.stream()
                 .map(ArgumentSerialization::fromCollection)

@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -30,17 +29,19 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
 import org.tweetyproject.commons.InferenceMode;
+import org.tweetyproject.commons.ModelProvider;
+import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
  * Reasoner for incomplete argumentation frameworks
  * @author Sebastian Franke
  * @author Lars Bengel
  */
-public class IncompleteReasoner{
+public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,Argument>, ModelProvider<Argument, IncompleteTheory, Extension<IncompleteTheory>> {
     /**
      * the underlying Dung reasoner
      */
-    private AbstractExtensionReasoner reasoner;
+    private final AbstractExtensionReasoner reasoner;
 
     /**
      * constructor for direct initialization of reasoner
@@ -63,42 +64,11 @@ public class IncompleteReasoner{
      * @param theory incomplete theory
      * @return all possible models
      */
-    public Collection<Collection<Extension<DungTheory>>> getAllModels(IncompleteTheory theory){
-        Collection<Collection<Extension<DungTheory>>> models = new HashSet<Collection<Extension<DungTheory>>>();
+    public Collection<Collection<Extension<IncompleteTheory>>> getAllModels(IncompleteTheory theory){
+        Collection<Collection<Extension<IncompleteTheory>>> models = new HashSet<>();
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<Extension<DungTheory>>();
-            //uncertain attacks that can occur in this instance
-            HashSet<Attack> uncertainAttacksInInstance = new HashSet<Attack>();
-            for(Attack att : theory.uncertainAttacks) {
-                //only add attack to possible attacks if both parties appear in instance
-                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
-                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
-                    uncertainAttacksInInstance.add(att);
-                }
-            }
-            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
-            //create new instance for each member of the power set and evaluate it
-            for(Collection<Attack> j : powerSetAttacks) {
-                theory.instantiate(instance, j);
-                instanceModels.addAll(this.reasoner.getModels(theory));
-            }
-
-            models.add(instanceModels);
-        }
-        return models;
-    }
-
-    /**
-     * Computes the set of possible extensions
-     * @param theory incomplete theory
-     * @return all possible models
-     */
-    public Collection<Extension<DungTheory>> getPossibleModels(IncompleteTheory theory){
-        Collection<Extension<DungTheory>> models = new HashSet<>();
-        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
-        for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
+            Collection<Extension<IncompleteTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -112,7 +82,41 @@ public class IncompleteReasoner{
             //create new instance for each member of the power set and evaluate it
             for(Collection<Attack> j : powerSetAttacks) {
                 theory.instantiate(instance, j);
-                models.addAll(this.reasoner.getModels(theory));
+                for (Extension<DungTheory> ext : this.reasoner.getModels(theory)) {
+                    instanceModels.add(new Extension<>(ext));
+                }
+            }
+
+            models.add(instanceModels);
+        }
+        return models;
+    }
+
+    /**
+     * Computes the set of possible extensions
+     * @param theory incomplete theory
+     * @return all possible models
+     */
+    public Collection<Extension<IncompleteTheory>> getPossibleModels(IncompleteTheory theory){
+        Collection<Extension<IncompleteTheory>> models = new HashSet<>();
+        Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+        for(Collection<Argument> instance : powerSet) {
+            //uncertain attacks that can occur in this instance
+            HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
+            for(Attack att : theory.uncertainAttacks) {
+                //only add attack to possible attacks if both parties appear in instance
+                if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+                        (theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+                    uncertainAttacksInInstance.add(att);
+                }
+            }
+            Collection<Collection<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+            //create new instance for each member of the power set and evaluate it
+            for(Collection<Attack> j : powerSetAttacks) {
+                theory.instantiate(instance, j);
+                for (Extension<DungTheory> ext : this.reasoner.getModels(theory)) {
+                    models.add(new Extension<>(ext));
+                }
             }
         }
         return models;
@@ -123,12 +127,11 @@ public class IncompleteReasoner{
      * @param theory incomplete theory
      * @return all necessary models
      */
-    public Collection<Extension<DungTheory>> getNecessaryModels(IncompleteTheory theory){
+    public Collection<Extension<IncompleteTheory>> getNecessaryModels(IncompleteTheory theory){
         boolean first = true;
-        Collection<Extension<DungTheory>> models = new HashSet<>();
+        Collection<Extension<IncompleteTheory>> models = new HashSet<>();
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -144,9 +147,15 @@ public class IncompleteReasoner{
                 theory.instantiate(instance, j);
                 if (first) {
                     first = false;
-                    models.addAll(this.reasoner.getModels(theory));
+                    for (Extension<DungTheory> ext : this.reasoner.getModels(theory)) {
+                        models.add(new Extension<>(ext));
+                    }
                 }
-                models.retainAll(this.reasoner.getModels(theory));
+                Collection<Extension<IncompleteTheory>> instanceModels = new HashSet<>();
+                for (Extension<DungTheory> ext : this.reasoner.getModels(theory)) {
+                    instanceModels.add(new Extension<>(ext));
+                }
+                models.retainAll(instanceModels);
             }
         }
         return models;
@@ -161,7 +170,6 @@ public class IncompleteReasoner{
     public boolean isPossibleCredulous(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -190,7 +198,6 @@ public class IncompleteReasoner{
     public boolean isNecessaryCredulous(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -219,7 +226,6 @@ public class IncompleteReasoner{
     public boolean isPossibleSkeptical(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             HashSet<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -248,7 +254,6 @@ public class IncompleteReasoner{
     public boolean isNecessarySkeptical(IncompleteTheory theory, Argument arg) {
         Collection<Collection<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
         for(Collection<Argument> instance : powerSet) {
-            Collection<Extension<DungTheory>> instanceModels = new HashSet<>();
             //uncertain attacks that can occur in this instance
             Collection<Attack> uncertainAttacksInInstance = new HashSet<>();
             for(Attack att : theory.uncertainAttacks) {
@@ -268,6 +273,46 @@ public class IncompleteReasoner{
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
+     */
+    @Override
+    public Boolean query(IncompleteTheory beliefbase, Argument formula) {
+        return query(beliefbase, formula, InferenceMode.SKEPTICAL, Type.NECESSARY);
+    }
+
+    /**
+     * Determines acceptability of an argument under the given parameters
+     * @param beliefbase    some incomplete theory
+     * @param formula       some argument
+     * @param mode          the inference mode
+     * @param type          the type of inference (possible or necessary)
+     * @return "true" if the argument is acceptable wrt this reasoner under the given parameters
+     */
+    public Boolean query(IncompleteTheory beliefbase, Argument formula, InferenceMode mode, Type type) {
+        if (mode.equals(InferenceMode.CREDULOUS)) {
+            if (type.equals(Type.POSSIBLE)) {
+                return isPossibleCredulous(beliefbase, formula);
+            } else {
+                return isNecessaryCredulous(beliefbase, formula);
+            }
+        } else {
+            if (type.equals(Type.POSSIBLE)) {
+                return isPossibleSkeptical(beliefbase, formula);
+            } else {
+                return isNecessarySkeptical(beliefbase, formula);
+            }
+        }
+    }
+
+    /** The type of inference */
+    public enum Type {
+        /** possible inference (ie must be contained in one completion */
+        POSSIBLE,
+        /** necessary inference (ie must be contained in all completions */
+        NECESSARY
+    }
+
     /**
      *
      * @return whether the solver is installed
@@ -276,4 +321,51 @@ public class IncompleteReasoner{
         return true;
     }
 
+    @Override
+    public Collection<Extension<IncompleteTheory>> getModels(IncompleteTheory bbase) {
+        return getModels(bbase, Type.NECESSARY);
+    }
+
+    /**
+     * Determine the models
+     * @param bbase some incomplete theory
+     * @param type  the inference type
+     * @return the models for the given theory and inference type
+     */
+    public Collection<Extension<IncompleteTheory>> getModels(IncompleteTheory bbase, Type type) {
+        if (type.equals(Type.POSSIBLE)) {
+            return getPossibleModels(bbase);
+        } else {
+            return getNecessaryModels(bbase);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
+     */
+    @Override
+    public Extension<IncompleteTheory> getModel(IncompleteTheory bbase) {
+        return getModels(bbase).iterator().next();
+    }
+
+    /**
+     * Determines the set of arguments that is acceptable wrt this reasoner and the given parameters
+     * @param bbase         some incomplete theory
+     * @param type          the type of inference (possible or necessary)
+     * @param inferenceMode the inference mode
+     * @return The set of arguments that is acceptable wrt this reasoner and the given parameters
+     */
+    public Collection<Argument> queryAll(IncompleteTheory bbase, Type type, InferenceMode inferenceMode) {
+        Collection<Argument> result = new HashSet<>();
+        Collection<Extension<IncompleteTheory>> extensions = this.getModels(bbase, type);
+        if(inferenceMode.equals(InferenceMode.CREDULOUS))
+            for(Collection<Argument> extension: extensions)
+                result.addAll(extension);
+        else {
+            result.addAll(bbase);
+            for(Collection<Argument> extension: extensions)
+                result.retainAll(extension);
+        }
+        return result;
+    }
 }

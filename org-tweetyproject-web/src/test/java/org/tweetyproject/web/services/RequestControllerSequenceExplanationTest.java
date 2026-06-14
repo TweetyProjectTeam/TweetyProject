@@ -209,11 +209,10 @@ class RequestControllerSequenceExplanationTest {
                             }
                           },
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -267,11 +266,10 @@ class RequestControllerSequenceExplanationTest {
                             }
                           },
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -314,10 +312,9 @@ class RequestControllerSequenceExplanationTest {
                             }
                           },
                           "email": "aId",
-                          "time": 0,
                           "unit_timeout": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 }

@@ -62,11 +62,19 @@ class RequestControllerBipolarTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "cf",
-                            "sa",
-                            "cl",
-                            "c-ad",
+                            "b-cf",
+                            "b-coh",
+                            "b-ad",
+                            "b-coal-ad",
+                            "b-coal-co",
+                            "b-coal-gr",
+                            "b-coal-pr",
+                            "b-coal-st",
                             "d-ad",
+                            "d-co",
+                            "d-gr",
+                            "d-pr",
+                            "d-st",
                             "n-ad",
                             "n-co",
                             "n-gr",
@@ -75,7 +83,9 @@ class RequestControllerBipolarTest {
                           ],
                           "commands": [
                             "get_models",
-                            "get_model"
+                            "get_model",
+                            "get_credulous",
+                            "get_skeptical"
                           ]
                         }
                         """, true));
@@ -91,7 +101,7 @@ class RequestControllerBipolarTest {
                            "nr_of_arguments": 3,
                            "attacks": [[1, 2]],
                            "supports": [[2, 3]],
-                           "semantics": "c-ad",
+                           "semantics": "b-ad",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -116,14 +126,13 @@ class RequestControllerBipolarTest {
                               3
                             ]
                           ],
-                          "semantics": "c-ad",
+                          "semantics": "b-ad",
                           "solver": null,
-                          "answer": "[{1}, {3}, {1,3}, {2,3}]",
-                          "time": 0.0,
+                          "answer": "[{1}, {}]",
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     @Test
@@ -136,7 +145,7 @@ class RequestControllerBipolarTest {
                            "nr_of_arguments": 3,
                            "attacks": [[1, 2]],
                            "supports": [[2, 3]],
-                           "semantics": "c-ad",
+                           "semantics": "b-ad",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -161,14 +170,13 @@ class RequestControllerBipolarTest {
                               3
                             ]
                           ],
-                          "semantics": "c-ad",
+                          "semantics": "b-ad",
                           "solver": null,
                           "answer": "{1}",
-                          "time": 0.0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, true));
+                        """, false));
     }
 
     private static Stream<BipolarSemantics> availableSemantics() {

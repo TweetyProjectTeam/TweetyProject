@@ -18,14 +18,12 @@
  */
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.util.UnionSetView;
+import org.tweetyproject.commons.AbstractInterpretation;
 
 /**
  * @author Mathias Hofer
@@ -33,7 +31,7 @@ import org.tweetyproject.arg.adf.util.UnionSetView;
  */
 final class Interpretations {
 
-	static final class EmptyInterpretation implements Interpretation {
+	static final class EmptyInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Set<Argument> undecided;
 		
@@ -128,6 +126,16 @@ final class Interpretations {
 			builder.append("}");
 			return builder.toString();
 		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return false;
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
+		}
 	}
 	
 	/**
@@ -138,7 +146,7 @@ final class Interpretations {
 	 * @author Mathias Hofer
 	 *
 	 */
-	static final class SetInterpretation implements Interpretation {
+	static final class SetInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Set<Argument> satisfied;
 
@@ -235,9 +243,19 @@ final class Interpretations {
 			s.append("}");
 			return s.toString();
 		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return satisfied().contains(formula);
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
+		}
 	}
 	
-	static final class SingleSatisfiedInterpretation implements Interpretation {
+	static final class SingleSatisfiedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Argument argument;
 
@@ -306,9 +324,19 @@ final class Interpretations {
 		public String toString() {
 			return new StringBuilder("{t(").append("argument").append(")}").toString();
 		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return satisfied().contains(formula);
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
+		}
 	}
 	
-	static final class SingleUnsatisfiedInterpretation implements Interpretation {
+	static final class SingleUnsatisfiedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Argument argument;
 
@@ -377,9 +405,19 @@ final class Interpretations {
 		public String toString() {
 			return new StringBuilder("{f(").append("argument").append(")}").toString();
 		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return satisfied().contains(formula);
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
+		}
 	}
 	
-	static final class SingleUndecidedInterpretation implements Interpretation {
+	static final class SingleUndecidedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Argument argument;
 
@@ -447,6 +485,16 @@ final class Interpretations {
 		@Override
 		public String toString() {
 			return new StringBuilder("{u(").append("argument").append(")}").toString();
+		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return satisfied().contains(formula);
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
 		}
 	}
 

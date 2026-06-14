@@ -37,7 +37,7 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @deprecated use {@link AbstractDialecticalFramework#query()} instead
  */
 @Deprecated( forRemoval = true, since = "1.19" )
-public abstract class AbstractDialecticalFrameworkReasoner {
+public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFReasoner {
 	
 	private final IncrementalSatSolver solver;
 

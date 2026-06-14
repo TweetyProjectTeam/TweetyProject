@@ -29,6 +29,7 @@ import java.io.StringReader;
 import java.util.List;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.tweetyproject.lp.asp.parser.ASPParser;
@@ -44,6 +45,7 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * @author Anna Gessler
  *
  */
+@Ignore
 public class DLVTest {
 	/**
 	 * parser

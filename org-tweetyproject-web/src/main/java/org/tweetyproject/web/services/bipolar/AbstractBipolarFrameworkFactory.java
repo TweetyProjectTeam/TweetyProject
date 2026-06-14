@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.web.services.bipolar;
 
-import org.tweetyproject.arg.bipolar.reasoner.deductive.*;
-import org.tweetyproject.arg.bipolar.reasoner.necessity.*;
 import org.tweetyproject.arg.bipolar.syntax.*;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.Attack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,26 +34,21 @@ public abstract class AbstractBipolarFrameworkFactory {
 
 
 	/**
-	 * Creates a new bipolar argumentation framework required fo the given semantics.
+	 * Creates a new bipolar argumentation framework.
 	 *
-	 * @param semantics specified semantics
 	 * @param numberOfArguments number of arguments
 	 * @param attacks attacks
 	 * @param supports supports
 	 * @return the requested reasoner.
 	 */
-	public static AbstractBipolarFramework getArgumentationFramework(BipolarSemantics semantics,
-																	 int numberOfArguments,
+	public static BipolarArgumentationFramework getArgumentationFramework(int numberOfArguments,
 																	 List<List<Integer>> attacks,
 																	 List<List<Integer>> supports) {
-		var argumentationFramework = switch (semantics.input) {
-			case DeductiveArgumentationFramework -> new DeductiveArgumentationFramework();
-			case NecessityArgumentationFramework -> new NecessityArgumentationFramework();
-		};
+		BipolarArgumentationFramework argumentationFramework = new BipolarArgumentationFramework();
 
-		var arguments = new ArrayList<BArgument>();
+		List<Argument> arguments = new ArrayList<Argument>();
 		for (int i = 1; i <= numberOfArguments; i++){
-			var argument = new BArgument(Integer.toString(i));
+			var argument = new Argument(Integer.toString(i));
 			arguments.add(argument);
 			argumentationFramework.add(argument);
 		}
@@ -61,14 +56,14 @@ public abstract class AbstractBipolarFrameworkFactory {
 		for (List<Integer> attackInput : attacks) {
 			var attacker = arguments.get(attackInput.get(0) - 1);
 			var attacked = arguments.get(attackInput.get(1) - 1);
-			Attack attack = new BinaryAttack(attacker, attacked);
+			Attack attack = new Attack(attacker, attacked);
 			argumentationFramework.add(attack);
 		}
 
 		for (List<Integer> supportInput : supports) {
 			var supporter = arguments.get(supportInput.get(0) - 1);
 			var supported = arguments.get(supportInput.get(1) - 1);
-			Support attack = new BinarySupport(supporter, supported);
+			Support attack = new Support(supporter, supported);
 			argumentationFramework.add(attack);
 		}
 

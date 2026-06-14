@@ -28,12 +28,24 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Service for building sequence explanations from a Dung argumentation theory.
+ *
+ * <p>This service uses the dialectical sequence explanation reasoner to
+ * compute explanations for individual arguments.</p>
+ *
  * @author Oleksandr Dzhychko
  */
 @Service
 public final class SequenceExplanationService {
     private final DialecticalSequenceExplanationReasoner explanationReasoner = new DialecticalSequenceExplanationReasoner();
 
+    /**
+     * Computes sequence explanations for the given theory.
+     *
+     * @param theory         the Dung theory to explain
+     * @param argumentFilter optional set of arguments to restrict the results to
+     * @return sequence explanations grouped by argument
+     */
     public SequenceExplanations querySequenceExplanations(DungTheory theory, Set<Argument> argumentFilter) {
         var perArgumentSequenceExplanations = new LinkedHashMap<Argument, List<DialectialSequenceExplanation>>();
         for (var argument: theory) {
@@ -51,13 +63,26 @@ public final class SequenceExplanationService {
         return new SequenceExplanations(perArgumentSequenceExplanations);
     }
 
+    /**
+     * Container for sequence explanations grouped by argument.
+     */
     public static final class SequenceExplanations {
         private final Map<Argument, List<DialectialSequenceExplanation>> perArgumentSequenceExplanations;
 
+        /**
+         * Creates a new container for sequence explanations.
+         *
+         * @param perAtomSequenceExplanations sequence explanations grouped by argument
+         */
         public SequenceExplanations(Map<Argument, List<DialectialSequenceExplanation>> perAtomSequenceExplanations) {
             this.perArgumentSequenceExplanations = perAtomSequenceExplanations;
         }
 
+        /**
+         * Returns the sequence explanations grouped by argument.
+         *
+         * @return map from argument to its sequence explanations
+         */
         public Map<Argument, List<DialectialSequenceExplanation>> getPerArgumentSequenceExplanations() {
             return perArgumentSequenceExplanations;
         }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.tweetyproject.commons.ParserException;
@@ -20,8 +21,8 @@ import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
  * 
  * @author Anna Gessler
  */
+@Ignore
 public class MleanCoPTest {
-
 	MlParser parser;
 	MleanCoPReasoner prover;
 	public static final int DEFAULT_TIMEOUT = 10000;

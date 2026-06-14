@@ -29,26 +29,53 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * Reply payload for a sequence explanation request.
+ *
+ * <p>Contains the serialized attack relations and sequence explanations grouped
+ * by argument.</p>
+ *
  * @author Oleksandr Dzhychko
  */
 public final class SequenceExplanationReply {
     private final List<AttackDTO> attacks;
     private final Map<String, List<DialectialSequenceExplanationDTO>> perAtomSequenceExplanations;
 
+    /**
+     * Creates a new sequence explanation reply.
+     *
+     * @param attacks                     list of serialized attacks
+     * @param perAtomSequenceExplanations serialized sequence explanations grouped by argument
+     */
     public SequenceExplanationReply(List<AttackDTO> attacks, Map<String, List<DialectialSequenceExplanationDTO>> perAtomSequenceExplanations) {
         this.attacks = attacks;
         this.perAtomSequenceExplanations = perAtomSequenceExplanations;
     }
 
 
+    /**
+     * Returns the serialized attack relations.
+     *
+     * @return list of attack DTOs
+     */
     public List<AttackDTO> getAttacks() {
         return attacks;
     }
 
+    /**
+     * Returns sequence explanations grouped by argument name.
+     *
+     * @return map of argument name to sequence explanation DTOs
+     */
     public Map<String, List<DialectialSequenceExplanationDTO>> getPerAtomSequenceExplanations() {
         return perAtomSequenceExplanations;
     }
 
+    /**
+     * Converts service-level sequence explanations into a reply payload.
+     *
+     * @param sequenceExplanations service sequence explanations
+     * @return serialized reply payload
+     */
     public static SequenceExplanationReply from(CausalReasonerService.SequenceExplanations sequenceExplanations) {
         var attacksConverted = AttackDTO.from(sequenceExplanations.getAttacks());
         var perAtomSequenceExplanationsConverted = from(sequenceExplanations.getPerAtomSequenceExplanations());

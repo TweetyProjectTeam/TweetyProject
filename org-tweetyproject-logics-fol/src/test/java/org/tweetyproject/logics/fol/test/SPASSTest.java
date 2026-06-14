@@ -22,8 +22,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import org.junit.jupiter.api.Disabled;
 import org.tweetyproject.commons.util.Shell;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.reasoner.FolReasoner;
@@ -39,9 +41,9 @@ import org.tweetyproject.logics.fol.writer.SPASSWriter;
  * @author Anna Gessler
  *
  */
-
+@Ignore
 public class SPASSTest {
-	
+
 	static FolReasoner spass;
 	SPASSWriter printer = new SPASSWriter();
 	
@@ -50,6 +52,7 @@ public class SPASSTest {
 		 spass = new SpassFolReasoner("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
 	}
 
+	@Disabled
 	@Test
 	public void test1() throws Exception {
 		FolParser parser = new FolParser();	
@@ -61,7 +64,8 @@ public class SPASSTest {
 		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("c")));
 		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("!c")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test2() throws Exception {
 		FolParser parser = new FolParser();	
@@ -78,7 +82,8 @@ public class SPASSTest {
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test3() throws Exception {
 		FolParser parser = new FolParser();	

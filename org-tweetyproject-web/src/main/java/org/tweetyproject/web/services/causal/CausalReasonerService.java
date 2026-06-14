@@ -38,15 +38,30 @@ import java.util.stream.Collectors;
  */
 @Service
 public final class CausalReasonerService {
+    /** the underlying causal reasoner */
     private final ArgumentationBasedCausalReasoner causalReasoner = new ArgumentationBasedCausalReasoner();
+    /** the provider of explanations */
     private final DialecticalSequenceExplanationReasoner explanationReasoner = new DialecticalSequenceExplanationReasoner();
 
+    /**
+     * Computes the causal conclusions of the causal knowledge based given the observations
+     * @param causalKnowledgeBase the causal knowledge base
+     * @param observations        a set of observations about causal atoms
+     * @param conclusionFilter    the set of propositions to consider
+     * @return the causal conclusions of the causal knowledge based given the observations
+     */
     public Collection<PlFormula> queryConclusions(CausalKnowledgeBase causalKnowledgeBase, Collection<PlFormula> observations, Set<Proposition> conclusionFilter) {
         Collection<PlFormula> conclusions = causalReasoner.getConclusions(causalKnowledgeBase, observations);
         conclusions = filterConclusions(conclusions, conclusionFilter);
         return conclusions;
     }
 
+    /**
+     * Filter out the relevant conclusions
+     * @param conclusions       all conclusions
+     * @param conclusionFilter  the propositions to consider
+     * @return the filtered conclusions
+     */
     private static Collection<PlFormula> filterConclusions(Collection<PlFormula> conclusions, @Nullable Set<Proposition> conclusionFilter) {
         if (conclusionFilter == null) {
             return conclusions;
@@ -56,16 +71,35 @@ public final class CausalReasonerService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Determine whether the conclusion is relevant
+     * @param conclusion        all conclusions
+     * @param conclusionFilter  the relevant conclusions
+     * @return "true" if the conclusion is relevant
+     */
     public static boolean isConclusionInFilter(PlFormula conclusion, @NonNull Set<Proposition> conclusionFilter) {
         return conclusionFilter.stream()
                 .anyMatch(proposition -> conclusion.getAtoms().contains(proposition));
     }
 
-
+    /**
+     * Determine mapping of significant atoms per atom
+     * @param causalKnowledgeBase   some causal knowledge base
+     * @param observations          a collection of observations
+     * @param conclusionFilter      the relevant propositions
+     * @return mapping of significant atoms per atom
+     */
     public Map<Proposition, Collection<Proposition>> queryPerAtomSignificantAtoms(CausalKnowledgeBase causalKnowledgeBase, Collection<PlFormula> observations, Set<Proposition> conclusionFilter) {
         return causalReasoner.getSignificantAtoms(causalKnowledgeBase, observations, Map.of(), conclusionFilter);
     }
 
+    /**
+     * Determine the collection of sequence explanations
+     * @param causalKnowledgeBase some causal knowledge base
+     * @param observations        some observations
+     * @param conclusionFilter    the relevant atoms
+     * @return the collection of sequence explanations
+     */
     public SequenceExplanations querySequenceExplanations(CausalKnowledgeBase causalKnowledgeBase, Collection<PlFormula> observations, Set<Proposition> conclusionFilter) {
         var theory = causalReasoner.getInducedTheory(causalKnowledgeBase, observations, Map.of());
         var perAtomArgumentsWithAtomInConclusion = causalReasoner.getPerAtomArgumentsWithAtomInConclusion(theory, conclusionFilter);
@@ -86,25 +120,51 @@ public final class CausalReasonerService {
         return new SequenceExplanations(theory.getAttacks(), perAtomPerSequenceExplanations);
     }
 
+    /**
+     * Class bundling sequence explanations and additional information
+     */
     public static final class SequenceExplanations {
+        /** set of associated attacks */
         private final Set<Attack> attacks;
+        /** map of atoms to their sequence explanations */
         private final Map<Proposition, List<DialectialSequenceExplanation>> perAtomSequenceExplanations;
 
+        /**
+         * Initialize new instance
+         * @param attacks                       a set of attacks
+         * @param perAtomSequenceExplanations   Map of atoms to sequence explanations
+         */
         public SequenceExplanations(Set<Attack> attacks,
                                     Map<Proposition, List<DialectialSequenceExplanation>> perAtomSequenceExplanations) {
             this.attacks = attacks;
             this.perAtomSequenceExplanations = perAtomSequenceExplanations;
         }
 
+        /**
+         * Returns the attacks that were used to build the sequence explanations.
+         *
+         * @return set of attacks
+         */
         public Set<Attack> getAttacks() {
             return attacks;
         }
 
+        /**
+         * Returns the sequence explanations grouped by conclusion atom.
+         *
+         * @return map from proposition to sequence explanations
+         */
         public Map<Proposition, List<DialectialSequenceExplanation>> getPerAtomSequenceExplanations() {
             return perAtomSequenceExplanations;
         }
     }
 
+    /**
+     * Compute the induced dung theory
+     * @param causalKnowledgeBase   some causal knowledge base
+     * @param observations          some observations
+     * @return the induced dung theory
+     */
     public DungTheory queryArgumentationFramework(CausalKnowledgeBase causalKnowledgeBase, Collection<PlFormula> observations) {
         return causalReasoner.getInducedTheory(causalKnowledgeBase, observations, Map.of());
     }
