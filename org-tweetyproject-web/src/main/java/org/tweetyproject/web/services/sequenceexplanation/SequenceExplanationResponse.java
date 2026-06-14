@@ -34,8 +34,13 @@ import java.util.Map;
  */
 public final class SequenceExplanationResponse {
 
+    /**
+     * Status of a sequence explanation response.
+     */
     public enum Status {
+        /** Operation completed successfully. */
         SUCCESS,
+        /** Operation timed out before completion. */
         TIMEOUT,
     }
 
@@ -108,13 +113,13 @@ public final class SequenceExplanationResponse {
         return status;
     }
 
+    /**
+     * Marker interface for sequence explanation result payloads.
+     */
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = GetSequenceExplanationsResult.class, name = "get_sequence_explanations"),
     })
-    /**
-     * Marker interface for sequence explanation result payloads.
-     */
     public interface SequenceExplanationResult {
     }
 

@@ -101,16 +101,16 @@ public class SequenceExplanationPost {
         return cmd;
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = GetSequenceExplanationsCmd.class, name = "get_sequence_explanations"),
-    })
-    /**
+/**
      * Marker interface for sequence explanation request commands.
      *
      * <p>Concrete implementations define the payload content for a specific
      * sequence explanation action.</p>
      */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = GetSequenceExplanationsCmd.class, name = "get_sequence_explanations"),
+    })
     public interface SequenceExplanationCmd {
     }
 
