@@ -35,6 +35,11 @@ public final class SequenceExplanationReply {
     private final List<AttackDTO> attacks;
     private final Map<String, List<DialectialSequenceExplanationDTO>> perAtomSequenceExplanations;
 
+    /**
+     * Default constructor
+     * @param attacks                       list of serialized attacks
+     * @param perAtomSequenceExplanations   list of serialized explanations
+     */
     public SequenceExplanationReply(List<AttackDTO> attacks, Map<String, List<DialectialSequenceExplanationDTO>> perAtomSequenceExplanations) {
         this.attacks = attacks;
         this.perAtomSequenceExplanations = perAtomSequenceExplanations;

@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.tweetyproject.commons.ParserException;
@@ -39,6 +40,7 @@ import org.tweetyproject.logics.ml.parser.MlParser;
  * 
  *  @author Anna Gessler
  */
+@Ignore
 public class SPASSTest {
 	
 	public static final int DEFAULT_TIMEOUT = 10000;

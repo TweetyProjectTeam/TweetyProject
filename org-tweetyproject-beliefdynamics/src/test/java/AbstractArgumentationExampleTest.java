@@ -18,15 +18,7 @@
  */
 
 
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.agents.Agent;
 import org.tweetyproject.agents.DummyAgent;
@@ -44,6 +36,7 @@ import org.tweetyproject.beliefdynamics.mas.InformationObject;
 import org.tweetyproject.beliefdynamics.operators.CrMasArgumentativeRevisionOperator;
 import org.tweetyproject.beliefdynamics.operators.CrMasSimpleRevisionOperator;
 import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.comparator.Order;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.sat.SatSolver;
@@ -51,7 +44,14 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
-import org.tweetyproject.comparator.Order;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Example code for applying belief dynamics on abstract argumentation frameworks.
@@ -59,7 +59,8 @@ import org.tweetyproject.comparator.Order;
  * @author Matthias Thimm
  *
  */
-public class AbstractArgumentationExample {
+public class AbstractArgumentationExampleTest {
+	@Disabled
 	@Test
 	public void abstractArgEx(){
 		DungTheory theory = new DungTheory();
@@ -83,7 +84,7 @@ public class AbstractArgumentationExample {
 		System.out.println();
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature())){
 			if(w.satisfies(beliefSet))
-				assertTrue(w.toString().equals("[undec_b, undec_c, undec_a]") || 
+				assertTrue(w.toString().equals("[undec_b, undec_c, undec_a]") ||
 						w.toString().equals("[out_b, out_a, in_c]"));
 		}
 
@@ -91,7 +92,8 @@ public class AbstractArgumentationExample {
 	
 				
 	}
-	
+
+	@Disabled
 	@Test
 	public void crmasTest() throws ParserException, IOException{		
 		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;

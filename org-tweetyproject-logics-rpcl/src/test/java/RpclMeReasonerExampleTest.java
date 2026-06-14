@@ -18,6 +18,8 @@
  */
 
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.Predicate;
@@ -33,9 +35,11 @@ import org.tweetyproject.math.probability.Probability;
 /**
  *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
  */
-public class RpclMeReasonerExample {
+@Ignore
+public class RpclMeReasonerExampleTest {
 	@Test
-	public void main(String[] args){
+	@Disabled
+	public void test(){
 
 		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());

@@ -273,6 +273,9 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
+     */
     @Override
     public Boolean query(IncompleteTheory beliefbase, Argument formula) {
         return query(beliefbase, formula, InferenceMode.SKEPTICAL, Type.NECESSARY);
@@ -337,6 +340,9 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
+     */
     @Override
     public Extension<IncompleteTheory> getModel(IncompleteTheory bbase) {
         return getModels(bbase).iterator().next();
