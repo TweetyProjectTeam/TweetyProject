@@ -51,6 +51,9 @@ import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.arg.dung.reasoner.IncompleteReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
+import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -129,6 +132,7 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 import javafx.util.Pair;
+import org.tweetyproject.web.services.serialisation.*;
 
 import javax.validation.Valid;
 import java.util.logging.Level;
@@ -1450,6 +1454,108 @@ public class RequestController {
 			command_ids.add(c.id);
 		response.setCommands(command_ids);
 		response.setSolvers(AbstractPafReasonerFactory.getSolvers());
+		return response;
+	}
+
+	/**
+	 * Handles HTTP POST requests for Serialisation operations.
+	 *
+	 * <p>Supported commands:
+	 * <ul>
+	 *   <li>{@code info} – return supported commands and functions</li>
+	 *   <li>{@code get_reduct} – compute the reduct for the given AF and extension</li>
+	 *   <li>{@code get_selection} – get the selectable initial sets for the given AF and selection function</li>
+	 *   <li>{@code is_terminal} – determine whether the given AF and extension are a terminal state according to the termination function</li>
+	 * </ul>
+	 *
+	 * @param serPost the request payload
+	 * @return a {@link Response} containing the computed result or service info
+	 */
+	@PostMapping(value = "/serialisation", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(@RequestBody SerialisationPost serPost) {
+		if (serPost.getCmd().equals("info"))
+			return getSerInfo(serPost.getEmail());
+
+		SerialisationCalleeFactory.Command cmd = SerialisationCalleeFactory.Command.getCommand(serPost.getCmd());
+		if (cmd == null)
+			return new SerialisationResponse();
+
+		DungTheory theory = AbstractExtensionReasonerFactory.getDungTheory(
+				serPost.getNr_of_arguments(),
+				serPost.getAttacks());
+		Extension<DungTheory> extension = SerialisationFactory.getExtension(serPost.getExtension());
+		SelectionFunction alpha = SerialisationFactory.getSelectionFunction(serPost.getSelectionFunction());
+		TerminationFunction beta = SerialisationFactory.getTerminationFunction(serPost.getTerminationFunction());
+		Callee callee = SerialisationCalleeFactory.getCallee(cmd, alpha, beta, theory, extension);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		SerialisationResponse reasonerResponse = new SerialisationResponse(
+				serPost.getCmd(), serPost.getEmail(), serPost.getNr_of_arguments(), serPost.getAttacks(),
+				serPost.getExtension(), serPost.getSelectionFunction(),
+				serPost.getTerminationFunction(), null, 0,
+				serPost.getUnit_timeout(), "ERROR");
+		TimeUnit unit = Utils.getTimeoutUnit(serPost.getUnit_timeout());
+		int user_timeout = Utils.checkUserTimeout(serPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+		try {
+			String result_str;
+			switch (cmd) {
+				case GET_SEQUENCES -> {
+					Future<Collection<SerialisationSequence>> future = executor.submit(callee);
+					Pair<Collection<SerialisationSequence>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+					result_str = result.getKey().toString();
+				} case GET_REDUCT -> {
+					Future<DungTheory> future = executor.submit(callee);
+					Pair<DungTheory, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+					result_str = result.getKey().toString();
+				} case IS_TERMINAL -> {
+					Future<Boolean> future = executor.submit(callee);
+					Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+					result_str = result.getKey().toString();
+				} case GET_SELECTION,GET_MODELS -> {
+					Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
+					Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+					result_str = result.getKey().toString();
+				} default -> throw new IllegalArgumentException("unknown command " + cmd);
+
+				/*
+
+				 */
+
+            }
+			// TODO update result type; need to make distinction here i guess
+			Future<Boolean> future = executor.submit(callee);
+			Pair<Boolean, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			executor.shutdownNow();
+			reasonerResponse.setAnswer(result_str);
+			reasonerResponse.setTime(result.getValue());
+			reasonerResponse.setStatus("SUCCESS");
+		} catch (TimeoutException e) {
+			reasonerResponse.setTime(serPost.getTimeout());
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("TIMEOUT");
+			executor.shutdownNow();
+		} catch (Exception e) {
+			reasonerResponse.setTime(0.0);
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("Error");
+			executor.shutdownNow();
+		}
+		return reasonerResponse;
+	}
+
+	private SerialisationInfoResponse getSerInfo(String email) {
+		SerialisationInfoResponse response = new SerialisationInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		response.setSelectionFunctions(SerialisationFactory.getSelectionFunctions());
+		response.setTerminationFunctions(SerialisationFactory.getTerminationFunction());
+		SerialisationCalleeFactory.Command[] com = SerialisationCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<>();
+		for (SerialisationCalleeFactory.Command c : com)
+			command_ids.add(c.id);
+		response.setCommands(command_ids);
 		return response;
 	}
 }
