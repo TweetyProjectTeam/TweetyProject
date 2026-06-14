@@ -18,12 +18,14 @@
  */
 package org.tweetyproject.arg.rankings.reasoner;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
+import org.tweetyproject.math.probability.Probability;
 
 /**
  * Common abstract class for ranking reasoners for abstract argumentation. Currently,
@@ -58,8 +60,6 @@ public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argume
                 return new CategorizerRankingReasoner();
             } case BB -> {
                 return new BurdenBasedRankingReasoner();
-            } case CT -> {
-                throw new UnsupportedOperationException("Can currently not be initialized without a given graph.");
             } case CO -> {
                 return new CountingRankingReasoner();
             } case DB -> {
@@ -75,9 +75,9 @@ public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argume
             } case TU -> {
                 return new TuplesRankingReasoner();
             } case PR -> {
-                throw new UnsupportedOperationException("Semantics only supports acyclic graphs");
+                return new PropagationRankingReasoner(true);
             } case PROB -> {
-                throw new UnsupportedOperationException("Currently not supported");
+                return new ProbabilisticRankingReasoner(Semantics.GR, new Probability(0.5), true);
             } default -> throw new IllegalArgumentException("Unsupported semantics.");
         }
     }

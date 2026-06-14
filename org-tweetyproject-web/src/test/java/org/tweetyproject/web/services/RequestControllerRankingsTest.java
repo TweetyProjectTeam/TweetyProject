@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
+import org.tweetyproject.web.services.rankings.AbstractRankingReasonerFactory;
 
 import java.util.stream.Stream;
 
@@ -62,7 +63,7 @@ class RequestControllerRankingsTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CAT","SER","BB","CT","CO","DB","IGD","PR","SAF","SB","TU","PROB"
+                            "CAT","SER","BB","CO","DB","IGD","SAF","SB","TU"
                           ],
                           "commands": [
                             "get_model"
@@ -106,14 +107,16 @@ class RequestControllerRankingsTest {
                           "semantics": "SER",
                           "solver": null,
                           "answer": "{1=1.0, 2=3.0, 3=2.0}",
+                          "time": 0,
+                          "rankingType": "lattice",
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, false));
+                        """, true));
     }
 
     private static Stream<RankingSemantics> availableSemantics() {
-        return Stream.of(RankingSemantics.values());
+        return Stream.of(AbstractRankingReasonerFactory.getSemantics());
     }
 
     @ParameterizedTest(name = "semantics {0}")

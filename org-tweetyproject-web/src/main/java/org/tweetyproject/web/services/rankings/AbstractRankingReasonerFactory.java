@@ -35,7 +35,7 @@ public class AbstractRankingReasonerFactory {
      * @return the list o all ranking semantics
      */
     public static RankingSemantics[] getSemantics() {
-        return RankingSemantics.values();
+        return new RankingSemantics[]{RankingSemantics.CAT,RankingSemantics.SER,RankingSemantics.BB,RankingSemantics.CO,RankingSemantics.DB,RankingSemantics.IGD,RankingSemantics.SAF,RankingSemantics.SB,RankingSemantics.TU};
     }
 
     /**

@@ -136,8 +136,8 @@ class RequestControllerCausalTest {
 
     @Test
     public void causalReasonerCalculatesSignificantAtoms() throws Exception {
-        var post = post("/causal")
-                .contentType(MediaType.APPLICATION_JSON)
+        var post = post("/causal").contentType(MediaType.APPLICATION_JSON)
+                // language=JSON
                 .content("""
                         {
                           "email": "aId",
@@ -150,8 +150,8 @@ class RequestControllerCausalTest {
                         }
                         """);
 
-        mvc.perform(post)
-                .andExpect(status().isOk())
+        mvc.perform(post).andExpect(status().isOk())
+                // language=JSON
                 .andExpect(content().json("""
                         {
                           "reply": "{\\n  \\"a\\" : [ \\"a\\", \\"b\\" ]\\n}\\n",
