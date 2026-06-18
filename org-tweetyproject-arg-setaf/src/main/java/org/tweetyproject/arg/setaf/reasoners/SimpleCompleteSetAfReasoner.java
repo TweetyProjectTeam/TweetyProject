@@ -31,7 +31,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner {
+public class SimpleCompleteSetAfReasoner extends AbstractSetAfExtensionReasoner {
 
 		/** Default */
 		public SimpleCompleteSetAfReasoner(){

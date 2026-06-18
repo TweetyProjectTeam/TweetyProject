@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -29,17 +30,17 @@ import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
- * Ancestor class for all SetAf-extension-based reasoners.
+ * Ancestor class for all SetAF-extension-based reasoners.
  *
  * @author Sebastian Franke
  */
-public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner
+public abstract class AbstractSetAfExtensionReasoner extends AbstractSetAfReasoner
 		implements ModelProvider<Argument, SetAf, Extension<SetAf>>, PostulateEvaluatable<Argument> {
 
 	/**
 	 * Default constructor for {@code AbstractExtensionSetAfReasoner}.
 	 */
-	public AbstractExtensionSetAfReasoner() {
+	public AbstractSetAfExtensionReasoner() {
 		// No specific initialization required
 	}
 
@@ -56,10 +57,29 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 	}
 
 	/**
-	 * Queries the given AAF for the given argument using the given
+	 * Determine the set of acceptable arguments wrt. the given inference mode
+	 * @param bbase some SetAF
+	 * @param inferenceMode the inference mode
+	 * @return the set of acceptable arguments
+	 */
+	public Collection<Argument> queryAll(SetAf bbase, InferenceMode inferenceMode) {
+		Collection<Argument> result = new HashSet<>();
+		if(inferenceMode.equals(InferenceMode.CREDULOUS))
+			for(Collection<Argument> extension: this.getModels(bbase))
+				result.addAll(extension);
+		else {
+			result.addAll(bbase);
+			for(Collection<Argument> extension: this.getModels(bbase))
+				result.retainAll(extension);
+		}
+		return result;
+	}
+
+	/**
+	 * Queries the given SetAf for the given argument using the given
 	 * inference type.
 	 *
-	 * @param beliefbase    an AAF
+	 * @param beliefbase    an SetAF
 	 * @param formula       a single argument
 	 * @param inferenceMode either InferenceMode.SKEPTICAL or
 	 *                      InferenceMode.CREDULOUS
@@ -85,9 +105,9 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 	 * Creates a reasoner for the given semantics.
 	 *
 	 * @param semantics a semantics
-	 * @return a reasoner for the given Dung theory, inference type, and semantics
+	 * @return a reasoner for the given SetAF, inference type, and semantics
 	 */
-	public static AbstractExtensionSetAfReasoner getSimpleReasonerForSemantics(Semantics semantics) {
+	public static AbstractSetAfExtensionReasoner getSimpleReasonerForSemantics(Semantics semantics) {
 		switch (semantics) {
 			case CO:
 				return new SimpleCompleteSetAfReasoner();

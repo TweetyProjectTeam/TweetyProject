@@ -32,7 +32,7 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner {
+public class SimpleGroundedSetAfReasoner extends AbstractSetAfExtensionReasoner {
 
 	/** Default */
 			public SimpleGroundedSetAfReasoner(){

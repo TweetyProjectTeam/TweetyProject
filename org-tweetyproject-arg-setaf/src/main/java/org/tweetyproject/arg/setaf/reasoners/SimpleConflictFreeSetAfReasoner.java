@@ -32,7 +32,7 @@ import org.tweetyproject.commons.util.SetTools;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReasoner {
+public class SimpleConflictFreeSetAfReasoner extends AbstractSetAfExtensionReasoner {
 
 
 		/** Default */

@@ -432,6 +432,16 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
         return true;
     }
 
+    /**
+     * Add a new set-attack so the theory
+     * @param attackers the set of attacking arguments
+     * @param attacked the attacked argument
+     * @return "true" if the set-attack has been added
+     */
+    public boolean addSetAttack(Set<Argument> attackers, Argument attacked) {
+        return this.add(new SetAttack(attackers, attacked));
+    }
+
     @Override
     public Collection<Argument> getNodes() {
         return this.nodes;

@@ -70,6 +70,8 @@ import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
 import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
 import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
+import org.tweetyproject.arg.setaf.reasoners.AbstractSetAfExtensionReasoner;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
@@ -121,6 +123,7 @@ import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationRes
 import org.tweetyproject.web.services.serialisation.*;
 
 import javafx.util.Pair;
+import org.tweetyproject.web.services.setaf.*;
 
 import javax.validation.Valid;
 
@@ -791,6 +794,50 @@ public class RequestController {
 		for (SerialisationCalleeFactory.Command c : SerialisationCalleeFactory.getCommands())
 			command_ids.add(c.id);
 		response.setCommands(command_ids);
+		return response;
+	}
+
+	// ── Serialisation ─────────────────────────────────────────────────────────
+
+	@PostMapping(value = "/setaf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(@RequestBody SetAfReasonerPost post) {
+		if (post.getCmd().equals("info"))
+			return getSetAfInfo(post.getEmail());
+
+		SetAfReasonerCalleeFactory.Command cmd = SetAfReasonerCalleeFactory.Command.getCommand(post.getCmd());
+		if (cmd == null)
+			return new SetAfReasonerResponse();
+
+		SetAf theory = AbstractSetAfFactory.getSetAf(post.getNr_of_arguments(), post.getAttacks());
+		AbstractSetAfExtensionReasoner reasoner = AbstractSetAfFactory.getReasoner(Semantics.getSemantics(post.getSemantics()));
+		Callee callee = SetAfReasonerCalleeFactory.getCallee(cmd, reasoner, theory);
+		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
+		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+
+		SetAfReasonerResponse response = new SetAfReasonerResponse(post.getCmd(), post.getEmail(),
+				post.getNr_of_arguments(), post.getAttacks(), post.getSemantics(), post.getSolver(),
+				null, 0, post.getUnit_timeout(), "ERROR");
+		ExecutionResult r = runCallee(callee, userTimeout, post.getTimeout(), unit);
+		response.setAnswer(r.answer);
+		response.setTime(r.time);
+		response.setStatus(r.status);
+		return response;
+	}
+
+	private SetAfServicesInfoResponse getSetAfInfo(String email) {
+		SetAfServicesInfoResponse response = new SetAfServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		ArrayList<String> command_ids = new ArrayList<>();
+		for (SetAfReasonerCalleeFactory.Command c : SetAfReasonerCalleeFactory.getCommands())
+			command_ids.add(c.id);
+		response.setCommands(command_ids);
+		ArrayList<String> semantics_ids = new ArrayList<>();
+		for (Semantics s : AbstractSetAfFactory.getSemantics())
+			semantics_ids.add(s.abbreviation());
+		response.setSemantics(semantics_ids);
 		return response;
 	}
 
