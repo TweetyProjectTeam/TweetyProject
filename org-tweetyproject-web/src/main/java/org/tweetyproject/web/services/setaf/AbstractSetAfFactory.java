@@ -18,9 +18,11 @@
  */
 package org.tweetyproject.web.services.setaf;
 
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.reasoners.AbstractSetAfExtensionReasoner;
+import org.tweetyproject.arg.setaf.reasoners.ReductionBasedSetAfReasoner;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 import java.util.*;
@@ -37,7 +39,7 @@ public abstract class AbstractSetAfFactory {
 	 * @return An array of all available semantics.
 	 */
 	public static Semantics[] getSemantics() {
-		return new Semantics[] {Semantics.CF, Semantics.ADM, Semantics.CO, Semantics.PR, Semantics.GR, Semantics.ST, Semantics.STG, Semantics.ID, Semantics.SST};
+		return Semantics.values();
 	}
 
 	/**
@@ -48,7 +50,7 @@ public abstract class AbstractSetAfFactory {
 	 * @return the requested reasoner.
 	 */
 	public static AbstractSetAfExtensionReasoner getReasoner(Semantics sem) {
-		return AbstractSetAfExtensionReasoner.getSimpleReasonerForSemantics(sem);
+		return new ReductionBasedSetAfReasoner(AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem));
 	}
 
     /**
@@ -58,7 +60,6 @@ public abstract class AbstractSetAfFactory {
      * @param attacks         The binary attack relations represented as a list of lists of integers.
      * @return A DungTheory constructed from the given arguments and attacks.
      */
-
     public static SetAf getSetAf(int nr_of_arguments, List<List<Integer>> attacks) {
         List<Argument> arguments = new ArrayList<Argument>();
 		SetAf theory = new SetAf();
