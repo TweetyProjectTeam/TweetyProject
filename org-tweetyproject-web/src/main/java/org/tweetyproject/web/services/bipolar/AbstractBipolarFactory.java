@@ -18,7 +18,10 @@
  */
 package org.tweetyproject.web.services.bipolar;
 
-import org.tweetyproject.arg.bipolar.syntax.*;
+import org.tweetyproject.arg.bipolar.reasoner.*;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.arg.bipolar.syntax.Support;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 
@@ -26,12 +29,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory for construction bipolar argumentation framework from web requests.
+ * Main factory for retrieving bipolar extension reasoners as supported by the web service
  * 
- * @author Oleksandr Dzhychko
+ * @author Lars Bengel
  */
-public abstract class AbstractBipolarFrameworkFactory {
+public abstract class AbstractBipolarFactory {
+	/**
+	 * Returns an array of all available bipolar semantics.
+	 *
+	 * @return An array of all available bipolar semantics.
+	 */
+	public static org.tweetyproject.arg.bipolar.semantics.Semantics[] getSemantics() {
+		return org.tweetyproject.arg.bipolar.semantics.Semantics.values();
+	}
 
+	public static Support.Type[] getSupportTypes() {
+		return new Support.Type[] {Support.Type.DEFAULT, Support.Type.DEDUCTIVE, Support.Type.NECESSITY};
+	}
+
+	/**
+	 * Creates a new reasoner measure of the given semantics with default
+	 * settings.
+	 * 
+	 * @param sem some identifier of a semantics.
+	 * @return the requested reasoner.
+	 */
+	public static AbstractBipolarExtensionReasoner getReasoner(String sem, String type) {
+		Support.Type support_type = Support.Type.getType(type);
+		switch (support_type) {
+			case DEFAULT -> {
+				org.tweetyproject.arg.bipolar.semantics.Semantics semantics = org.tweetyproject.arg.bipolar.semantics.Semantics.getSemantics(sem);
+				return AbstractBipolarExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+			} case DEDUCTIVE,SIMPLE_DEDUCTIVE -> {
+				Semantics semantics = Semantics.getSemantics(sem);
+				return new SimpleDeductiveReasoner(semantics);
+			} case NECESSITY,SIMPLE_NECESSITY -> {
+				Semantics semantics = Semantics.getSemantics(sem);
+				return new SimpleNecessityReasoner(semantics);
+			} default -> throw new IllegalArgumentException("unsupported combination of support type and semantics " + type + " and " + sem);
+        }
+	}
 
 	/**
 	 * Creates a new bipolar argumentation framework.
@@ -41,9 +78,9 @@ public abstract class AbstractBipolarFrameworkFactory {
 	 * @param supports supports
 	 * @return the requested reasoner.
 	 */
-	public static BipolarArgumentationFramework getArgumentationFramework(int numberOfArguments,
-																	 List<List<Integer>> attacks,
-																	 List<List<Integer>> supports) {
+	public static BipolarArgumentationFramework getBAF(int numberOfArguments,
+													   List<List<Integer>> attacks,
+													   List<List<Integer>> supports) {
 		BipolarArgumentationFramework argumentationFramework = new BipolarArgumentationFramework();
 
 		List<Argument> arguments = new ArrayList<Argument>();

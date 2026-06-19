@@ -108,6 +108,22 @@ public class Support extends DirectedEdge<Argument> {
         /** inverse of simple deductive */
         SIMPLE_NECESSITY,
         /** arguments must be supported by evidence*/
-        EVIDENTIAL
+        EVIDENTIAL;
+
+        public static Type getType(String type) {
+            switch (type) {
+                case "none", "default" -> {
+                    return DEFAULT;
+                } case "ded_simple" -> {
+                    return SIMPLE_DEDUCTIVE;
+                } case "ded" -> {
+                    return DEDUCTIVE;
+                } case "nec_simple" -> {
+                    return SIMPLE_NECESSITY;
+                } case "nec" -> {
+                    return NECESSITY;
+                } default -> throw new IllegalArgumentException("unknown support type " + type);
+            }
+        }
     }
 }

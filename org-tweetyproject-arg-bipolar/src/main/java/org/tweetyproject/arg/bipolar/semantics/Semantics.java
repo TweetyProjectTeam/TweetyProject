@@ -18,6 +18,10 @@
  */
 package org.tweetyproject.arg.bipolar.semantics;
 
+import org.tweetyproject.arg.bipolar.syntax.Support;
+
+import java.util.NoSuchElementException;
+
 /**
  * Enum of semantics for bipolar argumentation
  *
@@ -27,30 +31,29 @@ public enum Semantics {
     /**
      * CF
      */
-    BCF("conflict-free semantics", "B-CF"),
+    BCF("conflict-free semantics", "BCF"),
     /**
      * COH
      */
-    BCOH("coherent semantics", "B-COH"),
+    BCOH("coherent semantics", "BCOH"),
     /**
      * ADM
      */
-    BAD("admissible semantics", "B-AD"),
+    BAD("admissible semantics", "BAD"),
+    /** coalition-admissible semantics */
+    CAD("Coalition-Admissible", "CAD"),
+    /** coalition-complete semantics */
+    CCO("Coalition-Complete", "CCO"),
+    /** coalition-grounded semantics */
+    CGR("Coalition-Grounded", "CGR"),
+    /** coalition-preferred semantics */
+    CPR("Coalition-Preferred", "CPR"),
+    /** coalition-stable semantics */
+    CST("Coalition-Stable", "CST"),
     /**
      * diverse
      */
     diverse("diverse semantics", "div");
-    /**
-     * all semantics
-     */
-    @SuppressWarnings("javadoc")
-    public static final Semantics
-            /** CONFLICT_FREE SEMANTICS*/
-            B_CONFLICT_FREE_SEMANTICS = BCF,
-            /** COHERENT SEMANTICS*/
-            B_COHERENT_SEMANTICS = BCOH,
-            /** COHERENT_ADMISSIBLE SEMANTICS */
-            B_ADMISSIBLE_SEMANTICS = BAD;
 
     /**
      * The description of the semantics.
@@ -88,6 +91,20 @@ public enum Semantics {
      */
     public String abbreviation() {
         return this.abbreviation;
+    }
+
+    /**
+     * Returns the semantics whose abbreviation matched the given string.
+     * @param abbreviation Abbreviation of the semantics to return.
+     * @return Semantics with the specified abbreviation.
+     */
+    public static Semantics getSemantics(String abbreviation) {
+        for (Semantics element : Semantics.values()) {
+            if (element.abbreviation().equals(abbreviation)) {
+                return element;
+            }
+        }
+        throw new NoSuchElementException();
     }
 }
 

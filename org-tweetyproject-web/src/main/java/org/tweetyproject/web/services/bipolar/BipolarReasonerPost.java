@@ -22,196 +22,217 @@ import java.util.List;
 
 /**
  * The BipolarReasonerPost class represents a data structure for holding information
- * related to a bipolar argumentation reasoner request sent via HTTP POST.
+ * related to a bipolar argumentation reasoner post sent via HTTP POST.
  */
 public class BipolarReasonerPost {
 
-  /** The command type for the bipolar reasoner request */
-  private String cmd;
+    /** The command type for the bipolar reasoner post */
+    private String cmd;
 
-  /** The email associated with the bipolar reasoner request */
-  private String email;
+    /** The email associated with the bipolar reasoner post */
+    private String email;
 
-  /** The number of arguments in the bipolar reasoner request */
-  private int nr_of_arguments;
+    /** The number of arguments in the bipolar reasoner post */
+    private int nr_of_arguments;
 
-  /** The attacks information in the bipolar reasoner request */
-  private List<List<Integer>> attacks;
+    /** The attacks information in the bipolar reasoner post */
+    private List<List<Integer>> attacks;
 
-  /** The supports information in the bipolar reasoner request */
-  private List<List<Integer>> supports;
+    /** The supports information in the bipolar reasoner post */
+    private List<List<Integer>> supports;
 
-  /** The semantics specified in the bipolar reasoner request */
-  private String semantics;
+    /** The type of support for the bipolar reasoner post */
+    private String support_type;
 
-  /** The solver specified in the bipolar reasoner request */
-  private String solver;
+    /** The semantics specified in the bipolar reasoner post */
+    private String semantics;
 
-  /** The timeout value (in seconds) specified in the bipolar reasoner request */
-  private int timeout;
+    /** The solver specified in the bipolar reasoner post */
+    private String solver;
 
-  /** The unit timeout value specified in the bipolar reasoner request */
-  private String unit_timeout;
+    /** The timeout value (in seconds) specified in the bipolar reasoner post */
+    private int timeout;
 
-  /**
-   * Gets the unit timeout value specified in the bipolar reasoner request.
-   *
-   * @return The unit timeout value
-   */
-  public String getUnit_timeout() {
+    /** The unit timeout value specified in the bipolar reasoner post */
+    private String unit_timeout;
+
+    /**
+    * Gets the unit timeout value specified in the bipolar reasoner post.
+    *
+    * @return The unit timeout value
+    */
+    public String getUnit_timeout() {
       return unit_timeout;
-  }
+    }
 
-  /**
-   * Sets the unit timeout value in the bipolar reasoner request.
-   *
-   * @param unit_timeout The unit timeout value to be set
-   */
-  public void setUnit_timeout(String unit_timeout) {
+    /**
+    * Sets the unit timeout value in the bipolar reasoner post.
+    *
+    * @param unit_timeout The unit timeout value to be set
+    */
+    public void setUnit_timeout(String unit_timeout) {
       this.unit_timeout = unit_timeout;
-  }
+    }
 
-  /**
-   * Gets the command type in the bipolar reasoner request.
-   *
-   * @return The command type
-   */
-  public String getCmd() {
+    /**
+    * Gets the command type in the bipolar reasoner post.
+    *
+    * @return The command type
+    */
+    public String getCmd() {
       return this.cmd;
-  }
+    }
 
-  /**
-   * Sets the command type in the bipolar reasoner request.
-   *
-   * @param cmd The command type to be set
-   */
-  public void setCmd(String cmd) {
+    /**
+    * Sets the command type in the bipolar reasoner post.
+    *
+    * @param cmd The command type to be set
+    */
+    public void setCmd(String cmd) {
       this.cmd = cmd;
-  }
+    }
 
-  /**
-   * Gets the email associated with the bipolar reasoner request.
-   *
-   * @return The email associated with the request
-   */
-  public String getEmail() {
+    /**
+    * Gets the email associated with the bipolar reasoner post.
+    *
+    * @return The email associated with the post
+    */
+    public String getEmail() {
       return this.email;
-  }
+    }
 
-  /**
-   * Sets the email associated with the bipolar reasoner request.
-   *
-   * @param email The email to be set
-   */
-  public void setEmail(String email) {
+    /**
+    * Sets the email associated with the bipolar reasoner post.
+    *
+    * @param email The email to be set
+    */
+    public void setEmail(String email) {
       this.email = email;
-  }
+    }
 
-  /**
-   * Gets the number of arguments in the bipolar reasoner request.
-   *
-   * @return The number of arguments
-   */
-  public int getNr_of_arguments() {
+    /**
+    * Gets the number of arguments in the bipolar reasoner post.
+    *
+    * @return The number of arguments
+    */
+    public int getNr_of_arguments() {
       return this.nr_of_arguments;
-  }
+    }
 
-  /**
-   * Sets the number of arguments in the bipolar reasoner request.
-   *
-   * @param nr_of_arguments The number of arguments to be set
-   */
-  public void setNr_of_arguments(int nr_of_arguments) {
+    /**
+    * Sets the number of arguments in the bipolar reasoner post.
+    *
+    * @param nr_of_arguments The number of arguments to be set
+    */
+    public void setNr_of_arguments(int nr_of_arguments) {
       this.nr_of_arguments = nr_of_arguments;
-  }
+    }
 
-  /**
-   * Gets the attacks information in the bipolar reasoner request.
-   *
-   * @return The attacks information
-   */
-  public List<List<Integer>> getAttacks() {
+    /**
+    * Gets the attacks information in the bipolar reasoner post.
+    *
+    * @return The attacks information
+    */
+    public List<List<Integer>> getAttacks() {
       return this.attacks;
-  }
+    }
 
-  /**
-   * Sets the attacks information in the bipolar reasoner request.
-   *
-   * @param attacks The attacks information to be set
-   */
-  public void setAttacks(List<List<Integer>> attacks) {
+    /**
+    * Sets the attacks information in the bipolar reasoner post.
+    *
+    * @param attacks The attacks information to be set
+    */
+    public void setAttacks(List<List<Integer>> attacks) {
       this.attacks = attacks;
-  }
+    }
 
-  /**
-   * Gets the supports information in the bipolar reasoner request.
-   *
-   * @return The supports information
-   */
-  public List<List<Integer>> getSupports() {
+    /**
+    * Gets the supports information in the bipolar reasoner post.
+    *
+    * @return The supports information
+    */
+    public List<List<Integer>> getSupports() {
       return this.supports;
-  }
+    }
 
-  /**
-   * Sets the supports information in the bipolar reasoner request.
-   *
-   * @param supports The supports information to be set
-   */
-  public void setSupports(List<List<Integer>> supports) {
+    /**
+    * Sets the supports information in the bipolar reasoner post.
+    *
+    * @param supports The supports information to be set
+    */
+    public void setSupports(List<List<Integer>> supports) {
       this.supports = supports;
-  }
+    }
 
-  /**
-   * Gets the semantics specified in the bipolar reasoner request.
-   *
-   * @return The semantics specified
-   */
-  public String getSemantics() {
+    /**
+     * Gets the support_type specified in the bipolar reasoner post.
+     *
+     * @return The support_type specified
+     */
+    public String getSupport_type() {
+        return this.support_type;
+    }
+
+    /**
+     * Sets the support_type in the bipolar reasoner post.
+     *
+     * @param support_type The support_type to be set
+     */
+    public void setSupport_type(String support_type) {
+        this.support_type = support_type;
+    }
+
+    /**
+    * Gets the semantics specified in the bipolar reasoner post.
+    *
+    * @return The semantics specified
+    */
+    public String getSemantics() {
       return this.semantics;
-  }
+    }
 
-  /**
-   * Sets the semantics in the bipolar reasoner request.
-   *
-   * @param semantics The semantics to be set
-   */
-  public void setSemantics(String semantics) {
+    /**
+    * Sets the semantics in the bipolar reasoner post.
+    *
+    * @param semantics The semantics to be set
+    */
+    public void setSemantics(String semantics) {
       this.semantics = semantics;
-  }
+    }
 
-  /**
-   * Gets the solver specified in the bipolar reasoner request.
-   *
-   * @return The solver specified
-   */
-  public String getSolver() {
+    /**
+    * Gets the solver specified in the bipolar reasoner post.
+    *
+    * @return The solver specified
+    */
+    public String getSolver() {
       return this.solver;
-  }
+    }
 
-  /**
-   * Sets the solver in the bipolar reasoner request.
-   *
-   * @param solver The solver to be set
-   */
-  public void setSolver(String solver) {
+    /**
+    * Sets the solver in the bipolar reasoner post.
+    *
+    * @param solver The solver to be set
+    */
+    public void setSolver(String solver) {
       this.solver = solver;
-  }
+    }
 
-  /**
-   * Gets the timeout value (in seconds) specified in the bipolar reasoner request.
-   *
-   * @return The timeout value
-   */
-  public int getTimeout() {
+    /**
+    * Gets the timeout value (in seconds) specified in the bipolar reasoner post.
+    *
+    * @return The timeout value
+    */
+    public int getTimeout() {
       return this.timeout;
-  }
+    }
 
-  /**
-   * Sets the timeout value (in seconds) in the bipolar reasoner request.
-   *
-   * @param timeout The timeout value to be set
-   */
-  public void setTimeout(int timeout) {
+    /**
+    * Sets the timeout value (in seconds) in the bipolar reasoner post.
+    *
+    * @param timeout The timeout value to be set
+    */
+    public void setTimeout(int timeout) {
       this.timeout = timeout;
-  }
+    }
 }

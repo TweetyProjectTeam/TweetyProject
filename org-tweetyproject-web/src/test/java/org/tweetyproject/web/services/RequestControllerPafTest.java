@@ -27,7 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.web.services.bipolar.BipolarSemantics;
 
 import java.util.stream.Stream;
 

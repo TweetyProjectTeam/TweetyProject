@@ -37,6 +37,9 @@ public class BipolarServicesInfoResponse extends Response {
     /** The backend timeout value specified in the bipolar services info response */
     private int backend_timeout;
 
+    /** The list of supported support types in the bipolar services info response */
+    private List<String> support_type;
+
     /** The list of supported semantics in the bipolar services info response */
     private List<String> semantics;
 
@@ -55,13 +58,15 @@ public class BipolarServicesInfoResponse extends Response {
      * @param reply           The reply message
      * @param email           The email associated with the response
      * @param backend_timeout The backend timeout value
+     * @param support_type    The list of supported support types
      * @param semantics       The list of supported semantics
      * @param commands        The list of supported commands
      */
-    public BipolarServicesInfoResponse(String reply, String email, int backend_timeout, List<String> semantics, List<String> commands) {
+    public BipolarServicesInfoResponse(String reply, String email, int backend_timeout, List<String> support_type, List<String> semantics, List<String> commands) {
         this.reply = reply;
         this.email = email;
         this.backend_timeout = backend_timeout;
+        this.support_type = support_type;
         this.semantics = semantics;
         this.commands = commands;
     }
@@ -118,6 +123,24 @@ public class BipolarServicesInfoResponse extends Response {
      */
     public void setBackend_timeout(int backend_timeout) {
         this.backend_timeout = backend_timeout;
+    }
+
+    /**
+     * Gets the list of support_type elements associated with the service.
+     *
+     * @return A list of support_types as strings.
+     */
+    public List<String> getSupport_type() {
+        return this.support_type;
+    }
+
+    /**
+     * Sets the list of support_type elements for the service.
+     *
+     * @param support_type A list of support_type strings to be used or defined by the service.
+     */
+    public void setSupport_type(List<String> support_type) {
+        this.support_type = support_type;
     }
 
     /**
@@ -192,6 +215,17 @@ public class BipolarServicesInfoResponse extends Response {
     }
 
     /**
+     * Sets the support_type and returns this instance for method chaining.
+     *
+     * @param support_type A list of semantic strings to set.
+     * @return This instance to facilitate further modifications.
+     */
+    public BipolarServicesInfoResponse support_type(List<String> support_type) {
+        setSupport_type(support_type);
+        return this;
+    }
+
+    /**
      * Sets the semantics and returns this instance for method chaining.
      *
      * @param semantics A list of semantic strings to set.
@@ -216,11 +250,12 @@ public class BipolarServicesInfoResponse extends Response {
     @Override
     public String toString() {
         return "{" +
-            " reply='" + getReply() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", backend_timeout='" + getBackend_timeout() + "'" +
-            ", semantics='" + getSemantics() + "'" +
-            ", commands='" + getCommands() + "'" +
+                " reply='" + getReply() + "'" +
+                ", email='" + getEmail() + "'" +
+                ", backend_timeout='" + getBackend_timeout() + "'" +
+                ", support_type='" + getSupport_type() + "'" +
+                ", semantics='" + getSemantics() + "'" +
+                ", commands='" + getCommands() + "'" +
             "}";
     }
 }

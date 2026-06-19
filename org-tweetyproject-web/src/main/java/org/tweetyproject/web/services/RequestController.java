@@ -18,22 +18,7 @@
  */
 package org.tweetyproject.web.services;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-
+import javafx.util.Pair;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.aba.parser.AbaParser;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
-import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
@@ -97,11 +81,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.math.opt.solver.ApacheCommonsSimplex;
 import org.tweetyproject.math.opt.solver.GlpkSolver;
 import org.tweetyproject.math.opt.solver.Solver;
-import org.tweetyproject.web.services.aba.AbaGetSemanticsResponse;
-import org.tweetyproject.web.services.aba.AbaReasonerCalleeFactory;
-import org.tweetyproject.web.services.aba.AbaReasonerPost;
-import org.tweetyproject.web.services.aba.AbaReasonerResponse;
-import org.tweetyproject.web.services.aba.GeneralAbaReasonerFactory;
+import org.tweetyproject.web.services.aba.*;
 import org.tweetyproject.web.services.adf.*;
 import org.tweetyproject.web.services.bipolar.*;
 import org.tweetyproject.web.services.delp.DeLPCallee;
@@ -121,11 +101,13 @@ import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPos
 import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationResponse.GetSequenceExplanationsResult;
 import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationResponse.SequenceExplanationResult;
 import org.tweetyproject.web.services.serialisation.*;
-
-import javafx.util.Pair;
 import org.tweetyproject.web.services.setaf.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.logging.Level;
 
 
 /**
@@ -449,16 +431,15 @@ public class RequestController {
 		if (cmd == null)
 			return new BipolarReasonerResponse();
 
-		BipolarArgumentationFramework bbase = AbstractBipolarFrameworkFactory.getArgumentationFramework(
+		BipolarArgumentationFramework bbase = AbstractBipolarFactory.getBAF(
 				post.getNr_of_arguments(), post.getAttacks(), post.getSupports());
-		AbstractBipolarExtensionReasoner reasoner = AbstractBipolarExtensionReasonerFactory.getReasoner(
-				BipolarSemantics.getSemantics(post.getSemantics()));
+		AbstractBipolarExtensionReasoner reasoner = AbstractBipolarFactory.getReasoner(post.getSemantics(), post.getSupport_type());
 		Callee callee = BipolarReasonerCalleeFactory.getCallee(cmd, reasoner, bbase);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 
 		BipolarReasonerResponse response = new BipolarReasonerResponse(post.getCmd(), post.getEmail(),
-				post.getNr_of_arguments(), post.getAttacks(), post.getSupports(), post.getSemantics(),
+				post.getNr_of_arguments(), post.getAttacks(), post.getSupports(), post.getSupport_type(), post.getSemantics(),
 				post.getSolver(), null, 0, post.getUnit_timeout(), "ERROR");
 		ExecutionResult r = runCallee(callee, userTimeout, post.getTimeout(), unit);
 		response.setAnswer(r.answer);
@@ -472,9 +453,17 @@ public class RequestController {
 		response.setReply("info");
 		response.setEmail(email);
 		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		List<String> support_types = List.of("none", "ded", "nec");
+		response.setSupport_type(support_types);
 		ArrayList<String> semantics_ids = new ArrayList<>();
-		for (var s : AbstractBipolarExtensionReasonerFactory.getSemantics())
-			semantics_ids.add(s.id);
+		for (Semantics sem : AbstractExtensionReasonerFactory.getSemantics()) {
+			if (sem.equals(Semantics.diverse)) continue;
+			semantics_ids.add(sem.abbreviation());
+		}
+		for (org.tweetyproject.arg.bipolar.semantics.Semantics sem : AbstractBipolarFactory.getSemantics()) {
+			if (sem.equals(org.tweetyproject.arg.bipolar.semantics.Semantics.diverse)) continue;
+			semantics_ids.add(sem.abbreviation());
+		}
 		response.setSemantics(semantics_ids);
 		ArrayList<String> command_ids = new ArrayList<>();
 		for (var c : BipolarReasonerCalleeFactory.getCommands())
