@@ -62,7 +62,7 @@ class RequestControllerBipolarTest {
                           "reply": "info",
                           "email": null,
                           "backend_timeout": 600,
-                          "support_type": ["none","ded","nec"],
+                          "support_type": ["coalition","ded","nec"],
                           "semantics": [
                             "CF",
                             "ADM",
@@ -86,15 +86,7 @@ class RequestControllerBipolarTest {
                             "WAD",
                             "WCO",
                             "WPR",
-                            "WGR",
-                            "BCF",
-                            "BCOH",
-                            "BAD",
-                            "CAD",
-                            "CCO",
-                            "CGR",
-                            "CPR",
-                            "CST"
+                            "WGR"
                           ],
                           "commands": [
                             "get_models",
@@ -163,8 +155,8 @@ class RequestControllerBipolarTest {
                            "nr_of_arguments": 3,
                            "attacks": [[1, 2]],
                            "supports": [[2, 3]],
-                           "support_type": "ded",
-                           "semantics": "ADM",
+                           "support_type": "coalition",
+                           "semantics": "PR",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -189,8 +181,8 @@ class RequestControllerBipolarTest {
                               3
                             ]
                           ],
-                          "support_type": "ded",
-                          "semantics": "ADM",
+                          "support_type": "coalition",
+                          "semantics": "PR",
                           "solver": null,
                           "answer": "{1}",
                           "unit_time": "s",

@@ -433,7 +433,8 @@ public class RequestController {
 
 		BipolarArgumentationFramework bbase = AbstractBipolarFactory.getBAF(
 				post.getNr_of_arguments(), post.getAttacks(), post.getSupports());
-		AbstractBipolarExtensionReasoner reasoner = AbstractBipolarFactory.getReasoner(post.getSemantics(), post.getSupport_type());
+		Semantics semantics = Semantics.getSemantics(post.getSemantics());
+		AbstractBipolarExtensionReasoner reasoner = AbstractBipolarFactory.getReasoner(semantics, post.getSupport_type());
 		Callee callee = BipolarReasonerCalleeFactory.getCallee(cmd, reasoner, bbase);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
@@ -453,15 +454,11 @@ public class RequestController {
 		response.setReply("info");
 		response.setEmail(email);
 		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
-		List<String> support_types = List.of("none", "ded", "nec");
+		List<String> support_types = List.of("coalition", "ded", "nec");
 		response.setSupport_type(support_types);
 		ArrayList<String> semantics_ids = new ArrayList<>();
 		for (Semantics sem : AbstractExtensionReasonerFactory.getSemantics()) {
 			if (sem.equals(Semantics.diverse)) continue;
-			semantics_ids.add(sem.abbreviation());
-		}
-		for (org.tweetyproject.arg.bipolar.semantics.Semantics sem : AbstractBipolarFactory.getSemantics()) {
-			if (sem.equals(org.tweetyproject.arg.bipolar.semantics.Semantics.diverse)) continue;
 			semantics_ids.add(sem.abbreviation());
 		}
 		response.setSemantics(semantics_ids);

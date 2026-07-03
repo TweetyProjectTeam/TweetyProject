@@ -112,7 +112,7 @@ public class Support extends DirectedEdge<Argument> {
 
         public static Type getType(String type) {
             switch (type) {
-                case "none", "default" -> {
+                case "none", "default", "coalition" -> {
                     return DEFAULT;
                 } case "ded_simple" -> {
                     return SIMPLE_DEDUCTIVE;

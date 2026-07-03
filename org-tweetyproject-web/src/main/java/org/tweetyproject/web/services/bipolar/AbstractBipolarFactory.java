@@ -39,8 +39,8 @@ public abstract class AbstractBipolarFactory {
 	 *
 	 * @return An array of all available bipolar semantics.
 	 */
-	public static org.tweetyproject.arg.bipolar.semantics.Semantics[] getSemantics() {
-		return org.tweetyproject.arg.bipolar.semantics.Semantics.values();
+	public static Semantics[] getSemantics() {
+		return Semantics.values();
 	}
 
 	public static Support.Type[] getSupportTypes() {
@@ -51,22 +51,19 @@ public abstract class AbstractBipolarFactory {
 	 * Creates a new reasoner measure of the given semantics with default
 	 * settings.
 	 * 
-	 * @param sem some identifier of a semantics.
+	 * @param semantics some identifier of a semantics.
 	 * @return the requested reasoner.
 	 */
-	public static AbstractBipolarExtensionReasoner getReasoner(String sem, String type) {
+	public static AbstractBipolarExtensionReasoner getReasoner(Semantics semantics, String type) {
 		Support.Type support_type = Support.Type.getType(type);
 		switch (support_type) {
 			case DEFAULT -> {
-				org.tweetyproject.arg.bipolar.semantics.Semantics semantics = org.tweetyproject.arg.bipolar.semantics.Semantics.getSemantics(sem);
-				return AbstractBipolarExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+				return new SimpleCoalitionReasoner(semantics);
 			} case DEDUCTIVE,SIMPLE_DEDUCTIVE -> {
-				Semantics semantics = Semantics.getSemantics(sem);
 				return new SimpleDeductiveReasoner(semantics);
 			} case NECESSITY,SIMPLE_NECESSITY -> {
-				Semantics semantics = Semantics.getSemantics(sem);
 				return new SimpleNecessityReasoner(semantics);
-			} default -> throw new IllegalArgumentException("unsupported combination of support type and semantics " + type + " and " + sem);
+			} default -> throw new IllegalArgumentException("unsupported combination of support type and semantics " + type + " and " + semantics);
         }
 	}
 
