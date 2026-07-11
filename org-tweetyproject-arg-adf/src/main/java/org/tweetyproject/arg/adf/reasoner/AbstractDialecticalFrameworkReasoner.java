@@ -32,27 +32,31 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * Ancestor class for all adf reasoner
- * 
+ * Ancestor class for ADF reasoners backed by an incremental SAT solver.
+ *
  * @deprecated use {@link AbstractDialecticalFramework#query()} instead
  */
 @Deprecated( forRemoval = true, since = "1.19" )
 public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFReasoner {
-	
+		
+	/** The SAT solver used for model enumeration. */
 	private final IncrementalSatSolver solver;
 
 	/**
-	 * @param solver solver
+	 * Creates a new abstract dialectical framework reasoner.
+	 *
+	 * @param solver the SAT solver used for model enumeration
 	 */
 	public AbstractDialecticalFrameworkReasoner(IncrementalSatSolver solver) {
 		this.solver = Objects.requireNonNull(solver);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @param argument argument
-	 * @return skepticalQuery
+	 * Checks whether the given argument is accepted under skeptical semantics.
+	 *
+	 * @param adf the ADF to query
+	 * @param argument the argument to check
+	 * @return {@code true} iff all models satisfy the argument
 	 */
 	public boolean skepticalQuery(AbstractDialecticalFramework adf, Argument argument) {
 		Iterator<Interpretation> iterator = modelIterator(adf);
@@ -66,10 +70,11 @@ public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFRe
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @param argument argument
-	 * @return credulousQuery
+	 * Checks whether the given argument is accepted under credulous semantics.
+	 *
+	 * @param adf the ADF to query
+	 * @param argument the argument to check
+	 * @return {@code true} iff at least one model satisfies the argument
 	 */
 	public boolean credulousQuery(AbstractDialecticalFramework adf, Argument argument) {
 		Iterator<Interpretation> iterator = modelIterator(adf);
@@ -83,9 +88,10 @@ public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFRe
 	}
 
 	/**
-	 * 
-	 * @param adf adf 
-	 * @return getModels
+	 * Returns all models of the given ADF.
+	 *
+	 * @param adf the ADF to query
+	 * @return all models of the ADF
 	 */
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
@@ -97,9 +103,10 @@ public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFRe
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return getModel
+	 * Returns one model of the given ADF, if available.
+	 *
+	 * @param adf the ADF to query
+	 * @return one model of the ADF or {@code null} if none exist
 	 */
 	public Interpretation getModel(AbstractDialecticalFramework adf) {
 		Iterator<Interpretation> modelIterator = modelIterator(adf);
@@ -110,9 +117,10 @@ public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFRe
 	}
 
 	/**
-	 * 
-	 * @param adf adf 
-	 * @return modelIterator
+	 * Returns an iterator over all models of the given ADF.
+	 *
+	 * @param adf the ADF to query
+	 * @return an iterator over all models
 	 */
 	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
 		return query(adf)
@@ -121,5 +129,11 @@ public abstract class AbstractDialecticalFrameworkReasoner extends AbstractADFRe
 				.iterator();
 	}
 	
+	/**
+	 * Creates the query used to enumerate models.
+	 *
+	 * @param adf the ADF to query
+	 * @return the query producing all models
+	 */
 	abstract Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf);
 }

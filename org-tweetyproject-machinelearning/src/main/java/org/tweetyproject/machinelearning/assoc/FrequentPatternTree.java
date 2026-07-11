@@ -33,15 +33,19 @@ import org.tweetyproject.commons.util.SetTools;
  * @param <T> the type of items
  */
 public class FrequentPatternTree<T extends Object> {
+	/** Counter used to assign unique ids to tree nodes. */
 	private static int next_id = 1;
-	// minimal support (absolute) of this tree
+	/** Minimal support threshold of this tree, as an absolute value. */
 	private int minsupport_abs;
-	// the root of the tree
+	/** Root node of the tree. */
 	private FrequentPatternTreeNode<T> root;
-	// the header table
+	/** Header table with all frequent items and their support. */
 	private List<Pair<T,Integer>> items = new ArrayList<>();	
+	/** First node for each item in the header table. */
 	private List<FrequentPatternTreeNode<T>> items_first_node = new ArrayList<>();
+	/** Last node for each item in the header table. */
 	private List<FrequentPatternTreeNode<T>> items_last_node = new ArrayList<>();
+	/** Maps an item to its index in the header table. */
 	private Map<T,Integer> indexOf = new HashMap<>();
 	/**
 	 * a node of the tree
@@ -50,12 +54,18 @@ public class FrequentPatternTree<T extends Object> {
 	 * @param <S> any object
 	 */
 	public class FrequentPatternTreeNode<S extends Object>{		
+		/** Unique id of this node. */
 		private int id;
+		/** Item stored at this node, or {@code null} for the root. */
 		private S item;
+		/** Absolute support of the path represented by this node. */
 		private int freq_abs;
 		
+		/** Parent node, or {@code null} for the root. */
 		private FrequentPatternTreeNode<S> parent;
+		/** Child nodes indexed by their item. */
 		private Map<S,FrequentPatternTreeNode<S>> children = new HashMap<>();		
+		/** Next node with the same item in the header table chain. */
 		private FrequentPatternTreeNode<S> next_node = null;
 		
 		/**
@@ -143,15 +153,26 @@ public class FrequentPatternTree<T extends Object> {
 		}
 	}
 	
+	/** Comparator that orders items by decreasing support. */
 	private class PairComparator implements Comparator<Pair<T,Integer>>{
+		/** Creates a new pair comparator. */
+		public PairComparator() {
+		}
 		@Override
 		public int compare(Pair<T, Integer> o1, Pair<T, Integer> o2) {
 			return -1 * o1.getSecond().compareTo(o2.getSecond());
 		}	
 	}
 	
+	/** Comparator that orders items according to the header table index. */
 	private class ItemComparator implements Comparator<T>{
+		/** Mapping from items to header-table positions. */
 		private Map<T,Integer> indexOf;
+		/**
+		 * Creates a new item comparator.
+		 *
+		 * @param indexOf the map from items to header-table indices
+		 */
 		public ItemComparator(Map<T,Integer> indexOf) {
 			this.indexOf = indexOf;
 		}
@@ -232,9 +253,11 @@ public class FrequentPatternTree<T extends Object> {
 	}
 	
 	/**
-	 * Converts the given (unweighted) data base to weighted data base
-	 * where every transaction has weight 1.
+	 * Converts the given unweighted database to a weighted database where every
+	 * transaction has weight 1.
+	 *
 	 * @param database some data base
+	 * @param <R> the item type
 	 * @return the weighted version of the database
 	 */
 	private static <R extends Object> Collection<Pair<Collection<R>,Integer>> toWeightedDatabase(Collection<Collection<R>> database) {
@@ -245,11 +268,12 @@ public class FrequentPatternTree<T extends Object> {
 	}
 	
 	/**
-	 * Inserts the given transaction (which only lists frequent items ordered by frequency) into the tree
+	 * Inserts the given transaction, which only lists frequent items ordered by
+	 * frequency, into the tree.
+	 *
 	 * @param freq_trans a transaction (which only lists frequent items ordered by frequency)
 	 * @param node the current node of the tree
-	 * @param indexOf maps items to the index in the order
-	 * @param weigth the multiplicity of the transaction
+	 * @param weight the multiplicity of the transaction
 	 */
 	private void insert_tree(List<T> freq_trans, FrequentPatternTreeNode<T> node, int weight) {
 		while(freq_trans.size() != 0) {
@@ -275,7 +299,8 @@ public class FrequentPatternTree<T extends Object> {
 
 	/**
 	 * Extracts all frequent patterns from this tree.
-	 * @return the set of all frequent patterns from this tree 
+	 *
+	 * @return the set of all frequent patterns from this tree
 	 */
 	public Collection<Collection<T>> extractFrequentPatterns(){
 		return this.extractFrequentPatterns(new HashSet<>());
@@ -283,8 +308,9 @@ public class FrequentPatternTree<T extends Object> {
 	
 	/**
 	 * Extracts all frequent patterns from this tree plus <code>prefix</code>.
+	 *
 	 * @param prefix items to be added to each set.
-	 * @return the set of all frequent patterns from this tree plus <code>prefix</code>. 
+	 * @return the set of all frequent patterns from this tree plus <code>prefix</code>.
 	 */
 	public Collection<Collection<T>> extractFrequentPatterns(Collection<T> prefix){
 		Collection<Collection<T>> result = new HashSet<Collection<T>>();

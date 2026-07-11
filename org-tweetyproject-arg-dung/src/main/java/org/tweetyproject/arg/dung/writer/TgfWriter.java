@@ -34,6 +34,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class TgfWriter extends AbstractDungWriter {
 
+    /**
+     * Creates a new TgfWriter instance.
+     */
+    public TgfWriter() {
+        // default constructor
+    }
+
 	/* (non-Javadoc)
 	 * @see argc.writer.Writer#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)
 	 */

@@ -35,11 +35,19 @@ import java.util.*;
  */
 public class ExtensionRankingExample {
 	/**
-	 * Shows extension ranks of a theory for the respective semantic
-	 * @param args arguments
-	 * @throws NoSuchMethodException Exception
-	 * @throws IllegalAccessException Exception
-	 * @throws InvocationTargetException Exception
+	 * Creates a new extension ranking example.
+	 */
+	public ExtensionRankingExample() {
+		super();
+	}
+
+	/**
+	 * Shows extension ranks of a theory for the respective semantic.
+	 *
+	 * @param args command-line arguments
+	 * @throws NoSuchMethodException if a required method cannot be found
+	 * @throws IllegalAccessException if reflective access fails
+	 * @throws InvocationTargetException if reflective invocation fails
 	 */
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 

@@ -60,6 +60,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public class CommandLineInterface {
 
+    /** Prevents instantiation. */
+    private CommandLineInterface() {
+    }
+
     /** The SAT solver used by the reasoners. */
     private static final IncrementalSatSolver satSolver = new NativeMinisatSolver();
 

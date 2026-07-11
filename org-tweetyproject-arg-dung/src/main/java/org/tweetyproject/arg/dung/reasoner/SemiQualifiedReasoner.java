@@ -37,6 +37,7 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
+    /** The base reasoner used for the underlying semantics. */
     private final AbstractExtensionReasoner baseReasoner;
 
     /**

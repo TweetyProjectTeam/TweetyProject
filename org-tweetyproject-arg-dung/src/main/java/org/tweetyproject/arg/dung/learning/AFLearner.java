@@ -44,7 +44,8 @@ public interface AFLearner {
     Collection<DungTheory> getModels();
 
     /**
-     * compute an argumentation framework that satisfy the internal acceptance conditions
+     * Compute an argumentation framework that satisfies the internal acceptance conditions.
+     *
      * @return some argumentation framework that satisfies the internal conditions
      */
     DungTheory getModel();
@@ -60,7 +61,8 @@ public interface AFLearner {
      */
     long getNumberOfFrameworks();
     /**
-     * 
+     * Compute a framework count with optional shortcut evaluation.
+     *
      * @param shortcut whether shortcut is applied
      * @return number of frameworks
      */

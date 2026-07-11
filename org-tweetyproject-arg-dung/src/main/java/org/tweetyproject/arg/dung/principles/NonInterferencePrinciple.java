@@ -29,18 +29,15 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Non-Interference Principle
- * <p>
- * A semantics satisfies non-interference iff for every isolated set 'U' in an abstract argumentation framework F it holds that:
- * The extensions of F restricted to 'U' are equal to the extensions of F intersected with U
- *
- * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics.
- * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
- * @see DirectionalityPrinciple
+ * Non-interference principle.
  *
  * @author Julian Sander
  */
 public class NonInterferencePrinciple extends DirectionalityPrinciple {
+
+	/** Creates the principle. */
+	public NonInterferencePrinciple() {
+	}
 
 	@Override
 	public String getName() {

@@ -29,6 +29,13 @@ import java.util.Collection;
  * @author Julian Sander, Lars Bengel
  */
 public class SyntacticEquivalence implements Equivalence<DungTheory> {
+
+    /**
+     * Creates a new SyntacticEquivalence instance.
+     */
+    public SyntacticEquivalence() {
+        // default constructor
+    }
     @Override
     public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
         if (!theory1.getNodes().equals(theory2.getNodes())) return false;

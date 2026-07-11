@@ -41,11 +41,12 @@ import java.util.Set;
  * @author Lars Bengel
  */
 public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
-    /** the semantics of this equivalence instance **/
+    /** Semantics used by this equivalence instance. */
     private final Semantics semantics;
 
     /**
-     * Initializes a new instance of this equivalence wrt. the given semantics
+     * Initializes a new instance of this equivalence with the given semantics.
+     *
      * @param semantics some semantics
      */
     public NormalDeletionEquivalence(Semantics semantics) {
@@ -109,6 +110,13 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
         return true;
     }
 
+    /**
+     * Checks whether both theories agree on the self-loop pattern of their symmetric difference.
+     *
+     * @param theory1 the first theory
+     * @param theory2 the second theory
+     * @return {@code true} if the self-loop pattern matches
+     */
     private boolean loop(DungTheory theory1, DungTheory theory2) {
         Collection<Argument> symDif = new SetTools<Argument>().symmetricDifference(theory1, theory2);
         DungTheory combi = theory1.clone();
@@ -116,6 +124,13 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
         return symDif.equals(getSelfLoops((DungTheory) combi.getRestriction(symDif)));
     }
 
+    /**
+     * Checks the co-attack condition for the shared and exclusive arguments.
+     *
+     * @param theory1 the first theory
+     * @param theory2 the second theory
+     * @return {@code true} if the co-attack condition holds
+     */
     private boolean coAtt(DungTheory theory1, DungTheory theory2) {
         Collection<Argument> args1 = new HashSet<>(theory1);
         args1.removeAll(theory2);
@@ -139,6 +154,13 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
         return true;
     }
 
+    /**
+     * Checks the admissibility-specific attack condition for the two theories.
+     *
+     * @param theory1 the first theory
+     * @param theory2 the second theory
+     * @return {@code true} if the admissibility-specific attack condition holds
+     */
     private boolean admAtt(DungTheory theory1, DungTheory theory2) {
         Collection<Argument> args1 = new HashSet<>(theory1);
         args1.removeAll(theory2);
@@ -162,6 +184,12 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
         return true;
     }
 
+    /**
+     * Returns all arguments in the theory that attack themselves.
+     *
+     * @param theory the theory to inspect
+     * @return the self-attacking arguments
+     */
     private Collection<Argument> getSelfLoops(DungTheory theory) {
         Collection<Argument> result = new HashSet<>();
         for (Argument arg : theory) {
@@ -172,6 +200,12 @@ public class NormalDeletionEquivalence implements Equivalence<DungTheory> {
         return result;
     }
 
+    /**
+     * Returns all arguments in the theory that do not attack themselves.
+     *
+     * @param theory the theory to inspect
+     * @return the non-self-attacking arguments
+     */
     private Collection<Argument> getNonSelfLoops(DungTheory theory) {
         Collection<Argument> result = new HashSet<>();
         for (Argument arg : theory) {

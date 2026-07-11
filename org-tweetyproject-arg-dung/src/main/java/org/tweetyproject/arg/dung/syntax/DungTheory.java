@@ -1132,8 +1132,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.graphs.DefaultGraph#getComponents()
 	 */
 	/**
-	 * 
-	 * @return DefaultGraph
+	 * Returns the connected components of this theory.
+	 *
+	 * @return the connected components of this theory
 	 */
 	public Collection<Graph<Argument>> getComponents() {
 		return DefaultGraph.getComponents(this);
@@ -1143,8 +1144,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.graphs.DefaultGraph#getInducedSubgraphs()
 	 */
 	/**
-	 * 
-	 * @return DefaultGraph
+	 * Returns the induced subgraphs of this theory.
+	 *
+	 * @return the induced subgraphs of this theory
 	 */
 	public Collection<Graph<Argument>> getInducedSubgraphs() {
 		return DefaultGraph.getInducedSubgraphs(this);
@@ -1162,11 +1164,17 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return false;
 	}
 	
+	/** Removes empty parent and child entries. */
 	private void removeEmptyParents() {
 		cleanUpMap(parents);
 		cleanUpMap(children);
 	}
 
+	/**
+	 * Removes empty entries from the given adjacency map.
+	 *
+	 * @param map the adjacency map to clean up
+	 */
 	private static void cleanUpMap(Map<Argument,Set<Argument>> map) {
 		var tempArgsToRemove = new HashSet<Argument>();
 		for (Argument a : map.keySet()) {

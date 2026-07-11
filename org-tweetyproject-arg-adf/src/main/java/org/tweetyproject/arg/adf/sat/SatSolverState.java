@@ -38,9 +38,12 @@ public interface SatSolverState extends AutoCloseable {
 	 */
 	Set<Literal> witness();
 	/**
-	 * 
-	 * @param filter filter
-	 * @return Set
+	 * Returns a witness restricted to the given filter.
+	 *
+	 * Only literals contained in the filter are included in the returned set.
+	 *
+	 * @param filter the literals to keep in the witness
+	 * @return a witness restricted to the given filter
 	 */
 	Set<Literal> witness(Collection<? extends Literal> filter);
 

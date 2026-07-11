@@ -29,13 +29,20 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.Argument;;
 
 /**
- * Writes an abstract argumentation framework into a file of the
- * CNF format. Note that the order of the arguments may change
- * by using this writer.
- * 
+ * Writes an abstract argumentation framework to the CNF format.
+ * <p>
+ * Note that the order of the arguments may change by using this writer.
+ *
  * @author Matthias Thimm
  */
 public class CnfWriter extends AbstractDungWriter{
+
+	/**
+	 * Creates a new CNF writer.
+	 */
+	public CnfWriter() {
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.writer.AbstractDungWriter#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)

@@ -48,6 +48,13 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       debugStream = ds;
    }
 
+   /**
+    * Determines the state at which the string-literal DFA should stop.
+    *
+    * @param pos the current position in the token
+    * @param active0 the bit mask of active token kinds
+    * @return the state from which NFA processing should continue, or {@code -1}
+    */
    private static final int jjStopStringLiteralDfa_0(int pos, long active0) {
       switch (pos) {
          default:
@@ -55,16 +62,35 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       }
    }
 
+   /**
+    * Starts NFA processing after the string-literal DFA has stopped.
+    *
+    * @param pos the current position in the token
+    * @param active0 the bit mask of active token kinds
+    * @return the number of characters consumed
+    */
    private static final int jjStartNfa_0(int pos, long active0) {
       return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
    }
 
+   /**
+    * Records a matched token kind at the given position.
+    *
+    * @param pos the position at which the token was matched
+    * @param kind the matched token kind
+    * @return the position following the match
+    */
    static private int jjStopAtPos(int pos, int kind) {
       jjmatchedKind = kind;
       jjmatchedPos = pos;
       return pos + 1;
    }
 
+   /**
+    * Processes the first character of a string literal using the DFA.
+    *
+    * @return the number of characters consumed
+    */
    static private int jjMoveStringLiteralDfa0_0() {
       switch (curChar) {
          case 44:
@@ -84,6 +110,13 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       }
    }
 
+   /**
+    * Runs the NFA for the default lexical state.
+    *
+    * @param startState the state at which processing starts
+    * @param curPos the current position in the token
+    * @return the number of characters consumed
+    */
    static private int jjMoveNfa_0(int startState, int curPos) {
       int startsAt = 0;
       jjnewStateCnt = 6;
@@ -189,6 +222,7 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       }
    }
 
+   /** States used for generated NFA transitions. */
    static final int[] jjnextStates = {
    };
 
@@ -201,16 +235,20 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
    public static final String[] lexStateNames = {
          "DEFAULT",
    };
+   /** Bit mask identifying token kinds returned to the parser. */
    static final long[] jjtoToken = {
          0x3fe1L,
    };
+   /** Bit mask identifying token kinds skipped by the lexer. */
    static final long[] jjtoSkip = {
          0x1eL,
    };
 
    /** input stream */
    static protected SimpleCharStream input_stream;
+   /** Round markers used to avoid processing an NFA state more than once. */
    static private final int[] jjrounds = new int[6];
+   /** Working set of active NFA states. */
    static private final int[] jjstateSet = new int[12];
 
    /** current Character */
@@ -371,11 +409,17 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       return t;
    }
 
+   /** Current lexical state used by the token manager. */
    static int curLexState = 0;
+   /** Default lexical state used when the token manager is reinitialized. */
    static int defaultLexState = 0;
+   /** Number of new NFA states queued for processing. */
    static int jjnewStateCnt;
+   /** Current NFA processing round. */
    static int jjround;
+   /** Position of the most recently matched token. */
    static int jjmatchedPos;
+   /** Kind of the most recently matched token. */
    static int jjmatchedKind;
 
    /**
@@ -441,6 +485,12 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       }
    }
 
+   /**
+    * Adds a generated NFA state to the working set if it has not already been
+    * processed in the current round.
+    *
+    * @param state the state to add
+    */
    static private void jjCheckNAdd(int state) {
       if (jjrounds[state] != jjround) {
          jjstateSet[jjnewStateCnt++] = state;
@@ -448,12 +498,24 @@ public class RpclCondensedProbabilityDistributionParserTokenManager
       }
    }
 
+   /**
+    * Adds a contiguous range of generated NFA states to the working set.
+    *
+    * @param start the first index in {@link #jjnextStates}
+    * @param end the last index in {@link #jjnextStates}
+    */
    static private void jjAddStates(int start, int end) {
       do {
          jjstateSet[jjnewStateCnt++] = jjnextStates[start];
       } while (start++ != end);
    }
 
+   /**
+    * Adds two generated NFA states to the working set.
+    *
+    * @param state1 the first state to add
+    * @param state2 the second state to add
+    */
    static private void jjCheckNAddTwoStates(int state1, int state2) {
       jjCheckNAdd(state1);
       jjCheckNAdd(state2);

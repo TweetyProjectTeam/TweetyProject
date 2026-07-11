@@ -34,10 +34,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Service for querying causal conclusions and sequence explanations.
+ *
  * @author Oleksandr Dzhychko
  */
 @Service
 public final class CausalReasonerService {
+    /**
+     * Default constructor.
+     */
+    public CausalReasonerService() {
+    }
+
     /** the underlying causal reasoner */
     private final ArgumentationBasedCausalReasoner causalReasoner = new ArgumentationBasedCausalReasoner();
     /** the provider of explanations */

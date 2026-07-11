@@ -23,10 +23,19 @@ import java.io.FilenameFilter;
 
 /**
  * Filename filter for APX files.
+ * <p>
+ * Accepts files whose names end with the {@code .apx} extension.
  * 
  * @author Matthias Thimm
  */
 public class ApxFilenameFilter implements FilenameFilter{
+
+	/**
+	 * Creates a new APX filename filter.
+	 */
+	public ApxFilenameFilter() {
+		super();
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)

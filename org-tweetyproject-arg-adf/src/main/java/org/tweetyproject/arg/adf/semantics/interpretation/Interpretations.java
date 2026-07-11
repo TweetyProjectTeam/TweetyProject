@@ -26,6 +26,9 @@ import org.tweetyproject.arg.adf.util.UnionSetView;
 import org.tweetyproject.commons.AbstractInterpretation;
 
 /**
+ * Utility classes for canonical interpretations over abstract dialectical
+ * frameworks.
+ *
  * @author Mathias Hofer
  *
  */

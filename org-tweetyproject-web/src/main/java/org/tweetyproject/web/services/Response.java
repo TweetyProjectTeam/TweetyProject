@@ -19,8 +19,12 @@
 package org.tweetyproject.web.services;
 
 /**
- * Response placeholder class
+ * Base response type for web service replies.
  */
 public class Response {
+
+	/** Creates an empty response placeholder. */
+	public Response() {
+	}
 
 }

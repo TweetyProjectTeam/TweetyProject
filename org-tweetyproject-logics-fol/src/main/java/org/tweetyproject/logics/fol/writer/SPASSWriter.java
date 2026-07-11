@@ -223,6 +223,11 @@ public class SPASSWriter {
 		return axioms + "end_of_list.\n\n" + conjectures + "end_of_list.\n";
 	}
 
+	/**
+	 * Converts a relational formula to its SPASS representation
+	 * @param f the relational formula to convert
+	 * @return the SPASS string representation of the formula
+	 */
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {
 			Negation n = (Negation) f;

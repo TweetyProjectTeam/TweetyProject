@@ -36,6 +36,12 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public abstract class AbstractADFReasoner implements QualitativeReasoner<AbstractDialecticalFramework, Argument>, ModelProvider<Argument,AbstractDialecticalFramework,Interpretation> {
+    /**
+     * Creates a new abstract ADF reasoner.
+     */
+    public AbstractADFReasoner() {
+    }
+
     @Override
     public Boolean query(AbstractDialecticalFramework bbase, Argument formula) {
         return this.query(bbase, formula, InferenceMode.SKEPTICAL);

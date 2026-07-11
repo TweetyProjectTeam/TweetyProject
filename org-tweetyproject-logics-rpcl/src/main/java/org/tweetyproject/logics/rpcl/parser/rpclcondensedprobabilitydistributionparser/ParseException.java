@@ -135,9 +135,8 @@ public class ParseException extends Exception {
  *                               that the parser expected to encounter at the point of the error.
  * @param tokenImage An array of strings representing the image of each token. Each index corresponds to
  *                   a token kind.
- * @return A string containing the formatted parse error message.
- *
  * @throws NullPointerException if any of the parameters are {@code null}.
+ * @return A string containing the formatted parse error message.
  */
   private static String initialise(Token currentToken,
                            int[][] expectedTokenSequences,
@@ -192,6 +191,7 @@ public class ParseException extends Exception {
    * when these raw version cannot be used as part of an ASCII
    * string literal.
    * @param str input
+   * @return the escaped string
    */
   static String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();

@@ -49,6 +49,11 @@ import org.tweetyproject.logics.commons.syntax.Sort;
  * @author Sebastian Homann
  */
 public class ActionSignatureParser {
+	/**
+	 * Creates a new action signature parser.
+	 */
+	public ActionSignatureParser() {
+	}
 
 	/**
 	 * Resulting signature.

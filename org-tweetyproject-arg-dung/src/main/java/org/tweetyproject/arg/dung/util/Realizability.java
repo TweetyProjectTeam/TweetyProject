@@ -19,6 +19,10 @@ import org.tweetyproject.commons.util.SubsetIterator;
  */
 public abstract class Realizability {
 
+	/** Creates the utility base. */
+	protected Realizability() {
+	}
+
 	/**
 	 * Returns the set of all arguments appearing in some extension.
 	 * @param exts some set of extensions

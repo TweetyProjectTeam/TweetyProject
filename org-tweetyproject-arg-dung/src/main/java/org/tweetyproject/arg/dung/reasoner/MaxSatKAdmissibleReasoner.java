@@ -36,16 +36,18 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * A MaxSAT-based implementation for solving the MaxAdm# problem from
- * [Skiba,Thimm; 2024]
- * @author Matthias Thimm
+ * A MaxSAT-based implementation for solving the MaxAdm# problem.
  *
+ * @author Matthias Thimm
  */
 public class MaxSatKAdmissibleReasoner implements KOptimisationReasoner {
 
+	/** The used MaxSAT solver. */
 	private MaxSatSolver solver;
 	
 	/**
+	 * Creates a new reasoner using the given MaxSAT solver.
+	 *
 	 * @param solver the used MaxSAT solver
 	 */
 	public MaxSatKAdmissibleReasoner(MaxSatSolver solver) {
@@ -59,7 +61,7 @@ public class MaxSatKAdmissibleReasoner implements KOptimisationReasoner {
 	 * it is not conflict-free)
 	 * @param aaf some AAF.
 	 * @param set some set of arguments.
-	 *  @return the maximal k such that the given extension is a 
+	 * @return the maximal k such that the given extension is a 
 	 * k-adm# extension of the given AAF.
 	 */
 	public static int eval(DungTheory aaf, Collection<Argument> set) {

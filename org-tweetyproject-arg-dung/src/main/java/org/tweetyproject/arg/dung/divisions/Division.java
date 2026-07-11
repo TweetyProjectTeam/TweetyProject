@@ -40,9 +40,10 @@ import org.tweetyproject.graphs.Graph;
  * @author Matthias Thimm
  */
 public class Division extends Pair<Extension<DungTheory>,Extension<DungTheory>>{
+	/** Serial version UID. */
 	private static final long serialVersionUID = -4217044135734274436L;
 
-	/** archive of requested divisions. */
+	/** Archive of requested divisions. */
 	private static Map<DungTheory,Collection<Division>> archivedDivisons = new HashMap<DungTheory,Collection<Division>>();
 	
 	/**

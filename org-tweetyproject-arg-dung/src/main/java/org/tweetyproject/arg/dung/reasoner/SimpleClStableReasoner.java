@@ -36,6 +36,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 
+    /**
+     * Creates a new SimpleClStableReasoner instance.
+     */
+    public SimpleClStableReasoner() {
+        // default constructor
+    }
+
 
 	/**
 	 *

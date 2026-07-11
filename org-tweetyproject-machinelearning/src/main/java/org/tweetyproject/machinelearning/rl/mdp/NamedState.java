@@ -26,6 +26,7 @@ package org.tweetyproject.machinelearning.rl.mdp;
  *
  */
 public class NamedState implements State{
+	/** The name of this state. */
 	private String name;
 	
 	/**

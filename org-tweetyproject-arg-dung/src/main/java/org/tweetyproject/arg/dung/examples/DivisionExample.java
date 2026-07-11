@@ -31,14 +31,22 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for working with divisions.
+ * <p>
+ * It demonstrates how to compute divisions and their dividers for a small Dung theory.
  * 
  * @author Matthias Thimm
  */
 public class DivisionExample {
 
+	/** Creates the example. */
+	public DivisionExample() {
+		// default
+	}
+
 	/**
-	 * 
-	 * @param args string
+	 * Runs the example.
+	 *
+	 * @param args command-line arguments
 	 */
 	public static void main(String[] args){
 		// create some Dung theory

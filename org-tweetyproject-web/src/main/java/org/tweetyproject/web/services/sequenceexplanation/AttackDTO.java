@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * DTO for serializing an attack between two arguments.
+ *
  * @author Oleksandr Dzhychko
  */
 public final class AttackDTO {

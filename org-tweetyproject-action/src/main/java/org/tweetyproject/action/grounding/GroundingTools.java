@@ -36,6 +36,12 @@ import org.tweetyproject.logics.commons.syntax.Variable;
  */
 public class GroundingTools {
 	/**
+	 * Creates a new grounding tools helper.
+	 */
+	public GroundingTools() {
+	}
+
+	/**
 	 * Checks a grounding application for compliance with the grounding
 	 * requirements.
 	 * 

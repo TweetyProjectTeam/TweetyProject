@@ -32,9 +32,9 @@ import org.tweetyproject.commons.util.Triple;
  * @param <A> The type of actions this MDP uses
  */
 public class Episode<S extends State, A extends Action> {
-	// the lists of states and actions; the list of actions
-	// must always have one element less
+	/** The states visited during this episode. */
 	private List<S> states;
+	/** The actions taken during this episode; always one fewer than the states. */
 	private List<A> actions;
 	
 

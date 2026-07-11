@@ -343,6 +343,7 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	 * interface. This means an ordered list
 	 * of programs can be revised in one step.
 	 *
+	 * @param <T> the formula type handled by the operator
 	 * @param op The operator used to perform the revision.
 	 * @return A map of steps of the revision process to the belief bases.
 	 * @todo Kill warnings, not easy cause '?' does not works with revise
@@ -363,6 +364,7 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	 * MultipleBaseRevisionOperator. It simulates
 	 * the revision by iteratively revise the different belief bases
 	 *
+	 * @param <T> the formula type handled by the operator
 	 * @param op The operator used to perform the revision.
 	 * @return A map of steps of the revision process to the belief bases.
 	 * @todo Kill warnings, not easy cause '?' does not works with revise
@@ -391,6 +393,7 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	 * formulas of the second belief base
 	 * one after another.
 	 *
+	 * @param <T> the formula type handled by the operator
 	 * @param op The operator used to perform the revision
 	 * @return A map of steps of the revision process to the belief bases.
 	 * @todo Kill warnings, not easy cause '?' does not works with revise

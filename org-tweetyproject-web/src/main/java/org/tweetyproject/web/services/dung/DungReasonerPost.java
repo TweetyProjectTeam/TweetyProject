@@ -21,10 +21,15 @@ package org.tweetyproject.web.services.dung;
 import java.util.List;
 
 /**
- * The DungReasonerPost class represents a data structure for holding information
- * related to a Dung argumentation reasoner request sent via HTTP POST.
+ * Request payload for Dung reasoner web service calls.
  */
 public class DungReasonerPost {
+
+  /**
+   * Creates an empty request payload.
+   */
+  public DungReasonerPost() {
+  }
 
   /** The command type for the Dung reasoner request */
   private String cmd;

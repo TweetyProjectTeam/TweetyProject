@@ -29,20 +29,25 @@ import java.util.*;
 
 /**
  * This class can be used to find example dung theories that produce the same set of extensions wrt to two semantics,
- * but different extensions wrt to another semantics
+ * but different extensions wrt to another semantics.
+ * <p>
+ * It groups example theories by their first, second, and third semantics extension sets.
  * @author Lars Bengel
  */
 public class ExtendedExampleFinder {
-    // reasoners for the semantics
+    /** reasoner for the first semantics */
     private AbstractExtensionReasoner reasoner1;
+    /** reasoner for the second semantics */
     private AbstractExtensionReasoner reasoner2;
+    /** reasoner for the third semantics */
     private AbstractExtensionReasoner reasoner3;
 
-    // map object to store examples
+    /** map object to store grouped example theories */
     private Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>>> examples;
 
     /**
-     * initialize with three semantics and automatically find reasoners for them (if they exist)
+     * Initializes the finder with three semantics and automatically determines reasoners for them if available.
+     *
      * @param semantics1 a semantics
      * @param semantics2 a semantics
      * @param semantics3 a semantics
@@ -52,7 +57,8 @@ public class ExtendedExampleFinder {
     }
 
     /**
-     * initialize with three specific reasoners
+     * Initializes the finder with three specific reasoners.
+     *
      * @param reasoner1 a reasoner
      * @param reasoner2 a reasoner
      * @param reasoner3 a reasoner

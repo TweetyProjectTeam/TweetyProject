@@ -50,6 +50,12 @@ public class LoggerUtil {
    /** The logger instance for this utility class */
     public static final Logger logger = Logger.getLogger(LoggerUtil.class.getName());
 
+    /**
+     * Prevents instantiation.
+     */
+    private LoggerUtil() {
+    }
+
     static {
         try {
             // 1) Console handler

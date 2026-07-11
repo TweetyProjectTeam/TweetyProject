@@ -371,6 +371,11 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule, FolSignature> {
 		return signature;
 	}
 
+	/**
+	 * Prints usage information for the DeLP command line interface
+	 * @param parser the command line parser
+	 * @param printStream the output stream for the usage message
+	 */
 	private static void printUsage(CmdLineParser parser, PrintStream printStream) {
 		printStream.println("usage:\n java ... " +
 				DefeasibleLogicProgram.class.getName() +
@@ -465,25 +470,55 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule, FolSignature> {
 		}
 	}
 
+	/**
+	 * Command line options for DeLP reasoning.
+	 */
 	private static class DelpOptions {
+		/**
+		 * Creates default command line options.
+		 */
+		DelpOptions() {
+		}
+
+		/**
+		 * Flag to display help message.
+		 */
 		@Option(name = "-h", aliases = "--help", usage = "display usage and exit")
 		boolean displayHelp = false;
 
+		/**
+		 * Flag to enable verbose output
+		 */
 		@Option(name = "-v", aliases = "--verbose", usage = "also prints DeLP, not just query and answer")
 		boolean beVerbose = false;
 
+		/**
+		 * Flag to show time stamps between queries
+		 */
 		@Option(name = "-t", aliases = "--time", usage = "show time stamps between queries")
 		boolean showTime = false;
 
+		/**
+		 * The comparison criterion for DeLP reasoning
+		 */
 		@Option(name = "-c", aliases = "--compare", usage = "use given comparison criterion\nEMPTY, GEN_SPEC (default), PRIORITY (not implemented)")
 		ComparisonCriterion criterion = new GeneralizedSpecificity();
 
+		/**
+		 * The query to be performed against DeLP
+		 */
 		@Option(name = "-q", aliases = "--query", usage = "query to be performed against DeLP", metaVar = "QUERY")
 		String query;
 
+		/**
+		 * The batch file containing queries to be performed against DeLP
+		 */
 		@Option(name = "-b", aliases = "--batch", usage = "use queries from batch file to be performed against DeLP", metaVar = "BATCH")
 		File batchFile;
 
+		/**
+		 * The DeLP files to read from
+		 */
 		@org.kohsuke.args4j.Argument(metaVar = "DELP_FILE(S)", usage = "read DeLP from given FILE(S)")
 		List<File> arguments;
 	}

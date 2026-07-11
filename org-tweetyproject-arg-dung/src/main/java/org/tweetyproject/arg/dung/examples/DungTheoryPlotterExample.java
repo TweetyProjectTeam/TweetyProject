@@ -24,15 +24,25 @@ import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 
 /**
- * This class summarizes some examples, showcasing the usage of the {@link DungTheoryPlotter} to visualize {@link DungTheory argumentation frameworks}
+ * This class summarizes some examples and showcases the usage of the {@link DungTheoryPlotter}
+ * to visualize {@link DungTheory argumentation frameworks}.
+ * <p>
+ * The examples are rendered in a browser window.
  *
- *  @author Julian Sander
+  *  @author Julian Sander
  */
 public class DungTheoryPlotterExample {
     /**
+     * Creates a new plotter example.
+     */
+    public DungTheoryPlotterExample() {
+        super();
+    }
+
+    /**
      * Main method to visualize the examples of Dung theories created in this class.
      * It collects all examples into a set and visualizes them together using the DungTheoryPlotter.
-     * 
+     *
      * @param args Command-line arguments, not used in this example.
      */
 	public static void main(String[] args) {

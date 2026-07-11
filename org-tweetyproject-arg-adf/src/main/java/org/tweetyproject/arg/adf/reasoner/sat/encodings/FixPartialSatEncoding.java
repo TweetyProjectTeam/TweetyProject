@@ -33,9 +33,12 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public class FixPartialSatEncoding implements RelativeSatEncoding {
 	
+	/** Propositional mapping used for encoded arguments. */
 	private final PropositionalMapping mapping;
 	
 	/**
+	 * Creates a new encoding for fixing partial interpretations.
+	 *
 	 * @param mapping mapping
 	 */
 	public FixPartialSatEncoding(PropositionalMapping mapping) {

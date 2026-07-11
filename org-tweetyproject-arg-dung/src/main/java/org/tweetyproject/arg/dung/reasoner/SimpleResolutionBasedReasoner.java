@@ -35,9 +35,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 	/**chosen family member semantic*/
 	AbstractExtensionReasoner semantic = null;
 	/**
-	 *  choose a member of family of the resolution-based semantics
-	 */
-	/**
+	 * Chooses a member of the family of resolution-based semantics.
 	 *
 	 * @param semantics semantics
 	 */
@@ -48,14 +46,10 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 
 
 	/**
-	 * helper function
-	 * computes all permutations of the DungTheory
-	 * @param start, where birdirectional attacks have been resolved to unidirectonal ones
-	 */
-	/**
+	 * Computes all permutations of bidirectional attacks in the given theory.
 	 *
-	 * @param start start
-	 * @return DungTheory
+	 * @param start the theory whose bidirectional attacks are resolved
+	 * @return all frameworks obtained by resolving bidirectional attacks
 	 */
 	public Set<DungTheory> computeFRAF(DungTheory start){
 		//get all bidirectional attacks

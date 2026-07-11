@@ -38,6 +38,11 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class SemiQualifiedAdmissibilityPrinciple extends Principle {
+
+    /** Prevents instantiation. */
+    public SemiQualifiedAdmissibilityPrinciple() {
+    }
+
     @Override
     public String getName() {
         return "Semi-Qualified Admissibility";

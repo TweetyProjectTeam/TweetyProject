@@ -37,7 +37,9 @@ import java.util.stream.Collectors;
  * @author Oleksandr Dzhychko
  */
 public final class SequenceExplanationReply {
+    /** Serialized attack relations. */
     private final List<AttackDTO> attacks;
+    /** Sequence explanations grouped by proposition name. */
     private final Map<String, List<DialectialSequenceExplanationDTO>> perAtomSequenceExplanations;
 
     /**
@@ -82,6 +84,12 @@ public final class SequenceExplanationReply {
         return new SequenceExplanationReply(attacksConverted, perAtomSequenceExplanationsConverted);
     }
 
+    /**
+     * Converts sequence explanations keyed by propositions to their serialized form.
+     *
+     * @param perAtomSequenceExplanations sequence explanations grouped by proposition
+     * @return serialized sequence explanations grouped by proposition name
+     */
     private static Map<String, List<DialectialSequenceExplanationDTO>> from(Map<Proposition, List<DialectialSequenceExplanation>> perAtomSequenceExplanations) {
         return perAtomSequenceExplanations.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -91,4 +99,3 @@ public final class SequenceExplanationReply {
                         LinkedHashMap::new));
     }
 }
-

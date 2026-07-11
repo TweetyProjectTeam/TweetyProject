@@ -40,11 +40,12 @@ public class SerialisationGraph implements Graph<SerialisationState> {
 
     /** semantics for this serialisation graph */
     private final Semantics semantics;
-    /** explicit storage of parents for each node */
+    /** Explicit storage of parents for each node. */
     private Map<SerialisationState, Set<SerialisationState>> parents = new HashMap<>();
-    /** explicit storage of children for each node */
+    /** Explicit storage of children for each node. */
     private Map<SerialisationState, Set<SerialisationState>> children = new HashMap<>();
 
+    /** All edges of the serialisation graph. */
     private Collection<GeneralEdge<SerialisationState>> edges = new HashSet<>();
 
 

@@ -11,6 +11,10 @@ import java.util.HashSet;
  * Equivalence kernel for local expansion under complete semantics.
  */
 public class LocalExpansionCompleteKernel extends EquivalenceKernel {
+    /** Creates the kernel. */
+    public LocalExpansionCompleteKernel() {
+    }
+
     /**
      * Computes the redundant attacks for the given argumentation theory.
      *
@@ -40,4 +44,3 @@ public class LocalExpansionCompleteKernel extends EquivalenceKernel {
         return attacks;
     }
 }
-

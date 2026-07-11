@@ -29,18 +29,27 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.Argument;;
 
 /**
- * Writes an abstract argumentation framework into a file of the
- * ICCMA23 format, see https://iccma2023.github.io/rules.html#input-format.<br/>
- * <br/>
- * NOTE: this format is a slight variation of the CNF format (see CnfWriter)
- * 
+ * Writes an abstract argumentation framework to the ICCMA 23 format.
+ * <p>
+ * See https://iccma2023.github.io/rules.html#input-format. This format is a
+ * slight variation of the CNF format.
+ *
  * @author Matthias Thimm
  */
 public class Iccma23Writer extends AbstractDungWriter{
 
+	/** maps arguments to their numeric ids */
 	private Map<Argument,Integer> map;
+	/** reverse mapping from numeric ids to arguments */
 	private Argument[] rev_map;
 	
+	/**
+	 * Creates a new ICCMA23 writer.
+	 */
+	public Iccma23Writer() {
+		super();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.writer.AbstractDungWriter#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)
 	 */
@@ -63,6 +72,7 @@ public class Iccma23Writer extends AbstractDungWriter{
 	/**
 	 * Returns the mapping of the given argument wrt. the last
 	 * written file.
+	 *
 	 * @param arg some argument
 	 * @return the argument id
 	 */
@@ -73,6 +83,7 @@ public class Iccma23Writer extends AbstractDungWriter{
 	/**
 	 * Returns the argument mapped to the given integer wrt.
 	 * the last written file
+	 *
 	 * @param i some index
 	 * @return the argument
 	 */

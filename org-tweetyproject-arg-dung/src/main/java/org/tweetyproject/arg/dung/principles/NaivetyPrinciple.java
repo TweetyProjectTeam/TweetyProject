@@ -36,6 +36,9 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class NaivetyPrinciple extends Principle {
+    /** Creates the principle. */
+    public NaivetyPrinciple() {
+    }
 
     @Override
     public String getName() {

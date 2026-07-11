@@ -28,20 +28,24 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
- * The {@link #close()} call is handled by the provided executor. This allows asynchronous cleanup.
- * 
+ * Wrapper that closes a SAT solver state asynchronously via a provided executor.
+ *
  * @author Mathias Hofer
  *
  */
 public class AsynchronousCloseSatSolverState implements SatSolverState {
 
+	/** Wrapped SAT solver state. */
 	private final SatSolverState delegate;
-	
+
+	/** Executor used to close the wrapped state asynchronously. */
 	private final Executor executor;
-	
+
 	/**
-	 * @param delegate the state
-	 * @param executor the executor which is used to execute the calls to the delegate state
+	 * Creates a new asynchronously closing SAT solver state.
+	 *
+	 * @param delegate the wrapped SAT solver state
+	 * @param executor the executor used to close the wrapped state asynchronously
 	 */
 	public AsynchronousCloseSatSolverState(SatSolverState delegate, Executor executor) {
 		this.delegate = Objects.requireNonNull(delegate);

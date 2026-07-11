@@ -36,6 +36,13 @@ import java.util.Collection;
  * @author Timothy Gillespie
  */
 public class WeightedComponentCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
+
+    /**
+     * Creates a new WeightedComponentCountInconsistencyMeasure instance.
+     */
+    public WeightedComponentCountInconsistencyMeasure() {
+        // default constructor
+    }
 	
 	/**
      * Calculates the inconsistency measure of the given Dung theory argumentation framework based on

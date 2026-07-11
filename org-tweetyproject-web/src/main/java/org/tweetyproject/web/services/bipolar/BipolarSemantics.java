@@ -80,6 +80,13 @@ public enum BipolarSemantics {
      */
     public Support.Type type;
 
+    /**
+     * Creates a bipolar semantics entry.
+     *
+     * @param id the string identifier
+     * @param label the human-readable label
+     * @param input the expected support type
+     */
     BipolarSemantics(String id, String label, Support.Type input) {
         this.id = id;
         this.label = label;
@@ -87,8 +94,9 @@ public enum BipolarSemantics {
     }
 
     /**
+     * Looks up a semantics entry by its identifier.
      *
-     * @param id ID
+     * @param id the string identifier
      * @return the semantics
      */
     public static BipolarSemantics getSemantics(String id) {

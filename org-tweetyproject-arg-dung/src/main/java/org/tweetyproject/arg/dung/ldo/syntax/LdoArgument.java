@@ -32,16 +32,14 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.pl.syntax.PlPredicate;
 
 /**
- * This class represents an argument in ldo. 
- * 
+ * Represents an argument in LDO.
+ *
  * @author Matthias Thimm
  * @author Tim Janus
  */
 public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgument> {
 	
-	/**
-	 * The name of the proposition
-	 */
+	/** The name of the proposition. */
 	private PlPredicate predicate;
 
 	/** Default-Ctor for dynamic instantiation */
@@ -56,8 +54,9 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 	}
 	
 	/**
-	 * 
-	 * @param other other
+	 * Creates a copy of the given LDO argument.
+	 *
+	 * @param other the argument to copy
 	 */
 	public LdoArgument(LdoArgument other) {
 		this.predicate = new PlPredicate(other.getName());
@@ -185,4 +184,3 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 		return predicate.compareTo(o.predicate);
 	}
 }
-

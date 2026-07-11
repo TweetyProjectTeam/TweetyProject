@@ -27,11 +27,15 @@ import org.tweetyproject.web.services.Callee;
 import java.util.Objects;
 
 /**
- * The AbaReasonerCalleeFactory class provides a factory for creating different
- * instances of Argumentation-Based Argumentation (ABA) reasoner callees based on
- * specific commands.
+ * Factory for creating ABA reasoner callees from web request data.
  */
 public class AbaReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private AbaReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of supported commands for ABA reasoner.

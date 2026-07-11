@@ -338,6 +338,9 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     jj_la1_init_0();
   }
 
+  /**
+   * Initializes the parser lookahead table for this grammar.
+   */
   private static void jj_la1_init_0() {
     jj_la1_0 = new int[] { 0x80, 0x100, 0x20, 0x100, 0x800, };
   }
@@ -530,6 +533,13 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
       jj_la1[i] = -1;
   }
 
+  /**
+   * Consumes the current token if it matches the expected kind.
+   *
+   * @param kind the expected token kind
+   * @return the consumed token
+   * @throws ParseException if the current token does not match the expected kind
+   */
   static private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null)
@@ -591,6 +601,11 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     return t;
   }
 
+  /**
+   * Returns the kind of the next token in the stream.
+   *
+   * @return the next token kind
+   */
   static private int jj_ntk() {
     if ((jj_nt = token.next) == null)
       return (jj_ntk = (token.next = token_source.getNextToken()).kind);
@@ -598,8 +613,11 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
       return (jj_ntk = jj_nt.kind);
   }
 
+  /** Expected token sequences collected while building a parse error. */
   static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  /** Temporary storage for a single expected token sequence. */
   static private int[] jj_expentry;
+  /** Currently expected token kind while constructing a parse error. */
   static private int jj_kind = -1;
 
   /**

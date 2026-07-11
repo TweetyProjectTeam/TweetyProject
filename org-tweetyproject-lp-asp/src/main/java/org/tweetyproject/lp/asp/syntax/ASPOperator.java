@@ -216,8 +216,9 @@ public class ASPOperator {
 	 * @author Anna Gessler
 	 */
 	public static class DLVPredicate extends Predicate {
+		/** the set of supported DLV predicate names */
 		final Set<String> NAMES = Set.of("#int", "#rand", "#absdiff", "#append", "#delnth", "#flatten", "#getnth",
-				"#head", "#insLast", "#insnth", "#last", "#length", "#member", "#reverse", "#subList", "#tail");
+					"#head", "#insLast", "#insnth", "#last", "#length", "#member", "#reverse", "#subList", "#tail");
 
 				/**
 				 * Constructor
@@ -241,6 +242,7 @@ public class ASPOperator {
 	 * @author Anna Gessler
 	 */
 	public static class ClingoPredicate extends Predicate {
+		/** the set of supported Clingo predicate names */
 		final Set<String> NAMES = Set.of("#true", "#false");
 		/**
 		 * Constructor

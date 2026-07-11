@@ -28,8 +28,11 @@ import org.tweetyproject.action.signature.FolAction;
  * @author Sebastian Homann
  */
 public class Transition {
+	/** the source state of this transition */
 	private State from;
+	/** the target state of this transition */
 	private State to;
+	/** the action that causes this transition */
 	private FolAction action;
 
 	/**

@@ -43,12 +43,17 @@ import java.util.*;
  */
 public class TheoryLearner {
 
+    /** MaxSAT solver used to compute a model. */
     private MaxSatSolver maxSatSolver;
+    /** Arguments that may occur in the learned theory. */
     private Collection<Argument> arguments;
+    /** Parser used to build propositional constraints. */
     private PlParser parser;
+    /** Reflection handle for the clause encoder matching the selected semantics. */
     private Method getClause;
 
     /**
+     * Creates a new theory learner for the given arguments and semantics.
      *
      * @param args a set of arguments
      * @param semantics a semantics
@@ -80,7 +85,8 @@ public class TheoryLearner {
     }
 
     /**
-     * learns an argumentation framework fulfilling as many positive examples as possible while trying to not fulfill any negative examples
+     * Learns an argumentation framework that satisfies as many positive examples as possible while avoiding negative examples.
+     *
      * @param positiveExamples a map of positive examples and their weights
      * @param negativeExamples a map of negative examples and their weights
      * @return a argumentation framework inferred from the given examples
@@ -145,7 +151,8 @@ public class TheoryLearner {
     }
 
     /**
-     * create the formula encoding the conflict-free restriction on the extension
+     * Creates the formula encoding the conflict-free restriction on the extension.
+     *
      * @param theory a dung theory
      * @param labeling an extension
      * @return a formula encoding the conflict-freeness of the extension
@@ -165,7 +172,8 @@ public class TheoryLearner {
     }
 
     /**
-     * encode admissibility of the extension into a formula
+     * Encodes admissibility of the extension into a formula.
+     *
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the admissibility of ext
@@ -192,7 +200,8 @@ public class TheoryLearner {
     }
 
     /**
-     * encode stability of the extension into a formula
+     * Encodes stability of the extension into a formula.
+     *
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the stability of ext
@@ -218,7 +227,8 @@ public class TheoryLearner {
     }
 
     /**
-     * encode completeness of the extension into a formula
+     * Encodes completeness of the extension into a formula.
+     *
      * @param theory a dung theory
      * @param labeling an extension
      * @return formula representing the completeness of ext

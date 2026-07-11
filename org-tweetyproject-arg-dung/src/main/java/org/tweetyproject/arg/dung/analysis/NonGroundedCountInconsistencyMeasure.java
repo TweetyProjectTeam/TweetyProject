@@ -28,11 +28,15 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Calculates the non-grounded count inconsistency measure of the given argumentation framework.
- * Non-grounded count inconsistency measure is the count of arguments in the argumentation framework
- * that are neither in any grounded extension nor attacked by any argument in grounded extensions.
+ * Calculates the non-grounded count inconsistency measure for an argumentation framework.
+ *
+ * @param <T> the type of argumentation framework
  */
 public class NonGroundedCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
+
+	/** Creates the measure. */
+	public NonGroundedCountInconsistencyMeasure() {
+	}
 
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {

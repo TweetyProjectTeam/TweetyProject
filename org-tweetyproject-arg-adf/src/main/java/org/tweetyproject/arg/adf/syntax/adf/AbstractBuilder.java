@@ -34,20 +34,29 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder;
 
 /**
- * 
- * 
- * @author Mathias Hofer
+ * Base implementation for ADF builders that manages arguments, links, and eager/lazy construction modes.
  *
+ * @author Mathias Hofer
  */
 abstract class AbstractBuilder implements Builder {
 
+	/** the arguments currently contained in the builder */
 	protected final Map<Argument, AcceptanceCondition> arguments = new HashMap<>();
 
+	/** the strategy used to infer links in eager mode */
 	protected LinkStrategy linkStrategy;
 
+	/** the links targeting each argument */
 	private final Map<Argument, Set<Link>> linksTo = new HashMap<>();
 
+	/** whether the builder operates in eager mode */
 	private boolean eager = true;
+
+	/**
+	 * Creates a new abstract builder.
+	 */
+	protected AbstractBuilder() {
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -134,8 +143,15 @@ abstract class AbstractBuilder implements Builder {
 		return this;
 	}
 
+	/**
+	 * Returns the links targeting the given child argument, computing missing
+	 * links if necessary.
+	 *
+	 * @param child the argument whose incoming links should be returned
+	 * @return the incoming links for the given argument
+	 */
 	protected Collection<Link> linksTo(Argument child) {
-		Set<Link> to = linksTo.computeIfAbsent(child, a -> new HashSet<>());		
+		Set<Link> to = linksTo.computeIfAbsent(child, a -> new HashSet<>());
 		if (eager) {
 			// check if we have to compute missing links
 			AcceptanceCondition acc = arguments.get(child);

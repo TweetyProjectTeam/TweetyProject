@@ -40,6 +40,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class AllowingAbstentionPrinciple extends Principle {
 
+	/**
+	 * Creates a new allowing abstention principle.
+	 */
+	public AllowingAbstentionPrinciple() {
+		super();
+	}
+
 	@Override
 	public String getName() {
 		return "AllowingAbstention";

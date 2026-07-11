@@ -25,11 +25,15 @@ import org.tweetyproject.web.services.Callee;
 
 
 /**
- * The DungReasonerCalleeFactory class is responsible for creating instances of Callee
- * based on the specified Command, AbstractExtensionReasoner, and DungTheory parameters.
- * It also defines an enumeration of commands with associated IDs and labels.
+ * Factory for creating Dung reasoner callees from web request data.
  */
 public class DungReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private DungReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.

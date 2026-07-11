@@ -33,6 +33,13 @@ import java.util.HashSet;
  */
 public class CompleteKernel extends EquivalenceKernel {
 
+    /**
+     * Creates a new complete kernel.
+     */
+    public CompleteKernel() {
+        super();
+    }
+
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

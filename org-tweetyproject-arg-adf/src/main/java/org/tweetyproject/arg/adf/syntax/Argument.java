@@ -38,13 +38,15 @@ import org.tweetyproject.graphs.Node;
 public final class Argument extends org.tweetyproject.arg.dung.syntax.Argument implements AcceptanceCondition, Node {
 
     /**
-     * Argument
+     * Creates an unnamed ADF argument.
      */
     public Argument() {
         this(null);
     }
 
     /**
+     * Creates an ADF argument with the given name.
+     *
      * @param name the name of the argument
      */
     public Argument(String name) {

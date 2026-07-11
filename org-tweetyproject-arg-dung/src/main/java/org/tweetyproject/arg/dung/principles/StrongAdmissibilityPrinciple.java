@@ -38,6 +38,13 @@ import java.util.Collection;
  */
 public class StrongAdmissibilityPrinciple extends Principle {
 
+    /**
+     * Creates a new StrongAdmissibilityPrinciple instance.
+     */
+    public StrongAdmissibilityPrinciple() {
+        // default constructor
+    }
+
     @Override
     public String getName() {
         return "Strong Admissibility";

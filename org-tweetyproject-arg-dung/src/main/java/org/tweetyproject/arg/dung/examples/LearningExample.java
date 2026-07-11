@@ -33,8 +33,16 @@ import java.util.*;
  */
 public class LearningExample {
 	/**
+	 * Prevents instantiation of this utility-style example class.
+	 */
+	private LearningExample() {
+		// utility class
+	}
+
+	/**
+	 * Creates labelings for a small example theory and learns a new theory from them.
 	 *
-	 * @param args string
+	 * @param args command-line arguments
 	 */
     public static void main(String[] args) {
         // create graph to construct labelings

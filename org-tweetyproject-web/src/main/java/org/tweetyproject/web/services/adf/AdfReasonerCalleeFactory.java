@@ -26,11 +26,15 @@ import org.tweetyproject.web.services.Callee;
 
 
 /**
- * The AdfReasonerCalleeFactory class is responsible for creating instances of Callee
- * based on the specified Command, AbstractADFReasoner, and ADF parameters.
- * It also defines an enumeration of commands with associated IDs and labels.
+ * Factory for creating ADF reasoner callees from web request data.
  */
 public class AdfReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private AdfReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.

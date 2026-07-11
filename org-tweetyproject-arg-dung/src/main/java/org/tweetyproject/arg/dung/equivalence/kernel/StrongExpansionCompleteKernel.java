@@ -34,6 +34,13 @@ import java.util.HashSet;
  */
 public class StrongExpansionCompleteKernel extends EquivalenceKernel {
 
+    /**
+     * Creates a new StrongExpansionCompleteKernel instance.
+     */
+    public StrongExpansionCompleteKernel() {
+        // default constructor
+    }
+
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

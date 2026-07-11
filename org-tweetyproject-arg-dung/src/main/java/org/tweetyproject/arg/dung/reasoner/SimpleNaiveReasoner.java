@@ -30,6 +30,13 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new SimpleNaiveReasoner instance.
+     */
+    public SimpleNaiveReasoner() {
+        // default constructor
+    }
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         DungTheory restrictedTheory = new DungTheory((DungTheory)bbase);
         // remove all self-attacking arguments

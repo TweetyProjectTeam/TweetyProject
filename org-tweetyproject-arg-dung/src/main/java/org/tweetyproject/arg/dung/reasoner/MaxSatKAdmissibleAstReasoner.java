@@ -36,16 +36,17 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * A MaxSAT-based implementation for solving the MaxAdm* problem from
- * [Skiba,Thimm; 2024]
- * @author Matthias Thimm
+ * A MaxSAT-based implementation for solving the MaxAdm* problem.
  *
+ * @author Matthias Thimm
  */
 public class MaxSatKAdmissibleAstReasoner implements KOptimisationReasoner {
 
 	private MaxSatSolver solver;
 	
 	/**
+	 * Creates a new reasoner using the given MaxSAT solver.
+	 *
 	 * @param solver the max sat solver
 	 */
 	public MaxSatKAdmissibleAstReasoner(MaxSatSolver solver) {

@@ -30,11 +30,18 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Main factory for retrieving adf extension reasoners.
+ * Abstract factory for retrieving ADF reasoners.
  *
  * @author Lars Bengel
  */
 public abstract class AbstractAdfReasonerFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    protected AbstractAdfReasonerFactory() {
+    }
+
     /**
      * Returns an array of all available semantics.
      *

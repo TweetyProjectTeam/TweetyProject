@@ -34,6 +34,13 @@ import java.util.Set;
  * @author Lars Bengel
  */
 public class SimpleEagerReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new SimpleEagerReasoner instance.
+     */
+    public SimpleEagerReasoner() {
+        // default constructor
+    }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Collection<Extension<DungTheory>> exts = new HashSet<Extension<DungTheory>>();

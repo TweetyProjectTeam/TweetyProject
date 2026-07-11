@@ -38,6 +38,11 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class ReductAdmissibilityPrinciple extends Principle {
+    /** Creates the principle. */
+    public ReductAdmissibilityPrinciple() {
+        // default
+    }
+
     @Override
     public String getName() {
         return "Reduct Admissibility";

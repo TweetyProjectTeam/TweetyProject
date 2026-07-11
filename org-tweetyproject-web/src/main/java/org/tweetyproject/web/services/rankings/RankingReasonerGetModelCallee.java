@@ -106,9 +106,19 @@ public class RankingReasonerGetModelCallee extends Callee {
         return numericalRanking;
     }
 
+    /**
+     * Inner class for comparing arguments based on lattice partial order
+     */
     private static class LatticeComparator implements Comparator<Argument> {
+        /**
+         * The lattice partial order for argument comparison
+         */
         private final LatticePartialOrder<Argument,DungTheory> order;
 
+        /**
+         * Constructs a LatticeComparator with the given order
+         * @param order the lattice partial order
+         */
         public LatticeComparator(LatticePartialOrder<Argument,DungTheory> order) {
             this.order = order;
         }

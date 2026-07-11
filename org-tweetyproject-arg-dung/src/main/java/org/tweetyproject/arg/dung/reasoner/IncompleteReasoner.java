@@ -60,6 +60,7 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     }
 
     /**
+     * Computes all model sets that can arise from the completions of the given incomplete theory.
      *
      * @param theory incomplete theory
      * @return all possible models
@@ -93,7 +94,8 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     }
 
     /**
-     * Computes the set of possible extensions
+     * Computes the set of extensions that occur in at least one completion of the given incomplete theory.
+     *
      * @param theory incomplete theory
      * @return all possible models
      */
@@ -123,7 +125,8 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
     }
 
     /**
-     * Computes the set of necessary extensions
+     * Computes the set of extensions that occur in every completion of the given incomplete theory.
+     *
      * @param theory incomplete theory
      * @return all necessary models
      */

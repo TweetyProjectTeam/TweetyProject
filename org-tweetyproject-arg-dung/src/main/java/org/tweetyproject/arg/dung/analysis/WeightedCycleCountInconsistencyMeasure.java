@@ -36,6 +36,13 @@ import org.tweetyproject.graphs.DefaultGraph;
  */
 public class WeightedCycleCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
+    /**
+     * Creates a new WeightedCycleCountInconsistencyMeasure instance.
+     */
+    public WeightedCycleCountInconsistencyMeasure() {
+        // default constructor
+    }
+
 	/**
      * Calculates the inconsistency measure of a given Dung theory argumentation framework by evaluating
      * the cycles within the framework. Each cycle contributes inversely to its size to the total inconsistency

@@ -28,6 +28,7 @@ import java.util.Objects;
  *
  */
 public class NamedAction implements Action{
+	/** The name of this action. */
 	private String name;
 	
 	/**

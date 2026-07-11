@@ -36,6 +36,11 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
+    /** Creates the reasoner. */
+    public SCOOCNaiveReasoner() {
+        // default
+    }
+
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops((DungTheory) bbase);

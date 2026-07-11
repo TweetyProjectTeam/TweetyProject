@@ -21,10 +21,15 @@ package org.tweetyproject.web.services.adf;
 import java.util.List;
 
 /**
- * The ADFReasonerPost class represents a data structure for holding information
- * related to an ADF argumentation reasoner request sent via HTTP POST.
+ * Request payload for ADF reasoner web service calls.
  */
 public class AdfReasonerPost {
+
+    /**
+     * Creates an empty request payload.
+     */
+    public AdfReasonerPost() {
+    }
 
     /** The command type for the ADF reasoner request */
     private String cmd;

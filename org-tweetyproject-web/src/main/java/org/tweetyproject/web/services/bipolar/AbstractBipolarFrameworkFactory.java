@@ -26,11 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory for construction bipolar argumentation framework from web requests.
- * 
+ * Abstract factory for building bipolar argumentation frameworks from web requests.
+ *
  * @author Oleksandr Dzhychko
  */
 public abstract class AbstractBipolarFrameworkFactory {
+
+	/**
+	 * Prevents instantiation.
+	 */
+	protected AbstractBipolarFrameworkFactory() {
+	}
 
 
 	/**

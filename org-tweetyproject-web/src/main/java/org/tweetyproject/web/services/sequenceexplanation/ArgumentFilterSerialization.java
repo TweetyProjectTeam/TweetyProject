@@ -26,9 +26,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Utility for converting serialized argument filters into sets of arguments.
+ *
  * @author Oleksandr Dzhychko
  */
 public class ArgumentFilterSerialization {
+
+    /** Prevents instantiation. */
+    private ArgumentFilterSerialization() {
+        // utility class
+    }
 
     /**
      * Deserialize the filter for arguments.

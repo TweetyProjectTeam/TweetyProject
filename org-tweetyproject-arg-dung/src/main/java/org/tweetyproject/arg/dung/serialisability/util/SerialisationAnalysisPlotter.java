@@ -40,6 +40,11 @@ import org.tweetyproject.commons.PlotterMultiFrame;
  */
 public class SerialisationAnalysisPlotter {
 
+    /** Creates the utility class. */
+    protected SerialisationAnalysisPlotter() {
+        // default
+    }
+
     /**
      * Plots specified analyses of the serialising generation of extensions, each in a separate frame.
      * @param framework an argumentation framework
@@ -153,6 +158,13 @@ public class SerialisationAnalysisPlotter {
         return groundPlotter;
     }
 
+    /**
+     * Generates serialisation graphs for the given semantics and framework.
+     *
+     * @param semantics semantics to use for graph generation
+     * @param framework framework for which the graphs are generated
+     * @return the generated serialisation graphs, or {@code null} entries if a graph cannot be created
+     */
     private static SerialisationGraph[] generateGraphs(Semantics[] semantics, DungTheory framework) {
         SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
         for (int i = 0; i < graphs.length; i++) {
@@ -166,6 +178,13 @@ public class SerialisationAnalysisPlotter {
         return graphs;
     }
 
+    /**
+     * Generates a framework-to-graphs map for the given frameworks.
+     *
+     * @param semantics semantics to use for graph generation
+     * @param frameworks frameworks for which the graphs are generated
+     * @return a map from each framework to its serialisation graphs
+     */
     private static HashMap<DungTheory, SerialisationGraph[]> generateGraphsMapToAF(Semantics[] semantics, DungTheory[] frameworks) {
         var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
 

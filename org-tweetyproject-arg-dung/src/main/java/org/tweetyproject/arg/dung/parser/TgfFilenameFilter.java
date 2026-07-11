@@ -27,6 +27,13 @@ import java.io.FilenameFilter;
  * @author Matthias Thimm
  */
 public class TgfFilenameFilter implements FilenameFilter{
+
+    /**
+     * Creates a new TgfFilenameFilter instance.
+     */
+    public TgfFilenameFilter() {
+        // default constructor
+    }
 	
 	/* (non-Javadoc)
 	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)

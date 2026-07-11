@@ -36,6 +36,7 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class QualifiedReasoner extends AbstractExtensionReasoner {
+    /** Base reasoner used to compute the underlying semantics. */
     private final AbstractExtensionReasoner baseReasoner;
 
     /**

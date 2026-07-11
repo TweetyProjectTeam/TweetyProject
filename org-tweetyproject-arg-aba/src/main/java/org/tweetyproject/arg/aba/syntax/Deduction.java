@@ -34,7 +34,10 @@ import org.tweetyproject.commons.Formula;
  */
 public class Deduction<T extends Formula> extends Argument {
 
+	/** The top rule of this deduction. */
 	AbaRule<T> rule;
+
+	/** The direct subdeductions of this deduction. */
 	Collection<Deduction<T>> subs = new HashSet<>();
 
 	/**

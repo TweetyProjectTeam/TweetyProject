@@ -36,6 +36,13 @@ import org.tweetyproject.graphs.Graph;
 
 public class UnstableCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
+    /**
+     * Creates a new UnstableCountInconsistencyMeasure instance.
+     */
+    public UnstableCountInconsistencyMeasure() {
+        // default constructor
+    }
+
 	/**
  * Calculates the unstable count inconsistency measure of the given argumentation framework.
  *

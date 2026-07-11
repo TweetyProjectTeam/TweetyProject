@@ -34,6 +34,7 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
  * @author Sebastian Homann
  */
 public class FolAction implements Iterable<FolAtom> {
+	/** the action names mapped to true in this action */
 	private Set<FolAtom> actionNames = new HashSet<FolAtom>();
 
 	/**

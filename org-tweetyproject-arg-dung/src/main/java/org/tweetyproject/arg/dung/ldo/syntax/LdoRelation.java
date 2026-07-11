@@ -31,14 +31,17 @@ import org.tweetyproject.logics.pl.syntax.PlPredicate;
  */
 public class LdoRelation extends LdoFormula {
 
+	/** Left-hand side of the relation. */
 	private LdoFormula left;
+	/** Right-hand side of the relation. */
 	private LdoFormula right;
 	
 	
 	/**
-	 * 
-	 * @param left left
-	 * @param right right
+	 * Creates a new relation between two LDO formulas.
+	 *
+	 * @param left left-hand side formula
+	 * @param right right-hand side formula
 	 */
 	public LdoRelation(LdoFormula left, LdoFormula right){
 		this.left = left;
@@ -47,18 +50,19 @@ public class LdoRelation extends LdoFormula {
 	
 	
 	/**
-	 * 
-	 * @return return
+	 * Returns the left-hand side formula.
+	 *
+	 * @return the left-hand side formula
 	 */
-	
 	public LdoFormula getLeft(){
 		return this.left;
 	}
 	
 	
 	/**
-	 * 
-	 * @return return
+	 * Returns the right-hand side formula.
+	 *
+	 * @return the right-hand side formula
 	 */
 	public LdoFormula getRight(){
 		return this.right;

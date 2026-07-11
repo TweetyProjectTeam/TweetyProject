@@ -36,7 +36,9 @@ import org.tweetyproject.commons.InferenceMode;
  */
 public class EeeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 
+	/** the internal extension reasoner */
 	private AbstractExtensionReasoner reasoner;
+	/** the inference mode */
 	private InferenceMode inferenceMode;
 	
 	/**
@@ -63,7 +65,9 @@ public class EeeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 		return result;
 	}	
     /**
-     * this method always returns true because the solver is native
+     * Indicates that the reasoner is always installed.
+     *
+     * @return true
      */
 	@Override
 	public boolean isInstalled() {

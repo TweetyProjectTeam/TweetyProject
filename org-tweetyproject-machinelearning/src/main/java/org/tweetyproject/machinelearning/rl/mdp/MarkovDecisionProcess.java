@@ -36,14 +36,21 @@ import org.tweetyproject.commons.util.Triple;
  * @param <A> The type of actions this MDP uses
  */
 public class MarkovDecisionProcess<S extends State, A extends Action> {
+	/** All states of this MDP. */
 	private Collection<S> states;
+	/** All actions available in this MDP. */
 	private Collection<A> actions;
+	/** Transition probabilities indexed by state-action-state triples. */
 	private Map<Triple<S,A,S>,Double> prob;
+	/** Immediate rewards indexed by state-action-state triples. */
 	private Map<Triple<S,A,S>,Double> rewards;
 	
+	/** Initial state of the process. */
 	private S initial_state;
+	/** Terminal states of the process. */
 	private Collection<S> terminal_states;
 	
+	/** Random number generator used by sampling-based methods. */
 	private Random rand;
 
 	/**

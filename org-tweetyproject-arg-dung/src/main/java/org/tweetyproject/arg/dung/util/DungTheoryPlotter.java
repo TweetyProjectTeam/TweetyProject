@@ -50,14 +50,41 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 
+	/**
+	 * Default label for nodes
+	 */
 	private final String LABEL_DEFAULT_NODE = "N.A.";
+	/**
+	 * Default label for edges
+	 */
 	private final String LABEL_DEFAULT_EDGE = "";
+	/**
+	 * Style property for node fill color
+	 */
 	private final String STYLE_NODE_FILLCOLOR = "=lightblue;";
+	/**
+	 * Style property for rounded node corners
+	 */
 	private final String STYLE_NODE_ROUNDED = "=true;";
+	/**
+	 * Width of vertex nodes
+	 */
 	private final int VERTEX_WIDTH = 30;
+	/**
+	 * Height of vertex nodes
+	 */
 	private final int VERTEX_HEIGHT = 30;
+	/**
+	 * Spacing between vertices
+	 */
 	private final int VERTEX_SPACING = 100;
+	/**
+	 * Spacing between ranks
+	 */
 	private final int RANK_SPACING = 150;
+	/**
+	 * Font size for labels
+	 */
 	private final int FONTSIZE = 14;
 	
 	/**

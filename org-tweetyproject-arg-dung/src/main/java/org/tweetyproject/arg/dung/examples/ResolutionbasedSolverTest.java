@@ -33,6 +33,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 
 public class ResolutionbasedSolverTest {
+    /** Creates the example. */
+    public ResolutionbasedSolverTest() {
+        // default
+    }
 
     /**
      * Main method to run the resolution-based solver test. It constructs a simple Dung theory with

@@ -25,6 +25,8 @@ package org.tweetyproject.arg.adf.syntax.acc;
 public final class ExclusiveDisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**
+	 * Creates a new exclusive disjunction acceptance condition.
+	 *
 	 * @param left the left side of the xor
 	 * @param right the right side of the xor
 	 */

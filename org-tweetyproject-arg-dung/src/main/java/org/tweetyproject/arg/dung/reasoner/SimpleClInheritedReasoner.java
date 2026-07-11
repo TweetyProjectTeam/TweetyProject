@@ -32,6 +32,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  *
  */
 public class SimpleClInheritedReasoner extends AbstractClaimBasedReasoner{
+	/** The underlying extension reasoner. */
 	private static AbstractExtensionReasoner reasoner;
 	
 	/**

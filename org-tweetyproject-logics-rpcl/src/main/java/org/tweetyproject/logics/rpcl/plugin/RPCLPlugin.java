@@ -55,8 +55,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.options.getplugin.OptionCapabilities;
 
 /**
- * relational probabilistic conditional logic plugin for the tweety cli
- * skeleton
+ * Tweety CLI plugin for relational probabilistic conditional logic.
  *
  * @author Bastian Wolf
  *
@@ -66,8 +65,8 @@ import net.xeoh.plugins.base.options.getplugin.OptionCapabilities;
 public class RPCLPlugin extends AbstractTweetyPlugin {
 
 
-	// necessary
-	private static final String RPCLOGIC__CALL_PARAMETER = "rpcl";
+		/** Command-line identifier for the RPCL plugin. */
+		private static final String RPCLOGIC__CALL_PARAMETER = "rpcl";
 
 //	private static final String RPCLOGIC__CALL_DESCRIPTION = "";
 
@@ -83,90 +82,113 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	// option capabilities
 //	private static final OptionCapabilities RPCLOGIC__OPTIONS = new OptionCapabilities("TweetyProject Plugin", RPCLOGIC__CALL_PARAMETER);
 
-	private static final String RPCLOGIC__PARSER_IDENTIFIER = "-parser";
+		/** Command-line identifier for selecting a probability parser. */
+		private static final String RPCLOGIC__PARSER_IDENTIFIER = "-parser";
 
-	private static final String RPCLOGIC__PARSER_DESCRIPTION = "-parser <parser>, parser used to parse input files";
+		/** Description of the parser selection parameter. */
+		private static final String RPCLOGIC__PARSER_DESCRIPTION = "-parser <parser>, parser used to parse input files";
 
-	private static final String[] RPCLOGIC__PARSER_ENUM = {"rpclmeProb","rpclmeCondProb"};
+		/** Supported probability parser identifiers. */
+		private static final String[] RPCLOGIC__PARSER_ENUM = {"rpclmeProb","rpclmeCondProb"};
 
 
-	private static final String RPCLOGIC__SEMANTICS_IDENTIFIER = "-semantics";
+		/** Command-line identifier for selecting RPCL semantics. */
+		private static final String RPCLOGIC__SEMANTICS_IDENTIFIER = "-semantics";
 
 //	private static final String RPCLOGIC__SEMANTICS_IDENTIFIER_SHORT = "-sem";
 
-	private static final String RPCLOGIC__SEMANTICS_DESCRIPTION = "";
+		/** Description of the semantics selection parameter. */
+		private static final String RPCLOGIC__SEMANTICS_DESCRIPTION = "";
 
-	private static final String[] RPCLOGIC__SEMANTICS_ENUM = {"averaging","aggregating"};
+		/** Supported RPCL semantics identifiers. */
+		private static final String[] RPCLOGIC__SEMANTICS_ENUM = {"averaging","aggregating"};
 
 
-	private static final String RPCLOGIC__INFERENCE_IDENTIFIER = "-inference";
+		/** Command-line identifier for selecting an inference method. */
+		private static final String RPCLOGIC__INFERENCE_IDENTIFIER = "-inference";
 
 //	private static final String RPCLOGIC__INFERENCE_IDENTIFIER_SHORT = "-inf";
 
-	private static final String RPCLOGIC__INFERENCE_DESCRIPTION = "";
+		/** Description of the inference selection parameter. */
+		private static final String RPCLOGIC__INFERENCE_DESCRIPTION = "";
 
-	private static final String[] RPCLOGIC__INFERENCE_ENUM = {"standard", "lifted"};
+		/** Supported inference method identifiers. */
+		private static final String[] RPCLOGIC__INFERENCE_ENUM = {"standard", "lifted"};
 
 
 	// optional
 	// output
-	private static final String RPCLOGIC__OUTPUT_IDENTIFIER = "-o";
+		/** Command-line identifier for the general output file. */
+		private static final String RPCLOGIC__OUTPUT_IDENTIFIER = "-o";
 
-	private static final String RPCLOGIC__OUTPUT_DESCRIPTION = "";
+		/** Description of the general output parameter. */
+		private static final String RPCLOGIC__OUTPUT_DESCRIPTION = "";
 
-	private static final String[] RPCLOGIC__OUTPUT_VALUE = new String[1];
+		/** Storage for the general output parameter value. */
+		private static final String[] RPCLOGIC__OUTPUT_VALUE = new String[1];
 
 	// query
-	private static final String RPCLOGIC__QUERY_IDENTIFIER = "-query";
+		/** Command-line identifier for the query parameter. */
+		private static final String RPCLOGIC__QUERY_IDENTIFIER = "-query";
 
-	private static final String RPCLOGIC__QUERY_DESCRIPTION = "";
+		/** Description of the query parameter. */
+		private static final String RPCLOGIC__QUERY_DESCRIPTION = "";
 
-	private static final String[] RPCLOGIC__QUERY_VALUE = new String[1];
+		/** Storage for the query parameter value. */
+		private static final String[] RPCLOGIC__QUERY_VALUE = new String[1];
 
 	// input probability files
-	private static final String RPCLOGIC__INPROB_IDENTIFIER = "-ip";
+		/** Command-line identifier for probability distribution input files. */
+		private static final String RPCLOGIC__INPROB_IDENTIFIER = "-ip";
 
-	private static final String RPCLOGIC__INPROB_DESCRIPTION = "";
+		/** Description of the probability input parameter. */
+		private static final String RPCLOGIC__INPROB_DESCRIPTION = "";
 
-	private static final File[] RPCLOGIC__INPROB_FILES = new File[1];
+		/** Storage for probability distribution input files. */
+		private static final File[] RPCLOGIC__INPROB_FILES = new File[1];
 
 	// probability output file
-	private static final String RPCLOGIC__PROBOUT_IDENTIFIER = "-po";
+		/** Command-line identifier for the probability distribution output file. */
+		private static final String RPCLOGIC__PROBOUT_IDENTIFIER = "-po";
 
-	private static final String RPCLOGIC__PROBOUT_DESCRIPTION = "";
+		/** Description of the probability output parameter. */
+		private static final String RPCLOGIC__PROBOUT_DESCRIPTION = "";
 
-	private static final File[] RPCLOGIC__PROBOUT_FILES = new File[1];
+		/** Storage for the probability distribution output file. */
+		private static final File[] RPCLOGIC__PROBOUT_FILES = new File[1];
 
 	// static parameter
-	// probability input files
-	private static String[] probInputFiles = null;
-	// all available parsers
- 	private static RpclParser parser = null;
-	// the used probability parser
- 	private static Object probParser = null;
- 	// probability output file
- 	private static String probOutFile = null;
- 	// probability output writer
- 	private static Writer probOutWriter = null;
- 	// write output to file?
- 	private static boolean writeToFile = false;
- 	// plugin output file
- 	private static String outputFile = null;
- 	// query string
- 	private static String query = null;
- 	// query result
- 	private static Double queryResult = null;
- 	// semantics
- 	private static int semantics = -1;
- 	// inference
- 	private static int inference = -1;
- 	// lifted?
- 	private static boolean lifted = false;
- 	// folparser
- 	private static FolParser folParser = new FolParser();
+		/** Paths of the probability distribution input files. */
+		private static String[] probInputFiles = null;
+		/** Parser used for the RPCL belief set. */
+		private static RpclParser parser = null;
+		/** Parser used for the probability distribution. */
+		private static Object probParser = null;
+		/** Path of the probability distribution output file. */
+		private static String probOutFile = null;
+		/** Writer used for the probability distribution output. */
+		private static Writer probOutWriter = null;
+		/** Indicates whether plugin output is written to a file. */
+		private static boolean writeToFile = false;
+		/** Path of the general plugin output file. */
+		private static String outputFile = null;
+		/** Query formula supplied to the plugin. */
+		private static String query = null;
+		/** Probability calculated for the query. */
+		private static Double queryResult = null;
+		/** Index of the selected RPCL semantics. */
+		private static int semantics = -1;
+		/** Index of the selected inference method. */
+		private static int inference = -1;
+		/** Indicates whether lifted inference is selected. */
+		private static boolean lifted = false;
+		/** Parser used to parse first-order queries. */
+		private static FolParser folParser = new FolParser();
 
 	/**
+	 * Returns the command identifier used to invoke this plugin.
 	 *
+	 * @return the plugin command
 	 */
 	@Override
 	public String getCommand() {
@@ -174,7 +196,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	}
 
 	/**
-	 *Constructor
+	 * Creates a new RPCL plugin.
 	 */
 	public RPCLPlugin() {
 		super();
@@ -189,19 +211,20 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	}
 
 	/**
-	 * Constructs a new plugin
-	 * @param args arguments
+	 * Creates a new RPCL plugin instance from command-line arguments.
+	 *
+	 * @param args command-line arguments
 	 */
 	public RPCLPlugin(String[] args) {
 		this();
 	}
 
 	/**
-	 * Executes this plugin with given input files and other aggregated parameters
-	 * @param input files to be parsed (e.g. knowledge base). Input is assumed to contain only one file
-	 * at the first position (input[0]).
-	 * @param params other parameter like queries, parser or reasoner
-	 * @return the output calculated from input files and arguments
+	 * Executes this plugin with the given input files and parameters.
+	 *
+	 * @param input files to be parsed; the first entry is treated as the knowledge base
+	 * @param params additional parameters such as query, parser, or semantics settings
+	 * @return the output calculated from the input files and parameters
 	 */
 	@Override
 	public PluginOutput execute(File[] input, CommandParameter[] params) {

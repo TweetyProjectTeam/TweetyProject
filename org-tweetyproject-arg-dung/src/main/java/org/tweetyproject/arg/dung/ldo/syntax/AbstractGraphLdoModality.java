@@ -29,7 +29,13 @@ import org.tweetyproject.logics.pl.syntax.PlPredicate;
  */
 public abstract class AbstractGraphLdoModality extends AbstractLdoModality {
 
+	/**
+	 * upper reference arguments of this modality
+	 */
 	private Set<LdoArgument> upperReferenceArguments;
+	/**
+	 * lower reference arguments of this modality
+	 */
 	private Set<LdoArgument> lowerReferenceArguments;
 	
     /**

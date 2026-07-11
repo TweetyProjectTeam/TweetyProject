@@ -27,20 +27,20 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 
 
 /**
- *implements claim based theory
- *see: The Complexity Landscape of Claim-Augmented
-Argumentation Frameworks (Wolfgang Dvoˇr´ak  Alexander Greßler
-Anna Rapberger  StefanWoltran )
+ * Implements a claim-based argumentation theory.
+ *
+ * See: "The Complexity Landscape of Claim-Augmented Argumentation Frameworks"
+ * by Wolfgang Dvorak, Alexander Gressler, Anna Rapberger, and Stefan Woltran.
  *
  * @author Sebastian Franke
- *
  */
 public class ClaimBasedTheory extends DungTheory {
 
 
-	/**all claims*/
+	/** All claims. */
 	private HashSet<Claim> claims;
 	/**
+	 * Adds a claim argument to this theory.
 	 *
 	 * @param arg argument
 	 */
@@ -52,6 +52,8 @@ public class ClaimBasedTheory extends DungTheory {
 
 
 	/**
+	 * Returns all claims in this theory.
+	 *
 	 *
 	 * @return the claims
 	 */
@@ -59,8 +61,9 @@ public class ClaimBasedTheory extends DungTheory {
 		return claims;
 	}
 	/**
+	 * Sets the claims of this theory.
 	 *
-	 * @param claims the claims to e set
+	 * @param claims the claims to set
 	 */
 	public void setClaims(HashSet<Claim> claims) {
 		this.claims = claims;
@@ -68,7 +71,7 @@ public class ClaimBasedTheory extends DungTheory {
 
 
 	/**
-	 * Default constructor; initializes empty sets of arguments and attacks
+	 * Creates a new empty claim-based theory.
 	 */
 	public ClaimBasedTheory(){
 		super();
@@ -76,7 +79,9 @@ public class ClaimBasedTheory extends DungTheory {
 	}
 
 	/**
-	 * Default constructor; initializes empty sets of arguments and attacks
+	 * Creates a new claim-based theory from a claim map.
+	 *
+	 *
 	 * @param claimMap the map if arguments to claims
 	 */
 	public ClaimBasedTheory(HashMap<ClaimArgument, Claim> claimMap){
@@ -88,7 +93,9 @@ public class ClaimBasedTheory extends DungTheory {
 		}
 	}
 	/**
-	 * get all claims of a given extension
+	 * Returns all claims of a given extension.
+	 *
+	 *
 	 * @param ext extension
 	 * @return the extension's claims
 	 */
@@ -102,9 +109,11 @@ public class ClaimBasedTheory extends DungTheory {
 
 
 	/**
+	 * Returns all claims defeated by the extension.
+	 *
 	 *
 	 * @param ext the extension
-	 * @return all claims defeated by the extension (extension defeat all arguments of a claim => claim defeated)
+	 * @return all claims defeated by the extension
 	 */
 	public ClaimSet defeats(Extension ext) {
 		HashSet<ClaimArgument> argsWithClaim = new HashSet<ClaimArgument>();

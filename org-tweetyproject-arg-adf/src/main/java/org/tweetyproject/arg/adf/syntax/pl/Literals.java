@@ -21,8 +21,9 @@ package org.tweetyproject.arg.adf.syntax.pl;
 import java.util.Objects;
 
 /**
- * @author Mathias Hofer
+ * Helper types for representing propositional literals in ADF syntax.
  *
+ * @author Mathias Hofer
  */
 class Literals {
 	

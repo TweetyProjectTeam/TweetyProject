@@ -269,6 +269,7 @@ public class PetriNetParser extends Parser {
 	/**
 	 * Create a place associated with a node of the BPMN model
 	 * @param node the associated node
+	 * @return the created place
 	 */
 	private Place createPlace(BpmnNode node) {
 		String id = "p_" + node.getId();
@@ -284,6 +285,7 @@ public class PetriNetParser extends Parser {
 	 * e.g. the preset of an inclusive gateway transition
 	 * @param nodeA the first associated node
 	 * @param nodeB the second associated node
+	 * @return the created place
 	 */
 	private Place createPlace(BpmnNode nodeA, BpmnNode nodeB) {
 		String id = "p_" + nodeA.getId() + "_" + nodeB.getId();

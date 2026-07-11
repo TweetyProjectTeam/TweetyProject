@@ -68,6 +68,7 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
 	/**
 	 * calculates the inconsistency and culpabilities after performing the Markov walk
 	 * @param markovWalk the exhaustively performed Markov walk
+	 * @return the calculated inconsistency value
 	 */
 	private double calculateInconsistencyValue(MarkovWalk markovWalk) {
 		Matrix controlVector = markovWalk.getControlVector();
@@ -126,4 +127,3 @@ public class DeadTransitionMeasure implements BpmnInconsistencyMeasure {
     /** Default Constructor */
     public DeadTransitionMeasure(){}
 }
-

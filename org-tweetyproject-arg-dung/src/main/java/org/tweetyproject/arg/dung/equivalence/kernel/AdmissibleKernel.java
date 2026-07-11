@@ -33,6 +33,13 @@ import java.util.HashSet;
  */
 public class AdmissibleKernel extends EquivalenceKernel {
 
+    /**
+     * Creates a new admissible kernel.
+     */
+    public AdmissibleKernel() {
+        super();
+    }
+
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

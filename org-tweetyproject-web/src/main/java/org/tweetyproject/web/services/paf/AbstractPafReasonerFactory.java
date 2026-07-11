@@ -32,10 +32,15 @@ import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Factory for building {@link ProbabilisticArgumentationFramework} instances and
- * {@link AbstractPafReasoner} instances from web request data.
+ * Abstract factory for building PAF reasoners and frameworks from web request data.
  */
 public abstract class AbstractPafReasonerFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    protected AbstractPafReasonerFactory() {
+    }
 
     /** Default number of Monte Carlo trials when none is specified. */
     public static final int DEFAULT_NR_OF_TRIALS = 10000;

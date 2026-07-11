@@ -18,31 +18,35 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 /**
- * a claim for an argument
- * @author Sebastian Franke
+ * Represents a claim for an argument.
  *
+ * @author Sebastian Franke
  */
 public class Claim{
 	/**
-	 * name
+	 * The claim label.
 	 */
 	String claim;
 	/**
-	 * 
-	 * @param claim the name 
+	 * Creates a new claim.
+	 *
+	 * @param claim the claim name
 	 */
 	public Claim(String claim) {
 		this.claim = claim;
 	}
 	/**
-	 * 
-	 * @return the claim
+	 * Returns the claim label.
+	 *
+	 * @return the claim label
 	 */
 	public String getClaim() {
 		return this.claim;
 	}
 	/**
-	 * return the name
+	 * Returns the claim label.
+	 *
+	 * @return the claim label
 	 */
 	public String toString() {
 		return claim;

@@ -25,15 +25,17 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.*;
 
 
-/**
- * This reasoner for SetAf theories performs inference on the complete extensions.
- * Computes the set of all complete extensions, i.e., all admissible sets that contain all their acceptable arguments.
- * @author Matthias Thimm, Sebastian Franke
- *
- */
+	/**
+	 * This reasoner for SetAf theories performs inference on the complete extensions.
+	 * Computes the set of all complete extensions, i.e., all admissible sets that contain all their acceptable arguments.
+	 * @author Matthias Thimm, Sebastian Franke
+	 *
+	 */
 public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
-		/** Default */
+		/**
+		 * Default constructor.
+		 */
 		public SimpleCompleteSetAfReasoner(){
 			// Default
 		}
@@ -56,7 +58,7 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 
 	/**
 	 * Auxiliary method to compute all complete extensions
-	 * @param setafTheory a SetAf theory
+	 * @param dungTheory a SetAf theory
 	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>

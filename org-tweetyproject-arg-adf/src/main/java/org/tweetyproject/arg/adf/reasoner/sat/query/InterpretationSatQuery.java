@@ -24,6 +24,8 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
+ * Query that returns a single interpretation from a SAT execution.
+ *
  * @author Mathias Hofer
  *
  */

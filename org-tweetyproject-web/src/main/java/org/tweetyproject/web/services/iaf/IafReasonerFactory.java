@@ -33,6 +33,13 @@ import java.util.List;
  * @author Jonas Klein, Lars Bengel
  */
 public abstract class IafReasonerFactory {
+
+	/**
+	 * Prevents instantiation.
+	 */
+	private IafReasonerFactory() {
+	}
+
 	/**
 	 * Returns an array of all available semantics.
 	 *

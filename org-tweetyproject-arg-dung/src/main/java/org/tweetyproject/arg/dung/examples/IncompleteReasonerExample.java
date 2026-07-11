@@ -31,16 +31,24 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
 
 /**
- * example of a problem for an incomplete reasoner
- * @author Sebastian Franke
+ * Demonstrates reasoning tasks for incomplete argumentation frameworks.
  *
+ * @author Sebastian Franke
  */
 public class IncompleteReasonerExample {
 	/**
-	 * main method
-	 * @param args arguments
+	 * Creates a new incomplete reasoner example.
 	 */
-		public static void main(String[] args) {
+	public IncompleteReasonerExample() {
+		super();
+	}
+
+    /**
+     * Runs the example and prints the results of several incomplete-reasoner queries.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(String[] args) {
 
 			IncompleteTheory ex = new IncompleteTheory();
 
@@ -74,32 +82,20 @@ public class IncompleteReasonerExample {
 	        IncompleteReasoner re2 = new IncompleteReasoner(Semantics.CO);
 	        
 
-			System.out.println("Possible Credulous Conclusion 'd': " + re2.isPossibleCredulous(ex, d));
-			System.out.println("Necessary Credulous Conclusion 'd': " + re2.isNecessaryCredulous(ex, d));
-			System.out.println("Possible Skeptical Conclusion 'd': " + re2.isPossibleSkeptical(ex, d));
-			System.out.println("Necessary Skeptical Conclusion 'd': " + re2.isNecessarySkeptical(ex, d));
+        System.out.println("Possible Credulous Conclusion 'd': " + re2.isPossibleCredulous(ex, d));
+        System.out.println("Necessary Credulous Conclusion 'd': " + re2.isNecessaryCredulous(ex, d));
+        System.out.println("Possible Skeptical Conclusion 'd': " + re2.isPossibleSkeptical(ex, d));
+        System.out.println("Necessary Skeptical Conclusion 'd': " + re2.isNecessarySkeptical(ex, d));
 
 
-	        SimpleCompleteReasoner re = new SimpleCompleteReasoner();
-	        ex.optimisticCompletion(argSet);
-	        
-	        
-	        System.out.println("optimistic for {d}: " + re.getModels(ex));
-	        ex.pessimisticCompletion(argSet);
+        SimpleCompleteReasoner re = new SimpleCompleteReasoner();
+        ex.optimisticCompletion(argSet);
 
-	        System.out.println("pessimistic for {d}: " + re.getModels(ex));
-	        System.out.print("all possible models: " + re2.getAllModels(ex).toString());
-	        
-	       
-	        
-	        
+        System.out.println("optimistic for {d}: " + re.getModels(ex));
+        ex.pessimisticCompletion(argSet);
 
-
-
-	        
-	        
-	        
-	        
-		}
+        System.out.println("pessimistic for {d}: " + re.getModels(ex));
+        System.out.print("all possible models: " + re2.getAllModels(ex).toString());
+    }
 
 }

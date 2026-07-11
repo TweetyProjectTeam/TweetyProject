@@ -37,6 +37,13 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class WeakReinstatementPrinciple extends Principle {
+
+    /**
+     * Creates a new WeakReinstatementPrinciple instance.
+     */
+    public WeakReinstatementPrinciple() {
+        // default constructor
+    }
     @Override
     public String getName() {
         return "Weak Reinstatement";

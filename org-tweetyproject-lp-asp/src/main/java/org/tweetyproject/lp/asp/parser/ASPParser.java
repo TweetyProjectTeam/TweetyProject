@@ -76,9 +76,16 @@ import org.tweetyproject.lp.asp.semantics.*;
  */
 public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPParserConstants {/*@bgen(jjtree)*/
 	/**parser state	 */
-  protected JJTASPParserState jjtree = new JJTASPParserState();private static ASPParser oneThreadParser = new ASPParser(new StringReader(""));
+  protected JJTASPParserState jjtree = new JJTASPParserState();
+  
+  /**
+   * Thread-safe singleton parser instance
+   */
+  private static ASPParser oneThreadParser = new ASPParser(new StringReader(""));
 
-  /** the visitor */
+  /**
+   * The visitor for parsing ASP programs
+   */
  private static InstantiateVisitor visitor = new InstantiateVisitor();
 
  /**
@@ -255,8 +262,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return RuleList
+   * Parses a list of statements
    * @return RuleList
    * @throws ParseException RuleList
    */
@@ -301,8 +307,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Query
+   * Parses a query
    * @return Query
    * @throws ParseException Query
    */
@@ -340,8 +345,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Rule
+   * Parses a single statement
    * @return Rule
    * @throws ParseException Rule
    */
@@ -535,8 +539,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Head
+   * Parses the head of a rule
    * @return Head
    * @throws ParseException Head
    */
@@ -590,8 +593,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return BodyList
+   * Parses the body of a rule as a list of atoms
    * @return BodyList
    * @throws ParseException BodyList
    */
@@ -638,8 +640,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Body
+   * Parses a single body atom
    * @return Body
    * @throws ParseException Body
    */
@@ -717,8 +718,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return HeadElementsList
+   * Parses a disjunction of head elements
    * @return HeadElementsList
    * @throws ParseException HeadElementsList
    */
@@ -765,8 +765,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Choice
+   * Parses a choice element
    * @return Choice
    * @throws ParseException Choise
    */
@@ -844,8 +843,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return ChoiceElementList
+   * Parses a list of choice elements
    * @return ChoiceElementList
    * @throws ParseException ChoiseElementList
    */
@@ -892,8 +890,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return ChoiceElement
+   * Parses a single choice element
    * @return ChoiceElement
    * @throws ParseException ChoiceElement
    */
@@ -966,8 +963,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return Aggregate
+   * Parses an aggregate element
    * @return Aggregate
    * @throws ParseException Aggregate
    */
@@ -1036,8 +1032,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return AggrElementList
+   * Parses a list of aggregate elements
    * @return AggrElementList
    * @throws ParseException AggrElementList
    */
@@ -1084,8 +1079,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return AggrElement
+   * Parses a single aggregate element
    * @return AggrElement
    * @throws ParseException AggrElement
    */
@@ -1171,8 +1165,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
-   * Return AggrFunc
+   * Parses an aggregate function name
    * @return AggrFunc
    * @throws ParseException AggrFunc
    */
@@ -1219,8 +1212,9 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
+   * Parses a clingo meta statement.
    *
-   * @throws ParseException ClingoMeta
+   * @throws ParseException if parsing fails
    */
   final public void MetaStatement() throws ParseException {
  /*@bgen(jjtree) ClingoMeta */
@@ -1257,7 +1251,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a clingo meta statement
    * @return Opt
    * @throws ParseException Opt
    */
@@ -1310,7 +1304,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a list of optimization elements
    * @return OptElementList
    * @throws ParseException OptElementList
    */
@@ -1357,7 +1351,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a single optimization element
    * @return OptElement
    * @throws ParseException OptElement
    */
@@ -1430,7 +1424,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses an optimization function
    * @return OptFunc
    * @throws ParseException OptFunc
    */
@@ -1466,7 +1460,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a weight at level expression
    * @return Weight
    * @throws ParseException Weight
    */
@@ -1522,7 +1516,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a list of NAF literals
    * @return NAFLiteralList
    * @throws ParseException NAFLiteralList
    */
@@ -1569,7 +1563,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a NAF literal (negation as failure)
    * @return ASTNAFLiteral
    * @throws ParseException ASTNAFLiteral
    */
@@ -1630,7 +1624,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a classical literal
    * @return ASTLiteral
    * @throws ParseException ASTListeral
    */
@@ -1713,7 +1707,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a built-in atom
    * @return ASTBuiltInAtom
    * @throws ParseException ASTBuiltInAtom
    */
@@ -1794,7 +1788,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a binary operator
    * @return Binop
    * @throws ParseException Binop
    */
@@ -1841,7 +1835,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a list of terms
    * @return ASTTermList
    * @throws ParseException ASTTermList
    */
@@ -1888,7 +1882,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a single term
    * @return ASTTerm
    * @throws ParseException ASTTerm
    */
@@ -1982,7 +1976,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses an arithmetic term expression
    * @return Ariterm
    * @throws ParseException Ariterm
    */
@@ -2025,7 +2019,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses an arithmetic operator
    * @return Arithop
    * @throws ParseException Arithop
    */
@@ -2069,7 +2063,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a numeric value
    * @throws ParseException ParseException
    */
   final public void Number() throws ParseException {
@@ -2090,7 +2084,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a variable
    * @throws ParseException ParseException
    */
   final public void Variable() throws ParseException {
@@ -2122,7 +2116,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses an identifier
    * @throws ParseException Identifier
    */
   final public void Identifier() throws ParseException {
@@ -2143,7 +2137,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a DLV-specific identifier
    * @throws ParseException DlvIdentifier
    */
   final public void DlvIdentifier() throws ParseException {
@@ -2164,7 +2158,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a Clingo-specific identifier
    * @throws ParseException Parse Exception
    */
   final public void ClingoIdentifier() throws ParseException {
@@ -2185,7 +2179,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a DLV arithmetic predicate
    * @throws ParseException ParseException
    */
   final public void DlvArithmeticPredicate() throws ParseException {
@@ -2206,7 +2200,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /**
-   *
+   * Parses a string literal
    * @throws ParseException ParseException
    */
   final public void String() throws ParseException {
@@ -2226,6 +2220,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_1(); }
@@ -2233,6 +2228,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(0, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_2(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_2(); }
@@ -2240,6 +2236,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(1, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_3(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_3(); }
@@ -2247,6 +2244,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(2, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_4(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_4(); }
@@ -2254,6 +2252,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(3, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_5(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_5(); }
@@ -2261,6 +2260,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(4, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_6(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_6(); }
@@ -2268,6 +2268,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(5, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_7(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_7(); }
@@ -2275,6 +2276,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(6, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_8(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_8(); }
@@ -2282,6 +2284,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(7, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_9(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_9(); }
@@ -2289,6 +2292,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(8, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_10(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_10(); }
@@ -2296,6 +2300,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(9, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_11(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_11(); }
@@ -2303,6 +2308,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(10, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_12(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_12(); }
@@ -2310,6 +2316,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(11, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_13(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_13(); }
@@ -2317,6 +2324,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(12, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_14(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_14(); }
@@ -2324,6 +2332,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(13, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_2_15(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_15(); }
@@ -2331,6 +2340,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(14, xla); }
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_32() {
     if (jj_3R_65()) return true;
     if (jj_scan_token(CURLY_OPEN)) return true;
@@ -2341,11 +2351,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_75() {
     if (jj_scan_token(DLV_ID)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_70() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2362,22 +2374,26 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_106() {
     if (jj_3R_29()) return true;
     if (jj_3R_28()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_79() {
     if (jj_3R_99()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_74() {
     if (jj_scan_token(ID)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_48() {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -2386,6 +2402,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_27() {
     if (jj_3R_30()) return true;
     if (jj_scan_token(PAREN_OPEN)) return true;
@@ -2394,11 +2411,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_77() {
     if (jj_3R_55()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_16() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2421,22 +2440,26 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_78() {
     if (jj_3R_99()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_9() {
     if (jj_3R_21()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_47() {
     if (jj_3R_55()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_21() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2446,6 +2469,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_89() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2456,17 +2480,20 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_87() {
     if (jj_scan_token(NUMBER)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_98() {
     if (jj_3R_29()) return true;
     if (jj_3R_28()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_46() {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -2475,6 +2502,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_45() {
     if (jj_scan_token(PAREN_OPEN)) return true;
     Token xsp;
@@ -2484,17 +2512,20 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_72() {
     if (jj_scan_token(NAF)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_110() {
     if (jj_3R_21()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_97() {
     Token xsp;
     while (true) {
@@ -2505,22 +2536,26 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_105() {
     if (jj_3R_38()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_103() {
     if (jj_3R_55()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_96() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_73() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2534,12 +2569,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_8() {
     if (jj_3R_20()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_30() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2559,6 +2596,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_20() {
     if (jj_3R_19()) return true;
     Token xsp;
@@ -2567,11 +2605,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_44() {
     if (jj_3R_76()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_85() {
     if (jj_scan_token(PAREN_OPEN)) return true;
     Token xsp;
@@ -2581,18 +2621,21 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_15() {
     if (jj_3R_30()) return true;
     if (jj_3R_28()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_71() {
     if (jj_3R_20()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_86() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2600,6 +2643,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_38() {
     Token xsp;
     while (true) {
@@ -2610,6 +2654,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_61() {
     if (jj_scan_token(MINUS)) return true;
     if (jj_3R_28()) return true;
@@ -2617,12 +2662,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_7() {
     if (jj_3R_19()) return true;
     if (jj_scan_token(OR)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_60() {
     if (jj_scan_token(PAREN_OPEN)) return true;
     if (jj_3R_28()) return true;
@@ -2631,29 +2678,34 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_104() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_14() {
     if (jj_3R_38()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_59() {
     if (jj_3R_89()) return true;
     if (jj_3R_86()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_58() {
     if (jj_3R_88()) return true;
     if (jj_3R_86()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_90() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2667,29 +2719,34 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_18() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_14() {
     if (jj_3R_28()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_43() {
     if (jj_3R_75()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_57() {
     if (jj_3R_87()) return true;
     if (jj_3R_86()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_56() {
     if (jj_3R_74()) return true;
     Token xsp;
@@ -2699,6 +2756,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_28() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2721,12 +2779,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_107() {
     if (jj_3R_19()) return true;
     if (jj_scan_token(OR)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_91() {
     Token xsp;
     while (true) {
@@ -2737,6 +2797,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_6() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2747,6 +2808,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_26() {
     if (jj_3R_54()) return true;
     if (jj_scan_token(PAREN_OPEN)) return true;
@@ -2755,12 +2817,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_84() {
     if (jj_3R_28()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_55() {
     Token xsp;
     while (true) {
@@ -2771,22 +2835,26 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_42() {
     if (jj_3R_74()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_5() {
     if (jj_3R_17()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_40() {
     if (jj_3R_23()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_39() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2795,6 +2863,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_17() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2805,29 +2874,34 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_25() {
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_81() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_55()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_15() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_109() {
     if (jj_3R_17()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_4() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2837,6 +2911,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_94() {
     Token xsp;
     while (true) {
@@ -2847,12 +2922,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_13() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_29() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2875,6 +2952,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_3() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2886,11 +2964,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_95() {
     if (jj_3R_94()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_102() {
     if (jj_3R_30()) return true;
     if (jj_scan_token(PAREN_OPEN)) return true;
@@ -2903,12 +2983,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_11() {
     if (jj_3R_32()) return true;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_101() {
     if (jj_3R_54()) return true;
     if (jj_scan_token(PAREN_OPEN)) return true;
@@ -2917,11 +2999,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_64() {
     if (jj_3R_91()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_100() {
     if (jj_3R_29()) return true;
     if (jj_scan_token(PAREN_OPEN)) return true;
@@ -2932,21 +3016,25 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_63() {
     if (jj_3R_73()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_69() {
     if (jj_3R_94()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_62() {
     if (jj_3R_90()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_13() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
@@ -2954,6 +3042,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_83() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2970,6 +3059,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_31() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2983,6 +3073,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_68() {
     if (jj_scan_token(CONS)) return true;
     Token xsp;
@@ -2991,22 +3082,26 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_10() {
     if (jj_3R_31()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_67() {
     if (jj_3R_94()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_37() {
     if (jj_3R_70()) return true;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_24() {
     if (jj_3R_28()) return true;
     if (jj_3R_29()) return true;
@@ -3014,6 +3109,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_12() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3030,17 +3126,20 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_41() {
     if (jj_scan_token(MINUS)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_36() {
     if (jj_3R_32()) return true;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_35() {
     if (jj_scan_token(WCONS)) return true;
     Token xsp;
@@ -3053,6 +3152,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_19() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3070,6 +3170,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_34() {
     if (jj_3R_31()) return true;
     Token xsp;
@@ -3079,6 +3180,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_33() {
     if (jj_scan_token(CONS)) return true;
     Token xsp;
@@ -3088,6 +3190,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_12() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3107,32 +3210,38 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_53() {
     if (jj_3R_19()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_2() {
     if (jj_3R_12()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_11() {
     if (jj_3R_23()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_51() {
     if (jj_scan_token(NAF)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_52() {
     if (jj_3R_83()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_23() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3145,6 +3254,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_1() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3173,23 +3283,27 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_80() {
     if (jj_scan_token(AT)) return true;
     if (jj_3R_28()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_82() {
     if (jj_3R_99()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_111() {
     if (jj_3R_23()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_99() {
     Token xsp;
     while (true) {
@@ -3200,6 +3314,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_49() {
     if (jj_3R_28()) return true;
     Token xsp;
@@ -3210,6 +3325,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_50() {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -3218,21 +3334,25 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_66() {
     if (jj_3R_93()) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_92() {
     if (jj_scan_token(MAXIMIZE)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_88() {
     if (jj_scan_token(STRING)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_65() {
     Token xsp;
     xsp = jj_scanpos;
@@ -3243,12 +3363,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3_10() {
     if (jj_3R_22()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_22() {
     if (jj_3R_49()) return true;
     Token xsp;
@@ -3257,17 +3379,20 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_54() {
     if (jj_scan_token(DLV_ARITHMETIC_ID)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_108() {
     if (jj_3R_22()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_93() {
     Token xsp;
     while (true) {
@@ -3278,6 +3403,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  /** Generated parser lookahead helper. */
   private boolean jj_3R_76() {
     if (jj_scan_token(CLINGO_ID)) return true;
     return false;
@@ -3285,17 +3411,25 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
   /** Generated Token Manager. */
   public ASPParserTokenManager token_source;
+  /** Generated parser input stream. */
   SimpleCharStream jj_input_stream;
   /** Current token. */
   public Token token;
   /** Next token. */
   public Token jj_nt;
+  /** Generated next-token kind cache. */
   private int jj_ntk;
+  /** Generated scan and last token positions. */
   private Token jj_scanpos, jj_lastpos;
+  /** Generated lookahead counter. */
   private int jj_la;
+  /** Generated parser generation counter. */
   private int jj_gen;
+  /** Generated lookahead table. */
   final private int[] jj_la1 = new int[41];
+  /** Generated lookahead table part 0. */
   static private int[] jj_la1_0;
+  /** Generated lookahead table part 1. */
   static private int[] jj_la1_1;
   static {
       jj_la1_init_0();
@@ -3307,8 +3441,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
    private static void jj_la1_init_1() {
       jj_la1_1 = new int[] {0x180000,0x180000,0x1c73fe,0x1c73fe,0x0,0x1c73fe,0x3bff80,0x180000,0x0,0x1c007e,0x0,0x180000,0x7e,0x1c007e,0x0,0x0,0x7e,0x0,0x1c007e,0x0,0x7380,0x238000,0x0,0x1c007e,0x0,0xc00,0x0,0x0,0x0,0x180000,0x0,0x180000,0x0,0x0,0x4007e,0x7e,0x0,0x0,0x0,0x0,0x0,};
    }
+  /** Generated lookahead call table. */
   final private JJCalls[] jj_2_rtns = new JJCalls[15];
+  /** Generated lookahead rescan flag. */
   private boolean jj_rescan = false;
+  /** Generated token garbage collection counter. */
   private int jj_gc = 0;
 
   /** Constructor with InputStream
@@ -3333,17 +3470,16 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Reinitialise. */
   /**
+   * Reinitializes the parser with an input stream.
    *
-   * @param stream java.io.Input.Stream
+   * @param stream input stream to parse
    */
 
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /** Reinitialise. */
-  /**
+  /** Reinitialize the parser with an input stream and encoding
    *
    * @param stream java.io.InputStream
    * @param encoding java.io.InputStream
@@ -3375,7 +3511,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
   /** Reinitialise. */
   /**
-   *
+   * Reinitialize the parser with a reader
    * @param stream java.io.Reader
    */
   public void ReInit(java.io.Reader stream) {
@@ -3404,7 +3540,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
   /** Reinitialise. */
   /**
-   *
+   * Reinitialize with token manager
    * @param tm ReInit
    */
   public void ReInit(ASPParserTokenManager tm) {
@@ -3441,8 +3577,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw generateParseException();
   }
 
+  /** Generated marker used to signal successful lookahead. */
   static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  /** Scans a generated parser token during lookahead. */
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
       jj_la--;
@@ -3467,7 +3605,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
 /** Get the next Token. */
   /**
-   *
+   * Gets the next token
    * @return getNextToken
    */
   final public Token getNextToken() {
@@ -3480,7 +3618,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
 /** Get the specific Token. */
   /**
-   *
+   * Gets a token at the specified index
    * @param index getToken
    * @return getToken
    */
@@ -3493,6 +3631,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return t;
   }
 
+  /** Returns the kind of the next token. */
   private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
@@ -3500,12 +3639,18 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
       return (jj_ntk = jj_nt.kind);
   }
 
+  /** Generated expected token entries. */
   private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  /** Generated expected token entry. */
   private int[] jj_expentry;
+  /** Generated token kind for parse errors. */
   private int jj_kind = -1;
+  /** Generated record of recent token kinds. */
   private int[] jj_lasttokens = new int[100];
+  /** Generated end position for token tracking. */
   private int jj_endpos;
 
+  /** Adds a generated parser error token. */
   private void jj_add_error_token(int kind, int pos) {
     if (pos >= 100) return;
     if (pos == jj_endpos + 1) {
@@ -3536,7 +3681,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
   /** Generate ParseException. */
   /**
-   *
+   * Generates a parse exception
    * @return generateParseException
    */
   public ParseException generateParseException() {
@@ -3583,6 +3728,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   final public void disable_tracing() {
   }
 
+  /** Rescans generated parser lookahead tokens. */
   private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 15; i++) {
@@ -3616,6 +3762,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     jj_rescan = false;
   }
 
+  /** Saves generated parser lookahead state. */
   private void jj_save(int index, int xla) {
     JJCalls p = jj_2_rtns[index];
     while (p.gen > jj_gen) {
@@ -3625,10 +3772,15 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
   }
 
+  /** Generated lookahead call bookkeeping. */
   static final class JJCalls {
+    /** Generated parser generation. */
     int gen;
+    /** First token in the generated lookahead call. */
     Token first;
+    /** Generated lookahead argument. */
     int arg;
+    /** Next generated lookahead call. */
     JJCalls next;
   }
 

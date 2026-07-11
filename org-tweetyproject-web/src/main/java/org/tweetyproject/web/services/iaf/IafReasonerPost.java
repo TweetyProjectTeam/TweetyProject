@@ -21,10 +21,15 @@ package org.tweetyproject.web.services.iaf;
 import java.util.List;
 
 /**
- * The iAFReasonerPost class represents a data structure for holding information
- * related to a iAF argumentation reasoner request sent via HTTP POST.
+ * Request payload for iAF reasoner web service calls.
  */
 public class IafReasonerPost {
+
+  /**
+   * Creates an empty request payload.
+   */
+  public IafReasonerPost() {
+  }
 
   /** The command type for the iAF reasoner request */
   private String cmd;

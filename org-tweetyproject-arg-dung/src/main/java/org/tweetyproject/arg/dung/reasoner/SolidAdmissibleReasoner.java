@@ -36,6 +36,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Lars Bengel
  */
 public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new SolidAdmissibleReasoner instance.
+     */
+    public SolidAdmissibleReasoner() {
+        // default constructor
+    }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Collection<Extension<DungTheory>> result = new HashSet<>();
@@ -56,6 +63,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     /**
+     * Checks whether the given extension solidly defends the argument.
      *
      * @param arg arg
      * @param ext ext
@@ -71,10 +79,11 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     /**
+     * Returns all arguments solidly defended by the given extension.
      *
      * @param ext ext
      * @param theory theory
-     * @return DungTheory
+     * @return the solidly defended arguments
      */
     public Collection<Argument> getSolidlyDefended(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> defended = new HashSet<>();

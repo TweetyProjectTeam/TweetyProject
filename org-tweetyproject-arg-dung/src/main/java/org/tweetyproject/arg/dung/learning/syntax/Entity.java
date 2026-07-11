@@ -41,10 +41,12 @@ public class Entity {
     /** structure to store the labeling of the AF */
     private Map<Semantics, List<Input>> examples;
 
+    /** all available inputs */
     private List<Input> allInputs;
 
     /**
-     * initialize the entity with the given AF
+     * Initializes the entity with the given hidden argumentation framework.
+     *
      * @param theory some argumentation framework
      */
     public Entity(DungTheory theory) {
@@ -70,8 +72,9 @@ public class Entity {
     }
 
     /**
-     * 
-     * @param theory a DUng theory
+     * Initializes the entity with the given argumentation framework and inputs.
+     *
+     * @param theory a Dung theory
      * @param inputs inputs
      */
     public Entity(DungTheory theory, List<Input> inputs) {
@@ -80,7 +83,8 @@ public class Entity {
     }
 
     /**
-     * helper method to compute all labelings for the given semantics
+     * Computes all labelings for the given semantics.
+     *
      * @param sem some semantics
      */
     private void computeExamplesForSemantics(Semantics sem) {
@@ -94,8 +98,9 @@ public class Entity {
     }
 
     /**
-     * Ask for a random labeling w.r.t. the given semantics
-     * The labeling is also removed from the internal storage so it can ot be given out again
+     * Returns a random labeling for the given semantics.
+     * The labeling is also removed from the internal storage so it cannot be given out again.
+     *
      * @param sem a semantics
      * @return a labeling
      */
@@ -108,7 +113,8 @@ public class Entity {
     }
 
     /**
-     * 
+     * Returns any available labeling.
+     *
      * @return any labeling
      */
     public Input getAnyLabeling() {

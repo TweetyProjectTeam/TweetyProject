@@ -2,20 +2,26 @@ package org.tweetyproject.arg.adf.syntax.acc;
 
 import java.util.Objects;
 import java.util.Set;
+
 /**
- * BinaryAcceptanceCondition class
+ * Base class for acceptance conditions with two children.
+ *
  * @author Sebastian
  *
  */
 public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 
+	/** the left child acceptance condition */
 	private final AcceptanceCondition left;
 
+	/** the right child acceptance condition */
 	private final AcceptanceCondition right;
 
 	/**
-	 * @param left left
-	 * @param right right
+	 * Creates a new binary acceptance condition.
+	 *
+	 * @param left the left child acceptance condition
+	 * @param right the right child acceptance condition
 	 */
 	public BinaryAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
         if (left.equals(Objects.requireNonNull(right))) {
@@ -30,22 +36,25 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 		return Set.of(left, right);
 	}
 	/**
+	 * Returns the left child acceptance condition.
 	 *
-	 * @return AcceptanceCondition getLeft
+	 * @return the left child acceptance condition
 	 */
 	public AcceptanceCondition getLeft() {
 		return left;
 	}
 	/**
+	 * Returns the right child acceptance condition.
 	 *
-	 * @return AcceptanceCondition getRight
+	 * @return the right child acceptance condition
 	 */
 	public AcceptanceCondition getRight() {
 		return right;
 	}
 	/**
+	 * Returns the operator name used in {@link #toString()}.
 	 *
-	 * @return String getName
+	 * @return the operator name
 	 */
 	protected abstract String getName();
 

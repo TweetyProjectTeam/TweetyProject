@@ -33,19 +33,23 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Implementation of the MaxSAT algorithm from:
- * Niskanen, Andreas, Johannes Wallner, and Matti Järvisalo. "Synthesizing argumentation frameworks from examples." Journal of Artificial Intelligence Research 66 (2019)
+ * Synthesizes argumentation frameworks from positive and negative examples.
  *
  * @author Lars Bengel
  */
 public class NiskanenTheorySynthesizer {
 
+    /** MaxSAT solver used to compute a model. */
     private MaxSatSolver maxSatSolver;
+    /** Arguments that may occur in the synthesized theory. */
     private Collection<Argument> arguments;
+    /** Parser used to build propositional constraints. */
     private PlParser parser;
+    /** Reflection handle for the clause encoder matching the selected semantics. */
     private Method getClause;
 
     /**
+     * Creates a new theory synthesizer for the given arguments and semantics.
      *
      * @param args a set of arguments
      * @param semantics a semantics

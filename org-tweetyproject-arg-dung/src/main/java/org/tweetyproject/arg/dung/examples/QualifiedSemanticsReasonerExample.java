@@ -31,6 +31,10 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class QualifiedSemanticsReasonerExample {
+    /** Creates the example. */
+    public QualifiedSemanticsReasonerExample() {
+    }
+
     /**
      * Execute the example
      *

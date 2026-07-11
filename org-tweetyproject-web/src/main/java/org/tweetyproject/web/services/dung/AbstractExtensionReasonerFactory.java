@@ -30,11 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Main factory for retrieving abstract extension reasoners.
- * 
+ * Abstract factory for retrieving Dung extension reasoners.
+ *
  * @author Jonas Klein, Lars Bengel
  */
 public abstract class AbstractExtensionReasonerFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    protected AbstractExtensionReasonerFactory() {
+    }
+
 	/**
 	 * Returns an array of all available semantics.
 	 *

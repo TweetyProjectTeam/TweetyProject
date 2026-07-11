@@ -28,18 +28,31 @@ import org.tweetyproject.web.services.Response;
  */
 public class PafReasonerResponse extends Response {
 
+    /** The textual reply message */
     private String reply;
+    /** The email address */
     private String email;
+    /** The number of arguments in the PAF */
     private int nr_of_arguments;
+    /** The probabilities for each argument */
     private List<Double> argument_probabilities;
+    /** The attack relation list */
     private List<List<Integer>> attacks;
+    /** The attack probabilities corresponding to attacks */
     private List<Double> attack_probabilities;
+    /** The semantics used by the reasoner */
     private String semantics;
+    /** The solver used by the reasoner */
     private String solver;
+    /** The specific argument queried */
     private int argument;
+    /** The answer from the reasoner */
     private String answer;
+    /** The execution time */
     private double time;
+    /** The unit of time measurement */
     private String unit_time;
+    /** The status of the reasoning process */
     private String status;
 
     /**

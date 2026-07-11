@@ -37,6 +37,11 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  */
 public class SCF_GreedyKApproximationReasoner implements KOptimisationReasoner{
+
+	/** Creates the reasoner. */
+	public SCF_GreedyKApproximationReasoner() {
+		// default
+	}
 	
 	@Override
 	public Integer query(DungTheory aaf, Argument arg) {
@@ -82,4 +87,3 @@ public class SCF_GreedyKApproximationReasoner implements KOptimisationReasoner{
 		return MaxSatKStableReasoner.eval(aaf, current);
 	}
 }
- 

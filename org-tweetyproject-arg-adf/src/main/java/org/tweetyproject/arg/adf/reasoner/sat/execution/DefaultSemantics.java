@@ -24,12 +24,22 @@ import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
+/**
+ * Base implementation shared by the default ADF semantics.
+ */
 abstract class DefaultSemantics implements Semantics {
-	
+
+	/** Underlying abstract dialectical framework. */
 	final AbstractDialecticalFramework adf;
-	
+
+	/** Propositional mapping of the ADF. */
 	final PropositionalMapping mapping;
 
+	/**
+	 * Creates the base semantics wrapper.
+	 *
+	 * @param adf the underlying abstract dialectical framework
+	 */
 	private DefaultSemantics(AbstractDialecticalFramework adf) {
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = new PropositionalMapping(adf);
@@ -40,8 +50,14 @@ abstract class DefaultSemantics implements Semantics {
 		return new MostComplexAcceptanceConditionDecomposer(adf);
 	}
 	
+	/** Semantics implementation for conflictfree semantics. */
 	static final class ConflictFreeSemantics extends DefaultSemantics {
 
+		/**
+		 * Creates a new ConflictFreeSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public ConflictFreeSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -78,8 +94,14 @@ abstract class DefaultSemantics implements Semantics {
 	
 	}
 	
+	/** Semantics implementation for naive semantics. */
 	static final class NaiveSemantics extends DefaultSemantics {
 		
+		/**
+		 * Creates a new NaiveSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public NaiveSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -116,8 +138,14 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 	
+	/** Semantics implementation for admissible semantics. */
 	static final class AdmissibleSemantics extends DefaultSemantics {
 		
+		/**
+		 * Creates a new AdmissibleSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public AdmissibleSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -154,8 +182,14 @@ abstract class DefaultSemantics implements Semantics {
 	
 	}
 	
+	/** Semantics implementation for preferred semantics. */
 	static final class PreferredSemantics extends DefaultSemantics {
 		
+		/**
+		 * Creates a new PreferredSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public PreferredSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -192,8 +226,14 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 	
+	/** Semantics implementation for stable semantics. */
 	static final class StableSemantics extends DefaultSemantics {
 		
+		/**
+		 * Creates a new StableSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public StableSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -235,8 +275,14 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 	
+	/** Semantics implementation for complete semantics. */
 	static final class CompleteSemantics extends DefaultSemantics {
 		
+		/**
+		 * Creates a new CompleteSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public CompleteSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -273,8 +319,14 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 
+	/** Semantics implementation for model semantics. */
 	static final class ModelSemantics extends DefaultSemantics {
 
+		/**
+		 * Creates a new ModelSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public ModelSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}
@@ -316,8 +368,14 @@ abstract class DefaultSemantics implements Semantics {
 	
 	}
 	
+	/** Semantics implementation for ground semantics. */
 	static final class GroundSemantics extends DefaultSemantics {
 
+		/**
+		 * Creates a new GroundSemantics instance.
+		 *
+		 * @param adf the underlying abstract dialectical framework
+		 */
 		public GroundSemantics(AbstractDialecticalFramework adf) {
 			super(adf);
 		}

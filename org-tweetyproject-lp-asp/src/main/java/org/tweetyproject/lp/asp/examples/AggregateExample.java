@@ -49,6 +49,7 @@ import org.tweetyproject.lp.asp.syntax.Program;
  */
 public class AggregateExample {
 
+	/** Path to the Clingo executable used in this example. */
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	/**

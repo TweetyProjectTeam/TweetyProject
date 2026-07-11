@@ -90,11 +90,12 @@ public class ParseException extends Exception {
   public String[] tokenImage;
 
   /**
-   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
-   * error message and returns it.  If this object has been created
-   * due to a parse error, and you do not catch it (it gets thrown
-   * from the parser) the correct error message
-   * gets displayed.
+   * Builds the parse error message for the given token state.
+   *
+   * @param currentToken the current token at the failure point
+   * @param expectedTokenSequences the expected token sequences
+   * @param tokenImage the parser token image table
+   * @return the formatted parse error message
    */
   private static String initialise(Token currentToken,
                            int[][] expectedTokenSequences,
@@ -145,9 +146,10 @@ public class ParseException extends Exception {
   protected String eol = System.getProperty("line.separator", "\n");
 
   /**
-   * Used to convert raw characters to their escaped version
-   * when these raw version cannot be used as part of an ASCII
-   * string literal.
+   * Escapes raw characters so they can be used in an ASCII string literal.
+   *
+   * @param str the string to escape
+   * @return the escaped string
    */
   static String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();

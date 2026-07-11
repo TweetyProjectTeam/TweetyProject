@@ -35,11 +35,17 @@ public class RpclProbabilityDistributionParserTokenManager implements RpclProbab
 
   /** Debug output. */
   public static  java.io.PrintStream debugStream = System.out;
-  /** Set debug output.
+  /** Sets the debug output stream.
    *
-   * @param ds the print stream
-  */
+   * @param ds the debug output stream
+   */
   public static  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
+/** Determines the state at which the string-literal DFA stops.
+ *
+ * @param pos the current position
+ * @param active0 the active bit mask
+ * @return the next state, or {@code -1} if no match is possible
+ */
 private static final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
    switch (pos)
@@ -48,16 +54,32 @@ private static final int jjStopStringLiteralDfa_0(int pos, long active0)
          return -1;
    }
 }
+/** Continues NFA processing after the string-literal DFA stops.
+ *
+ * @param pos the current position
+ * @param active0 the active bit mask
+ * @return the next NFA position
+ */
 private static final int jjStartNfa_0(int pos, long active0)
 {
    return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
 }
+/** Records a matched token kind at the given position.
+ *
+ * @param pos the matched position
+ * @param kind the token kind
+ * @return the next position
+ */
 static private int jjStopAtPos(int pos, int kind)
 {
    jjmatchedKind = kind;
    jjmatchedPos = pos;
    return pos + 1;
 }
+/** Processes the first character of a string literal using the DFA.
+ *
+ * @return the next position
+ */
 static private int jjMoveStringLiteralDfa0_0()
 {
    switch(curChar)
@@ -78,6 +100,12 @@ static private int jjMoveStringLiteralDfa0_0()
          return jjMoveNfa_0(0, 0);
    }
 }
+/** Processes the NFA for the default lexical state.
+ *
+ * @param startState the start state
+ * @param curPos the current position
+ * @return the next position
+ */
 static private int jjMoveNfa_0(int startState, int curPos)
 {
    int startsAt = 0;
@@ -171,6 +199,7 @@ static private int jjMoveNfa_0(int startState, int curPos)
       catch(java.io.IOException e) { return curPos; }
    }
 }
+/** Next NFA states used by generated transitions. */
 static final int[] jjnextStates = {
 };
 
@@ -183,41 +212,58 @@ public static final String[] jjstrLiteralImages = {
 public static final String[] lexStateNames = {
    "DEFAULT",
 };
+/** Bit mask of token-producing kinds. */
 static final long[] jjtoToken = {
    0x1fe1L,
 };
+/** Bit mask of skipped token kinds. */
 static final long[] jjtoSkip = {
    0x1eL,
 };
-/** input_stream */
+/** Input stream. */
 static protected SimpleCharStream input_stream;
-/** jjrounds */
+/** Round markers used to avoid revisiting NFA states. */
 static private final int[] jjrounds = new int[5];
-/** jjstateSet */
+/** Working set of active NFA states. */
 static private final int[] jjstateSet = new int[10];
-/** current char */
+/** Current character. */
 static protected char curChar;
-/** Constructor.
- * @param stream the char stream
-*/
+/** Current lexical state. */
+static int curLexState = 0;
+/** Default lexical state. */
+static int defaultLexState = 0;
+/** Number of active NFA states. */
+static int jjnewStateCnt;
+/** Current round counter. */
+static int jjround;
+/** Current matched position. */
+static int jjmatchedPos;
+/** Current matched token kind. */
+static int jjmatchedKind;
+/** Creates a token manager for the given input stream.
+ *
+ * @param stream the input stream
+ */
 public RpclProbabilityDistributionParserTokenManager(SimpleCharStream stream){
    if (input_stream != null)
       throw new TokenMgrError("ERROR: Second call to constructor of static lexer. You must use ReInit() to initialize the static variables.", TokenMgrError.STATIC_LEXER_ERROR);
    input_stream = stream;
 }
 
-/** Constructor.
- * @param stream the char stream
- * @param lexState the state
-*/
+/** Creates a token manager for the given input stream and lexical state.
+ *
+ * @param stream the input stream
+ * @param lexState the lexical state
+ */
 public RpclProbabilityDistributionParserTokenManager(SimpleCharStream stream, int lexState){
    this(stream);
    SwitchTo(lexState);
 }
 
-/** Reinitialise parser.
- * @param stream the char stream
-*/
+/** Reinitializes the token manager with a new input stream.
+ *
+ * @param stream the input stream
+ */
 static public void ReInit(SimpleCharStream stream)
 {
    jjmatchedPos = jjnewStateCnt = 0;
@@ -225,6 +271,7 @@ static public void ReInit(SimpleCharStream stream)
    input_stream = stream;
    ReInitRounds();
 }
+/** Reinitializes the round markers for the NFA. */
 static private void ReInitRounds()
 {
    int i;
@@ -233,20 +280,21 @@ static private void ReInitRounds()
       jjrounds[i] = 0x80000000;
 }
 
-/** Reinitialise parser.
+/** Reinitializes the token manager with a new input stream and lexical state.
  *
- * @param stream the char stream
- * @param lexState the state
-*/
+ * @param stream the input stream
+ * @param lexState the lexical state
+ */
 static public void ReInit(SimpleCharStream stream, int lexState)
 {
    ReInit(stream);
    SwitchTo(lexState);
 }
 
-/** Switch to specified lex state.
- * @param lexState the state
-*/
+/** Switches to the specified lexical state.
+ *
+ * @param lexState the lexical state
+ */
 static public void SwitchTo(int lexState)
 {
    if (lexState >= 1 || lexState < 0)
@@ -255,15 +303,9 @@ static public void SwitchTo(int lexState)
       curLexState = lexState;
 }
 
-/**
- * Creates and returns a new {@link Token} object.
- * <p>
- * This method fills in the details of the {@link Token} such as its image (i.e., the string representation),
- * the position in the input stream (beginning and ending line and column numbers), and the token kind (i.e., its type).
- * It fetches the token image either from the pre-defined literal images or from the input stream itself, based on the matched kind.
- * </p>
+/** Fills and returns a token for the current match.
  *
- * @return A {@link Token} object representing the matched token in the input stream.
+ * @return a {@link Token} object representing the matched token in the input stream
  */
 static protected Token jjFillToken()
 {
@@ -289,16 +331,10 @@ static protected Token jjFillToken()
    return t;
 }
 
-static int curLexState = 0;
-static int defaultLexState = 0;
-static int jjnewStateCnt;
-static int jjround;
-static int jjmatchedPos;
-static int jjmatchedKind;
-
-/** Get the next Token.
+/** Gets the next token.
+ *
  * @return the token
-*/
+ */
 public static Token getNextToken()
 {
   Token matchedToken;
@@ -363,6 +399,10 @@ public static Token getNextToken()
   }
 }
 
+/** Adds an NFA state if it has not been seen in the current round.
+ *
+ * @param state the NFA state
+ */
 static private void jjCheckNAdd(int state)
 {
    if (jjrounds[state] != jjround)
@@ -371,12 +411,22 @@ static private void jjCheckNAdd(int state)
       jjrounds[state] = jjround;
    }
 }
+/** Adds a range of NFA states to the working set.
+ *
+ * @param start the start index
+ * @param end the end index
+ */
 static private void jjAddStates(int start, int end)
 {
    do {
       jjstateSet[jjnewStateCnt++] = jjnextStates[start];
    } while (start++ != end);
 }
+/** Adds two NFA states if they have not already been seen in the current round.
+ *
+ * @param state1 the first NFA state
+ * @param state2 the second NFA state
+ */
 static private void jjCheckNAddTwoStates(int state1, int state2)
 {
    jjCheckNAdd(state1);

@@ -30,6 +30,13 @@ import java.util.*;
  */
 
 public class IndependenceExample {
+    /**
+     * Creates a new independence example.
+     */
+    public IndependenceExample() {
+        super();
+    }
+
 	/**
 	 * execute the example
 	 * @param args cmdline arguments

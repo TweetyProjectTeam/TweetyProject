@@ -22,11 +22,18 @@ import org.tweetyproject.arg.bipolar.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 
 /**
- * Main factory for retrieving bipolar extension reasoners as supported by the web service
- * 
+ * Abstract factory for retrieving bipolar extension reasoners.
+ *
  * @author Lars Bengel
  */
 public abstract class AbstractBipolarExtensionReasonerFactory {
+
+	/**
+	 * Prevents instantiation.
+	 */
+	protected AbstractBipolarExtensionReasonerFactory() {
+	}
+
 	/**
 	 * Returns an array of all available semantics.
 	 *

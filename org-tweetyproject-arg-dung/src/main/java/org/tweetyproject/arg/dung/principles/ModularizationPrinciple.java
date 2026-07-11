@@ -38,6 +38,10 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class ModularizationPrinciple extends Principle {
+    /** Creates the principle. */
+    public ModularizationPrinciple() {
+    }
+
     @Override
     public String getName() {
         return "Modularization";

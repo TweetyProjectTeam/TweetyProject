@@ -56,6 +56,7 @@ public class IafReasonerQueryAllCallee extends Callee {
      * @param reasoner The AbstractAcceptabilityReasoner to be used for obtaining the model
      * @param bbase    The base IncompleteTheory on which the getModel operation is performed
      * @param mode     The inference mode
+     * @param type     the reasoning type
      */
     public IafReasonerQueryAllCallee(IncompleteReasoner reasoner, IncompleteTheory bbase, InferenceMode mode, IncompleteReasoner.Type type) {
         this.reasoner = reasoner;

@@ -34,6 +34,13 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class StrongExpansionAdmissibleKernel extends EquivalenceKernel {
+
+    /**
+     * Creates a new StrongExpansionAdmissibleKernel instance.
+     */
+    public StrongExpansionAdmissibleKernel() {
+        // default constructor
+    }
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

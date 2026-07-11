@@ -48,7 +48,7 @@ public interface AcceptanceCondition {
 	static final TautologyAcceptanceCondition TAUTOLOGY = TautologyAcceptanceCondition.INSTANCE;
 
 	/**
-	 *
+	 * Recursively computes all the arguments of this acceptance condition
 	 * @return recursively computes all the arguments of this acceptance condition
 	 */
 	default Stream<Argument> arguments() {
@@ -58,7 +58,7 @@ public interface AcceptanceCondition {
 	}
 
 	/**
-	 *
+	 * Returns the children of this acceptance condition
 	 * @return an unmodifiable set of children
 	 */
 	Set<AcceptanceCondition> getChildren();
@@ -106,22 +106,27 @@ public interface AcceptanceCondition {
 	 */
 	static final class Builder {
 
+		/** the current left-hand side of the builder */
 		private AcceptanceCondition left;
 
-		private Builder(AcceptanceCondition left) {
+	/**
+	 * Constructs a builder with the given base acceptance condition
+	 * @param left the base acceptance condition
+	 */
+	private Builder(AcceptanceCondition left) {
 			this.left = left;
 		}
-		/**
-		 *
-		 * @param acc acc
-		 * @return Builder and
-		 */
-		public Builder and(AcceptanceCondition acc) {
+	/**
+	 * Adds a conjunction with the given acceptance condition
+	 * @param acc acc
+	 * @return Builder and
+	 */
+	public Builder and(AcceptanceCondition acc) {
 			this.left = new ConjunctionAcceptanceCondition(left, acc);
 			return this;
 		}
 	/**
-	 *
+	 * Adds conjunctions with all the given acceptance conditions
 	 * @param accs accs
 	 * @return Builder and
 	 */
@@ -132,7 +137,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 	/**
-	 *
+	 * Adds a disjunction with the given acceptance condition
 	 * @param acc acc
 	 * @return Builder or
 	 */
@@ -141,7 +146,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 		/**
-		 *
+		 * Adds disjunctions with all the given acceptance conditions
 		 * @param accs accs
 		 * @return Builder or
 		 */
@@ -152,7 +157,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 		/**
-		 *
+		 * Adds an implication with the given acceptance condition
 		 * @param acc acc
 		 * @return Builder implies
 		 */
@@ -161,7 +166,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 	/**
-	 *
+	 * Adds an equivalence with the given acceptance condition
 	 * @param acc acc
 	 * @return Builder equiv
 	 */
@@ -170,7 +175,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 		/**
-		 *
+		 * Adds equivalences with all the given acceptance conditions
 		 * @param accs accs
 		 * @return Builder equiv
 		 */
@@ -181,7 +186,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 /**
- *
+ * Adds an exclusive disjunction with the given acceptance condition
  * @param acc acc
  * @return Builder xor
  */
@@ -190,7 +195,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 		/**
-		 *
+		 * Negates the current acceptance condition
 		 * @return Builder neg
 		 */
 		public Builder neg() {
@@ -198,7 +203,7 @@ public interface AcceptanceCondition {
 			return this;
 		}
 		/**
-		 *
+		 * Builds and returns the acceptance condition
 		 * @return AcceptanceCondition build
 		 */
 		public AcceptanceCondition build() {

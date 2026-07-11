@@ -40,8 +40,11 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class ImprovedRiveretTheoryLearner {
+    /** the weighted theory being learned */
     private WeightedDungTheory theory;
+    /** the number of learning cycles completed so far */
     private int cycles;
+    /** the maximum number of learning cycles */
     private int MAX_CYCLES;
 
 

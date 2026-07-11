@@ -143,18 +143,26 @@ import static org.tweetyproject.web.services.causal.CausalReasonerResponse.Statu
 @RestController
 public class RequestController {
 
-	private final int SERVICES_TIMEOUT_DUNG = 600;
-	private final int SERVICES_TIMEOUT_DELP = 600;
-	private final int SERVICES_TIMEOUT_INCMES = 300;
-	private final int SERVICES_TIMEOUT_SEQUENCE_EXPLANATION = 300;
-	private final int SERVICES_TIMEOUT_CAUSAL = 300;
+		/** Timeout for Dung argumentation framework services */
+		private final int SERVICES_TIMEOUT_DUNG = 600;
+		/** Timeout for Delp services */
+		private final int SERVICES_TIMEOUT_DELP = 600;
+		/** Timeout for inconsistency measure services */
+		private final int SERVICES_TIMEOUT_INCMES = 300;
+		/** Timeout for sequence explanation services */
+		private final int SERVICES_TIMEOUT_SEQUENCE_EXPLANATION = 300;
+		/** Timeout for causal reasoner services */
+		private final int SERVICES_TIMEOUT_CAUSAL = 300;
 
-	private final SequenceExplanationService sequenceExplanationService;
-	private final ObjectMapper objectMapper;
-	private final CausalReasonerService causalReasonerService;
+		/** Service for sequence explanation reasoning */
+		private final SequenceExplanationService sequenceExplanationService;
+		/** Object mapper for JSON serialization */
+		private final ObjectMapper objectMapper;
+		/** Service for causal reasoning operations */
+		private final CausalReasonerService causalReasonerService;
 
 	/**
-	 * Constructor for causal reasoner service
+	 * Constructs a RequestController with the required services
 	 * @param sequenceExplanationService the sequence explanation service
 	 * @param objectMapper			     the object mapper
 	 * @param causalReasonerService		 the causal reasoner service
@@ -459,6 +467,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Retrieves IAF services information
+	 * @param email the email address
+	 * @return IafServicesInfoResponse containing service information
+	 */
 	private IafServicesInfoResponse getIafInfo(String email) {
 		IafServicesInfoResponse response = new IafServicesInfoResponse();
 		response.setReply("info");
@@ -551,6 +564,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Retrieves Ranking services information
+	 * @param email the email address
+	 * @return RankingServicesInfoResponse containing service information
+	 */
 	private RankingServicesInfoResponse getRankingInfo(String email) {
 		RankingServicesInfoResponse response = new RankingServicesInfoResponse();
 		response.setReply("info");
@@ -642,6 +660,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Retrieves ADF services information
+	 * @param email the email address
+	 * @return AdfServicesInfoResponse containing service information
+	 */
 	private AdfServicesInfoResponse getAdfInfo(String email) {
 		AdfServicesInfoResponse response = new AdfServicesInfoResponse();
 		response.setReply("info");
@@ -800,6 +823,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Retrieves Bipolar services information
+	 * @param email the email address
+	 * @return BipolarServicesInfoResponse containing service information
+	 */
 	private BipolarServicesInfoResponse getBipolarInfo(String email) {
 		BipolarServicesInfoResponse response = new BipolarServicesInfoResponse();
 		response.setReply("info");
@@ -972,11 +1000,19 @@ public class RequestController {
  	* @param <S> The type of signature associated with the belief set, e.g., PlSignature.
  	*/
 	private class MeasurementCallee implements Callable<Double> {
+		/** The inconsistency measure used for the computation. */
 		InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure;
+		/** The belief set whose inconsistency is evaluated. */
 		BeliefSet<PlFormula, PlSignature> beliefSet;
 
-		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
-				BeliefSet<PlFormula, PlSignature> beliefSet) {
+			/**
+			 * Creates a new measurement task for the given measure and belief set.
+			 *
+			 * @param measure the inconsistency measure to use
+			 * @param beliefSet the belief set to evaluate
+			 */
+			public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
+					BeliefSet<PlFormula, PlSignature> beliefSet) {
 			this.measure = measure;
 			this.beliefSet = beliefSet;
 		}
@@ -1186,6 +1222,12 @@ public class RequestController {
 		);
 	}
 
+	/**
+	 * Dispatches a sequence explanation command to the matching handler.
+	 *
+	 * @param cmd the incoming command
+	 * @return the computed sequence explanation result
+	 */
 	private SequenceExplanationResult processCommand(SequenceExplanationCmd cmd) {
 		if (cmd instanceof GetSequenceExplanationsCmd) {
 			return processSequenceExplanationCmd((GetSequenceExplanationsCmd) cmd);
@@ -1194,6 +1236,12 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Computes sequence explanations for the given command.
+	 *
+	 * @param cmd the sequence explanation command
+	 * @return the computed sequence explanation result
+	 */
 	private GetSequenceExplanationsResult processSequenceExplanationCmd(GetSequenceExplanationsCmd cmd) {
 		var theory = new DungTheory();
 		for (AttackDTO attackDTO: cmd.getAttacks()) {
@@ -1268,6 +1316,12 @@ public class RequestController {
 		);
 	}
 
+	/**
+	 * Dispatches a causal request to the concrete command handler.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the serialized command result
+	 */
 	private String processCommand(CausalReasonerPost causalReasonerPost) {
 		return switch (causalReasonerPost.getCmd()) {
 			case GET_CONCLUSIONS -> processConclusionsCommand(causalReasonerPost);
@@ -1277,6 +1331,12 @@ public class RequestController {
 		};
 	}
 
+	/**
+	 * Computes the conclusions for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the conclusions as a string representation
+	 */
 	private String processConclusionsCommand(CausalReasonerPost causalReasonerPost) {
 		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
 		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
@@ -1286,6 +1346,12 @@ public class RequestController {
 		return conclusions.toString();
 	}
 
+	/**
+	 * Computes the significant atoms for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the significant atoms serialized as JSON
+	 */
 	private String processSignificantAtomsCommand(CausalReasonerPost causalReasonerPost) {
 		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
 		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
@@ -1310,6 +1376,12 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Computes sequence explanations for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the sequence explanations serialized as JSON
+	 */
 	private String processSequenceExplanations(CausalReasonerPost causalReasonerPost) {
 		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
 		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
@@ -1324,6 +1396,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Processes argumentation framework queries from causal reasoner posts
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return JSON string containing the argumentation framework result
+	 */
 	private String processArgumentationFramework(CausalReasonerPost causalReasonerPost) {
 		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
 		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
@@ -1337,6 +1414,11 @@ public class RequestController {
 		}
 	}
 
+	/**
+	 * Parses observations from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return Collection of propositional logic formulas
+	 */
 	private static Collection<PlFormula> parseObservations(CausalReasonerPost causalReasonerPost) {
 		CausalParser causalParser = new CausalParser();
 		Collection<PlFormula> observations;
@@ -1350,10 +1432,20 @@ public class RequestController {
 		return observations;
 	}
 
+	/**
+	 * Parses the conclusion filter from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return Set of propositions or null if not specified
+	 */
 	private static @Nullable Set<Proposition> parseConclusionFilter(CausalReasonerPost causalReasonerPost) {
 		return ConclusionsFilterSerialization.parse(causalReasonerPost.getConclusionsFilter());
 	}
 
+	/**
+	 * Parses a causal knowledge base from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return CausalKnowledgeBase parsed from the request
+	 */
 	private static CausalKnowledgeBase parseCausalKnowledgeBase(CausalReasonerPost causalReasonerPost) {
 		CausalParser causalParser = new CausalParser();
 		CausalKnowledgeBase causalKnowledgeBase;
@@ -1434,6 +1526,11 @@ public class RequestController {
 		return reasonerResponse;
 	}
 
+	/**
+	 * Retrieves PAF services information
+	 * @param email the email address
+	 * @return PafServicesInfoResponse containing service information
+	 */
 	private PafServicesInfoResponse getPafInfo(String email) {
 		PafServicesInfoResponse response = new PafServicesInfoResponse();
 		response.setReply("info");

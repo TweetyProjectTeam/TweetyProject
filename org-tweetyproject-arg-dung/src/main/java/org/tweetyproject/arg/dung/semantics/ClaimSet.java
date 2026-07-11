@@ -28,9 +28,9 @@ import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 import org.tweetyproject.commons.AbstractInterpretation;
 /**
- * a set of claims
- * @author Sebastian Franke
+ * Represents a set of claims associated with claim arguments.
  *
+ * @author Sebastian Franke
  */
 public class ClaimSet extends AbstractInterpretation<ClaimBasedTheory,ClaimArgument>  implements Collection<ClaimArgument>, Comparable<ClaimSet>{
 
@@ -59,8 +59,9 @@ public class ClaimSet extends AbstractInterpretation<ClaimBasedTheory,ClaimArgum
 	 */
 	HashSet<ClaimArgument> claims;
 	/**
-	 * 
-	 * @return the claims
+	 * Returns the underlying claim arguments.
+	 *
+	 * @return the claim arguments stored in this set
 	 */
 	public HashSet<ClaimArgument> getClaims(){
 		return this.claims;
@@ -178,9 +179,10 @@ public class ClaimSet extends AbstractInterpretation<ClaimBasedTheory,ClaimArgum
 
 
 	/**
-	 * 
-	 * @param status like IN or OUT
-	 * @return the claimset with the given status
+	 * Returns this claim set for the {@link ArgumentStatus#IN} status.
+	 *
+	 * @param status the requested argument status
+	 * @return this claim set if the status is {@link ArgumentStatus#IN}
 	 */
 	public ClaimSet getArgumentsOfStatus(ArgumentStatus status) {
 		if(status.equals(ArgumentStatus.IN)) return this;

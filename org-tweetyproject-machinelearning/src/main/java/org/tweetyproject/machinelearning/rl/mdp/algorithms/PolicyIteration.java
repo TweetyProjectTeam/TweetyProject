@@ -34,6 +34,7 @@ import org.tweetyproject.machinelearning.rl.mdp.State;
  * @param <A> The type of actions 
  */
 public class PolicyIteration<S extends State, A extends Action> extends OfflineAlgorithm<S,A>{
+	/** The policy evaluation algorithm used during iteration. */
 	private PolicyEvaluation<S,A> pe;
 	
 	/**

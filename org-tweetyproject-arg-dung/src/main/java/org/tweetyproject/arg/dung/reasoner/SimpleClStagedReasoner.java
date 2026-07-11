@@ -35,9 +35,17 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SimpleClStagedReasoner extends AbstractClaimBasedReasoner{
 
+    /**
+     * Creates a new SimpleClStagedReasoner instance.
+     */
+    public SimpleClStagedReasoner() {
+        // default constructor
+    }
 
-	/**
-	 * 
+
+		/**
+		 * Computes all claim-based staged extensions.
+		 *
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
@@ -63,8 +71,9 @@ public class SimpleClStagedReasoner extends AbstractClaimBasedReasoner{
 		return resultClone;	
 	}
 
-	/**
-	 * 
+		/**
+		 * Computes one claim-based staged extension.
+		 *
 	 * @param bbase the claim based theory
 	 * @return an extensions of the semantics
 	 */

@@ -68,8 +68,9 @@ public class BpmnModelParser {
 	};
 
 	/**
-	 * handle tag attributes and assign to the parsed element
-	 * @param attribute the attribute
+	 * Handles a child node of the root element.
+	 *
+	 * @param node the child node
 	 */
 	private void handleChildNode(Node node) {
 		String tagName = rootParser.getNormalizedTagName(node);

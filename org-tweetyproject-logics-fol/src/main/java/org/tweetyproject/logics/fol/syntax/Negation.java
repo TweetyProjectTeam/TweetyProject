@@ -33,6 +33,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
  */
 public class Negation extends FolFormula {
 
+	/** The formula to be negated. */
 	private FolFormula folFormula;
 	/**
 	 *

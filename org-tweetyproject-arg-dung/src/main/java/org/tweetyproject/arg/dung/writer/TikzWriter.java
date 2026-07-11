@@ -39,6 +39,13 @@ import java.util.*;
  */
 public class TikzWriter extends AbstractDungWriter {
 
+    /**
+     * Creates a new TikzWriter instance.
+     */
+    public TikzWriter() {
+        // default constructor
+    }
+
     /** Mapping from integer identifiers to arguments. */
     protected Argument[] intToArg;
 

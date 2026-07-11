@@ -19,8 +19,14 @@
 package org.tweetyproject.web.util;
 
 /**
- * Generic JSON Object
+ * Generic JSON object placeholder.
  */
 public class JSONObject {
+
+	/**
+	 * Creates an empty JSON object placeholder.
+	 */
+	public JSONObject() {
+	}
 
 }

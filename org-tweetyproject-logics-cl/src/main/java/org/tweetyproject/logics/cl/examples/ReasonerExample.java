@@ -34,24 +34,27 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * Compares reasoning with different reasoners.
  */
 public class ReasonerExample {
-	/** Constructor */
+	/** Creates the example application. */
 	public ReasonerExample(){
 		// default
 	}
 
-	/**  Indicates if the program should continue running  */
+	/** Indicates if the program should continue running. */
 	private static boolean run = true;
 
-	/**  Indicates if the comparison between rule-based and brute-force reasoners should be performed  */
+	/** Indicates if the comparison between rule-based and brute-force reasoners should be performed. */
 	private static boolean compare = true;
 
+	/** Menu entries shown by the example application. */
 	private static final String [] entries = {
 		"Beispiel 'Simpel'", "Beispiel 'Drowning Problem'", "Beispiel 'Komplex (Kiwis)'",
 		"Beispiel-Beschreibungen", "Toggle Bruteforce Reasoner", "Beenden"
 	};
 
+	/** Belief sets used by the menu entries. */
 	private static ClBeliefSet [] beliefSets;
 
+	/** Short descriptions for the belief sets. */
 	private static final String [] descriptions = {
 		"Einfaches Beispiel enthaelt 3 Konditionale und 4 Symbole jedoch keine Spezialfaelle.",
 		"Enthaelt das Drowning-Problem enkodiert als 'Pinguine sind Voegel die keine Fluegel haben'.",
@@ -59,9 +62,10 @@ public class ReasonerExample {
 	};
 
 	/**
-	 *  Example
-	 * @param args the args
-	 * @throws IOException error
+	 * Runs the example application.
+	 *
+	 * @param args the command-line arguments
+	 * @throws IOException if reading from standard input fails
 	 */
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -103,6 +107,7 @@ public class ReasonerExample {
 		}
 	}
 
+	/** Initializes the predefined belief sets. */
 	private static void init() {
 		beliefSets = new ClBeliefSet[3];
 		Proposition b = new Proposition("b");
@@ -126,11 +131,13 @@ public class ReasonerExample {
 		beliefSets[2].add(new Conditional(k, new Negation(w)));
 	}
 
+	/** Prints the current application status. */
 	private static void printStatus() {
 		System.out.println("Comparision with Bruteforce Reasoner: " +
 				(compare ? "On" : "Off"));
 	}
 
+	/** Prints the descriptions for the predefined belief sets. */
 	private static void printDescription() {
 		System.out.println("Bespiel-Beschreibungen:");
 		for(int i=0; i<descriptions.length; ++i) {
@@ -140,6 +147,11 @@ public class ReasonerExample {
 		}
 	}
 
+	/**
+	 * Compares the available reasoners for the given belief set.
+	 *
+	 * @param beliefset the belief set to compare
+	 */
 	private static void test(ClBeliefSet beliefset) {
 		System.out.println("Start Calculation RuleBased:");
 		long begin = System.nanoTime();

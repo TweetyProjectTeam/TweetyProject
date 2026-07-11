@@ -37,16 +37,18 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * A MaxSAT-based implementation for solving the MaxStable problem from
- * [Thimm. Optimisation and Approximation in Abstract Argumentation: The Case of Stable Semantics. IJCAI 2024]
- * @author Matthias Thimm
+ * A MaxSAT-based implementation for solving the MaxStable problem.
  *
+ * @author Matthias Thimm
  */
 public class MaxSatKStableReasoner implements KOptimisationReasoner {
 
+	/** The used MaxSAT solver. */
 	private MaxSatSolver solver;
 	
 	/**
+	 * Creates a new reasoner using the given MaxSAT solver.
+	 *
 	 * @param solver the used MaxSAT solver
 	 */
 	public MaxSatKStableReasoner(MaxSatSolver solver) {

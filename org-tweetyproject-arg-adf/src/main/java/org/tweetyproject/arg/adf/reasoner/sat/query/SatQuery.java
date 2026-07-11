@@ -28,20 +28,36 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
 
 /**
- * @author Mathias Hofer
+ * Base class for SAT-backed queries over abstract dialectical frameworks.
  *
+ * @param <T> the result type of the query
+ * @author Mathias Hofer
  */
 abstract class SatQuery<T> implements Query<T> {
 
+	/** Semantics used for query execution. */
 	final Semantics semantics;
 
+	/** Execution configuration for the query. */
 	final Configuration configuration;
 
+	/**
+	 * Creates a new SAT-backed query.
+	 *
+	 * @param semantics semantics used for query execution
+	 * @param configuration execution configuration
+	 */
 	SatQuery(Semantics semantics, Configuration configuration) {
 		this.semantics = Objects.requireNonNull(semantics);
 		this.configuration = Objects.requireNonNull(configuration);
 	}
 
+	/**
+	 * Executes the query using the given execution.
+	 *
+	 * @param execution execution to use
+	 * @return the query result
+	 */
 	abstract T execute(Execution execution);
 	
 	@Override

@@ -269,6 +269,12 @@ public class QbfParser extends PlParser {
 		return result;
 	}
 
+	/**
+	 * Parses an equivalence formula from the token list.
+	 *
+	 * @param l the token list
+	 * @return the parsed formula
+	 */
 	private PlFormula parseEquivalence(List<Object> l) {
 		if (l.isEmpty())
 			throw new ParserException("Empty parentheses.");
@@ -289,6 +295,12 @@ public class QbfParser extends PlParser {
 		return new Equivalence(parseQuantification(left), parseQuantification(right));
 	}
 
+	/**
+	 * Parses an implication formula from the token list.
+	 *
+	 * @param l the token list
+	 * @return the parsed formula
+	 */
 	private PlFormula parseImplication(List<Object> l) {
 		if (l.isEmpty())
 			throw new ParserException("Empty parentheses.");

@@ -244,9 +244,8 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return theClass.isAssignableFrom(object.getClass());
 	}
 	/**
-	 *
+	 * The types of nodes in a BPMN model.
 	 * @author Matthias Thimm
-	 *
 	 */
 	public enum BpmnNodeType {
 		/** START_EVENT */
@@ -280,6 +279,12 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return sortedNodes;
 	}
 
+	/**
+	 * Returns the BPMN node type of the given node.
+	 *
+	 * @param node the node to classify
+	 * @return the type of the given node
+	 */
 	private BpmnNodeType getType(BpmnNode node) {
 		if(StartEvent.class.isAssignableFrom(node.getClass())) {
 			return BpmnNodeType.START_EVENT;

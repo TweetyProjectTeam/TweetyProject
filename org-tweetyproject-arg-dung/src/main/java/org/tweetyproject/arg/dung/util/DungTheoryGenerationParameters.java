@@ -24,6 +24,13 @@ package org.tweetyproject.arg.dung.util;
  * @author Matthias Thimm
  */
 public class DungTheoryGenerationParameters{
+	/**
+	 * Creates a new set of Dung theory generation parameters.
+	 */
+	public DungTheoryGenerationParameters() {
+		super();
+	}
+
 	/** The number of arguments to be created in a theory. */
 	public int numberOfArguments = 20;
 	/** The attack probability for each two arguments in the theory. */

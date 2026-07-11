@@ -38,12 +38,19 @@ import org.tweetyproject.web.services.Post;
 
  public class InconsistencyPost extends Post {
 
+    /** The command to be executed */
     private String cmd;
+    /** The email address associated with this post */
     private String email;
+    /** The inconsistency measure to apply */
     private String measure;
+    /** The knowledge base for inconsistency calculation */
     private String kb;
+    /** The format for the response */
     private String format;
+    /** The timeout value in specified units */
     private int timeout;
+    /** The unit of time for the timeout */
     private String unit_timeout;
 
     /**

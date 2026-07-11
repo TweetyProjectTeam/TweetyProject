@@ -30,15 +30,25 @@ import org.tweetyproject.arg.dung.util.PodlaszewskiCaminadaDungTheoryGenerator;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
- * Example code for generating dung theories and exporting them to apx format.
- * 
+ * Example code for generating Dung theories and exporting them to APX format.
+ * <p>
+ * The example shows several generators and writes their output to files.
+ *
  * @author Anna Gessler
  */
 public class DungTheoryGeneratorExample {
 	/**
-	 * 
-	 * @param args string
-	 * @throws IOException Exception
+	 * Creates a new Dung theory generator example.
+	 */
+	public DungTheoryGeneratorExample() {
+		super();
+	}
+
+	/**
+	 * Runs the example.
+	 *
+	 * @param args command-line arguments
+	 * @throws IOException if writing generated theories fails
 	 */
 	public static void main(String[] args) throws IOException{
 		ApxWriter writer = new ApxWriter();
@@ -82,7 +92,12 @@ public class DungTheoryGeneratorExample {
 		}
 
 	}
-	
+	/**
+	 * Creates the target directory if necessary.
+	 *
+	 *
+	 * @param path the directory path
+	 */
 	private static void createDir(String path) {
 		File customDir = new File(path);
 		customDir.mkdirs();

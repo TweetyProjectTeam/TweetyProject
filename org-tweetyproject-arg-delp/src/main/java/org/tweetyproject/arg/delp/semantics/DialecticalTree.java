@@ -84,7 +84,12 @@ public enum Mark {
 		this(null, argument);
 	}
 
-    // for building the linked tree structure
+    /**
+     * Creates a tree node with the given parent and argument.
+     *
+     * @param parent the parent node
+     * @param argument the argument stored in this node
+     */
     private DialecticalTree(DialecticalTree parent, DelpArgument argument){
         if (argument == null)
             throw new IllegalArgumentException("Cannot instantiate dialectical tree with NULL argument");

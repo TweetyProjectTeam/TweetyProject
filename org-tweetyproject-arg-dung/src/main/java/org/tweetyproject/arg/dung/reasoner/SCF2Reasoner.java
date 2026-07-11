@@ -36,6 +36,11 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SCF2Reasoner extends AbstractExtensionReasoner {
+    /** Creates the reasoner. */
+    public SCF2Reasoner() {
+        // default
+    }
+
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         DungTheory restrictedTheory = new DungTheory((DungTheory) bbase);

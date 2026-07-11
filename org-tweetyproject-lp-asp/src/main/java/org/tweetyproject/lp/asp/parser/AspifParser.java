@@ -184,7 +184,7 @@ public class AspifParser {
 	 * 
 	 * @param elements a string array that contains the elements of the aspif rule statement in order
 	 * @return program
-	 * @throws ParseException 
+	 * @throws ParseException if the aspif content cannot be parsed
 	 */
 	private ASPRule parseRule(String[] elements) throws ParseException {
 		boolean isChoice = Integer.parseInt(elements[1]) == 1;
@@ -309,7 +309,7 @@ public class AspifParser {
 	 * hidden from clingo models by enabling the use of the output
 	 * predicates whitelist.
 	 * 
-	 * @param name
+	 * @param name the auxiliary atom identifier
 	 * @return atom with the generated name
 	 */
 	private ASPAtom generateAtomMapping(int name) {
