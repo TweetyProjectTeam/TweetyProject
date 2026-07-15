@@ -19,6 +19,7 @@
 package org.tweetyproject.web.services.dung;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The DungReasonerPost class represents a data structure for holding information
@@ -43,6 +44,9 @@ public class DungReasonerPost {
 
   /** The solver specified in the Dung reasoner request */
   private String solver;
+
+  /** Additional constructor parameters for the reasoner, keyed by parameter name */
+  private Map<String, Object> args;
 
   /** The timeout value (in seconds) specified in the Dung reasoner request */
   private int timeout;
@@ -174,6 +178,24 @@ public class DungReasonerPost {
    */
   public void setSolver(String solver) {
       this.solver = solver;
+  }
+
+  /**
+   * Gets the additional constructor parameters for the reasoner.
+   *
+   * @return The reasoner parameters, keyed by parameter name
+   */
+  public Map<String, Object> getArgs() {
+      return this.args;
+  }
+
+  /**
+   * Sets the additional constructor parameters for the reasoner.
+   *
+   * @param args The reasoner parameters to be set, keyed by parameter name
+   */
+  public void setArgs(Map<String, Object> args) {
+      this.args = args;
   }
 
   /**

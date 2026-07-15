@@ -250,7 +250,7 @@ public class RequestController {
 			return new DungReasonerResponse();
 
 		DungTheory theory = AbstractExtensionReasonerFactory.getDungTheory(post.getNr_of_arguments(), post.getAttacks());
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(Semantics.getSemantics(post.getSemantics()));
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(post.getSemantics(), post.getArgs());
 		Callee callee = DungReasonerCalleeFactory.getCallee(cmd, reasoner, theory);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
@@ -342,7 +342,7 @@ public class RequestController {
 			return new RankingReasonerResponse();
 
 		DungTheory theory = AbstractExtensionReasonerFactory.getDungTheory(post.getNr_of_arguments(), post.getAttacks());
-		AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(RankingSemantics.getSemantics(post.getSemantics()));
+		AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(RankingSemantics.getSemantics(post.getSemantics()), post.getArgs());
 		Callee callee = RankingReasonerCalleeFactory.getCallee(cmd, reasoner, theory);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);

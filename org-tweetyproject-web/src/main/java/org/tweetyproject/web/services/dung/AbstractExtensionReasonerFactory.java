@@ -28,6 +28,7 @@ import org.tweetyproject.graphs.Graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Main factory for retrieving abstract extension reasoners.
@@ -53,6 +54,39 @@ public abstract class AbstractExtensionReasonerFactory {
 	 */
 	public static AbstractExtensionReasoner getReasoner(Semantics sem) {
 		return AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem);
+	}
+
+	/**
+	 * Creates a reasoner for the given semantics identifier, initialized with the given
+	 * parameters. In addition to the semantics handled by {@link #getReasoner(Semantics)},
+	 * this supports the meta-reasoners "QLD" (qualified), "SQLD" (semi-qualified) and "VR"
+	 * (vacuous reduct), whose base (and, for "VR", reduct) semantics are read from
+	 * {@code args}. Parameters missing from {@code args} fall back to documented defaults.
+	 *
+	 * @param semantics identifier of a semantics or meta-reasoner
+	 * @param args      map of constructor parameters for meta-reasoners, keyed by parameter name
+	 * @return the requested reasoner
+	 */
+	public static AbstractExtensionReasoner getReasoner(String semantics, Map<String, Object> args) {
+		switch (semantics) {
+			case "QLD" -> {
+				return new QualifiedReasoner(getSemantics(args, "baseSemantics", Semantics.CO));
+			} case "SQLD" -> {
+				return new SemiQualifiedReasoner(getSemantics(args, "baseSemantics", Semantics.CO));
+			} case "VR" -> {
+				AbstractExtensionReasoner base = getReasoner(getSemantics(args, "baseSemantics", Semantics.CF));
+				AbstractExtensionReasoner reduct = getReasoner(getSemantics(args, "reductSemantics", Semantics.ADM));
+				return new VacuousReductReasoner(base, reduct);
+			} default -> {
+				return getReasoner(Semantics.getSemantics(semantics));
+			}
+		}
+	}
+
+	private static Semantics getSemantics(Map<String, Object> args, String key, Semantics defaultValue) {
+		if (args == null) return defaultValue;
+		Object value = args.get(key);
+		return value instanceof String ? Semantics.getSemantics((String) value) : defaultValue;
 	}
 
     /**
