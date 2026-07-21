@@ -20,11 +20,14 @@ package org.tweetyproject.web.services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
+import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
 import org.tweetyproject.graphs.DirectedEdge;
 import org.tweetyproject.graphs.Graph;
+import org.tweetyproject.web.services.serialisation.SerialisationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +62,10 @@ public abstract class AbstractExtensionReasonerFactory {
 	/**
 	 * Creates a reasoner for the given semantics identifier, initialized with the given
 	 * parameters. In addition to the semantics handled by {@link #getReasoner(Semantics)},
-	 * this supports the meta-reasoners "QLD" (qualified), "SQLD" (semi-qualified) and "VR"
-	 * (vacuous reduct), whose base (and, for "VR", reduct) semantics are read from
-	 * {@code args}. Parameters missing from {@code args} fall back to documented defaults.
+	 * this supports the meta-reasoners "QLD" (qualified), "SQLD" (semi-qualified), "VR"
+	 * (vacuous reduct) and "SER" (serialised), whose base (and, for "VR", reduct;
+	 * for "SER", selection/termination function) parameters are read from {@code args}.
+	 * Parameters missing from {@code args} fall back to documented defaults.
 	 *
 	 * @param semantics identifier of a semantics or meta-reasoner
 	 * @param args      map of constructor parameters for meta-reasoners, keyed by parameter name
@@ -77,6 +81,10 @@ public abstract class AbstractExtensionReasonerFactory {
 				AbstractExtensionReasoner base = getReasoner(getSemantics(args, "baseSemantics", Semantics.CF));
 				AbstractExtensionReasoner reduct = getReasoner(getSemantics(args, "reductSemantics", Semantics.ADM));
 				return new VacuousReductReasoner(base, reduct);
+			} case "SER" -> {
+				SelectionFunction selection = SerialisationFactory.getSelectionFunction(getString(args, "selectionFunction", "ADM"));
+				TerminationFunction termination = SerialisationFactory.getTerminationFunction(getString(args, "terminationFunction", "PR"));
+				return new SerialisedExtensionReasoner(selection, termination);
 			} default -> {
 				return getReasoner(Semantics.getSemantics(semantics));
 			}
@@ -87,6 +95,12 @@ public abstract class AbstractExtensionReasonerFactory {
 		if (args == null) return defaultValue;
 		Object value = args.get(key);
 		return value instanceof String ? Semantics.getSemantics((String) value) : defaultValue;
+	}
+
+	private static String getString(Map<String, Object> args, String key, String defaultValue) {
+		if (args == null) return defaultValue;
+		Object value = args.get(key);
+		return value instanceof String ? (String) value : defaultValue;
 	}
 
     /**
