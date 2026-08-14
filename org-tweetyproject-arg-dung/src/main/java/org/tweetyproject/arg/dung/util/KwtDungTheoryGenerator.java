@@ -28,41 +28,55 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Creates AAFs with a complex structure for tasks
- * related to skeptical reasoning wrt. preferred semantics,
- * see [Kuhlmann, Wujek, Thimm, 2022]
- * 
+ * Creates abstract argumentation frameworks with a characteristic structure for
+ * skeptical reasoning tasks under preferred semantics.
+ *
+ * <p>See Kuhlmann, Wujek, and Thimm (2022).</p>
+ *
  * @author Matthias Thimm
  */
 public class KwtDungTheoryGenerator implements DungTheoryGenerator {
+	/** random number generator used to sample attacks */
 	private Random rand;
+	/** total number of arguments to generate */
 	private int num_arguments;
+	/** number of skeptically accepted arguments */
 	private int num_skept_arguments;
+	/** size of the ideal extension */
 	private int size_ideal_extension;
+	/** number of credulously accepted arguments */
 	private int num_cred_arguments;
+	/** number of preferred extensions to build */
 	private int num_pref_exts;
-	
+	/** probability that an ideal argument is attacked */
 	private double p_ideal_attacked;
+	/** probability that an ideal argument attacks back */
 	private double p_ideal_attack_back;
+	/** probability that a skeptical non-ideal argument is attacked */
 	private double p_other_skept_args_attacked;
+	/** skeptical attacked-args-back probability */
 	private double p_other_skept_args_attack_back;
+	/** probability that a credulous argument is attacked */
 	private double p_cred_args_attacked;
+	/** probability that a credulous argument attacks back */
 	private double p_cred_args_attack_back;
+	/** probability of all remaining attacks */
 	private double p_other_attacks;
 	/**
-	 * 
+	 * Creates a new KWT Dung theory generator.
+	 *
 	 * @param num_arguments nr of args
 	 * @param num_skept_arguments nr of skeptical args
 	 * @param size_ideal_extension size of ideal extension
 	 * @param num_cred_arguments nr of credulous args
 	 * @param num_pref_exts nums of preferred extensions
-	 * @param p_ideal_attacked idel attacked
-	 * @param p_ideal_attack_back ideal aattcked back
-	 * @param p_other_skept_args_attacked skeptical attacked back
-	 * @param p_other_skept_args_attack_back skeptical attacked args back
-	 * @param p_cred_args_attacked credulous args attacked
-	 * @param p_cred_args_attack_back creduous args attack back
-	 * @param p_other_attacks other attack
+	 * @param p_ideal_attacked ideal attacked probability
+	 * @param p_ideal_attack_back ideal attacked-back probability
+	 * @param p_other_skept_args_attacked skeptical attacked-back probability
+	 * @param p_other_skept_args_attack_back skeptical attacked-args-back probability
+	 * @param p_cred_args_attacked credulous args attacked probability
+	 * @param p_cred_args_attack_back credulous args attack-back probability
+	 * @param p_other_attacks other attack probability
 	 */
 	public KwtDungTheoryGenerator(
 			int num_arguments,

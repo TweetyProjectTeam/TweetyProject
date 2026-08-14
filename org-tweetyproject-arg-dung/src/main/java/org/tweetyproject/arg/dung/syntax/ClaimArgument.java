@@ -18,14 +18,15 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 /**
- * an argument with a claim
- * @author Sebastian Franke
+ * Represents an argument with an associated claim.
  *
+ * @author Sebastian Franke
  */
 public class ClaimArgument extends Argument{
 	/**
-	 * 
-	 * @param name name of argument
+	 * Creates a new claim argument.
+	 *
+	 * @param name name of the argument
 	 * @param claim the claim
 	 */
 	public ClaimArgument(String name, Claim claim) {
@@ -33,25 +34,29 @@ public class ClaimArgument extends Argument{
 		this.claim = claim;
 	}
 	/**
-	 * the claim
+	 * The associated claim label.
 	 */
 	Claim claim;
 	/**
-	 * 
-	 * @return the claim
+	 * Returns the associated claim label.
+	 *
+	 * @return the associated claim label
 	 */
 	public Claim getClaim() {
 		return this.claim;
 	}
 	/**
-	 * 
+	 * Sets the associated claim label.
+	 *
 	 * @param c the claim
 	 */
 	public void setClaim(Claim c) {
 		this.claim = c;
 	}
 	/**
-	 * reurn string representation
+	 * Returns the string representation.
+	 *
+	 * @return the string representation
 	 */
 	public String toString() {
 		return this.getClaim().toString();

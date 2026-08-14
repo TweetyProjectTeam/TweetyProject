@@ -107,6 +107,6 @@ public class SerialisationState implements Node {
 
     @Override
     public String toString() {
-        return extension.toString();
+        return extension.toString() + (isTerminal() ? "*" : "");
     }
 }

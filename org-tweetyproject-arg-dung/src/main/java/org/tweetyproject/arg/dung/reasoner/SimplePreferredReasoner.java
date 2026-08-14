@@ -35,6 +35,13 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class SimplePreferredReasoner extends AbstractExtensionReasoner {	
 
+    /**
+     * Creates a new SimplePreferredReasoner instance.
+     */
+    public SimplePreferredReasoner() {
+        // default constructor
+    }
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */

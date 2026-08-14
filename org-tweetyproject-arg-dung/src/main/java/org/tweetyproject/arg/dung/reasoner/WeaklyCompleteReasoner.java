@@ -38,6 +38,13 @@
   * @author Lars Bengel
   */
  public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
+
+     /**
+      * Creates a new WeaklyCompleteReasoner instance.
+      */
+     public WeaklyCompleteReasoner() {
+         // default constructor
+     }
  
      @Override
      public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {

@@ -34,6 +34,11 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SccCF2Reasoner extends AbstractExtensionReasoner {
+    /** Creates the reasoner. */
+    public SccCF2Reasoner() {
+        // default
+    }
+
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory) bbase).getStronglyConnectedComponents());

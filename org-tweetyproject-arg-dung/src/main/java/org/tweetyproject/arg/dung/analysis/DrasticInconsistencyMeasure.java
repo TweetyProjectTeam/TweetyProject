@@ -21,12 +21,20 @@ package org.tweetyproject.arg.dung.analysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Calculates the drastic inconsistency measure of the given argumentation framework.It implements the
- * InconsistencyMeasure interface.
+ * Calculates the drastic inconsistency measure of the given argumentation framework.
+ * It implements the {@code InconsistencyMeasure} interface.
+ *
  * @author Timothy Gillespie
  * @param <T> the type of DungTheory
  */
 public class DrasticInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
+	/**
+	 * Creates a new drastic inconsistency measure.
+	 */
+	public DrasticInconsistencyMeasure() {
+		super();
+	}
+
 	/**
 	 * Calculates the inconsistency measure based on the drastic inconsistency
 	 * measure.

@@ -30,17 +30,28 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
- * @author Mathias Hofer
+ * Query that checks whether all relevant executions satisfy a condition.
  *
+ * @author Mathias Hofer
  */
 final class ForAllSatQuery implements Query<Boolean> {
 	
+	/** Semantics used for query execution. */
 	private final Semantics semantics;
 
+	/** Execution configuration for the query. */
 	private final Configuration configuration;
 	
+	/** Argument representing the queried condition. */
 	private final Argument condition;
 
+	/**
+	 * Creates a new universal SAT query.
+	 *
+	 * @param semantics semantics used for the query
+	 * @param configuration execution configuration
+	 * @param condition queried condition
+	 */
 	public ForAllSatQuery(Semantics semantics, Configuration configuration, Argument condition) {
 		this.semantics = Objects.requireNonNull(semantics);
 		this.configuration = Objects.requireNonNull(configuration);

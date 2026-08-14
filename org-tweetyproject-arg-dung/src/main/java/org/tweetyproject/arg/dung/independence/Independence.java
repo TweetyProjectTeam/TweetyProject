@@ -36,8 +36,16 @@ import java.util.*;
 public class Independence {
 
     /**
-     * Compute whether argsA and argsB are independent given argsC in the given AF
-     * argsA, argsB and argsC are disjoint
+     * Creates a new independence helper.
+     */
+    public Independence() {
+        super();
+    }
+
+    /**
+     * Computes whether argsA and argsB are independent given argsC in the given AF.
+     * argsA, argsB and argsC are disjoint.
+     *
      * @param theory a dung theory
      * @param argsA a set of arguments
      * @param argsB a set of arguments

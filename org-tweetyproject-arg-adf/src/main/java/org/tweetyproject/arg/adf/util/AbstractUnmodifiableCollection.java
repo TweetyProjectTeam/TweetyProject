@@ -30,6 +30,12 @@ import java.util.function.Predicate;
  */
  public abstract class AbstractUnmodifiableCollection<E> extends AbstractCollection<E>{
 
+	/**
+	 * Creates a new unmodifiable collection helper.
+	 */
+	protected AbstractUnmodifiableCollection() {
+	}
+
 	/* (non-Javadoc)
 	 * @see java.util.Collection#removeIf(java.util.function.Predicate)
 	 */

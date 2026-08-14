@@ -38,6 +38,13 @@ import java.util.Map;
  */
 public class SimpleInitialReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new initial reasoner.
+     */
+    public SimpleInitialReasoner() {
+        // default constructor
+    }
+
 /**
  * The {@code Initial} enum represents the three different types of initial sets
  */

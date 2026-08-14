@@ -23,24 +23,26 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
  * Performs further processing on interpretations, e.g. maximization.
- * 
+ *
  * @author Mathias Hofer
- * 
  *
  */
 public interface InterpretationProcessor extends AutoCloseable {
-	
+
 	/**
-	 * 
-	 * @param interpretation interpretation
-	 * @return Interpretation process
+	 * Processes the given interpretation.
+	 *
+	 * @param interpretation the interpretation to process
+	 * @return the processed interpretation
 	 */
 	Interpretation process(Interpretation interpretation);
-/**
- * 
- * @param state state
- * @param processed processed
- */
+
+	/**
+	 * Updates the solver state after processing an interpretation.
+	 *
+	 * @param state the current SAT solver state
+	 * @param processed the processed interpretation
+	 */
 	void updateState(SatSolverState state, Interpretation processed);
 	
 	@Override

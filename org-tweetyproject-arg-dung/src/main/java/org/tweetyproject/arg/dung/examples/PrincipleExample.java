@@ -37,6 +37,10 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class PrincipleExample {
+    /** Creates the example. */
+    public PrincipleExample() {
+    }
+
     /**
      * Execute the example
      *

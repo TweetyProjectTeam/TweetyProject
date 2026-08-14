@@ -37,6 +37,13 @@ import java.util.Set;
  * @author Lars Bengel
  */
 public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new StronglyAdmissibleReasoner instance.
+     */
+    public StronglyAdmissibleReasoner() {
+        // default constructor
+    }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         // check all subsets of the grounded extension of bbase

@@ -379,7 +379,7 @@ public class StructuralCausalModel implements BeliefBase, Collection<PlFormula> 
     /**
      * Thrown to indicate that the structural equations of a causal model contain a cyclic dependency
      */
-    public static class CyclicDependencyException extends Throwable {
+    public static class CyclicDependencyException extends Exception {
         /**
          * Constructs a CyclicDependencyException with the specified detail message
          *

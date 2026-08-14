@@ -34,6 +34,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class PreferredCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
+	/** Creates the measure. */
+	public PreferredCountInconsistencyMeasure() {
+	}
+
 	/**
  * Calculates the inconsistency measure of the given argumentation framework based on preferred extensions.
  * Preferred count inconsistency measure is computed by determining the count of preferred extensions

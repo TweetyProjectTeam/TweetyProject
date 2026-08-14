@@ -93,6 +93,10 @@ public final class Configuration {
 		/** The parallelism level, initialized to the number of available processors. */
 		private int parallelism = Runtime.getRuntime().availableProcessors();
 
+		/** Creates a new configuration builder. */
+		private Builder() {
+		}
+
 		/**
 		 * Sets the {@link IncrementalSatSolver} to be used in the {@link Configuration}.
 		 *

@@ -34,6 +34,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class GsAdmissibleAstApproximationReasoner implements KOptimisationReasoner{
+
+	/**
+	 * Creates a new Gs admissible AST approximation reasoner.
+	 */
+	public GsAdmissibleAstApproximationReasoner() {
+		super();
+	}
 	
 		
 	@Override

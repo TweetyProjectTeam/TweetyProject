@@ -34,17 +34,21 @@ import org.tweetyproject.arg.dung.writer.TgfWriter;
 import org.tweetyproject.commons.InferenceMode;
 
 /**
- * 
  * Example code for generating a lot of KWT graphs.
- * 
- * @author Matthias Thimm
  *
+ * @author Matthias Thimm
  */
 public class KwtGeneratorExample {
+	/** Creates the example. */
+	public KwtGeneratorExample() {
+		// default
+	}
+
 	/**
-	 * 
+	 * Runs the example.
+	 *
 	 * @param args command line arguments
-	 * @throws IOException when Input goes wrong
+	 * @throws IOException when input goes wrong
 	 */
 	public static void main(String[] args) throws IOException {
 		String path = args[0]; // enter path where graphs and solutions should be stored

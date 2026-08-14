@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Implementation of the iterative algorithm for learning argumentation frameworks from labelings
- * utilizing the parallelization possibilities
+ * Learns argumentation frameworks from labelings using parallel computation.
+ *
  * @author Lars Bengel
  */
 public class OptimizedParallelAFLearner implements AFLearner {
@@ -83,8 +83,9 @@ public class OptimizedParallelAFLearner implements AFLearner {
 
     // TODO: doesnt work like this probably. need an add function for the ClausalAttackConstraint
     /**
-     * 
-     * @param inputs inputs
+     * Learns labelings from the given inputs.
+     *
+     * @param inputs the inputs to learn from
      * @return the learned labels
      */
     public boolean learnLabelings(Collection<Input> inputs) {

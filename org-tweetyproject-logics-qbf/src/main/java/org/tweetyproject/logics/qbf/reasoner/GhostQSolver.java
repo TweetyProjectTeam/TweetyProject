@@ -70,7 +70,7 @@ public class GhostQSolver extends QbfSolver {
 	 * Invokes GhostQ with the given input file.
 	 * 
 	 * @param file input file for GhostQ
-	 * @param file2 
+	 * @param file2 the intermediate QDIMACS file
 	 * @return true if the result is SAT, false if the result is UNSAT
 	 * @throws Exception if the bash command fails or if GhostQ produces no interpretable output
 	 */

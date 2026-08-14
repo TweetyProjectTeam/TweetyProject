@@ -28,7 +28,9 @@ import org.tweetyproject.causal.syntax.StructuralCausalModel;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.pl.syntax.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -44,12 +46,7 @@ import java.util.Map;
 public class ArgumentationBasedCausalReasoner extends AbstractArgumentationBasedCausalReasoner {
     @Override
     public DungTheory getInducedTheory(CausalKnowledgeBase cbase, Collection<PlFormula> observations, Map<Proposition,Boolean> interventions) {
-        StructuralCausalModel model = cbase.getCausalModel();
-        for (Proposition atom : interventions.keySet()) {
-            model = model.intervene(atom, interventions.get(atom));
-        }
-        PlBeliefSet base = new PlBeliefSet(model.getStructuralEquations());
-        base.addAll(observations);
+        PlBeliefSet base = createBeliefSetWithObservationsAndInterventions(cbase, observations, interventions);
 
         Collection<PlFormula> literals = new HashSet<>();
         for (Proposition atom : base.getSignature()) {
@@ -111,6 +108,19 @@ public class ArgumentationBasedCausalReasoner extends AbstractArgumentationBased
         return theory;
     }
 
+    private static PlBeliefSet createBeliefSetWithObservationsAndInterventions(
+            CausalKnowledgeBase cbase,
+            Collection<PlFormula> observations,
+            Map<Proposition, Boolean> interventions) {
+        StructuralCausalModel model = cbase.getCausalModel();
+        for (Proposition atom : interventions.keySet()) {
+            model = model.intervene(atom, interventions.get(atom));
+        }
+        PlBeliefSet base = new PlBeliefSet(model.getStructuralEquations());
+        base.addAll(observations);
+        return base;
+    }
+
     /**
      * Determines whether the given causal statements holds under the causal knowledge base
      *
@@ -131,5 +141,93 @@ public class ArgumentationBasedCausalReasoner extends AbstractArgumentationBased
      */
     public boolean query(CausalKnowledgeBase cbase, InterventionalStatement statement) {
         return query(cbase, statement.getObservations(), statement.getInterventions(), statement.getConclusion());
+    }
+
+    /**
+     * Computes, for each atom that appears in the knowledge base, the set of atoms that are
+     * significant for establishing that conclusion under the given observations and interventions.
+     * <p>
+     * This method:
+     * <ul>
+     *   <li>Induces an argumentation theory from the given knowledge base, observations,
+     *       and interventions.</li>
+     *   <li>Groups arguments by the (single) atom occurring in their conclusion (positive
+     *       or negated).</li>
+     *   <li>Collects, per atom, all arguments concluding that atom (or its negation) and
+     *       all their ancestors in the attack graph.</li>
+     *   <li>For each of these arguments, retrieves kernels for the argument’s conclusion
+     *       under a belief set extended with the argument’s premises, and gathers all
+     *       atoms that appear in those kernels.</li>
+     * </ul>
+     *
+     * @param cbase         some causal knowledge base
+     * @param observations  some logical formulae representing the observations of causal atoms
+     * @param interventions a set of interventions on causal atoms
+     * @param atomFilter    atoms for which to get the significant atoms.
+     *                      If {@code null}, the filter is not applied.
+     * @return the argumentation framework induced from the causal knowledge base and the observations
+     */
+    public Map<Proposition, Collection<Proposition>> getSignificantAtoms(
+            CausalKnowledgeBase cbase,
+            Collection<PlFormula> observations,
+            Map<Proposition, Boolean> interventions,
+            Collection<Proposition> atomFilter) {
+        var theory = getInducedTheory(cbase, observations, interventions);
+        var perAtomArgumentsWithAtomInConclusion = getPerAtomArgumentsWithAtomInConclusion(theory, atomFilter);
+        var beliefSetWithoutAssumptions = createBeliefSetWithObservationsAndInterventions(cbase, observations, interventions);
+
+        var perAtomSignificantAtoms = new HashMap<Proposition, Collection<Proposition>>();
+
+        for (var entry : perAtomArgumentsWithAtomInConclusion.entrySet()) {
+            var atom = entry.getKey();
+            var argumentsForAtom = entry.getValue();
+
+            var significantArguments = new HashSet<>();
+            significantArguments.addAll(argumentsForAtom);
+            significantArguments.addAll(theory.getAncestors(argumentsForAtom));
+
+            var significantAtoms = new HashSet<Proposition>();
+            for (var argument : significantArguments) {
+                var causalArgument = (CausalArgument) argument;
+                var beliefSetWithAssumptions = new PlBeliefSet(beliefSetWithoutAssumptions);
+                beliefSetWithAssumptions.addAll(causalArgument.getPremises());
+                var kernels = reasoner.getKernels(beliefSetWithAssumptions, causalArgument.getConclusion());
+                for (var kernel : kernels) {
+                    for (var formula : kernel) {
+                        significantAtoms.addAll(formula.getAtoms());
+                    }
+                }
+            }
+            perAtomSignificantAtoms.put(atom, significantAtoms);
+        }
+
+        return perAtomSignificantAtoms;
+    }
+
+
+    /**
+     * Returns, for each atom, the set of arguments whose conclusion is the atom or its negation.
+     *
+     * @param theory the theory containing the arguments
+     * @param atomFilter    atoms for which to get the significant atoms.
+     *                      If {@code null}, the filter is not applied.
+     * @return a map from atom to the set of matching arguments
+     */
+    public Map<Proposition, Collection<CausalArgument>> getPerAtomArgumentsWithAtomInConclusion(DungTheory theory, Collection<Proposition> atomFilter) {
+        var perAtomArguments = new HashMap<Proposition, Collection<CausalArgument>>();
+
+        for (var argument: theory) {
+            var causalArgument = (CausalArgument) argument;
+            var signature = causalArgument.getConclusion().getAtoms();
+            if (signature.size() != 1) {
+                throw new IllegalStateException("Encountered invalid argument with more than one atom in the its conclusion: " + causalArgument);
+            }
+            var atom = signature.stream().findFirst().get();
+            if (atomFilter != null && !atomFilter.contains(atom)) continue;
+
+            var arguments = perAtomArguments.computeIfAbsent(atom, (_atom) -> new ArrayList<>());
+            arguments.add(causalArgument);
+        }
+        return perAtomArguments;
     }
 }

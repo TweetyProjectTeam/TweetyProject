@@ -29,6 +29,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.commons.AbstractInterpretation;
 
 /**
  * TwoValuedInterpretationIterator class
@@ -74,7 +76,7 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 		return new TwoValuedInterpretation(arguments, value++);
 	}
 
-	private static final class TwoValuedInterpretation implements Interpretation {
+	private static final class TwoValuedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework,Argument> implements Interpretation {
 
 		private final Map<Argument, Integer> indexMap;
 
@@ -148,6 +150,15 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 			return indexMap.keySet();
 		}
 
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return satisfied().contains(formula);
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			throw new IllegalArgumentException("Satisfaction of belief bases by ADF interpretations is undefined.");
+		}
 	}
 
 }

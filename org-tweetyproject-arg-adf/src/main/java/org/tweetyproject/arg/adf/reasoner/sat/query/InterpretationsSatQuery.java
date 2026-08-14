@@ -28,6 +28,8 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
+ * Query that returns the stream of satisfying interpretations.
+ *
  * @author Mathias Hofer
  *
  */

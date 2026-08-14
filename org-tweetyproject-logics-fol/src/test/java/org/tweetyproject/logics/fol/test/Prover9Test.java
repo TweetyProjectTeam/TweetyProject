@@ -22,8 +22,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import org.junit.jupiter.api.Disabled;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.reasoner.FolReasoner;
 import org.tweetyproject.logics.fol.reasoner.Prover9FolReasoner;
@@ -37,8 +39,8 @@ import org.tweetyproject.logics.fol.writer.Prover9Writer;
  * @author Nils Geilen
  *
  */
+@Ignore
 public class Prover9Test {
-
 	static FolReasoner e;
 	FolWriter printer = new Prover9Writer();
 	
@@ -46,6 +48,7 @@ public class Prover9Test {
 		e = new Prover9FolReasoner("C:\\app\\prover9\\bin\\prover9.exe");
 	}
 
+	@Disabled
 	@Test
 	public void test1() throws Exception {
 		FolParser parser = new FolParser();	
@@ -61,7 +64,8 @@ public class Prover9Test {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a&&b <=> b&&a")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("forall X:(X==X && !(X/==X))")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test2() throws Exception {
 		FolParser parser = new FolParser();	
@@ -80,7 +84,8 @@ public class Prover9Test {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test3() throws Exception {
 		FolParser parser = new FolParser();	

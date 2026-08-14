@@ -33,6 +33,13 @@ import java.util.HashSet;
  */
 public class GroundedKernel extends EquivalenceKernel {
 
+    /**
+     * Creates a new grounded kernel.
+     */
+    public GroundedKernel() {
+        super();
+    }
+
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

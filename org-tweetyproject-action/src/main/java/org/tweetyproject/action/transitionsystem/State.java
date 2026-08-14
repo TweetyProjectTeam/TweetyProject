@@ -31,6 +31,7 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
  * @author Sebastian Homann
  */
 public class State {
+	/** the fluents mapped to true in this state */
 	private Set<FolAtom> fluents = new HashSet<FolAtom>();
 
 	/**

@@ -38,6 +38,7 @@ import java.util.Collection;
  */
 public class StrongExpansionEquivalence implements Equivalence<DungTheory> {
 
+    /** Kernel used to characterize strong expansion equivalence. */
     private final EquivalenceKernel kernel;
 
     /**

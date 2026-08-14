@@ -34,6 +34,10 @@ import java.util.Collection;
  */
 public abstract class Principle implements Postulate<Argument> {
 
+    /** Creates the principle base. */
+    public Principle() {
+    }
+
     /** The I-maximality principle **/
     public static final Principle I_MAXIMALITY = new IMaximalityPrinciple();
     /** The conflict-free principle **/

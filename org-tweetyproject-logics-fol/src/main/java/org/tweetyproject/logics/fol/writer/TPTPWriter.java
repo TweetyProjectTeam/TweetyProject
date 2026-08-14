@@ -244,6 +244,8 @@ public class TPTPWriter implements FolWriter {
 	/**
 	 * Joins the elements of c.
 	 * 
+	 * @param <T>
+	 *            the type of elements in the collection
 	 * @param c
 	 *            a collection
 	 * @param delimiter

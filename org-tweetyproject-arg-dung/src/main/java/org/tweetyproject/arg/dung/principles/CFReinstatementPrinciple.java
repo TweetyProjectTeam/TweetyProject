@@ -37,6 +37,13 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class CFReinstatementPrinciple extends Principle {
+    /**
+     * Creates a new CF-reinstatement principle.
+     */
+    public CFReinstatementPrinciple() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "CF-Reinstatement";

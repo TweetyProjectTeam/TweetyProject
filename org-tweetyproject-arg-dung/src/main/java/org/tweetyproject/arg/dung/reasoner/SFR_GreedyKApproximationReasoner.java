@@ -37,7 +37,11 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  */
 public class SFR_GreedyKApproximationReasoner implements KOptimisationReasoner{
-	
+
+	/** Creates a greedy k-approximation reasoner. */
+	public SFR_GreedyKApproximationReasoner() {
+	}
+		
 	/**
 	 * Checks whether the given argument can be removed from current
 	 * without compromising full range.

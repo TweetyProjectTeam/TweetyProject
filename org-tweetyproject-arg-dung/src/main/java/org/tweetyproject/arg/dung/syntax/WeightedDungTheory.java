@@ -159,8 +159,9 @@ public class WeightedDungTheory extends DungTheory {
     }
 
     /**
-     * 
-     * @return removeDiscardedAttacks
+     * Removes all attacks with negative weights.
+     *
+     * @return "true" if all attacks were removed
      */
     public boolean removeDiscardedAttacks() {
         return this.removeDiscardedAttacks(0);

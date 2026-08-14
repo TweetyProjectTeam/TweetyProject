@@ -18,8 +18,7 @@
  */
 package org.tweetyproject.graphs;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 import org.tweetyproject.math.matrix.Matrix;
 
@@ -130,7 +129,41 @@ public interface Graph<T extends Node> extends GeneralGraph<T>{
 	 * @return the set of parents of the given node.
 	 */
 	public Collection<T> getParents(Node node);
-	
+
+	/**
+	 * Returns the ancestors (nodes connected via an undirected or directed path
+	 * where the given node is the descendant) of the given node.
+	 * @param node some node (must be in the graph).
+	 * @return the ancestors of the given node.
+	 */
+	public default Collection<T> getAncestors(Node node) {
+		return  getAncestors(List.of(node));
+	}
+
+	/**
+	 * Returns the union of ancestors (nodes connected via an undirected or directed path
+	 * where the given node is the descendant) of the given nodes.
+	 * @param nodes some nodes (must be in the graph).
+	 * @return union of ancestors of the given node.
+	 */
+	public default Collection<T> getAncestors(Collection<? extends Node> nodes) {
+		var ancestors = new HashSet<T>();
+		var visited = new HashSet<T>();
+
+		var stack = new ArrayDeque<Node>(nodes);
+		while (!stack.isEmpty()) {
+			Node current = stack.pop();
+			for (T parent : this.getParents(current)) {
+				if (!visited.contains(parent)) {
+					ancestors.add(parent);
+					stack.push(parent);
+					visited.add(parent);
+				}
+			}
+		}
+		return ancestors;
+	}
+
 	/**
 	 * Checks whether there is a (directed) path from node1 to node2.
 	 * @param node1 some node.

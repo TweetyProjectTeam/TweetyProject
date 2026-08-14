@@ -43,21 +43,25 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @author Matthias Thimm
  *
  */
-public class SeemAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
+	public class SeemAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 
-	private MaxSatSolver maxSatSolver;
-		
+		/** MaxSAT solver used to search for acceptable arguments. */
+		private MaxSatSolver maxSatSolver;
+			
+	/** Semantics used to determine acceptability. */
 	private Semantics semantics;
 	
-	private InferenceMode inferenceMode;
-	
-	/**
-	 * Creates a new IaqAcceptabilityReasoner.
-	 * @param maxSatSolver some MaxSATSolver.
-	 * @param semantics either Semantics.CO, Semantics.PR, or Semantics.ST
-	 * @param inferenceMode either InferenceMode.CREDULOUS or InferenceMode.SKEPTICAL (only stable semantics)
-	 */
-	public SeemAcceptabilityReasoner(MaxSatSolver maxSatSolver,  Semantics semantics, InferenceMode inferenceMode) {
+		/** Inference mode used for the query. */
+		private InferenceMode inferenceMode;
+		
+		/**
+		 * Creates a new SEEM acceptability reasoner.
+		 *
+		 * @param maxSatSolver some MaxSATSolver
+		 * @param semantics either Semantics.CO, Semantics.PR, or Semantics.ST
+		 * @param inferenceMode either InferenceMode.CREDULOUS or InferenceMode.SKEPTICAL (only stable semantics)
+		 */
+		public SeemAcceptabilityReasoner(MaxSatSolver maxSatSolver,  Semantics semantics, InferenceMode inferenceMode) {
 		if(!semantics.equals(Semantics.CO) && !semantics.equals(Semantics.PR) && !semantics.equals(Semantics.ST))
 			throw new IllegalArgumentException("Semantics must be CO, PR, or ST");
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL) && !semantics.equals(Semantics.ST))

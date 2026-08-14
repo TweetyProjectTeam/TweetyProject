@@ -35,13 +35,15 @@ import java.util.function.Function;
  */
 public final class CacheMap<K, V> implements Function<K, V>, Map<K, V> {
 
+	/** Backing map used to store cached values. */
 	private final Map<K, V> delegate;
 
+	/** Function used to compute missing values. */
 	private final Function<K, V> function;
 
 	/**
-	 * Creates an empty cache
-	 * 
+	 * Creates an empty cache.
+	 *
 	 * @param function the function to cache
 	 */
 	public CacheMap(Function<K, V> function) {

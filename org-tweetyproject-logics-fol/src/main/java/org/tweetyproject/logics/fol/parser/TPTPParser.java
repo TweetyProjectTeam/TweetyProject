@@ -628,6 +628,12 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 		throw new ParserException("General parsing exception.");
 	}
 
+	/**
+	 * Parses a negation from the given list of tokens and formulas.
+	 *
+	 * @param l the list of tokens and formulas to parse
+	 * @return the parsed FOL formula
+	 */
 	private FolFormula parseNegation(List<Object> l) {
 		if(l.get(0).equals("~")){
 			l.remove(0);
@@ -636,6 +642,11 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 		return this.parseAtomic(l);
 	}
 
+	/**
+	 * Parses an atomic formula from the given list of objects
+	 * @param l the list of objects to parse
+	 * @return the parsed FOL formula
+	 */
 	@SuppressWarnings("unchecked")
 	private FolFormula parseAtomic(List<Object> l) {
 		if(l.size() == 1){

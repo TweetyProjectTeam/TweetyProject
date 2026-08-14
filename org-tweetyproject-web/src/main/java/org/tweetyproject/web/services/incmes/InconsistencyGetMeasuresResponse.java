@@ -44,8 +44,11 @@ import org.tweetyproject.web.services.Response;
  * This class extends {@link Response} to inherit base response functionality.
  */
 public class InconsistencyGetMeasuresResponse extends Response {
+    /** The retrieved measures. */
     private List<HashMap<String, String>> measures;
+    /** The response message. */
     private String reply;
+    /** The request email address. */
     private String email;
 
     /**

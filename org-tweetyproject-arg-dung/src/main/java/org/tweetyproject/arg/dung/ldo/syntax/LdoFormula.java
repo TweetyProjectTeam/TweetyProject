@@ -35,13 +35,15 @@ import org.tweetyproject.logics.pl.syntax.PlPredicate;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * This abstract class specifies the general methods of all Ldo-formulas
- * (LDO - Logic of dialectical outcomes, cf. [Hunter, Thimm, 2015])
- * 
- * @author Matthias Thimm
+ * This abstract class specifies the general methods of all LDO formulas.
  *
+ * @author Matthias Thimm
  */
 public abstract class LdoFormula implements ClassicalFormula{
+
+	/** Creates a new LDO formula. */
+	protected LdoFormula() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.commons.syntax.interfaces.SimpleLogicalFormula#getAtoms()

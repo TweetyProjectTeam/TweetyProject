@@ -35,33 +35,27 @@ import org.tweetyproject.graphs.Node;
  * @author Mathias Hofer
  *
  */
-public final class Argument implements AcceptanceCondition, Node {
+public final class Argument extends org.tweetyproject.arg.dung.syntax.Argument implements AcceptanceCondition, Node {
 
-    private final String name;
     /**
-     * Argument
+     * Creates an unnamed ADF argument.
      */
     public Argument() {
         this(null);
     }
 
     /**
+     * Creates an ADF argument with the given name.
+     *
      * @param name the name of the argument
      */
     public Argument(String name) {
-        this.name = name;
+        super(name);
     }
 
     @Override
     public Stream<Argument> arguments() {
         return Stream.of(this);
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
     }
 
     /* (non-Javadoc)
@@ -96,13 +90,4 @@ public final class Argument implements AcceptanceCondition, Node {
         if(!((Argument)o).getName().equals(getName())) return false;
         return true;
     }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return name;
-    }
-
 }

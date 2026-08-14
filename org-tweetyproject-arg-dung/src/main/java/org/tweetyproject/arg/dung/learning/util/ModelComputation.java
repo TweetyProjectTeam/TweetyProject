@@ -31,6 +31,10 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class ModelComputation {
+    /** Creates the utility class. */
+    public ModelComputation() {
+    }
+
     /**
      * compute the model of a formula in atomic CNF e.g. a and b and !c
      * @param condition some formula which is a conjunction of literals

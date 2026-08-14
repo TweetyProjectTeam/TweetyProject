@@ -20,15 +20,20 @@ package org.tweetyproject.web.services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
 
 /**
- * The DungReasonerCalleeFactory class is responsible for creating instances of Callee
- * based on the specified Command, AbstractExtensionReasoner, and DungTheory parameters.
- * It also defines an enumeration of commands with associated IDs and labels.
+ * Factory for creating Dung reasoner callees from web request data.
  */
 public class DungReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private DungReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.
@@ -37,7 +42,11 @@ public class DungReasonerCalleeFactory {
         /** get models */
         GET_MODELS("get_models", "Get all models"),
         /** get model */
-        GET_MODEL("get_model", "Get some model");
+        GET_MODEL("get_model", "Get some model"),
+        /** get credulously acceptable arguments */
+        GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        /** get skeptically acceptable arguments */
+        GET_SKEPTICAL("get_skeptical", "Get skeptical arguments");
 
         /** ID of the command */
         public String id;
@@ -94,6 +103,10 @@ public class DungReasonerCalleeFactory {
                 return new DungReasonerGetModelsCallee(reasoner, bbase);
             case GET_MODEL:
                 return new DungReasonerGetModelCallee(reasoner, bbase);
+            case GET_CREDULOUS:
+                return new DungReasonerQueryAllCallee(reasoner, bbase, InferenceMode.CREDULOUS);
+            case GET_SKEPTICAL:
+                return new DungReasonerQueryAllCallee(reasoner, bbase, InferenceMode.SKEPTICAL);
             default:
                 throw new RuntimeException("Command not found: " + cmd.toString());
         }

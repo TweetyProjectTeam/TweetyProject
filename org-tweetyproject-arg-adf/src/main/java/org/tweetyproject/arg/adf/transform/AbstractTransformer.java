@@ -41,7 +41,14 @@ import org.tweetyproject.arg.adf.syntax.acc.Visitor;
  */
 public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
+	/** the visitor used for the top-down traversal */
 	private final TransformerVisitor visitor = new TransformerVisitor();
+
+	/**
+	 * Creates a new abstract transformer.
+	 */
+	protected AbstractTransformer() {
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -192,7 +199,11 @@ protected abstract U transformTautology(D topDownData, int polarity);
 	 */
 	private final class TransformerVisitor implements Visitor<U, TopDownData<D>> {
 
-		/*
+		/** Creates the internal visitor. */
+		private TransformerVisitor() {
+		}
+
+			/*
 		 * (non-Javadoc)
 		 *
 		 * @see
@@ -316,16 +327,22 @@ protected abstract U transformTautology(D topDownData, int polarity);
 
 	/**
 	 * Used to store additional meta-data which may be useful.
+	 *
+	 * @param <D> the type of the stored user object
 	 */
 	private static final class TopDownData<D> {
 
+		/** the current polarity */
 		private final int polarity;
 
+		/** the user object carried through the traversal */
 		private final D userObject;
 
 		/**
-		 * @param polarity
-		 * @param userObject
+		 * Creates a new meta-data container for top-down traversal.
+		 *
+		 * @param polarity the current polarity
+		 * @param userObject the associated user object
 		 */
 		public TopDownData(int polarity, D userObject) {
 			this.polarity = polarity;

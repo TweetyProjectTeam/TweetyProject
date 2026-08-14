@@ -35,10 +35,13 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  */
 public class ExcludeSubinterpretationsIterator implements Iterator<Interpretation> {
 
+	/** Builder used to assemble the next interpretation. */
 	private final Interpretation.Builder builder;
 
+	/** Root of the exclusion tree. */
 	private final Node root;
 
+	/** Argument order used throughout the iterator. */
 	private final Argument[] order;
 
 	/**
@@ -54,8 +57,7 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 	 * is added to the tree. This structure allows efficient exclusion of
 	 * subinterpretations during iteration.
 	 *
-	 * @param interpretations A list of {@code Interpretation} objects to be
-	 *                        iterated over.
+	 * @param interpretations a list of {@code Interpretation} objects to be iterated over
 	 * @throws NoSuchElementException if the list of interpretations is empty.
 	 */
 	public ExcludeSubinterpretationsIterator(List<Interpretation> interpretations) {
@@ -76,7 +78,7 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 	 * Creates an array of the arguments in <code>interpretation</code> but orders
 	 * them s.t. the undecided ones are at the end.
 	 *
-	 * @param interpretation
+	 * @param interpretation the interpretation to reorder
 	 * @return the arguments as an array and in a more efficient order
 	 */
 	private static Argument[] arguments(Interpretation interpretation) {
@@ -115,37 +117,76 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		return builder.build();
 	}
 
-	private interface Node {
+		/**
+		 * Internal node of the exclusion tree.
+		 */
+		private interface Node {
 
-		boolean done();
+			/**
+			 * Returns whether this node has been exhausted.
+			 *
+			 * @return {@code true} if this node has no more interpretations
+			 */
+			boolean done();
 
-		void buildNext(Builder builder);
+			/**
+			 * Builds the next interpretation fragment.
+			 *
+			 * @param builder builder receiving the next fragment
+			 */
+			void buildNext(Builder builder);
 
-		void add(int offset, int remaining, Interpretation interpretation);
+			/**
+			 * Adds the given interpretation to the tree.
+			 *
+			 * @param offset current argument offset
+			 * @param remaining remaining decided arguments
+			 * @param interpretation interpretation to add
+			 */
+			void add(int offset, int remaining, Interpretation interpretation);
 
+		/** Resets the node state. */
 		void reset();
 
+		/** Adds leaf nodes below this node. */
 		void addLeafs();
 
-		void addReference(int index, boolean value, Node reference);
+			/**
+			 * Adds a reference to another node.
+			 *
+			 * @param index argument index for the reference
+			 * @param value referenced truth value
+			 * @param reference referenced node
+			 */
+			void addReference(int index, boolean value, Node reference);
 
 	}
 
+	/**
+	 * Internal tree node used for branching on argument values.
+	 */
 	private final class InnerNode implements Node {
 
+		/** Bit set representing the current branch. */
 		private final ThreeValuedBitSet bitSet;
 
+		/** Current argument index. */
 		private final int index;
 
+		/** Branch for undecided values. */
 		private Node uNode;
 
+		/** Branch for false values. */
 		private Node fNode;
 
+		/** Branch for true values. */
 		private Node tNode;
 
 		/**
-		 * @param bitSet
-		 * @param index
+		 * Creates an inner node.
+		 *
+		 * @param bitSet the bit set for this branch
+		 * @param index the current argument index
 		 */
 		public InnerNode(ThreeValuedBitSet bitSet, int index) {
 			this.bitSet = bitSet;
@@ -163,7 +204,12 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			return uNode.done() && fNode.done() && tNode.done();
 		}
 
-		private Node current() {
+			/**
+			 * Returns the active child node.
+			 *
+			 * @return the active child node
+			 */
+			private Node current() {
 			Boolean value = bitSet.get(index);
 			if (value == null) {
 				return uNode;
@@ -203,6 +249,7 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 		}
 
+		/** Advances the current branch if possible. */
 		private void incrementIfPossible() {
 			Boolean value = bitSet.get(index);
 			if (value == null || !value) {
@@ -269,20 +316,44 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			}
 		}
 
-		private void addReferenceIfPossible(Node node, int index, boolean value, Node reference) {
+			/**
+			 * Propagates a reference to a non-null child node.
+			 *
+			 * @param node child node receiving the reference
+			 * @param index argument index for the reference
+			 * @param value referenced truth value
+			 * @param reference referenced node
+			 */
+			private void addReferenceIfPossible(Node node, int index, boolean value, Node reference) {
 			if (node != null) {
 				node.addReference(index - 1, value, reference);
 			}
 		}
 
-		private Node createInnerIfNecessary(int offset, Node node) {
+			/**
+			 * Creates an inner node for the given child if needed.
+			 *
+			 * @param offset current argument offset
+			 * @param node existing child node
+			 * @return the existing or created node
+			 */
+			private Node createInnerIfNecessary(int offset, Node node) {
 			if (node == null) {
 				return new InnerNode(bitSet, offset);
 			}
 			return node;
 		}
 
-		private Node createIfNecessary(int offset, int remaining, Node node, Interpretation interpretation) {
+			/**
+			 * Creates a branch node or sink node if needed.
+			 *
+			 * @param offset current argument offset
+			 * @param remaining remaining decided arguments
+			 * @param node existing child node
+			 * @param interpretation interpretation to add
+			 * @return the existing or created node
+			 */
+			private Node createIfNecessary(int offset, int remaining, Node node, Interpretation interpretation) {
 			if (remaining <= 1) {
 				// we should only be here if the current argument is decided
 				return SinkNode.INSTANCE;
@@ -299,7 +370,14 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 			tNode = createLeaf(tNode, true);
 		}
 
-		private Node createLeaf(Node node, Boolean value) {
+			/**
+			 * Creates a leaf or tail node below the current branch.
+			 *
+			 * @param node the existing node, if any
+			 * @param value the final value for a leaf node
+			 * @return the existing node or a newly created child node
+			 */
+			private Node createLeaf(Node node, Boolean value) {
 			Node leaf = node;
 			if (leaf == null) {
 				if (index + 1 < order.length) {
@@ -313,19 +391,28 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 		}
 	}
 
-	private final class TailNode implements Node {
+	/**
+	 * Tail node that covers the remaining argument positions.
+	 */
+		private final class TailNode implements Node {
 
-		private final ThreeValuedBitSet bitSet;
+			/** Bit set representing the current branch. */
+			private final ThreeValuedBitSet bitSet;
 
-		private final int offset;
+			/** First argument offset covered by this tail. */
+			private final int offset;
 
-		private boolean first = true; // do not swallow the all undecided
+			/** Whether this tail has produced its first value. */
+			private boolean first = true; // do not swallow the all undecided
 
-		private boolean done = false;
+			/** Whether this tail node has been exhausted. */
+			private boolean done = false;
 
 		/**
-		 * @param bitSet
-		 * @param offset
+		 * Creates a tail node.
+		 *
+		 * @param bitSet the bit set for this branch
+		 * @param offset the first undecided argument position
 		 */
 		public TailNode(ThreeValuedBitSet bitSet, int offset) {
 			this.bitSet = bitSet;
@@ -385,17 +472,25 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 
 	}
 
-	private final class LeafNode implements Node {
+	/**
+	 * Leaf node representing a fully determined interpretation.
+	 */
+		private final class LeafNode implements Node {
 
-		private final ThreeValuedBitSet bitSet;
+			/** Bit set representing the current branch. */
+			private final ThreeValuedBitSet bitSet;
 
-		private final Boolean value;
+			/** Fixed value represented by this leaf. */
+			private final Boolean value;
 
-		private boolean done = false;
+			/** Whether this leaf node has been exhausted. */
+			private boolean done = false;
 
 		/**
-		 * @param bitSet
-		 * @param value
+		 * Creates a leaf node.
+		 *
+		 * @param bitSet the bit set for this branch
+		 * @param value the final value
 		 */
 		public LeafNode(ThreeValuedBitSet bitSet, Boolean value) {
 			this.bitSet = bitSet;
@@ -432,8 +527,12 @@ public class ExcludeSubinterpretationsIterator implements Iterator<Interpretatio
 
 	}
 
-	private enum SinkNode implements Node {
-		INSTANCE;
+	/**
+	 * Sink node that terminates a branch.
+	 */
+		private enum SinkNode implements Node {
+			/** Singleton sink node instance. */
+			INSTANCE;
 
 		@Override
 		public boolean done() {

@@ -39,6 +39,13 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class INRAPrinciple extends Principle {
+    /**
+     * Creates a new INRA principle.
+     */
+    public INRAPrinciple() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "Irrelevance of Necessarily Rejected Arguments (INRA)";

@@ -33,21 +33,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class defines local (expansion) equivalence for {@link DungTheory argumentation frameworks} wrt. some {@link Semantics semantics},
- * i.e., two AFs F and G are local expansion equivalent iff they possess the same set of
- * {@link org.tweetyproject.arg.dung.semantics.Extension extensions} wrt. the {@link Semantics semantics} under every local expansion
- *
- * @see "Emilia Oikarinen and Stefan Woltran. 'Characterizing strong equivalence for argumentation frameworks.' Artificial intelligence 175.14-15 (2011): 1985-2009."
+ * Defines local expansion equivalence for Dung theories under a given semantics.
  *
  * @author Lars Bengel
  */
 public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
 
+    /** Semantics used for the equivalence test. */
     private final Semantics semantics;
 
     /**
-     * Initializes a new instance of this equivalence notion
-     * @param semantics some semantics
+     * Initializes a new instance of this equivalence notion.
+     *
+     * @param semantics the semantics to use
      */
     public LocalExpansionEquivalence(Semantics semantics) {
         this.semantics = semantics;
@@ -146,6 +144,12 @@ public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
         return "Local Expansion Equivalence";
     }
 
+    /**
+     * Checks whether every argument in the theory has a self-loop.
+     *
+     * @param theory the argumentation framework to inspect
+     * @return {@code true} if every argument attacks itself
+     */
     private boolean isSelfLoopPathological(DungTheory theory) {
         for (Argument arg : theory) {
             if (!theory.isAttackedBy(arg, arg)) {
@@ -155,6 +159,13 @@ public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
         return true;
     }
 
+    /**
+     * Checks whether the given argument is the pathological {@code b} case.
+     *
+     * @param theory the argumentation framework to inspect
+     * @param b the candidate argument
+     * @return {@code true} if the candidate is pathological
+     */
     private boolean isBPathological(DungTheory theory, Argument b) {
         if (theory.isAttackedBy(b,b)) return false;
         for (Argument arg : theory) {
@@ -166,6 +177,12 @@ public class LocalExpansionEquivalence implements Equivalence<DungTheory> {
         return true;
     }
 
+    /**
+     * Returns the pathological {@code b} argument, or {@code null} if none exists.
+     *
+     * @param theory the argumentation framework to inspect
+     * @return the pathological argument, or {@code null}
+     */
     private Argument getBPathological(DungTheory theory) {
         for (Argument b : theory) {
             if (isBPathological(theory, b)) {

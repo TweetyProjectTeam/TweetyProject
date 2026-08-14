@@ -16,63 +16,73 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * Maximizes a given interpretation, but only counts admissible interpretations as larger.
- *  
+ *
  * @author Mathias Hofer
  *
  */
 public abstract class AdmissibleMaximizer implements InterpretationProcessor {
-		
+
+	/** the ADF to maximize interpretations for */
 	private final AbstractDialecticalFramework adf;
-	
+
+	/** the propositional encoding of the ADF */
 	private final PropositionalMapping mapping;
-	
+
+	/** supplies fresh SAT solver states */
 	private final Supplier<SatSolverState> stateSupplier;
-	
+
+	/** encoding that forbids already refined larger interpretations */
 	private final RelativeSatEncoding refineLarger;
-	
+
+	/** encoding that constrains the search to larger interpretations */
 	private final RelativeSatEncoding larger;
-	
+
 	/**
-	 * @param adf adf
-	 * @param mapping mapping
-	 * @param stateSupplier stateSupplier
+	 * Creates a new admissible maximizer.
+	 *
+	 * @param adf the ADF to maximize interpretations for
+	 * @param mapping the propositional encoding of the ADF
+	 * @param stateSupplier supplies fresh SAT solver states
 	 */
 	protected AdmissibleMaximizer(AbstractDialecticalFramework adf, PropositionalMapping mapping,
-			Supplier<SatSolverState> stateSupplier) {
+				Supplier<SatSolverState> stateSupplier) {
 		this.adf = adf;
 		this.mapping = mapping;
 		this.stateSupplier = stateSupplier;
 		this.refineLarger = new RefineLargerSatEncoding(mapping);
 		this.larger = new LargerInterpretationSatEncoding(mapping);
 	}
-/**
- * 
- * @param stateSupplier stateSupplier
- * @param adf adf
- * @param mapping mapping
- * @param prefix prefix
- * @return InterpretationProcessor restricted
- */
-	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
-		return new RestrictedAdmissibleMaximizer(stateSupplier, adf, mapping, prefix);
-	}
 	/**
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @param adf adf
-	 * @param mapping mapping
-	 * @return InterpretationProcessor unrestricted
+	 * Creates a processor that maximizes interpretations above a fixed prefix.
+	 *
+	 * @param stateSupplier supplies fresh SAT solver states
+	 * @param adf the ADF to maximize interpretations for
+	 * @param mapping the propositional encoding of the ADF
+	 * @param prefix the fixed prefix interpretation
+	 * @return an interpretation processor restricted to the prefix
 	 */
-	public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-		return new UnrestrictedAdmissibleMaximizer(stateSupplier, adf, mapping);
-	}
-/**
- * 
- * @param state state
- * @param adf adf
- * @return SatSolverState prepareState
- */
-	protected abstract SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf);
+		public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
+			return new RestrictedAdmissibleMaximizer(stateSupplier, adf, mapping, prefix);
+		}
+		/**
+		 * Creates a processor that maximizes interpretations without a prefix.
+		 *
+		 * @param stateSupplier supplies fresh SAT solver states
+		 * @param adf the ADF to maximize interpretations for
+		 * @param mapping the propositional encoding of the ADF
+		 * @return an unrestricted interpretation processor
+		 */
+		public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+			return new UnrestrictedAdmissibleMaximizer(stateSupplier, adf, mapping);
+		}
+	/**
+	 * Prepares the SAT solver state for the concrete maximization strategy.
+	 *
+	 * @param state the current SAT solver state
+	 * @param adf the ADF to maximize interpretations for
+	 * @return the prepared SAT solver state
+	 */
+		protected abstract SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf);
 		
 	@Override
 	public Interpretation process( Interpretation interpretation ) {
@@ -98,10 +108,21 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 	@Override
 	public void close() {}
 	
+	/**
+	 * Admissible maximizer without prefix restrictions.
+	 */
 	private static final class UnrestrictedAdmissibleMaximizer extends AdmissibleMaximizer {
-		
+
+		/** the propositional encoding of the ADF */
 		private final PropositionalMapping mapping;
-				
+
+		/**
+		 * Creates a new unrestricted admissible maximizer.
+		 *
+		 * @param stateSupplier supplies fresh SAT solver states
+		 * @param adf the ADF to maximize interpretations for
+		 * @param mapping the propositional encoding of the ADF
+		 */
 		UnrestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 			super(adf, mapping, stateSupplier);
 			this.mapping = mapping;
@@ -116,12 +137,25 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 		
 	}
 	
+	/**
+	 * Admissible maximizer that preserves a prefix interpretation.
+	 */
 	private static final class RestrictedAdmissibleMaximizer extends AdmissibleMaximizer {
-								
+
+		/** the prefix interpretation that must be preserved */
 		private final Interpretation partial;
-				
+
+		/** the propositional encoding of the ADF */
 		private final PropositionalMapping mapping;
-				
+
+		/**
+		 * Creates a new restricted admissible maximizer.
+		 *
+		 * @param stateSupplier supplies fresh SAT solver states
+		 * @param adf the ADF to maximize interpretations for
+		 * @param mapping the propositional encoding of the ADF
+		 * @param partial the prefix interpretation that must be preserved
+		 */
 		RestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 			super(adf, mapping, stateSupplier);
 			this.mapping = Objects.requireNonNull(mapping);

@@ -34,6 +34,13 @@ import org.tweetyproject.commons.util.SetTools;
  */
 public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new SimpleConflictFreeReasoner instance.
+     */
+    public SimpleConflictFreeReasoner() {
+        // default constructor
+    }
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */

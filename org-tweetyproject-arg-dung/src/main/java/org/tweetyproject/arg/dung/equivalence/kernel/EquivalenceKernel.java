@@ -36,6 +36,13 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public abstract class EquivalenceKernel {
+	/**
+	 * Creates a new equivalence kernel.
+	 */
+	protected EquivalenceKernel() {
+		super();
+	}
+
 	/** STABLE kernel */
     public static final EquivalenceKernel STABLE = new StableKernel();
     /** COMPLETE kernel */

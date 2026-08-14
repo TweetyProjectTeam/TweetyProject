@@ -47,7 +47,8 @@ import org.tweetyproject.commons.InferenceMode;
  */
 public class FlatAbaReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 
-	private Semantics semantics;
+    /** The semantics used to instantiate the underlying Dung reasoner. */
+    private Semantics semantics;
 	
 	/**
 	 * Creates a new instance

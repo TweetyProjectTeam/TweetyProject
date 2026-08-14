@@ -151,8 +151,7 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	 * @throws ParserException some parsing exception
 	 */
 	public List<T> parseListOfBeliefBases(String text, String delimiter) throws ParserException, IOException {
-		if (delimiter.matches(".*" + illegalDelimitors + ".*"))
-			throw new IllegalArgumentException("The given delimiter is similar to characters that are likely to appear in formulas. Try using a more unique delimiter.");
+		assertDelimiterIsLegal(delimiter);
 		String[] kbs_string = text.split(delimiter);
 		ArrayList<T> kbs = new ArrayList<T>();
 		for (String kb_string : kbs_string) {
@@ -215,4 +214,30 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 		return true;
 	}
 
+	/**
+	 * Parses the given text into a list of formulae of the given type.
+	 * Formulae are separated by the given delimiter.
+	 *
+	 * @param text a string
+	 * @param delimiter for separating formulae
+	 * @return a list of formulae in the order in which they appear in the input
+	 *         string.
+	 * @throws IOException if an IO error occurs
+	 * @throws ParserException some parsing exception
+	 */
+	public List<S> parseListOfFormulae(String text, String delimiter) throws IOException, ParserException {
+		assertDelimiterIsLegal(delimiter);
+		String[] formulaStrings = text.split(delimiter);
+		List<S> formulae = new ArrayList<>();
+		for (String formulaString : formulaStrings) {
+			if (!formulaString.isBlank())
+				formulae.add(this.parseFormula(formulaString));
+		}
+		return formulae;
+	}
+
+	private void assertDelimiterIsLegal(String delimiter) {
+		if (delimiter.matches(".*" + illegalDelimitors + ".*"))
+			throw new IllegalArgumentException("The given delimiter is similar to characters that are likely to appear in formulas. Try using a more unique delimiter.");
+	}
 }

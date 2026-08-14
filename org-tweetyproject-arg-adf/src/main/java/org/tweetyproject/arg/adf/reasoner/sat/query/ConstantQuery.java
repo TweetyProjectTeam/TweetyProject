@@ -22,13 +22,20 @@ import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 
 /**
- * @author Mathias Hofer
+ * Query that always returns the same constant value.
  *
+ * @param <T> the result type of the query
+ * @author Mathias Hofer
  */
 final class ConstantQuery<T> implements Query<T> {
 
+	/** The constant result value. */
 	private final T value;
-	
+		
+	/** Creates a query that always returns the given value.
+	 *
+	 * @param value the constant result value
+	 */
 	public ConstantQuery(T value) {
 		this.value = value; // explicitly allow null
 	}

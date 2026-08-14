@@ -155,6 +155,11 @@ public abstract class CLaw implements CausalLaw {
 		setIfFormula(ifFormula);
 	}
 
+	/**
+	 * Sets the grounding requirements of this causal law.
+	 *
+	 * @param requirements the grounding requirements to add
+	 */
 	private void setGroundingRequirements(Set<GroundingRequirement> requirements) {
 		if (requirements != null)
 			this.requirements.addAll(requirements);

@@ -25,8 +25,11 @@ import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.QuantitativeReasoner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Abstract anecestor for PAF reasoner.
+ * Abstract ancestor for PAF reasoner.
  * 
  * @author Matthias Thimm
  *
@@ -34,7 +37,7 @@ import org.tweetyproject.commons.QuantitativeReasoner;
 public abstract class AbstractPafReasoner implements QuantitativeReasoner<ProbabilisticArgumentationFramework,Argument>{
 
 	/** Semantics for plain AAFs. */
-	private Semantics semantics;
+	private final Semantics semantics;
 	
 	/**
 	 * Creates a new reasoner.
@@ -78,5 +81,19 @@ public abstract class AbstractPafReasoner implements QuantitativeReasoner<Probab
 	 * @return the estimated probability of the given set to be 
 	 * an extension
 	 */
-	public abstract Double query(ProbabilisticArgumentationFramework paf, Extension ext);
+	public abstract Double query(ProbabilisticArgumentationFramework paf, Extension<ProbabilisticArgumentationFramework> ext);
+
+	/**
+	 * Determine the set of acceptable arguments wrt. the given inference mode
+	 * @param paf some probabilistic argumentation framework
+	 * @param inferenceMode the inference mode
+	 * @return a map of all arguments and their respective acceptance probability
+	 */
+	public Map<Argument,Double> queryAll(ProbabilisticArgumentationFramework paf, InferenceMode inferenceMode) {
+		Map<Argument,Double> result = new HashMap<>();
+		for (Argument arg : paf) {
+			result.put(arg, this.query(paf, arg, inferenceMode));
+		}
+		return result;
+	}
 }

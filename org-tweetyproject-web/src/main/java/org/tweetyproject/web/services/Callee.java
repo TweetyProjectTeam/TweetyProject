@@ -33,6 +33,10 @@ import java.util.concurrent.Callable;
 
 public class Callee implements Callable {
 
+    /** Creates a callee placeholder. */
+    public Callee() {
+    }
+
     @Override
     public Object call() throws Exception {
         // TODO Auto-generated method stub

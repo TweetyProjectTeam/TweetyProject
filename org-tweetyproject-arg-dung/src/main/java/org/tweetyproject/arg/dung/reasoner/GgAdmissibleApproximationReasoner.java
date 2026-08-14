@@ -32,6 +32,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class GgAdmissibleApproximationReasoner implements KOptimisationReasoner{
+
+	/**
+	 * Creates a new Gg admissible approximation reasoner.
+	 */
+	public GgAdmissibleApproximationReasoner() {
+		super();
+	}
 	
 	@Override
 	public Integer query(DungTheory aaf, Argument arg) {

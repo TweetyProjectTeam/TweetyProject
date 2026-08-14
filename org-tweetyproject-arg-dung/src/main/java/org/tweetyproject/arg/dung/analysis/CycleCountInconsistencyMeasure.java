@@ -35,6 +35,13 @@ import org.tweetyproject.graphs.DefaultGraph;
  */
 public class CycleCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 	/**
+	 * Creates a new cycle count inconsistency measure.
+	 */
+	public CycleCountInconsistencyMeasure() {
+		super();
+	}
+
+	/**
 	 * Calculates the inconsistency measure based on the count of cycles in the argumentation framework.
 	 *
 	 * @param argumentationFramework the argumentation framework to calculate the inconsistency measure for

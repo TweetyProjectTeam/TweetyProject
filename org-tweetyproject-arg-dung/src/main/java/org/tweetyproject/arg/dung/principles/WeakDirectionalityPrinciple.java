@@ -39,6 +39,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class WeakDirectionalityPrinciple extends DirectionalityPrinciple {
 
+    /**
+     * Creates a new WeakDirectionalityPrinciple instance.
+     */
+    public WeakDirectionalityPrinciple() {
+        // default constructor
+    }
+
 	@Override
 	public String getName() {
 		return "Weak Directionality";

@@ -46,7 +46,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Constructor that creates a clausal attack constraint from an argument and input
      * @param arg argument
      * @param input input
      */
@@ -56,7 +56,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Constructor that merges two clausal attack constraints
      * @param condition1 condition 1 
      * @param condition2 condition 2
      */
@@ -84,7 +84,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Gets the condition formulas for an argument based on the input and semantics
      * @param arg argument
      * @param input input
      * @return a collection of formulas 
@@ -100,7 +100,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Gets the condition formulas for an argument under conflict-free semantics
      * @param arg argument
      * @param input input
      * @return the condition for the argument
@@ -126,7 +126,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Gets the condition formulas for an argument under admissibility semantics
      * @param arg argument
      * @param input an input
      * @return the condition for the argument admissible
@@ -161,7 +161,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Gets the condition formulas for an argument under completeness semantics
      * @param arg argument
      * @param input input
      * @return the condition for the argument completness
@@ -202,7 +202,7 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
     }
 
     /**
-     * 
+     * Gets the condition formulas for an argument under stable semantics
      * @param arg argument
      * @param input input
      * @return conditon for argument (stable)

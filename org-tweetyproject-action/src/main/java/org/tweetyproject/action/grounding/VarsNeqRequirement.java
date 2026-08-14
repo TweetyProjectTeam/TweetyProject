@@ -30,7 +30,9 @@ import org.tweetyproject.logics.commons.syntax.Variable;
  * @author Sebastian Homann
  */
 public class VarsNeqRequirement implements GroundingRequirement {
+	/** the first variable in the inequality constraint */
 	private Variable first;
+	/** the second variable in the inequality constraint */
 	private Variable second;
 
 	/**

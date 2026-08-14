@@ -11,7 +11,7 @@
     <parent>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>parent-pom</artifactId>
-  		<version>1.30-SNAPSHOT</version>
+  		<version>1.31-SNAPSHOT</version>
         <relativePath>..</relativePath>
   	</parent>
 
@@ -56,7 +56,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -101,44 +104,74 @@
 			<version>4.13.1</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.tweetyproject</groupId>
+			<artifactId>causal</artifactId>
+			<version>1.31-SNAPSHOT</version>
+		</dependency>
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>commons</artifactId>
-    		<version>1.30-SNAPSHOT</version>
+    		<version>1.31-SNAPSHOT</version>
 	    </dependency>
         <dependency>
     		<groupId>org.tweetyproject.logics</groupId>
     		<artifactId>pl</artifactId>
-    		<version>1.30-SNAPSHOT</version>
+    		<version>1.31-SNAPSHOT</version>
 	    </dependency>
+		<dependency>
+			<groupId>org.tweetyproject.arg</groupId>
+			<artifactId>explanations</artifactId>
+			<version>1.31-SNAPSHOT</version>
+		</dependency>
 	    <dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>delp</artifactId>
-    		<version>1.30-SNAPSHOT</version>
+    		<version>1.31-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
     		<groupId>org.tweetyproject.arg</groupId>
     		<artifactId>aba</artifactId>
-    		<version>1.30-SNAPSHOT</version>
+    		<version>1.31-SNAPSHOT</version>
 	    </dependency>
 		<dependency>
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
 		    <version>20231013</version>
 		</dependency>
-
-		<!-- SLF4J API
+        <dependency>
+            <groupId>org.tweetyproject.arg</groupId>
+            <artifactId>bipolar</artifactId>
+            <version>1.31-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tweetyproject.arg</groupId>
+            <artifactId>rankings</artifactId>
+            <version>1.31-SNAPSHOT</version>
+        </dependency>
+	    <dependency>
+		    <groupId>org.tweetyproject.arg</groupId>
+		    <artifactId>adf</artifactId>
+		    <version>1.31-SNAPSHOT</version>
+	    </dependency>
 		<dependency>
-    		<groupId>org.slf4j</groupId>
-    		<artifactId>slf4j-api</artifactId>
-    		<version>1.7.32</version>
+			<groupId>org.tweetyproject.arg</groupId>
+			<artifactId>prob</artifactId>
+			<version>1.31-SNAPSHOT</version>
 		</dependency>
 
-		<dependency>
+		<!-- SLF4J API
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+
+        <dependency>
     <groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-core</artifactId>
-    	<version>1.5.13</version>
-	</dependency> -->
+        <artifactId>logback-core</artifactId>
+        <version>1.5.13</version>
+    </dependency> -->
 
 <!-- Logback (Logging Implementation) -->
 		<!-- <dependency>

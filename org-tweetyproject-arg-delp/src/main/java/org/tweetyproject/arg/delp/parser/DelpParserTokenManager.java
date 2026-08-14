@@ -7,11 +7,20 @@ public class DelpParserTokenManager implements DelpParserConstants
 
   /** Debug output. */
   public  java.io.PrintStream debugStream = System.out;
-  /** Set debug output.
-   * @param ds printstream
-  */
+  /**
+   * Sets the debug output stream.
+   *
+   * @param ds the new debug output stream
+   */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
-private final int jjStopStringLiteralDfa_0(int pos, long active0)
+  /**
+   * Determines the state at which the string-literal DFA stops.
+   *
+   * @param pos the current position
+   * @param active0 the active token bitmask
+   * @return the next DFA state, or {@code -1} if no transition exists
+   */
+  private final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
    switch (pos)
    {
@@ -19,17 +28,36 @@ private final int jjStopStringLiteralDfa_0(int pos, long active0)
          return -1;
    }
 }
-private final int jjStartNfa_0(int pos, long active0)
+  /**
+   * Continues NFA processing after the string-literal DFA stops.
+   *
+   * @param pos the current position
+   * @param active0 the active token bitmask
+   * @return the next NFA state
+   */
+  private final int jjStartNfa_0(int pos, long active0)
 {
    return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
 }
-private int jjStopAtPos(int pos, int kind)
+  /**
+   * Records a matched token kind at the given position.
+   *
+   * @param pos the matched position
+   * @param kind the matched token kind
+   * @return the next input position
+   */
+  private int jjStopAtPos(int pos, int kind)
 {
    jjmatchedKind = kind;
    jjmatchedPos = pos;
    return pos + 1;
 }
-private int jjMoveStringLiteralDfa0_0()
+  /**
+   * Processes the first character of a string literal using the DFA.
+   *
+   * @return the next input position
+   */
+  private int jjMoveStringLiteralDfa0_0()
 {
    switch(curChar)
    {
@@ -51,7 +79,13 @@ private int jjMoveStringLiteralDfa0_0()
          return jjMoveNfa_0(0, 0);
    }
 }
-private int jjMoveStringLiteralDfa1_0(long active0)
+  /**
+   * Processes the second character of a string literal using the DFA.
+   *
+   * @param active0 the active token bitmask
+   * @return the next input position
+   */
+  private int jjMoveStringLiteralDfa1_0(long active0)
 {
    try { curChar = input_stream.readChar(); }
    catch(java.io.IOException e) {
@@ -73,9 +107,17 @@ private int jjMoveStringLiteralDfa1_0(long active0)
    }
    return jjStartNfa_0(0, active0);
 }
+/** Bit vectors used during NFA matching. */
 static final long[] jjbitVec0 = {
    0x0L, 0x0L, 0xffffffffffffffffL, 0xffffffffffffffffL
 };
+/**
+ * Advances the NFA matcher.
+ *
+ * @param startState the starting state
+ * @param curPos the current input position
+ * @return the updated input position
+ */
 private int jjMoveNfa_0(int startState, int curPos)
 {
    int startsAt = 0;
@@ -207,6 +249,7 @@ private int jjMoveNfa_0(int startState, int curPos)
       catch(java.io.IOException e) { return curPos; }
    }
 }
+/** Precomputed next states for the NFA. */
 static final int[] jjnextStates = {
    6, 8, 9, 1, 2,
 };
@@ -220,31 +263,27 @@ public static final String[] jjstrLiteralImages = {
 public static final String[] lexStateNames = {
    "DEFAULT",
 };
-/** Lexer state names. */
+/** Bit mask identifying tokens returned to the parser. */
 static final long[] jjtoToken = {
    0x7fc1L,
 };
-/** Lexer state names. */
+/** Bit mask identifying tokens skipped by the lexer. */
 static final long[] jjtoSkip = {
    0x3eL,
 };
-/** input stream */
+/** Input stream. */
 protected SimpleCharStream input_stream;
-/** jjrounds */
+/** Round markers used to avoid revisiting NFA states. */
 private final int[] jjrounds = new int[10];
-/** jjstateSet */
+/** Working set of active NFA states. */
 private final int[] jjstateSet = new int[20];
-/** current char */
+/** Current character. */
 protected char curChar;
-/**
-     * Constructor for initializing the token manager with the specified input stream.
-     * <p>
-     * This constructor sets up the token manager with the provided character stream.
-     * It also verifies that the static flag of the character stream is not set.
-     * </p>
+  /**
+     * Creates a token manager for the given input stream.
      *
-     * @param stream The {@link SimpleCharStream} to be used for token input.
-     * @throws Error if the static flag of the character stream is set.
+     * @param stream the {@link SimpleCharStream} to be used for token input
+     * @throws Error if the static flag of the character stream is set
      */
     public DelpParserTokenManager(SimpleCharStream stream) {
       if (SimpleCharStream.staticFlag)
@@ -253,14 +292,10 @@ protected char curChar;
   }
 
   /**
-   * Constructor for initializing the token manager with the specified input stream and lexical state.
-   * <p>
-   * This constructor sets up the token manager with the provided character stream and
-   * switches to the specified lexical state.
-   * </p>
+   * Creates a token manager for the given input stream and lexical state.
    *
-   * @param stream The {@link SimpleCharStream} to be used for token input.
-   * @param lexState The initial lexical state to switch to.
+   * @param stream the {@link SimpleCharStream} to be used for token input
+   * @param lexState the initial lexical state to switch to
    */
   public DelpParserTokenManager(SimpleCharStream stream, int lexState) {
       this(stream);
@@ -269,12 +304,8 @@ protected char curChar;
 
   /**
    * Reinitializes the token manager with a new input stream.
-   * <p>
-   * This method resets the token manager's state and prepares it to process tokens
-   * from the new input stream. It also resets the current lexical state to the default.
-   * </p>
    *
-   * @param stream The new {@link SimpleCharStream} to be used for token input.
+   * @param stream the new {@link SimpleCharStream} to be used for token input
    */
   public void ReInit(SimpleCharStream stream) {
       jjmatchedPos = jjnewStateCnt = 0;
@@ -283,13 +314,7 @@ protected char curChar;
       ReInitRounds();
   }
 
-  /**
-   * Reinitializes the rounds used for token matching.
-   * <p>
-   * This method sets up the initial round values used during token matching.
-   * It is invoked by the {@link #ReInit(SimpleCharStream)} method.
-   * </p>
-   */
+  /** Reinitializes the round markers used for token matching. */
   private void ReInitRounds() {
       int i;
       jjround = 0x80000001;
@@ -299,13 +324,9 @@ protected char curChar;
 
   /**
    * Reinitializes the token manager with a new input stream and lexical state.
-   * <p>
-   * This method reinitializes the token manager to process tokens from a new input stream
-   * and switch to the specified lexical state.
-   * </p>
    *
-   * @param stream The new {@link SimpleCharStream} to be used for token input.
-   * @param lexState The initial lexical state to switch to.
+   * @param stream the new {@link SimpleCharStream} to be used for token input
+   * @param lexState the initial lexical state to switch to
    */
   public void ReInit(SimpleCharStream stream, int lexState) {
       ReInit(stream);
@@ -364,16 +385,24 @@ protected Token jjFillToken()
    return t;
 }
 
+/** Current lexical state. */
 int curLexState = 0;
+/** Default lexical state. */
 int defaultLexState = 0;
+/** Number of active NFA states. */
 int jjnewStateCnt;
+/** Current round marker. */
 int jjround;
+/** Matched token position. */
 int jjmatchedPos;
+/** Matched token kind. */
 int jjmatchedKind;
 
-/** Get the next Token.
- * @return the token
-*/
+/**
+ * Gets the next token.
+ *
+ * @return the next token
+ */
 public Token getNextToken()
 {
   Token matchedToken;
@@ -438,6 +467,11 @@ public Token getNextToken()
   }
 }
 
+/**
+ * Adds a state to the active NFA set if necessary.
+ *
+ * @param state the state to add
+ */
 private void jjCheckNAdd(int state)
 {
    if (jjrounds[state] != jjround)
@@ -446,18 +480,36 @@ private void jjCheckNAdd(int state)
       jjrounds[state] = jjround;
    }
 }
+/**
+ * Adds a range of precomputed states to the active NFA set.
+ *
+ * @param start the first index in {@link #jjnextStates}
+ * @param end the last index in {@link #jjnextStates}
+ */
 private void jjAddStates(int start, int end)
 {
    do {
       jjstateSet[jjnewStateCnt++] = jjnextStates[start];
    } while (start++ != end);
 }
+/**
+ * Adds two states to the active NFA set if necessary.
+ *
+ * @param state1 the first state to add
+ * @param state2 the second state to add
+ */
 private void jjCheckNAddTwoStates(int state1, int state2)
 {
    jjCheckNAdd(state1);
    jjCheckNAdd(state2);
 }
 
+/**
+ * Adds a range of precomputed states to the active NFA set if necessary.
+ *
+ * @param start the first index in {@link #jjnextStates}
+ * @param end the last index in {@link #jjnextStates}
+ */
 private void jjCheckNAddStates(int start, int end)
 {
    do {

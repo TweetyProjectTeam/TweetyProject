@@ -36,6 +36,11 @@ import org.tweetyproject.logics.commons.syntax.Variable;
  * @author Sebastian Homann
  */
 public class GroundingRequirementsParser {
+	/**
+	 * Creates a new grounding requirements parser.
+	 */
+	public GroundingRequirementsParser() {
+	}
 
 	/**
 	 * Parses a string of the following form: REQUIREMENT ("," REQUIREMENT)*

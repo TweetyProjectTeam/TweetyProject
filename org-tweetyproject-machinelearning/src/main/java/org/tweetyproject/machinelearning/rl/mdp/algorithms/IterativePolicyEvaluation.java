@@ -34,11 +34,13 @@ import org.tweetyproject.machinelearning.rl.mdp.State;
  * @param <A> The type of actions
  */
 public class IterativePolicyEvaluation<S extends State, A extends Action> implements PolicyEvaluation<S,A>{
+	/** The number of evaluation iterations to perform. */
 	private long num_iterations;
 	
 	/**
-	 * Creates a new policy evaluation algorithm
-	 * @param num_iterations the given number of num_iterations
+	 * Creates a new policy evaluation algorithm.
+	 *
+	 * @param num_iterations the number of iterations to perform
 	 */
 	public IterativePolicyEvaluation(long num_iterations) {
 		this.num_iterations = num_iterations;

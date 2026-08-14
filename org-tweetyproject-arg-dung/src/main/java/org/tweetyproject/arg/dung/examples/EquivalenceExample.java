@@ -24,14 +24,24 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Example showcasing the use of different equivalence notions for abstract argumentation frameworks
+ * Example showcasing the use of different equivalence notions for abstract argumentation frameworks.
+ * <p>
+ * It compares several notions of equivalence on small sample theories.
  *
  * @author Lars Bengel
  */
 public class EquivalenceExample {
     /**
-     * Example for Equivalence of Argumentation Frameworks
-     * @param args args
+     * Creates a new equivalence example.
+     */
+     public EquivalenceExample() {
+        super();
+     }
+
+    /**
+     * Runs the example for equivalence of argumentation frameworks.
+     *
+     * @param args command-line arguments
      */
      public static void main(String[] args) {
         // Initialize Example Argumentation Frameworks

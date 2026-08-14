@@ -30,7 +30,11 @@ import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
  *
  */
 public class SimpleClNaiveReasoner extends AbstractClaimBasedReasoner{
-	
+
+	/** Creates a simple claim-based naive reasoner. */
+	public SimpleClNaiveReasoner() {
+	}
+		
 	/**
 	 * 
 	 * @param bbase the claim based thory

@@ -25,21 +25,47 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.arg.dung.reasoner.IncompleteReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
+import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
+import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
+import org.tweetyproject.causal.parser.CausalParser;
+import org.tweetyproject.causal.syntax.CausalKnowledgeBase;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.commons.analysis.NaiveMusEnumerator;
 import org.tweetyproject.logics.fol.parser.FolParser;
@@ -66,19 +92,25 @@ import org.tweetyproject.web.services.aba.AbaReasonerCalleeFactory;
 import org.tweetyproject.web.services.aba.AbaReasonerPost;
 import org.tweetyproject.web.services.aba.AbaReasonerResponse;
 import org.tweetyproject.web.services.aba.GeneralAbaReasonerFactory;
+import org.tweetyproject.web.services.adf.*;
+import org.tweetyproject.web.services.bipolar.*;
+import org.tweetyproject.web.services.causal.*;
 import org.tweetyproject.web.services.delp.DeLPCallee;
 import org.tweetyproject.web.services.delp.DeLPPost;
 import org.tweetyproject.web.services.delp.DeLPResponse;
-import org.tweetyproject.web.services.dung.AbstractExtensionReasonerFactory;
-import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory;
-import org.tweetyproject.web.services.dung.DungReasonerPost;
-import org.tweetyproject.web.services.dung.DungReasonerResponse;
-import org.tweetyproject.web.services.dung.DungServicesInfoResponse;
-import org.tweetyproject.web.services.dung.AbstractExtensionReasonerFactory.Semantics;
+import org.tweetyproject.web.services.dung.*;
 import org.tweetyproject.web.services.dung.DungReasonerCalleeFactory.Command;
+import org.tweetyproject.web.services.iaf.*;
 import org.tweetyproject.web.services.incmes.InconsistencyGetMeasuresResponse;
 import org.tweetyproject.web.services.incmes.InconsistencyPost;
 import org.tweetyproject.web.services.incmes.InconsistencyValueResponse;
+import org.tweetyproject.web.services.rankings.*;
+import org.tweetyproject.web.services.paf.*;
+import org.tweetyproject.web.services.sequenceexplanation.*;
+import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPost.GetSequenceExplanationsCmd;
+import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationPost.SequenceExplanationCmd;
+import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationResponse.GetSequenceExplanationsResult;
+import org.tweetyproject.web.services.sequenceexplanation.SequenceExplanationResponse.SequenceExplanationResult;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.tweetyproject.arg.aba.parser.AbaParser;
@@ -97,19 +129,52 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 import javafx.util.Pair;
+
+import javax.validation.Valid;
 import java.util.logging.Level;
+
+import static org.tweetyproject.web.services.causal.CausalReasonerResponse.Status.SUCCESS;
+import static org.tweetyproject.web.services.causal.CausalReasonerResponse.Status.TIMEOUT;
 
 
 /**
- * andles HTTP POST requests at the provided endpoints
+ * handles HTTP POST requests at the provided endpoints
  */
 @RestController
 public class RequestController {
 
-	private final int SERVICES_TIMEOUT_DUNG = 600;
-	private final int SERVICES_TIMEOUT_DELP = 600;
-	private final int SERVICES_TIMEOUT_INCMES = 300;
+		/** Timeout for Dung argumentation framework services */
+		private final int SERVICES_TIMEOUT_DUNG = 600;
+		/** Timeout for Delp services */
+		private final int SERVICES_TIMEOUT_DELP = 600;
+		/** Timeout for inconsistency measure services */
+		private final int SERVICES_TIMEOUT_INCMES = 300;
+		/** Timeout for sequence explanation services */
+		private final int SERVICES_TIMEOUT_SEQUENCE_EXPLANATION = 300;
+		/** Timeout for causal reasoner services */
+		private final int SERVICES_TIMEOUT_CAUSAL = 300;
 
+		/** Service for sequence explanation reasoning */
+		private final SequenceExplanationService sequenceExplanationService;
+		/** Object mapper for JSON serialization */
+		private final ObjectMapper objectMapper;
+		/** Service for causal reasoning operations */
+		private final CausalReasonerService causalReasonerService;
+
+	/**
+	 * Constructs a RequestController with the required services
+	 * @param sequenceExplanationService the sequence explanation service
+	 * @param objectMapper			     the object mapper
+	 * @param causalReasonerService		 the causal reasoner service
+	 */
+	@Autowired
+	public RequestController(SequenceExplanationService sequenceExplanationService,
+	                         ObjectMapper objectMapper,
+	                         CausalReasonerService causalReasonerService) {
+		this.sequenceExplanationService = sequenceExplanationService;
+		this.objectMapper = objectMapper;
+		this.causalReasonerService = causalReasonerService;
+	}
 
 
 /**
@@ -207,7 +272,7 @@ public class RequestController {
 					AbaReasonerPost.getFol_signature(), AbaReasonerPost.getQuery_assumption(),
 					AbaReasonerPost.getSemantics(), AbaReasonerPost.getTimeout(), "", 0.0,
 					AbaReasonerPost.getUnit_timeout(), "");
-			TimeUnit unit = Utils.getTimoutUnit(AbaReasonerPost.getUnit_timeout());
+			TimeUnit unit = Utils.getTimeoutUnit(AbaReasonerPost.getUnit_timeout());
 			int user_timeout = Utils.checkUserTimeout(AbaReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
@@ -290,20 +355,19 @@ public class RequestController {
 		if (dungReasonerPost.getCmd().equals("info"))
 			return (Response) getInfo(dungReasonerPost);
 
-		if (dungReasonerPost.getCmd().equals("get_models") || dungReasonerPost.getCmd().equals("get_model")) {
-			DungTheory dungTheory = Utils.getDungTheory(dungReasonerPost.getNr_of_arguments(),
+		if (dungReasonerPost.getCmd().equals("get_models") || dungReasonerPost.getCmd().equals("get_model") || dungReasonerPost.getCmd().equals("get_credulous") || dungReasonerPost.getCmd().equals("get_skeptical")) {
+			DungTheory dungTheory = AbstractExtensionReasonerFactory.getDungTheory(dungReasonerPost.getNr_of_arguments(),
 					dungReasonerPost.getAttacks());
-
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
-					Semantics.getSemantics(dungReasonerPost.getSemantics()));
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			DungReasonerResponse reasonerResponse = new DungReasonerResponse(dungReasonerPost.getCmd(),
 					dungReasonerPost.getEmail(), dungReasonerPost.getNr_of_arguments(), dungReasonerPost.getAttacks(),
 					dungReasonerPost.getSemantics(), dungReasonerPost.getSolver(), null, 0,
 					dungReasonerPost.getUnit_timeout(), "ERRORs");
-			TimeUnit unit = Utils.getTimoutUnit(dungReasonerPost.getUnit_timeout());
-			Callee callee = DungReasonerCalleeFactory.getCallee(Command.getCommand(dungReasonerPost.getCmd()), reasoner,
-					dungTheory);
+			TimeUnit unit = Utils.getTimeoutUnit(dungReasonerPost.getUnit_timeout());
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
+					Semantics.getSemantics(dungReasonerPost.getSemantics()));
+			Callee callee = DungReasonerCalleeFactory.getCallee(
+					Command.getCommand(dungReasonerPost.getCmd()), reasoner, dungTheory);
 			int user_timeout = Utils.checkUserTimeout(dungReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
 			try {
 				// handle timeout
@@ -330,6 +394,297 @@ public class RequestController {
 		} else {
 			return new DungReasonerResponse();
 		}
+	}
+
+	/**
+	 * Handles HTTP POST requests for Dung Reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/dung" that have the specified content types
+	 * for both request and response. It takes a DungReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+	 *
+	 * @param iafReasonerPost The DungReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/iaf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody IafReasonerPost iafReasonerPost) {
+		if (iafReasonerPost.getCmd().equals("info"))
+			return (Response) getIafInfo(iafReasonerPost.getEmail());
+
+		if (iafReasonerPost.getCmd().equals("get_models_pos") || iafReasonerPost.getCmd().equals("get_credulous_pos") || iafReasonerPost.getCmd().equals("get_skeptical_pos") || iafReasonerPost.getCmd().equals("get_models_nec") || iafReasonerPost.getCmd().equals("get_credulous_nec") || iafReasonerPost.getCmd().equals("get_skeptical_nec")) {
+			IncompleteTheory incompleteTheory = IafReasonerFactory.getIncompleteTheory(iafReasonerPost.getNr_of_arguments(),
+					iafReasonerPost.getUncertainArguments(), iafReasonerPost.getDefiniteAttacks(), iafReasonerPost.getUncertainAttacks());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			IafReasonerResponse reasonerResponse = new IafReasonerResponse(iafReasonerPost.getCmd(),
+					iafReasonerPost.getEmail(), iafReasonerPost.getNr_of_arguments(), iafReasonerPost.getUncertainArguments(),
+					iafReasonerPost.getDefiniteAttacks(), iafReasonerPost.getUncertainAttacks(),
+					iafReasonerPost.getSemantics(), iafReasonerPost.getSolver(), null, 0,
+					iafReasonerPost.getUnit_timeout(), "ERRORs");
+			TimeUnit unit = Utils.getTimeoutUnit(iafReasonerPost.getUnit_timeout());
+			IncompleteReasoner reasoner = IafReasonerFactory.getReasoner(
+					Semantics.getSemantics(iafReasonerPost.getSemantics()));
+			Callee callee = IafReasonerCalleeFactory.getCallee(
+					IafReasonerCalleeFactory.Command.getCommand(iafReasonerPost.getCmd()), reasoner, incompleteTheory);
+			int user_timeout = Utils.checkUserTimeout(iafReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<Collection<Extension<IncompleteTheory>>> future = executor.submit(callee);
+				Pair<Collection<Extension<IncompleteTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(iafReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new IafReasonerResponse();
+		}
+	}
+
+	/**
+	 * Retrieves IAF services information
+	 * @param email the email address
+	 * @return IafServicesInfoResponse containing service information
+	 */
+	private IafServicesInfoResponse getIafInfo(String email) {
+		IafServicesInfoResponse response = new IafServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = IafReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.abbreviation());
+		}
+		response.setSemantics(semantics_ids);
+
+		IafReasonerCalleeFactory.Command[] com = IafReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
+	/**
+	 * Handles HTTP POST requests for Ranking Reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/rankings" that have the specified content types
+	 * for both request and response. It takes a DungReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the DungReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractRankingReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+	 *
+	 * @param rankingReasonerPost The DungReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/rankings", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody RankingReasonerPost rankingReasonerPost) {
+		if (rankingReasonerPost.getCmd().equals("info"))
+			return (Response) getRankingInfo(rankingReasonerPost.getEmail());
+
+		if (rankingReasonerPost.getCmd().equals("get_model")) {
+			DungTheory dungTheory = AbstractExtensionReasonerFactory.getDungTheory(rankingReasonerPost.getNr_of_arguments(),
+					rankingReasonerPost.getAttacks());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			RankingReasonerResponse reasonerResponse = new RankingReasonerResponse(rankingReasonerPost.getCmd(),
+					rankingReasonerPost.getEmail(), rankingReasonerPost.getNr_of_arguments(), rankingReasonerPost.getAttacks(),
+					rankingReasonerPost.getSemantics(), AbstractRankingReasonerFactory.getRankingType(rankingReasonerPost.getSemantics()), rankingReasonerPost.getSolver(), null, 0,
+					rankingReasonerPost.getUnit_timeout(), "ERRORs");
+			TimeUnit unit = Utils.getTimeoutUnit(rankingReasonerPost.getUnit_timeout());
+			AbstractRankingReasoner<?> reasoner = AbstractRankingReasonerFactory.getReasoner(
+					RankingSemantics.getSemantics(rankingReasonerPost.getSemantics()));
+			Callee callee = RankingReasonerCalleeFactory.getCallee(
+					RankingReasonerCalleeFactory.Command.getCommand(rankingReasonerPost.getCmd()), reasoner, dungTheory);
+			int user_timeout = Utils.checkUserTimeout(rankingReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<GeneralComparator<Argument,DungTheory>> future = executor.submit(callee);
+				Pair<GeneralComparator<Argument, DungTheory>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(rankingReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new RankingReasonerResponse();
+		}
+	}
+
+	/**
+	 * Retrieves Ranking services information
+	 * @param email the email address
+	 * @return RankingServicesInfoResponse containing service information
+	 */
+	private RankingServicesInfoResponse getRankingInfo(String email) {
+		RankingServicesInfoResponse response = new RankingServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = AbstractRankingReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.getId());
+		}
+		response.setSemantics(semantics_ids);
+
+		RankingReasonerCalleeFactory.Command[] com = RankingReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
+	/**
+	 * Handles HTTP POST requests for ADF Reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/dung" that have the specified content types
+	 * for both request and response. It takes a AdfReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the AdfReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the ADF,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a DungReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default DungReasonerResponse.</p>
+	 *
+	 * @param adfReasonerPost The DungReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/adf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody AdfReasonerPost adfReasonerPost) {
+		if (adfReasonerPost.getCmd().equals("info"))
+			return (Response) getAdfInfo(adfReasonerPost.getEmail());
+
+		if (adfReasonerPost.getCmd().equals("get_models") || adfReasonerPost.getCmd().equals("get_credulous") || adfReasonerPost.getCmd().equals("get_skeptical")) {
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			AdfReasonerResponse reasonerResponse = new AdfReasonerResponse(adfReasonerPost.getCmd(),
+					adfReasonerPost.getEmail(), adfReasonerPost.getNr_of_arguments(), adfReasonerPost.getConditions(),
+					adfReasonerPost.getSemantics(), adfReasonerPost.getSolver(), null, 0,
+					adfReasonerPost.getUnit_timeout(), "ERRORs");
+			TimeUnit unit = Utils.getTimeoutUnit(adfReasonerPost.getUnit_timeout());
+			try {
+				AbstractDialecticalFramework adf = AbstractAdfReasonerFactory.getAdf(adfReasonerPost.getNr_of_arguments(),
+						adfReasonerPost.getConditions());
+				AbstractADFReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(
+						Semantics.getSemantics(adfReasonerPost.getSemantics()));
+				Callee callee = AdfReasonerCalleeFactory.getCallee(
+						AdfReasonerCalleeFactory.Command.getCommand(adfReasonerPost.getCmd()), reasoner, adf);
+				int user_timeout = Utils.checkUserTimeout(adfReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+				// handle timeout
+				Future<Collection<Interpretation>> future = executor.submit(callee);
+				Pair<Collection<Interpretation>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString().replace("[","{").replace("]", "}"));
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(adfReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new AdfReasonerResponse();
+		}
+	}
+
+	/**
+	 * Retrieves ADF services information
+	 * @param email the email address
+	 * @return AdfServicesInfoResponse containing service information
+	 */
+	private AdfServicesInfoResponse getAdfInfo(String email) {
+		AdfServicesInfoResponse response = new AdfServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = AbstractAdfReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.abbreviation());
+		}
+		response.setSemantics(semantics_ids);
+
+		AdfReasonerCalleeFactory.Command[] com = AdfReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
 	}
 
 	/**
@@ -373,7 +728,7 @@ public class RequestController {
 		Semantics[] sem = AbstractExtensionReasonerFactory.getSemantics();
 		ArrayList<String> semantics_ids = new ArrayList<String>();
 		for (Semantics s : sem) {
-			semantics_ids.add(s.id);
+			semantics_ids.add(s.abbreviation());
 		}
 		response.setSemantics(semantics_ids);
 
@@ -387,6 +742,114 @@ public class RequestController {
 		// response.setSemantics(AbstractExtensionReasonerFactory.Semantics.values());
 		return response;
 	}
+
+	/**
+	 * Handles HTTP POST requests for bipolar extension reasoner operations.
+	 *
+	 * <p>This method processes requests with the endpoint "/bipolar" that have the specified content types
+	 * for both request and response. It takes a BipolarReasonerPost object as the request body and returns
+	 * a Response object as the response body.</p>
+	 *
+	 * <p>The method checks the command (cmd) from the BipolarReasonerPost object and performs different
+	 * operations based on the command. If the command is "info," it delegates the request to the getInfo
+	 * method. If the command is "get_models" or "get_model," it processes the request using the DungTheory,
+	 * AbstractExtensionReasoner, and other components. The result includes information about the execution
+	 * time, answer, and status, which is encapsulated in a BipolarReasonerResponse object.</p>
+	 *
+	 * <p>In case of a timeout during execution, the method sets the response status to "TIMEOUT" and includes
+	 * the specified timeout duration. If any other exception occurs, the response status is set to "Error,"
+	 * and the method provides a generic response with a time of 0.0 and a null answer.</p>
+	 *
+	 * <p>If the command is not recognized or not applicable, the method returns a default BipolarReasonerResponse.</p>
+	 *
+	 * @param bipolarReasonerPost The BipolarReasonerPost object representing the request payload.
+	 * @return A Response object representing the response payload.
+	 */
+	@PostMapping(value = "/bipolar", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+			@RequestBody BipolarReasonerPost bipolarReasonerPost) {
+
+		if (bipolarReasonerPost.getCmd().equals("info"))
+			return (Response) getBipolarInfo(bipolarReasonerPost.getEmail());
+
+		if (bipolarReasonerPost.getCmd().equals("get_models") || bipolarReasonerPost.getCmd().equals("get_model") || bipolarReasonerPost.getCmd().equals("get_credulous") || bipolarReasonerPost.getCmd().equals("get_skeptical")) {
+			BipolarArgumentationFramework bbase = AbstractBipolarFrameworkFactory.getArgumentationFramework(bipolarReasonerPost.getNr_of_arguments(),
+					bipolarReasonerPost.getAttacks(),
+					bipolarReasonerPost.getSupports());
+			BipolarSemantics semantics = BipolarSemantics.getSemantics(bipolarReasonerPost.getSemantics());
+			AbstractBipolarExtensionReasoner reasoner = AbstractBipolarExtensionReasonerFactory.getReasoner(semantics);
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			BipolarReasonerResponse reasonerResponse = new BipolarReasonerResponse(
+					bipolarReasonerPost.getCmd(),
+					bipolarReasonerPost.getEmail(),
+					bipolarReasonerPost.getNr_of_arguments(),
+					bipolarReasonerPost.getAttacks(),
+					bipolarReasonerPost.getSupports(),
+					bipolarReasonerPost.getSemantics(),
+					bipolarReasonerPost.getSolver(),
+					null,
+					0,
+					bipolarReasonerPost.getUnit_timeout(),
+					"ERRORs");
+			TimeUnit unit = Utils.getTimeoutUnit(bipolarReasonerPost.getUnit_timeout());
+			var command = BipolarReasonerCalleeFactory.Command.getCommand(bipolarReasonerPost.getCmd());
+			Callee callee = BipolarReasonerCalleeFactory.getCallee(command, reasoner, bbase);
+			int user_timeout = Utils.checkUserTimeout(bipolarReasonerPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+			try {
+				// handle timeout
+				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
+				Pair<Collection<Extension<DungTheory>>, Long> result = Utils.runServicesWithTimeout(future,
+						user_timeout, unit);
+				executor.shutdownNow();
+				reasonerResponse.setTime(result.getValue());
+				reasonerResponse.setAnswer(result.getKey().toString());
+				reasonerResponse.setStatus("SUCCESS");
+			} catch (TimeoutException e) {
+				reasonerResponse.setTime(bipolarReasonerPost.getTimeout());
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("TIMEOUT");
+				executor.shutdownNow();
+			} catch (Exception e) {
+				reasonerResponse.setTime(0.0);
+				reasonerResponse.setAnswer(null);
+				reasonerResponse.setStatus("Error");
+
+				executor.shutdownNow();
+			}
+			return reasonerResponse;
+		} else {
+			return new BipolarReasonerResponse();
+		}
+	}
+
+	/**
+	 * Retrieves Bipolar services information
+	 * @param email the email address
+	 * @return BipolarServicesInfoResponse containing service information
+	 */
+	private BipolarServicesInfoResponse getBipolarInfo(String email) {
+		BipolarServicesInfoResponse response = new BipolarServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		var sem = AbstractBipolarExtensionReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<String>();
+		for (var s : sem) {
+			semantics_ids.add(s.id);
+		}
+		response.setSemantics(semantics_ids);
+
+		BipolarReasonerCalleeFactory.Command[] com = BipolarReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<String>();
+		for (var c : com) {
+			command_ids.add(c.id);
+		}
+		response.setCommands(command_ids);
+
+		return response;
+	}
+
 
 	/**
  * Handles HTTP POST requests for Defeasible logic programming DeLP Reasoner operations.
@@ -419,7 +882,7 @@ public class RequestController {
 		DeLPResponse delpResponse = new DeLPResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(),
 				delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(), null, 0.0, delpPost.getUnit_timeout(),
 				null);
-		TimeUnit unit = Utils.getTimoutUnit(delpPost.getUnit_timeout());
+		TimeUnit unit = Utils.getTimeoutUnit(delpPost.getUnit_timeout());
 		int user_timeout = Utils.checkUserTimeout(delpPost.getTimeout(), SERVICES_TIMEOUT_DELP, unit);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		try {
@@ -537,11 +1000,19 @@ public class RequestController {
  	* @param <S> The type of signature associated with the belief set, e.g., PlSignature.
  	*/
 	private class MeasurementCallee implements Callable<Double> {
+		/** The inconsistency measure used for the computation. */
 		InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure;
+		/** The belief set whose inconsistency is evaluated. */
 		BeliefSet<PlFormula, PlSignature> beliefSet;
 
-		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
-				BeliefSet<PlFormula, PlSignature> beliefSet) {
+			/**
+			 * Creates a new measurement task for the given measure and belief set.
+			 *
+			 * @param measure the inconsistency measure to use
+			 * @param beliefSet the belief set to evaluate
+			 */
+			public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
+					BeliefSet<PlFormula, PlSignature> beliefSet) {
 			this.measure = measure;
 			this.beliefSet = beliefSet;
 		}
@@ -579,7 +1050,7 @@ public class RequestController {
 
 	private InconsistencyValueResponse handleGetICMESValue(InconsistencyPost query) throws JSONException {
 		InconsistencyValueResponse icmesResponse = new InconsistencyValueResponse();
-		TimeUnit unit = Utils.getTimoutUnit(query.getUnit_timeout());
+		TimeUnit unit = Utils.getTimeoutUnit(query.getUnit_timeout());
 		int user_timeout = Utils.checkUserTimeout(query.getTimeout(), SERVICES_TIMEOUT_INCMES, unit);
 		// set sub-solvers
 		SatSolver.setDefaultSolver(new Sat4jSolver());
@@ -696,5 +1167,386 @@ public class RequestController {
 		return response;
 	}
 
+	/**
+	 * handler for the /sequence-explanation endpoint
+	 * @param request the sequence explanation request
+	 * @return the server response
+	 */
+	@PostMapping(value = "/sequence-explanation", produces = "application/json")
+	@ResponseBody
+	public SequenceExplanationResponse handleRequest(@Valid @RequestBody SequenceExplanationPost request) {
+		LoggerUtil.logger.info(String.format("Run sequence explanation command \"%s\" for user \"%s\" with timeout: %s %s",
+				request.getCmd().getClass().getSimpleName(),
+				request.getEmail(),
+				request.getTimeout(),
+				request.getUnit_timeout()));
 
+		TimeUnit timeoutUnit = Utils.getTimeoutUnit(request.getUnit_timeout());
+		int timeout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_SEQUENCE_EXPLANATION, timeoutUnit);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Pair<SequenceExplanationResult, Long> resultAndExecutionTime;
+		try {
+			var future = executor.submit(() -> processCommand(request.getCmd()));
+			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timeout, timeoutUnit);
+		} catch (TimeoutException e) {
+			LoggerUtil.logger.info("Timeout while running sequence explanation.");
+			return new SequenceExplanationResponse(
+					null,
+					request.getEmail(),
+					timeout,
+					request.getUnit_timeout(),
+					SequenceExplanationResponse.Status.TIMEOUT
+			);
+		} catch (ExecutionException e) {
+			LoggerUtil.logger.warning(() -> "Error while running sequence explanation reasoner: " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			LoggerUtil.logger.warning(() -> "Interrupt while running  sequence explanation: " + e.getMessage());
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+			throw new RuntimeException("Thread was interrupted.");
+		} finally {
+			executor.shutdownNow();
+		}
+
+		double executionTime = resultAndExecutionTime.getValue();
+		var result = resultAndExecutionTime.getKey();
+		return new SequenceExplanationResponse(
+				result,
+				request.getEmail(),
+				executionTime,
+				request.getUnit_timeout(),
+				SequenceExplanationResponse.Status.SUCCESS
+		);
+	}
+
+	/**
+	 * Dispatches a sequence explanation command to the matching handler.
+	 *
+	 * @param cmd the incoming command
+	 * @return the computed sequence explanation result
+	 */
+	private SequenceExplanationResult processCommand(SequenceExplanationCmd cmd) {
+		if (cmd instanceof GetSequenceExplanationsCmd) {
+			return processSequenceExplanationCmd((GetSequenceExplanationsCmd) cmd);
+		} else {
+			throw new IllegalStateException("Encountered invalid command:" + cmd.getClass().getSimpleName());
+		}
+	}
+
+	/**
+	 * Computes sequence explanations for the given command.
+	 *
+	 * @param cmd the sequence explanation command
+	 * @return the computed sequence explanation result
+	 */
+	private GetSequenceExplanationsResult processSequenceExplanationCmd(GetSequenceExplanationsCmd cmd) {
+		var theory = new DungTheory();
+		for (AttackDTO attackDTO: cmd.getAttacks()) {
+			var attacker = new Argument(attackDTO.getAttacker());
+			var attacked = new Argument(attackDTO.getAttacked());
+			theory.add(attacker);
+			theory.add(attacked);
+			var attack = new Attack(attacker, attacked);
+			theory.add(attack);
+		}
+		Set<Argument> argumentFilter = ArgumentFilterSerialization.deserialize(cmd.getArgumentFilter());
+		if (argumentFilter != null) {
+			theory.addAll(argumentFilter);
+		}
+		var sequenceExplanation = sequenceExplanationService.querySequenceExplanations(theory, argumentFilter);
+		return GetSequenceExplanationsResult.from(sequenceExplanation);
+	}
+
+	/**
+	 * Executes the causal reasoner as specified by the provided {@link CausalReasonerPost}
+	 *
+	 * @param request The request payload containing information for causal reasoning
+	 * @return A Response object containing the result of the ABA reasoning operation.
+	 */
+	@PostMapping(value = "/causal", produces = "application/json")
+	@ResponseBody
+	public CausalReasonerResponse handleRequest(@Valid @RequestBody CausalReasonerPost request) {
+		LoggerUtil.logger.info(String.format("Run causal reasoner command \"%s\" for user \"%s\" with timeout: %s %s",
+				request.getCmd(),
+				request.getEmail(),
+				request.getTimeout(),
+				request.getUnit_timeout()));
+
+		TimeUnit timoutUnit = Utils.getTimeoutUnit(request.getUnit_timeout());
+		int timout = Utils.checkUserTimeout(request.getTimeout(), SERVICES_TIMEOUT_CAUSAL, timoutUnit);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Pair<String, Long> resultAndExecutionTime;
+		try {
+			var future = executor.submit(() -> processCommand(request));
+			resultAndExecutionTime = Utils.runServicesWithTimeout(future, timout, timoutUnit);
+		} catch (TimeoutException e) {
+			LoggerUtil.logger.info("Timeout while running causal reasoner.");
+			return new CausalReasonerResponse(
+					null,
+					request.getEmail(),
+					timout,
+					request.getUnit_timeout(),
+					TIMEOUT
+			);
+		} catch (ExecutionException e) {
+			LoggerUtil.logger.warning(() -> "Error while running causal reasoner: " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			LoggerUtil.logger.warning(() -> "Interrupt while running causal reasoner: " + e.getMessage());
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+			throw new RuntimeException("Thread was interrupted.");
+		} finally {
+			executor.shutdownNow();
+		}
+
+		double executionTime = resultAndExecutionTime.getValue();
+		String result = resultAndExecutionTime.getKey();
+		return new CausalReasonerResponse(
+				result,
+				request.getEmail(),
+				executionTime,
+				request.getUnit_timeout(),
+				SUCCESS
+		);
+	}
+
+	/**
+	 * Dispatches a causal request to the concrete command handler.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the serialized command result
+	 */
+	private String processCommand(CausalReasonerPost causalReasonerPost) {
+		return switch (causalReasonerPost.getCmd()) {
+			case GET_CONCLUSIONS -> processConclusionsCommand(causalReasonerPost);
+			case GET_SIGNIFICANT_ATOMS -> processSignificantAtomsCommand(causalReasonerPost);
+			case GET_ARGUMENTATION_FRAMEWORK -> processArgumentationFramework(causalReasonerPost);
+			case GET_SEQUENCE_EXPLANATIONS -> processSequenceExplanations(causalReasonerPost);
+		};
+	}
+
+	/**
+	 * Computes the conclusions for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the conclusions as a string representation
+	 */
+	private String processConclusionsCommand(CausalReasonerPost causalReasonerPost) {
+		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
+		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
+		var conclusionFilter = parseConclusionFilter(causalReasonerPost);
+
+		Collection<PlFormula> conclusions = causalReasonerService.queryConclusions(causalKnowledgeBase, observations, conclusionFilter);
+		return conclusions.toString();
+	}
+
+	/**
+	 * Computes the significant atoms for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the significant atoms serialized as JSON
+	 */
+	private String processSignificantAtomsCommand(CausalReasonerPost causalReasonerPost) {
+		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
+		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
+		var conclusionFilter = parseConclusionFilter(causalReasonerPost);
+
+		var perAtomSignificantAtoms = causalReasonerService.queryPerAtomSignificantAtoms(causalKnowledgeBase, observations, conclusionFilter);
+
+		Map<String, Collection<String>> jsonData = new HashMap<>();
+		for (Map.Entry<Proposition, Collection<Proposition>> entry : perAtomSignificantAtoms.entrySet()) {
+			List<String> list = new ArrayList<>();
+			for (Proposition proposition : entry.getValue()) {
+				String string = proposition.toString();
+				list.add(string);
+			}
+			jsonData.put(entry.getKey().toString(), list);
+		}
+
+		try {
+			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonData);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Computes sequence explanations for the given causal request.
+	 *
+	 * @param causalReasonerPost the incoming causal request
+	 * @return the sequence explanations serialized as JSON
+	 */
+	private String processSequenceExplanations(CausalReasonerPost causalReasonerPost) {
+		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
+		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
+		var conclusionFilter = parseConclusionFilter(causalReasonerPost);
+
+		var result = causalReasonerService.querySequenceExplanations(causalKnowledgeBase, observations, conclusionFilter);
+		var reply = SequenceExplanationReply.from(result);
+		try {
+			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reply);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Processes argumentation framework queries from causal reasoner posts
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return JSON string containing the argumentation framework result
+	 */
+	private String processArgumentationFramework(CausalReasonerPost causalReasonerPost) {
+		CausalKnowledgeBase causalKnowledgeBase = parseCausalKnowledgeBase(causalReasonerPost);
+		Collection<PlFormula> observations = parseObservations(causalReasonerPost);
+
+		var result = causalReasonerService.queryArgumentationFramework(causalKnowledgeBase, observations);
+		var reply = ArgumentationFrameworkReply.from(result);
+		try {
+			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reply);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Parses observations from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return Collection of propositional logic formulas
+	 */
+	private static Collection<PlFormula> parseObservations(CausalReasonerPost causalReasonerPost) {
+		CausalParser causalParser = new CausalParser();
+		Collection<PlFormula> observations;
+		try {
+			observations = causalParser.parseListOfFormulae(causalReasonerPost.getObservations(), ",");
+		} catch (ParserException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, null, e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return observations;
+	}
+
+	/**
+	 * Parses the conclusion filter from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return Set of propositions or null if not specified
+	 */
+	private static @Nullable Set<Proposition> parseConclusionFilter(CausalReasonerPost causalReasonerPost) {
+		return ConclusionsFilterSerialization.parse(causalReasonerPost.getConclusionsFilter());
+	}
+
+	/**
+	 * Parses a causal knowledge base from a causal reasoner post
+	 * @param causalReasonerPost the causal reasoner request
+	 * @return CausalKnowledgeBase parsed from the request
+	 */
+	private static CausalKnowledgeBase parseCausalKnowledgeBase(CausalReasonerPost causalReasonerPost) {
+		CausalParser causalParser = new CausalParser();
+		CausalKnowledgeBase causalKnowledgeBase;
+		try {
+			causalKnowledgeBase = causalParser.parseBeliefBase(causalReasonerPost.getKb());
+		} catch (ParserException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, null, e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return causalKnowledgeBase;
+	}
+
+	/**
+	 * Handles HTTP POST requests for Probabilistic Argumentation Framework (PAF) operations.
+	 *
+	 * <p>Supported commands:
+	 * <ul>
+	 *   <li>{@code info} – return supported semantics, commands, and solvers</li>
+	 *   <li>{@code get_credulous} – probability that the queried argument is credulously accepted</li>
+	 *   <li>{@code get_skeptical} – probability that the queried argument is skeptically accepted</li>
+	 * </ul>
+	 *
+	 * <p>Two solvers are available: {@code simple} (exact, enumerates all subgraphs) and
+	 * {@code montecarlo} (approximate sampling, configurable via {@code nr_of_trials}).</p>
+	 *
+	 * @param pafPost the request payload
+	 * @return a {@link Response} containing the computed probability or service info
+	 */
+	@PostMapping(value = "/paf", produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public Response handleRequest(@RequestBody PafReasonerPost pafPost) {
+		if (pafPost.getCmd().equals("info"))
+			return getPafInfo(pafPost.getEmail());
+
+		PafReasonerCalleeFactory.Command cmd = PafReasonerCalleeFactory.Command.getCommand(pafPost.getCmd());
+		if (cmd == null)
+			return new PafReasonerResponse();
+
+		ProbabilisticArgumentationFramework paf = AbstractPafReasonerFactory.getPaf(
+				pafPost.getNr_of_arguments(),
+				pafPost.getArgument_probabilities(),
+				pafPost.getAttacks(),
+				pafPost.getAttack_probabilities());
+		AbstractPafReasoner reasoner = AbstractPafReasonerFactory.getReasoner(
+				Semantics.getSemantics(pafPost.getSemantics()),
+				pafPost.getSolver(),
+				pafPost.getNr_of_trials());
+		Callee callee = PafReasonerCalleeFactory.getCallee(cmd, reasoner, paf);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		PafReasonerResponse reasonerResponse = new PafReasonerResponse(
+				pafPost.getCmd(), pafPost.getEmail(), pafPost.getNr_of_arguments(),
+				pafPost.getArgument_probabilities(), pafPost.getAttacks(),
+				pafPost.getAttack_probabilities(), pafPost.getSemantics(),
+				pafPost.getSolver(), pafPost.getArgument(), null, 0,
+				pafPost.getUnit_timeout(), "ERROR");
+		TimeUnit unit = Utils.getTimeoutUnit(pafPost.getUnit_timeout());
+		int user_timeout = Utils.checkUserTimeout(pafPost.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);
+		try {
+			Future<Map<Argument,Double>> future = executor.submit(callee);
+			Pair<Map<Argument,Double>, Long> result = Utils.runServicesWithTimeout(future, user_timeout, unit);
+			executor.shutdownNow();
+			reasonerResponse.setAnswer(result.getKey().toString());
+			reasonerResponse.setTime(result.getValue());
+			reasonerResponse.setStatus("SUCCESS");
+		} catch (TimeoutException e) {
+			reasonerResponse.setTime(pafPost.getTimeout());
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("TIMEOUT");
+			executor.shutdownNow();
+		} catch (Exception e) {
+			reasonerResponse.setTime(0.0);
+			reasonerResponse.setAnswer(null);
+			reasonerResponse.setStatus("Error");
+			executor.shutdownNow();
+		}
+		return reasonerResponse;
+	}
+
+	/**
+	 * Retrieves PAF services information
+	 * @param email the email address
+	 * @return PafServicesInfoResponse containing service information
+	 */
+	private PafServicesInfoResponse getPafInfo(String email) {
+		PafServicesInfoResponse response = new PafServicesInfoResponse();
+		response.setReply("info");
+		response.setEmail(email);
+		response.setBackend_timeout(SERVICES_TIMEOUT_DUNG);
+		Semantics[] sem = AbstractPafReasonerFactory.getSemantics();
+		ArrayList<String> semantics_ids = new ArrayList<>();
+		for (Semantics s : sem)
+			semantics_ids.add(s.abbreviation());
+		response.setSemantics(semantics_ids);
+		PafReasonerCalleeFactory.Command[] com = PafReasonerCalleeFactory.getCommands();
+		ArrayList<String> command_ids = new ArrayList<>();
+		for (PafReasonerCalleeFactory.Command c : com)
+			command_ids.add(c.id);
+		response.setCommands(command_ids);
+		response.setSolvers(AbstractPafReasonerFactory.getSolvers());
+		return response;
+	}
 }

@@ -35,6 +35,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new SimpleSemiStableReasoner instance.
+     */
+    public SimpleSemiStableReasoner() {
+        // default constructor
+    }
+
 	/**
 	 *
 	 * @param bbase the claim based thory

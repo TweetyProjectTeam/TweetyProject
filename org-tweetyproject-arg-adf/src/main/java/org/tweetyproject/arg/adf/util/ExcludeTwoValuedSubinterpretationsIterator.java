@@ -34,10 +34,13 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  */
 public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Interpretation> {
 
+	/** Builder used for generated interpretations. */
 	private final Interpretation.Builder builder;
 
+	/** Root of the exclusion tree. */
 	private final Node root;
 
+	/** Argument iteration order. */
 	private final Argument[] order;
 
 	/**
@@ -74,7 +77,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 	 * Creates an array of the arguments in <code>interpretation</code> but
 	 * orders them s.t. the undecided ones are at the end.
 	 *
-	 * @param interpretation
+	 * @param interpretation the interpretation whose arguments are ordered
 	 * @return the arguments as an array and in a more efficient order
 	 */
 	private static Argument[] arguments(Interpretation interpretation) {
@@ -103,32 +106,68 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		return builder.build();
 	}
 
+	/** Internal node of the exclusion tree. */
 	private interface Node {
 
+		/**
+		 * Returns whether this node has been exhausted.
+		 *
+		 * @return {@code true} if this node has no more interpretations
+		 */
 		boolean done();
 
+		/**
+		 * Builds the next interpretation fragment.
+		 *
+		 * @param builder builder receiving the next fragment
+		 */
 		void buildNext(Builder builder);
 
+		/**
+		 * Adds the given interpretation to the tree.
+		 *
+		 * @param offset current argument offset
+		 * @param remaining remaining decided arguments
+		 * @param interpretation interpretation to add
+		 */
 		void add(int offset, int remaining, Interpretation interpretation);
 
+		/**
+		 * Adds leaf nodes below this node.
+		 */
 		void addLeafs();
 
+		/**
+		 * Propagates sink nodes where possible.
+		 *
+		 * @return this node or a replacement sink node
+		 */
 		default Node propagateSink() {
 			return this;
 		}
 
 	}
 
+	/** Internal branching node. */
 	private final class InnerNode implements Node {
 
+		/** Current argument index. */
 		private final int index;
 
+		/** Current branch value. */
 		private boolean value;
 
+		/** Child node for false assignments. */
 		private Node fNode;
 
+		/** Child node for true assignments. */
 		private Node tNode;
 
+		/**
+		 * Creates an inner node.
+		 *
+		 * @param index the current argument index
+		 */
 		public InnerNode(int index) {
 			this.index = index;
 		}
@@ -138,6 +177,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			return fNode.done() && tNode.done();
 		}
 
+		/** Returns the active child node. */
 		private Node current() {
 			if (value) {
 				return tNode;
@@ -180,6 +220,13 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			}
 		}
 
+		/**
+		 * Creates an inner node if no node exists yet.
+		 *
+		 * @param offset the next argument offset
+		 * @param node the existing child node
+		 * @return the existing or created node
+		 */
 		private Node createInnerIfNecessary(int offset, Node node) {
 			if (node == null) {
 				return new InnerNode(offset);
@@ -187,6 +234,15 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			return node;
 		}
 
+		/**
+		 * Creates a branch node or sink node if needed.
+		 *
+		 * @param offset the next argument offset
+		 * @param remaining the number of remaining decided arguments
+		 * @param node the existing child node
+		 * @param interpretation the interpretation being inserted
+		 * @return the existing or created node
+		 */
 		private Node createIfNecessary(int offset, int remaining, Node node, Interpretation interpretation) {
 			if (remaining <= 1) {
 				// we should only be here if the current argument is decided
@@ -213,6 +269,13 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			return this;
 		}
 
+		/**
+		 * Creates a leaf node if no node exists yet.
+		 *
+		 * @param node the existing child node
+		 * @param value the leaf value
+		 * @return the existing or created node
+		 */
 		private Node createLeaf(Node node, Boolean value) {
 			Node leaf = node;
 			if (leaf == null) {
@@ -227,21 +290,27 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		}
 	}
 
-	private final class TailNode implements Node {
+		/** Tail node covering remaining arguments. */
+		private final class TailNode implements Node {
 
-		private final int offset;
+			/** First argument offset covered by this tail. */
+			private final int offset;
 
-		private final int max;
+			/** Maximum encoded value for this tail. */
+			private final int max;
 
-		private boolean first = true; // do not swallow the all undecided
+			/** Whether this tail has produced its first value. */
+			private boolean first = true; // do not swallow the all undecided
 
-		private int value;
+			/** Current encoded tail value. */
+			private int value;
 
-		/**
-		 * @param bitSet
-		 * @param offset
-		 */
-		public TailNode(int offset) {
+			/**
+			 * Creates a tail node.
+			 *
+			 * @param offset the first argument index covered by the tail
+			 */
+			public TailNode(int offset) {
 			this.offset = offset;
 			int diff = order.length - offset - 1;
 			int max = 1;
@@ -256,7 +325,14 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			return value >= max;
 		}
 
-		boolean getBit(int n, int k) {
+			/**
+			 * Returns whether the given bit is set.
+			 *
+			 * @param n encoded value
+			 * @param k bit index
+			 * @return {@code true} if the bit is set
+			 */
+			boolean getBit(int n, int k) {
 			return ((n >> k) & 1) == 1;
 		}
 
@@ -282,17 +358,21 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 
 	}
 
-	private final class LeafNode implements Node {
+		/** Leaf node for a fixed argument value. */
+		private final class LeafNode implements Node {
 
-		private final boolean value;
+			/** Fixed value represented by this leaf. */
+			private final boolean value;
 
+		/** Whether this node has been exhausted. */
 		private boolean done = false;
 
-		/**
-		 * @param bitSet
-		 * @param value
-		 */
-		public LeafNode(boolean value) {
+			/**
+			 * Creates a leaf node.
+			 *
+			 * @param value the fixed value for this leaf
+			 */
+			public LeafNode(boolean value) {
 			this.value = value;
 		}
 
@@ -317,7 +397,9 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 
 	}
 
+	/** Sink node that terminates a branch. */
 	private enum SinkNode implements Node {
+		/** Singleton sink node instance. */
 		INSTANCE;
 
 		@Override

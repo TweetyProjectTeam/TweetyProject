@@ -42,6 +42,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class TgfParser extends AbstractDungParser{	
+
+    /**
+     * Creates a new TgfParser instance.
+     */
+    public TgfParser() {
+        // default constructor
+    }
 	
 	/* (non-Javadoc)
 	 * @see argc.parser.Parser#parse(java.io.File)

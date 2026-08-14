@@ -32,9 +32,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class RestServiceCorsApplication {
-	/** Allowed origins for production and debug environments */
+	/** Allowed origins for production and debug environments. */
     static String allowedOrigins = "http://tweetyproject.org";
+    /** Allowed origins for local debug setups. */
 	static String debug_allowedOrigins = "http://127.0.0.1:5500/";
+    /** Creates the application entry point. */
+    public RestServiceCorsApplication() {
+    }
     /**
      * Main method that starts the Spring Boot application and logs the allowed origins.
      * It also sets up necessary configurations and initializes the Spring context.
