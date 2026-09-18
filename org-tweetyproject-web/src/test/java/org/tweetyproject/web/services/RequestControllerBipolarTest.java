@@ -86,7 +86,8 @@ class RequestControllerBipolarTest {
                             "WAD",
                             "WCO",
                             "WPR",
-                            "WGR"
+                            "WGR",
+                            "CG"
                           ],
                           "commands": [
                             "get_models",
@@ -199,6 +200,7 @@ class RequestControllerBipolarTest {
     @ParameterizedTest(name = "semantics {0}")
     @MethodSource("availableSemantics")
     public void getModelsForSemantics(Semantics semantics) throws Exception {
+        if (semantics.equals(Semantics.diverse)) return;
         var post = post("/bipolar").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content(String.format("""

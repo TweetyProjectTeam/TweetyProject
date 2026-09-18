@@ -63,7 +63,7 @@ class RequestControllerRankingsTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CAT","SER","BB","CO","DB","IGD","SAF","SB","TU"
+                            "CAT","SER","BB","CO","DB","IGD","SAF","SB","TU","PR","PROB"
                           ],
                           "commands": [
                             "get_model"
