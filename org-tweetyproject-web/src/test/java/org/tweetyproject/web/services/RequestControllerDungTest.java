@@ -63,7 +63,7 @@ class RequestControllerDungTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","STG","STG2","SST","ID","EA","CF2","SCF2","NA","SAD","IS","UC","UD","SUD","WAD","WCO","WPR","WGR","div"
+                            "CF","ADM","CO","GR","PR","ST","STG","STG2","SST","ID","EA","CF2","SCF2","NA","SAD","IS","UC","UD","SUD","WAD","WCO","WPR","WGR","CG","div"
                           ],
                           "commands": [
                             "get_models",
