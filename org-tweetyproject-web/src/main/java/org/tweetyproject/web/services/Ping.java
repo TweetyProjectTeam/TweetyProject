@@ -29,7 +29,9 @@ import java.util.Objects;
  */
 public class Ping {
 
+    /** Unique identifier for the ping. */
     private final long id;
+    /** Message content carried by the ping. */
     private final String content;
 
     /**

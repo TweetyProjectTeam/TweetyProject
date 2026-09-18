@@ -34,6 +34,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SimpleStageReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new SimpleStageReasoner instance.
+     */
+    public SimpleStageReasoner() {
+        // default constructor
+    }
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */

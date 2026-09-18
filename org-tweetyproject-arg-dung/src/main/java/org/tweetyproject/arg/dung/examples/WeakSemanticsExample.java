@@ -19,10 +19,7 @@
 
 package org.tweetyproject.arg.dung.examples;
 
-import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
-import org.tweetyproject.arg.dung.reasoner.WeaklyCompleteReasoner;
-import org.tweetyproject.arg.dung.reasoner.WeaklyGroundedReasoner;
-import org.tweetyproject.arg.dung.reasoner.WeaklyPreferredReasoner;
+import org.tweetyproject.arg.dung.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -35,6 +32,13 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class WeakSemanticsExample {
+
+    /**
+     * Creates a new WeakSemanticsExample instance.
+     */
+    public WeakSemanticsExample() {
+        // default constructor
+    }
 	/**
 	 * Execute the example
 	 * @param args cmdline arguments
@@ -61,9 +65,11 @@ public class WeakSemanticsExample {
         Collection<Extension<DungTheory>> exts_wco = new WeaklyCompleteReasoner().getModels(ex1);
         Collection<Extension<DungTheory>> exts_wgr = new WeaklyGroundedReasoner().getModels(ex1);
         Collection<Extension<DungTheory>> exts_wpr = new WeaklyPreferredReasoner().getModels(ex1);
+        Collection<Extension<DungTheory>> exts_cg  = new SimpleCogentReasoner().getModels(ex1);
         System.out.println("w-admissible Extensions: " + exts_wad);
         System.out.println("w-complete Extensions: " + exts_wco);
         System.out.println("w-grounded Extensions: " + exts_wgr);
         System.out.println("w-preferred Extensions: " + exts_wpr);
+        System.out.println("cogent Extensions: " + exts_cg);
     }
 }

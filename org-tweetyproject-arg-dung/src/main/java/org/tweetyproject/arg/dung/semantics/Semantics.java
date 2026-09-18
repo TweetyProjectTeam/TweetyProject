@@ -71,6 +71,8 @@ public enum Semantics {
     WPR ("weakly-preferred semantics", "WPR"),
     /** WGR */
     WGR ("weakly-grounded semantics", "WGR"),
+    /** Cogent */
+    CG("cogent semantics", "CG"),
     /** diverse */
     diverse ("diverse semantics", "div");
     /**
@@ -123,7 +125,8 @@ public enum Semantics {
         /** WEAKLY_PREFERRED_SEMANTICS */
         WEAKLY_PREFERRED_SEMANTICS = WPR,
         /** WEAKLY_GROUNDED_SEMANTICS */
-        WEAKLY_GROUNDED_SEMANTICS = WGR;
+        WEAKLY_GROUNDED_SEMANTICS = WGR,
+        COGENT_SEMANTICS = CG;
 
 
     /** The description of the semantics. */

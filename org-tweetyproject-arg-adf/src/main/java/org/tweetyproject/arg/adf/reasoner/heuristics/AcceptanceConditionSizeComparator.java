@@ -26,16 +26,21 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * Comparator that orders arguments by the size of their acceptance conditions.
+ *
  * @author Mathias Hofer
  * @deprecated not used anymore
  */
 @Deprecated(forRemoval = true)
 public final class AcceptanceConditionSizeComparator implements Comparator<Argument>{
 
+	/** The ADF used to retrieve acceptance conditions. */
 	private final AbstractDialecticalFramework adf;
 	
 	/**
-	 * @param adf some ADF
+	 * Creates a new acceptance condition size comparator.
+	 *
+	 * @param adf the ADF whose arguments should be compared
 	 */
 	public AcceptanceConditionSizeComparator(AbstractDialecticalFramework adf) {
 		this.adf = Objects.requireNonNull(adf);

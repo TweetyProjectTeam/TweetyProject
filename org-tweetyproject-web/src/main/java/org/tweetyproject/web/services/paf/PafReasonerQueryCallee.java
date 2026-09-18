@@ -29,9 +29,13 @@ import org.tweetyproject.web.services.Callee;
  */
 public class PafReasonerQueryCallee extends Callee {
 
+    /** The PAF reasoner to use */
     private final AbstractPafReasoner reasoner;
+    /** The probabilistic argumentation framework */
     private final ProbabilisticArgumentationFramework paf;
+    /** The argument to query */
     private final Argument argument;
+    /** The inference mode for reasoning */
     private final InferenceMode inferenceMode;
 
     /**

@@ -60,9 +60,13 @@ public class SequenceExplanationPost {
         this.cmd = cmd;
     }
 
+    /** Optional email address used for notifications about the request. */
     private final @Nullable String email;
+    /** Timeout value for the request. */
     private final int timeout;
+    /** Unit used for the timeout value. */
     private final @NotNull String unit_timeout;
+    /** Command payload defining the requested action. */
     private final @Valid @NotNull SequenceExplanationCmd cmd;
 
     /**
@@ -101,7 +105,7 @@ public class SequenceExplanationPost {
         return cmd;
     }
 
-/**
+    /**
      * Marker interface for sequence explanation request commands.
      *
      * <p>Concrete implementations define the payload content for a specific
@@ -115,19 +119,20 @@ public class SequenceExplanationPost {
     }
 
     /**
-     * helper class for sequence explanation commands
+     * Command payload for requesting sequence explanations.
      */
     public static class GetSequenceExplanationsCmd implements SequenceExplanationCmd {
         /** The attack relations represented as a list of lists of integers.*/
         private final @Valid @NotNull List<@NotNull AttackDTO> attacks;
+        /** The optional argument identifiers used to restrict the results. */
         private final @Valid @Nullable  List<@NotNull String> argumentFilter;
 
-        /**
-         * Creates a new command for retrieving sequence explanations.
-         *
-         * @param attacks        the attack relations used for sequence explanation
-         * @param argumentFilter optional argument filter to restrict the result set
-         */
+    /**
+     * Creates a new command for retrieving sequence explanations.
+     *
+     * @param attacks the attack relations used for sequence explanation
+     * @param argumentFilter optional argument filter to restrict the result set
+     */
         public GetSequenceExplanationsCmd(
                 @JsonProperty(value="attacks", required = true)
                 List<AttackDTO> attacks,

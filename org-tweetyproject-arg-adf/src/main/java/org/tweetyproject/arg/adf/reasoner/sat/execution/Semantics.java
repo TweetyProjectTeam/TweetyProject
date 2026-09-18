@@ -40,136 +40,148 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * Provides access to the computational building blocks of SAT based ADF
- * semantics.
- * 
- * @author Mathias Hofer
+ * Provides access to the computational building blocks of SAT-based ADF semantics.
  *
+ * @author Mathias Hofer
  */
 public interface Semantics {
-	
+
 	/**
-	 * 
-	 * @return createDecomposer
+	 * Creates the decomposer used by this semantics.
+	 *
+	 * @return the decomposer
 	 */
 	Decomposer createDecomposer();
-/**
- * 
- * @param stateSupplier Supplier
- * @return CandidateGenerator
- */
+
+	/**
+	 * Creates the candidate generator used by this semantics.
+	 *
+	 * @param stateSupplier supplier of SAT solver states
+	 * @return the candidate generator
+	 */
 	CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier);
 	/**
-	 * 
-	 * @return List
+	 * Creates the state processors used by this semantics.
+	 *
+	 * @return the state processors
 	 */
 	List<StateProcessor> createStateProcessors();
-		
+
 	/**
-	 * Is applied to interpretations before they are verified.
+	 * Creates the processor applied before interpretations are verified.
 	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return Optional
+	 * @param stateSupplier supplier of SAT solver states
+	 * @return an optional pre-verification processor
 	 */
 	Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier);
 	/**
-	 * 
-	 * @return boolean hasStatefulVerifier()
+	 * Returns whether this semantics uses a stateful verifier.
+	 *
+	 * @return {@code true} if this semantics uses a stateful verifier
 	 */
 	default boolean hasStatefulVerifier() {
 		return true; // safe option
 	}
-	
+
 	/**
 	 * Creates a verifier, which acts as a filter.
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return Optional
+	 *
+	 * @param stateSupplier supplier of SAT solver states
+	 * @return an optional verifier
 	 */
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
-	
+
 	/**
-	 * Is applied to interpretations after they are verified.
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return Optional
+	 * Creates the processor applied after interpretations are verified.
+	 *
+	 * @param stateSupplier supplier of SAT solver states
+	 * @return an optional post-verification processor
 	 */
 	Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier);
 
 	/**
-	 * 
-	 * @param partial partial
+	 * Returns a restricted version of this semantics.
+	 *
+	 * @param partial the partial interpretation used for restriction
 	 * @return a new {@link Semantics} instance
 	 */
 	Semantics restrict(Interpretation partial);
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return conflictFree
+	 * Creates the conflict-free semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the conflict-free semantics
 	 */
 	static Semantics conflictFree(AbstractDialecticalFramework adf) {
 		return new ConflictFreeSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return naive
+	 * Creates the naive semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the naive semantics
 	 */
 	static Semantics naive(AbstractDialecticalFramework adf) {
 		return new NaiveSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return admissible
+	 * Creates the admissible semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the admissible semantics
 	 */
 	static Semantics admissible(AbstractDialecticalFramework adf) {
 		return new AdmissibleSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return preferred
+	 * Creates the preferred semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the preferred semantics
 	 */
 	static Semantics preferred(AbstractDialecticalFramework adf) {
 		return new PreferredSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return stable
+	 * Creates the stable semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the stable semantics
 	 */
 	static Semantics stable(AbstractDialecticalFramework adf) {
 		return new StableSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return complete
+	 * Creates the complete semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the complete semantics
 	 */
 	static Semantics complete(AbstractDialecticalFramework adf) {
 		return new CompleteSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return model
+	 * Creates the model semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the model semantics
 	 */
 	static Semantics model(AbstractDialecticalFramework adf) {
 		return new ModelSemantics(adf);
 	}
 
 	/**
-	 * 
-	 * @param adf adf
-	 * @return ground
+	 * Creates the grounded semantics for the given ADF.
+	 *
+	 * @param adf the ADF
+	 * @return the grounded semantics
 	 */
 	static Semantics ground(AbstractDialecticalFramework adf) {
 		return new GroundSemantics(adf);

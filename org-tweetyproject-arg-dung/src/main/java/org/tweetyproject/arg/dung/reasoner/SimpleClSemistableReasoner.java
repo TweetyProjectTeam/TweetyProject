@@ -35,9 +35,17 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 
+    /**
+     * Creates a new SimpleClSemistableReasoner instance.
+     */
+    public SimpleClSemistableReasoner() {
+        // default constructor
+    }
 
-	/**
-	 * 
+
+		/**
+		 * Computes all claim-based semistable extensions.
+		 *
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
@@ -63,8 +71,9 @@ public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 		return resultClone;	
 	}
 	
-	/**
-	 * 
+		/**
+		 * Computes one claim-based semistable extension.
+		 *
 	 * @param bbase the claim based thory
 	 * @return one extensions of the semantics
 	 */

@@ -14,58 +14,54 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Reasoner for strong admissibility
- * <p>
- * A set of arguments E is strongly admissible iff all every argument 'a' in E is defended by some argument 'b' in E \ {a}, which itself is strongly defended by E \ {a},
- * i.e. no argument in E is defended only by itself
+ * Simple reasoner for cogent semantics. Cogent extensions only need to defend against non-self-attacking arguments.
+ *
+ * @see "Bodanza, Gustavo A., and Fernando A. Tohmè. 'Two approaches to the problems of self-attacking arguments and general odd-length cycles of attack.' Journal of Applied Logic 7.4 (2009)"
  *
  * @author Lars Bengel
  */
-public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
-
-    /**
-     * Creates a new StronglyAdmissibleReasoner instance.
-     */
-    public StronglyAdmissibleReasoner() {
-        // default constructor
-    }
+public class SimpleCogentReasoner extends AbstractExtensionReasoner {
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        // check all subsets of the grounded extension of bbase
-        Set<Set<Argument>> candidates = new SetTools<Argument>().subsets(new SimpleGroundedReasoner().getModel(bbase));
         Collection<Extension<DungTheory>> result = new HashSet<>();
-        for (Set<Argument> ext: candidates) {
-            boolean isStronglyDefended = true;
-            for (Argument a: ext) {
-                if (!bbase.isStronglyDefendedBy(a, ext)) {
-                    isStronglyDefended = false;
-                    break;
+        for (Extension<DungTheory> ext : new SimpleConflictFreeReasoner().getModels(bbase)) {
+            boolean cogent = true;
+            for (Argument arg : ext) {
+                if (!isCogentlyDefended(bbase, ext, arg)) {
+                    cogent = false;
+                    continue;
                 }
+                if (!cogent) break;
             }
-            if (isStronglyDefended)
-                result.add(new Extension<>(ext));
+            if (cogent) {
+                result.add(ext);
+            }
         }
         return result;
     }
 
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
-        return this.getModels(bbase).iterator().next();
+        return getModels(bbase).iterator().next();
     }
 
+    private boolean isCogentlyDefended(DungTheory theory, Extension<DungTheory> extension, Argument argument) {
+        for (Argument attacker : theory.getAttackers(argument)) {
+            if (theory.isAttackedBy(attacker,attacker)) continue;
+            if (!theory.isAttacked(attacker, extension)) return false;
+        }
+        return true;
+    }
 }

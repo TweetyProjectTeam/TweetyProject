@@ -44,11 +44,11 @@ public enum ProboProblem {
 	DC_ST (SubProblem.DC, Semantics.ST),
 	/**DC_STG*/
 	DC_STG (SubProblem.DC, Semantics.STG),
-	/**DC_SST*/
+	/** Decide credulously with strong semi-stable semantics. */
 	DC_SST (SubProblem.DC, Semantics.SST),
 	/**DC_ID*/
 	DC_ID (SubProblem.DC, Semantics.ID),
-	/**DC_CF2*/
+	/** Decide credulously with CF2 semantics. */
 	DC_CF2 (SubProblem.DC, Semantics.CF2),
 	/**DS_CF*/
 	DS_CF (SubProblem.DS, Semantics.CF),
@@ -58,7 +58,7 @@ public enum ProboProblem {
 	DS_CO (SubProblem.DS, Semantics.CO),
 	/**DS_GR*/
 	DS_GR (SubProblem.DS, Semantics.GR),
-	/**DS_PR*/
+	/** Decide skeptically with preferred semantics. */
 	DS_PR (SubProblem.DS, Semantics.PR),
 	/**DS_ST*/
 	DS_ST (SubProblem.DS, Semantics.ST),
@@ -288,12 +288,14 @@ public enum ProboProblem {
 		/** The abbreviation of the sub-problem. */
 		private String abbreviation;
 		
+		/** Whether the sub-problem is a justification problem. */
 		private boolean justification;
 		
 		/**
-		 * Creates a new sub-problem
-		 * @param description some description.
-		 * @param abbreviation the abbreviation of the sub-problem.
+		 * Creates a new sub-problem.
+		 *
+		 * @param description some description
+		 * @param abbreviation the abbreviation of the sub-problem
 		 * @param just whether justification is needed
 		 */
 		private SubProblem(String description, String abbreviation, boolean just){
@@ -317,8 +319,9 @@ public enum ProboProblem {
 		}
 		
 		/**
-		 * 
-		 * @return isJustificationProblem
+		 * Returns whether this is a justification problem.
+		 *
+		 * @return whether this is a justification problem
 		 */
 		public boolean isJustificationProblem() {
 			return justification;
@@ -400,8 +403,9 @@ public enum ProboProblem {
 
 
 	/**
-	 * 
-	 * @return if problem is justified
+	 * Returns whether this problem is a justification problem.
+	 *
+	 * @return whether this problem is a justification problem
 	 */
 	public boolean isJustificationProblem() {
 		return subProblem.isJustificationProblem();

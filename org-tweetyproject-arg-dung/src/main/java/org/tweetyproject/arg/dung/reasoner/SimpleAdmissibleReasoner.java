@@ -37,6 +37,10 @@ import org.tweetyproject.commons.util.SetTools;
 
 public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 
+	/** Creates a simple admissible reasoner. */
+	public SimpleAdmissibleReasoner() {
+	}
+
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();

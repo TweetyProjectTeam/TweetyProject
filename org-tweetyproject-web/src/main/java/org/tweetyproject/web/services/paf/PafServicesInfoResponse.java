@@ -28,11 +28,17 @@ import org.tweetyproject.web.services.Response;
  */
 public class PafServicesInfoResponse extends Response {
 
+    /** The textual reply message */
     private String reply;
+    /** The email address */
     private String email;
+    /** The backend timeout in seconds */
     private int backend_timeout;
+    /** The list of supported semantics */
     private List<String> semantics;
+    /** The list of available commands */
     private List<String> commands;
+    /** The list of available solvers */
     private List<String> solvers;
 
     /**

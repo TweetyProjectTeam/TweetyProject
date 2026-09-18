@@ -40,8 +40,15 @@ import org.tweetyproject.logics.fol.syntax.*;
  */
 public final class GeneralizedSpecificity extends ComparisonCriterion {
 
-    // indicates whether an activation set is trivial or not
-    private enum ActSetType {TRIVIAL, NON_TRIVIAL}
+    /**
+     * Indicates whether an activation set is trivial or not.
+     */
+    private enum ActSetType {
+        /** Trivial activation set. */
+        TRIVIAL,
+        /** Non-trivial activation set. */
+        NON_TRIVIAL
+    }
 
 	@Override
 	public Result compare(DelpArgument argument1, DelpArgument argument2, DefeasibleLogicProgram context) {

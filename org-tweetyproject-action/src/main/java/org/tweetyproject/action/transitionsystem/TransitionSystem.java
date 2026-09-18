@@ -39,8 +39,11 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
  * @author Sebastian Homann
  */
 public class TransitionSystem {
+	/** the states contained in this transition system */
 	private Set<State> states = new HashSet<State>();
+	/** the transitions contained in this transition system */
 	private Set<Transition> transitions = new HashSet<Transition>();
+	/** the action signature of this transition system */
 	private ActionSignature signature;
 
 	/**

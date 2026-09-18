@@ -33,8 +33,11 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class RiveretTheoryLearner {
+    /** Learned weighted argumentation theory. */
     private WeightedDungTheory theory;
+    /** Number of learning cycles that have been executed. */
     private int cycles;
+    /** Maximum number of learning cycles. */
     private int MAX_CYCLES;
 
 

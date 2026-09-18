@@ -33,15 +33,25 @@ import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 /**
- * test for claim based  reasoners
- * @author Sebastian Franke
+ * Test for claim-based reasoners.
+ * <p>
+ * The example builds a small claim-based theory and prints the results of several reasoners.
  *
+ * @author Sebastian Franke
  */
 public class ClaimBasedReasonersTest {
-/**
- * main method
- * @param args arguments
- */
+	/**
+	 * Creates a new claim-based reasoner test.
+	 */
+	public ClaimBasedReasonersTest() {
+		super();
+	}
+
+	/**
+	 * Main method.
+	 *
+	 * @param args command-line arguments
+	 */
 	public static void main(String[] args) {
 
 		ClaimBasedTheory ex = new ClaimBasedTheory();
@@ -83,9 +93,10 @@ public class ClaimBasedReasonersTest {
 	}
 
 	/**
-	 * 
+	 * Converts claim sets to sets of claim names for pretty printing.
+	 *
 	 * @param input input for pretty print
-	 * @return the printe version
+	 * @return the printed version
 	 */
 	public static Set<Set<String>> print(Set<ClaimSet> input) {
 		HashSet<Set<String>> result = new HashSet<Set<String>>();

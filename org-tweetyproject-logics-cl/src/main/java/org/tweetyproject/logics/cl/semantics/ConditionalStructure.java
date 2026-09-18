@@ -111,24 +111,21 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld> {
 	}
 
 	/**
-	 * The data of the conditional structure maps to every PossibleWorld a map
-	 * of Conditionals and their Generators.
-	 * The PossibleWorld is implemented as NicePossibleWorld and therefore
-	 * stores a data structure for it's representation that is used by
-	 * the ConditionalStructure to represent itself
+	 * Stores, for each possible world, the conditionals and generators associated
+	 * with that world.
 	 */
 	private SortedMap<NicePossibleWorld, Map<Conditional, Generator>> worldData;
 
 	/**
-	 * This maps saves the same data as worldData but uses another mapping allowing
-	 * fast
-	 * access to the Generators using Conditionals. This is important for processing
-	 * semantics like C-representations because they mainly depend on these mapping.
+	 * Stores the same information as {@link #worldData}, indexed by conditional so
+	 * generators can be accessed efficiently.
 	 */
 	private Map<Conditional, SortedMap<NicePossibleWorld, Generator>> conditionalData = new HashMap<Conditional, SortedMap<NicePossibleWorld, Generator>>();
 
+	/** Maps each conditional to the worlds that verify it. */
 	private Map<Conditional, List<NicePossibleWorld>> verifyingWorlds = new HashMap<Conditional, List<NicePossibleWorld>>();
 
+	/** Maps each conditional to the worlds that falsify it. */
 	private Map<Conditional, List<NicePossibleWorld>> falsifyingWorlds = new HashMap<Conditional, List<NicePossibleWorld>>();
 
 	/**

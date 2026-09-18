@@ -32,6 +32,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class EnumeratingDilationGenerator extends EnumeratingDungTheoryGenerator {
 
+	/** the original framework to keep fixed while dilating */
 	private DungTheory frameworkOriginal;
 	
     /**
@@ -39,7 +40,7 @@ public class EnumeratingDilationGenerator extends EnumeratingDungTheoryGenerator
      * The constructor initializes the generator and sets the framework size to the size of the
      * original framework plus one, preparing the generator to expand the framework.
      *
-     * @param frameworkOriginal The original Dung theory that this generator will dilate.
+     * @param frameworkOriginal the original Dung theory that this generator will dilate
      */
 	public EnumeratingDilationGenerator(DungTheory frameworkOriginal) {
 		this.frameworkOriginal = frameworkOriginal;

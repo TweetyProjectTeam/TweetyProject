@@ -27,6 +27,10 @@ import java.util.Map;
  */
 public class RankingReasonerPost {
 
+    /** Creates an empty request payload. */
+    public RankingReasonerPost() {
+    }
+
     /** The command type for the Ranking reasoner request */
     private String cmd;
 

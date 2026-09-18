@@ -25,14 +25,24 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Example code for CF2 semantics. Shows how to construct an abstract argumentation framework programmatically and how to reason with it using CF2 semantics.
+ * Example code for CF2 semantics.
+ * <p>
+ * Shows how to construct an abstract argumentation framework programmatically and how to reason with it using CF2 semantics.
  *
  * @author Matthias Thimm
  */
 public class CF2Example {
 	/**
+	 * Creates a new CF2 example.
+	 */
+	public CF2Example() {
+		super();
+	}
+
+	/**
+	 * Runs the example.
 	 *
-	 * @param args string
+	 * @param args command-line arguments
 	 */
 	public static void main(String[] args){
 		// create some Dung theory

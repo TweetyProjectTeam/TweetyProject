@@ -90,6 +90,13 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 		this(false);
 	}
 		
+	/**
+	 * Rewrites conditionals with contradictory conclusions into equivalent
+	 * premise-level formulas.
+	 *
+	 * @param list the list to collect extracted formulas
+	 * @param beliefset the belief set to rewrite
+	 */
 	private void filter(ArrayList<PlFormula> list, ClBeliefSet beliefset){
 		ClBeliefSet copy = beliefset.clone();
 		for(Formula f: copy){

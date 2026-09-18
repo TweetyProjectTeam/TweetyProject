@@ -22,10 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The DungReasonerPost class represents a data structure for holding information
- * related to a Dung argumentation reasoner request sent via HTTP POST.
+ * Request payload for Dung reasoner web service calls.
  */
 public class DungReasonerPost {
+
+  /**
+   * Creates an empty request payload.
+   */
+  public DungReasonerPost() {
+  }
 
   /** The command type for the Dung reasoner request */
   private String cmd;

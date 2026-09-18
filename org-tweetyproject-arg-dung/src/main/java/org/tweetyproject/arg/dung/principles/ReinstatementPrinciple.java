@@ -37,6 +37,11 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class ReinstatementPrinciple extends Principle {
+    /** Creates the principle. */
+    public ReinstatementPrinciple() {
+        // default
+    }
+
     @Override
     public String getName() {
         return "Reinstatement";

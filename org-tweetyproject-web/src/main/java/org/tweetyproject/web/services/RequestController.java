@@ -532,11 +532,19 @@ public class RequestController {
 	}
 
 	private class MeasurementCallee implements Callable<Double> {
+		/** The inconsistency measure used for the computation. */
 		InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure;
+		/** The belief set whose inconsistency is evaluated. */
 		BeliefSet<PlFormula, PlSignature> beliefSet;
 
-		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
-				BeliefSet<PlFormula, PlSignature> beliefSet) {
+			/**
+			 * Creates a new measurement task for the given measure and belief set.
+			 *
+			 * @param measure the inconsistency measure to use
+			 * @param beliefSet the belief set to evaluate
+			 */
+			public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula, ?>> measure,
+					BeliefSet<PlFormula, PlSignature> beliefSet) {
 			this.measure = measure;
 			this.beliefSet = beliefSet;
 		}
@@ -668,12 +676,24 @@ public class RequestController {
 				resultAndTime.getValue(), request.getUnit_timeout(), SequenceExplanationResponse.Status.SUCCESS);
 	}
 
+	/**
+	 * Dispatches a sequence explanation command to the matching handler.
+	 *
+	 * @param cmd the incoming command
+	 * @return the computed sequence explanation result
+	 */
 	private SequenceExplanationResult processCommand(SequenceExplanationCmd cmd) {
 		if (cmd instanceof GetSequenceExplanationsCmd)
 			return processSequenceExplanationCmd((GetSequenceExplanationsCmd) cmd);
 		throw new IllegalStateException("Encountered invalid command:" + cmd.getClass().getSimpleName());
 	}
 
+	/**
+	 * Computes sequence explanations for the given command.
+	 *
+	 * @param cmd the sequence explanation command
+	 * @return the computed sequence explanation result
+	 */
 	private GetSequenceExplanationsResult processSequenceExplanationCmd(GetSequenceExplanationsCmd cmd) {
 		var theory = new DungTheory();
 		for (AttackDTO attackDTO : cmd.getAttacks()) {

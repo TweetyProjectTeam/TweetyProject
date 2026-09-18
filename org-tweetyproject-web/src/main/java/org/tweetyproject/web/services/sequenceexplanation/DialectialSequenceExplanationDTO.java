@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * DTO for serializing a dialectical sequence explanation.
+ *
  * @author Oleksandr Dzhychko
  */
 public final class DialectialSequenceExplanationDTO {

@@ -33,7 +33,9 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class SimpleCompleteSetAfReasoner extends AbstractSetAfExtensionReasoner {
 
-		/** Default */
+		/**
+		 * Default constructor.
+		 */
 		public SimpleCompleteSetAfReasoner(){
 			// Default
 		}
@@ -56,7 +58,7 @@ public class SimpleCompleteSetAfReasoner extends AbstractSetAfExtensionReasoner 
 
 	/**
 	 * Auxiliary method to compute all complete extensions
-	 * @param setafTheory a SetAf theory
+	 * @param dungTheory a SetAf theory
 	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>

@@ -38,6 +38,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class DefencePrinciple extends Principle {
 
+	/**
+	 * Creates a new defence principle.
+	 */
+	public DefencePrinciple() {
+		super();
+	}
+
 	@Override
 	public String getName() {
 		return "Defence";

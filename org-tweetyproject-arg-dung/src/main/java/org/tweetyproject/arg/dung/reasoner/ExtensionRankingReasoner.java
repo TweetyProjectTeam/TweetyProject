@@ -39,8 +39,11 @@ import java.util.*;
  */
 //TODO: rework class to use classes from "comparator" module (e.g. LatticePartialOrder) instead of weird "Comparison -> Character [<,>,=,null] Map.
 public class ExtensionRankingReasoner {
+    /** the ordering semantics used by this reasoner */
     private final ExtensionRankingSemantics semantics;
+    /** the base comparison functions used to rank extensions */
     private final List<Method> baseFunctions;
+    /** cached comparison results between pairs of extensions */
     private Map<List<Extension<DungTheory>>, Character> comparisonMap;
 //    public final  Extension debug = new Extension();
 //    public final  Extension debug2 = new Extension();
@@ -72,8 +75,9 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     *get the semantic of OrderingSemanticsReasoner instance
-     * @return OrderingSemantics enum that was used for creating the reasoner
+     * Returns the semantics used by this reasoner.
+     *
+     * @return the semantics used by this reasoner
      */
     public ExtensionRankingSemantics getSemantics(){
         return this.semantics;
@@ -91,15 +95,15 @@ public class ExtensionRankingReasoner {
         //return the best rank
         List<List<Extension<DungTheory>>> ranks = getModels(theory);
         return  ranks.get(ranks.size()-1);
-    }/**
-     * compute the ordering over all subsets of theory wrt. to the ordering semantics
-     * this is done by making several comparisons (in lexicographic order) of Base Functions applied to Extensions
-     * this implies a total order that is sorted and split into ranks in the end.
-     * LOWER levels are ranked BETTER (Ascending order)
-     * !!!two extensions in one rank are either equally ranked or incomparable.
-     * !!!thus an extension placed in a better rank does not necessarily mean it is better than all the extensions in the rank below
+    }
+
+    /**
+     * Computes the ranking of all subsets of the given theory.
+     *
+     * The ranking is built by comparing extensions lexicographically with the configured base functions.
+     *
      * @param theory a dung theory
-     * @return a list representing the ordering of all subsets of the given graph wrt. the ordering semantics (ascending order)
+     * @return a list representing the ordering of all subsets of the given graph wrt. the ordering semantics
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
@@ -150,6 +154,7 @@ public class ExtensionRankingReasoner {
     /**
      * "iteratively" calculate base functions of two extensions and compare the outcome,
      * if they are equal, recursively calculate sign for the next base function for the corresponding semantic
+     *
      * @param comparison list of TWO extensions, first index of list corresponds to extension on the "left"
      * @param map map to store comparison sign for comparison
      * @param theory attacks/defenses for base function calculations
@@ -158,7 +163,20 @@ public class ExtensionRankingReasoner {
      */
     private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison,Map<List<Extension<DungTheory>>,Character> map, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         putCompareSignInMap(comparison, map, theory, 0);
-    }private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison, Map<List<Extension<DungTheory>>, Character> map, DungTheory theory, int iteration) throws InvocationTargetException, IllegalAccessException {
+    }
+
+    /**
+     * "iteratively" calculate base functions of two extensions and compare the outcome,
+     * if they are equal, recursively calculate sign for the next base function for the corresponding semantic
+     *
+     * @param comparison list of TWO extensions, first index of list corresponds to extension on the "left"
+     * @param map map to store comparison sign for comparison
+     * @param theory attacks/defenses for base function calculations
+     * @param iteration current comparison iteration
+     * @throws InvocationTargetException should never happen
+     * @throws IllegalAccessException should never happen
+     */
+    private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison, Map<List<Extension<DungTheory>>, Character> map, DungTheory theory, int iteration) throws InvocationTargetException, IllegalAccessException {
         if(iteration == baseFunctions.size()){
             //no more baseFunctions:
             // if preferred or grounded semantic:
@@ -549,8 +567,9 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * 
-     * @return this method always returns true because the solver is native
+     * Indicates that this reasoner is always installed.
+     *
+     * @return true
      */
 	public boolean isInstalled() {
 		return true;

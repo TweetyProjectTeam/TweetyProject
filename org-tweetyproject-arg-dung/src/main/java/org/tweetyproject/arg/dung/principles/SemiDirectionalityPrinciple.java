@@ -39,6 +39,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class SemiDirectionalityPrinciple extends DirectionalityPrinciple {
 
+	/** Prevents instantiation. */
+	public SemiDirectionalityPrinciple() {
+	}
+
 	@Override
 	public String getName() {
 		return "Semi Directionality";

@@ -41,18 +41,26 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- *  Example code illustrating Abstract Dialectical Frameworks (ADFs) with different semantics.
- *  
+ * Example code illustrating abstract dialectical frameworks with different
+ * semantics.
+ *
  * @author Jonas Schumacher
  *
  */
 public class ADFExample {
 
 	/**
-	 * 
-	 * @param args args
-	 * @throws FileNotFoundException File Not Found Exception
-	 * @throws IOException IO Exception
+	 * Creates a new ADF example.
+	 */
+	public ADFExample() {
+	}
+
+	/**
+	 * Runs the example.
+	 *
+	 * @param args command-line arguments
+	 * @throws FileNotFoundException if the example file cannot be found
+	 * @throws IOException if reading the example file fails
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		

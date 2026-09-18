@@ -107,6 +107,11 @@ public class ParseException extends Exception {
    * due to a parse error, and you do not catch it (it gets thrown
    * from the parser) the correct error message
    * gets displayed.
+   *
+   * @param currentToken the token at which the parse error occurred
+   * @param expectedTokenSequences the token sequences expected by the parser
+   * @param tokenImage the textual representations of the parser tokens
+   * @return the generated parse error message
    */
   private static String initialise(Token currentToken,
                            int[][] expectedTokenSequences,
@@ -160,6 +165,9 @@ public class ParseException extends Exception {
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.
+   *
+   * @param str the string whose characters are to be escaped
+   * @return the escaped representation of the string
    */
   static String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();

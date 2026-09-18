@@ -18,13 +18,15 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 /**
- * DisjunctionAcceptanceCondition class
- * @author Sebastian
+ * Represents a disjunction acceptance condition.
  *
+ * @author Sebastian
  */
 public final class DisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**
+	 * Creates a disjunction acceptance condition.
+	 *
 	 *
 	 * @param left the left side of the disjunction
 	 * @param right the right side of the disjunction

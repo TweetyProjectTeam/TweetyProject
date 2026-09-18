@@ -27,12 +27,20 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Writes an abstract argumentation framework into a file of the
- * APX format.
- * 
+ * Writes an abstract argumentation framework to the APX format.
+ * <p>
+ * The output uses one `arg(...)` line per argument and one `att(...)` line per attack.
+ *
  * @author Matthias Thimm
  */
 public class ApxWriter extends AbstractDungWriter{
+
+	/**
+	 * Creates a new APX writer.
+	 */
+	public ApxWriter() {
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see argc.writer.Writer#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)

@@ -48,6 +48,7 @@ public class IafReasonerGetModelsCallee extends Callee {
      *
      * @param reasoner The IncompleteReasoner to be used for obtaining multiple models
      * @param bbase    The base IncompleteTheory on which the getModels operation is performed
+     * @param type     the reasoning type
      */
     public IafReasonerGetModelsCallee(IncompleteReasoner reasoner, IncompleteTheory bbase, IncompleteReasoner.Type type) {
         this.reasoner = reasoner;

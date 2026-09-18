@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Reply object containing an argumentation framework in serializable form.
+ *
  * @author Oleksandr Dzhychko
  */
 public final class ArgumentationFrameworkReply {
@@ -73,4 +75,3 @@ public final class ArgumentationFrameworkReply {
         return new ArgumentationFrameworkReply(arguments, attacksConverted);
     }
 }
-

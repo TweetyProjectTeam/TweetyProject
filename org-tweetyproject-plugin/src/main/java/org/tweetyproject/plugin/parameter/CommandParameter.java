@@ -36,7 +36,6 @@ public abstract class CommandParameter implements Cloneable {
 	
 	/**
 	 * The description string for this parameter,  e.g.
-	 * "-identifier <argument>, does magic with argument={simple, complex}"
 	 */
 	private String description;
 	

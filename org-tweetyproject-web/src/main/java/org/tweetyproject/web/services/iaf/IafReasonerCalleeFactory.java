@@ -32,6 +32,12 @@ import org.tweetyproject.web.services.Callee;
 public class IafReasonerCalleeFactory {
 
     /**
+     * Prevents instantiation.
+     */
+    private IafReasonerCalleeFactory() {
+    }
+
+    /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.
      */
     public enum Command {
@@ -48,9 +54,9 @@ public class IafReasonerCalleeFactory {
         /** get necessary skeptically acceptable arguments */
         GET_SKEPTICAL_NEC("get_skeptical_nec", "Get necessary skeptical arguments");
 
-        /** ID of the command */
+        /** ID of the command. */
         public String id;
-        /** Label of the command */
+        /** Label of the command. */
         public String label;
 
         /**

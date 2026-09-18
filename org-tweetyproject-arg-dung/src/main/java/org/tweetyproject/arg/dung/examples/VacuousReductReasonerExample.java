@@ -33,11 +33,19 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  */
 public class VacuousReductReasonerExample {
-	/**
-	 * 
-	 * @param reasoner the reasoner 
-	 */
-	public static void example1(AbstractExtensionReasoner reasoner) {
+
+    /**
+     * Creates a new VacuousReductReasonerExample instance.
+     */
+    public VacuousReductReasonerExample() {
+        // default constructor
+		}
+		/**
+		 * Runs the first vacuous reduct reasoner example.
+		 *
+		 * @param reasoner the reasoner 
+		 */
+		public static void example1(AbstractExtensionReasoner reasoner) {
 		// AF: ({a,b},{(a,a),(a,b)})
 		DungTheory af = new DungTheory();
 		Argument a = new Argument("a");
@@ -49,12 +57,13 @@ public class VacuousReductReasonerExample {
 		
 		System.out.println("AF: " + af);
 		System.out.println("Extensions: " + reasoner.getModels(af));
-	}
-	/**
-	 * 
-	 * @param reasoner the reasoner
-	 */
-	public static void example2(AbstractExtensionReasoner reasoner) {
+		}
+		/**
+		 * Runs the second vacuous reduct reasoner example.
+		 *
+		 * @param reasoner the reasoner
+		 */
+		public static void example2(AbstractExtensionReasoner reasoner) {
 		// AF: ({a1,a2,a3,b},{(a1,a3),(a3,a2),(a2,a1),(a1,b)})
 		DungTheory af = new DungTheory();
 		Argument a1 = new Argument("a1");
@@ -73,12 +82,13 @@ public class VacuousReductReasonerExample {
 		System.out.println("AF: " + af);
 		System.out.println("Extensions: " + reasoner.getModels(af));
 	}
-	
-	/**
-	 * 
-	 * @param reasoner the reasoner
-	 */
-	public static void example3(AbstractExtensionReasoner reasoner) {
+		
+		/**
+		 * Runs the third vacuous reduct reasoner example.
+		 *
+		 * @param reasoner the reasoner
+		 */
+		public static void example3(AbstractExtensionReasoner reasoner) {
 		// AF: ({a,b,c,d},{(a,b),(b,c),(c,a),(d,d),(d,a),(d,b),(d,c)})
 		DungTheory af = new DungTheory();
 		Argument a = new Argument("a");
@@ -99,12 +109,13 @@ public class VacuousReductReasonerExample {
 		
 		System.out.println("AF: " + af);
 		System.out.println("Extensions: " + reasoner.getModels(af));
-	}
-	/**
-	 * 
-	 * @param args arguments
-	 */
-	public static void main(String[] args) {
+		}
+		/**
+		 * Runs all vacuous reduct reasoner examples.
+		 *
+		 * @param args arguments
+		 */
+		public static void main(String[] args) {
 		VacuousReductReasoner udReasoner = new UndisputedReasoner();
 		System.out.println("Undisputed (=cf^adm) Semantics:");
 		example1(udReasoner);

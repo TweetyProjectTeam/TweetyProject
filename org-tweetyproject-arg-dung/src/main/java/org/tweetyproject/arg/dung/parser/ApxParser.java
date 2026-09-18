@@ -41,6 +41,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class ApxParser extends AbstractDungParser {
+
+	/**
+	 * Creates a new APX parser.
+	 */
+	public ApxParser() {
+		super();
+	}
 	
 	/* (non-Javadoc)
 	 * @see argc.parser.Parser#parse(java.io.File)
@@ -54,16 +61,24 @@ public class ApxParser extends AbstractDungParser {
      * Parses an argumentation framework from a reader source with options to ignore comments and optionally print commands.
      * This method is useful when you want to preprocess the data or when debug outputs are needed.
      *
-     * @param reader The reader to parse the argumentation framework from.
-     * @param printCommands A boolean flag that when set to true, prints each row of the input to standard output.
-     * @return A {@code DungTheory} representing the parsed argumentation framework.
-     * @throws IOException If an I/O error occurs during reading or parsing the input.
+     * @param reader the reader to parse the argumentation framework from
+     * @param printCommands when true, prints each row of the input to standard output
+     * @return a {@code DungTheory} representing the parsed argumentation framework
+     * @throws IOException if an I/O error occurs during reading or parsing the input
      */
 	public DungTheory parseIgnoreComments(Reader reader, boolean printCommands) throws IOException{
 		 return parse(reader, true, printCommands);
 		}
 	
-	
+	/**
+	 * Parses an argumentation framework from a reader.
+	 *
+	 * @param reader the reader to parse from
+	 * @param ignoreComment whether non-declaration lines should be ignored
+	 * @param printCommands whether ignored lines should be printed
+	 * @return the parsed argumentation framework
+	 * @throws IOException if reading fails or the input format is invalid
+	 */
 	private DungTheory parse(Reader reader, boolean ignoreComment, boolean printCommands) throws IOException{
 		DungTheory theory = new DungTheory();
 		BufferedReader in = new BufferedReader(reader);

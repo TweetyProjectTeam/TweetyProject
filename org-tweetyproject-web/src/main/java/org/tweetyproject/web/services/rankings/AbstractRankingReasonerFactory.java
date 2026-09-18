@@ -32,11 +32,17 @@ import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Factory for creating reasoner for ranking semantics
+ * Abstract factory for creating ranking reasoners.
  *
  * @author Lars Bengel
  */
 public class AbstractRankingReasonerFactory {
+    /**
+     * Prevents instantiation.
+     */
+    private AbstractRankingReasonerFactory() {
+    }
+
     /**
      * returns the list of all available semantics
      * @return the list o all ranking semantics

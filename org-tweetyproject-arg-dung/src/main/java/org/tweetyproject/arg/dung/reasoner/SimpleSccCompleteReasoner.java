@@ -32,6 +32,13 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class SimpleSccCompleteReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new SimpleSccCompleteReasoner instance.
+     */
+    public SimpleSccCompleteReasoner() {
+        // default constructor
+    }
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */

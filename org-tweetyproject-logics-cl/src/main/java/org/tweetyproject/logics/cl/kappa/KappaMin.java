@@ -38,8 +38,10 @@ public class KappaMin implements KappaTerm {
 		super();
 	}
 
+	/** Smallest lower bound among terms that cannot yet be evaluated. */
 	int smallestGreaterEqual = Integer.MAX_VALUE;
 
+	/** Smallest value among terms that can be evaluated. */
 	int smallestEvaluate = Integer.MAX_VALUE;
 
 	/** The value of the kappa minimum, is -1 as long as it cannot be evaluated */

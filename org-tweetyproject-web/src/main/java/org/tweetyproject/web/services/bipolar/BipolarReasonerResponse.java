@@ -72,7 +72,7 @@ public class BipolarReasonerResponse extends Response {
     }
 
     /**
-     * Parameterized constructor for BipolarReasonerResponse.
+     * Creates a bipolar reasoner response.
      *
      * @param reply           The reply message
      * @param email           The email associated with the response

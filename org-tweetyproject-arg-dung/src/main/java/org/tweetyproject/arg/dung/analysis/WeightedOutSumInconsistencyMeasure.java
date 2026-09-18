@@ -34,6 +34,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class WeightedOutSumInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
     /**
+     * Creates a new WeightedOutSumInconsistencyMeasure instance.
+     */
+    public WeightedOutSumInconsistencyMeasure() {
+        // default constructor
+    }
+
+    /**
      * Calculates the inconsistency measure of a given Dung theory argumentation framework by evaluating
      * the weighted sum of outgoing attacks for each argument. This measure computes the sum of 1 divided
      * by the number of attackees for each argument, suggesting that arguments with many targets contribute

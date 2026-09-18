@@ -29,6 +29,10 @@ import org.tweetyproject.web.services.Callee;
  */
 public class PafReasonerCalleeFactory {
 
+    /** Prevents instantiation. */
+    private PafReasonerCalleeFactory() {
+    }
+
     /** Commands supported by the PAF web service. */
     public enum Command {
         /** Query the credulous probability of an argument. */
@@ -41,6 +45,12 @@ public class PafReasonerCalleeFactory {
         /** Human-readable label. */
         public final String label;
 
+        /**
+         * Creates a command entry with identifier and label.
+         *
+         * @param id the command identifier
+         * @param label the human-readable label
+         */
         Command(String id, String label) {
             this.id = id;
             this.label = label;

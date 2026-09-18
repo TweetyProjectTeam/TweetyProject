@@ -31,11 +31,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Utility for parsing serialized conclusions filters.
+ *
  * @author Oleksandr Dzhychko
  */
 public class ConclusionsFilterSerialization {
 
+    /**
+     * Prevents instantiation.
+     */
+    private ConclusionsFilterSerialization() {
+    }
+
+    /** Delimiter used to separate atoms in the filter string. */
     private static final String ATOM_DELIMITER = ",";
+    /** Parser used to interpret the conclusions filter string. */
     private static final CausalParser CAUSAL_PARSER = new CausalParser();
 
     /**

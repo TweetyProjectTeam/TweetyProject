@@ -194,7 +194,7 @@ public class QdimacsWriter {
 	/**
 	 * Simplify clauses that contain tautologies or contradictions.
 	 *
-	 * @param a formula in cnf (if it is not in cnf already, it will be converted
+	 * @param f formula in cnf (if it is not in cnf already, it will be converted
 	 *          to cnf)
 	 * @return simplified belief set
 	 */

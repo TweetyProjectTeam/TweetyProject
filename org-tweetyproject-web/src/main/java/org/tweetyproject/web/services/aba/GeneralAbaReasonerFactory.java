@@ -26,16 +26,17 @@ import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
 
 /**
- * Main factory for retrieving reasoners for aba.
- * @author Jonas Klein
- */
-/**
- * The GeneralAbaReasonerFactory class is an abstract factory class for creating instances of
- * Argumentation-Based Argumentation (ABA) reasoners with different semantics.
+ * Abstract factory for retrieving ABA reasoners.
  *
- * @param <T> The type of formula used in ABA
+ * @param <T> the formula type used in ABA
  */
 public abstract class GeneralAbaReasonerFactory<T> {
+
+	/**
+	 * Prevents direct instantiation.
+	 */
+	protected GeneralAbaReasonerFactory() {
+	}
 
     /**
      * An enumeration of all available semantics for ABA reasoners.

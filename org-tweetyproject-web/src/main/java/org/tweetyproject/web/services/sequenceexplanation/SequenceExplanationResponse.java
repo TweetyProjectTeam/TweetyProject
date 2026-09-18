@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Response to {@link SequenceExplanationPost}
+ * JSON response for sequence explanation requests.
  *
  * @author Oleksandr Dzhychko
  */
@@ -44,10 +44,15 @@ public final class SequenceExplanationResponse {
         TIMEOUT,
     }
 
+    /** The response result payload. */
     private final SequenceExplanationResult reply;
+    /** The email address associated with the request. */
     private final String email;
+    /** The execution time of the request. */
     private final double time;
+    /** The unit used for the execution time. */
     private final String unit_timeout;
+    /** The response status. */
     private final Status status;
 
     /**
@@ -127,6 +132,7 @@ public final class SequenceExplanationResponse {
      * Result wrapper for a list of sequence explanations per argument.
      */
     public static class GetSequenceExplanationsResult implements SequenceExplanationResult {
+        /** The sequence explanations grouped by argument name. */
         private final Map<String, List<DialectialSequenceExplanationDTO>> perArgumentSequenceExplanations;
 
         /**

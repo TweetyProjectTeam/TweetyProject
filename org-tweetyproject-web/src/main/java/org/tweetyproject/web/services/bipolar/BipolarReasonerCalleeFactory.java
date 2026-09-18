@@ -25,11 +25,15 @@ import org.tweetyproject.web.services.Callee;
 
 
 /**
- * The BipolarReasonerCalleeFactory class is responsible for creating instances of Callee
- * based on the specified Command, AbstractBipolarExtensionReasoner, and AbstractBipolarFramework parameters.
- * It also defines an enumeration of commands with associated IDs and labels.
+ * Factory for creating bipolar reasoner callees from web request data.
  */
 public class BipolarReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private BipolarReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.

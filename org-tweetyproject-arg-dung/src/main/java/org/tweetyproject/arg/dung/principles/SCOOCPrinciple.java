@@ -40,6 +40,11 @@ import java.util.Stack;
  * @author Lars Bengel
  */
 public class SCOOCPrinciple extends Principle {
+    /** Creates the principle. */
+    public SCOOCPrinciple() {
+        // default
+    }
+
     @Override
     public String getName() {
         return "Strong Completeness Outside Odd Cycles";

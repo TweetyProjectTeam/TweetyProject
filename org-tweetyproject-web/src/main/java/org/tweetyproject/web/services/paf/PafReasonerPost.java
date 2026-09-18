@@ -29,6 +29,10 @@ import java.util.List;
  */
 public class PafReasonerPost {
 
+    /** Creates an empty request payload. */
+    public PafReasonerPost() {
+    }
+
     /** Command to execute (e.g. "get_credulous", "get_skeptical", "info"). */
     private String cmd;
 

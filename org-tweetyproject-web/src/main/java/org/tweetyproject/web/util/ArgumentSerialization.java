@@ -26,10 +26,17 @@ import java.util.stream.Collectors;
 
 
 /**
- * Methods for serializing arguments as strings
+ * Utility for serializing arguments as strings.
+ *
  * @author Oleksandr Dzhychko
  */
 public final class ArgumentSerialization {
+    /**
+     * Prevents instantiation.
+     */
+    private ArgumentSerialization() {
+    }
+
     /**
      * Serialize argument object to string
      * @param argument some argument

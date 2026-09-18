@@ -41,6 +41,11 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class SccDecomposabilityPrinciple extends Principle {
+    /** Creates the principle. */
+    public SccDecomposabilityPrinciple() {
+        // default
+    }
+
     @Override
     public String getName() {
         return "SCC Decomposability";

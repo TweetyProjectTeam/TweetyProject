@@ -219,6 +219,12 @@ protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
 	 */
 	private final class TransformerVisitor implements Visitor<U, TopDownData<D>> {
 
+		/**
+		 * Creates a new transformer visitor.
+		 */
+		private TransformerVisitor() {
+		}
+
 		/*
 		 * (non-Javadoc)
 		 *
@@ -355,16 +361,22 @@ protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
 
 	/**
 	 * Used to store additional meta-data which may be useful.
+	 *
+	 * @param <D> the type of the stored user object
 	 */
 	private static final class TopDownData<D> {
-
+	
+		/** The current polarity. */
 		private final int polarity;
-
+	
+		/** The user-provided consumer. */
 		private final Consumer<D> userObject;
 
 		/**
-		 * @param polarity
-		 * @param userObject
+		 * Creates a new meta-data container for top-down traversal.
+		 *
+		 * @param polarity the current polarity
+		 * @param userObject the associated user object
 		 */
 		public TopDownData(int polarity, Consumer<D> userObject) {
 			this.polarity = polarity;

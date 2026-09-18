@@ -1,3 +1,12 @@
+14.07.2026 - TweetyProject v1.31
+  New libraries: <none>
+  New functionalities:
+    - Refactored bipolar argumentation library (org.tweetyproject.arg.bipolar)
+    - Refactored ADF library (org.tweetyproject.arg.adf)
+  Minor changes:
+    - Fixed JavaDoc
+    - Minor bugfixes
+
 16.01.2026 - TweetyProject v1.30
   New libraries:
     - org.tweetyproject.causal: causal reasoning approaches (based on abstract argumentation)

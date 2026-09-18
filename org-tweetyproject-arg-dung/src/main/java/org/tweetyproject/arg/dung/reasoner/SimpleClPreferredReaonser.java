@@ -32,6 +32,13 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
  */
 public class SimpleClPreferredReaonser  extends AbstractClaimBasedReasoner{
 
+    /**
+     * Creates a new SimpleClPreferredReaonser instance.
+     */
+    public SimpleClPreferredReaonser() {
+        // default constructor
+    }
+
 	/**
 	 *
 	 * @param bbase the claim based thory

@@ -37,7 +37,14 @@ import java.util.stream.Collectors;
  */
 @Service
 public final class SequenceExplanationService {
+    /** Reasoner used to compute dialectical sequence explanations. */
     private final DialecticalSequenceExplanationReasoner explanationReasoner = new DialecticalSequenceExplanationReasoner();
+
+    /**
+     * Creates a sequence explanation service.
+     */
+    public SequenceExplanationService() {
+    }
 
     /**
      * Computes sequence explanations for the given theory.
@@ -67,6 +74,7 @@ public final class SequenceExplanationService {
      * Container for sequence explanations grouped by argument.
      */
     public static final class SequenceExplanations {
+        /** The sequence explanations grouped by argument. */
         private final Map<Argument, List<DialectialSequenceExplanation>> perArgumentSequenceExplanations;
 
         /**

@@ -53,9 +53,12 @@ import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
  */
 public final class FixPartialTransformer implements Transformer<AcceptanceCondition>{
 
+	/** Interpretation used to replace decided arguments. */
 	private final Interpretation interpretation;
 	
 	/**
+	 * Creates a new transformer for the given partial interpretation.
+	 *
 	 * @param interpretation the interpretation which is used
 	 */
 	public FixPartialTransformer(Interpretation interpretation) {
@@ -88,6 +91,13 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return acc; // constants
 	}
 
+	/**
+	 * Transforms a disjunction with the given children.
+	 *
+	 * @param left left child
+	 * @param right right child
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformDisjunction(AcceptanceCondition left, AcceptanceCondition right) {
 		if (left == TAUTOLOGY || right == TAUTOLOGY) return TAUTOLOGY;
 		if (left == CONTRADICTION) return right;
@@ -95,6 +105,13 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return new DisjunctionAcceptanceCondition(left, right);
 	}
 
+	/**
+	 * Transforms a conjunction with the given children.
+	 *
+	 * @param left left child
+	 * @param right right child
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformConjunction(AcceptanceCondition left, AcceptanceCondition right) {
 		if (left == CONTRADICTION || right == CONTRADICTION) return CONTRADICTION;
 		if (left == TAUTOLOGY) return right;
@@ -102,6 +119,13 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return new ConjunctionAcceptanceCondition(left, right);
 	}
 
+	/**
+	 * Transforms an implication with the given children.
+	 *
+	 * @param left left child
+	 * @param right right child
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformImplication(AcceptanceCondition left, AcceptanceCondition right) {
 		if (left == CONTRADICTION || right == TAUTOLOGY) return TAUTOLOGY;
 		if (left == TAUTOLOGY) return right;
@@ -109,6 +133,13 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return new ImplicationAcceptanceCondition(left, right);
 	}
 
+	/**
+	 * Transforms an equivalence with the given children.
+	 *
+	 * @param left left child
+	 * @param right right child
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformEquivalence(AcceptanceCondition left, AcceptanceCondition right) {
 		if (left == right) return TAUTOLOGY;
 		if (left == TAUTOLOGY) return right;
@@ -118,6 +149,13 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return new ConjunctionAcceptanceCondition(left, right);
 	}
 
+	/**
+	 * Transforms an exclusive disjunction with the given children.
+	 *
+	 * @param left left child
+	 * @param right right child
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformExclusiveDisjunction(AcceptanceCondition left, AcceptanceCondition right) {
 		if (left == right) return CONTRADICTION;
 		if (left == CONTRADICTION) return right;
@@ -127,12 +165,24 @@ public final class FixPartialTransformer implements Transformer<AcceptanceCondit
 		return new ExclusiveDisjunctionAcceptanceCondition(left, right);
 	}
 
+	/**
+	 * Transforms a negation with the given child.
+	 *
+	 * @param child child acceptance condition
+	 * @return the transformed acceptance condition
+	 */
 	private AcceptanceCondition transformNegation(AcceptanceCondition child) {
 		if (child == CONTRADICTION) return TAUTOLOGY;
 		if (child == TAUTOLOGY) return CONTRADICTION;
 		return new NegationAcceptanceCondition(child);
 	}
 
+	/**
+	 * Transforms an argument according to the partial interpretation.
+	 *
+	 * @param argument argument to transform
+	 * @return tautology, contradiction, or the original argument
+	 */
 	private AcceptanceCondition transformArgument(Argument argument) {
 		if (interpretation.unsatisfied(argument)) return CONTRADICTION;
 		if (interpretation.satisfied(argument)) return TAUTOLOGY;

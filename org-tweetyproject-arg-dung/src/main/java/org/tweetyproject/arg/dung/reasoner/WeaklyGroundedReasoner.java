@@ -37,6 +37,13 @@ import java.util.Set;
  * @author Lars Bengel
  */
 public class WeaklyGroundedReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new WeaklyGroundedReasoner instance.
+     */
+    public WeaklyGroundedReasoner() {
+        // default constructor
+    }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Collection<Extension<DungTheory>> w_complete = new WeaklyCompleteReasoner().getModels(bbase);

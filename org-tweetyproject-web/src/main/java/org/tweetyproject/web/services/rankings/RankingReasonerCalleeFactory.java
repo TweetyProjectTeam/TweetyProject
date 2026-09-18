@@ -30,6 +30,10 @@ import org.tweetyproject.web.services.Callee;
  */
 public class RankingReasonerCalleeFactory {
 
+    /** Prevents instantiation. */
+    private RankingReasonerCalleeFactory() {
+    }
+
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.
      */
@@ -37,9 +41,9 @@ public class RankingReasonerCalleeFactory {
         /** get model */
         GET_MODEL("get_model", "Get ranking model");
 
-        /** ID of the command */
+        /** ID of the command. */
         public String id;
-        /** Label of the command */
+        /** Label of the command. */
         public String label;
 
         /**
