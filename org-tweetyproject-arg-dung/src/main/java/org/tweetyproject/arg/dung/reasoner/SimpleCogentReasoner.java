@@ -28,7 +28,7 @@ import java.util.HashSet;
 /**
  * Simple reasoner for cogent semantics. Cogent extensions only need to defend against non-self-attacking arguments.
  *
- * @see "Bodanza, Gustavo A., and Fernando A. Tohmé. "Two approaches to the problems of self-attacking arguments and general odd-length cycles of attack." Journal of Applied Logic 7.4 (2009)"
+ * @see "Bodanza, Gustavo A., and Fernando A. Tohmè. 'Two approaches to the problems of self-attacking arguments and general odd-length cycles of attack.' Journal of Applied Logic 7.4 (2009)"
  *
  * @author Lars Bengel
  */
