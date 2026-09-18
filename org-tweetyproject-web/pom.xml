@@ -162,7 +162,7 @@
         <dependency>
             <groupId>org.tweetyproject.arg</groupId>
             <artifactId>setaf</artifactId>
-            <version>1.30-SNAPSHOT</version>
+            <version>1.31-SNAPSHOT</version>
         </dependency>
 
         <!-- SLF4J API
