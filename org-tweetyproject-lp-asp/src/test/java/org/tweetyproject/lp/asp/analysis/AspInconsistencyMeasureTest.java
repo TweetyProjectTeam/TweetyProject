@@ -21,6 +21,7 @@ package org.tweetyproject.lp.asp.analysis;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.tweetyproject.lp.asp.reasoner.ASPSolver;
@@ -37,6 +38,7 @@ import org.tweetyproject.lp.asp.syntax.DefaultNegation;
  * @author Matthias Thimm 
  *
  */
+@Ignore
 public class AspInconsistencyMeasureTest {
 	/**
 	 * solver

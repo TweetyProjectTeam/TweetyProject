@@ -34,7 +34,21 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class GsAdmissibleApproximationReasoner implements KOptimisationReasoner{
-	
+
+	/**
+	 * Creates a new Gs admissible approximation reasoner.
+	 */
+	public GsAdmissibleApproximationReasoner() {
+		super();
+		}
+
+	/**
+	 * Removes an argument and updates the stored conflict counts.
+	 *
+	 * @param aaf the argumentation framework
+	 * @param num_conflicts the current conflict counts
+	 * @param a the argument to remove
+	 */
 	private void removeAndUpdate(DungTheory aaf, Map<Argument,Integer> num_conflicts, Argument a) {
 		for(Argument b: aaf.getAttackers(a))
 			if(!a.equals(b) && num_conflicts.keySet().contains(b))

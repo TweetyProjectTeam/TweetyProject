@@ -26,6 +26,7 @@ import java.util.Objects;
  * @author Jonas Klein
  */
 public class Post {
+    /** Command carried by this request. */
     private String cmd;
 
     /**

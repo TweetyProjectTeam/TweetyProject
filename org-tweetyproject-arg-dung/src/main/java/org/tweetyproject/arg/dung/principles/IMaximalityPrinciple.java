@@ -38,6 +38,13 @@ import java.util.Collection;
  */
 public class IMaximalityPrinciple extends Principle{
 
+    /**
+     * Creates a new I-maximality principle.
+     */
+    public IMaximalityPrinciple() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "I-Maximality";

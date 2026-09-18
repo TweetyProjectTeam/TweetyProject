@@ -21,10 +21,15 @@ package org.tweetyproject.web.services.bipolar;
 import java.util.List;
 
 /**
- * The BipolarReasonerPost class represents a data structure for holding information
- * related to a bipolar argumentation reasoner request sent via HTTP POST.
+ * Request payload for bipolar reasoner web service calls.
  */
 public class BipolarReasonerPost {
+
+  /**
+   * Creates an empty request payload.
+   */
+  public BipolarReasonerPost() {
+  }
 
   /** The command type for the bipolar reasoner request */
   private String cmd;

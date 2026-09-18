@@ -55,14 +55,20 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	}
 
 	/**
-	 * @return A BitSet representing the attack pattern in the last generated framework.
+	 * Returns the attack pattern of the last generated framework.
+	 * The bit set encodes which possible attacks are present.
+	 *
+	 * @return the attack pattern
 	 */
 	public BitSet getAttacks() {
 		return (BitSet)this.attacks.clone();
 	}
 
 	/**
-	 * @return Number of arguments of the last argumentation framework created by this generator, if the number was not newly set.
+	 * Returns the current number of arguments.
+	 * This is the size of the framework that will be generated next.
+	 *
+	 * @return the current number of arguments
 	 */
 	public int getCurrentSize() {
 		return this.currentSize;

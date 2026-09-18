@@ -34,7 +34,15 @@ import org.tweetyproject.arg.dung.learning.syntax.Input;
  */
 public class AFLearnerExample {
 	/**
-	 * main method
+	 * Creates a new AFLearner example.
+	 */
+	public AFLearnerExample() {
+		super();
+	}
+
+	/**
+	 * Runs the example.
+	 *
 	 * @param args command line arguments
 	 */
     public static void main(String[] args ) {

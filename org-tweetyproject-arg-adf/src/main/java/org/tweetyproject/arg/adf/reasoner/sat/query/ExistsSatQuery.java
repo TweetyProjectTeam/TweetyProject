@@ -23,11 +23,18 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 
 /**
- * @author Mathias Hofer
+ * Query that checks whether at least one satisfying interpretation exists.
  *
+ * @author Mathias Hofer
  */
 final class ExistsSatQuery extends SatQuery<Boolean> {
 
+	/**
+	 * Creates a new existential SAT query.
+	 *
+	 * @param semantics semantics used for the query
+	 * @param configuration execution configuration
+	 */
 	public ExistsSatQuery(Semantics semantics, Configuration configuration) {
 		super(semantics, configuration);
 	}

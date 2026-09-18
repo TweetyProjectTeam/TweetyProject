@@ -19,8 +19,8 @@
 package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
-import org.tweetyproject.arg.bipolar.syntax.BArgument;
-import org.tweetyproject.arg.bipolar.syntax.AbstractBipolarFramework;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.web.services.Callee;
 
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class BipolarReasonerGetModelsCallee extends Callee {
     private AbstractBipolarExtensionReasoner reasoner;
 
     /** The AbstractBipolarFramework on which the getModels operation is performed */
-    private AbstractBipolarFramework bbase;
+    private BipolarArgumentationFramework bbase;
 
     /**
      * Constructs a new BipolarReasonerGetModelsCallee with the specified reasoner and base AbstractBipolarFramework.
@@ -46,7 +46,7 @@ public class BipolarReasonerGetModelsCallee extends Callee {
      * @param reasoner The AbstractBipolarExtensionReasoner to be used for obtaining multiple models
      * @param bbase    The base AbstractBipolarFramework on which the getModels operation is performed
      */
-    public BipolarReasonerGetModelsCallee(AbstractBipolarExtensionReasoner reasoner, AbstractBipolarFramework bbase) {
+    public BipolarReasonerGetModelsCallee(AbstractBipolarExtensionReasoner reasoner, BipolarArgumentationFramework bbase) {
         this.reasoner = reasoner;
         this.bbase = bbase;
     }
@@ -58,7 +58,7 @@ public class BipolarReasonerGetModelsCallee extends Callee {
      * @throws Exception If an error occurs during the getModels operation
      */
     @Override
-    public Collection<Collection<BArgument>> call() throws Exception {
+    public Collection<Extension<BipolarArgumentationFramework>> call() throws Exception {
         return this.reasoner.getModels(this.bbase);
     }
 }

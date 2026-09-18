@@ -52,7 +52,7 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner#query(org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework, org.tweetyproject.arg.dung.semantics.Extension)
 	 */
-	public Double query(ProbabilisticArgumentationFramework paf, Extension ext){
+	public Double query(ProbabilisticArgumentationFramework paf, Extension<ProbabilisticArgumentationFramework> ext){
 		int count = 0;
 		AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.getSemantics());
 		for(int i = 0; i < this.numberOfTrials; i++){

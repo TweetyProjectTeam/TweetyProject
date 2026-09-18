@@ -25,13 +25,14 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.*;
 
 /**
- * Class representing Min-Max numberings for labelings of argumentation frameworks
+ * Represents min-max numberings for labelings of argumentation frameworks.
  *
  * @author Lars Bengel
  */
-public class MinMaxNumbering implements Map<Argument, Integer> {
+	public class MinMaxNumbering implements Map<Argument, Integer> {
     /** maximum number of iteration after which all still changing values are considered infinite */
     private static final int CUTOFF = 100;
+    /** The computed min-max numbering. */
     private Map<Argument, Integer> numbering;
 
     /**

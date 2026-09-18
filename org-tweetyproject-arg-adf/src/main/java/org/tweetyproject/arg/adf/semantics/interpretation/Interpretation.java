@@ -46,7 +46,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  * @author Mathias Hofer
  *
  */
-public interface Interpretation {
+public interface Interpretation extends org.tweetyproject.commons.Interpretation<AbstractDialecticalFramework, Argument> {
 /**
  *
  * @param adf adf

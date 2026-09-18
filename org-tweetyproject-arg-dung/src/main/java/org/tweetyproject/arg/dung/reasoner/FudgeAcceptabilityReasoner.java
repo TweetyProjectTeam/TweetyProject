@@ -43,33 +43,74 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 
+	/**
+	 * The SAT solver used for reasoning
+	 */
 	private DimacsSatSolver satSolver;
 	
+	/**
+	 * Maps arguments to their "in" propositions
+	 */
 	private Map<Argument,Proposition> in;
+	/**
+	 * Maps arguments to their "out" propositions
+	 */
 	private Map<Argument,Proposition> out;
+	/**
+	 * Maps arguments to their "undecided" propositions
+	 */
 	private Map<Argument,Proposition> undec;
+	/**
+	 * Maps arguments to their second "in" propositions
+	 */
 	private Map<Argument,Proposition> in2;
+	/**
+	 * Maps arguments to their second "out" propositions
+	 */
 	private Map<Argument,Proposition> out2;
+	/**
+	 * Maps arguments to their second "undecided" propositions
+	 */
 	private Map<Argument,Proposition> undec2;
 
-	private List<String> cnf_baseFormulas_admExt; 
+	/**
+	 * Base formulas for admissible extensions
+	 */
+	private List<String> cnf_baseFormulas_admExt;
+	/**
+	 * Base formulas for admissible extensions with attacks
+	 */
 	private List<String> cnf_baseFormulas_admExtAtt;
 	
-	// the next index used for generating propositions
+	/**
+	 * Next index for generating propositions in admissible extensions
+	 */
 	private int index_admExt;
+	/**
+	 * Next index for generating propositions in admissible extensions with attacks
+	 */
 	private int index_admExtAtt;
-	// maps propositions to the number used by the SAT solver
+	/**
+	 * Maps propositions to SAT solver numbers for admissible extensions
+	 */
 	private Map<Proposition,Integer> prop_index_admExt;
-	// maps numbers used by the SAT solver to propositions
+	/**
+	 * Maps SAT solver numbers to propositions for admissible extensions
+	 */
 	private Map<Integer,Proposition> prop_inverted_index_admExt;
-	// maps propositions to the number used by the SAT solver
+	/**
+	 * Maps propositions to SAT solver numbers for admissible extensions with attacks
+	 */
 	private Map<Proposition,Integer> prop_index_admExtAtt;
-	// maps numbers used by the SAT solver to propositions
+	/**
+	 * Maps SAT solver numbers to propositions for admissible extensions with attacks
+	 */
 	private Map<Integer,Proposition> prop_inverted_index_admExtAtt;
 	
 	/**
 	 * Creates a new FudgeAcceptabilityReasoner.
-	 * @param satSolver some DimacsSatSolver.	 * 
+	 *
+	 * @param satSolver some DimacsSatSolver
 	 */
 	public FudgeAcceptabilityReasoner(DimacsSatSolver satSolver){
 		this.satSolver = satSolver;
@@ -338,6 +379,11 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 		}
 	}
 
+	/**
+	 * Indicates that this reasoner is installed if the underlying SAT solver is installed.
+	 *
+	 * @return whether the underlying SAT solver is installed
+	 */
 	@Override
 	public boolean isInstalled() {
 		return this.satSolver.isInstalled();

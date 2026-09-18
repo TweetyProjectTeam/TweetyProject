@@ -40,6 +40,13 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class DirectionalityPrinciple extends Principle {
+	/**
+	 * Creates a new directionality principle.
+	 */
+	public DirectionalityPrinciple() {
+		super();
+	}
+
 	@Override
 	public String getName() {
 		return "Directionality";

@@ -155,7 +155,7 @@ public class AspicTest {
 		at.setOrder(new WeakestLinkOrder<>(rule_comp, prem_comp, true));
 		dt = at.asDungTheory();
 		assertEquals(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker())
-				.getConclusion(), access);
+				.getConclusion(), no_access);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class AspicTest {
 
 		Collection<AspicArgument<PlFormula>> args = at.getArguments();
 		AspicArgument<PlFormula> B2 = null;
-		PlFormula not = plparser.parseFormula("! LikesWhisky");
+		PlFormula not = plparser.parseFormula("LikesWhisky");
 		for (AspicArgument<PlFormula> arg : args)
 			if (arg.getConclusion().equals(not))
 				B2 = arg;

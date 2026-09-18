@@ -49,7 +49,9 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 	// <---- STATIC DELCARATION ----->
 
 
-	// the static identifier for this plugin
+	/**
+	 * The static identifier for this plugin
+	 */
 	private static final String FOLOGIC__CALL_PARAMETER = "fol";
 
 //	private static final String FOL__PLUGIN_DESCRIPTION = "";
@@ -61,16 +63,29 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 	@Capabilities
 	public String[] capabilities() { return new String[] {"TweetyProject Plugin", FOLOGIC__CALL_PARAMETER}; }
 
-	// reasoner enum command parameter
+	/**
+	 * The reasoner enum command parameter identifier
+	 */
 	private static final String FOLOGIC__REASONER_IDENTIFIER = "-reasoner";
 
+	/**
+	 * The description for the reasoner command parameter
+	 */
 	private static final String FOLOGIC__REASONER_DESCRIPTION = "-reasoner <solver>, use given solver with query";
-	// TODO: check this!
+	/**
+	 * The list of available reasoner solvers
+	 * TODO: check this!
+	 */
 	private static final String[] FOLOGIC__REASONER_SOLVERENUM = {"classic"};
 
-	// query input parameter
+	/**
+	 * The query input parameter identifier
+	 */
 	private static final String FOLOGIC__QUERY_IDENTIFIER = "-query";
 
+	/**
+	 * The description for the query command parameter
+	 */
 	private static final String FOLOGIC__QUERY_DESCRIPTION = "-query <formula>, one or more queries to be checked against knowledge base";
 
 	// <---- STATIC DELCARATION ----->

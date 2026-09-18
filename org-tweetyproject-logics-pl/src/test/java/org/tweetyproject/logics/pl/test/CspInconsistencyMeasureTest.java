@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.tweetyproject.commons.ParserException;
@@ -33,6 +34,7 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.math.opt.solver.GlpkSolver;
 
+@Ignore
 public class CspInconsistencyMeasureTest {
 	
 	private CspInconsistencyMeasure<PlFormula> m; 

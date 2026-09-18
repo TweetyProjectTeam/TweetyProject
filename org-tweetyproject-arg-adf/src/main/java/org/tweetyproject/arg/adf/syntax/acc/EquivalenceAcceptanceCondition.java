@@ -18,13 +18,15 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 /**
- * EquivalenceAcceptanceCondition class
- * @author Sebastian
+ * Represents an equivalence acceptance condition.
  *
+ * @author Sebastian
  */
 public final class EquivalenceAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**
+	 * Creates an equivalence acceptance condition.
+	 *
 	 * @param left the left side of the equivalence
 	 * @param right the right side of the equivalence
 	 */

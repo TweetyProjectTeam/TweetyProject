@@ -19,16 +19,21 @@
 package org.tweetyproject.web.services.bipolar;
 
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
-import org.tweetyproject.arg.bipolar.syntax.AbstractBipolarFramework;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
 
 /**
- * The BipolarReasonerCalleeFactory class is responsible for creating instances of Callee
- * based on the specified Command, AbstractBipolarExtensionReasoner, and AbstractBipolarFramework parameters.
- * It also defines an enumeration of commands with associated IDs and labels.
+ * Factory for creating bipolar reasoner callees from web request data.
  */
 public class BipolarReasonerCalleeFactory {
+
+    /**
+     * Prevents instantiation.
+     */
+    private BipolarReasonerCalleeFactory() {
+    }
 
     /**
      * Enumeration of commands supported by the factory, each with a unique ID and label.
@@ -37,7 +42,11 @@ public class BipolarReasonerCalleeFactory {
         /** get models */
         GET_MODELS("get_models", "Get all models"),
         /** get model */
-        GET_MODEL("get_model", "Get some model");
+        GET_MODEL("get_model", "Get some model"),
+        /** get credulous arguments */
+        GET_CREDULOUS("get_credulous", "Get credulous arguments"),
+        /** get skeptical arguments */
+        GET_SKEPTICAL("get_skeptical", "Get skeptical arguments");
 
         /** ID of the command */
         public String id;
@@ -88,12 +97,16 @@ public class BipolarReasonerCalleeFactory {
      * @return A Callee instance corresponding to the specified command
      * @throws RuntimeException If the specified command is not found
      */
-    public static Callee getCallee(Command cmd, AbstractBipolarExtensionReasoner reasoner, AbstractBipolarFramework bbase) {
+    public static Callee getCallee(Command cmd, AbstractBipolarExtensionReasoner reasoner, BipolarArgumentationFramework bbase) {
         switch (cmd) {
             case GET_MODELS:
                 return new BipolarReasonerGetModelsCallee(reasoner, bbase);
             case GET_MODEL:
                 return new BipolarReasonerGetModelCallee(reasoner, bbase);
+            case GET_CREDULOUS:
+                return new BipolarReasonerQueryAllCallee(reasoner, bbase, InferenceMode.CREDULOUS);
+            case GET_SKEPTICAL:
+                return new BipolarReasonerQueryAllCallee(reasoner, bbase, InferenceMode.SKEPTICAL);
             default:
                 throw new RuntimeException("Command not found: " + cmd.toString());
         }

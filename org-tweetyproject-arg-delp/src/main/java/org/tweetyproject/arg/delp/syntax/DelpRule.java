@@ -55,6 +55,11 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	protected Set<FolFormula> body;
 
+    /**
+     * Returns the symbol used to print this rule.
+     *
+     * @return the rule symbol
+     */
     abstract String getSymbol();
 
 	/**

@@ -37,6 +37,13 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new WeaklyAdmissibleReasoner instance.
+     */
+    public WeaklyAdmissibleReasoner() {
+        // default constructor
+    }
     /**
      * computes all weakly admissible sets of bbase. A set S is weakly admissible iff it is conflict-free
      * and no attacker of S is element of a weakly admissible set of the reduct of bbase wrt. S

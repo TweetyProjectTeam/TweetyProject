@@ -69,18 +69,19 @@ public class BipolarReasonerResponse extends Response {
     }
 
     /**
-     * Parameterized constructor for BipolarReasonerResponse.
+     * Creates a bipolar reasoner response.
      *
-     * @param reply           The reply message
-     * @param email           The email associated with the response
-     * @param nr_of_arguments The number of arguments
-     * @param attacks         The attacks information
-     * @param semantics       The semantics specified
-     * @param solver          The solver specified
-     * @param answer          The answer provided
-     * @param time            The time taken for the operation
-     * @param unit_time       The unit time specified
-     * @param status          The status of the response
+     * @param reply the reply message
+     * @param email the email associated with the response
+     * @param nr_of_arguments the number of arguments
+     * @param attacks the attacks information
+     * @param supports the supports information
+     * @param semantics the semantics specified
+     * @param solver the solver specified
+     * @param answer the answer provided
+     * @param time the time taken for the operation
+     * @param unit_time the unit time specified
+     * @param status the status of the response
      */
     public BipolarReasonerResponse(String reply,
                                    String email,

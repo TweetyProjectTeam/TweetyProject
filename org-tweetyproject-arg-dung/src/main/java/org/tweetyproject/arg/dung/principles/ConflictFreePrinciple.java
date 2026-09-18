@@ -38,6 +38,13 @@ import java.util.Collection;
  */
 public class ConflictFreePrinciple extends Principle {
 
+    /**
+     * Creates a new conflict-free principle.
+     */
+    public ConflictFreePrinciple() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "Conflict-Freeness";

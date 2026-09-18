@@ -41,10 +41,17 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/minisat.dll";
 	private static final String DEFAULT_LINUX_LIB = "/minisat.so";
+	private static volatile boolean loaded = false;
+
 /**
  * NativeMinisatSolver
  */
 	public NativeMinisatSolver() {
+		loadLibrary();
+	}
+
+	private static synchronized void loadLibrary() {
+		if (loaded) return;
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;
 		if (osName.contains("win")) {
@@ -52,8 +59,28 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		} else if (osName.contains("nux")) {
 			lib = DEFAULT_LINUX_LIB;
 		}
-		String path = getClass().getResource(lib).getPath();
-		System.load(path);
+		if (lib == null) {
+			throw new UnsatisfiedLinkError("Unsupported OS: " + osName);
+		}
+		try {
+			java.net.URL resource = NativeMinisatSolver.class.getResource(lib);
+			String path = resource.getPath();
+			if (path.contains("!")) {
+				// Library is bundled inside a JAR — extract to a temp file first
+				String suffix = lib.substring(lib.lastIndexOf('.'));
+				java.io.File tempFile = java.io.File.createTempFile("minisat", suffix);
+				tempFile.deleteOnExit();
+				try (java.io.InputStream is = NativeMinisatSolver.class.getResourceAsStream(lib)) {
+					java.nio.file.Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				}
+				System.load(tempFile.getAbsolutePath());
+			} else {
+				System.load(path);
+			}
+			loaded = true;
+		} catch (java.io.IOException e) {
+			throw new RuntimeException("Failed to extract native minisat library", e);
+		}
 	}
 
 	/*

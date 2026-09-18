@@ -34,6 +34,7 @@ import org.tweetyproject.machinelearning.rl.mdp.State;
  * @param <A> The type of actions
  */
 public class ValueIteration<S extends State, A extends Action> extends OfflineAlgorithm<S,A>{
+	/** The number of value iteration steps to perform. */
 	private long num_iterations;
 	
 	/**

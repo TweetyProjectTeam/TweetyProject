@@ -18,11 +18,14 @@
  */
 package org.tweetyproject.arg.rankings.reasoner;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.rankings.semantics.RankingSemantics;
 import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
+import org.tweetyproject.math.probability.Probability;
 
 /**
  * Common abstract class for ranking reasoners for abstract argumentation. Currently,
@@ -45,4 +48,37 @@ public abstract class AbstractRankingReasoner<R extends GeneralComparator<Argume
 
     /** Default Constructor */
     public AbstractRankingReasoner(){}
+
+    /**
+     * returns the corresponding reasoner for the given semantics
+     * @param semantics some ranking semantics
+     * @return the corresponding reasoner
+     */
+    public static AbstractRankingReasoner<?> getRankingReasonerForSemantics(RankingSemantics semantics) {
+        switch (semantics) {
+            case CAT -> {
+                return new CategorizerRankingReasoner();
+            } case BB -> {
+                return new BurdenBasedRankingReasoner();
+            } case CO -> {
+                return new CountingRankingReasoner();
+            } case DB -> {
+                return new DiscussionBasedRankingReasoner();
+            } case IGD -> {
+                return new IteratedGradedDefenseReasoner();
+            } case SAF -> {
+                return new SAFRankingReasoner();
+            } case SER -> {
+                return new SerialisableRankingReasoner();
+            } case SB -> {
+                return new StrategyBasedRankingReasoner();
+            } case TU -> {
+                return new TuplesRankingReasoner();
+            } case PR -> {
+                return new PropagationRankingReasoner(true);
+            } case PROB -> {
+                return new ProbabilisticRankingReasoner(Semantics.GR, new Probability(0.5), true);
+            } default -> throw new IllegalArgumentException("Unsupported semantics.");
+        }
+    }
 }

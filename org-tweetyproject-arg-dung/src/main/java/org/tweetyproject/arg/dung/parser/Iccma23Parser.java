@@ -27,10 +27,11 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Parses abstract argumentation frameworks in the ICCMA 23 format 
- * (see also https://iccma2023.github.io/rules.html#input-format).
+ * Parses abstract argumentation frameworks in the ICCMA 23 format.
+ * <p>
+ * See also https://iccma2023.github.io/rules.html#input-format.
  * It is given by the following BNF (start symbol is S):<br>
- * <br>
+ *
  * S 	     ::== PROBLEM "\n" ATTACKS<br> 
  * PROBLEM   ::== "p af " INT<br>
  * ATTACKS   ::== (INT " " INT "\n")*  
@@ -48,6 +49,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  */
 public class Iccma23Parser extends AbstractDungParser {
+
+	/**
+	 * Creates a new ICCMA23 parser.
+	 */
+	public Iccma23Parser() {
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.parser.AbstractDungParser#parse(java.io.File)
@@ -80,4 +88,3 @@ public class Iccma23Parser extends AbstractDungParser {
 		return theory;
 	}	
 }
-

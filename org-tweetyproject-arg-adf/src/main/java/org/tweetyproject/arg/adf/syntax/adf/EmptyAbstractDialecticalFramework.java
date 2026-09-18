@@ -45,6 +45,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * @author Lars Bengel
  */
 enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
+    /** The singleton empty ADF instance. */
     INSTANCE;
 
     @Override

@@ -34,6 +34,13 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class Stage2Reasoner extends AbstractExtensionReasoner {
+
+    /**
+     * Creates a new Stage2Reasoner instance.
+     */
+    public Stage2Reasoner() {
+        // default constructor
+    }
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory) bbase).getStronglyConnectedComponents());
         // order SCCs in a DAG

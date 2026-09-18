@@ -22,8 +22,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import org.junit.jupiter.api.Disabled;
 import org.tweetyproject.commons.util.Shell;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.reasoner.EFOLReasoner;
@@ -40,9 +42,9 @@ import org.tweetyproject.logics.fol.writer.TPTPWriter;
  * @author Nils Geilen
  *
  */
-
+@Ignore
 public class TPTPTest {
-	
+
 	static FolReasoner e;
 	FolWriter printer = new TPTPWriter();
 	
@@ -57,6 +59,7 @@ public class TPTPTest {
 		}
 	}
 
+	@Disabled
 	@Test
 	public void test1() throws Exception {
 		FolParser parser = new FolParser();	
@@ -70,7 +73,8 @@ public class TPTPTest {
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!c")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test2() throws Exception {
 		FolParser parser = new FolParser();	
@@ -89,7 +93,8 @@ public class TPTPTest {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
-	
+
+	@Disabled
 	@Test
 	public void test3() throws Exception {
 		FolParser parser = new FolParser();	

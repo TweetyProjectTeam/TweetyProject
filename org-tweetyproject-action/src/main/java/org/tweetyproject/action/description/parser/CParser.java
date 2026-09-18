@@ -40,6 +40,12 @@ import org.tweetyproject.commons.ParserException;
  * @author Sebastian Homann
  */
 public class CParser extends Parser<CActionDescription, Formula> {
+	/**
+	 * Creates a new causal-law parser.
+	 */
+	public CParser() {
+	}
+
 	/** The signature attribute  */
 	protected ActionSignature signature;
 

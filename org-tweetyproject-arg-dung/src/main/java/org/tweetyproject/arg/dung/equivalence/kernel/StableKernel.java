@@ -34,6 +34,13 @@ import java.util.HashSet;
  */
 public class StableKernel extends EquivalenceKernel {
 
+    /**
+     * Creates a new StableKernel instance.
+     */
+    public StableKernel() {
+        // default constructor
+    }
+
     @Override
     public Collection<Attack> getRedundantAttacks(DungTheory theory) {
         Collection<Attack> attacks = new HashSet<>();

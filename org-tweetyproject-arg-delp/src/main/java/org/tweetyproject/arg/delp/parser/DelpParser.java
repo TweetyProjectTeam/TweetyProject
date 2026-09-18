@@ -425,6 +425,7 @@ public class DelpParser extends Parser<DefeasibleLogicProgram, Formula> implemen
 
   /*** Generated Token Manager. */
   public DelpParserTokenManager token_source;
+  /** Input character stream used by the parser. */
   SimpleCharStream jj_input_stream;
   /*** Current token. */
   public Token token;

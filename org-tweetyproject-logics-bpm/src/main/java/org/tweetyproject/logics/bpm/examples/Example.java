@@ -81,6 +81,9 @@ public class Example {
 
 	} 
 	
+	/**
+	 * The probability function types used in the example.
+	 */
 	private enum ProbabilityFunctionType {
 		/**
 		 * An equal distribution
@@ -97,10 +100,14 @@ public class Example {
 	}
 	
 	/**
-	 * Run the visualization for a particular BPMN model
+	 * Runs the visualization for a particular BPMN model.
+	 *
 	 * @param modelFile the file of the BPMN model
-	 * @throws ParserException
-	 * @throws IOException
+	 * @param useShortCircuit whether to transform the Petri net to short-circuit
+	 * @param pftype the probability function type to use
+	 * @param measure the inconsistency measure to evaluate
+	 * @throws ParserException if the BPMN model cannot be parsed
+	 * @throws IOException if the model file cannot be read
 	 */
 	private static void runExample(File modelFile, boolean useShortCircuit, ProbabilityFunctionType pftype, BpmnInconsistencyMeasure measure) throws ParserException, IOException {
 		BpmnModel bpmnModel;

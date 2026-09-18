@@ -27,15 +27,17 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Parses abstract argumentation frameworks in the CNF/Dimacs Format used for the
- * SAT solver competition (see also http://people.sc.fsu.edu/~jburkardt/data/cnf/cnf.html).
+ * Parses abstract argumentation frameworks in the CNF/Dimacs format used for the
+ * SAT solver competition.
+ * <p>
+ * See also http://people.sc.fsu.edu/~jburkardt/data/cnf/cnf.html.
  * It is given by the following BNF (start symbol is S):<br>
  * <br>
  * S 	     ::== COMMENTS "\n" PROBLEM "\n" ATTACKS<br>
  * COMMENTS  ::== ("c" COMMENT "\n")*<br>
  * PROBLEM   ::== "p af " INT INT<br>
  * ATTACKS   ::== (INT " -" INT " 0\n")*  
- * 
+ *
  * where "COMMENT" represents any string, and INT is a positive natural number. Lines beginning
  * with "c" are comment lines and are ignored by the parser. The line beginning with "p af" is the
  * problem definition, it is followed by two positive integers where the first is the number
@@ -43,11 +45,17 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * definition there is one line for each attack. The first integer in these lines describe the attacker
  * of the attack and the second the attacked (the attacked is also prefixed by a minus sign "-"). Each
  * line of an attack ends with "0" and a line break.  
- * 
- * @author Matthias Thimm
  *
+ * @author Matthias Thimm
  */
 public class CnfParser extends AbstractDungParser {
+
+	/**
+	 * Creates a new CNF parser.
+	 */
+	public CnfParser() {
+		super();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.parser.AbstractDungParser#parse(java.io.File)

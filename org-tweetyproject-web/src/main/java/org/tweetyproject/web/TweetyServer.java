@@ -32,12 +32,18 @@ import java.net.URI;
  * that provides API access to TweetyProject services.
  */
 public class TweetyServer {
-	
+
+	/**
+	 * Prevents instantiation.
+	 */
+	private TweetyServer() {
+	}
+
     /**
      * Base URI of this server
      */
     public static final String BASE_URI = "http://localhost:8080/tweety/"; //"http://132.176.10.102:6080/tweety/";//"http://127.0.0.1:8080/tweety/";//"http://192.168.0.2:8080/tweety/";//"http://141.26.208.49:8080/tweety/"; 
-    // Log file of this server
+    /** Log file used by this server. */
     private static final String LOG = "tweetyserver.log";
      
     /**
@@ -73,4 +79,3 @@ public class TweetyServer {
 		}
     }
 }
-

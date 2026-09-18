@@ -44,13 +44,28 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 
 
 	/**
-	 * Private extension of credibility comparer
+	 * Private extension of the credibility comparer used to evaluate source
+	 * plausibility.
+	 *
 	 * @author Matthias Thimm
 	 */
 	private class CredibilityComparer extends AbstractCredibilityComparer{
+		/**
+		 * Creates a new credibility comparer.
+		 *
+		 * @param formulas the formulas to compare
+		 * @param credOrder the credibility ordering
+		 */
 		public CredibilityComparer(Collection<InformationObject<PlFormula>> formulas, Order<Agent> credOrder) {
 			super(formulas, credOrder);
 		}
+		/**
+		 * Checks whether the former formula is at least as preferred as the latter collection.
+		 *
+		 * @param f a formula
+		 * @param formulas a collection of formulas
+		 * @return true iff the former formula is at least as preferred as the latter collection
+		 */
 		public boolean isFormerAtLeastAsPreferredAsLatter(PlFormula f, Collection<PlFormula> formulas){
 			return this.isAtLeastAsPreferredAs(f, formulas);
 		}

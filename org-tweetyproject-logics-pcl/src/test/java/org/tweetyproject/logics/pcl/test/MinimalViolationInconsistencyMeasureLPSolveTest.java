@@ -23,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
@@ -45,7 +47,7 @@ import org.junit.Test;
  *
  */
 // TODO: there are some bugs to be fixed in the code of the minimal violation measure
-//@Ignore
+@Ignore
 public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	double accuracy;

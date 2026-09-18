@@ -31,6 +31,10 @@ import javax.ws.rs.core.MultivaluedMap;
  *
  */
 public class CorsResponseFilter implements ContainerResponseFilter {     
+    /** Creates a new CORS response filter. */
+    public CorsResponseFilter() {
+    }
+
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {     
         MultivaluedMap<String, Object> headers = responseContext.getHeaders();     
         headers.add("Access-Control-Allow-Origin", "*");

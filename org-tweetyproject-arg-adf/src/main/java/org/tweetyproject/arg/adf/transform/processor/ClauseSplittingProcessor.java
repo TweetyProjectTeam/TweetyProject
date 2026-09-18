@@ -32,9 +32,12 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  */
 public final class ClauseSplittingProcessor implements Processor<Set<Literal>, Collection<Set<Literal>>>{
 
+	/** Maximum number of literals allowed in each split clause. */
 	private final int maxClauseSize;
 
 	/**
+	 * Creates a processor that splits clauses larger than the given size.
+	 *
 	 * @param maxClauseSize the maximal clause size of the generated clauses
 	 */
 	public ClauseSplittingProcessor(int maxClauseSize) {

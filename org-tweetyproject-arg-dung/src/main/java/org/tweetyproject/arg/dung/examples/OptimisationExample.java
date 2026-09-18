@@ -28,6 +28,10 @@ import org.tweetyproject.logics.pl.sat.OpenWboSolver;
  * Illustrates the use of reasoner.KOptimisationReasoner
  */
 public class OptimisationExample {
+	/** Creates the example. */
+	public OptimisationExample() {
+	}
+
 	/**
 	 * Illustrates the use of reasoner.KOptimisationReasoner
 	 * @param args na

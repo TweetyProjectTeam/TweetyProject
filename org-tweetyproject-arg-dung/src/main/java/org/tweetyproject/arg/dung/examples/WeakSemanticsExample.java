@@ -32,6 +32,13 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class WeakSemanticsExample {
+
+    /**
+     * Creates a new WeakSemanticsExample instance.
+     */
+    public WeakSemanticsExample() {
+        // default constructor
+    }
 	/**
 	 * Execute the example
 	 * @param args cmdline arguments

@@ -38,6 +38,13 @@ import java.util.Collection;
  */
 public class AdmissibilityPrinciple extends Principle {
 
+    /**
+     * Creates a new admissibility principle.
+     */
+    public AdmissibilityPrinciple() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "Admissibility";

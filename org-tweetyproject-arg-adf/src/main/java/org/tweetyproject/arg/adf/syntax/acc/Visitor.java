@@ -30,63 +30,63 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  */
 public interface Visitor<U, D> {
 /**
- * 
+ * Visits a tautology acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(TautologyAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits a contradiction acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(ContradictionAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits a conjunction acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(ConjunctionAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits a disjunction acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(DisjunctionAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits an equivalence acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(EquivalenceAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits an exclusive disjunction acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(ExclusiveDisjunctionAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits an implication acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(ImplicationAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits a negation acceptance condition
  * @param acc acc
  * @param topDownData topDownData
  * @return visit
  */
 	U visit(NegationAcceptanceCondition acc, D topDownData);
 /**
- * 
+ * Visits an argument
  * @param acc acc
  * @param topDownData topDownData
  * @return visit

@@ -6,17 +6,17 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
- * A SatEncoding which is relative to a given interpretation.
- * 
- * @author Mathias
+ * A SAT encoding which is relative to a given interpretation.
  *
+ * @author Mathias
  */
 public interface RelativeSatEncoding {
 
 	/**
-	 * 
-	 * @param consumer consumer
-	 * @param interpretation interpretation
+	 * Encodes clauses relative to the given interpretation.
+	 *
+	 * @param consumer the consumer that receives generated clauses
+	 * @param interpretation the reference interpretation
 	 */
 	void encode(Consumer<Clause> consumer, Interpretation interpretation);
 	

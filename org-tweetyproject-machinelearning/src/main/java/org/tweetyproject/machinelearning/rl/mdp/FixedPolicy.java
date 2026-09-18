@@ -32,6 +32,7 @@ import java.util.Objects;
  * @param <A> The type of actions
  */
 public class FixedPolicy<S extends State, A extends Action> implements Policy<S,A>{
+	/** The action prescribed for each state. */
 	private Map<S,A> map;
 	
 	/**

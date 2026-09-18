@@ -19,20 +19,16 @@
 package org.tweetyproject.arg.dung.ldo.syntax;
 
 /**
- * Represents the diamond modality in the logic of dialectical outcomes (LDO). The diamond modality is used to express possibility within the context of argumentation frameworks in LDO. This class encapsulates
- * an LDO formula and defines the semantic interpretation that the enclosed formula is possibly true given the dialectical
- * framework.
- *
- * This class provides an implementation for handling the diamond modality specifically, allowing the representation and
- * manipulation of such modal statements within LDO theories.
+ * Represents the diamond modality in LDO.
  *
  * @author Matthias Thimm
  */
 public class LdoDiamondModality extends AbstractLdoModality {
 
 	/**
+	 * Creates a diamond modality around the given formula.
 	 *
-	 * @param innerFormula inner Formula
+	 * @param innerFormula the enclosed formula
 	 */
 	public LdoDiamondModality(LdoFormula innerFormula) {
 		super(innerFormula);

@@ -86,33 +86,40 @@ public class SerialisationGraphPlotter extends GraphPlotter<SerialisationState, 
 		sePlotter.addLabels(lstLabels);
 	}
 
+	/** Default node label. */
 	private final String LABEL_DEFAULT_NODE = "N.A.";
+	/** Default edge label. */
 	private final String LABEL_DEFAULT_EDGE = "";
+	/** Fill color for regular nodes. */
 	private final String STYLE_NODE_FILLCOLOR = "=lightblue;";
+	/** Rounded style for regular nodes. */
 	private final String STYLE_NODE_ROUNDED = "=true;";
+	/** Fill color for highlighted nodes. */
 	private final String STYLE_NODE_HIGHLIGHTED_FILLCOLOR = "=lightgreen;";
+	/** Rounded style for highlighted nodes. */
 	private final String STYLE_NODE_HIGHLIGHTED_ROUNDED = "=true;";
+	/** Default vertex width. */
 	private final int VERTEX_WIDTH = 90;
+	/** Default vertex height. */
 	private final int VERTEX_HEIGHT = 30;
+	/** Default vertex spacing. */
 	private final int VERTEX_SPACING = 90;
+	/** Default font size. */
 	private final int FONTSIZE = 10;
 
+	/** Serialisation graph being plotted. */
 	private SerialisationGraph graph;
 
-/**
- * Constructs a SerialisationGraphPlotter with the specified plotter and serialisation graph.
- * This constructor initializes the plotter and associates it with a specific serialisation graph,
- * which represents the graph of a generation process of serialisable extensions.
- * 
- *
- * @param plotter The plotter to be used for visualizing the graph. This component handles the graphical rendering.
- * @param graph The serialisation graph that represents the structure and data of a serialisable extension generation process.
- */
-public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
-    super(plotter, graph); // Call to the superclass constructor to initialize the plotter and graph
-
-    this.graph = graph; // Storing the graph in an instance variable for further use
-}
+	/**
+	 * Constructs a serialisation graph plotter for the given plotter and graph.
+	 *
+	 * @param plotter the plotter to be used for visualizing the graph
+	 * @param graph the serialisation graph to plot
+	 */
+	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
+		super(plotter, graph);
+		this.graph = graph;
+	}
 
 	@Override
 	public void createGraph(boolean isVertical) {

@@ -97,8 +97,9 @@ public class Argument implements DungEntity, Node, Comparable<Argument>{
 	}
 	
 	/**
-	 * 
-	 * @return getLdoArgument
+	 * Returns the corresponding LDO argument.
+	 *
+	 * @return the corresponding LDO argument
 	 */
 	public LdoArgument getLdoArgument(){
 		return new LdoArgument(this.name);

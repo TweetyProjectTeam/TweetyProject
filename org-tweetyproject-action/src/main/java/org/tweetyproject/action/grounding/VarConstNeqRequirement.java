@@ -31,7 +31,9 @@ import org.tweetyproject.logics.commons.syntax.Variable;
  */
 public class VarConstNeqRequirement implements GroundingRequirement {
 
+	/** the variable that must not be mapped to the forbidden constant */
 	private Variable variable;
+	/** the constant that is forbidden for the variable */
 	private Constant constant;
 
 	/**

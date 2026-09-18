@@ -180,9 +180,10 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * Computes the power set of a collection
+	 * Computes the power set of a collection.
 	 *
 	 * @param set a collection
+	 * @param <S> the element type
 	 * @return a power set
 	 */
 	private static <S> Collection<Collection<S>> toPowerSet(Collection<S> set) {
@@ -283,6 +284,12 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 		return this.groundFolNegations(negations);
 	}
 
+	/**
+	 * Grounds all inference rules with the constants of the minimal signature.
+	 *
+	 * @param rules the rules to ground
+	 * @return the grounded rules
+	 */
 	@SuppressWarnings("unchecked")
 	private Collection<InferenceRule<T>> groundFolRules(Collection<InferenceRule<T>> rules) {
 		Signature sig = this.getMinimalSignature();
@@ -297,6 +304,12 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 		return ground_rules;
 	}
 
+	/**
+	 * Grounds all assumptions with the constants of the minimal signature.
+	 *
+	 * @param assumptions the assumptions to ground
+	 * @return the grounded assumptions
+	 */
 	@SuppressWarnings("unchecked")
 	private Collection<Assumption<T>> groundFolAssumptions(Collection<Assumption<T>> assumptions) {
 		Signature sig = this.getMinimalSignature();
@@ -312,6 +325,12 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 
 	}
 
+	/**
+	 * Grounds all negations with the constants of the minimal signature.
+	 *
+	 * @param negations the negations to ground
+	 * @return the grounded negations
+	 */
 	@SuppressWarnings("unchecked")
 	private Collection<Negation<T>> groundFolNegations(Collection<Negation<T>> negations) {
 		Signature sig = this.getMinimalSignature();

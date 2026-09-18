@@ -32,6 +32,13 @@ import org.tweetyproject.arg.dung.syntax.*;
  */
 public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 
+    /**
+     * Creates a new SimpleCompleteReasoner instance.
+     */
+    public SimpleCompleteReasoner() {
+        // default constructor
+    }
+
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		Extension<DungTheory> groundedExtension = new SimpleGroundedReasoner().getModel(bbase);

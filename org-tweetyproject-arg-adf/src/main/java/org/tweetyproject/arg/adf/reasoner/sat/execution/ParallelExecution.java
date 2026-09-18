@@ -47,6 +47,7 @@ import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * ParallelExecution class
@@ -413,6 +414,21 @@ public final class ParallelExecution implements Execution {
 		@Override
 		public Set<Argument> arguments() {
 			return Set.of();
+		}
+
+		@Override
+		public boolean satisfies(Argument formula) throws IllegalArgumentException {
+			return false;
+		}
+
+		@Override
+		public boolean satisfies(Collection<Argument> formulas) throws IllegalArgumentException {
+			return false;
+		}
+
+		@Override
+		public boolean satisfies(AbstractDialecticalFramework beliefBase) throws IllegalArgumentException {
+			return false;
 		}
 	}
 

@@ -37,6 +37,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class GCF_GreedyKApproximationReasoner implements KOptimisationReasoner{
 
+	/**
+	 * Creates a new GCF greedy k-approximation reasoner.
+	 */
+	public GCF_GreedyKApproximationReasoner() {
+		super();
+	}
+
 	@Override
 	public Integer query(DungTheory aaf, Argument arg) {
 		if(aaf.isAttackedBy(arg, arg))
@@ -80,4 +87,3 @@ public class GCF_GreedyKApproximationReasoner implements KOptimisationReasoner{
 		return current.size() + current_attacked.size();
 	}
 }
- 

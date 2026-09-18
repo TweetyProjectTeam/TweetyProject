@@ -39,6 +39,10 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class SerialisedExtensionReasonerExample {
+	/** Prevents instantiation. */
+	private SerialisedExtensionReasonerExample() {
+	}
+
 	/**
 	 * Execute the example
 	 * @param args cmdline arguments

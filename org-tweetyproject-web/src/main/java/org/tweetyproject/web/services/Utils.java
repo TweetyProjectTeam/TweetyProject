@@ -18,15 +18,10 @@
  */
 package org.tweetyproject.web.services;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.*;
 
 
 import javafx.util.Pair;
@@ -44,32 +39,6 @@ public final class Utils {
      * Default constructor
      */
     private Utils(){}
-
-    /**
-     * Creates a DungTheory from the given number of arguments and attack relations.
-     *
-     * @param nr_of_arguments The number of arguments in the DungTheory.
-     * @param atttacks        The attack relations represented as a list of lists of integers.
-     * @return A DungTheory constructed from the given arguments and attacks.
-     */
-
-    public static DungTheory getDungTheory(int nr_of_arguments, List<List<Integer>> atttacks) {
-        Graph<Argument> af_graph = new DefaultGraph<Argument>();
-        List<Argument> arguments = new ArrayList<Argument>();
-        for (int i = 1; i <= nr_of_arguments; i++){
-            arguments.add(new Argument(Integer.toString(i)));
-        }
-
-        for (Argument arg: arguments){
-            af_graph.add(arg);
-        }
-        for (List<Integer> list : atttacks) {
-            af_graph.add(new DirectedEdge<Argument>(arguments.get(list.get(0) - 1),arguments.get(list.get(1) - 1)));
-        }
-
-        DungTheory dungTheory = new DungTheory(af_graph);
-        return dungTheory;
-    }
 
 
     /**
@@ -101,19 +70,17 @@ public final class Utils {
      * @param unit The string representation of the time unit ("ms" for milliseconds, "sec" for seconds).
      * @return The TimeUnit corresponding to the input string.
      */
-    public static TimeUnit getTimoutUnit(String unit){
-        switch (unit) {
-			case "ms":
-				System.out.println("Unit of timeout set to ms" );
-				return TimeUnit.MILLISECONDS;
-
-			case "sec":
-				System.out.println("Unit of timeout set to seconds" );
-				return  TimeUnit.SECONDS;
-			default:
-				System.out.println("Unit of timeout set to seconds" );
-				return TimeUnit.SECONDS;
-		}
+    public static TimeUnit getTimeoutUnit(String unit){
+        return switch (unit) {
+            case "ms" -> {
+                System.out.println("Unit of timeout set to ms");
+                yield TimeUnit.MILLISECONDS;
+            }
+            default -> {
+                System.out.println("Unit of timeout set to seconds");
+                yield TimeUnit.SECONDS;
+            }
+        };
     }
 
      /**
@@ -134,13 +101,12 @@ public final class Utils {
 		millis = System.currentTimeMillis() - millis;
 		long time = millis;
 		if (unit.equals(TimeUnit.SECONDS)){
-			System.out.println("converting millis to seconds");
-			time = TimeUnit.MILLISECONDS.toSeconds(millis);
-			System.out.println(time);
-
+            System.out.println("converting millis to seconds");
+            time = TimeUnit.MILLISECONDS.toSeconds(millis);
+            System.out.println(time);
 		}
 
-        return new Pair<T,Long>(result, time);
+        return new Pair<>(result, time);
     }
 
     /**

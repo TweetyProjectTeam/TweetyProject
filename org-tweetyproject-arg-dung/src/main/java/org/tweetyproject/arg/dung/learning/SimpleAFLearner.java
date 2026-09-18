@@ -238,8 +238,9 @@ public class SimpleAFLearner implements AFLearner {
     }
 
     /**
+     * Prints the current status of the learned acceptance conditions.
+     *
      * @param dnf if true, the acceptance conditions are transformed to DNF before printing
-     * print the current status of the acceptance conditions
      */
     public void printStatus(boolean dnf) {
         for (Argument arg: this.args) {

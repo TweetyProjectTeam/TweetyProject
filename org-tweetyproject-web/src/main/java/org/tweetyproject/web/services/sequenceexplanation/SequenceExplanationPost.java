@@ -28,10 +28,22 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @author Oleksandr Dzhychko
+ * Request payload for sequence explanation web service calls.
+ *
+ * This class encapsulates the optional notification email, the timeout
+ * configuration, and the concrete command information required to execute
+ * a sequence explanation request.
  */
 public class SequenceExplanationPost {
 
+    /**
+     * Creates a new request for sequence explanations.
+     *
+     * @param email        optional notification email address
+     * @param timeout      timeout value for the request
+     * @param unit_timeout timeout unit for the request
+     * @param cmd          command payload that defines the requested action
+     */
     public SequenceExplanationPost(
             @JsonProperty("email")
             String email,
@@ -48,27 +60,57 @@ public class SequenceExplanationPost {
         this.cmd = cmd;
     }
 
+    /** Optional email address used for notifications about the request. */
     private final @Nullable String email;
+    /** Timeout value for the request. */
     private final int timeout;
+    /** Unit used for the timeout value. */
     private final @NotNull String unit_timeout;
+    /** Command payload defining the requested action. */
     private final @Valid @NotNull SequenceExplanationCmd cmd;
 
+    /**
+     * Returns the optional email address for request notifications.
+     *
+     * @return email address or null if not provided
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Returns the timeout value for the request.
+     *
+     * @return request timeout
+     */
     public int getTimeout() {
         return timeout;
     }
 
+    /**
+     * Returns the timeout unit for the request.
+     *
+     * @return timeout unit string
+     */
     public String getUnit_timeout() {
         return unit_timeout;
     }
 
+    /**
+     * Returns the command payload for this request.
+     *
+     * @return sequence explanation command
+     */
     public SequenceExplanationCmd getCmd() {
         return cmd;
     }
 
+    /**
+     * Marker interface for sequence explanation request commands.
+     *
+     * <p>Concrete implementations define the payload content for a specific
+     * sequence explanation action.</p>
+     */
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = GetSequenceExplanationsCmd.class, name = "get_sequence_explanations"),
@@ -76,11 +118,21 @@ public class SequenceExplanationPost {
     public interface SequenceExplanationCmd {
     }
 
+    /**
+     * Command payload for requesting sequence explanations.
+     */
     public static class GetSequenceExplanationsCmd implements SequenceExplanationCmd {
         /** The attack relations represented as a list of lists of integers.*/
         private final @Valid @NotNull List<@NotNull AttackDTO> attacks;
+        /** The optional argument identifiers used to restrict the results. */
         private final @Valid @Nullable  List<@NotNull String> argumentFilter;
 
+    /**
+     * Creates a new command for retrieving sequence explanations.
+     *
+     * @param attacks the attack relations used for sequence explanation
+     * @param argumentFilter optional argument filter to restrict the result set
+     */
         public GetSequenceExplanationsCmd(
                 @JsonProperty(value="attacks", required = true)
                 List<AttackDTO> attacks,
@@ -90,10 +142,20 @@ public class SequenceExplanationPost {
             this.argumentFilter = argumentFilter;
         }
 
+        /**
+         * Returns the attack relations used for the request.
+         *
+         * @return the attack relation list
+         */
         public List<AttackDTO> getAttacks() {
             return attacks;
         }
 
+        /**
+         * Returns an optional filter of argument identifiers.
+         *
+         * @return argument filter list or null when not specified
+         */
         @Nullable
         public List<String> getArgumentFilter() {
             return argumentFilter;

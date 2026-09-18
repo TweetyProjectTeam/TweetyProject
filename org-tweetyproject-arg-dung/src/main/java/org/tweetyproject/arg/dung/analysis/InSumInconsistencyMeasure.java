@@ -33,6 +33,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class InSumInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
 	/**
+	 * Creates a new in-sum inconsistency measure.
+	 */
+	public InSumInconsistencyMeasure() {
+		super();
+	}
+
+	/**
      * Calculates the inconsistency measure of the given Dung theory argumentation framework.
      * The measure is calculated as the number of attack relations present in the framework,
      * under the assumption that more attacks indicate a higher level of inconsistency.

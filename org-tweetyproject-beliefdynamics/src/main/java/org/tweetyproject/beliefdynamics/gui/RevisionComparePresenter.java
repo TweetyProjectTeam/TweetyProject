@@ -235,6 +235,12 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 
 	/** does not try to load the file but only return null */
 	private static class DefaultFileHandler implements FileHandler {
+		/**
+		 * Creates a default file handler that does not load files.
+		 */
+		public DefaultFileHandler() {
+		}
+
 		@Override
 		public Collection<? extends Formula> load(File file) {
 			return null;
@@ -269,20 +275,35 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 	 */
 	private static class MockFormula implements Formula {
 
+		/** the printable symbol of this formula */
 		private char mc;
 
+		/** the next printable symbol to assign */
 		private static char c = 'a';
 
+		/**
+		 * Creates a new mock formula.
+		 */
 		public MockFormula() {
 			mc = c++;
 		}
 
+		/**
+		 * Returns no signature for the mock formula.
+		 *
+		 * @return always {@code null}
+		 */
 		@Override
 		public Signature getSignature() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		/**
+		 * Returns the printable representation of this mock formula.
+		 *
+		 * @return the printable symbol
+		 */
 		@Override
 		public String toString() {
 			return "" + mc;
@@ -297,19 +318,37 @@ public class RevisionComparePresenter implements ItemListener, ChangeListener, A
 	 */
 	private static class MockOperator implements BaseRevisionOperator<MockFormula> {
 
+		/** the name of this operator */
 		private String name;
 
+		/**
+		 * Creates a new mock operator.
+		 *
+		 * @param name the operator name
+		 */
 		public MockOperator(String name) {
 			this.name = name;
 		}
 
+		/**
+		 * Revises the base by adding the given formula.
+		 *
+		 * @param base the belief base
+		 * @param formula the formula to add
+		 * @return the revised belief base
+		 */
 		@Override
 		public Collection<MockFormula> revise(Collection<MockFormula> base,
-				MockFormula formula) {
+					MockFormula formula) {
 			base.add(formula);
 			return base;
 		}
 
+		/**
+		 * Returns the operator name.
+		 *
+		 * @return the name
+		 */
 		@Override
 		public String toString() {
 			return name;

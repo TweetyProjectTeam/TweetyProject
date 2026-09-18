@@ -30,6 +30,16 @@ import javax.validation.constraints.NotNull;
  */
 public final class CausalReasonerPost {
 
+    /**
+     * Initialize new CausalReasonerPost
+     * @param cmd               the command string
+     * @param email             user email
+     * @param kb                the causal knowledge base
+     * @param observations      the observations
+     * @param conclusionsFilter conclusion filter approach
+     * @param timeout           the timeout
+     * @param unit_timeout      unit of timeout
+     */
     public CausalReasonerPost(
             @JsonProperty(value = "cmd", required = true)
             Cmd cmd,
@@ -126,58 +136,128 @@ public final class CausalReasonerPost {
     @NotNull
     private String unit_timeout;
 
+    /**
+     * Returns the command to execute.
+     *
+     * @return causal reasoner command
+     */
     public Cmd getCmd() {
         return this.cmd;
     }
 
+    /**
+     * Sets the command to execute.
+     *
+     * @param cmd causal reasoner command
+     */
     public void setCmd(Cmd cmd) {
         this.cmd = cmd;
     }
 
+    /**
+     * Returns the user email for the request.
+     *
+     * @return user email
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * Sets the user email for the request.
+     *
+     * @param email user email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Returns the knowledge base string.
+     *
+     * @return knowledge base
+     */
     public String getKb() {
         return this.kb;
     }
 
+    /**
+     * Sets the knowledge base string.
+     *
+     * @param kb knowledge base
+     */
     public void setKb(String kb) {
         this.kb = kb;
     }
 
+    /**
+     * Returns the observations string.
+     *
+     * @return observations
+     */
     public String getObservations() {
         return this.observations;
     }
 
+    /**
+     * Sets the observations string.
+     *
+     * @param observations observations
+     */
     public void setObservations(String observations) {
         this.observations = observations;
     }
 
+    /**
+     * Returns the conclusions filter string.
+     *
+     * @return conclusions filter
+     */
     public String getConclusionsFilter() {
         return this.conclusionsFilter;
     }
 
+    /**
+     * Sets the conclusions filter string.
+     *
+     * @param conclusionsFilter conclusions filter
+     */
     public void setConclusionsFilter(String conclusionsFilter) {
         this.conclusionsFilter = conclusionsFilter;
     }
 
+    /**
+     * Returns the request timeout.
+     *
+     * @return timeout in seconds
+     */
     public int getTimeout() {
         return this.timeout;
     }
 
+    /**
+     * Sets the request timeout.
+     *
+     * @param timeout timeout in seconds
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * Returns the timeout unit.
+     *
+     * @return timeout unit
+     */
     public String getUnit_timeout() {
         return this.unit_timeout;
     }
 
+    /**
+     * Sets the timeout unit.
+     *
+     * @param unit_timeout timeout unit
+     */
     public void setUnit_timeout(String unit_timeout) {
         this.unit_timeout = unit_timeout;
     }

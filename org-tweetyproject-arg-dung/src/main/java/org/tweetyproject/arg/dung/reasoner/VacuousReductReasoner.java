@@ -36,7 +36,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class VacuousReductReasoner extends AbstractExtensionReasoner {
 
+	/** Reasoner used to compute candidate base extensions. */
 	private AbstractExtensionReasoner baseReasoner;
+	/** Reasoner used to evaluate the reduct of each candidate extension. */
 	private AbstractExtensionReasoner reductReasoner;
 	
 	/**

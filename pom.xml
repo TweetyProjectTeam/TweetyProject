@@ -9,7 +9,7 @@
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
   <name>TweetyProject (Parent POM)</name>
-  <version>1.30-SNAPSHOT</version>
+  <version>1.31-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description
@@ -62,6 +62,7 @@
     <maven.compiler.target>15</maven.compiler.target>
   </properties>
 
+
   <build>
   <!--
       <resources>
@@ -75,8 +76,29 @@
         </includes>
       </resource>
       </resources>
-      -->
+     -->
     <plugins>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version>3.12.0</version>
+
+    <executions>
+        <execution>
+            <id>check-javadocs</id>
+            <phase>package</phase>
+            <goals>
+                <goal>jar</goal>
+            </goals>
+            <configuration>
+                <doclint>all</doclint>
+                <show>private</show>
+                <failOnError>false</failOnError>
+                <failOnWarnings>false</failOnWarnings>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

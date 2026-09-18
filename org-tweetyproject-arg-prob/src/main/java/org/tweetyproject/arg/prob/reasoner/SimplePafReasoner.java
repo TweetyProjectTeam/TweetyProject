@@ -56,7 +56,7 @@ public class SimplePafReasoner extends AbstractPafReasoner{
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner#query(org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework, org.tweetyproject.arg.dung.semantics.Extension)
 	 */
-	public Double query(ProbabilisticArgumentationFramework paf, Extension ext){
+	public Double query(ProbabilisticArgumentationFramework paf, Extension<ProbabilisticArgumentationFramework> ext){
 		double prob = 0d;
 		SubgraphProbabilityFunction p = paf.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){

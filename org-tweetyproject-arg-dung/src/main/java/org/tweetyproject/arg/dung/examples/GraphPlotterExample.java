@@ -30,12 +30,20 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
- * Example Usage of the {@link AigGraphPlotter} which renders a given graph via
- * html in the webbrowser
+ * Example usage of the {@link AigGraphPlotter} for Dung theories.
+ * <p>
+ * It renders a sample argumentation framework in a browser window.
  *
  * @author Lars Bengel
  */
 public class GraphPlotterExample {
+    /**
+     * Creates a new graph plotter example.
+     */
+    public GraphPlotterExample() {
+        super();
+    }
+
     /**
      * Entry point of the program demonstrating the visualization of an
      * argumentation framework using the {@code AigGraphPlotter}.
