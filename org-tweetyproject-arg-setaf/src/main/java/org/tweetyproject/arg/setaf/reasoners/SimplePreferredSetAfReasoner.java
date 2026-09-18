@@ -33,7 +33,7 @@ import org.tweetyproject.arg.setaf.syntax.SetAf;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner {
+public class SimplePreferredSetAfReasoner extends AbstractSetAfExtensionReasoner {
 
 
 

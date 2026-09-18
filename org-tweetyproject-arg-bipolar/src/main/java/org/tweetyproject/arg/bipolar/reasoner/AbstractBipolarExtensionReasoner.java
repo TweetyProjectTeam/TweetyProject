@@ -22,7 +22,6 @@ import org.tweetyproject.arg.bipolar.semantics.Semantics;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.QualitativeReasoner;
@@ -56,6 +55,11 @@ public abstract class AbstractBipolarExtensionReasoner implements ModelProvider<
             case BCF -> new SimpleStronglyConflictFreeReasoner();
             case BCOH -> new SimpleCoherentReasoner();
             case BAD -> new SimpleCoherentAdmissibleReasoner();
+            case CAD -> new SimpleCoalitionReasoner(org.tweetyproject.arg.dung.semantics.Semantics.ADM);
+            case CCO -> new SimpleCoalitionReasoner(org.tweetyproject.arg.dung.semantics.Semantics.CO);
+            case CGR -> new SimpleCoalitionReasoner(org.tweetyproject.arg.dung.semantics.Semantics.GR);
+            case CPR -> new SimpleCoalitionReasoner(org.tweetyproject.arg.dung.semantics.Semantics.PR);
+            case CST -> new SimpleCoalitionReasoner(org.tweetyproject.arg.dung.semantics.Semantics.ST);
             default -> throw new IllegalArgumentException("Unknown semantics.");
         };
     }

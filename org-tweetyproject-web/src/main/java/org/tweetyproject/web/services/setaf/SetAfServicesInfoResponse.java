@@ -14,59 +14,56 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.web.services.bipolar;
+package org.tweetyproject.web.services.setaf;
 
 import org.tweetyproject.web.services.Response;
 
 import java.util.List;
+import java.util.Objects;
+
 
 /**
- * The BipolarServicesInfoResponse class extends the Response class and represents
- * a response containing information about bipolar argumentation services.
+ * The DungServicesInfoResponse class extends the Response class and represents
+ * a response containing information about Dung argumentation services.
  */
-public class BipolarServicesInfoResponse extends Response {
+public class SetAfServicesInfoResponse extends Response {
 
-    /** The reply message in the bipolar services info response */
+    /** The reply message in the Dung services info response */
     private String reply;
 
-    /** The email associated with the bipolar services info response */
+    /** The email associated with the Dung services info response */
     private String email;
 
-    /** The backend timeout value specified in the bipolar services info response */
+    /** The backend timeout value specified in the Dung services info response */
     private int backend_timeout;
 
-    /** The list of supported support types in the bipolar services info response */
-    private List<String> support_type;
-
-    /** The list of supported semantics in the bipolar services info response */
+    /** The list of supported semantics in the Dung services info response */
     private List<String> semantics;
 
-    /** The list of supported commands in the bipolar services info response */
+    /** The list of supported commands in the Dung services info response */
     private List<String> commands;
 
     /**
-     * Default constructor for BipolarServicesInfoResponse .
+     * Default constructor for DungServicesInfoResponse.
      */
-    public BipolarServicesInfoResponse() {
+    public SetAfServicesInfoResponse() {
     }
 
     /**
-     * Parameterized constructor for BipolarServicesInfoResponse .
+     * Parameterized constructor for DungServicesInfoResponse.
      *
      * @param reply           The reply message
      * @param email           The email associated with the response
      * @param backend_timeout The backend timeout value
-     * @param support_type    The list of supported support types
      * @param semantics       The list of supported semantics
      * @param commands        The list of supported commands
      */
-    public BipolarServicesInfoResponse(String reply, String email, int backend_timeout, List<String> support_type, List<String> semantics, List<String> commands) {
+    public SetAfServicesInfoResponse(String reply, String email, int backend_timeout, List<String> semantics, List<String> commands) {
         this.reply = reply;
         this.email = email;
         this.backend_timeout = backend_timeout;
-        this.support_type = support_type;
         this.semantics = semantics;
         this.commands = commands;
     }
@@ -126,24 +123,6 @@ public class BipolarServicesInfoResponse extends Response {
     }
 
     /**
-     * Gets the list of support_type elements associated with the service.
-     *
-     * @return A list of support_types as strings.
-     */
-    public List<String> getSupport_type() {
-        return this.support_type;
-    }
-
-    /**
-     * Sets the list of support_type elements for the service.
-     *
-     * @param support_type A list of support_type strings to be used or defined by the service.
-     */
-    public void setSupport_type(List<String> support_type) {
-        this.support_type = support_type;
-    }
-
-    /**
      * Gets the list of semantic elements associated with the service.
      *
      * @return A list of semantics as strings.
@@ -187,7 +166,7 @@ public class BipolarServicesInfoResponse extends Response {
      * @param reply The reply message to set.
      * @return This instance to facilitate further modifications.
      */
-    public BipolarServicesInfoResponse reply(String reply) {
+    public SetAfServicesInfoResponse reply(String reply) {
         setReply(reply);
         return this;
     }
@@ -198,7 +177,7 @@ public class BipolarServicesInfoResponse extends Response {
      * @param email The email address to set.
      * @return This instance to facilitate further modifications.
      */
-    public BipolarServicesInfoResponse email(String email) {
+    public SetAfServicesInfoResponse email(String email) {
         setEmail(email);
         return this;
     }
@@ -209,19 +188,8 @@ public class BipolarServicesInfoResponse extends Response {
      * @param backend_timeout The backend timeout in seconds to set.
      * @return This instance to facilitate further modifications.
      */
-    public BipolarServicesInfoResponse backend_timeout(int backend_timeout) {
+    public SetAfServicesInfoResponse backend_timeout(int backend_timeout) {
         setBackend_timeout(backend_timeout);
-        return this;
-    }
-
-    /**
-     * Sets the support_type and returns this instance for method chaining.
-     *
-     * @param support_type A list of semantic strings to set.
-     * @return This instance to facilitate further modifications.
-     */
-    public BipolarServicesInfoResponse support_type(List<String> support_type) {
-        setSupport_type(support_type);
         return this;
     }
 
@@ -231,7 +199,7 @@ public class BipolarServicesInfoResponse extends Response {
      * @param semantics A list of semantic strings to set.
      * @return This instance to facilitate further modifications.
      */
-    public BipolarServicesInfoResponse semantics(List<String> semantics) {
+    public SetAfServicesInfoResponse semantics(List<String> semantics) {
         setSemantics(semantics);
         return this;
     }
@@ -242,20 +210,35 @@ public class BipolarServicesInfoResponse extends Response {
      * @param commands A list of command strings to set.
      * @return This instance to facilitate further modifications.
      */
-    public BipolarServicesInfoResponse commands(List<String> commands) {
+    public SetAfServicesInfoResponse commands(List<String> commands) {
         setCommands(commands);
         return this;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof SetAfServicesInfoResponse)) {
+            return false;
+        }
+        SetAfServicesInfoResponse dungServicesInfoRespones = (SetAfServicesInfoResponse) o;
+        return Objects.equals(reply, dungServicesInfoRespones.reply) && Objects.equals(email, dungServicesInfoRespones.email) && backend_timeout == dungServicesInfoRespones.backend_timeout && Objects.equals(semantics, dungServicesInfoRespones.semantics) && Objects.equals(commands, dungServicesInfoRespones.commands);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reply, email, backend_timeout, semantics, commands);
+    }
+
+    @Override
     public String toString() {
         return "{" +
-                " reply='" + getReply() + "'" +
-                ", email='" + getEmail() + "'" +
-                ", backend_timeout='" + getBackend_timeout() + "'" +
-                ", support_type='" + getSupport_type() + "'" +
-                ", semantics='" + getSemantics() + "'" +
-                ", commands='" + getCommands() + "'" +
+            " reply='" + getReply() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", backend_timeout='" + getBackend_timeout() + "'" +
+            ", semantics='" + getSemantics() + "'" +
+            ", commands='" + getCommands() + "'" +
             "}";
     }
 }

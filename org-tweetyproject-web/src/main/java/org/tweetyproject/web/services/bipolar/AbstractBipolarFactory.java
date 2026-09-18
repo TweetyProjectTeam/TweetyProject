@@ -18,7 +18,10 @@
  */
 package org.tweetyproject.web.services.bipolar;
 
-import org.tweetyproject.arg.bipolar.syntax.*;
+import org.tweetyproject.arg.bipolar.reasoner.*;
+import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
+import org.tweetyproject.arg.bipolar.syntax.Support;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 
@@ -26,18 +29,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract factory for building bipolar argumentation frameworks from web requests.
- *
- * @author Oleksandr Dzhychko
+ * Main factory for retrieving bipolar extension reasoners as supported by the web service
+ * 
+ * @author Lars Bengel
  */
-public abstract class AbstractBipolarFrameworkFactory {
-
+public abstract class AbstractBipolarFactory {
 	/**
-	 * Prevents instantiation.
+	 * Returns an array of all available bipolar semantics.
+	 *
+	 * @return An array of all available bipolar semantics.
 	 */
-	protected AbstractBipolarFrameworkFactory() {
+	public static Semantics[] getSemantics() {
+		return Semantics.values();
 	}
 
+	public static Support.Type[] getSupportTypes() {
+		return new Support.Type[] {Support.Type.DEFAULT, Support.Type.DEDUCTIVE, Support.Type.NECESSITY};
+	}
+
+	/**
+	 * Creates a new reasoner measure of the given semantics with default
+	 * settings.
+	 * 
+	 * @param semantics some identifier of a semantics.
+	 * @return the requested reasoner.
+	 */
+	public static AbstractBipolarExtensionReasoner getReasoner(Semantics semantics, String type) {
+		Support.Type support_type = Support.Type.getType(type);
+		switch (support_type) {
+			case DEFAULT -> {
+				return new SimpleCoalitionReasoner(semantics);
+			} case DEDUCTIVE,SIMPLE_DEDUCTIVE -> {
+				return new SimpleDeductiveReasoner(semantics);
+			} case NECESSITY,SIMPLE_NECESSITY -> {
+				return new SimpleNecessityReasoner(semantics);
+			} default -> throw new IllegalArgumentException("unsupported combination of support type and semantics " + type + " and " + semantics);
+        }
+	}
 
 	/**
 	 * Creates a new bipolar argumentation framework.
@@ -47,9 +75,9 @@ public abstract class AbstractBipolarFrameworkFactory {
 	 * @param supports supports
 	 * @return the requested reasoner.
 	 */
-	public static BipolarArgumentationFramework getArgumentationFramework(int numberOfArguments,
-																	 List<List<Integer>> attacks,
-																	 List<List<Integer>> supports) {
+	public static BipolarArgumentationFramework getBAF(int numberOfArguments,
+													   List<List<Integer>> attacks,
+													   List<List<Integer>> supports) {
 		BipolarArgumentationFramework argumentationFramework = new BipolarArgumentationFramework();
 
 		List<Argument> arguments = new ArrayList<Argument>();

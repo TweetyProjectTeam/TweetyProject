@@ -16,51 +16,42 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.web.services.dung;
+package org.tweetyproject.web.services.setaf;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Request payload for Dung reasoner web service calls.
+ * The SetAfReasonerPost class represents a data structure for holding information
+ * related to a SetAf argumentation reasoner request sent via HTTP POST.
  */
-public class DungReasonerPost {
+public class SetAfReasonerPost {
 
-  /**
-   * Creates an empty request payload.
-   */
-  public DungReasonerPost() {
-  }
-
-  /** The command type for the Dung reasoner request */
+  /** The command type for the SetAf reasoner request */
   private String cmd;
 
-  /** The email associated with the Dung reasoner request */
+  /** The email associated with the SetAf reasoner request */
   private String email;
 
-  /** The number of arguments in the Dung reasoner request */
+  /** The number of arguments in the SetAf reasoner request */
   private int nr_of_arguments;
 
-  /** The attacks information in the Dung reasoner request */
+  /** The attacks information in the SetAf reasoner request */
   private List<List<Integer>> attacks;
 
-  /** The semantics specified in the Dung reasoner request */
+  /** The semantics specified in the SetAf reasoner request */
   private String semantics;
 
-  /** The solver specified in the Dung reasoner request */
+  /** The solver specified in the SetAf reasoner request */
   private String solver;
 
-  /** Additional constructor parameters for the reasoner, keyed by parameter name */
-  private Map<String, Object> args;
-
-  /** The timeout value (in seconds) specified in the Dung reasoner request */
+  /** The timeout value (in seconds) specified in the SetAf reasoner request */
   private int timeout;
 
-  /** The unit timeout value specified in the Dung reasoner request */
+  /** The unit timeout value specified in the SetAf reasoner request */
   private String unit_timeout;
 
   /**
-   * Gets the unit timeout value specified in the Dung reasoner request.
+   * Gets the unit timeout value specified in the SetAf reasoner request.
    *
    * @return The unit timeout value
    */
@@ -69,7 +60,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the unit timeout value in the Dung reasoner request.
+   * Sets the unit timeout value in the SetAf reasoner request.
    *
    * @param unit_timeout The unit timeout value to be set
    */
@@ -78,7 +69,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the command type in the Dung reasoner request.
+   * Gets the command type in the SetAf reasoner request.
    *
    * @return The command type
    */
@@ -87,7 +78,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the command type in the Dung reasoner request.
+   * Sets the command type in the SetAf reasoner request.
    *
    * @param cmd The command type to be set
    */
@@ -96,7 +87,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the email associated with the Dung reasoner request.
+   * Gets the email associated with the SetAf reasoner request.
    *
    * @return The email associated with the request
    */
@@ -105,7 +96,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the email associated with the Dung reasoner request.
+   * Sets the email associated with the SetAf reasoner request.
    *
    * @param email The email to be set
    */
@@ -114,7 +105,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the number of arguments in the Dung reasoner request.
+   * Gets the number of arguments in the SetAf reasoner request.
    *
    * @return The number of arguments
    */
@@ -123,7 +114,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the number of arguments in the Dung reasoner request.
+   * Sets the number of arguments in the SetAf reasoner request.
    *
    * @param nr_of_arguments The number of arguments to be set
    */
@@ -132,7 +123,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the attacks information in the Dung reasoner request.
+   * Gets the attacks information in the SetAf reasoner request.
    *
    * @return The attacks information
    */
@@ -141,7 +132,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the attacks information in the Dung reasoner request.
+   * Sets the attacks information in the SetAf reasoner request.
    *
    * @param attacks The attacks information to be set
    */
@@ -150,7 +141,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the semantics specified in the Dung reasoner request.
+   * Gets the semantics specified in the SetAf reasoner request.
    *
    * @return The semantics specified
    */
@@ -159,7 +150,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the semantics in the Dung reasoner request.
+   * Sets the semantics in the SetAf reasoner request.
    *
    * @param semantics The semantics to be set
    */
@@ -168,7 +159,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the solver specified in the Dung reasoner request.
+   * Gets the solver specified in the SetAf reasoner request.
    *
    * @return The solver specified
    */
@@ -177,7 +168,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the solver in the Dung reasoner request.
+   * Sets the solver in the SetAf reasoner request.
    *
    * @param solver The solver to be set
    */
@@ -186,25 +177,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Gets the additional constructor parameters for the reasoner.
-   *
-   * @return The reasoner parameters, keyed by parameter name
-   */
-  public Map<String, Object> getArgs() {
-      return this.args;
-  }
-
-  /**
-   * Sets the additional constructor parameters for the reasoner.
-   *
-   * @param args The reasoner parameters to be set, keyed by parameter name
-   */
-  public void setArgs(Map<String, Object> args) {
-      this.args = args;
-  }
-
-  /**
-   * Gets the timeout value (in seconds) specified in the Dung reasoner request.
+   * Gets the timeout value (in seconds) specified in the SetAf reasoner request.
    *
    * @return The timeout value
    */
@@ -213,7 +186,7 @@ public class DungReasonerPost {
   }
 
   /**
-   * Sets the timeout value (in seconds) in the Dung reasoner request.
+   * Sets the timeout value (in seconds) in the SetAf reasoner request.
    *
    * @param timeout The timeout value to be set
    */

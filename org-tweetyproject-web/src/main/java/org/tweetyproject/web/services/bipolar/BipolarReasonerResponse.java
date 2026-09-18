@@ -44,6 +44,9 @@ public class BipolarReasonerResponse extends Response {
     /** The supports information in the bipolar reasoner response */
     private List<List<Integer>> supports;
 
+    /** The support type in the bipolar reasoner response */
+    private String support_type;
+
     /** The semantics specified in the bipolar reasoner response */
     private String semantics;
 
@@ -71,23 +74,25 @@ public class BipolarReasonerResponse extends Response {
     /**
      * Creates a bipolar reasoner response.
      *
-     * @param reply the reply message
-     * @param email the email associated with the response
-     * @param nr_of_arguments the number of arguments
-     * @param attacks the attacks information
-     * @param supports the supports information
-     * @param semantics the semantics specified
-     * @param solver the solver specified
-     * @param answer the answer provided
-     * @param time the time taken for the operation
-     * @param unit_time the unit time specified
-     * @param status the status of the response
+     * @param reply           The reply message
+     * @param email           The email associated with the response
+     * @param nr_of_arguments The number of arguments
+     * @param attacks         The attacks information
+     * @param supports        The supports information
+     * @param support_type    The support type information
+     * @param semantics       The semantics specified
+     * @param solver          The solver specified
+     * @param answer          The answer provided
+     * @param time            The time taken for the operation
+     * @param unit_time       The unit time specified
+     * @param status          The status of the response
      */
     public BipolarReasonerResponse(String reply,
                                    String email,
                                    int nr_of_arguments,
                                    List<List<Integer>> attacks,
                                    List<List<Integer>> supports,
+                                   String support_type,
                                    String semantics,
                                    String solver,
                                    String answer,
@@ -99,6 +104,7 @@ public class BipolarReasonerResponse extends Response {
         this.nr_of_arguments = nr_of_arguments;
         this.attacks = attacks;
         this.supports = supports;
+        this.support_type = support_type;
         this.semantics = semantics;
         this.solver = solver;
         this.answer = answer;
@@ -195,6 +201,24 @@ public class BipolarReasonerResponse extends Response {
      */
     public void setSupports(List<List<Integer>> supports) {
         this.supports = supports;
+    }
+
+    /**
+     * Gets the support_type specified in the bipolar reasoner post.
+     *
+     * @return The support_type specified
+     */
+    public String getSupport_type() {
+        return this.support_type;
+    }
+
+    /**
+     * Sets the support_type in the bipolar reasoner post.
+     *
+     * @param support_type The support_type to be set
+     */
+    public void setSupport_type(String support_type) {
+        this.support_type = support_type;
     }
 
     /**
@@ -350,6 +374,28 @@ public class BipolarReasonerResponse extends Response {
     }
 
     /**
+     * Sets the supports information in the bipolar reasoner response.
+     *
+     * @param supports The supports information in the bipolar reasoner response.
+     * @return The current instance of BipolarReasonerResponse.
+     */
+    public BipolarReasonerResponse supports(List<List<Integer>> supports) {
+        setSupports(supports);
+        return this;
+    }
+
+    /**
+     * Sets the support_type specified in the bipolar reasoner response.
+     *
+     * @param support_type The support_type specified in the bipolar reasoner response.
+     * @return The current instance of BipolarReasonerResponse.
+     */
+    public BipolarReasonerResponse support_type(String support_type) {
+        setSupport_type(support_type);
+        return this;
+    }
+
+    /**
      * Sets the semantics specified in the bipolar reasoner response.
      *
      * @param semantics The semantics specified in the bipolar reasoner response.
@@ -411,6 +457,8 @@ public class BipolarReasonerResponse extends Response {
                 ", email='" + getEmail() + "'" +
                 ", nr_of_arguments='" + getNr_of_arguments() + "'" +
                 ", attacks='" + getAttacks() + "'" +
+                ", supports='" + getSupports() + "'" +
+                ", support_type='" + getSupport_type() + "'" +
                 ", semantics='" + getSemantics() + "'" +
                 ", solver='" + getSolver() + "'" +
                 ", answer='" + getAnswer() + "'" +

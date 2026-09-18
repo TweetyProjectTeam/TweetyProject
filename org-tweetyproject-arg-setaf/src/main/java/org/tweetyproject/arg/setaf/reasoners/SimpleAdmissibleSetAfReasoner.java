@@ -33,7 +33,7 @@ import org.tweetyproject.commons.util.SetTools;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasoner {
+public class SimpleAdmissibleSetAfReasoner extends AbstractSetAfExtensionReasoner {
 	/** Default */
 	public SimpleAdmissibleSetAfReasoner(){
 		// Default

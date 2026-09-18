@@ -19,16 +19,11 @@
 package org.tweetyproject.web.services;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.tweetyproject.arg.dung.semantics.Semantics;
-
-import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,13 +35,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class RequestControllerDungTest {
+class RequestControllerSerialisationTest {
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getInfos() throws Exception {
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content("""
                         {
@@ -61,29 +56,187 @@ class RequestControllerDungTest {
                           "reply": "info",
                           "email": null,
                           "backend_timeout": 600,
-                          "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","STG","STG2","SST","ID","EA","CF2","SCF2","NA","SAD","IS","UC","UD","SUD","WAD","WCO","WPR","WGR","CG","div"
+                          "selectionFunctions": [
+                            "ADM","UC","GR"
+                          ],
+                          "terminationFunctions": [
+                            "ADM","CO","UC","PR","ST"
                           ],
                           "commands": [
+                            "get_reduct",
+                            "is_terminal",
+                            "get_selection",
                             "get_models",
-                            "get_model",
-                            "get_credulous",
-                            "get_skeptical"
+                            "get_sequences"
                           ]
                         }
                         """, true));
     }
 
     @Test
+    public void getReduct() throws Exception {
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
+                // language=JSON
+                .content("""
+                         {
+                           "cmd": "get_reduct",
+                           "nr_of_arguments": 4,
+                           "attacks": [[1, 2],[2,3],[3,4],[4,3]],
+                           "extension": [1],
+                           "timeout": 10,
+                           "unit_timeout": "s"
+                        }
+                        """);
+
+        mvc.perform(post).andExpect(status().isOk())
+                // language=JSON
+                .andExpect(content().json("""
+                        {
+                          "reply": "get_reduct",
+                          "email": null,
+                          "nr_of_arguments": 4,
+                          "attacks": [
+                            [
+                              1,
+                              2
+                            ],
+                            [
+                              2,
+                              3
+                            ],
+                            [
+                              3,
+                              4
+                            ],
+                            [
+                              4,
+                              3
+                            ]
+                          ],
+                          "extension": [1],
+                          "selectionFunction": null,
+                          "terminationFunction": null,
+                          "answer": "<{ 3, 4 },[(3,4), (4,3)]>",
+                          "time": 0,
+                          "unit_time": "s",
+                          "status": "SUCCESS"
+                        }
+                        """, true));
+    }
+
+    @Test
+    public void getSelection() throws Exception {
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
+                // language=JSON
+                .content("""
+                         {
+                           "cmd": "get_selection",
+                           "nr_of_arguments": 4,
+                           "attacks": [[1, 2],[2,3],[3,4],[4,3]],
+                           "selectionFunction": "UC",
+                           "timeout": 10,
+                           "unit_timeout": "s"
+                        }
+                        """);
+
+        mvc.perform(post).andExpect(status().isOk())
+                // language=JSON
+                .andExpect(content().json("""
+                        {
+                          "reply": "get_selection",
+                          "email": null,
+                          "nr_of_arguments": 4,
+                          "attacks": [
+                            [
+                              1,
+                              2
+                            ],
+                            [
+                              2,
+                              3
+                            ],
+                            [
+                              3,
+                              4
+                            ],
+                            [
+                              4,
+                              3
+                            ]
+                          ],
+                          "extension": null,
+                          "selectionFunction": "UC",
+                          "terminationFunction": null,
+                          "answer": "[{1}, {4}]",
+                          "time": 0,
+                          "unit_time": "s",
+                          "status": "SUCCESS"
+                        }
+                        """, true));
+    }
+
+    @Test
+    public void isTerminal() throws Exception {
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
+                // language=JSON
+                .content("""
+                         {
+                           "cmd": "is_terminal",
+                           "nr_of_arguments": 4,
+                           "attacks": [[1, 2],[2,3],[3,4],[4,3]],
+                           "terminationFunction": "UC",
+                           "timeout": 10,
+                           "unit_timeout": "s"
+                        }
+                        """);
+
+        mvc.perform(post).andExpect(status().isOk())
+                // language=JSON
+                .andExpect(content().json("""
+                        {
+                          "reply": "is_terminal",
+                          "email": null,
+                          "nr_of_arguments": 4,
+                          "attacks": [
+                            [
+                              1,
+                              2
+                            ],
+                            [
+                              2,
+                              3
+                            ],
+                            [
+                              3,
+                              4
+                            ],
+                            [
+                              4,
+                              3
+                            ]
+                          ],
+                          "extension": null,
+                          "selectionFunction": null,
+                          "terminationFunction": "UC",
+                          "answer": "false",
+                          "time": 0,
+                          "unit_time": "s",
+                          "status": "SUCCESS"
+                        }
+                        """, true));
+    }
+
+    @Test
     public void getModels() throws Exception {
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content("""
                          {
                            "cmd": "get_models",
-                           "nr_of_arguments": 3,
-                           "attacks": [[1, 2],[2,3]],
-                           "semantics": "ADM",
+                           "nr_of_arguments": 4,
+                           "attacks": [[1, 2],[2,3],[3,4],[4,3]],
+                           "selectionFunction": "ADM",
+                           "terminationFunction": "PR",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -95,7 +248,7 @@ class RequestControllerDungTest {
                         {
                           "reply": "get_models",
                           "email": null,
-                          "nr_of_arguments": 3,
+                          "nr_of_arguments": 4,
                           "attacks": [
                             [
                               1,
@@ -104,27 +257,38 @@ class RequestControllerDungTest {
                             [
                               2,
                               3
+                            ],
+                            [
+                              3,
+                              4
+                            ],
+                            [
+                              4,
+                              3
                             ]
                           ],
-                          "semantics": "ADM",
-                          "solver": null,
-                          "answer": "[{1}, {1,3}, {}]",
+                          "extension": null,
+                          "selectionFunction": "ADM",
+                          "terminationFunction": "PR",
+                          "answer": "[{1,3}, {1,4}]",
+                          "time": 0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, false));
+                        """, true));
     }
 
     @Test
-    public void getModel() throws Exception {
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
+    public void getSequences() throws Exception {
+        var post = post("/serialisation").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content("""
                          {
-                           "cmd": "get_model",
-                           "nr_of_arguments": 3,
-                           "attacks": [[1, 2],[2, 3]],
-                           "semantics": "ADM",
+                           "cmd": "get_sequences",
+                           "nr_of_arguments": 4,
+                           "attacks": [[1, 2],[2,3],[3,4],[4,3]],
+                           "selectionFunction": "UC",
+                           "terminationFunction": "UC",
                            "timeout": 10,
                            "unit_timeout": "s"
                         }
@@ -134,9 +298,9 @@ class RequestControllerDungTest {
                 // language=JSON
                 .andExpect(content().json("""
                         {
-                          "reply": "get_model",
+                          "reply": "get_sequences",
                           "email": null,
-                          "nr_of_arguments": 3,
+                          "nr_of_arguments": 4,
                           "attacks": [
                             [
                               1,
@@ -145,125 +309,24 @@ class RequestControllerDungTest {
                             [
                               2,
                               3
-                            ]
-                          ],
-                          "semantics": "ADM",
-                          "solver": null,
-                          "answer": "{}",
-                          "unit_time": "s",
-                          "status": "SUCCESS"
-                        }
-                        """, false));
-    }
-
-    @Test
-    public void getCredulous() throws Exception {
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
-                // language=JSON
-                .content("""
-                         {
-                           "cmd": "get_credulous",
-                           "nr_of_arguments": 3,
-                           "attacks": [[1, 2],[2,3]],
-                           "semantics": "ADM",
-                           "timeout": 10,
-                           "unit_timeout": "s"
-                        }
-                        """);
-
-        mvc.perform(post).andExpect(status().isOk())
-                // language=JSON
-                .andExpect(content().json("""
-                        {
-                          "reply": "get_credulous",
-                          "email": null,
-                          "nr_of_arguments": 3,
-                          "attacks": [
-                            [
-                              1,
-                              2
                             ],
                             [
-                              2,
+                              3,
+                              4
+                            ],
+                            [
+                              4,
                               3
                             ]
                           ],
-                          "semantics": "ADM",
-                          "solver": null,
-                          "answer": "{1,3}",
+                          "extension": null,
+                          "selectionFunction": "UC",
+                          "terminationFunction": "UC",
+                          "answer": "[({4},{1}), ({1})]",
+                          "time": 0,
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }
-                        """, false));
-    }
-
-    @Test
-    public void getSkeptical() throws Exception {
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
-                // language=JSON
-                .content("""
-                         {
-                           "cmd": "get_skeptical",
-                           "nr_of_arguments": 3,
-                           "attacks": [[1, 2],[2,3]],
-                           "semantics": "ADM",
-                           "timeout": 10,
-                           "unit_timeout": "s"
-                        }
-                        """);
-
-        mvc.perform(post).andExpect(status().isOk())
-                // language=JSON
-                .andExpect(content().json("""
-                        {
-                          "reply": "get_skeptical",
-                          "email": null,
-                          "nr_of_arguments": 3,
-                          "attacks": [
-                            [
-                              1,
-                              2
-                            ],
-                            [
-                              2,
-                              3
-                            ]
-                          ],
-                          "semantics": "ADM",
-                          "solver": null,
-                          "answer": "{}",
-                          "unit_time": "s",
-                          "status": "SUCCESS"
-                        }
-                        """, false));
-    }
-
-    private static Stream<Semantics> availableSemantics() {
-        return Stream.of(Semantics.values());
-    }
-
-    @ParameterizedTest(name = "semantics {0}")
-    @MethodSource("availableSemantics")
-    public void getModelsForSemantics(Semantics semantics) throws Exception {
-        if (semantics.equals(Semantics.diverse)) return;
-        var post = post("/dung").contentType(MediaType.APPLICATION_JSON)
-                // language=JSON
-                .content(String.format("""
-                         {
-                           "cmd": "get_models",
-                           "nr_of_arguments": 3,
-                           "attacks": [[1, 2],[2, 3]],
-                           "semantics": "%s",
-                           "timeout": 10,
-                           "unit_timeout": "s"
-                        }
-                        """, semantics.abbreviation()));
-
-        mvc.perform(post).andExpect(status().isOk())
-                .andExpect(content().json("""
-                    {
-                      "status": "SUCCESS"
-                    }
-                    """));
+                        """, true));
     }
 }
