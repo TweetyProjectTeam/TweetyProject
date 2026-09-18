@@ -18,11 +18,7 @@
  */
 package org.tweetyproject.arg.bipolar.syntax;
 
-import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
-import org.tweetyproject.arg.dung.ldo.syntax.LdoRelation;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungSignature;
-import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.DirectedEdge;
 
 /**

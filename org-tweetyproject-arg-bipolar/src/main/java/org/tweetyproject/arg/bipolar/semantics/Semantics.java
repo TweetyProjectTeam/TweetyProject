@@ -18,8 +18,6 @@
  */
 package org.tweetyproject.arg.bipolar.semantics;
 
-import org.tweetyproject.arg.bipolar.syntax.Support;
-
 import java.util.NoSuchElementException;
 
 /**
