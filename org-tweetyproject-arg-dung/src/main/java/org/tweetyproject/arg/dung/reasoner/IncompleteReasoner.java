@@ -359,15 +359,15 @@ public class IncompleteReasoner implements QualitativeReasoner<IncompleteTheory,
      * @return The set of arguments that is acceptable wrt this reasoner and the given parameters
      */
     public Collection<Argument> queryAll(IncompleteTheory bbase, Type type, InferenceMode inferenceMode) {
+        // Acceptance must quantify over completions and extensions independently, so we decide each
+        // argument with the per-argument query rather than collapsing all completions into one pool.
         Collection<Argument> result = new HashSet<>();
-        Collection<Extension<IncompleteTheory>> extensions = this.getModels(bbase, type);
-        if(inferenceMode.equals(InferenceMode.CREDULOUS))
-            for(Collection<Argument> extension: extensions)
-                result.addAll(extension);
-        else {
-            result.addAll(bbase);
-            for(Collection<Argument> extension: extensions)
-                result.retainAll(extension);
+        Collection<Argument> candidates = new HashSet<>(bbase.definiteArguments);
+        candidates.addAll(bbase.uncertainArgument);
+        for (Argument arg : candidates) {
+            if (this.query(bbase, arg, inferenceMode, type)) {
+                result.add(arg);
+            }
         }
         return result;
     }
