@@ -18,15 +18,15 @@
  */
 package org.tweetyproject.arg.aba;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.tweetyproject.arg.aba.examples.AbaExample;
 import org.tweetyproject.arg.aba.parser.AbaParser;
@@ -62,7 +62,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  */
 public class AbaTest {
 
-	@Before
+	@BeforeEach
 	public void SetUp() {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 	}
@@ -242,7 +242,7 @@ public class AbaTest {
 
 	}
 
-//	@Test
+	@Test
 	public void ClosureTest() throws Exception {
 		PlParser plparser = new PlParser();
 		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
@@ -311,7 +311,7 @@ public class AbaTest {
 	}
 
 	@SuppressWarnings("unchecked")
-//	@Test
+	@Test
 	public void Example4() throws Exception {
 		PlParser plparser = new PlParser();
 		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
@@ -332,7 +332,7 @@ public class AbaTest {
 	}
 
 	@SuppressWarnings("unchecked")
-//	@Test
+	@Test
 	public void Example5() throws Exception {
 		PlParser plparser = new PlParser();
 		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
@@ -360,7 +360,7 @@ public class AbaTest {
 		assertTrue(wellfexts.contains(asss_c));
 	}
 
-//	@Test
+	@Test
 	public void Example11() throws Exception {
 		PlParser plparser = new PlParser();
 		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
