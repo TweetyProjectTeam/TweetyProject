@@ -65,6 +65,13 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	private Collection<Negation<T>> negations = new HashSet<>();
 
 	/**
+	 * Cached ground instances of rules, assumptions and negations; null when stale
+	 */
+	private Collection<InferenceRule<T>> groundRules;
+	private Collection<Assumption<T>> groundAssumptions;
+	private Collection<Negation<T>> groundNegations;
+
+	/**
 	 * Return all deductions that can be derived from this theory
 	 * @return all deductions that can be derived from this theory
 	 */
@@ -216,6 +223,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 			rules.add((InferenceRule<T>) rule);
 		else if (rule instanceof Negation)
 			negations.add((Negation<T>) rule);
+		invalidateGrounding();
 	}
 
 	/** Add to theory
@@ -232,6 +240,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void addAssumption(T assumption) {
 		assumptions.add(new Assumption<>(assumption));
+		invalidateGrounding();
 	}
 
 	/**
@@ -242,6 +251,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void addNegation(T formula, T negation) {
 		negations.add(new Negation<>(formula, negation));
+		invalidateGrounding();
 	}
 
 	/**
@@ -271,7 +281,8 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the rules
 	 */
 	public Collection<InferenceRule<T>> getRules() {
-		return this.groundFolRules(rules);
+		ground();
+		return groundRules;
 	}
 
 	/**
@@ -279,7 +290,8 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the assumptions
 	 */
 	public Collection<Assumption<T>> getAssumptions() {
-		return this.groundFolAssumptions(assumptions);
+		ground();
+		return groundAssumptions;
 	}
 
 	/**
@@ -287,18 +299,41 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the negations
 	 */
 	public Collection<Negation<T>> getNegations() {
-		return this.groundFolNegations(negations);
+		ground();
+		return groundNegations;
 	}
 
 	/**
-	 * Grounds all inference rules with the constants of the minimal signature.
+	 * Grounds rules, assumptions and negations with the constants of the minimal
+	 * signature, unless the cached ground instances are still valid.
+	 */
+	private void ground() {
+		if (groundRules != null)
+			return;
+		Signature sig = this.getMinimalSignature();
+		groundRules = this.groundFolRules(rules, sig);
+		groundAssumptions = this.groundFolAssumptions(assumptions, sig);
+		groundNegations = this.groundFolNegations(negations, sig);
+	}
+
+	/**
+	 * Drops the cached ground instances after the theory changed.
+	 */
+	private void invalidateGrounding() {
+		groundRules = null;
+		groundAssumptions = null;
+		groundNegations = null;
+	}
+
+	/**
+	 * Grounds all inference rules with the constants of the given signature.
 	 *
 	 * @param rules the rules to ground
+	 * @param sig the signature of the theory
 	 * @return the grounded rules
 	 */
 	@SuppressWarnings("unchecked")
-	private Collection<InferenceRule<T>> groundFolRules(Collection<InferenceRule<T>> rules) {
-		Signature sig = this.getMinimalSignature();
+	private Collection<InferenceRule<T>> groundFolRules(Collection<InferenceRule<T>> rules, Signature sig) {
 		if (!(sig instanceof FolSignature))
 			return rules;
 
@@ -311,14 +346,14 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * Grounds all assumptions with the constants of the minimal signature.
+	 * Grounds all assumptions with the constants of the given signature.
 	 *
 	 * @param assumptions the assumptions to ground
+	 * @param sig the signature of the theory
 	 * @return the grounded assumptions
 	 */
 	@SuppressWarnings("unchecked")
-	private Collection<Assumption<T>> groundFolAssumptions(Collection<Assumption<T>> assumptions) {
-		Signature sig = this.getMinimalSignature();
+	private Collection<Assumption<T>> groundFolAssumptions(Collection<Assumption<T>> assumptions, Signature sig) {
 		if (!(sig instanceof FolSignature))
 			return assumptions;
 
@@ -332,14 +367,14 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * Grounds all negations with the constants of the minimal signature.
+	 * Grounds all negations with the constants of the given signature.
 	 *
 	 * @param negations the negations to ground
+	 * @param sig the signature of the theory
 	 * @return the grounded negations
 	 */
 	@SuppressWarnings("unchecked")
-	private Collection<Negation<T>> groundFolNegations(Collection<Negation<T>> negations) {
-		Signature sig = this.getMinimalSignature();
+	private Collection<Negation<T>> groundFolNegations(Collection<Negation<T>> negations, Signature sig) {
 		if (!(sig instanceof FolSignature))
 			return negations;
 		FolSignature fsig = (FolSignature) sig;
@@ -356,6 +391,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void setAssumptions(Collection<Assumption<T>> assumptions) {
 		this.assumptions = assumptions;
+		invalidateGrounding();
 	}
 
 	/**
