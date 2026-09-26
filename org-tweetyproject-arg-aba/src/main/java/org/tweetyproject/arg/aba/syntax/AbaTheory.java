@@ -76,7 +76,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return all deductions that can be derived from this theory
 	 */
 	public Collection<Deduction<T>> getAllDeductions() {
-		return getAllDeductions(assumptions);
+		return getAllDeductions(getAssumptions());
 	}
 
 	/**

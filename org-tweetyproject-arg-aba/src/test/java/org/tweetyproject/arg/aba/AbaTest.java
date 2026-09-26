@@ -126,6 +126,19 @@ public class AbaTest {
 
 	}
 
+	@Test
+	public void FolDeductionsUseGroundAssumptions() throws Exception {
+		FolParser folparser = new FolParser();
+		folparser.setSignature(folparser.parseSignature("Male = {a,b}\n" + "Female = {c,d}\n" + "type(Pair(Male,Female))\n"
+				+ "type(Likes(Male,Female))"));
+		AbaParser<FolFormula> parser = new AbaParser<FolFormula>(folparser);
+		parser.setSymbolComma(";");
+		AbaTheory<FolFormula> abat = parser.parseBeliefBase("{Pair(A,B)}\nLikes(a,c) <-");
+
+		FolFormula pair = (FolFormula) folparser.parseFormula("Pair(a,c)");
+		assertTrue(abat.getAllDeductions().stream().anyMatch(d -> d.getConclusion().equals(pair)));
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void DeductionTest1() throws Exception {
