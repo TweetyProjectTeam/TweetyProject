@@ -18,10 +18,12 @@
  */
 package org.tweetyproject.arg.aba.syntax;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -145,17 +147,41 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the closure of assumptions
 	 */
 	public Collection<Assumption<T>> getClosure(Collection<Assumption<T>> assumptions) {
-		Collection<Deduction<T>> deductions = getAllDeductions(assumptions);
+		Set<T> derivable = getDerivable(assumptions);
 		Set<Assumption<T>> cl = new HashSet<>();
 		for (Assumption<T> assumption : this.getAssumptions()) {
-			for (Deduction<T> deduction : deductions) {
-				if (assumption.getConclusion().equals(deduction.getConclusion())) {
-					cl.add(assumption);
-				}
-			}
+			if (derivable.contains(assumption.getConclusion()))
+				cl.add(assumption);
 		}
 		return cl;
+	}
 
+	/**
+	 * Computes all formulas that can be derived from a set of assumptions via
+	 * inference rules, by forward chaining to a fixpoint.
+	 *
+	 * @param assumptions a set of assumptions
+	 * @return the formulas derivable from assumptions
+	 */
+	public Set<T> getDerivable(Collection<Assumption<T>> assumptions) {
+		Set<T> derivable = new HashSet<>();
+		for (Assumption<T> a : assumptions)
+			derivable.add(a.getConclusion());
+		Collection<InferenceRule<T>> open = new ArrayList<>(getRules());
+		boolean changed;
+		do {
+			changed = false;
+			Iterator<InferenceRule<T>> it = open.iterator();
+			while (it.hasNext()) {
+				InferenceRule<T> rule = it.next();
+				if (derivable.containsAll(rule.getPremise())) {
+					derivable.add(rule.getConclusion());
+					it.remove();
+					changed = true;
+				}
+			}
+		} while (changed);
+		return derivable;
 	}
 
 	/**
@@ -402,11 +428,13 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return true iff the first set of assumptions attacks the second set
 	 */
 	public boolean attacks(Collection<Assumption<T>> attackers, Collection<Assumption<T>> attackeds) {
-		for (Deduction<T> d : getAllDeductions(attackers)) {
-			for (Assumption<T> a : attackeds) {
-				if (negates(d.getConclusion(), a.getConclusion()))
-					return true;
-			}
+		Set<T> derivable = getDerivable(attackers);
+		Set<T> attacked = new HashSet<>();
+		for (Assumption<T> a : attackeds)
+			attacked.add(a.getConclusion());
+		for (Negation<T> n : getNegations()) {
+			if (attacked.contains(n.formula) && derivable.contains(n.negation))
+				return true;
 		}
 		return false;
 	}
