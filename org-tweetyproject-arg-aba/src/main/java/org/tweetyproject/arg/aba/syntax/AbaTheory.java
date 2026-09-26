@@ -18,12 +18,10 @@
  */
 package org.tweetyproject.arg.aba.syntax;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +32,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
@@ -187,14 +186,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return a power set
 	 */
 	private static <S> Collection<Collection<S>> toPowerSet(Collection<S> set) {
-		Collection<Collection<S>> powerset = new HashSet<>();
-		powerset.add(set);
-		for (int i = 0; i < set.size(); i++) {
-			List<S> list = new ArrayList<>(set);
-			list.remove(i);
-			powerset.addAll(toPowerSet(list));
-		}
-		return powerset;
+		return new HashSet<>(SetTools.powerSet(new HashSet<>(set)));
 	}
 
 	/**
