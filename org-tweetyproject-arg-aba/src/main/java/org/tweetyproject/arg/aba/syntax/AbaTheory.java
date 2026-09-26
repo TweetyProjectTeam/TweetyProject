@@ -165,14 +165,17 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * An ABA theory is flat iff all subsets of its argumentation set are closed
+	 * An ABA theory is flat iff all subsets of its argumentation set are closed.
+	 * By monotonicity it suffices to check the sets A \ {a} for each assumption a.
 	 *
 	 * @return true iff the theory is flat
 	 */
 	public boolean isFlat() {
-		Collection<Collection<Assumption<T>>> powerset = toPowerSet(getAssumptions());
-		for (Collection<Assumption<T>> asss : powerset) {
-			if (!isClosed(asss))
+		Collection<Assumption<T>> all = getAssumptions();
+		for (Assumption<T> a : all) {
+			Collection<Assumption<T>> rest = new HashSet<>(all);
+			rest.remove(a);
+			if (!isClosed(rest))
 				return false;
 		}
 		return true;
