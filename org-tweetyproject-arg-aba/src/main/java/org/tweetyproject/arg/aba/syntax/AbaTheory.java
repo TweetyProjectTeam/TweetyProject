@@ -172,6 +172,17 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public boolean isFlat() {
 		Collection<Assumption<T>> all = getAssumptions();
+		Set<T> formulas = new HashSet<>();
+		for (Assumption<T> a : all)
+			formulas.add(a.getConclusion());
+		boolean assumptionIsHead = false;
+		for (InferenceRule<T> r : getRules())
+			if (formulas.contains(r.getConclusion())) {
+				assumptionIsHead = true;
+				break;
+			}
+		if (!assumptionIsHead)
+			return true;
 		for (Assumption<T> a : all) {
 			Collection<Assumption<T>> rest = new HashSet<>(all);
 			rest.remove(a);
