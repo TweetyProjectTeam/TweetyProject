@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.tweetyproject.arg.aba.parser.AbaParser;
-import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
+import org.tweetyproject.arg.aba.reasoner.AfReductionReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
@@ -69,7 +69,7 @@ public class AbaExample {
 		AbaParser<PlFormula> parser1 = new AbaParser<PlFormula>(new PlParser());
 		AbaTheory<PlFormula> abat1 = parser1.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
 		System.out.println("Parsed belief base: " + abat1);
-		FlatAbaReasoner<PlFormula> r1 = new FlatAbaReasoner<PlFormula>(Semantics.PREFERRED_SEMANTICS);
+		AfReductionReasoner<PlFormula> r1 = new AfReductionReasoner<PlFormula>(Semantics.PREFERRED_SEMANTICS);
 		PreferredReasoner<PlFormula> r2 = new PreferredReasoner<PlFormula>();
 		Assumption<PlFormula> a = new Assumption<>(new Proposition("a"));
 		System.out.println("query " + a + ": " + r1.query(abat1,a));
@@ -88,7 +88,7 @@ public class AbaExample {
 		AbaParser<FolFormula> parser2 = new AbaParser<FolFormula>(folparser);
 		parser2.setSymbolComma(";");
 		AbaTheory<FolFormula> abat2 = parser2.parseBeliefBaseFromFile(AbaExample.class.getResource("/smp_fol.aba").getFile());
-		FlatAbaReasoner<FolFormula> r4 = new FlatAbaReasoner<FolFormula>(Semantics.STABLE_SEMANTICS);
+		AfReductionReasoner<FolFormula> r4 = new AfReductionReasoner<FolFormula>(Semantics.STABLE_SEMANTICS);
 		System.out.println(r4.getModels(abat2));
 		PreferredReasoner<FolFormula> r5 = new PreferredReasoner<FolFormula>();
 		Assumption<FolFormula> a2 = new Assumption<>(folparser.parseFormula("Pair(a,d)"));

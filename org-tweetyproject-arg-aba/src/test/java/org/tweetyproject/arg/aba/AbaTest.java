@@ -41,7 +41,6 @@ import org.tweetyproject.arg.aba.reasoner.AfReductionReasoner;
 import org.tweetyproject.arg.aba.reasoner.AfReductionReasoner.SupportArgument;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
-import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
@@ -273,7 +272,7 @@ public class AbaTest {
 		assertTrue(abat.getAllDeductions().size() == 7);
 		assertTrue(abat.isFlat());
 		List<GeneralAbaReasoner<PlFormula>> reasoners = new LinkedList<>();
-		reasoners.add(new FlatAbaReasoner<PlFormula>(Semantics.COMPLETE_SEMANTICS));
+		reasoners.add(new AfReductionReasoner<PlFormula>(Semantics.COMPLETE_SEMANTICS));
 		reasoners.add(new CompleteReasoner<PlFormula>());
 		for (GeneralAbaReasoner<PlFormula> reasoner : reasoners) {
 			Assumption<PlFormula> query = (Assumption<PlFormula>) parser.parseFormula("a");
@@ -281,7 +280,7 @@ public class AbaTest {
 			query = (Assumption<PlFormula>) parser.parseFormula("b");
 			assertTrue(reasoner.query(abat, query, InferenceMode.CREDULOUS));
 		}
-		assertTrue(((FlatAbaReasoner<PlFormula>) reasoners.get(0)).getModels(abat)
+		assertTrue(reasoners.get(0).getModels(abat)
 				.size() == ((GeneralAbaReasoner<PlFormula>) reasoners.get(1)).getModels(abat).size());
 
 	}
@@ -616,7 +615,7 @@ public class AbaTest {
 	@Test
 	public void AfReductionAdmissibleMapsBackBySupport() throws Exception {
 		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		// FlatAbaReasoner returns {a} here, which does not counter-attack c
+		// mapping back by assumption names returns {a} here, which does not counter-attack c
 		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b,c}\np <- b\nnot a = c\nnot c = p\nnot b = z");
 		assertEquals(asSets(new AdmissibleReasoner<PlFormula>().getModels(abat)),
 				asSets(new AfReductionReasoner<PlFormula>(Semantics.ADM).getModels(abat)));
