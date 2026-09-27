@@ -107,7 +107,7 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 	@Override
 	public Signature getSignature() {
 		Signature sig = formula.getSignature();
-		sig.addSignature(formula.getSignature());
+		sig.addSignature(negation.getSignature());
 		return sig;
 	}
 

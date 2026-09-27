@@ -139,6 +139,19 @@ public class AbaTest {
 		assertTrue(abat.getAllDeductions().stream().anyMatch(d -> d.getConclusion().equals(pair)));
 	}
 
+	@Test
+	public void FolGroundingUsesConstantsFromContraries() throws Exception {
+		FolParser folparser = new FolParser();
+		folparser.setSignature(folparser.parseSignature("Male = {a,b}\n" + "Female = {c,d}\n" + "type(Pair(Male,Female))\n"
+				+ "type(Likes(Male,Female))"));
+		AbaParser<FolFormula> parser = new AbaParser<FolFormula>(folparser);
+		parser.setSymbolComma(";");
+		AbaTheory<FolFormula> abat = parser.parseBeliefBase("{Pair(A,c)}\nnot Pair(a,c) = Likes(b,c)");
+
+		FolFormula pair = (FolFormula) folparser.parseFormula("Pair(b,c)");
+		assertTrue(abat.getAssumptions().contains(new Assumption<FolFormula>(pair)));
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void DeductionTest1() throws Exception {
