@@ -170,15 +170,30 @@ public class RequestController {
 			throws ParserException, IOException, JSONException, org.codehaus.jettison.json.JSONException {
 
 		LoggerUtil.logger.info(String.format("User: %s  Command: %s", post.getEmail(), post.getCmd()));
-		if (post.getCmd().equals("semantics"))
+		if ("semantics".equals(post.getCmd()))
 			return handleGetSemantics(post);
 
+		AbaReasonerResponse response = new AbaReasonerResponse(post.getCmd(), post.getEmail(), post.getKb(),
+				post.getKb_format(), post.getFol_signature(), post.getQuery_assumption(),
+				post.getSemantics(), post.getTimeout(), "", 0.0, post.getUnit_timeout(), "");
+
+		String error = validateAbaPost(post);
+		if (error != null) {
+			LoggerUtil.logger.log(Level.SEVERE, error);
+			response.setAnswer(error);
+			response.setStatus("ERROR");
+			return response;
+		}
+
+		AbaReasonerCalleeFactory.Command cmd = AbaReasonerCalleeFactory.Command.getCommand(post.getCmd());
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		Callee callee = null;
 
 		if (post.getKb_format().equals("pl")) {
 			AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-			Assumption<PlFormula> assumption = new Assumption<>(new Proposition(post.getQuery_assumption()));
+			Assumption<PlFormula> assumption = cmd == AbaReasonerCalleeFactory.Command.QUERY
+					? new Assumption<>(new Proposition(post.getQuery_assumption()))
+					: null;
 			AbaTheory<PlFormula> theory = null;
 			try {
 				theory = parser.parseBeliefBase(post.getKb());
@@ -187,8 +202,7 @@ public class RequestController {
 			}
 			GeneralAbaReasoner<PlFormula> reasoner = GeneralAbaReasonerFactory.getReasoner(
 					GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
-			callee = AbaReasonerCalleeFactory.getCallee(
-					AbaReasonerCalleeFactory.Command.getCommand(post.getCmd()), reasoner, theory, assumption);
+			callee = AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
 		}
 
 		if (post.getKb_format().equals("fol")) {
@@ -197,7 +211,9 @@ public class RequestController {
 			folParser.setSignature(sig);
 			AbaParser<FolFormula> parser = new AbaParser<>(folParser);
 			parser.setSymbolComma(";");
-			Assumption<FolFormula> assumption = new Assumption<>(folParser.parseFormula(post.getQuery_assumption()));
+			Assumption<FolFormula> assumption = cmd == AbaReasonerCalleeFactory.Command.QUERY
+					? new Assumption<>(folParser.parseFormula(post.getQuery_assumption()))
+					: null;
 			AbaTheory<FolFormula> theory = null;
 			try {
 				theory = parser.parseBeliefBase(post.getKb());
@@ -206,23 +222,7 @@ public class RequestController {
 			}
 			GeneralAbaReasoner<FolFormula> reasoner = GeneralAbaReasonerFactory.getReasoner(
 					GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
-			try {
-				callee = AbaReasonerCalleeFactory.getCallee(
-						AbaReasonerCalleeFactory.Command.getCommand(post.getCmd()), reasoner, theory, assumption);
-			} catch (Exception e) {
-				LoggerUtil.logger.log(Level.SEVERE, String.format("Error while creating ABAReasonerCallee: %s", e.getClass().getSimpleName()));
-			}
-		}
-
-		AbaReasonerResponse response = new AbaReasonerResponse(post.getCmd(), post.getEmail(), post.getKb(),
-				post.getKb_format(), post.getFol_signature(), post.getQuery_assumption(),
-				post.getSemantics(), post.getTimeout(), "", 0.0, post.getUnit_timeout(), "");
-
-		if (AbaReasonerCalleeFactory.Command.getCommand(post.getCmd()) == null) {
-			LoggerUtil.logger.log(Level.SEVERE, String.format("Command \"%s\" not found.", post.getCmd()));
-			response.setAnswer("Command not found");
-			response.setStatus("ERROR");
-			return response;
+			callee = AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
 		}
 
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
@@ -621,6 +621,24 @@ public class RequestController {
 		response.setEmail(query.getEmail());
 		response.reply(query.getCmd());
 		return response;
+	}
+
+	/** Returns an error message for a malformed ABA request, or null if it is valid. */
+	private static String validateAbaPost(AbaReasonerPost post) {
+		AbaReasonerCalleeFactory.Command cmd = AbaReasonerCalleeFactory.Command.getCommand(post.getCmd());
+		if (cmd == null)
+			return String.format("Unknown command: %s", post.getCmd());
+		if (!"pl".equals(post.getKb_format()) && !"fol".equals(post.getKb_format()))
+			return String.format("Unknown kb_format: %s (expected pl or fol)", post.getKb_format());
+		if (post.getKb() == null)
+			return "Missing kb";
+		if (GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()) == null)
+			return String.format("Unknown semantics: %s", post.getSemantics());
+		if (cmd == AbaReasonerCalleeFactory.Command.QUERY && post.getQuery_assumption() == null)
+			return "Missing query_assumption";
+		if ("fol".equals(post.getKb_format()) && post.getFol_signature() == null)
+			return "Missing fol_signature";
+		return null;
 	}
 
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
