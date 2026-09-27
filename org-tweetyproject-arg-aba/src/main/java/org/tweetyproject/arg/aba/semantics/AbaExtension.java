@@ -207,6 +207,13 @@ public class AbaExtension<T extends Formula> extends AbstractInterpretation<AbaT
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.assumptions.toString();
+		String s = "{";
+		boolean first = true;
+		for (Assumption<T> a : this)
+			if (first) {
+				s += a;
+				first = false;
+			} else s += "," + a;
+		return s += "}";
 	}
 }

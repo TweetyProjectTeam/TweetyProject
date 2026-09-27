@@ -18,11 +18,9 @@
  */
 package org.tweetyproject.web.services.aba;
 
-import java.util.Collection;
-
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
-import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
@@ -63,7 +61,7 @@ public class AbaReasonerQueryAllCallee<T extends Formula> extends Callee {
      * @throws Exception If an error occurs during reasoning
      */
     @Override
-    public Collection<Assumption<T>> call() throws Exception {
-        return this.reasoner.queryAll(this.bbase, this.mode);
+    public AbaExtension<T> call() throws Exception {
+        return new AbaExtension<>(this.reasoner.queryAll(this.bbase, this.mode));
     }
 }
