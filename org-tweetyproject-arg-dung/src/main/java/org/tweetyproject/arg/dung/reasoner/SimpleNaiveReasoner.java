@@ -38,14 +38,14 @@ public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
         // default constructor
     }
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        DungTheory restrictedTheory = new DungTheory((DungTheory)bbase);
-        // remove all self-attacking arguments
-        for (Argument argument: (DungTheory)bbase) {
-            if (restrictedTheory.isAttackedBy(argument, argument)) {
-                restrictedTheory.remove(argument);
+        // self-attacking arguments are never part of a conflict-free set
+        Set<Argument> candidates = new HashSet<>();
+        for (Argument argument: bbase) {
+            if (!bbase.isAttackedBy(argument, argument)) {
+                candidates.add(argument);
             }
         }
-        return this.getMaximalConflictFreeSets((DungTheory)bbase, restrictedTheory);
+        return this.getMaximalConflictFreeSets(bbase, candidates);
     }
 
     public Extension<DungTheory> getModel(DungTheory bbase) {
@@ -54,35 +54,51 @@ public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
     }
 
     /**
-     * computes all maximal conflict-free sets of bbase
+     * computes all maximal conflict-free sets of bbase that only contain arguments from candidates.
+     * Uses the Bron-Kerbosch algorithm on the graph connecting all non-conflicting arguments,
+     * so each maximal set is found exactly once.
      * @param bbase an argumentation framework
      * @param candidates a set of arguments
-     * @return conflict-free sets in bbase
+     * @return maximal conflict-free sets in bbase
      */
     public Collection<Extension<DungTheory>> getMaximalConflictFreeSets(DungTheory bbase, Collection<Argument> candidates) {
-        Collection<Extension<DungTheory>> cfSubsets = new HashSet<Extension<DungTheory>>();
-        if (candidates.size() == 0 || bbase.size() == 0) {
-            cfSubsets.add(new Extension<DungTheory>());
-        } else {
-            for (Argument element: candidates) {
-                DungTheory remainingTheory = new DungTheory(bbase);
-                remainingTheory.remove(element);
-                remainingTheory.removeAll(bbase.getAttacked(element));
+        Collection<Extension<DungTheory>> result = new ArrayList<>();
+        this.getMaximalConflictFreeSets(bbase, new HashSet<>(), new HashSet<>(candidates), new HashSet<>(), result);
+        return result;
+    }
 
-                Set<Argument> remainingCandidates = new HashSet<Argument>(candidates);
-                remainingCandidates.remove(element);
-                remainingCandidates.removeAll(bbase.getAttacked(element));
-                remainingCandidates.removeAll(bbase.getAttackers(element));
-
-                Collection<Extension<DungTheory>> subsubsets = this.getMaximalConflictFreeSets(remainingTheory, remainingCandidates);
-
-                for (Extension<DungTheory> subsubset : subsubsets) {
-                    //cfSubsets.add(new Extension(subsubset));
-                    subsubset.add(element);
-                    cfSubsets.add(new Extension<DungTheory>(subsubset));
-                }
+    /**
+     * extends the conflict-free set by arguments from candidates and collects all maximal ones
+     * @param bbase an argumentation framework
+     * @param current the conflict-free set built so far
+     * @param candidates arguments that can still be added to current
+     * @param excluded arguments compatible with current whose extensions have already been collected
+     * @param result the collection of maximal conflict-free sets
+     */
+    private void getMaximalConflictFreeSets(DungTheory bbase, Set<Argument> current, Set<Argument> candidates, Set<Argument> excluded, Collection<Extension<DungTheory>> result) {
+        if (candidates.isEmpty()) {
+            // if some excluded argument is still compatible, current is not maximal or was already collected
+            if (excluded.isEmpty()) {
+                result.add(new Extension<>(current));
             }
+            return;
         }
-        return cfSubsets;
+        for (Argument argument: new ArrayList<>(candidates)) {
+            Collection<Argument> conflicting = new HashSet<>(bbase.getAttacked(argument));
+            conflicting.addAll(bbase.getAttackers(argument));
+
+            Set<Argument> remainingCandidates = new HashSet<>(candidates);
+            remainingCandidates.remove(argument);
+            remainingCandidates.removeAll(conflicting);
+            Set<Argument> remainingExcluded = new HashSet<>(excluded);
+            remainingExcluded.removeAll(conflicting);
+
+            current.add(argument);
+            this.getMaximalConflictFreeSets(bbase, current, remainingCandidates, remainingExcluded, result);
+            current.remove(argument);
+
+            candidates.remove(argument);
+            excluded.add(argument);
+        }
     }
 }

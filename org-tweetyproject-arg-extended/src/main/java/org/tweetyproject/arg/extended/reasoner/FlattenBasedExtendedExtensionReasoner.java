@@ -57,9 +57,7 @@ public class FlattenBasedExtendedExtensionReasoner extends AbstractExtendedExten
     @Override
     public Collection<Extension<ExtendedTheory>> getModels(ExtendedTheory bbase) {
         DungTheory flattenedTheory = bbase.flatten();
-        System.out.println(flattenedTheory.prettyPrint());
         Collection<Extension<DungTheory>> extensions = reasoner.getModels(flattenedTheory);
-        System.out.println("Got flattened models");
         Collection<Extension<ExtendedTheory>> result = new HashSet<>();
         for (Extension<DungTheory> ext: extensions) {
             Collection<Argument> restriction = new HashSet<>(ext);

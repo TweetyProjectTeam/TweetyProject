@@ -20,18 +20,17 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 /**
  * This reasoner for Dung theories performs inference on the admissible extensions.
- * Extensions are determined by checking all possible sets for admissibility.
- * @author Matthias Thimm
+ * Extensions are determined by checking all conflict-free sets for defence.
  *
+ * @author Matthias Thimm
+ * @author Lars Bengel
  */
 
 
@@ -43,11 +42,20 @@ public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
-		// Check all subsets
-		for(Set<Argument> ext: new SetTools<Argument>().subsets(((DungTheory) bbase)))
-			if(((DungTheory) bbase).isAdmissible(new Extension<DungTheory>(ext)))
-				extensions.add(new Extension<DungTheory>(ext));
+		Collection<Extension<DungTheory>> extensions = new HashSet<>();
+		// conflict-free sets only need to be checked for defence
+		for (Extension<DungTheory> ext: new SimpleConflictFreeReasoner().getModels(bbase)) {
+			boolean defended = true;
+			for (Argument argument: ext) {
+				if (!bbase.isAcceptable(argument, ext)) {
+					defended = false;
+					break;
+				}
+			}
+			if (defended) {
+				extensions.add(ext);
+			}
+		}
 		return extensions;
 	}
 

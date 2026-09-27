@@ -32,7 +32,7 @@ import java.util.*;
  * contains only arguments relevant to E and itself.
  * An argument is considered relevant to E iff it attacks any argument in the same component as E.
  *
- * see: Baumann, Brewka, Ulbricht:  Revisiting  the  foundations  of  abstract argumentation-semantics based on weak admissibility and weak defense.
+ * @see "Baumann, Brewka, Ulbricht. 'Revisiting the foundations of abstract argumentation-semantics based on weak admissibility and weak defense'. AAAI (2020)"
  *
  * @author Lars Bengel
  */
@@ -51,20 +51,20 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @return the weakly admissible sets of bbase
      */
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        DungTheory restrictedTheory = new DungTheory((DungTheory) bbase);
+        DungTheory restrictedTheory = new DungTheory(bbase);
         // remove all self-attacking arguments
-        for (Argument argument: (DungTheory) bbase) {
+        for (Argument argument: bbase) {
             if (restrictedTheory.isAttackedBy(argument, argument)) {
                 restrictedTheory.remove(argument);
             }
         }
 
         Collection<Extension<DungTheory>> extensions = new HashSet<>();
-        Set<Set<Argument>> cfSets = this.getConflictFreeSets(restrictedTheory, new HashSet<>(restrictedTheory));
-        for (Set<Argument> args: cfSets) {
-            Extension<DungTheory> ext = new Extension<DungTheory>(args);
-            if (isWeaklyAdmissible(restrictedTheory, ext))
+        Collection<Extension<DungTheory>> cfSets = new SimpleConflictFreeReasoner().getModels(restrictedTheory);
+        for (Extension<DungTheory> ext: cfSets) {
+            if (isWeaklyAdmissible(restrictedTheory, ext)) {
                 extensions.add(ext);
+            }
         }
         return extensions;
     }
@@ -92,11 +92,12 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
         }
 
         Set<Set<Argument>> subsets = this.getAttackingCandidates(bbase, ext);
+        DungTheory reduct = bbase.getReduct(ext);
         for (Set<Argument> args: subsets) {
             Extension<DungTheory> subExt = new Extension<DungTheory>(args);
 
             // if we find one weakly admissible attacker in the reduct, then subExt is not weakly admissible
-            if (isWeaklyAdmissible(bbase.getReduct(ext), subExt))
+            if (isWeaklyAdmissible(reduct, subExt))
                 return false;
         }
         return true;
@@ -111,8 +112,8 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
     public Set<Set<Argument>> getAttackingCandidates(DungTheory bbase, Collection<Argument> ext) {
         Set<Set<Argument>> sets = new HashSet<>();
         // only consider attackers which are not deactivated by ext
-        Collection<Argument> attackers = this.getAttackers(bbase, ext);
-        attackers.removeAll(getAttacked(bbase, ext));
+        Collection<Argument> attackers = bbase.getAttackers(ext);
+        attackers.removeAll(bbase.getAttacked(ext));
         DungTheory reduct_ext = bbase.getReduct(ext);
         for (Argument attacker: attackers) {
             DungTheory reduct = new DungTheory(reduct_ext);
@@ -156,7 +157,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      */
     public Set<Set<Argument>> getConflictFreeCandidateSets(DungTheory bbase, Collection<Argument> candidates) {
         Set<Set<Argument>> subsets = new HashSet<>();
-        if (candidates.size() == 0 || bbase.size() == 0) {
+        if (candidates.isEmpty() || bbase.isEmpty()) {
             subsets.add(new HashSet<>());
         } else {
             for (Argument element: candidates) {
@@ -219,74 +220,10 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
             return new HashSet<>(arguments);
         }
         Set<Argument> newArguments = new HashSet<>();
-        newArguments.addAll(this.getAttacked(bbase, toCheck));
-        newArguments.addAll(this.getAttackers(bbase, toCheck));
+        newArguments.addAll(bbase.getAttacked(toCheck));
+        newArguments.addAll(bbase.getAttackers(toCheck));
         newArguments.removeAll(arguments);
         arguments.addAll(newArguments);
         return getComponent(bbase, arguments, newArguments);
     }
-
-    /**
-     * computes all conflict-free sets of bbase, that contain only arguments in candidates
-     * @param bbase an argumentation framework
-     * @param candidates a set of arguments
-     * @return conflict-free sets in bbase
-     */
-    public Set<Set<Argument>> getConflictFreeSets(DungTheory bbase, Collection<Argument> candidates) {
-        Set<Set<Argument>> subsets = new HashSet<>();
-        if (candidates.size() == 0 || bbase.size() == 0) {
-            subsets.add(new HashSet<>());
-        } else {
-            for (Argument element: candidates) {
-                DungTheory remainingTheory = new DungTheory(bbase);
-                remainingTheory.remove(element);
-                remainingTheory.removeAll(bbase.getAttacked(element));
-
-                Set<Argument> remainingCandidates = new HashSet<>(candidates);
-                remainingCandidates.remove(element);
-                remainingCandidates.removeAll(bbase.getAttacked(element));
-                remainingCandidates.removeAll(bbase.getAttackers(element));
-
-                Set<Set<Argument>> subsubsets = this.getConflictFreeSets(remainingTheory, remainingCandidates);
-
-                for (Set<Argument> subsubset : subsubsets) {
-                    subsets.add(new HashSet<>(subsubset));
-                    subsubset.add(element);
-                    subsets.add(new HashSet<>(subsubset));
-                }
-            }
-        }
-
-        return subsets;
-    }
-
-    /**
-     * computes the set of arguments attacked by an element of arguments in bbase
-     * @param bbase an argumentation framework
-     * @param arguments a set of arguments
-     * @return the set of arguments attacked by arguments
-     */
-    protected Collection<Argument> getAttacked(DungTheory bbase, Collection<Argument> arguments) {
-        Collection<Argument> attacked = new HashSet<>();
-        for (Argument argument: arguments) {
-            attacked.addAll(bbase.getAttacked(argument));
-        }
-        return attacked;
-    }
-
-    /**
-     * computes the set of arguments attacking an element of arguments in bbase
-     * @param bbase an argumentation framework
-     * @param arguments a set of arguments
-     * @return the set of arguments attacking arguments
-     */
-    protected Collection<Argument> getAttackers(DungTheory bbase, Collection<Argument> arguments) {
-        Collection<Argument> attackers = new HashSet<>();
-        for (Argument argument: arguments) {
-            attackers.addAll(bbase.getAttackers(argument));
-        }
-        return attackers;
-    }
-    
-    
 }

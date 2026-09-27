@@ -22,18 +22,19 @@
  import org.tweetyproject.arg.dung.semantics.Extension;
  import org.tweetyproject.arg.dung.syntax.Argument;
  import org.tweetyproject.arg.dung.syntax.DungTheory;
+ import org.tweetyproject.commons.util.IncreasingSubsetIterator;
  import org.tweetyproject.commons.util.SetTools;
- 
+ import org.tweetyproject.commons.util.SubsetIterator;
+
  import java.util.Collection;
  import java.util.HashSet;
  import java.util.Set;
  
  /**
-  * Reasoner for weakly complete semantics as described in:
+  * Reasoner for weakly complete semantics as.
+  * A set of arguments E is w-complete iff it is w-admissible and there exists no superset of E that is w-defended by E
   *
-  * see: Baumann, Brewka, Ulbricht:  Revisiting  the  foundations  of  abstract argumentation-semantics based on weak admissibility and weak defense.
-  *
-  * a set of arguments E is w-complete iff it is w-admissible and there exists no superset of E that is w-defended by E
+  * @see "Baumann, Brewka, Ulbricht. 'Revisiting the foundations of abstract argumentation-semantics based on weak admissibility and weak defense'. AAAI (2020)"
   *
   * @author Lars Bengel
   */
@@ -102,11 +103,11 @@
          Collection<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
  
          boolean superset_wad = false;
-         for (Set<Argument> S: subsets) {
-             // S is a superset of X
-             if (S.containsAll(X)) {
-                 // S is w-admissible in F
-                 if (wad_exts.contains(new Extension<DungTheory>(S))) {
+         SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(theory));
+         while (it.hasNext()) {
+             Extension<DungTheory> S = new Extension<>(it.next());
+             if (S.containsAll(X)) { // S is a superset of X
+                 if (wad_exts.contains(S)) { // S is w-admissible in F
                      superset_wad = true;
                      break;
                  }
@@ -116,7 +117,7 @@
          if (!superset_wad)
              return false;
  
-         for (Argument y: new WeaklyAdmissibleReasoner().getAttackers(theory, X)) {
+         for (Argument y: theory.getAttackers(X)) {
              // E attacks y
              if (theory.isAttacked(y, new Extension<DungTheory>(E))) {
                  continue;

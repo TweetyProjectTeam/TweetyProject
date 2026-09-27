@@ -22,17 +22,19 @@ package org.tweetyproject.arg.dung.reasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Reasoner for strong admissibility
  * <p>
  * A set of arguments E is strongly admissible iff all every argument 'a' in E is defended by some argument 'b' in E \ {a}, which itself is strongly defended by E \ {a},
  * i.e. no argument in E is defended only by itself
+ *
+ * @see "M. Caminada. 'Strong Admissibility Revisited'. COMMA 2014"
  *
  * @author Lars Bengel
  */
@@ -46,19 +48,21 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     }
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        // check all subsets of the grounded extension of bbase
-        Set<Set<Argument>> candidates = new SetTools<Argument>().subsets(new SimpleGroundedReasoner().getModel(bbase));
         Collection<Extension<DungTheory>> result = new HashSet<>();
-        for (Set<Argument> ext: candidates) {
+
+        // check all subsets of the grounded extension of bbase
+        SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(new SimpleGroundedReasoner().getModel(bbase)));
+        while (it.hasNext()) {
+            Extension<DungTheory> ext = new Extension<>(it.next());
             boolean isStronglyDefended = true;
-            for (Argument a: ext) {
+            for (Argument a : ext) {
                 if (!bbase.isStronglyDefendedBy(a, ext)) {
                     isStronglyDefended = false;
                     break;
                 }
             }
             if (isStronglyDefended)
-                result.add(new Extension<>(ext));
+                result.add(ext);
         }
         return result;
     }
