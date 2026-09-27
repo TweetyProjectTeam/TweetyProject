@@ -20,9 +20,11 @@ package org.tweetyproject.arg.aba;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +37,8 @@ import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.aba.examples.AbaExample;
 import org.tweetyproject.arg.aba.parser.AbaParser;
 import org.tweetyproject.arg.aba.reasoner.AdmissibleReasoner;
+import org.tweetyproject.arg.aba.reasoner.AfReductionReasoner;
+import org.tweetyproject.arg.aba.reasoner.AfReductionReasoner.SupportArgument;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
@@ -578,6 +582,74 @@ public class AbaTest {
 				actual.add(new HashSet<>(ext));
 			assertEquals(expected, actual, abat.toString());
 		}
+	}
+
+	@Test
+	public void AfReductionMergesMinimalDerivations() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		// Lehtonen (SAFA 2026): the only argument from {a} derives {x, y}
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b}\nx <- a,b\nx <- a\ny <- a");
+		Map<Set<String>, Set<String>> actual = new HashMap<>();
+		for (SupportArgument<PlFormula> arg : new AfReductionReasoner<PlFormula>(Semantics.CO).getArguments(abat)) {
+			Set<String> support = new HashSet<>();
+			for (Assumption<PlFormula> a : arg.getSupport())
+				support.add(a.toString());
+			Set<String> claims = new HashSet<>();
+			for (PlFormula c : arg.getClaims())
+				claims.add(c.toString());
+			actual.put(support, claims);
+		}
+		assertEquals(Map.of(Set.of("a"), Set.of("a", "x", "y"), Set.of("b"), Set.of("b")), actual);
+	}
+
+	@Test
+	public void AfReductionRejectsNonFlat() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b}\na <- b");
+		assertThrows(IllegalArgumentException.class, () -> new AfReductionReasoner<PlFormula>(Semantics.CO).getArguments(abat));
+	}
+
+	@Test
+	public void AfReductionAdmissibleMapsBackBySupport() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		// FlatAbaReasoner returns {a} here, which does not counter-attack c
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b,c}\np <- b\nnot a = c\nnot c = p\nnot b = z");
+		assertEquals(asSets(new AdmissibleReasoner<PlFormula>().getModels(abat)),
+				asSets(new AfReductionReasoner<PlFormula>(Semantics.ADM).getModels(abat)));
+	}
+
+	@Test
+	public void AfReductionMatchesDirectReasoners() throws Exception {
+		Map<Semantics, GeneralAbaReasoner<PlFormula>> direct = Map.of(Semantics.CO, new CompleteReasoner<>(),
+				Semantics.PR, new PreferredReasoner<>(), Semantics.ST, new StableReasoner<>(), Semantics.GR,
+				new WellFoundedReasoner<>());
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		List<AbaTheory<PlFormula>> theories = comparisonTheories();
+		// conflicts only visible via arguments outside the extension
+		theories.add(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
+		theories.add(parser.parseBeliefBase("{b,c,d}\np <- b\nx <- b,d\nnot c = p\nnot b = zb\nnot d = zd"));
+		for (AbaTheory<PlFormula> abat : theories) {
+			if (!abat.isFlat())
+				continue;
+			for (Map.Entry<Semantics, GeneralAbaReasoner<PlFormula>> e : direct.entrySet())
+				assertEquals(asSets(e.getValue().getModels(abat)),
+						asSets(new AfReductionReasoner<PlFormula>(e.getKey()).getModels(abat)),
+						e.getKey() + ": " + abat);
+		}
+	}
+
+	@Test
+	public void AfReductionRejectsConflictFreeBasedSemantics() {
+		for (Semantics s : new Semantics[] { Semantics.CF, Semantics.NA, Semantics.STG, Semantics.CF2, Semantics.WAD,
+				Semantics.WPR, Semantics.UD, Semantics.SUD, Semantics.CG })
+			assertThrows(IllegalArgumentException.class, () -> new AfReductionReasoner<PlFormula>(s), s.toString());
+	}
+
+	private static Set<Set<Assumption<PlFormula>>> asSets(Collection<AbaExtension<PlFormula>> exts) {
+		Set<Set<Assumption<PlFormula>>> result = new HashSet<>();
+		for (AbaExtension<PlFormula> ext : exts)
+			result.add(new HashSet<>(ext));
+		return result;
 	}
 
 }
