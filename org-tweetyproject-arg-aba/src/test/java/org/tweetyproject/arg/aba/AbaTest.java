@@ -497,4 +497,19 @@ public class AbaTest {
 		}
 	}
 
+	@Test
+	public void PreferredReasonerMatchesTheory() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
+			Collection<AbaExtension<PlFormula>> adm = abat.getAllAdmissbleExtensions();
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : adm)
+				if (adm.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o)))
+					expected.add(new HashSet<>(ext));
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new PreferredReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, abat.toString());
+		}
+	}
+
 }
