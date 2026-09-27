@@ -18,7 +18,9 @@
  */
 package org.tweetyproject.web.services.aba;
 
+import org.tweetyproject.arg.aba.reasoner.AdmissibleReasoner;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
+import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
@@ -51,7 +53,11 @@ public abstract class GeneralAbaReasonerFactory<T> {
         /** stable */
         ST("st", "Stable"),
         /** well founded */
-        WF("wf", "Well-founded");
+        WF("wf", "Well-founded"),
+        /** conflict-free */
+        CF("cf", "Conflict-free"),
+        /** admissible */
+        ADM("adm", "Admissible");
 
         /** The identifier of the semantics */
         public String id;
@@ -118,6 +124,10 @@ public abstract class GeneralAbaReasonerFactory<T> {
 				return new PreferredReasoner<>();
 			case WF:
 				return new WellFoundedReasoner<>();
+			case CF:
+				return new ConflictFreeReasoner<>();
+			case ADM:
+				return new AdmissibleReasoner<>();
 			default:
 				throw new RuntimeException("No reasoner found for semantics " + sem.toString());
 		}
