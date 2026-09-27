@@ -45,6 +45,7 @@ import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.aba.reasoner.SetafReductionReasoner;
 import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
 import org.tweetyproject.arg.aba.semantics.AbaAttack;
@@ -55,7 +56,10 @@ import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.arg.aba.syntax.Deduction;
 import org.tweetyproject.arg.aba.syntax.InferenceRule;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
+import org.tweetyproject.arg.setaf.syntax.SetAttack;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.util.IncreasingSubsetIterator;
 import org.tweetyproject.commons.util.SubsetIterator;
@@ -643,6 +647,57 @@ public class AbaTest {
 		for (Semantics s : new Semantics[] { Semantics.CF, Semantics.NA, Semantics.STG, Semantics.CF2, Semantics.WAD,
 				Semantics.WPR, Semantics.UD, Semantics.SUD, Semantics.CG })
 			assertThrows(IllegalArgumentException.class, () -> new AfReductionReasoner<PlFormula>(s), s.toString());
+	}
+
+	@Test
+	public void SetafReductionMatchesDirectReasoners() throws Exception {
+		Map<Semantics, GeneralAbaReasoner<PlFormula>> direct = Map.of(Semantics.CF, new ConflictFreeReasoner<>(),
+				Semantics.ADM, new AdmissibleReasoner<>(), Semantics.CO, new CompleteReasoner<>(), Semantics.PR,
+				new PreferredReasoner<>(), Semantics.ST, new StableReasoner<>(), Semantics.GR,
+				new WellFoundedReasoner<>(), Semantics.ID, new IdealReasoner<>());
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		List<AbaTheory<PlFormula>> theories = comparisonTheories();
+		theories.add(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
+		theories.add(parser.parseBeliefBase("{b,c,d}\np <- b\nx <- b,d\nnot c = p\nnot b = zb\nnot d = zd"));
+		theories.add(parser.parseBeliefBase("{a,b,c}\nnb <- b\nnc <- c\nna <- a\nnot a = nb\nnot b = nc\nnot c = na"));
+		for (AbaTheory<PlFormula> abat : theories) {
+			if (!abat.isFlat())
+				continue;
+			for (Map.Entry<Semantics, GeneralAbaReasoner<PlFormula>> e : direct.entrySet())
+				assertEquals(asSets(e.getValue().getModels(abat)),
+						asSets(new SetafReductionReasoner<PlFormula>(e.getKey()).getModels(abat)),
+						e.getKey() + ": " + abat);
+		}
+	}
+
+	@Test
+	public void SetafReductionKeepsConflictsInMetalevelSemantics() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc");
+		Set<Set<Assumption<PlFormula>>> cf = asSets(new ConflictFreeReasoner<PlFormula>().getModels(abat));
+		for (Semantics s : new Semantics[] { Semantics.WAD, Semantics.UD })
+			assertTrue(cf.containsAll(asSets(new SetafReductionReasoner<PlFormula>(s).getModels(abat))), s.toString());
+	}
+
+	@Test
+	public void SetafReductionBuildsAssumptionAttacks() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		SetAf joint = new SetafReductionReasoner<PlFormula>(Semantics.CO)
+				.getSetaf(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
+		assertEquals(Set.of(new SetAttack(Set.of(new Argument("b"), new Argument("c")), new Argument("b"))),
+				new HashSet<>(joint.getAttacks()));
+		// q is a fact, so b is never accepted and drops out with its attacks
+		SetAf fact = new SetafReductionReasoner<PlFormula>(Semantics.CO).getSetaf(parser.parseBeliefBase(
+				"{a,b,c}\nr <- b,c\nq <-\np <- q,a\nnot a = r\nnot b = q\nnot c = p"));
+		assertEquals(Set.of(new Argument("a"), new Argument("c")), new HashSet<>(fact));
+		assertEquals(Set.of(new SetAttack(Set.of(new Argument("a")), new Argument("c"))),
+				new HashSet<>(fact.getAttacks()));
+	}
+
+	@Test
+	public void SetafReductionRejectsConflictFreeBasedMetalevelSemantics() {
+		for (Semantics s : new Semantics[] { Semantics.NA, Semantics.CF2, Semantics.SCF2, Semantics.STG2 })
+			assertThrows(IllegalArgumentException.class, () -> new SetafReductionReasoner<PlFormula>(s), s.toString());
 	}
 
 	private static Set<Set<Assumption<PlFormula>>> asSets(Collection<AbaExtension<PlFormula>> exts) {

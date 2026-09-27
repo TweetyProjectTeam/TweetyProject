@@ -37,5 +37,10 @@
   		<artifactId>aspic</artifactId>
   		<version>1.31-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.tweetyproject.arg</groupId>
+  		<artifactId>setaf</artifactId>
+  		<version>1.31-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
