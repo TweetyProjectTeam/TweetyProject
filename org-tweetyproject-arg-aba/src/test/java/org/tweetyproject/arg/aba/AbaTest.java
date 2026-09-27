@@ -71,6 +71,8 @@ public class AbaTest {
 		AbaTheory<PlFormula> abat = file("example1");
 		assertEquals(3, abat.getAssumptions().size());
 		assertEquals(4, abat.getRules().size());
+		// an empty body prints as true, so true parses back to an empty body
+		assertTrue(theory("y <- true").getRules().iterator().next().getPremise().isEmpty());
 
 		FolParser folparser = new FolParser();
 		folparser.setSignature(folparser.parseSignature("Male = {a,b}\nFemale = {c,d}\ntype(Pair(Male,Female))\n"

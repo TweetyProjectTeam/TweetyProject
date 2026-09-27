@@ -121,7 +121,7 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
     @Override
     public Formula parseFormula(Reader reader) throws IOException, ParserException {
         final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"),
-                      TRUE = Pattern.compile("^\\s*$"),
+                      TRUE = Pattern.compile("^\\s*(" + Pattern.quote(symbolTrue) + ")?\\s*$"),
                       NEGATION = Pattern.compile("not(.+)=(.+)");
 
         BufferedReader br = new BufferedReader(reader);
