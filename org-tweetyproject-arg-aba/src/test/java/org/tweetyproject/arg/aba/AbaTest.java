@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import org.tweetyproject.arg.aba.examples.AbaExample;
 import org.tweetyproject.arg.aba.parser.AbaParser;
+import org.tweetyproject.arg.aba.reasoner.AdmissibleReasoner;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
@@ -450,6 +451,29 @@ public class AbaTest {
 			for (AbaExtension<PlFormula> ext : new ConflictFreeReasoner<PlFormula>().getModels(abat))
 				actual.add(new HashSet<>(ext));
 			assertEquals(expected, actual, file);
+		}
+	}
+
+	@Test
+	public void AdmissibleReasonerMatchesTheory() throws Exception {
+		PlParser plparser = new PlParser();
+		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
+		List<AbaTheory<PlFormula>> theories = new LinkedList<>();
+		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" })
+			theories.add(parser.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile()));
+		// flat: a chain of attacks, and multi-premise rules with a cycle
+		theories.add(parser.parseBeliefBase("{a0,a1,a2,a3,a4,a5}\nnot a0 = c0\nnot a1 = c1\nnot a2 = c2\nnot a3 = c3\n"
+				+ "not a4 = c4\nnot a5 = c5\nc1 <- a0\nc2 <- a1\nc3 <- a2\nc4 <- a3\nc5 <- a4"));
+		theories.add(parser.parseBeliefBase("{a,b,c,d}\nx <- a,b\ny <- c\nz <- d\nw <- x\n"
+				+ "not a = y\nnot b = z\nnot c = w\nnot d = y"));
+		for (AbaTheory<PlFormula> abat : theories) {
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions())
+				expected.add(new HashSet<>(ext));
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new AdmissibleReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, abat.toString());
 		}
 	}
 
