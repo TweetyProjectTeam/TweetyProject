@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.aba.examples.AbaExample;
 import org.tweetyproject.arg.aba.parser.AbaParser;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
+import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
@@ -432,6 +433,23 @@ public class AbaTest {
 						expected.add(s);
 				assertEquals(expected, supports.getOrDefault(f, Set.of()), file + ": " + f);
 			}
+		}
+	}
+
+	@Test
+	public void ConflictFreeReasonerMatchesTheory() throws Exception {
+		PlParser plparser = new PlParser();
+		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
+		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" }) {
+			AbaTheory<PlFormula> abat = parser
+					.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile());
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			for (Collection<Assumption<PlFormula>> ext : abat.getAllConflictFreeExtensions())
+				expected.add(new HashSet<>(ext));
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new ConflictFreeReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, file);
 		}
 	}
 
