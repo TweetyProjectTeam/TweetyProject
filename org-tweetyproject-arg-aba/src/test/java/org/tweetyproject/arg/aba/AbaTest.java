@@ -18,12 +18,16 @@
  */
 package org.tweetyproject.arg.aba;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +49,7 @@ import org.tweetyproject.arg.aba.syntax.InferenceRule;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
@@ -399,6 +404,35 @@ public class AbaTest {
 		assertTrue(dt.getNodes().size() == 6);
 		assertTrue(dt.getAttacks().size() == 6);
 
+	}
+
+	@Test
+	public void MinimalSupportsMatchBruteForce() throws Exception {
+		PlParser plparser = new PlParser();
+		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
+		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" }) {
+			AbaTheory<PlFormula> abat = parser
+					.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile());
+			Map<PlFormula, Set<Set<Assumption<PlFormula>>>> supports = abat.getMinimalSupports();
+			Set<Set<Assumption<PlFormula>>> subsets = SetTools.powerSet(new HashSet<>(abat.getAssumptions()));
+			Set<PlFormula> formulas = new HashSet<>();
+			for (InferenceRule<PlFormula> r : abat.getRules()) {
+				formulas.add(r.getConclusion());
+				formulas.addAll(r.getPremise());
+			}
+			for (Assumption<PlFormula> a : abat.getAssumptions()) {
+				formulas.add(a.getConclusion());
+				formulas.addAll(abat.getContraries(a.getConclusion()));
+			}
+			for (PlFormula f : formulas) {
+				Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+				for (Set<Assumption<PlFormula>> s : subsets)
+					if (abat.getDerivable(s).contains(f)
+							&& subsets.stream().noneMatch(t -> s.containsAll(t) && !t.equals(s) && abat.getDerivable(t).contains(f)))
+						expected.add(s);
+				assertEquals(expected, supports.getOrDefault(f, Set.of()), file + ": " + f);
+			}
+		}
 	}
 
 }

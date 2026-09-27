@@ -180,6 +180,66 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
+	 * Computes the minimal supports of all derivable formulas, i.e. the
+	 * subset-minimal sets of assumptions each formula can be derived from, by a
+	 * fixpoint over the rules.
+	 *
+	 * @return a map from each derivable formula to its minimal supports
+	 */
+	public Map<T, Set<Set<Assumption<T>>>> getMinimalSupports() {
+		Map<T, Set<Set<Assumption<T>>>> supports = new HashMap<>();
+		for (Assumption<T> a : getAssumptions())
+			addMinimalSupport(supports, a.getConclusion(), Collections.singleton(a));
+		boolean changed;
+		do {
+			changed = false;
+			for (InferenceRule<T> rule : getRules())
+				for (Set<Assumption<T>> s : combineSupports(supports, rule))
+					changed = addMinimalSupport(supports, rule.getConclusion(), s) || changed;
+		} while (changed);
+		return supports;
+	}
+
+	/**
+	 * All unions of one current support per premise of the rule
+	 */
+	private Set<Set<Assumption<T>>> combineSupports(Map<T, Set<Set<Assumption<T>>>> supports, InferenceRule<T> rule) {
+		Set<Set<Assumption<T>>> result = new HashSet<>();
+		result.add(new HashSet<>());
+		for (T premise : rule.getPremise()) {
+			Set<Set<Assumption<T>>> premiseSupports = supports.get(premise);
+			if (premiseSupports == null)
+				return Collections.emptySet();
+			Set<Set<Assumption<T>>> next = new HashSet<>();
+			for (Set<Assumption<T>> s : result)
+				for (Set<Assumption<T>> p : premiseSupports) {
+					Set<Assumption<T>> union = new HashSet<>(s);
+					union.addAll(p);
+					next.add(union);
+				}
+			result = next;
+		}
+		return result;
+	}
+
+	/**
+	 * Adds s as a support of formula unless a subset already is one, and drops
+	 * the supports that s is a proper subset of
+	 */
+	private boolean addMinimalSupport(Map<T, Set<Set<Assumption<T>>>> supports, T formula, Set<Assumption<T>> s) {
+		Set<Set<Assumption<T>>> current = supports.computeIfAbsent(formula, f -> new HashSet<>());
+		for (Set<Assumption<T>> c : current)
+			if (s.containsAll(c))
+				return false;
+		Iterator<Set<Assumption<T>>> it = current.iterator();
+		while (it.hasNext())
+			if (it.next().containsAll(s))
+				it.remove();
+		current.add(s);
+		return true;
+	}
+
+	/**
 	 * A set of assumptions is closed iff it equals its closure.
 	 *
 	 * @param assumptions a set of assumptions
