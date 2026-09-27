@@ -60,7 +60,7 @@ public class SimpleEagerSetAfReasoner extends AbstractSetAfExtensionReasoner {
             // 1. for every semi-stable labeling L both in and out are subsets of that sets in L
             potEager = true;
             for(Extension<SetAf> ext2: sstExt){
-            	Extension<SetAf> extLab2 = new Extension<SetAf>(ext2);
+            	Labeling extLab2 = new Labeling((SetAf)bbase, ext2);
                 if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
                     potEager = false;
                     break;
