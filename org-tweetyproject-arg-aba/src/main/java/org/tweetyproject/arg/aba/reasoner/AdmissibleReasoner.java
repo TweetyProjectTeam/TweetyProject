@@ -18,8 +18,10 @@
  */
 package org.tweetyproject.arg.aba.reasoner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +49,7 @@ public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		// TODO non-flat: check closed attackers cl(T) once that is proven equivalent
 		if (!abat.isFlat())
-			return abat.getAllAdmissbleExtensions();
+			return getNonFlatModels(abat, getClosedSets(abat));
 		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);
 		Collection<AbaExtension<T>> result = new HashSet<>();
 		SubsetIterator<Assumption<T>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
@@ -57,6 +59,58 @@ public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<
 				result.add(new AbaExtension<T>(ext));
 		}
 		return result;
+	}
+
+	/**
+	 * Closed, conflict-free sets that attack every closed set attacking them
+	 *
+	 * @param abat   an ABA theory
+	 * @param closed the closed sets of the theory
+	 * @return the admissible extensions
+	 */
+	protected Collection<AbaExtension<T>> getNonFlatModels(AbaTheory<T> abat, List<Set<Assumption<T>>> closed) {
+		Collection<AbaExtension<T>> result = new HashSet<>();
+		l: for (Set<Assumption<T>> ext : closed) {
+			if (!abat.isConflictFree(ext))
+				continue;
+			for (Set<Assumption<T>> att : closed)
+				if (abat.attacks(att, ext) && !abat.attacks(ext, att))
+					continue l;
+			result.add(new AbaExtension<T>(ext));
+		}
+		return result;
+	}
+
+	/**
+	 * Checks whether ext attacks every closed set attacking a
+	 *
+	 * @param abat   an ABA theory
+	 * @param closed the closed sets of the theory
+	 * @param ext    a set of assumptions
+	 * @param a      an assumption
+	 * @return true iff ext defends a
+	 */
+	protected boolean defends(AbaTheory<T> abat, List<Set<Assumption<T>>> closed, Collection<Assumption<T>> ext,
+			Assumption<T> a) {
+		for (Set<Assumption<T>> att : closed)
+			if (abat.attacks(att, Set.of(a)) && !abat.attacks(ext, att))
+				return false;
+		return true;
+	}
+
+	/**
+	 * @param abat an ABA theory
+	 * @return all closed sets of assumptions
+	 */
+	protected List<Set<Assumption<T>>> getClosedSets(AbaTheory<T> abat) {
+		List<Set<Assumption<T>>> closed = new ArrayList<>();
+		SubsetIterator<Assumption<T>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
+		while (it.hasNext()) {
+			Set<Assumption<T>> s = it.next();
+			if (abat.isClosed(s))
+				closed.add(s);
+		}
+		return closed;
 	}
 
 	/**

@@ -20,6 +20,7 @@
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,15 +52,13 @@ public class CompleteReasoner<T extends Formula> extends AdmissibleReasoner<T> {
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		if (abat.isFlat())
 			return getFlatModels(abat);
+		List<Set<Assumption<T>>> closed = getClosedSets(abat);
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		Collection<AbaExtension<T>> exts = abat.getAllAdmissbleExtensions();
-		l:for(Collection<Assumption<T>> ext : exts) {
-			for(Assumption<T> a: abat.getAssumptions()) {
-				if(!ext.contains(a)&&abat.defends(ext, a)){
+		l: for (AbaExtension<T> ext : getNonFlatModels(abat, closed)) {
+			for (Assumption<T> a : abat.getAssumptions())
+				if (!ext.contains(a) && defends(abat, closed, ext, a))
 					continue l;
-				}
-			}
-			result.add(new AbaExtension<T>(ext));
+			result.add(ext);
 		}
 		return result;
 	}

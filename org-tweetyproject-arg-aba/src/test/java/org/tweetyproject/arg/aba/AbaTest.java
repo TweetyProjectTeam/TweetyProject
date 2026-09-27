@@ -396,12 +396,10 @@ public class AbaTest {
 	public void ConflictFreeReasonerMatchesTheory() throws Exception {
 		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			for (Collection<Assumption<PlFormula>> ext : abat.getAllConflictFreeExtensions())
-				expected.add(new HashSet<>(ext));
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new ConflictFreeReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
+			for (Set<Assumption<PlFormula>> ext : subsets(abat))
+				if (abat.isConflictFree(ext))
+					expected.add(ext);
+			assertEquals(expected, asSets(new ConflictFreeReasoner<PlFormula>().getModels(abat)), abat.toString());
 		}
 	}
 
@@ -427,25 +425,43 @@ public class AbaTest {
 
 	@Test
 	public void AdmissibleReasonerMatchesTheory() throws Exception {
-		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
-			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions())
-				expected.add(new HashSet<>(ext));
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new AdmissibleReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
-		}
+		for (AbaTheory<PlFormula> abat : comparisonTheories())
+			assertEquals(admissibleByDefinition(abat), asSets(new AdmissibleReasoner<PlFormula>().getModels(abat)),
+					abat.toString());
+	}
+
+	private static List<Set<Assumption<PlFormula>>> subsets(AbaTheory<PlFormula> abat) {
+		List<Set<Assumption<PlFormula>>> result = new LinkedList<>();
+		SubsetIterator<Assumption<PlFormula>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
+		while (it.hasNext())
+			result.add(it.next());
+		return result;
+	}
+
+	// handbook Def. 2.8: closed, conflict-free, and attacking every closed attacker
+	private static Set<Set<Assumption<PlFormula>>> admissibleByDefinition(AbaTheory<PlFormula> abat) {
+		Set<Set<Assumption<PlFormula>>> result = new HashSet<>();
+		for (Set<Assumption<PlFormula>> ext : subsets(abat))
+			if (abat.isClosed(ext) && abat.isConflictFree(ext) && subsets(abat).stream()
+					.noneMatch(att -> abat.isClosed(att) && abat.attacks(att, ext) && !abat.attacks(ext, att)))
+				result.add(ext);
+		return result;
 	}
 
 	private static Set<Set<Assumption<PlFormula>>> completeByDefinition(AbaTheory<PlFormula> abat) {
 		Set<Set<Assumption<PlFormula>>> result = new HashSet<>();
-		l: for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions()) {
-			for (Assumption<PlFormula> a : abat.getAssumptions())
-				if (!ext.contains(a) && abat.defends(ext, a))
-					continue l;
-			result.add(new HashSet<>(ext));
-		}
+		for (Set<Assumption<PlFormula>> ext : admissibleByDefinition(abat))
+			if (abat.getAssumptions().stream().allMatch(a -> ext.contains(a) || subsets(abat).stream().anyMatch(
+					att -> abat.isClosed(att) && abat.attacks(att, Set.of(a)) && !abat.attacks(ext, att))))
+				result.add(ext);
+		return result;
+	}
+
+	private static Set<Set<Assumption<PlFormula>>> maximal(Set<Set<Assumption<PlFormula>>> sets) {
+		Set<Set<Assumption<PlFormula>>> result = new HashSet<>();
+		for (Set<Assumption<PlFormula>> s : sets)
+			if (sets.stream().noneMatch(o -> o.containsAll(s) && !s.containsAll(o)))
+				result.add(s);
 		return result;
 	}
 
@@ -472,58 +488,38 @@ public class AbaTest {
 
 	@Test
 	public void PreferredReasonerMatchesTheory() throws Exception {
-		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
-			Collection<AbaExtension<PlFormula>> adm = abat.getAllAdmissbleExtensions();
-			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : adm)
-				if (adm.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o)))
-					expected.add(new HashSet<>(ext));
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new PreferredReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
-		}
+		for (AbaTheory<PlFormula> abat : comparisonTheories())
+			assertEquals(maximal(admissibleByDefinition(abat)),
+					asSets(new PreferredReasoner<PlFormula>().getModels(abat)), abat.toString());
 	}
 
 	@Test
 	public void StableReasonerMatchesDefinition() throws Exception {
 		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			for (Collection<Assumption<PlFormula>> ext : abat.getAllExtensions())
+			for (Set<Assumption<PlFormula>> ext : subsets(abat))
 				if (abat.isConflictFree(ext) && abat.isClosed(ext) && abat.getAssumptions().stream()
 						.allMatch(a -> ext.contains(a) || abat.attacks(ext, Set.of(a))))
-					expected.add(new HashSet<>(ext));
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new StableReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
+					expected.add(ext);
+			assertEquals(expected, asSets(new StableReasoner<PlFormula>().getModels(abat)), abat.toString());
 		}
 	}
 
 	@Test
 	public void IdealReasonerMatchesTheory() throws Exception {
 		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
-			Collection<AbaExtension<PlFormula>> adm = abat.getAllAdmissbleExtensions();
-			Set<Assumption<PlFormula>> prefIntersection = null;
-			for (AbaExtension<PlFormula> ext : adm)
-				if (adm.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o))) {
-					if (prefIntersection == null)
-						prefIntersection = new HashSet<>(ext);
-					else
-						prefIntersection.retainAll(ext);
-				}
-			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			if (prefIntersection != null) {
-				Set<Assumption<PlFormula>> pi = prefIntersection;
-				List<AbaExtension<PlFormula>> inside = adm.stream().filter(pi::containsAll).toList();
-				for (AbaExtension<PlFormula> ext : inside)
-					if (inside.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o)))
-						expected.add(new HashSet<>(ext));
-			}
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new IdealReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
+			// the maximal admissible sets inside every preferred set
+			Set<Set<Assumption<PlFormula>>> adm = admissibleByDefinition(abat);
+			Set<Assumption<PlFormula>> inAll = maximal(adm).stream().reduce((x, y) -> {
+				Set<Assumption<PlFormula>> i = new HashSet<>(x);
+				i.retainAll(y);
+				return i;
+			}).orElse(Set.of());
+			Set<Set<Assumption<PlFormula>>> inside = new HashSet<>();
+			for (Set<Assumption<PlFormula>> ext : adm)
+				if (inAll.containsAll(ext))
+					inside.add(ext);
+			assertEquals(maximal(inside), asSets(new IdealReasoner<PlFormula>().getModels(abat)), abat.toString());
 		}
 	}
 

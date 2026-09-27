@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.aba.syntax;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,14 +27,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
-import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
@@ -281,17 +278,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * Computes the power set of a collection.
-	 *
-	 * @param set a collection
-	 * @param <S> the element type
-	 * @return a power set
-	 */
-	private static <S> Collection<Collection<S>> toPowerSet(Collection<S> set) {
-		return new HashSet<>(SetTools.powerSet(new HashSet<>(set)));
-	}
-
-	/**
 	 * Add to theory
 	 * @param rule an assumption or an inference rule or a negation that is added to
 	 *             the theory
@@ -445,22 +431,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	}
 
 	/**
-	 * Checks whether a set of arguments defends an argument.
-	 *
-	 * @param defendor the defending set
-	 * @param defended the assumption which shall be defended
-	 * @return true iff defendor defends defended
-	 */
-	public boolean defends(Collection<Assumption<T>> defendor, Assumption<T> defended) {
-		Collection<Assumption<T>> defedl = Arrays.asList(defended);
-		for (Collection<Assumption<T>> ext : getAllExtensions()) {
-			if (isClosed(ext) && attacks(ext, defedl) && !attacks(defendor, ext))
-				return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Checks whether a set of arguments is conflict-free.
 	 *
 	 * @param ext a set of arguments
@@ -468,62 +438,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public boolean isConflictFree(Collection<Assumption<T>> ext) {
 		return !attacks(ext, ext);
-	}
-
-	/**
-	 * Computes all possible extensions.
-	 *
-	 * @return the powerset of the assumptions
-	 */
-	public Collection<Collection<Assumption<T>>> getAllExtensions() {
-		return toPowerSet(getAssumptions());
-	}
-
-	/**
-	 * Computes all context-free extensions.
-	 *
-	 * @return all context-free extensions
-	 */
-	public Collection<Collection<Assumption<T>>> getAllConflictFreeExtensions() {
-		Collection<Collection<Assumption<T>>> result = new HashSet<>();
-		for (Collection<Assumption<T>> ext : toPowerSet(getAssumptions())) {
-			if (isConflictFree(ext))
-				result.add(ext);
-		}
-		return result;
-	}
-
-	/**
-	 * Checks whether a set of arguments is admissible.
-	 *
-	 * @param ext the set
-	 * @return true iff ext is admissible
-	 */
-	public boolean isAdmissible(AbaExtension<T> ext) {
-		if (!isConflictFree(ext))
-			return false;
-		if (!isClosed(ext))
-			return false;
-		for (Collection<Assumption<T>> as : toPowerSet(getAssumptions())) {
-			if (isClosed(as) && attacks(as, ext) && !attacks(ext, as))
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Computes all admissible extensions.
-	 *
-	 * @return all admissible extensions
-	 */
-	public Collection<AbaExtension<T>> getAllAdmissbleExtensions() {
-		Collection<AbaExtension<T>> result = new HashSet<>();
-		for (Collection<Assumption<T>> ext : toPowerSet(getAssumptions())) {
-			AbaExtension<T> ext2 = new AbaExtension<T>(ext);
-			if (isAdmissible(ext2))
-				result.add(ext2);
-		}
-		return result;
 	}
 
 	/*
