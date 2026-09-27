@@ -64,7 +64,6 @@ import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.commons.analysis.NaiveMusEnumerator;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
-import org.tweetyproject.logics.fol.syntax.FolSignature;
 import org.tweetyproject.logics.fol.syntax.Negation;
 import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory;
 import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
@@ -77,7 +76,6 @@ import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
-import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.math.opt.solver.ApacheCommonsSimplex;
 import org.tweetyproject.math.opt.solver.GlpkSolver;
 import org.tweetyproject.math.opt.solver.Solver;
@@ -185,44 +183,24 @@ public class RequestController {
 			return response;
 		}
 
-		AbaReasonerCalleeFactory.Command cmd = AbaReasonerCalleeFactory.Command.getCommand(post.getCmd());
 		SatSolver.setDefaultSolver(new Sat4jSolver());
-		Callee callee = null;
-
-		if (post.getKb_format().equals("pl")) {
-			AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-			Assumption<PlFormula> assumption = cmd == AbaReasonerCalleeFactory.Command.QUERY
-					? new Assumption<>(new Proposition(post.getQuery_assumption()))
-					: null;
-			AbaTheory<PlFormula> theory = null;
-			try {
-				theory = parser.parseBeliefBase(post.getKb());
-			} catch (ParserException | IOException e) {
-				LoggerUtil.logger.log(Level.SEVERE, String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName()));
+		Callee callee;
+		try {
+			if (post.getKb_format().equals("pl")) {
+				callee = buildAbaCallee(post, new AbaParser<PlFormula>(new PlParser()));
+			} else {
+				FolParser folParser = new FolParser();
+				folParser.setSignature(folParser.parseSignature(post.getFol_signature()));
+				AbaParser<FolFormula> parser = new AbaParser<>(folParser);
+				parser.setSymbolComma(";");
+				callee = buildAbaCallee(post, parser);
 			}
-			GeneralAbaReasoner<PlFormula> reasoner = GeneralAbaReasonerFactory.getReasoner(
-					GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
-			callee = AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
-		}
-
-		if (post.getKb_format().equals("fol")) {
-			FolParser folParser = new FolParser();
-			FolSignature sig = folParser.parseSignature(post.getFol_signature());
-			folParser.setSignature(sig);
-			AbaParser<FolFormula> parser = new AbaParser<>(folParser);
-			parser.setSymbolComma(";");
-			Assumption<FolFormula> assumption = cmd == AbaReasonerCalleeFactory.Command.QUERY
-					? new Assumption<>(folParser.parseFormula(post.getQuery_assumption()))
-					: null;
-			AbaTheory<FolFormula> theory = null;
-			try {
-				theory = parser.parseBeliefBase(post.getKb());
-			} catch (ParserException | IOException e) {
-				LoggerUtil.logger.log(Level.SEVERE, String.format("Error while parsing the Beliefbase: %s", e.getClass().getSimpleName()));
-			}
-			GeneralAbaReasoner<FolFormula> reasoner = GeneralAbaReasonerFactory.getReasoner(
-					GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
-			callee = AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
+		} catch (IOException | RuntimeException e) {
+			String message = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+			LoggerUtil.logger.log(Level.SEVERE, String.format("Error while parsing the ABA request: %s", message));
+			response.setAnswer("Parse error: " + message);
+			response.setStatus("ERROR");
+			return response;
 		}
 
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
@@ -639,6 +617,24 @@ public class RequestController {
 		if ("fol".equals(post.getKb_format()) && post.getFol_signature() == null)
 			return "Missing fol_signature";
 		return null;
+	}
+
+	/** Parses the theory and query of a validated ABA request and builds its callee. */
+	@SuppressWarnings("unchecked")
+	private static <T extends Formula> Callee buildAbaCallee(AbaReasonerPost post, AbaParser<T> parser)
+			throws ParserException, IOException {
+		AbaReasonerCalleeFactory.Command cmd = AbaReasonerCalleeFactory.Command.getCommand(post.getCmd());
+		AbaTheory<T> theory = parser.parseBeliefBase(post.getKb());
+		Assumption<T> assumption = null;
+		if (cmd == AbaReasonerCalleeFactory.Command.QUERY) {
+			Formula formula = parser.parseFormula(post.getQuery_assumption());
+			if (!(formula instanceof Assumption))
+				throw new ParserException(String.format("query_assumption '%s' is not an atom", post.getQuery_assumption()));
+			assumption = (Assumption<T>) formula;
+		}
+		GeneralAbaReasoner<T> reasoner = GeneralAbaReasonerFactory.getReasoner(
+				GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
+		return AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
 	}
 
 	private AbaGetSemanticsResponse handleGetSemantics(AbaReasonerPost query)
