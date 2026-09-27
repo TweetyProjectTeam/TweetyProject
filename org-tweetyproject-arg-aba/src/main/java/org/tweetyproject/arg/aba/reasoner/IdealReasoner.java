@@ -53,7 +53,7 @@ public class IdealReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		Collection<AbaExtension<T>> prefexts = new PreferredReasoner<T>().getModels(abat);
 		Iterator<AbaExtension<T>> iter = prefexts.iterator();
-		Collection<Assumption<T>> intersec = iter.hasNext() ? iter.next() : new HashSet<Assumption<T>>();
+		Collection<Assumption<T>> intersec = iter.hasNext() ? new HashSet<>(iter.next()) : new HashSet<Assumption<T>>();
 		while (iter.hasNext()) {
 			intersec.retainAll(iter.next());
 		}
