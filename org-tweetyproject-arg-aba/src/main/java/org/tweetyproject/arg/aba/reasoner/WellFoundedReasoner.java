@@ -16,9 +16,6 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- /**
- *
- */
 package org.tweetyproject.arg.aba.reasoner;
 
 import java.util.Collection;

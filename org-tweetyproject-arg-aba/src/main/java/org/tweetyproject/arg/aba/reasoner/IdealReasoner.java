@@ -59,7 +59,7 @@ public class IdealReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 		}
 
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		Collection<AbaExtension<T>> exts = abat.getAllAdmissbleExtensions();
+		Collection<AbaExtension<T>> exts = new AdmissibleReasoner<T>().getModels(abat);
 		for (AbaExtension<T> ext : exts) {
 			if (intersec.containsAll(ext))
 				result.add(ext);

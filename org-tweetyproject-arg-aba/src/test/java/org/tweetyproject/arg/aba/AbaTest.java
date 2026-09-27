@@ -39,6 +39,7 @@ import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
 import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
@@ -547,6 +548,33 @@ public class AbaTest {
 		assertTrue(new CompleteReasoner<PlFormula>().getModels(abat).isEmpty());
 		assertTrue(new WellFoundedReasoner<PlFormula>().getModels(abat).isEmpty());
 		assertEquals(null, new WellFoundedReasoner<PlFormula>().getModel(abat));
+	}
+
+	@Test
+	public void IdealReasonerMatchesTheory() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
+			Collection<AbaExtension<PlFormula>> adm = abat.getAllAdmissbleExtensions();
+			Set<Assumption<PlFormula>> prefIntersection = null;
+			for (AbaExtension<PlFormula> ext : adm)
+				if (adm.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o))) {
+					if (prefIntersection == null)
+						prefIntersection = new HashSet<>(ext);
+					else
+						prefIntersection.retainAll(ext);
+				}
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			if (prefIntersection != null) {
+				Set<Assumption<PlFormula>> pi = prefIntersection;
+				List<AbaExtension<PlFormula>> inside = adm.stream().filter(pi::containsAll).toList();
+				for (AbaExtension<PlFormula> ext : inside)
+					if (inside.stream().noneMatch(o -> o.containsAll(ext) && !ext.containsAll(o)))
+						expected.add(new HashSet<>(ext));
+			}
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new IdealReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, abat.toString());
+		}
 	}
 
 }

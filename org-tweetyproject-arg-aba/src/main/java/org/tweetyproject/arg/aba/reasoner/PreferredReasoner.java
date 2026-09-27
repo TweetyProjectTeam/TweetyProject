@@ -37,7 +37,7 @@ import org.tweetyproject.commons.Formula;
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
-public class PreferredReasoner<T extends Formula> extends AdmissibleReasoner<T> {
+public class PreferredReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 	/** Default */
 	public PreferredReasoner() {
 	}
@@ -51,7 +51,7 @@ public class PreferredReasoner<T extends Formula> extends AdmissibleReasoner<T> 
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		Collection<AbaExtension<T>> exts = super.getModels(abat);
+		Collection<AbaExtension<T>> exts = new AdmissibleReasoner<T>().getModels(abat);
 		l: for (AbaExtension<T> ext : exts) {
 			for (AbaExtension<T> ext2 : exts) {
 				if (ext2 != ext && ext2.containsAll(ext))
