@@ -53,7 +53,8 @@ import org.tweetyproject.arg.aba.syntax.InferenceRule;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
@@ -418,7 +419,6 @@ public class AbaTest {
 			AbaTheory<PlFormula> abat = parser
 					.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile());
 			Map<PlFormula, Set<Set<Assumption<PlFormula>>>> supports = abat.getMinimalSupports();
-			Set<Set<Assumption<PlFormula>>> subsets = SetTools.powerSet(new HashSet<>(abat.getAssumptions()));
 			Set<PlFormula> formulas = new HashSet<>();
 			for (InferenceRule<PlFormula> r : abat.getRules()) {
 				formulas.add(r.getConclusion());
@@ -430,10 +430,13 @@ public class AbaTest {
 			}
 			for (PlFormula f : formulas) {
 				Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-				for (Set<Assumption<PlFormula>> s : subsets)
-					if (abat.getDerivable(s).contains(f)
-							&& subsets.stream().noneMatch(t -> s.containsAll(t) && !t.equals(s) && abat.getDerivable(t).contains(f)))
+				// smaller sets come first, so s is minimal iff no support found so far is inside it
+				SubsetIterator<Assumption<PlFormula>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
+				while (it.hasNext()) {
+					Set<Assumption<PlFormula>> s = it.next();
+					if (abat.getDerivable(s).contains(f) && expected.stream().noneMatch(s::containsAll))
 						expected.add(s);
+				}
 				assertEquals(expected, supports.getOrDefault(f, Set.of()), file + ": " + f);
 			}
 		}

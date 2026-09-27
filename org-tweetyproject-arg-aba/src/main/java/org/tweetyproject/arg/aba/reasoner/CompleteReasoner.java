@@ -27,7 +27,8 @@ import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 
 /**
  * This reasoner for ABA theories performs inference on the complete extensions.
@@ -69,7 +70,9 @@ public class CompleteReasoner<T extends Formula> extends AdmissibleReasoner<T> {
 	private Collection<AbaExtension<T>> getFlatModels(AbaTheory<T> abat) {
 		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		l: for (Set<Assumption<T>> ext : SetTools.powerSet(new HashSet<>(abat.getAssumptions()))) {
+		SubsetIterator<Assumption<T>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
+		l: while (it.hasNext()) {
+			Set<Assumption<T>> ext = it.next();
 			if (!isConflictFree(ext, attackers) || !isAdmissible(ext, attackers))
 				continue;
 			for (Assumption<T> a : abat.getAssumptions())

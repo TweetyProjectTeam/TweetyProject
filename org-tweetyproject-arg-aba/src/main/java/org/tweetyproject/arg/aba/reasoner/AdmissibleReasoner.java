@@ -27,7 +27,8 @@ import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 
 /**
  * This reasoner for ABA theories performs inference on the admissible
@@ -49,9 +50,12 @@ public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<
 			return abat.getAllAdmissbleExtensions();
 		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		for (Set<Assumption<T>> ext : SetTools.powerSet(new HashSet<>(abat.getAssumptions())))
+		SubsetIterator<Assumption<T>> it = new IncreasingSubsetIterator<>(new HashSet<>(abat.getAssumptions()));
+		while (it.hasNext()) {
+			Set<Assumption<T>> ext = it.next();
 			if (isConflictFree(ext, attackers) && isAdmissible(ext, attackers))
 				result.add(new AbaExtension<T>(ext));
+		}
 		return result;
 	}
 
