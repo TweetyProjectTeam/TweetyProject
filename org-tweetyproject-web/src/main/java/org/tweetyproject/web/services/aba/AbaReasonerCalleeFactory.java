@@ -22,6 +22,7 @@ import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
 import java.util.Objects;
@@ -46,7 +47,11 @@ public class AbaReasonerCalleeFactory {
         /** query */
         QUERY("query", "Query ABA framework"),
         /** get model */
-        GET_MODEL("get_model", "Get some model");
+        GET_MODEL("get_model", "Get some model"),
+        /** get credulously accepted assumptions */
+        GET_CREDULOUS("get_credulous", "Get credulous assumptions"),
+        /** get skeptically accepted assumptions */
+        GET_SKEPTICAL("get_skeptical", "Get skeptical assumptions");
 
 
         /** Identifier for the command */
@@ -112,6 +117,10 @@ public class AbaReasonerCalleeFactory {
 
             case QUERY:
                 return new AbaReasonerQueryCallee<>(reasoner, bbase, a);
+            case GET_CREDULOUS:
+                return new AbaReasonerQueryAllCallee<>(reasoner, bbase, InferenceMode.CREDULOUS);
+            case GET_SKEPTICAL:
+                return new AbaReasonerQueryAllCallee<>(reasoner, bbase, InferenceMode.SKEPTICAL);
 
             default:
                 throw new RuntimeException("Command not found: " + Objects.requireNonNull(cmd).toString());

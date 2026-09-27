@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.aba.reasoner;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.tweetyproject.arg.aba.semantics.AbaExtension;
@@ -78,6 +79,26 @@ public abstract class GeneralAbaReasoner<T extends Formula> implements Qualitati
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Returns all assumptions accepted under the given inference mode.
+	 *
+	 * @param beliefbase    an ABA theory
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @return the accepted assumptions
+	 */
+	public Collection<Assumption<T>> queryAll(AbaTheory<T> beliefbase, InferenceMode inferenceMode) {
+		Collection<Assumption<T>> result = new HashSet<>();
+		if (inferenceMode.equals(InferenceMode.CREDULOUS)) {
+			for (AbaExtension<T> e : this.getModels(beliefbase))
+				result.addAll(e);
+		} else {
+			result.addAll(beliefbase.getAssumptions());
+			for (AbaExtension<T> e : this.getModels(beliefbase))
+				result.retainAll(e);
+		}
+		return result;
 	}
 
 	/*

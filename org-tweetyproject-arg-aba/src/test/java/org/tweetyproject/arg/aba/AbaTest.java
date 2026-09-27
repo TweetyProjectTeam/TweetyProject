@@ -167,6 +167,8 @@ public class AbaTest {
 		assertTrue(reasoner.query(abat, a, InferenceMode.CREDULOUS));
 		assertFalse(reasoner.query(abat, a, InferenceMode.SKEPTICAL));
 		assertTrue(reasoner.query(abat, c, InferenceMode.SKEPTICAL));
+		assertEquals(Set.of("a", "b", "c"), strings(reasoner.queryAll(abat, InferenceMode.CREDULOUS)));
+		assertEquals(Set.of("c"), strings(reasoner.queryAll(abat, InferenceMode.SKEPTICAL)));
 	}
 
 	@Test

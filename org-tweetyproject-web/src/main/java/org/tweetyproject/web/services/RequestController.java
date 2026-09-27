@@ -218,7 +218,7 @@ public class RequestController {
 				post.getKb_format(), post.getFol_signature(), post.getQuery_assumption(),
 				post.getSemantics(), post.getTimeout(), "", 0.0, post.getUnit_timeout(), "");
 
-		if (!post.getCmd().equals("get_models") && !post.getCmd().equals("get_model") && !post.getCmd().equals("query")) {
+		if (AbaReasonerCalleeFactory.Command.getCommand(post.getCmd()) == null) {
 			LoggerUtil.logger.log(Level.SEVERE, String.format("Command \"%s\" not found.", post.getCmd()));
 			response.setAnswer("Command not found");
 			response.setStatus("ERROR");
