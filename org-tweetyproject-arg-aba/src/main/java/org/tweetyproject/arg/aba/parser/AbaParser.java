@@ -110,7 +110,7 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
             }
         }
 
-        return abat;
+        return abat.ground();
     }
 
     /*

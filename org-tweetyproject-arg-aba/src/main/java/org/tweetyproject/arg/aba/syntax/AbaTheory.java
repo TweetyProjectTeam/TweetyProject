@@ -35,6 +35,7 @@ import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
@@ -65,13 +66,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * The negation relation
 	 */
 	private Collection<Negation<T>> negations = new HashSet<>();
-
-	/**
-	 * Cached ground instances of rules, assumptions and negations; null when stale
-	 */
-	private Collection<InferenceRule<T>> groundRules;
-	private Collection<Assumption<T>> groundAssumptions;
-	private Collection<Negation<T>> groundNegations;
 
 	/**
 	 * Return all deductions that can be derived from this theory
@@ -249,7 +243,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 			rules.add((InferenceRule<T>) rule);
 		else if (rule instanceof Negation)
 			negations.add((Negation<T>) rule);
-		invalidateGrounding();
 	}
 
 	/** Add to theory
@@ -266,7 +259,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void addAssumption(T assumption) {
 		assumptions.add(new Assumption<>(assumption));
-		invalidateGrounding();
 	}
 
 	/**
@@ -277,7 +269,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void addNegation(T formula, T negation) {
 		negations.add(new Negation<>(formula, negation));
-		invalidateGrounding();
 	}
 
 	/**
@@ -307,8 +298,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the rules
 	 */
 	public Collection<InferenceRule<T>> getRules() {
-		ground();
-		return groundRules;
+		return rules;
 	}
 
 	/**
@@ -316,8 +306,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the assumptions
 	 */
 	public Collection<Assumption<T>> getAssumptions() {
-		ground();
-		return groundAssumptions;
+		return assumptions;
 	}
 
 	/**
@@ -325,90 +314,31 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the negations
 	 */
 	public Collection<Negation<T>> getNegations() {
-		ground();
-		return groundNegations;
+		return negations;
 	}
 
 	/**
-	 * Grounds rules, assumptions and negations with the constants of the minimal
-	 * signature, unless the cached ground instances are still valid.
+	 * Returns the ground theory: every rule, assumption and negation is replaced by
+	 * its ground instances over the constants of the minimal signature. The
+	 * reasoning methods assume a ground theory. Theories that are not first-order
+	 * are returned unchanged.
+	 *
+	 * @return the ground theory
 	 */
-	private void ground() {
-		if (groundRules != null)
-			return;
+	@SuppressWarnings("unchecked")
+	public AbaTheory<T> ground() {
 		Signature sig = this.getMinimalSignature();
-		groundRules = this.groundFolRules(rules, sig);
-		groundAssumptions = this.groundFolAssumptions(assumptions, sig);
-		groundNegations = this.groundFolNegations(negations, sig);
-	}
-
-	/**
-	 * Drops the cached ground instances after the theory changed.
-	 */
-	private void invalidateGrounding() {
-		groundRules = null;
-		groundAssumptions = null;
-		groundNegations = null;
-	}
-
-	/**
-	 * Grounds all inference rules with the constants of the given signature.
-	 *
-	 * @param rules the rules to ground
-	 * @param sig the signature of the theory
-	 * @return the grounded rules
-	 */
-	@SuppressWarnings("unchecked")
-	private Collection<InferenceRule<T>> groundFolRules(Collection<InferenceRule<T>> rules, Signature sig) {
 		if (!(sig instanceof FolSignature))
-			return rules;
-
-		FolSignature fsig = (FolSignature) sig;
-		Set<InferenceRule<T>> ground_rules = new HashSet<InferenceRule<T>>();
-		for (InferenceRule<T> r : rules) {
-			ground_rules.addAll((Set<InferenceRule<T>>) r.allGroundInstances(fsig.getConstants()));
-		}
-		return ground_rules;
-	}
-
-	/**
-	 * Grounds all assumptions with the constants of the given signature.
-	 *
-	 * @param assumptions the assumptions to ground
-	 * @param sig the signature of the theory
-	 * @return the grounded assumptions
-	 */
-	@SuppressWarnings("unchecked")
-	private Collection<Assumption<T>> groundFolAssumptions(Collection<Assumption<T>> assumptions, Signature sig) {
-		if (!(sig instanceof FolSignature))
-			return assumptions;
-
-		FolSignature fsig = (FolSignature) sig;
-		Set<Assumption<T>> ground_assumptions = new HashSet<Assumption<T>>();
-		for (Assumption<T> a : assumptions) {
-			ground_assumptions.addAll((Collection<? extends Assumption<T>>) a.allGroundInstances(fsig.getConstants()));
-		}
-		return ground_assumptions;
-
-	}
-
-	/**
-	 * Grounds all negations with the constants of the given signature.
-	 *
-	 * @param negations the negations to ground
-	 * @param sig the signature of the theory
-	 * @return the grounded negations
-	 */
-	@SuppressWarnings("unchecked")
-	private Collection<Negation<T>> groundFolNegations(Collection<Negation<T>> negations, Signature sig) {
-		if (!(sig instanceof FolSignature))
-			return negations;
-		FolSignature fsig = (FolSignature) sig;
-		Set<Negation<T>> ground_negations = new HashSet<Negation<T>>();
-		for (Negation<T> n : negations) {
-			ground_negations.addAll((Collection<? extends Negation<T>>) n.allGroundInstances(fsig.getConstants()));
-		}
-		return ground_negations;
+			return this;
+		Set<Constant> constants = ((FolSignature) sig).getConstants();
+		AbaTheory<T> result = new AbaTheory<>();
+		for (InferenceRule<T> r : rules)
+			result.rules.addAll((Set<InferenceRule<T>>) r.allGroundInstances(constants));
+		for (Assumption<T> a : assumptions)
+			result.assumptions.addAll((Set<Assumption<T>>) a.allGroundInstances(constants));
+		for (Negation<T> n : negations)
+			result.negations.addAll((Set<Negation<T>>) n.allGroundInstances(constants));
+		return result;
 	}
 
 	/**
@@ -417,7 +347,6 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public void setAssumptions(Collection<Assumption<T>> assumptions) {
 		this.assumptions = assumptions;
-		invalidateGrounding();
 	}
 
 	/**
