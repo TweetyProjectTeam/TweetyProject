@@ -18,24 +18,28 @@
  */
 package org.tweetyproject.arg.aba.reasoner;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.util.SetTools;
 
 /**
- * This reasoner for ABA theories performs inference on the stable extensions.
+ * This reasoner for ABA theories performs inference on the stable extensions,
+ * i.e. the closed, conflict-free sets of assumptions that attack every
+ * assumption outside them.
  *
  * @param <T> the language of the underlying ABA theory
  *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
-public class StableReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
+public class StableReasoner<T extends Formula> extends AdmissibleReasoner<T> {
 	/** Default */
 	public StableReasoner() {
 	}
@@ -48,17 +52,15 @@ public class StableReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 	 */
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
+		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);
+		boolean flat = abat.isFlat();
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		Collection<Collection<Assumption<T>>> exts = abat.getAllExtensions();
-		for (Collection<Assumption<T>> ext : exts) {
-			if (!abat.isConflictFree(ext))
+		l: for (Set<Assumption<T>> ext : SetTools.powerSet(new HashSet<>(abat.getAssumptions()))) {
+			if (!isConflictFree(ext, attackers) || (!flat && !abat.isClosed(ext)))
 				continue;
-			if (!abat.isClosed(ext))
-				continue;
-			for (Assumption<T> a : abat.getAssumptions()) {
-				if (!abat.attacks(ext, Arrays.asList(a)))
-					continue;
-			}
+			for (Assumption<T> a : abat.getAssumptions())
+				if (!ext.contains(a) && !attacks(ext, Set.of(a), attackers))
+					continue l;
 			result.add(new AbaExtension<T>(ext));
 		}
 		return result;

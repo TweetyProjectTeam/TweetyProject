@@ -40,6 +40,7 @@ import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.FlatAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
 import org.tweetyproject.arg.aba.semantics.AbaAttack;
 import org.tweetyproject.arg.aba.semantics.AbaExtension;
@@ -510,6 +511,32 @@ public class AbaTest {
 				actual.add(new HashSet<>(ext));
 			assertEquals(expected, actual, abat.toString());
 		}
+	}
+
+	@Test
+	public void StableReasonerMatchesDefinition() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			for (Collection<Assumption<PlFormula>> ext : abat.getAllExtensions())
+				if (abat.isConflictFree(ext) && abat.isClosed(ext) && abat.getAssumptions().stream()
+						.allMatch(a -> ext.contains(a) || abat.attacks(ext, Set.of(a))))
+					expected.add(new HashSet<>(ext));
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new StableReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, abat.toString());
+		}
+	}
+
+	@Test
+	public void StableChain() throws Exception {
+		AbaTheory<PlFormula> abat = comparisonTheories().get(6);
+		Collection<AbaExtension<PlFormula>> stable = new StableReasoner<PlFormula>().getModels(abat);
+		assertEquals(1, stable.size());
+		Set<String> names = new HashSet<>();
+		for (Assumption<PlFormula> a : stable.iterator().next())
+			names.add(a.toString());
+		assertEquals(Set.of("a0", "a2", "a4"), names);
 	}
 
 }
