@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.aba.parser.AbaParser;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
+import org.tweetyproject.arg.aba.reasoner.SetafReductionReasoner;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
@@ -197,8 +198,8 @@ public class RequestController {
 			}
 		} catch (IOException | RuntimeException e) {
 			String message = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
-			LoggerUtil.logger.log(Level.SEVERE, String.format("Error while parsing the ABA request: %s", message));
-			response.setAnswer("Parse error: " + message);
+			LoggerUtil.logger.log(Level.SEVERE, String.format("Invalid ABA request: %s", message));
+			response.setAnswer("Invalid request: " + message);
 			response.setStatus("ERROR");
 			return response;
 		}
@@ -610,7 +611,7 @@ public class RequestController {
 			return String.format("Unknown kb_format: %s (expected pl or fol)", post.getKb_format());
 		if (post.getKb() == null)
 			return "Missing kb";
-		if (GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()) == null)
+		if (!GeneralAbaReasonerFactory.getAvailableSemantics().containsKey(post.getSemantics()))
 			return String.format("Unknown semantics: %s", post.getSemantics());
 		if (cmd == AbaReasonerCalleeFactory.Command.QUERY && post.getQuery_assumption() == null)
 			return "Missing query_assumption";
@@ -619,7 +620,7 @@ public class RequestController {
 		return null;
 	}
 
-	/** Parses the theory and query of a validated ABA request and builds its callee. */
+	/** Parses the theory and query of a validated ABA request and builds its callee; flat-only semantics reject non-flat theories. */
 	@SuppressWarnings("unchecked")
 	private static <T extends Formula> Callee buildAbaCallee(AbaReasonerPost post, AbaParser<T> parser)
 			throws ParserException, IOException {
@@ -632,8 +633,9 @@ public class RequestController {
 				throw new ParserException(String.format("query_assumption '%s' is not an atom", post.getQuery_assumption()));
 			assumption = (Assumption<T>) formula;
 		}
-		GeneralAbaReasoner<T> reasoner = GeneralAbaReasonerFactory.getReasoner(
-				GeneralAbaReasonerFactory.Semantics.getSemantics(post.getSemantics()));
+		GeneralAbaReasoner<T> reasoner = GeneralAbaReasonerFactory.getReasoner(post.getSemantics());
+		if (reasoner instanceof SetafReductionReasoner && !theory.isFlat())
+			throw new IllegalArgumentException(String.format("Semantics %s requires a flat ABA theory", post.getSemantics()));
 		return AbaReasonerCalleeFactory.getCallee(cmd, reasoner, theory, assumption);
 	}
 
@@ -642,10 +644,10 @@ public class RequestController {
 		LoggerUtil.logger.info(String.format("User: %s  Command: %s", query.getEmail(), query.getCmd()));
 		AbaGetSemanticsResponse response = new AbaGetSemanticsResponse();
 		List<HashMap<String, String>> value = new LinkedList<>();
-		for (GeneralAbaReasonerFactory.Semantics m : GeneralAbaReasonerFactory.Semantics.values()) {
+		for (Map.Entry<String, String> m : GeneralAbaReasonerFactory.getAvailableSemantics().entrySet()) {
 			HashMap<String, String> jsonMes = new HashMap<>();
-			jsonMes.put("id", m.id);
-			jsonMes.put("label", m.label);
+			jsonMes.put("id", m.getKey());
+			jsonMes.put("label", m.getValue());
 			value.add(jsonMes);
 		}
 		response.setSemantics(value);

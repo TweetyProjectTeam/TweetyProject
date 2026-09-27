@@ -18,17 +18,22 @@
  */
 package org.tweetyproject.web.services.aba;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.tweetyproject.arg.aba.reasoner.AdmissibleReasoner;
 import org.tweetyproject.arg.aba.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.aba.reasoner.ConflictFreeReasoner;
 import org.tweetyproject.arg.aba.reasoner.GeneralAbaReasoner;
 import org.tweetyproject.arg.aba.reasoner.IdealReasoner;
 import org.tweetyproject.arg.aba.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.aba.reasoner.SetafReductionReasoner;
 import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
 
 /**
- * Abstract factory for retrieving ABA reasoners.
+ * Abstract factory for retrieving ABA reasoners. Semantics with a direct reasoner use it;
+ * all other Dung semantics accepted by the SETAF reduction use that (flat theories only).
  *
  * @param <T> the formula type used in ABA
  */
@@ -90,13 +95,54 @@ public abstract class GeneralAbaReasonerFactory<T> {
 		}
 	}
 
-	 /**
-     * Gets an array of all available semantics.
-     *
-     * @return An array of Semantics values
-     */
-	public static Semantics [] getSemantics(){
-		return Semantics.values();
+	/** Dung semantics without a direct reasoner that the SETAF reduction accepts, by id */
+	private static final Map<String, org.tweetyproject.arg.dung.semantics.Semantics> REDUCTION = reductionSemantics();
+
+	private static Map<String, org.tweetyproject.arg.dung.semantics.Semantics> reductionSemantics() {
+		Map<String, org.tweetyproject.arg.dung.semantics.Semantics> result = new LinkedHashMap<>();
+		for (org.tweetyproject.arg.dung.semantics.Semantics s : org.tweetyproject.arg.dung.semantics.Semantics.values()) {
+			String id = s.abbreviation().toLowerCase();
+			if (Semantics.getSemantics(id) != null)
+				continue;
+			try {
+				new SetafReductionReasoner<>(s);
+				result.put(id, s);
+			} catch (IllegalArgumentException e) {
+				// rejected by the reduction
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Gets all available semantics: the direct ones first, then those via the SETAF reduction.
+	 *
+	 * @return a map from semantics id to label
+	 */
+	public static Map<String, String> getAvailableSemantics() {
+		Map<String, String> result = new LinkedHashMap<>();
+		for (Semantics s : Semantics.values())
+			result.put(s.id, s.label);
+		for (Map.Entry<String, org.tweetyproject.arg.dung.semantics.Semantics> e : REDUCTION.entrySet()) {
+			String label = e.getValue().description().replace(" semantics", "");
+			result.put(e.getKey(), Character.toUpperCase(label.charAt(0)) + label.substring(1));
+		}
+		return result;
+	}
+
+	/**
+	 * Returns a reasoner for the given semantics id.
+	 *
+	 * @param id a semantics id
+	 * @return a direct reasoner if there is one, else a SETAF reduction reasoner, or null for unknown ids
+	 */
+	@SuppressWarnings("rawtypes")
+	public static GeneralAbaReasoner getReasoner(String id) {
+		Semantics direct = Semantics.getSemantics(id);
+		if (direct != null)
+			return getReasoner(direct);
+		org.tweetyproject.arg.dung.semantics.Semantics s = REDUCTION.get(id);
+		return s == null ? null : new SetafReductionReasoner<>(s);
 	}
 
     /**
@@ -109,7 +155,7 @@ public abstract class GeneralAbaReasonerFactory<T> {
      *
      * Return a reasoner
      * @param <T> type
-     * @param sem semantik
+     * @param sem semantics
      * @return a reasoner
      */
 	public static  <T> GeneralAbaReasoner getReasoner(Semantics sem){
