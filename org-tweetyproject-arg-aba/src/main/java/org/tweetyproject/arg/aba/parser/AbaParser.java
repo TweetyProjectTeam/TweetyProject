@@ -21,6 +21,10 @@ package org.tweetyproject.arg.aba.parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +46,9 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Atom;
  * <br>&lt;body&gt; ::= 'true' | &lt;atom&gt; (',' &lt;atom&gt;)*
  * <br>&lt;contrary&gt; ::= 'not' &lt;atom&gt; '=' &lt;atom&gt;
  * <br>where &lt;atom&gt; is an atom of the theory's language. Any other line
- * is a {@link ParserException}.
+ * is a {@link ParserException}, and so is a contrary of a non-assumption. An
+ * assumption may have no contrary (it is never attacked) or several (it is
+ * attacked if any of them is derivable).
  *
  * @param <T> the type of formulas (language) that the ABA theory ranges over
  *
@@ -92,6 +98,7 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
                       ASSUMPTIONS = Pattern.compile("^\\s*\\{(.*)\\}\\s*$");
 
         AbaTheory<T> abat = new AbaTheory<>();
+        Map<Formula, String> sources = new HashMap<>();
         BufferedReader br = new BufferedReader(reader);
         int lineNumber = 0;
         while (true) {
@@ -111,13 +118,24 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
                 }
                 if (!rulePattern().matcher(line).matches() && !negationPattern().matcher(line).matches())
                     throw new ParserException("expected '{...}', a rule or 'not a = c'");
-                abat.add(parseFormula(line));
+                Formula formula = parseFormula(line);
+                abat.add(formula);
+                sources.put(formula, "Line " + lineNumber + " '" + line.trim() + "'");
             } catch (RuntimeException e) {
                 throw new ParserException("Line " + lineNumber + " '" + line.trim() + "': " + e.getMessage());
             }
         }
 
-        return abat.ground();
+        // missing and multiple contraries are fine, a contrary of a non-assumption is a typo
+        AbaTheory<T> result = abat.ground();
+        Set<T> assumed = new HashSet<>();
+        for (Assumption<T> a : result.getAssumptions())
+            assumed.add(a.getConclusion());
+        for (Negation<T> n : result.getNegations())
+            if (!assumed.contains(n.getFormula()))
+                throw new ParserException(sources.getOrDefault(n, "'" + n + "'") + ": '" + n.getFormula()
+                        + "' is not an assumption");
+        return result;
     }
 
     /*

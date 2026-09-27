@@ -78,6 +78,7 @@ public class AbaTest {
 		// no bare assumption lines, and sentences are atoms
 		assertTrue(assertThrows(ParserException.class, () -> theory("{a}\nc")).getMessage().startsWith("Line 2"));
 		assertThrows(ParserException.class, () -> theory("{a}\np && q <- a"));
+		assertTrue(assertThrows(ParserException.class, () -> theory("{a}\nnot p = x")).getMessage().startsWith("Line 2"));
 
 		FolParser folparser = new FolParser();
 		folparser.setSignature(folparser.parseSignature("Male = {a,b}\nFemale = {c,d}\ntype(Pair(Male,Female))\n"

@@ -57,6 +57,20 @@ public class Negation<T extends Formula> extends AbaElement<T> {
 		this.negation = negation;
 	}
 
+	/**
+	 * @return the formula this is a contrary of
+	 */
+	public T getFormula() {
+		return formula;
+	}
+
+	/**
+	 * @return the contrary
+	 */
+	public T getContrary() {
+		return negation;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
