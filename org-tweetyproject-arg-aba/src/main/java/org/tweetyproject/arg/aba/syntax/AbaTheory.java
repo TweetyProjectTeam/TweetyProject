@@ -21,6 +21,7 @@ package org.tweetyproject.arg.aba.syntax;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,9 +64,9 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	private Collection<Assumption<T>> assumptions = new HashSet<>();
 
 	/**
-	 * The negation relation
+	 * The negation relation: maps each formula to its contraries
 	 */
-	private Collection<Negation<T>> negations = new HashSet<>();
+	private Map<T, Set<T>> negations = new HashMap<>();
 
 	/**
 	 * Return all deductions that can be derived from this theory
@@ -241,8 +242,10 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 			assumptions.add((Assumption<T>) rule);
 		else if (rule instanceof InferenceRule)
 			rules.add((InferenceRule<T>) rule);
-		else if (rule instanceof Negation)
-			negations.add((Negation<T>) rule);
+		else if (rule instanceof Negation) {
+			Negation<T> n = (Negation<T>) rule;
+			addNegation(n.formula, n.negation);
+		}
 	}
 
 	/** Add to theory
@@ -268,7 +271,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @param negation it's complement
 	 */
 	public void addNegation(T formula, T negation) {
-		negations.add(new Negation<>(formula, negation));
+		negations.computeIfAbsent(formula, k -> new HashSet<>()).add(negation);
 	}
 
 	/**
@@ -279,7 +282,17 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return true iff the two formulas are negations of each other
 	 */
 	public boolean negates(T negation, T formula) {
-		return getNegations().contains(new Negation<>(formula, negation));
+		return getContraries(formula).contains(negation);
+	}
+
+	/**
+	 * Returns the contraries of a formula, i.e. all c with "not formula = c".
+	 *
+	 * @param formula a formula
+	 * @return the contraries of formula; empty if it has none
+	 */
+	public Set<T> getContraries(T formula) {
+		return Collections.unmodifiableSet(negations.getOrDefault(formula, Collections.emptySet()));
 	}
 
 	/**
@@ -314,7 +327,11 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * @return the negations
 	 */
 	public Collection<Negation<T>> getNegations() {
-		return negations;
+		Set<Negation<T>> result = new HashSet<>();
+		for (Map.Entry<T, Set<T>> e : negations.entrySet())
+			for (T c : e.getValue())
+				result.add(new Negation<>(e.getKey(), c));
+		return result;
 	}
 
 	/**
@@ -336,8 +353,9 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 			result.rules.addAll((Set<InferenceRule<T>>) r.allGroundInstances(constants));
 		for (Assumption<T> a : assumptions)
 			result.assumptions.addAll((Set<Assumption<T>>) a.allGroundInstances(constants));
-		for (Negation<T> n : negations)
-			result.negations.addAll((Set<Negation<T>>) n.allGroundInstances(constants));
+		for (Negation<T> n : getNegations())
+			for (Negation<T> g : (Set<Negation<T>>) n.allGroundInstances(constants))
+				result.add(g);
 		return result;
 	}
 
@@ -358,12 +376,10 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	public boolean attacks(Collection<Assumption<T>> attackers, Collection<Assumption<T>> attackeds) {
 		Set<T> derivable = getDerivable(attackers);
-		Set<T> attacked = new HashSet<>();
-		for (Assumption<T> a : attackeds)
-			attacked.add(a.getConclusion());
-		for (Negation<T> n : getNegations()) {
-			if (attacked.contains(n.formula) && derivable.contains(n.negation))
-				return true;
+		for (Assumption<T> a : attackeds) {
+			for (T c : getContraries(a.getConclusion()))
+				if (derivable.contains(c))
+					return true;
 		}
 		return false;
 	}
@@ -463,7 +479,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 		else if (!assumptions.isEmpty())
 			sig = assumptions.iterator().next().getSignature();
 		else if (!negations.isEmpty())
-			sig = negations.iterator().next().getSignature();
+			sig = getNegations().iterator().next().getSignature();
 		else {
 			return null;
 		}
@@ -471,7 +487,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 			sig.addSignature(r.getSignature());
 		for (Assumption<T> a : assumptions)
 			sig.addSignature(a.getSignature());
-		for (Negation<T> n : negations)
+		for (Negation<T> n : getNegations())
 			sig.addSignature(n.getSignature());
 		return sig;
 	}
@@ -510,7 +526,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 */
 	@Override
 	public String toString() {
-		return "ABATheory [rules=" + rules + ", assumptions=" + assumptions + ", negations=" + negations + "]";
+		return "ABATheory [rules=" + rules + ", assumptions=" + assumptions + ", negations=" + getNegations() + "]";
 	}
 
 }
