@@ -32,20 +32,22 @@ import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.logics.commons.syntax.interfaces.Atom;
 
 /**
  * Parses an Assumption-Based Argumentation (ABA) System from an input text.
- * The standard symbols used in the syntax are:
- * <br>&lt;rule&gt; ::= &lt;head&gt; '&lt;-' &lt;body&gt;?
- * <br>&lt;head&gt; ::= &lt;word&gt;
- * <br>&lt;body&gt; ::= 'true' | &lt;word&gt; (',' &lt;word&gt;)*
- * <br>&lt;assumption&gt; ::= &lt;word&gt;
- * <br>&lt;assumptions&gt; ::= '{' &lt;assumption&gt; (',' &lt;assumption&gt;)* '}'
- * <br>where &lt;word&gt; is a term in the theory's language.
+ * Each line is empty, a comment starting with '%', or one of:
+ * <br>&lt;assumptions&gt; ::= '{' &lt;atom&gt; (',' &lt;atom&gt;)* '}'
+ * <br>&lt;rule&gt; ::= &lt;atom&gt; '&lt;-' &lt;body&gt;?
+ * <br>&lt;body&gt; ::= 'true' | &lt;atom&gt; (',' &lt;atom&gt;)*
+ * <br>&lt;contrary&gt; ::= 'not' &lt;atom&gt; '=' &lt;atom&gt;
+ * <br>where &lt;atom&gt; is an atom of the theory's language. Any other line
+ * is a {@link ParserException}.
  *
  * @param <T> the type of formulas (language) that the ABA theory ranges over
  *
  * @author Nils Geilen
+ * @author Lars Bengel
  */
 public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> {
 
@@ -91,22 +93,27 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
 
         AbaTheory<T> abat = new AbaTheory<>();
         BufferedReader br = new BufferedReader(reader);
-
+        int lineNumber = 0;
         while (true) {
             String line = br.readLine();
             if (line == null) break;
+            lineNumber++;
 
             // Skip comments and empty lines
             if (EMPTY.matcher(line).matches() || COMMENT.matcher(line).matches()) continue;
 
-            // Parse assumptions
-            Matcher matcher = ASSUMPTIONS.matcher(line);
-            if (matcher.matches()) {
-                String[] asss = matcher.group(1).split(symbolComma);
-                for (String ass : asss)
-                    abat.add(parseFormula(ass));
-            } else {
+            try {
+                Matcher matcher = ASSUMPTIONS.matcher(line);
+                if (matcher.matches()) {
+                    for (String ass : matcher.group(1).split(Pattern.quote(symbolComma)))
+                        abat.add(new Assumption<>(parseAtom(ass)));
+                    continue;
+                }
+                if (!rulePattern().matcher(line).matches() && !negationPattern().matcher(line).matches())
+                    throw new ParserException("expected '{...}', a rule or 'not a = c'");
                 abat.add(parseFormula(line));
+            } catch (RuntimeException e) {
+                throw new ParserException("Line " + lineNumber + " '" + line.trim() + "': " + e.getMessage());
             }
         }
 
@@ -117,40 +124,53 @@ public class AbaParser<T extends Formula> extends Parser<AbaTheory<T>, Formula> 
      * (non-Javadoc)
      * @see org.tweetyproject.commons.Parser#parseFormula(java.io.Reader)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Formula parseFormula(Reader reader) throws IOException, ParserException {
-        final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"),
-                      TRUE = Pattern.compile("^\\s*(" + Pattern.quote(symbolTrue) + ")?\\s*$"),
-                      NEGATION = Pattern.compile("not(.+)=(.+)");
+        final Pattern TRUE = Pattern.compile("^\\s*(" + Pattern.quote(symbolTrue) + ")?\\s*$");
 
         BufferedReader br = new BufferedReader(reader);
         String line = br.readLine();
         if (line == null) return null;
 
         // Parse inference rules
-        Matcher m = RULE.matcher(line);
+        Matcher m = rulePattern().matcher(line);
         if (m.matches()) {
             InferenceRule<T> rule = new InferenceRule<>();
-            String head = m.group(1), tail = m.group(2);
-            rule.setConclusion((T) formulaparser.parseFormula(head));
-
-            if (!TRUE.matcher(tail).matches()) {
-                String[] pres = tail.split(symbolComma);
-                for (String pre : pres)
-                    rule.addPremise((T) formulaparser.parseFormula(pre));
-            }
+            rule.setConclusion(parseAtom(m.group(1)));
+            if (!TRUE.matcher(m.group(2)).matches())
+                for (String pre : m.group(2).split(Pattern.quote(symbolComma)))
+                    rule.addPremise(parseAtom(pre));
             return rule;
         }
 
         // Parse negations
-        m = NEGATION.matcher(line);
-        if (m.matches()) {
-            return new Negation<Formula>(formulaparser.parseFormula(m.group(1)), formulaparser.parseFormula(m.group(2)));
-        }
+        m = negationPattern().matcher(line);
+        if (m.matches())
+            return new Negation<T>(parseAtom(m.group(1)), parseAtom(m.group(2)));
 
         // Parse assumptions
-        return new Assumption<>((T) formulaparser.parseFormula(line));
+        return new Assumption<>(parseAtom(line));
+    }
+
+    private Pattern rulePattern() {
+        return Pattern.compile("(.+)" + Pattern.quote(symbolArrow) + "(.*)");
+    }
+
+    private Pattern negationPattern() {
+        return Pattern.compile("^\\s*not\\s+(.+?)\\s*=\\s*(.+?)\\s*$");
+    }
+
+    /**
+     * Parses a single atom of the underlying language
+     */
+    @SuppressWarnings("unchecked")
+    private T parseAtom(String text) throws IOException, ParserException {
+        if (text.isBlank())
+            throw new ParserException("missing atom");
+        Formula formula = formulaparser.parseFormula(text.trim());
+        if (!(formula instanceof Atom))
+            throw new ParserException("'" + text.trim() + "' is not an atom");
+        return (T) formula;
     }
 
     /**

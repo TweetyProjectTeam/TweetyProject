@@ -20,6 +20,7 @@ package org.tweetyproject.arg.aba;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
@@ -49,6 +50,7 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.syntax.SetAttack;
 import org.tweetyproject.commons.InferenceMode;
+import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.util.IncreasingSubsetIterator;
 import org.tweetyproject.commons.util.SubsetIterator;
 import org.tweetyproject.logics.fol.parser.FolParser;
@@ -73,6 +75,9 @@ public class AbaTest {
 		assertEquals(4, abat.getRules().size());
 		// an empty body prints as true, so true parses back to an empty body
 		assertTrue(theory("y <- true").getRules().iterator().next().getPremise().isEmpty());
+		// no bare assumption lines, and sentences are atoms
+		assertTrue(assertThrows(ParserException.class, () -> theory("{a}\nc")).getMessage().startsWith("Line 2"));
+		assertThrows(ParserException.class, () -> theory("{a}\np && q <- a"));
 
 		FolParser folparser = new FolParser();
 		folparser.setSignature(folparser.parseSignature("Male = {a,b}\nFemale = {c,d}\ntype(Pair(Male,Female))\n"
