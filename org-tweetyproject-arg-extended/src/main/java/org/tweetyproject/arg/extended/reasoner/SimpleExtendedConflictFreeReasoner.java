@@ -22,13 +22,13 @@
  import org.tweetyproject.arg.dung.semantics.Extension;
  import org.tweetyproject.arg.dung.syntax.Argument;
  import org.tweetyproject.arg.extended.syntax.ExtendedTheory;
- import org.tweetyproject.commons.util.SetTools;
+ import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+ import org.tweetyproject.commons.util.SubsetIterator;
 
  import java.util.Collection;
  import java.util.HashSet;
- import java.util.Set;
 
- /**
+/**
   * Simple reasoner for computing conflict-free sets of extended theories.
   *
   * This reasoner iterates through all subsets of the argument set in the extended theory
@@ -61,9 +61,11 @@
      @Override
      public Collection<Extension<ExtendedTheory>> getModels(ExtendedTheory bbase) {
          Collection<Extension<ExtendedTheory>> result = new HashSet<>();
-         for (Set<Argument> args: new SetTools<Argument>().subsets(bbase)) {
-             if (bbase.isConflictFree(args)) {
-                 result.add(new Extension<>(args));
+         SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(bbase));
+         while (it.hasNext()) {
+             Extension<ExtendedTheory> ext = new Extension<>(it.next());
+             if (bbase.isConflictFree(ext)) {
+                 result.add(ext);
              }
          }
          return result;
