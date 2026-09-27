@@ -30,7 +30,8 @@ import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.commons.Formula;
 
 /**
- * This reasoner for ABA theories performs inference on the ideal extension.
+ * This reasoner for ABA theories performs inference on the well-founded
+ * extension, i.e. the intersection of all complete extensions.
  * @param <T>	the language of the underlying ABA theory
  *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
@@ -48,12 +49,15 @@ public class WellFoundedReasoner<T extends Formula> extends GeneralAbaReasoner<T
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		Collection<AbaExtension<T>> complete_exts = new CompleteReasoner<T>().getModels(abat);
+		Collection<AbaExtension<T>>result = new HashSet<>();
 		Iterator<AbaExtension<T>> iter = complete_exts.iterator();
-		AbaExtension<T> ext = iter.hasNext() ? iter.next() : new AbaExtension<T>();
+		// no complete extension: the intersection is undefined
+		if (!iter.hasNext())
+			return result;
+		AbaExtension<T> ext = new AbaExtension<T>(iter.next());
 		while (iter.hasNext()) {
 			ext.retainAll(iter.next());
 		}
-		Collection<AbaExtension<T>>result = new HashSet<>();
 		result.add(ext);
 		return result;
 	}

@@ -539,4 +539,14 @@ public class AbaTest {
 		assertEquals(Set.of("a0", "a2", "a4"), names);
 	}
 
+	@Test
+	public void WellFoundedWithoutCompleteExtension() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		// the fact a is in every closed set, and derives its own contrary
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a}\na <-\nx <- a\nnot a = x");
+		assertTrue(new CompleteReasoner<PlFormula>().getModels(abat).isEmpty());
+		assertTrue(new WellFoundedReasoner<PlFormula>().getModels(abat).isEmpty());
+		assertEquals(null, new WellFoundedReasoner<PlFormula>().getModel(abat));
+	}
+
 }

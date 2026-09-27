@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.aba.reasoner;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
@@ -97,7 +98,8 @@ public abstract class GeneralAbaReasoner<T extends Formula> implements Qualitati
 	 */
 	@Override
 	public AbaExtension<T> getModel(AbaTheory<T> bbase) {
-		// just return the first one.
-		return this.getModels(bbase).iterator().next();
+		// just return the first one, or null if there is none
+		Iterator<AbaExtension<T>> it = this.getModels(bbase).iterator();
+		return it.hasNext() ? it.next() : null;
 	}
 }
