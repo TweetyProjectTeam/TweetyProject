@@ -143,33 +143,23 @@ public class AbaTest {
 
 	}
 
+
 	@Test
-	public void FolDeductionsUseGroundAssumptions() throws Exception {
+	public void FolGroundingTest() throws Exception {
 		FolParser folparser = new FolParser();
 		folparser.setSignature(folparser.parseSignature("Male = {a,b}\n" + "Female = {c,d}\n" + "type(Pair(Male,Female))\n"
 				+ "type(Likes(Male,Female))"));
 		AbaParser<FolFormula> parser = new AbaParser<FolFormula>(folparser);
 		parser.setSymbolComma(";");
+		// deductions start from the ground instances of an assumption schema
 		AbaTheory<FolFormula> abat = parser.parseBeliefBase("{Pair(A,B)}\nLikes(a,c) <-");
-
-		FolFormula pair = (FolFormula) folparser.parseFormula("Pair(a,c)");
-		assertTrue(abat.getAllDeductions().stream().anyMatch(d -> d.getConclusion().equals(pair)));
+		FolFormula pairAC = (FolFormula) folparser.parseFormula("Pair(a,c)");
+		assertTrue(abat.getAllDeductions().stream().anyMatch(d -> d.getConclusion().equals(pairAC)));
+		// constants occurring only in contraries are used for grounding
+		abat = parser.parseBeliefBase("{Pair(A,c)}\nnot Pair(a,c) = Likes(b,c)");
+		assertTrue(abat.getAssumptions().contains(new Assumption<FolFormula>((FolFormula) folparser.parseFormula("Pair(b,c)"))));
 	}
 
-	@Test
-	public void FolGroundingUsesConstantsFromContraries() throws Exception {
-		FolParser folparser = new FolParser();
-		folparser.setSignature(folparser.parseSignature("Male = {a,b}\n" + "Female = {c,d}\n" + "type(Pair(Male,Female))\n"
-				+ "type(Likes(Male,Female))"));
-		AbaParser<FolFormula> parser = new AbaParser<FolFormula>(folparser);
-		parser.setSymbolComma(";");
-		AbaTheory<FolFormula> abat = parser.parseBeliefBase("{Pair(A,c)}\nnot Pair(a,c) = Likes(b,c)");
-
-		FolFormula pair = (FolFormula) folparser.parseFormula("Pair(b,c)");
-		assertTrue(abat.getAssumptions().contains(new Assumption<FolFormula>(pair)));
-	}
-
-	@SuppressWarnings("unchecked")
 	@Test
 	public void DeductionTest1() throws Exception {
 		PlParser plparser = new PlParser();
@@ -245,6 +235,7 @@ public class AbaTest {
 		assertTrue(AbaAttack.allAttacks(abat).size() == 6);
 	}
 
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void ToDungTheoryMethodTest() throws Exception {
@@ -257,32 +248,26 @@ public class AbaTest {
 		DungTheory dt = abat.asDungTheory();
 		assertTrue(dt.getNodes().size()==7);
 		assertTrue(dt.getAttacks().size()==2);
+
+		abat = parser.parseBeliefBaseFromFile(AbaTest.class.getResource("/example11.aba").getFile());
+		dt = abat.asDungTheory();
+		assertTrue(dt.getNodes().size() == 6);
+		assertTrue(dt.getAttacks().size() == 6);
 	}
+
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void ReasonerTest() throws Exception {
-		PlParser plparser = new PlParser();
-		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
-		AbaTheory<PlFormula> abat = parser
-				.parseBeliefBaseFromFile(AbaTest.class.getResource("/example2.aba").getFile());
-		abat.add((AbaRule<PlFormula>) parser.parseFormula("!a<-"));
-		abat.add(parser.parseFormula("not a=!a"));
-		abat.add(parser.parseFormula("not !a=a"));
-		assertTrue(abat.getAllDeductions().size() == 7);
-		assertTrue(abat.isFlat());
-		List<GeneralAbaReasoner<PlFormula>> reasoners = new LinkedList<>();
-		reasoners.add(new AfReductionReasoner<PlFormula>(Semantics.COMPLETE_SEMANTICS));
-		reasoners.add(new CompleteReasoner<PlFormula>());
-		for (GeneralAbaReasoner<PlFormula> reasoner : reasoners) {
-			Assumption<PlFormula> query = (Assumption<PlFormula>) parser.parseFormula("a");
-			assertFalse(reasoner.query(abat, query, InferenceMode.CREDULOUS));
-			query = (Assumption<PlFormula>) parser.parseFormula("b");
-			assertTrue(reasoner.query(abat, query, InferenceMode.CREDULOUS));
-		}
-		assertTrue(reasoners.get(0).getModels(abat)
-				.size() == ((GeneralAbaReasoner<PlFormula>) reasoners.get(1)).getModels(abat).size());
-
+	public void QueryTest() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
+		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b,c}\nnot a = x\nnot b = y\nnot c = z\nx <- b\ny <- a");
+		GeneralAbaReasoner<PlFormula> reasoner = new PreferredReasoner<>();
+		Assumption<PlFormula> a = (Assumption<PlFormula>) parser.parseFormula("a");
+		Assumption<PlFormula> c = (Assumption<PlFormula>) parser.parseFormula("c");
+		// preferred: {a, c} and {b, c}
+		assertTrue(reasoner.query(abat, a, InferenceMode.CREDULOUS));
+		assertFalse(reasoner.query(abat, a, InferenceMode.SKEPTICAL));
+		assertTrue(reasoner.query(abat, c, InferenceMode.SKEPTICAL));
 	}
 
 	@Test
@@ -299,61 +284,38 @@ public class AbaTest {
 		assertFalse(abat.isFlat());
 	}
 
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void Example3() throws Exception {
 		PlParser plparser = new PlParser();
 		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
+		// handbook Ex. 2.9; its stated complete sets {c} and {} do not contain the unattacked b they defend
 		AbaTheory<PlFormula> abat = parser
 				.parseBeliefBaseFromFile(AbaTest.class.getResource("/example3.aba").getFile());
-
 		assertFalse(abat.isFlat());
-
-		GeneralAbaReasoner<PlFormula> abar = new CompleteReasoner<>();
-		Collection<AbaExtension<PlFormula>> complexts = abar.getModels(abat);
-
-		Collection<AbaExtension<PlFormula>> prefexts = new PreferredReasoner<PlFormula>().getModels(abat);
-
-		GeneralAbaReasoner<PlFormula> grounded_reasoner = new WellFoundedReasoner<>();
-		Collection<AbaExtension<PlFormula>> groundedexts = grounded_reasoner.getModels(abat);
-		assertTrue(groundedexts.size() == 1);
 
 		AbaExtension<PlFormula> asss_c = new AbaExtension<PlFormula>();
 		asss_c.add((Assumption<PlFormula>) parser.parseFormula("c"));
-		assertTrue(abat.isClosed(asss_c));
-		assertTrue(abat.isAdmissible(asss_c));
-		assertTrue(prefexts.contains(asss_c));
-		// assertTrue(complexts.contains(asss_c));
-
-		AbaExtension<PlFormula> asss_0 = new AbaExtension<PlFormula>();
-		assertTrue(abat.isAdmissible(asss_0));
-		assertFalse(prefexts.contains(asss_0));
-		// assertTrue(complexts.contains(asss_0));
-		// assertTrue(groundedexts.contains(asss_0));
-
 		AbaExtension<PlFormula> asss_b = new AbaExtension<PlFormula>();
 		asss_b.add((Assumption<PlFormula>) parser.parseFormula("b"));
-		assertFalse(abat.isClosed(asss_b));
-		assertFalse(abat.isAdmissible(asss_b));
-		assertFalse(prefexts.contains(asss_b));
-		assertFalse(complexts.contains(asss_b));
-
 		AbaExtension<PlFormula> asss_ab = new AbaExtension<PlFormula>();
 		asss_ab.add((Assumption<PlFormula>) parser.parseFormula("a"));
 		asss_ab.add((Assumption<PlFormula>) parser.parseFormula("b"));
-		assertTrue(abat.isClosed(asss_ab));
-		assertTrue(abat.isAdmissible(asss_ab));
-		assertTrue(prefexts.contains(asss_ab));
-		assertTrue(complexts.contains(asss_ab));
 
 		assertTrue(abat.isClosed(asss_c));
 		assertTrue(abat.isConflictFree(asss_c));
-		assertTrue(abat.attacks(asss_b, asss_c));
 		assertFalse(abat.isClosed(asss_b));
+		assertTrue(abat.attacks(asss_b, asss_c));
+		assertTrue(abat.isClosed(asss_ab));
 
+		Set<Assumption<PlFormula>> c = new HashSet<>(asss_c), ab = new HashSet<>(asss_ab);
+		assertEquals(Set.of(Set.of(), c, ab), asSets(new AdmissibleReasoner<PlFormula>().getModels(abat)));
+		assertEquals(Set.of(c, ab), asSets(new PreferredReasoner<PlFormula>().getModels(abat)));
+		assertEquals(Set.of(ab), asSets(new CompleteReasoner<PlFormula>().getModels(abat)));
+		assertEquals(Set.of(ab), asSets(new WellFoundedReasoner<PlFormula>().getModels(abat)));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void Example4() throws Exception {
 		PlParser plparser = new PlParser();
@@ -386,7 +348,7 @@ public class AbaTest {
 		Collection<AbaExtension<PlFormula>> complexts = new CompleteReasoner<PlFormula>().getModels(abat);
 		assertTrue(complexts.size() == 2);
 		Collection<AbaExtension<PlFormula>> wellfexts = new WellFoundedReasoner<PlFormula>().getModels(abat);
-		assertTrue(complexts.size() == 2);
+		assertTrue(wellfexts.size() == 1);
 
 		AbaExtension<PlFormula> asss_ac = new AbaExtension<PlFormula>();
 		asss_ac.add((Assumption<PlFormula>) parser.parseFormula("a"));
@@ -404,27 +366,8 @@ public class AbaTest {
 	}
 
 	@Test
-	public void Example11() throws Exception {
-		PlParser plparser = new PlParser();
-		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
-		AbaTheory<PlFormula> abat = parser
-				.parseBeliefBaseFromFile(AbaTest.class.getResource("/example11.aba").getFile());
-
-		assertTrue(abat.isFlat());
-
-		DungTheory dt = abat.asDungTheory();
-		assertTrue(dt.getNodes().size() == 6);
-		assertTrue(dt.getAttacks().size() == 6);
-
-	}
-
-	@Test
 	public void MinimalSupportsMatchBruteForce() throws Exception {
-		PlParser plparser = new PlParser();
-		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
-		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" }) {
-			AbaTheory<PlFormula> abat = parser
-					.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile());
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			Map<PlFormula, Set<Set<Assumption<PlFormula>>>> supports = abat.getMinimalSupports();
 			Set<PlFormula> formulas = new HashSet<>();
 			for (InferenceRule<PlFormula> r : abat.getRules()) {
@@ -444,25 +387,21 @@ public class AbaTest {
 					if (abat.getDerivable(s).contains(f) && expected.stream().noneMatch(s::containsAll))
 						expected.add(s);
 				}
-				assertEquals(expected, supports.getOrDefault(f, Set.of()), file + ": " + f);
+				assertEquals(expected, supports.getOrDefault(f, Set.of()), abat + ": " + f);
 			}
 		}
 	}
 
 	@Test
 	public void ConflictFreeReasonerMatchesTheory() throws Exception {
-		PlParser plparser = new PlParser();
-		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
-		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" }) {
-			AbaTheory<PlFormula> abat = parser
-					.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile());
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
 			for (Collection<Assumption<PlFormula>> ext : abat.getAllConflictFreeExtensions())
 				expected.add(new HashSet<>(ext));
 			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
 			for (AbaExtension<PlFormula> ext : new ConflictFreeReasoner<PlFormula>().getModels(abat))
 				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, file);
+			assertEquals(expected, actual, abat.toString());
 		}
 	}
 
@@ -476,6 +415,13 @@ public class AbaTest {
 				+ "not a4 = c4\nnot a5 = c5\nc1 <- a0\nc2 <- a1\nc3 <- a2\nc4 <- a3\nc5 <- a4"));
 		theories.add(parser.parseBeliefBase("{a,b,c,d}\nx <- a,b\ny <- c\nz <- d\nw <- x\n"
 				+ "not a = y\nnot b = z\nnot c = w\nnot d = y"));
+		// an odd cycle; conflicts only visible through arguments outside an extension
+		theories.add(parser.parseBeliefBase("{a,b,c}\nnb <- b\nnc <- c\nna <- a\nnot a = nb\nnot b = nc\nnot c = na"));
+		theories.add(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
+		theories.add(parser.parseBeliefBase("{b,c,d}\np <- b\nx <- b,d\nnot c = p\nnot b = zb\nnot d = zd"));
+		theories.add(parser.parseBeliefBase("{a,b,c}\np <- b\nnot a = c\nnot c = p\nnot b = z"));
+		// non-flat without complete extension: the fact a derives its own contrary
+		theories.add(parser.parseBeliefBase("{a}\na <-\nx <- a\nnot a = x"));
 		return theories;
 	}
 
@@ -492,20 +438,35 @@ public class AbaTest {
 		}
 	}
 
+	private static Set<Set<Assumption<PlFormula>>> completeByDefinition(AbaTheory<PlFormula> abat) {
+		Set<Set<Assumption<PlFormula>>> result = new HashSet<>();
+		l: for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions()) {
+			for (Assumption<PlFormula> a : abat.getAssumptions())
+				if (!ext.contains(a) && abat.defends(ext, a))
+					continue l;
+			result.add(new HashSet<>(ext));
+		}
+		return result;
+	}
+
 	@Test
 	public void CompleteReasonerMatchesTheory() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories())
+			assertEquals(completeByDefinition(abat), asSets(new CompleteReasoner<PlFormula>().getModels(abat)),
+					abat.toString());
+	}
+
+	@Test
+	public void WellFoundedReasonerMatchesTheory() throws Exception {
 		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
+			// the intersection of all complete sets; none if there is no complete set
 			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
-			l: for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions()) {
-				for (Assumption<PlFormula> a : abat.getAssumptions())
-					if (!ext.contains(a) && abat.defends(ext, a))
-						continue l;
-				expected.add(new HashSet<>(ext));
-			}
-			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
-			for (AbaExtension<PlFormula> ext : new CompleteReasoner<PlFormula>().getModels(abat))
-				actual.add(new HashSet<>(ext));
-			assertEquals(expected, actual, abat.toString());
+			completeByDefinition(abat).stream().reduce((x, y) -> {
+				Set<Assumption<PlFormula>> i = new HashSet<>(x);
+				i.retainAll(y);
+				return i;
+			}).ifPresent(expected::add);
+			assertEquals(expected, asSets(new WellFoundedReasoner<PlFormula>().getModels(abat)), abat.toString());
 		}
 	}
 
@@ -537,27 +498,6 @@ public class AbaTest {
 				actual.add(new HashSet<>(ext));
 			assertEquals(expected, actual, abat.toString());
 		}
-	}
-
-	@Test
-	public void StableChain() throws Exception {
-		AbaTheory<PlFormula> abat = comparisonTheories().get(6);
-		Collection<AbaExtension<PlFormula>> stable = new StableReasoner<PlFormula>().getModels(abat);
-		assertEquals(1, stable.size());
-		Set<String> names = new HashSet<>();
-		for (Assumption<PlFormula> a : stable.iterator().next())
-			names.add(a.toString());
-		assertEquals(Set.of("a0", "a2", "a4"), names);
-	}
-
-	@Test
-	public void WellFoundedWithoutCompleteExtension() throws Exception {
-		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		// the fact a is in every closed set, and derives its own contrary
-		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a}\na <-\nx <- a\nnot a = x");
-		assertTrue(new CompleteReasoner<PlFormula>().getModels(abat).isEmpty());
-		assertTrue(new WellFoundedReasoner<PlFormula>().getModels(abat).isEmpty());
-		assertEquals(null, new WellFoundedReasoner<PlFormula>().getModel(abat));
 	}
 
 	@Test
@@ -613,25 +553,11 @@ public class AbaTest {
 	}
 
 	@Test
-	public void AfReductionAdmissibleMapsBackBySupport() throws Exception {
-		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		// mapping back by assumption names returns {a} here, which does not counter-attack c
-		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{a,b,c}\np <- b\nnot a = c\nnot c = p\nnot b = z");
-		assertEquals(asSets(new AdmissibleReasoner<PlFormula>().getModels(abat)),
-				asSets(new AfReductionReasoner<PlFormula>(Semantics.ADM).getModels(abat)));
-	}
-
-	@Test
 	public void AfReductionMatchesDirectReasoners() throws Exception {
-		Map<Semantics, GeneralAbaReasoner<PlFormula>> direct = Map.of(Semantics.CO, new CompleteReasoner<>(),
-				Semantics.PR, new PreferredReasoner<>(), Semantics.ST, new StableReasoner<>(), Semantics.GR,
-				new WellFoundedReasoner<>());
-		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		List<AbaTheory<PlFormula>> theories = comparisonTheories();
-		// conflicts only visible via arguments outside the extension
-		theories.add(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
-		theories.add(parser.parseBeliefBase("{b,c,d}\np <- b\nx <- b,d\nnot c = p\nnot b = zb\nnot d = zd"));
-		for (AbaTheory<PlFormula> abat : theories) {
+		Map<Semantics, GeneralAbaReasoner<PlFormula>> direct = Map.of(Semantics.ADM, new AdmissibleReasoner<>(),
+				Semantics.CO, new CompleteReasoner<>(), Semantics.PR, new PreferredReasoner<>(), Semantics.ST,
+				new StableReasoner<>(), Semantics.GR, new WellFoundedReasoner<>());
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			if (!abat.isFlat())
 				continue;
 			for (Map.Entry<Semantics, GeneralAbaReasoner<PlFormula>> e : direct.entrySet())
@@ -654,28 +580,19 @@ public class AbaTest {
 				Semantics.ADM, new AdmissibleReasoner<>(), Semantics.CO, new CompleteReasoner<>(), Semantics.PR,
 				new PreferredReasoner<>(), Semantics.ST, new StableReasoner<>(), Semantics.GR,
 				new WellFoundedReasoner<>(), Semantics.ID, new IdealReasoner<>());
-		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		List<AbaTheory<PlFormula>> theories = comparisonTheories();
-		theories.add(parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc"));
-		theories.add(parser.parseBeliefBase("{b,c,d}\np <- b\nx <- b,d\nnot c = p\nnot b = zb\nnot d = zd"));
-		theories.add(parser.parseBeliefBase("{a,b,c}\nnb <- b\nnc <- c\nna <- a\nnot a = nb\nnot b = nc\nnot c = na"));
-		for (AbaTheory<PlFormula> abat : theories) {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			if (!abat.isFlat())
 				continue;
 			for (Map.Entry<Semantics, GeneralAbaReasoner<PlFormula>> e : direct.entrySet())
 				assertEquals(asSets(e.getValue().getModels(abat)),
 						asSets(new SetafReductionReasoner<PlFormula>(e.getKey()).getModels(abat)),
 						e.getKey() + ": " + abat);
+			// metalevel semantics must not hide conflicts
+			Set<Set<Assumption<PlFormula>>> cf = asSets(new ConflictFreeReasoner<PlFormula>().getModels(abat));
+			for (Semantics s : new Semantics[] { Semantics.WAD, Semantics.UD })
+				assertTrue(cf.containsAll(asSets(new SetafReductionReasoner<PlFormula>(s).getModels(abat))),
+						s + ": " + abat);
 		}
-	}
-
-	@Test
-	public void SetafReductionKeepsConflictsInMetalevelSemantics() throws Exception {
-		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
-		AbaTheory<PlFormula> abat = parser.parseBeliefBase("{b,c}\np <- b,c\nnot b = p\nnot c = zc");
-		Set<Set<Assumption<PlFormula>>> cf = asSets(new ConflictFreeReasoner<PlFormula>().getModels(abat));
-		for (Semantics s : new Semantics[] { Semantics.WAD, Semantics.UD })
-			assertTrue(cf.containsAll(asSets(new SetafReductionReasoner<PlFormula>(s).getModels(abat))), s.toString());
 	}
 
 	@Test
