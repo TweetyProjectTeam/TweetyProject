@@ -20,11 +20,14 @@
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.tweetyproject.arg.aba.semantics.AbaExtension;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.util.SetTools;
 
 /**
  * This reasoner for ABA theories performs inference on the complete extensions.
@@ -33,7 +36,7 @@ import org.tweetyproject.commons.Formula;
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  */
-public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
+public class CompleteReasoner<T extends Formula> extends AdmissibleReasoner<T> {
 
 	/** Default */
 	public CompleteReasoner() {
@@ -45,6 +48,8 @@ public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 	 */
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
+		if (abat.isFlat())
+			return getFlatModels(abat);
 		Collection<AbaExtension<T>> result = new HashSet<>();
 		Collection<AbaExtension<T>> exts = abat.getAllAdmissbleExtensions();
 		l:for(Collection<Assumption<T>> ext : exts) {
@@ -53,6 +58,23 @@ public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 					continue l;
 				}
 			}
+			result.add(new AbaExtension<T>(ext));
+		}
+		return result;
+	}
+
+	/**
+	 * Admissible sets that contain every assumption they defend
+	 */
+	private Collection<AbaExtension<T>> getFlatModels(AbaTheory<T> abat) {
+		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);
+		Collection<AbaExtension<T>> result = new HashSet<>();
+		l: for (Set<Assumption<T>> ext : SetTools.powerSet(new HashSet<>(abat.getAssumptions()))) {
+			if (!isConflictFree(ext, attackers) || !isAdmissible(ext, attackers))
+				continue;
+			for (Assumption<T> a : abat.getAssumptions())
+				if (!ext.contains(a) && defends(ext, a, attackers))
+					continue l;
 			result.add(new AbaExtension<T>(ext));
 		}
 		return result;

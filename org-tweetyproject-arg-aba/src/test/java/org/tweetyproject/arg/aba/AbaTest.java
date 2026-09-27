@@ -454,10 +454,8 @@ public class AbaTest {
 		}
 	}
 
-	@Test
-	public void AdmissibleReasonerMatchesTheory() throws Exception {
-		PlParser plparser = new PlParser();
-		AbaParser<PlFormula> parser = new AbaParser<>(plparser);
+	private List<AbaTheory<PlFormula>> comparisonTheories() throws Exception {
+		AbaParser<PlFormula> parser = new AbaParser<>(new PlParser());
 		List<AbaTheory<PlFormula>> theories = new LinkedList<>();
 		for (String file : new String[] { "example1", "example2", "example3", "example4", "example5", "example11" })
 			theories.add(parser.parseBeliefBaseFromFile(AbaTest.class.getResource("/" + file + ".aba").getFile()));
@@ -466,12 +464,34 @@ public class AbaTest {
 				+ "not a4 = c4\nnot a5 = c5\nc1 <- a0\nc2 <- a1\nc3 <- a2\nc4 <- a3\nc5 <- a4"));
 		theories.add(parser.parseBeliefBase("{a,b,c,d}\nx <- a,b\ny <- c\nz <- d\nw <- x\n"
 				+ "not a = y\nnot b = z\nnot c = w\nnot d = y"));
-		for (AbaTheory<PlFormula> abat : theories) {
+		return theories;
+	}
+
+	@Test
+	public void AdmissibleReasonerMatchesTheory() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
 			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
 			for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions())
 				expected.add(new HashSet<>(ext));
 			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
 			for (AbaExtension<PlFormula> ext : new AdmissibleReasoner<PlFormula>().getModels(abat))
+				actual.add(new HashSet<>(ext));
+			assertEquals(expected, actual, abat.toString());
+		}
+	}
+
+	@Test
+	public void CompleteReasonerMatchesTheory() throws Exception {
+		for (AbaTheory<PlFormula> abat : comparisonTheories()) {
+			Set<Set<Assumption<PlFormula>>> expected = new HashSet<>();
+			l: for (AbaExtension<PlFormula> ext : abat.getAllAdmissbleExtensions()) {
+				for (Assumption<PlFormula> a : abat.getAssumptions())
+					if (!ext.contains(a) && abat.defends(ext, a))
+						continue l;
+				expected.add(new HashSet<>(ext));
+			}
+			Set<Set<Assumption<PlFormula>>> actual = new HashSet<>();
+			for (AbaExtension<PlFormula> ext : new CompleteReasoner<PlFormula>().getModels(abat))
 				actual.add(new HashSet<>(ext));
 			assertEquals(expected, actual, abat.toString());
 		}

@@ -66,9 +66,25 @@ public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<
 	protected boolean isAdmissible(Collection<Assumption<T>> ext,
 			Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers) {
 		for (Assumption<T> a : ext)
-			for (Set<Assumption<T>> att : attackers.get(a))
-				if (!attacks(ext, att, attackers))
-					return false;
+			if (!defends(ext, a, attackers))
+				return false;
+		return true;
+	}
+
+	/**
+	 * Checks whether ext attacks every minimal attacker of a; for a flat theory
+	 * this is defence
+	 *
+	 * @param ext       a set of assumptions
+	 * @param a         an assumption
+	 * @param attackers the minimal attackers of each assumption
+	 * @return true iff ext defends a
+	 */
+	protected boolean defends(Collection<Assumption<T>> ext, Assumption<T> a,
+			Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers) {
+		for (Set<Assumption<T>> att : attackers.get(a))
+			if (!attacks(ext, att, attackers))
+				return false;
 		return true;
 	}
 
