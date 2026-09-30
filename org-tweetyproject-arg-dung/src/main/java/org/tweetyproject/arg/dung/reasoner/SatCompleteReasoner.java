@@ -66,6 +66,7 @@ public class SatCompleteReasoner  extends AbstractSatExtensionReasoner {
 					attackersOr.add(in.get(b));
 					attackersNotOr.add((PlFormula)out.get(b).complement());					
 					beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr((PlFormula)out.get(b)));
+					beliefSet.add(((PlFormula)in.get(b).complement()).combineWithOr((PlFormula)out.get(a)));
 				}
 				beliefSet.add(new Disjunction(attackersOr).combineWithOr((PlFormula)out.get(a).complement()));
 				beliefSet.add(new Disjunction(attackersNotOr).combineWithOr((PlFormula)in.get(a)));				

@@ -27,6 +27,8 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -193,9 +195,12 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 */
 	public Collection<Extension<DungTheory>> getAllMNCompleteExtensions(DungTheory theory, int m, int n){
 		Collection<Extension<DungTheory>> result = new HashSet<>();
-		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
-			if(this.isMNComplete(theory, set, m, n))
-				result.add(new Extension<DungTheory>(set));
+		SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(theory));
+		while (it.hasNext()) {
+			Extension<DungTheory> ext = new Extension<>(it.next());
+			if (this.isMNComplete(theory, ext, m, n)) {
+				result.add(ext);
+			}
 		}
 		return result;
 	}
@@ -258,9 +263,12 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 */
 	public Collection<Extension<DungTheory>> getAllMStableExtensions(DungTheory theory, int m){
 		Collection<Extension<DungTheory>> result = new HashSet<>();
-		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
-			if(this.isMStable(theory, set, m))
-				result.add(new Extension<DungTheory>(set));
+		SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(theory));
+		while (it.hasNext()) {
+			Extension<DungTheory> ext = new Extension<>(it.next());
+			if (this.isMStable(theory, ext, m)) {
+				result.add(ext);
+			}
 		}
 		return result;
 	}

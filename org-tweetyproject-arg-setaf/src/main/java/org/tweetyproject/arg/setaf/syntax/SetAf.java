@@ -601,32 +601,6 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
         return null;
     }
 
-    /**
-     *
-     * Return the powerset of
-     * @param originalSet original set
-     * @return the powerset of
-     */
-    public Set<Set<Argument>> powerSet(Set<Argument> originalSet) {
-        HashSet<Set<Argument>> sets = new HashSet<Set<Argument>>();
-        if (originalSet.isEmpty()) {
-            sets.add(new HashSet<Argument>());
-            return sets;
-        }
-        ArrayList<Argument> list = new ArrayList<Argument>(originalSet);
-        Argument head = list.get(0);
-        HashSet<Argument> rest = new HashSet<Argument>(list.subList(1, list.size()));
-        for (Set<Argument> set : powerSet(rest)) {
-            Set<Argument> newSet = new HashSet<Argument>();
-            newSet.add(head);
-            newSet.addAll(set);
-            sets.add(newSet);
-            sets.add(set);
-        }
-
-        return sets;
-    }
-
     public SetAf getComplementGraph(int selfloops) {
         throw new UnsupportedOperationException("Not supported for SetAfs");
     }

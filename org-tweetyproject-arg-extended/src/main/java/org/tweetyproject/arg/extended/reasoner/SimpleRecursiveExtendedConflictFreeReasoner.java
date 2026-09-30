@@ -23,8 +23,10 @@
  import org.tweetyproject.arg.dung.syntax.DungEntity;
  import org.tweetyproject.arg.extended.syntax.ExtendedAttack;
  import org.tweetyproject.arg.extended.syntax.RecursiveExtendedTheory;
- import org.tweetyproject.commons.util.SetTools;
+ import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+ import org.tweetyproject.commons.util.SubsetIterator;
 
+ import java.util.ArrayList;
  import java.util.Collection;
  import java.util.HashSet;
  import java.util.Set;
@@ -60,28 +62,34 @@
      /**
       * Returns the collection of conflict-free sets of Dung entities for the given recursive extended theory.
       *
-      * This method generates all subsets of the arguments and extended attacks within the theory,
-      * and filters them to include only those that are conflict-free.
+      * This method generates and checks all subsets of extended attacks within the theory,
+      * and filters them to include only those that are conflict-free. Arguments are not considered for conflict-freeness.
+      * Hence, every combination of arguments is conflict-free.
       *
       * @param bbase the recursive extended theory for which conflict-free sets are to be computed
       * @return a collection of conflict-free sets of Dung entities
       */
      @Override
      public Collection<Collection<DungEntity>> getModels(RecursiveExtendedTheory bbase) {
+         // conflict-free subsets of extended attacks, independent of the arguments
+         Collection<Set<ExtendedAttack>> cfAttacks = new ArrayList<>();
+         SubsetIterator<ExtendedAttack> attIt = new IncreasingSubsetIterator<>(new HashSet<>(bbase.getAllAttacks()));
+         while (attIt.hasNext()) {
+             Set<ExtendedAttack> atts = attIt.next();
+             if (bbase.isConflictFree(new HashSet<>(atts))) {
+                 cfAttacks.add(atts);
+             }
+         }
+
+         // every pair of argument subset and conflict-free attack subset is a distinct result
          Collection<Collection<DungEntity>> result = new HashSet<>();
-
-         // Iterate through all subsets of arguments
-         for (Set<Argument> args : new SetTools<Argument>().subsets(bbase)) {
-             // Iterate through all subsets of extended attacks
-             for (Set<ExtendedAttack> atts : new SetTools<ExtendedAttack>().subsets(bbase.getAllAttacks())) {
-                 Collection<DungEntity> ext = new HashSet<>();
-                 ext.addAll(args);
+         SubsetIterator<Argument> argIt = new IncreasingSubsetIterator<>(new HashSet<>(bbase));
+         while (argIt.hasNext()) {
+             Set<Argument> args = argIt.next();
+             for (Set<ExtendedAttack> atts: cfAttacks) {
+                 Collection<DungEntity> ext = new HashSet<>(args);
                  ext.addAll(atts);
-
-                 // Check if the set is conflict-free
-                 if (bbase.isConflictFree(ext)) {
-                     result.add(ext);
-                 }
+                 result.add(ext);
              }
          }
          return result;

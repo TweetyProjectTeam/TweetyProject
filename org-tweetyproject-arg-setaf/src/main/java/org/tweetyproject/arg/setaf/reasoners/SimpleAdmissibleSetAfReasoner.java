@@ -25,7 +25,8 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
-import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
+import org.tweetyproject.commons.util.SubsetIterator;
 
 /**
  * This reasoner for SetAf theories performs inference on the admissible extensions.
@@ -44,12 +45,14 @@ public class SimpleAdmissibleSetAfReasoner extends AbstractSetAfExtensionReasone
 	 */
 	@Override
 	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
-		Set<Extension<SetAf>> extensions = new HashSet<Extension<SetAf>>();
+		Set<Extension<SetAf>> extensions = new HashSet<>();
 		// Check all subsets
-
-		for(Set<Argument> ext: new SetTools<Argument>().subsets((SetAf)bbase)) {
-			if(((SetAf)bbase).isAdmissible(new Extension<SetAf>(ext)))
-				extensions.add(new Extension<SetAf>(ext));
+		SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(bbase));
+		while (it.hasNext()) {
+			Extension<SetAf> ext = new Extension<>(it.next());
+			if (bbase.isAdmissible(ext)) {
+				extensions.add(ext);
+			}
 		}
 		return extensions;
 	}

@@ -24,7 +24,9 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.util.IncreasingSubsetIterator;
 import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.commons.util.SubsetIterator;
 import org.tweetyproject.graphs.Graph;
 
 import java.util.*;
@@ -152,7 +154,9 @@ public class BipolarArgumentationFramework extends DungTheory {
         Collection<Graph<Argument>> components = supp_theory.getComponents();
         Collection<Extension<DungTheory>> cfSets = new SimpleConflictFreeReasoner().getModels(this);
         for (Graph<Argument> component : components) {
-            for (Collection<Argument> candidate : new SetTools<Argument>().subsets(component.getNodes())) {
+            SubsetIterator<Argument> it = new IncreasingSubsetIterator<>(new HashSet<>(component.getNodes()));
+            while (it.hasNext()) {
+                Collection<Argument> candidate = new HashSet<>(it.next());
                 if (candidate.isEmpty()) continue;
                 DungTheory candidate_theory = (DungTheory) supp_theory.getRestriction(candidate);
                 if (candidate_theory.getComponents().size() == 1) {

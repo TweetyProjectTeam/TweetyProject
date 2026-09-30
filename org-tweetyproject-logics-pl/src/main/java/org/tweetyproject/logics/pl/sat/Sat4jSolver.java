@@ -76,7 +76,7 @@ public class Sat4jSolver extends DimacsSatSolver{
 	@Override
 	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses) {
 		if(additional_clauses.size() > 0)
-			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
+			throw new IllegalArgumentException("Sat4j does not support additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newDefault();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
@@ -97,9 +97,9 @@ public class Sat4jSolver extends DimacsSatSolver{
 					boolean taut = false;
 					for(PlFormula f3: disj){
 						if(f3 instanceof Proposition){
-							clause[i++] = prop_index.get(f3); 
+							clause[i++] = prop_index.get(f3) + 1;
 						}else if(f3 instanceof Negation){
-							clause[i++] = - prop_index.get(((Negation)f3).getFormula());
+							clause[i++] = - prop_index.get(((Negation)f3).getFormula()) - 1;
 						}else if(f3 instanceof Tautology){
 							taut = true;
 							break;
@@ -119,7 +119,7 @@ public class Sat4jSolver extends DimacsSatSolver{
 	@Override
 	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, List<String> additional_clauses) {
 		if(additional_clauses.size() > 0)
-			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
+			throw new IllegalArgumentException("Sat4j does not support additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
@@ -157,7 +157,7 @@ public class Sat4jSolver extends DimacsSatSolver{
 			PossibleWorld w = new PossibleWorld();
 			for(i = 0; i < model.length; i++)
 				if(model[i]>0)
-					w.add(prop_inverted_index.get(model[i]));				
+					w.add(prop_inverted_index.get(model[i] - 1));
 			return w;
 		}catch(ContradictionException e){
 			return null;

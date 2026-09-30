@@ -60,7 +60,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  */
 public class AbstractArgumentationExampleTest {
-	@Disabled
 	@Test
 	public void abstractArgEx(){
 		DungTheory theory = new DungTheory();
@@ -87,10 +86,6 @@ public class AbstractArgumentationExampleTest {
 				assertTrue(w.toString().equals("[undec_b, undec_c, undec_a]") ||
 						w.toString().equals("[out_b, out_a, in_c]"));
 		}
-
-
-	
-				
 	}
 
 	@Disabled
@@ -132,16 +127,15 @@ public class AbstractArgumentationExampleTest {
 						new DefaultMultipleBaseExpansionOperator<PlFormula>()
 						));
 		
-		assertTrue(rev.revise(bs, newInformation).toString().equals("[A3:a, A2:!c, A3:!a||c, A3:!b||!a]"));
+		assertTrue(rev.revise(bs, newInformation).toString().equals("[A3:a, A3:!b||!a, A2:!c, A3:!a||c]"));
 		
 		// simple non-prioritized revision (with credibilities)
 		CrMasSimpleRevisionOperator rev2 = new CrMasSimpleRevisionOperator();
-		assertTrue(rev2.revise(bs, newInformation).toString().equals("[A3:a, A2:!c, A3:!a||c, A3:!b||!a]"));
+		assertTrue(rev2.revise(bs, newInformation).toString().equals("[A3:a, A3:!b||!a, A2:!c, A3:!a||c]"));
 		
 		// credibility-based argumentative revision
 		CrMasArgumentativeRevisionOperator theRevision = new CrMasArgumentativeRevisionOperator();		
 		System.out.println(theRevision.revise(bs, newInformation).toString());
-		assertTrue(theRevision.revise(bs, newInformation).toString().equals("[A2:!c, A3:!b||!a, A3:!a||c, A3:b]"));
-		
+		assertTrue(theRevision.revise(bs, newInformation).toString().equals("[A3:b, A3:!b||!a, A2:!c, A3:!a||c]"));
 	}
 }

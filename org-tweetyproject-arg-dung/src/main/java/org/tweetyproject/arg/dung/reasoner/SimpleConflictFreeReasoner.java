@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.reasoner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,12 +26,11 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 /**
  * This reasoner for Dung theories performs inference on the conflict-free extensions.
  * @author Matthias Thimm
- *
+ * @author Lars Bengel
  */
 public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 
@@ -46,12 +46,38 @@ public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
-		// Check all subsets
-		for(Set<Argument> ext: new SetTools<Argument>().subsets((DungTheory)bbase))
-			if(((DungTheory)bbase).isConflictFree(new Extension<DungTheory>(ext)))
-				extensions.add(new Extension<DungTheory>(ext));
+		Collection<Extension<DungTheory>> extensions = new HashSet<>();
+		// self-attacking arguments are never part of a conflict-free set
+		Set<Argument> candidates = new HashSet<>();
+		for (Argument argument: bbase) {
+			if (!bbase.isAttackedBy(argument, argument))
+				candidates.add(argument);
+		}
+		this.getModels(bbase, new HashSet<>(), candidates, extensions);
 		return extensions;
+	}
+
+	/**
+	 * collects the given conflict-free set and all its conflict-free extensions by arguments
+	 * from candidates with a simple backtracking algorithm
+	 * @param bbase an argumentation framework
+	 * @param current the conflict-free set built so far
+	 * @param candidates arguments that can still be added to current
+	 * @param extensions the collection of conflict-free sets
+	 */
+	private void getModels(DungTheory bbase, Set<Argument> current, Set<Argument> candidates, Collection<Extension<DungTheory>> extensions) {
+		extensions.add(new Extension<>(current));
+		for (Argument argument: new ArrayList<>(candidates)) {
+			// later branches must not pick argument again, so each set is built only once
+			candidates.remove(argument);
+			Set<Argument> remainingCandidates = new HashSet<>(candidates);
+			remainingCandidates.removeAll(bbase.getAttacked(argument));
+			remainingCandidates.removeAll(bbase.getAttackers(argument));
+
+			current.add(argument);
+			this.getModels(bbase, current, remainingCandidates, extensions);
+			current.remove(argument);
+		}
 	}
 
 	/* (non-Javadoc)
