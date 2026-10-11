@@ -210,7 +210,7 @@ public class Implication extends FolFormula {
 
 	@Override
 	public Implication clone() {
-		return new Implication(this.formulas);
+		return new Implication(this.formulas.getFirst().clone(), this.formulas.getSecond().clone());
 	}
 
 	@Override

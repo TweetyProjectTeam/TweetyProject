@@ -83,36 +83,30 @@ public class DSumSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 		PlBeliefSet encoding = new PlBeliefSet();
 		List<PlFormula> list = Arrays.asList(kb.toArray(new PlFormula[0]));
 		for (int i = 0; i < kb.size(); i++) {
-			PlFormula fnew = list.get(i).clone();
-			for (Proposition p : list.get(i).getAtoms()) {
-				Proposition p_i = new Proposition(p.getName() + i);
-				for (int ai = 0; ai < list.get(i).numberOfOccurrences(p); ai++) {
-					fnew = fnew.replace(p, p_i, 1);
-				}
-			}
+			PlFormula fnew = copyOf(list.get(i), i);
 			encoding.add(fnew);
 		}
 		
 		List<Proposition> atoms = new ArrayList<Proposition>((new PlBeliefSet(kb)).getSignature().toCollection());
 		for (int i = 0; i < atoms.size(); i++) {
 			for (int j = 0; j < kb.size(); j++) {
-				String at = atoms.get(i).getName();
+				Proposition at = atoms.get(i);
 
 				Disjunction right = new Disjunction();
-				right.add(new Proposition(at + "_s"));
+				right.add(copyOf(at, "s"));
 				Conjunction c = new Conjunction();
-				c.add(new Proposition("j" + i + j));
-				c.add(new Negation(new Proposition(at + "_s")));
+				c.add(auxiliary("j" + i + "_" + j));
+				c.add(new Negation(copyOf(at, "s")));
 				right.add(c);
-				Implication imp_p = new Implication(new Proposition(at + j), right);
+				Implication imp_p = new Implication(copyOf(at, j), right);
 
 				right = new Disjunction();
-				right.add(new Negation(new Proposition(at + "_s")));
+				right.add(new Negation(copyOf(at, "s")));
 				c = new Conjunction();
-				c.add(new Proposition("j" + i + j));
-				c.add(new Proposition(at + "_s"));
+				c.add(auxiliary("j" + i + "_" + j));
+				c.add(copyOf(at, "s"));
 				right.add(c);
-				Implication imp_n = new Implication(new Negation(new Proposition(at + j)), right);
+				Implication imp_n = new Implication(new Negation(copyOf(at, j)), right);
 
 				encoding.add(imp_p);
 				encoding.add(imp_n);
@@ -122,7 +116,7 @@ public class DSumSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 		Set<Proposition> inverters = new HashSet<Proposition>();
 		for (int j = 0; j < kb.size(); j++) 
 			for (int i = 0; i < atoms.size(); i++) 
-				inverters.add(new Proposition("j" + i + j));
+				inverters.add(auxiliary("j" + i + "_" + j));
 		
 		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(inverters, upper_bound);
 		PlBeliefSet cardinality_constraints = c.getSatEncoding();

@@ -19,14 +19,19 @@
 package org.tweetyproject.logics.pl.analysis;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.sat.SatSolver;
+import org.tweetyproject.logics.pl.syntax.AssociativePlFormula;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
+import org.tweetyproject.logics.pl.syntax.Contradiction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Equivalence;
+import org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction;
 import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
@@ -34,6 +39,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.util.CardinalityConstraintEncoder;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
+import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class implements a SAT encoding of the contension inconsistency measure,
@@ -41,17 +47,25 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * loss in step-wise inconsistency resolution",  ECSQARU'11]. 
  * <br>This measure is defined on paraconsistent models (three-valued models with
  * truth values F,T,B) of a knowledge base by taking the minimal number of
- * B-valued propositions needed in a model of the knowledge base.
+ * B-valued propositions needed in a model of the knowledge base (infinity if
+ * the knowledge base has no paraconsistent model, i.e., if it contains a
+ * contradiction).
  * 
  * @author Anna Gessler
  */
 public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
+	/**
+	 * The names of the subformulas in the current encoding.
+	 */
+	private Map<PlFormula,String> aliases = new HashMap<PlFormula,String>();
+
 	/**
 	 * Create a new ContensionSatInconsistencyMeasure with the given SAT solver.
 	 * @param solver some SAT solver
 	 */
 	public ContensionSatInconsistencyMeasure(SatSolver solver) {
 		super(solver);
+		this.maxIsInfinity = true;
 	}
 
 	/**
@@ -59,6 +73,7 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 	 */
 	public ContensionSatInconsistencyMeasure() {
 		super();
+		this.maxIsInfinity = true;
 	}
 
 	/*
@@ -79,9 +94,7 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 		if (upper_bound == 0)
 			return (PlBeliefSet) kb;
 		PlSignature atoms = ((PlBeliefSet) kb).getMinimalSignature();
-		if (upper_bound == atoms.size())
-			return new PlBeliefSet();
-			
+		aliases.clear();
 		PlBeliefSet encoding = new PlBeliefSet();
 		// For each atom, create 3 new atoms representing the 3 truth values
 		// of three-valued logic.
@@ -138,9 +151,12 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			encoding.add(tvModels);
 		}
 
-		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(bAtoms, upper_bound);
-		PlBeliefSet cardinality_constraints = c.getSatEncoding();
-		encoding.addAll(cardinality_constraints.toCnf());
+		// (with upper_bound >= |atoms|, only the existence of a paraconsistent model is checked)
+		if (upper_bound < atoms.size()) {
+			CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(bAtoms, upper_bound);
+			PlBeliefSet cardinality_constraints = c.getSatEncoding();
+			encoding.addAll(cardinality_constraints.toCnf());
+		}
 		return encoding;
 	}
 
@@ -243,6 +259,8 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			Disjunction di = new Disjunction();
 			di.add(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
 			result.addAll(encodeSubformulas(di));
+			// the implication itself may be a subformula of another formula
+			result.addAll(encodeSameValue(f, di));
 			return result;
 		} else if (f instanceof Equivalence) {
 			Equivalence i = (Equivalence) f;
@@ -253,28 +271,65 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			Conjunction c = new Conjunction();
 			c.add(d_left,d_right);
 			result.addAll(encodeSubformulas(c));
+			result.addAll(encodeSameValue(f, c));
+			return result;
+		} else if (f instanceof ExclusiveDisjunction && !((ExclusiveDisjunction) f).isEmpty()) {
+			// as in PriestWorld, a^^b has the truth value of (a||b)&&(!a||!b)
+			ExclusiveDisjunction x = (ExclusiveDisjunction) f;
+			PlFormula c;
+			if (x.size() == 1)
+				c = x.iterator().next();
+			else {
+				ExclusiveDisjunction rest = (ExclusiveDisjunction) x.clone();
+				PlFormula first = rest.iterator().next();
+				rest.remove(first);
+				c = new Conjunction(new Disjunction(first, rest), new Disjunction(new Negation(first), new Negation(rest)));
+			}
+			result.addAll(encodeSubformulas(c));
+			result.addAll(encodeSameValue(f, c));
+			return result;
+		} else if (f instanceof Tautology || f instanceof Contradiction
+				|| (f instanceof AssociativePlFormula && ((AssociativePlFormula) f).isEmpty())) {
+			// tautologies (and empty conjunctions) are T, contradictions (and empty
+			// disjunctions) are F
+			boolean taut = f instanceof Tautology || f instanceof Conjunction;
+			Proposition pT = new Proposition(generateFormulaAlias(f) + "__T");
+			Proposition pB = new Proposition(generateFormulaAlias(f) + "__B");
+			Proposition pF = new Proposition(generateFormulaAlias(f) + "__F");
+			result.add(taut ? pT : new Negation(pT));
+			result.add(new Negation(pB));
+			result.add(taut ? new Negation(pF) : pF);
 			return result;
 		}
 		else
 			return result;
 	}
 
+	/**
+	 * Encodes that the two given formulas have the same truth value.
+	 * @param f some formula
+	 * @param g some formula
+	 * @return the encoding
+	 */
+	private PlBeliefSet encodeSameValue(PlFormula f, PlFormula g) {
+		PlBeliefSet result = new PlBeliefSet();
+		for (String v : new String[] { "__T", "__B", "__F" })
+			result.add(new Equivalence(new Proposition(generateFormulaAlias(f) + v), new Proposition(generateFormulaAlias(g) + v)).toCnf());
+		return result;
+	}
+
 	private String generateFormulaAlias(PlFormula input) {
-		String formula = input.toString();
-		formula = formula.replaceAll("&&", "aND");
-		formula = formula.replaceAll("\\|\\|", "OR");
-		formula = formula.replaceAll("\\^\\^", "XOR");
-		formula = formula.replaceAll("\\<\\=\\>", "IFF");
-		formula = formula.replaceAll("\\=\\>", "IMPL");
-		formula = formula.replaceAll("\\+", "TRUE");
-		formula = formula.replaceAll("\\-", "FaLSE");
-		formula = formula.replaceAll("\\!\\(", "NOTkK");
-		formula = formula.replaceAll("\\!\\)", "NOTzZ");
-		formula = formula.replaceAll("\\(", "FKLM");
-		formula = formula.replaceAll("\\)", "ZKLM");
-		formula = formula.replaceAll("\\s", "");	
-		formula = formula.replaceAll("\\!", "NOT");
-		return "Tx" + formula;
+		// propositions are named after themselves, other formulas are numbered
+		// (names derived from the formulas' strings could coincide, e.g., for the
+		// tautology "+" and a proposition "TRUE")
+		if (input instanceof Proposition)
+			return "Tx" + ((Proposition) input).getName();
+		String alias = aliases.get(input);
+		if (alias == null) {
+			alias = "<F" + aliases.size() + ">";
+			aliases.put(input, alias);
+		}
+		return alias;
 	}
 	
 	/**

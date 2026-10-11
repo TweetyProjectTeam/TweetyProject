@@ -89,7 +89,7 @@ public class DHitSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 		int hi = 0;
 		Set<Proposition> hits = new HashSet<Proposition>();
 		for (PlFormula f : kb) {
-			Proposition hit = new Proposition("HIT_" + hi);
+			Proposition hit = auxiliary("HIT_" + hi);
 			Disjunction d = new Disjunction();
 			d.add(f, hit);
 			encoding.add(d);
@@ -98,7 +98,7 @@ public class DHitSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 		}
 		
 		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(hits, upper_bound);
-		PlBeliefSet cardinality_constraints = c.getSatEncoding();
+		PlBeliefSet cardinality_constraints = c.getSatEncoding("<C>");
 		encoding.addAll(cardinality_constraints);
 		return encoding;
 	}

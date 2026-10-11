@@ -43,6 +43,8 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * This is equivalent to checking whether there is a paraconsistent model that sets the truth value
  * of p to B. If one of these knowledge bases is consistent we return "1" as inconsistency value. Otherwise,
  * the process is repeated with all pairs "p1,p2" of propositions, then triples, etc.  
+ * If the knowledge base has no paraconsistent model (because it contains a contradiction),
+ * the inconsistency value is infinity.
  * @author Matthias Thimm
  */
 public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula>{
@@ -67,9 +69,10 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 			if(SatSolver.getDefaultSolver().isConsistent((PlFormula)newCnf))
 				return ((double)props.size());
 		}
-		// this should not happen as at least the paraconsistent interpretation which assigns
-		// to every proposition the truth value B is a model
-		throw new RuntimeException("Unforeseen exception in computing the contension inconsistency measure: no paraconsistent model found.");
+		// no paraconsistent model exists (not even the interpretation that assigns B to
+		// every proposition) if the knowledge base contains a contradiction, i.e., a clause
+		// without propositions
+		return Double.POSITIVE_INFINITY;
 	}
 	
 	/* (non-Javadoc)

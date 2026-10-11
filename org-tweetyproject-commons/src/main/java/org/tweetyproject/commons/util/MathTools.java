@@ -51,13 +51,14 @@ public class MathTools {
 	 * Computes the faculty of the given number.
 	 * @param i an integer.
 	 * @return the value 1*...*i or 1 if i==0.
+	 * @throws ArithmeticException if the result does not fit into a long (i &gt; 20).
 	 */
-	public static int faculty(int i){
+	public static long faculty(int i){
 		if(i < 0) return 0;
 		if(i == 0) return 1;
-		int result = 1;
+		long result = 1;
 		for(int j = 2; j <= i; j++)
-			result *= j;
+			result = Math.multiplyExact(result, j);
 		return result;
 	}
 

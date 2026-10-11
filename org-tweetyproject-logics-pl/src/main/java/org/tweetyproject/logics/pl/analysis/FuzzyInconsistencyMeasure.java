@@ -183,6 +183,10 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlF
 			for(PlFormula f: formulas)
 				t = t.add(one.minus(this.getTerm(f, assignments)));
 		}
+		// without propositions there is nothing to optimise (and the solvers do not
+		// accept problems without variables)
+		if (t.getVariables().isEmpty())
+			return new Pair<Map<Variable,Term>,Double>(new HashMap<Variable,Term>(), t.doubleValue());
 		Solver solver = Solver.getDefaultGeneralSolver();
 		OptimizationProblem p = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		p.setTargetFunction(t);
