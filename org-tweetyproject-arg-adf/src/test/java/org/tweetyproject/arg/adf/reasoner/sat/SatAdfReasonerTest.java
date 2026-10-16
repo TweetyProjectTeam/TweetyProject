@@ -73,9 +73,26 @@ class SatAdfReasonerTest {
 	}
 
 	@Test
+	void groundedAgreesWithOracle() {
+		Random rng = new Random(3);
+		SatGroundedAdfReasoner reasoner = new SatGroundedAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			BruteForceOracle oracle = new BruteForceOracle(adf);
+			assertEquals(Set.of(oracle.gr()), Set.copyOf(reasoner.getModels(adf)), adf.toString());
+			assertTrue(reasoner.isModel(adf, oracle.gr()), adf.toString());
+			for (ThreeValuedInterpretation v : oracle.all().subList(0, Math.min(5, oracle.all().size()))) {
+				assertEquals(v.equals(oracle.gr()), reasoner.isModel(adf, v), v + " on " + adf);
+			}
+		}
+	}
+
+	@Test
 	void emptyAdf() {
 		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
-		assertEquals(Set.of(ThreeValuedInterpretation.allUndecided(adf.getNodes())), Set.copyOf(new SatTwoValuedModelAdfReasoner().getModels(adf)));
+		Set<ThreeValuedInterpretation> empty = Set.of(ThreeValuedInterpretation.allUndecided(adf.getNodes()));
+		assertEquals(empty, Set.copyOf(new SatTwoValuedModelAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatGroundedAdfReasoner().getModels(adf)));
 	}
 
 }
