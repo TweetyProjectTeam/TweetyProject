@@ -20,6 +20,7 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
@@ -41,7 +43,9 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * interpretation that maps every argument to u, an undecided argument a becomes
  * t if phi_a has no falsifying completion and f if it has no satisfying one.
  * Since the iteration only adds information, a decided argument is fixed by a
- * unit clause, and every check is one call to an incremental solver.
+ * unit clause, and every check is one call to an incremental solver. The calls
+ * are skipped if the Kleene value of phi_a is already decided, which then
+ * agrees with Γ (as in the brute-force {@code CharacteristicOperator}).
  *
  * @author Lars Bengel
  */
@@ -81,8 +85,14 @@ public class SatGroundedAdfReasoner extends AbstractAdfReasoner {
 
 	private ThreeValuedInterpretation grounded(AbstractDialecticalFramework adf) {
 		try (SatSolver solver = solvers.get()) {
-			AdfEncoding encoding = new AdfEncoding(new AbstractDialecticalFramework(adf), solver);
+			AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
+			AdfEncoding encoding = new AdfEncoding(copy, solver);
 			Map<Argument, TruthValue> values = new LinkedHashMap<>();
+			Map<Argument, PlFormula> conditions = new HashMap<>();
+			for (Argument a : encoding.arguments()) {
+				values.put(a, TruthValue.UNDECIDED);
+				conditions.put(a, copy.getAcceptanceCondition(a));
+			}
 			List<Argument> undecided = new ArrayList<>(encoding.arguments());
 			boolean changed = true;
 			while (changed) {
@@ -90,24 +100,26 @@ public class SatGroundedAdfReasoner extends AbstractAdfReasoner {
 					throw new CancellationException("Computation interrupted.");
 				}
 				changed = false;
+				ThreeValuedInterpretation v = ThreeValuedInterpretation.of(values);
 				for (Iterator<Argument> it = undecided.iterator(); it.hasNext();) {
 					Argument a = it.next();
-					int x = encoding.variable(a), phi = encoding.condition(a);
-					if (!solver.satisfiable(new int[] { -phi })) {
-						values.put(a, TruthValue.TRUE);
-						solver.add(x);
-					} else if (!solver.satisfiable(new int[] { phi })) {
-						values.put(a, TruthValue.FALSE);
-						solver.add(-x);
-					} else {
-						continue;
+					TruthValue value = v.evaluate(conditions.get(a));
+					if (!value.isDecided()) {
+						int phi = encoding.condition(a);
+						if (!solver.satisfiable(new int[] { -phi })) {
+							value = TruthValue.TRUE;
+						} else if (!solver.satisfiable(new int[] { phi })) {
+							value = TruthValue.FALSE;
+						} else {
+							continue;
+						}
 					}
+					values.put(a, value);
+					int x = encoding.variable(a);
+					solver.add(value == TruthValue.TRUE ? x : -x);
 					it.remove();
 					changed = true;
 				}
-			}
-			for (Argument a : undecided) {
-				values.put(a, TruthValue.UNDECIDED);
 			}
 			return ThreeValuedInterpretation.of(values);
 		}

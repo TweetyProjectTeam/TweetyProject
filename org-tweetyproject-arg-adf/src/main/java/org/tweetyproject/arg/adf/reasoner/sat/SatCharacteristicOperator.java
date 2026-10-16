@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf.reasoner.sat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -28,6 +29,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
@@ -35,8 +37,10 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * SAT-based variant of the {@link CharacteristicOperator}: Γ_D(v)(a) is t if
  * phi_a has no falsifying completion of v, f if it has no satisfying one, and
  * u otherwise. Both checks are calls to one incremental solver, with the
- * decided arguments of v as assumptions. The operator works on a copy of the
- * ADF and must be closed to release the solver.
+ * decided arguments of v as assumptions. As in the brute-force variant, the
+ * calls are skipped if the Kleene value of phi_a under v is already decided.
+ * The operator works on a copy of the ADF and must be closed to release the
+ * solver.
  *
  * @author Lars Bengel
  */
@@ -47,6 +51,8 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 	private final SatSolver solver;
 
 	private final AdfEncoding encoding;
+
+	private final Map<Argument, PlFormula> conditions = new HashMap<>();
 
 	/**
 	 * Creates the operator with the {@link Sat4jIncrementalSolver}.
@@ -77,7 +83,7 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 		int[] assumptions = encoding.assumptions(v);
 		Map<Argument, TruthValue> result = new LinkedHashMap<>();
 		for (Argument a : encoding.arguments()) {
-			result.put(a, gamma(assumptions, a));
+			result.put(a, gamma(v, assumptions, a));
 		}
 		return ThreeValuedInterpretation.of(result);
 	}
@@ -94,10 +100,14 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 		if (!adf.contains(argument)) {
 			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
 		}
-		return gamma(encoding.assumptions(v), argument);
+		return gamma(v, encoding.assumptions(v), argument);
 	}
 
-	private TruthValue gamma(int[] assumptions, Argument a) {
+	private TruthValue gamma(ThreeValuedInterpretation v, int[] assumptions, Argument a) {
+		TruthValue kleene = v.evaluate(conditions.computeIfAbsent(a, adf::getAcceptanceCondition));
+		if (kleene.isDecided()) {
+			return kleene;
+		}
 		int condition = encoding.condition(a);
 		int[] extended = Arrays.copyOf(assumptions, assumptions.length + 1);
 		extended[assumptions.length] = -condition;
