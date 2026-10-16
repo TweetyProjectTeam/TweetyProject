@@ -6,7 +6,7 @@ Old-vs-new comparison for the ADF rework (see `../docs/REWORK_PLAN.md`, section 
 |---|---|---|
 | `common` | – | runner protocol, JSON, canonical answer hash |
 | `runner-old` | `org.tweetyproject.arg:adf:1.31-baseline` or `1.31-baseline-fixed` | frozen old implementation, native MiniSat (`--impls old` / `old-fixed`) |
-| `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation (`Simple*` reasoners until phase 4) |
+| `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation: `Simple*` reasoners (`--impls new`) or SAT reasoners (`--impls new-sat`; semantics without a SAT reasoner are `unsupported`) |
 | `driver` | – | instance generation, supervised runs, independent brute-force oracle, reports |
 
 ## Setup
@@ -39,7 +39,7 @@ Tasks (`--task`): `EE` enumerate all models, `CE` count them, `SE` find one mode
 - Every run is a fresh JVM (`-Xms512m -Xmx4g -XX:+UseSerialGC -Xss64m`) pinned with `taskset` to one physical core (both SMT threads). The timeout applies to each solve. Parsing is untimed and repeated before every solve, so no solver state or cached link types carry over between repetitions.
 - Runs are grouped into chains, one per implementation and family, and processed in increasing size. Once every instance of a size has timed out, the chain records larger sizes as `skipped`. Chains run in parallel on the given cores.
 - `run` is resumable: runs already in the JSONL file are skipped.
-- The report compares `new` with `old-fixed` (or with `old` if `old-fixed` was not run) and lists crashes of every implementation.
+- The report compares the candidate (`new-sat` if run, otherwise `new`) with the reference (`old-fixed` if run, otherwise `old`) and lists crashes of every implementation.
 - Before the runners, `run` answers every query of an instance with at most `--oracle-max` (default 10) arguments with the oracle (`Oracle`, `KppAdf`), which shares no code with either implementation: its own k++ADF parser, Kleene evaluation and Γ over completions, written from the definitions in `../docs/ARCHITECTURE.md`. Its answers are recorded as implementation `oracle`. VE candidates of larger instances are checked with the oracle's verifier (`independent-check`), except PR/NA with more than 12 undecided arguments.
 - The report's validation section classifies every solved run as oracle-verified, independently verified (VE answers; SE witnesses of any size), wrong, in agreement or disagreement with the other side of the reference/new pair, or unchecked. Answers are compared per task: EE by count and hash, CE by count, SE by the existence of a model (witnesses may differ), DC/DS/VE by the Boolean answer. Wrong answers and disagreements also go to `mismatches.jsonl` next to the report, each with a `check` command that reproduces it.
 

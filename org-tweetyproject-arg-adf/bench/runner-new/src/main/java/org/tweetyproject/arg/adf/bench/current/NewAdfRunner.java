@@ -9,6 +9,7 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.bench.common.RunnerSupport;
 import org.tweetyproject.arg.adf.io.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleThreeValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
@@ -18,20 +19,31 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.InferenceMode;
 
 /**
- * Runner for the reworked implementation. Until the SAT reasoners exist
- * (phase 4) it runs the brute-force Simple* reasoners: {@code getModels} (EE,
- * CE), {@code getModel} (SE), {@code query} (DC, DS) and {@code isModel} (VE).
- * Each solve works on the freshly parsed framework.
+ * Runner for the reworked implementation: the brute-force Simple* reasoners,
+ * or with {@code --reasoner sat} the SAT reasoners (semantics without one are
+ * unsupported). It uses {@code getModels} (EE, CE), {@code getModel} (SE),
+ * {@code query} (DC, DS) and {@code isModel} (VE). Each solve works on the
+ * freshly parsed framework.
  */
 public class NewAdfRunner implements RunnerSupport.Implementation<AbstractDialecticalFramework, ThreeValuedInterpretation> {
 
+	private final boolean sat;
+
+	NewAdfRunner(boolean sat) {
+		this.sat = sat;
+	}
+
 	public static void main(String[] args) {
-		RunnerSupport.run(new NewAdfRunner(), args);
+		boolean sat = false;
+		for (int i = 0; i + 1 < args.length; i++) {
+			sat |= args[i].equals("--reasoner") && args[i + 1].equals("sat");
+		}
+		RunnerSupport.run(new NewAdfRunner(sat), args);
 	}
 
 	@Override
 	public String name() {
-		return "new-simple";
+		return sat ? "new-sat" : "new-simple";
 	}
 
 	@Override
@@ -39,7 +51,13 @@ public class NewAdfRunner implements RunnerSupport.Implementation<AbstractDialec
 		return new KppAdfParser().parse(file);
 	}
 
-	private static AbstractAdfReasoner reasoner(String semantics) {
+	private AbstractAdfReasoner reasoner(String semantics) {
+		if (sat) {
+			return switch (semantics) {
+				case "MOD" -> new SatTwoValuedModelAdfReasoner();
+				default -> throw new UnsupportedOperationException("No SAT reasoner for " + semantics + " yet");
+			};
+		}
 		return switch (semantics) {
 			case "MOD" -> new SimpleTwoValuedModelAdfReasoner();
 			case "3MOD" -> new SimpleThreeValuedModelAdfReasoner();

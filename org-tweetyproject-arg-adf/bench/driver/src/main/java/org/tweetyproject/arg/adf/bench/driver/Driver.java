@@ -61,7 +61,8 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * mismatches listed by {@code report}.
  * <p>
  * Implementations: {@code old} (adf:1.31-baseline as tagged), {@code old-fixed}
- * (adf:1.31-baseline-fixed, the performance reference) and {@code new}.
+ * (adf:1.31-baseline-fixed, the performance reference), {@code new} (the
+ * Simple* reasoners) and {@code new-sat} (the SAT reasoners).
  */
 public final class Driver {
 
@@ -118,7 +119,7 @@ public final class Driver {
 		Path results = Path.of(opts.get("results"));
 		List<String> impls = List.of(opts.getOrDefault("impls", "old,old-fixed,new").split(","));
 		for (String impl : impls) {
-			if (!impl.equals("new") && !BASELINES.containsKey(impl)) {
+			if (!impl.equals("new") && !impl.equals("new-sat") && !BASELINES.containsKey(impl)) {
 				throw new IllegalArgumentException("Unknown implementation " + impl);
 			}
 		}
@@ -357,6 +358,9 @@ public final class Driver {
 		cmd.addAll(jvmFlags(heap));
 		cmd.addAll(List.of("-cp", classpath, main, "--file", file.toAbsolutePath().toString()));
 		cmd.addAll(runnerFlags);
+		if (impl.equals("new-sat")) {
+			cmd.addAll(List.of("--reasoner", "sat"));
+		}
 		Process process = new ProcessBuilder(cmd).start();
 
 		Deque<String> stderrTail = new ArrayDeque<>();

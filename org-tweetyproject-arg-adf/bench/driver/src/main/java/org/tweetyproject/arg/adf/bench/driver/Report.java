@@ -27,8 +27,9 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * per-unit median solve times over the solved units, and the mean PAR-2 score
  * (every unsolved unit counts as twice the timeout). For the units solved by
  * both the reference ({@code old-fixed} if present, otherwise {@code old}) and
- * {@code new}: the geometric mean of the per-unit speedups reference/new, and
- * how many answers agree.
+ * the candidate ({@code new-sat} if present, otherwise {@code new}): the
+ * geometric mean of the per-unit speedups reference/candidate, and how many
+ * answers agree.
  * <p>
  * Validation (plan, section 4.2), per solved run:
  * <ul>
@@ -36,8 +37,8 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * for VE beyond the oracle's enumeration limit) or <em>wrong</em>;</li>
  * <li>otherwise an SE witness is verified with {@link Oracle#verify}
  * (<em>independent ok</em> or <em>wrong</em>);</li>
- * <li>otherwise the run is compared with the other side of the reference/new
- * pair ({@code old} with the reference): <em>agreement</em> is differential
+ * <li>otherwise the reference is compared with the candidate and every other
+ * implementation with the reference: <em>agreement</em> is differential
  * evidence only, <em>disagreement</em> is unresolved;</li>
  * <li>otherwise <em>unchecked</em>.</li>
  * </ul>
@@ -139,6 +140,7 @@ final class Report {
 		}
 		List<String> impls = runs.stream().map(Run::impl).filter(i -> !i.equals(ORACLE)).distinct().sorted().toList();
 		String reference = impls.contains("old-fixed") ? "old-fixed" : "old";
+		String candidate = impls.contains("new-sat") ? "new-sat" : "new";
 		Map<String, Map<Integer, List<Run>>> unitsByFamily = new TreeMap<>();
 		Set<String> seen = new java.util.HashSet<>();
 		for (Run run : runs) {
@@ -149,7 +151,8 @@ final class Report {
 		boolean counts = task.equals("EE") || task.equals("CE");
 
 		StringBuilder md = new StringBuilder("## ").append(sem).append(" · ").append(task).append("\n\n");
-		md.append("Speedup = ").append(reference).append(" / new on units solved by both (> 1: new is faster). ")
+		md.append("Speedup = ").append(reference).append(" / ").append(candidate).append(" on units solved by both (> 1: ")
+				.append(candidate).append(" is faster). ")
 				.append("Agree = units solved by both with the same answer").append(task.equals("SE") ? " (existence of a model)" : "")
 				.append(".\n\n");
 		for (Map.Entry<String, Map<Integer, List<Run>>> family : unitsByFamily.entrySet()) {
@@ -190,7 +193,7 @@ final class Report {
 							maxModels = Math.max(maxModels, r.count());
 						}
 					}
-					Run old = byKey.get(reference + "|" + unit.unit()), neu = byKey.get("new|" + unit.unit());
+					Run old = byKey.get(reference + "|" + unit.unit()), neu = byKey.get(candidate + "|" + unit.unit());
 					if (old != null && neu != null && old.solved() && neu.solved()) {
 						both++;
 						speedups.add(old.medianMs() / neu.medianMs());
@@ -209,8 +212,8 @@ final class Report {
 		md.append("### Validation\n\n");
 		md.append("Solved runs by validation strength: *oracle ok* / *wrong* against the brute-force oracle; *independent ok*: ")
 				.append("checked with the oracle's verifier beyond its enumeration limit (VE answers, SE witnesses); *agreement* / ")
-				.append("*disagreement* with the other side of the ").append(reference).append("/new pair (old with ").append(reference)
-				.append("), differential evidence only; *unchecked*: nothing to compare with. ")
+				.append("*disagreement* with the other side of the ").append(reference).append("/").append(candidate)
+				.append(" pair (every other implementation with ").append(reference).append("), differential evidence only; *unchecked*: nothing to compare with. ")
 				.append("*unsupported*: the implementation does not offer the semantics or task.\n\n");
 		md.append("| family | implementation | solved | oracle ok | independent ok | wrong | agreement | disagreement | unchecked | unsupported |\n");
 		md.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|\n");
@@ -233,7 +236,7 @@ final class Report {
 							continue;
 						}
 						c.merge("solved", 1, Integer::sum);
-						String otherImpl = impl.equals("new") ? reference : impl.equals(reference) ? "new" : reference;
+						String otherImpl = impl.equals(reference) ? candidate : reference;
 						String verdict = validate(run, byKey.get(ORACLE + "|" + unit.unit()), otherImpl.equals(impl) ? null
 								: byKey.get(otherImpl + "|" + unit.unit()), instances, parsed);
 						c.merge(verdict, 1, Integer::sum);
