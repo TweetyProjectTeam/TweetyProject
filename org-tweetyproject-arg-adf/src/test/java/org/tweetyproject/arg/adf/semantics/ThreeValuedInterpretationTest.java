@@ -173,7 +173,8 @@ class ThreeValuedInterpretationTest {
 		assertFalse(v.isTwoValued());
 		assertTrue(v.with(C, TruthValue.FALSE).isTwoValued());
 		assertEquals(v, ThreeValuedInterpretation.of(Set.of(A), Set.of(B), List.of(C, B, A)));
-		assertEquals("t:{a} f:{b} u:{c}", v.toString());
+		assertEquals("{t(a) f(b) u(c)}", v.toString());
+		assertEquals("{}", ThreeValuedInterpretation.allUndecided(List.of()).toString());
 		v.satisfied().iterator().next().setName("renamed");
 		assertEquals(Set.of(A), v.satisfied());
 	}

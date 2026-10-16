@@ -505,25 +505,24 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * @return the canonical form {@code t:{...} f:{...} u:{...}} with sorted names
+	 * @return the k++ADF/DIAMOND notation, e.g. {@code {t(a) t(c) f(b) u(d)}}:
+	 *         true, then false, then undecided arguments, each sorted by name
 	 */
 	@Override
 	public String toString() {
-		Map<TruthValue, Set<String>> byValue = new LinkedHashMap<>();
-		for (TruthValue v : TruthValue.values()) {
-			byValue.put(v, new TreeSet<>());
-		}
-		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			byValue.get(entry.getValue()).add(entry.getKey());
-		}
-		StringBuilder s = new StringBuilder();
-		for (Map.Entry<TruthValue, Set<String>> entry : byValue.entrySet()) {
-			if (s.length() > 0) {
-				s.append(' ');
+		StringBuilder s = new StringBuilder("{");
+		for (TruthValue value : TruthValue.values()) {
+			Set<String> names = new TreeSet<>();
+			for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
+				if (entry.getValue() == value) {
+					names.add(entry.getKey());
+				}
 			}
-			s.append(entry.getKey()).append(":{").append(String.join(",", entry.getValue())).append('}');
+			for (String name : names) {
+				s.append(s.length() > 1 ? " " : "").append(value).append('(').append(name).append(')');
+			}
 		}
-		return s.toString();
+		return s.append('}').toString();
 	}
 
 	private void requireSameDomain(ThreeValuedInterpretation other) {
