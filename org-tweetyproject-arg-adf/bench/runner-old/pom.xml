@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>runner-old</artifactId>
-    <description>Runs the frozen old implementation (adf:1.31-baseline).</description>
+    <description>Runs the frozen old implementation (adf:1.31-baseline or adf:1.31-baseline-fixed).</description>
     <dependencies>
         <dependency>
             <groupId>org.tweetyproject.arg.adf.bench</groupId>
@@ -30,9 +30,40 @@
     </dependencies>
     <build>
         <plugins>
+            <!-- both baseline variants share the API; the driver puts the jar of the selected one on the classpath -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>classpath</id>
+                        <configuration>
+                            <excludeArtifactIds>adf</excludeArtifactIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>baselines</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/adf</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.tweetyproject.arg</groupId>
+                                    <artifactId>adf</artifactId>
+                                    <version>1.31-baseline</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.tweetyproject.arg</groupId>
+                                    <artifactId>adf</artifactId>
+                                    <version>1.31-baseline-fixed</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

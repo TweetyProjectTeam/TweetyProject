@@ -30,7 +30,7 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  *
  * <pre>
  * generate --out DIR [--seed 2026] [--sizes 4,6,..,20] [--per 5]
- * run      --instances DIR --results FILE [--impls old,new] [--sem CO] [--timeout-s 60]
+ * run      --instances DIR --results FILE [--impls old,old-fixed,new] [--sem CO] [--timeout-s 60]
  *          [--heap 4g] [--warmup 1] [--reps 3] [--budget-ms 10000] [--cores 0,1,2,3,4,5]
  * report   --instances DIR --results FILE --out FILE [--timeout-s 60]
  * </pre>
@@ -41,6 +41,9 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * of a size has timed out, larger sizes of that chain are recorded as skipped.
  * Chains run in parallel on disjoint cores. Results are appended to a JSONL
  * file, and runs already present are not repeated.
+ * <p>
+ * Implementations: {@code old} (adf:1.31-baseline as tagged), {@code old-fixed}
+ * (adf:1.31-baseline-fixed, the performance reference) and {@code new}.
  */
 public final class Driver {
 
@@ -48,6 +51,9 @@ public final class Driver {
 
 	/** kills a runner that shows no protocol progress outside a solve for this long */
 	private static final long WATCHDOG_NS = 120_000_000_000L;
+
+	/** baseline artifact version of each old implementation, copied to runner-old/target/adf */
+	private static final Map<String, String> BASELINES = Map.of("old", "1.31-baseline", "old-fixed", "1.31-baseline-fixed");
 
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
@@ -82,7 +88,12 @@ public final class Driver {
 	private static void run(Map<String, String> opts) throws Exception {
 		Path instances = Path.of(opts.get("instances"));
 		Path results = Path.of(opts.get("results"));
-		List<String> impls = List.of(opts.getOrDefault("impls", "old,new").split(","));
+		List<String> impls = List.of(opts.getOrDefault("impls", "old,old-fixed,new").split(","));
+		for (String impl : impls) {
+			if (!impl.equals("new") && !BASELINES.containsKey(impl)) {
+				throw new IllegalArgumentException("Unknown implementation " + impl);
+			}
+		}
 		String sem = opts.getOrDefault("sem", "CO");
 		double timeoutS = Double.parseDouble(opts.getOrDefault("timeout-s", "60"));
 		List<Integer> cores = ints(opts.getOrDefault("cores", "0,1,2,3,4,5"));
@@ -197,11 +208,14 @@ public final class Driver {
 
 	private static Map<String, Object> runOne(String impl, Path file, int core, List<String> runnerFlags, String heap, double timeoutS)
 			throws IOException, InterruptedException {
-		String runner = impl.equals("old") ? "runner-old" : "runner-new";
-		String main = impl.equals("old") ? "org.tweetyproject.arg.adf.bench.old.OldAdfRunner"
-				: "org.tweetyproject.arg.adf.bench.current.NewAdfRunner";
+		boolean old = BASELINES.containsKey(impl);
+		String runner = old ? "runner-old" : "runner-new";
+		String main = old ? "org.tweetyproject.arg.adf.bench.old.OldAdfRunner" : "org.tweetyproject.arg.adf.bench.current.NewAdfRunner";
 		String classpath = BENCH.resolve(runner).resolve("target/classes") + ":"
 				+ Files.readString(BENCH.resolve(runner).resolve("target/classpath.txt")).trim();
+		if (old) {
+			classpath += ":" + BENCH.resolve(runner).resolve("target/adf/adf-" + BASELINES.get(impl) + ".jar");
+		}
 		List<String> cmd = new ArrayList<>(List.of("taskset", "-c", core + "," + (core + 8), "java"));
 		cmd.addAll(jvmFlags(heap));
 		cmd.addAll(List.of("-cp", classpath, main, "--file", file.toAbsolutePath().toString()));

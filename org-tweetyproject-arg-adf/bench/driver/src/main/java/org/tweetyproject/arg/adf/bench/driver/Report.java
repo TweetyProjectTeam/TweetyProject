@@ -21,9 +21,10 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * Per (family, size, implementation): solved instances, the geometric mean of
  * the per-instance median solve times over the solved instances, and the mean
  * PAR-2 score (every unsolved instance counts as twice the timeout). For the
- * instances solved by both implementations: the geometric mean of the
- * per-instance speedups old/new, and whether model count and answer hash
- * agree.
+ * instances solved by both the reference ({@code old-fixed} if present,
+ * otherwise {@code old}) and {@code new}: the geometric mean of the
+ * per-instance speedups reference/new, and whether model count and answer hash
+ * agree. Crashes and errors are listed for every implementation.
  */
 final class Report {
 
@@ -57,6 +58,7 @@ final class Report {
 			byKey.put(run.impl() + "|" + run.instance(), run);
 		}
 		List<String> impls = runs.stream().map(Run::impl).distinct().sorted().toList();
+		String reference = impls.contains("old-fixed") ? "old-fixed" : "old";
 		String sem = header == null ? "?" : String.valueOf(((List<?>) header.get("runnerFlags")).get(3));
 
 		StringBuilder md = new StringBuilder();
@@ -71,7 +73,7 @@ final class Report {
 		}
 		md.append("Times are geometric means over the solved instances of each row of the per-instance median solve time (ms). ")
 				.append("PAR-2 is the mean over all instances of the row in seconds, with unsolved instances counted as 2 × timeout. ")
-				.append("Speedup = old / new on instances solved by both (> 1: new is faster). ")
+				.append("Speedup = ").append(reference).append(" / new on instances solved by both (> 1: new is faster). ")
 				.append("Agree = instances solved by both with equal model count and answer hash.\n\n");
 
 		Map<String, Map<Integer, List<String>>> instancesByFamily = new TreeMap<>();
@@ -114,8 +116,8 @@ final class Report {
 				int both = 0, agree = 0;
 				long maxModels = 0;
 				for (String instance : size.getValue()) {
-					Run old = byKey.get("old|" + instance), neu = byKey.get("new|" + instance);
-					for (Run r : new Run[] { old, neu }) {
+					for (String impl : impls) {
+						Run r = byKey.get(impl + "|" + instance);
 						if (r != null && r.count() != null) {
 							maxModels = Math.max(maxModels, r.count());
 						}
@@ -123,13 +125,14 @@ final class Report {
 							problems.add("`" + instance + "` " + r.impl() + ": **" + r.status() + "** " + Objects.toString(r.error(), ""));
 						}
 					}
+					Run old = byKey.get(reference + "|" + instance), neu = byKey.get("new|" + instance);
 					if (old != null && neu != null && old.solved() && neu.solved()) {
 						both++;
 						speedups.add(old.medianMs() / neu.medianMs());
 						if (Objects.equals(old.count(), neu.count()) && Objects.equals(old.hash(), neu.hash())) {
 							agree++;
 						} else {
-							problems.add("`" + instance + "`: answers differ (old " + old.count() + " models, " + old.hash() + "; new "
+							problems.add("`" + instance + "`: answers differ (" + reference + " " + old.count() + " models, " + old.hash() + "; new "
 									+ neu.count() + " models, " + neu.hash() + ")");
 						}
 					}

@@ -5,7 +5,7 @@ Old-vs-new comparison for the ADF rework (see `../docs/REWORK_PLAN.md`, section 
 | Module | Classpath | Role |
 |---|---|---|
 | `common` | – | runner protocol, JSON, canonical answer hash |
-| `runner-old` | `org.tweetyproject.arg:adf:1.31-baseline` | frozen old implementation, native MiniSat |
+| `runner-old` | `org.tweetyproject.arg:adf:1.31-baseline` or `1.31-baseline-fixed` | frozen old implementation, native MiniSat (`--impls old` / `old-fixed`) |
 | `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation (`Simple*` reasoners until phase 4) |
 | `driver` | – | instance generation, supervised runs, reports |
 
@@ -21,19 +21,22 @@ mvn install:install-file -Dfile=org-tweetyproject-arg-adf/testBuild/org.tweetypr
     -DgroupId=org.tweetyproject.arg -DartifactId=adf -Dversion=1.31-baseline -Dpackaging=jar -DgeneratePom=true
 ```
 
+The hot-fixed baseline, the performance reference, is built the same way from the branch `adf-baseline-fixed` (which already contains the root-pom fix) and installed with `-Dversion=1.31-baseline-fixed`. `runner-old` copies both jars to `target/adf/`, and the driver puts the one of the selected implementation on the classpath.
+
 Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -DskipTests -Dgpg.skip`) and build the harness with `mvn -f org-tweetyproject-arg-adf/bench/pom.xml package`.
 
 ## Usage
 
 ```sh
 ./driver.sh generate --out instances/NAME --seed 2026 --sizes 4,6,8 --per 5
-./driver.sh run --instances instances/NAME --results results/NAME/results.jsonl --sem CO --timeout-s 60 --cores 0,1,2,3,4,5
+./driver.sh run --instances instances/NAME --results results/NAME/results.jsonl --impls old,old-fixed,new --sem CO --timeout-s 60 --cores 0,1,2,3,4,5
 ./driver.sh report --instances instances/NAME --results results/NAME/results.jsonl --out results/NAME/report.md --timeout-s 60
 ```
 
 - Every run is a fresh JVM (`-Xms512m -Xmx4g -XX:+UseSerialGC -Xss64m`) pinned with `taskset` to one physical core (both SMT threads). The timeout applies to each solve. Parsing is untimed and repeated before every solve, so no solver state or cached link types carry over between repetitions.
 - Runs are grouped into chains, one per implementation and family, and processed in increasing size. Once every instance of a size has timed out, the chain records larger sizes as `skipped`. Chains run in parallel on the given cores.
 - `run` is resumable: runs already in the JSONL file are skipped.
+- The report compares `new` with `old-fixed` (or with `old` if `old-fixed` was not run) and lists crashes of every implementation.
 
 ## Instance families
 
@@ -41,4 +44,4 @@ Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -Dsk
 
 ## Not yet implemented (compared with plan section 4)
 
-Hot-fixed baseline (`1.31-baseline-fixed`), the independent oracle in the driver, tasks other than EE, cold mode, peak memory, SAT statistics and plots.
+The independent oracle in the driver, tasks other than EE, cold mode, peak memory, SAT statistics and plots.
