@@ -29,17 +29,19 @@ Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -Dsk
 
 ```sh
 ./driver.sh generate --out instances/NAME --seed 2026 --sizes 4,6,8 --per 5
-./driver.sh run --instances instances/NAME --results results/NAME/results.jsonl --impls old,old-fixed,new --sem CO --timeout-s 60 --cores 0,1,2,3,4,5
+./driver.sh run --instances instances/NAME --results results/NAME/results.jsonl --impls old,old-fixed,new --sem CO --task EE --timeout-s 60 --cores 0,1,2,3,4,5
 ./driver.sh report --instances instances/NAME --results results/NAME/results.jsonl --out results/NAME/report.md --timeout-s 60
-./driver.sh check --file instances/NAME/x.kpp --sem CO --impls old-fixed,new
+./driver.sh check --file instances/NAME/x.kpp --sem CO --task DS --arg a3 --impls old-fixed,new
 ```
+
+Tasks (`--task`): `EE` enumerate all models, `CE` count them, `SE` find one model, `DC` / `DS` credulous / skeptical acceptance, `VE` verify an interpretation. Each `run` covers one semantics and one task; results of several runs can share one JSONL file, and the report has a section per (semantics, task). The queries are frozen per instance (`Queries`): one per instance for EE/CE/SE, three arguments for DC/DS, and for VE the all-undecided and grounded interpretations, three random interpretations and up to two oracle models. The old runner answers SE with the first enumerated model, DC/DS with `where(a).exists()` / `where(a).forAll()`, and VE by membership in the enumeration (recorded as `method`); it reports 3MOD as `unsupported`. The new runner uses `getModel`, `query` and `isModel`.
 
 - Every run is a fresh JVM (`-Xms512m -Xmx4g -XX:+UseSerialGC -Xss64m`) pinned with `taskset` to one physical core (both SMT threads). The timeout applies to each solve. Parsing is untimed and repeated before every solve, so no solver state or cached link types carry over between repetitions.
 - Runs are grouped into chains, one per implementation and family, and processed in increasing size. Once every instance of a size has timed out, the chain records larger sizes as `skipped`. Chains run in parallel on the given cores.
 - `run` is resumable: runs already in the JSONL file are skipped.
 - The report compares `new` with `old-fixed` (or with `old` if `old-fixed` was not run) and lists crashes of every implementation.
-- Before the runners, `run` solves every instance with at most `--oracle-max` (default 10) arguments with the oracle (`Oracle`, `KppAdf`), which shares no code with either implementation: its own k++ADF parser, Kleene evaluation and Γ over completions, written from the definitions in `../docs/ARCHITECTURE.md`. Its answers are recorded as implementation `oracle`.
-- The report's validation section classifies every solved run as oracle-verified, wrong, in agreement or disagreement with the other side of the reference/new pair, or unchecked. Wrong answers and disagreements also go to `mismatches.jsonl` next to the report, each with a `check` command that reproduces it.
+- Before the runners, `run` answers every query of an instance with at most `--oracle-max` (default 10) arguments with the oracle (`Oracle`, `KppAdf`), which shares no code with either implementation: its own k++ADF parser, Kleene evaluation and Γ over completions, written from the definitions in `../docs/ARCHITECTURE.md`. Its answers are recorded as implementation `oracle`. VE candidates of larger instances are checked with the oracle's verifier (`independent-check`), except PR/NA with more than 12 undecided arguments.
+- The report's validation section classifies every solved run as oracle-verified, independently verified (VE answers; SE witnesses of any size), wrong, in agreement or disagreement with the other side of the reference/new pair, or unchecked. Answers are compared per task: EE by count and hash, CE by count, SE by the existence of a model (witnesses may differ), DC/DS/VE by the Boolean answer. Wrong answers and disagreements also go to `mismatches.jsonl` next to the report, each with a `check` command that reproduces it.
 
 ## Instance families
 
@@ -47,4 +49,4 @@ Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -Dsk
 
 ## Not yet implemented (compared with plan section 4)
 
-Tasks other than EE, cold mode, peak memory, SAT statistics and plots.
+Capped enumeration (waits for D8), cold mode, peak memory, SAT statistics and plots.

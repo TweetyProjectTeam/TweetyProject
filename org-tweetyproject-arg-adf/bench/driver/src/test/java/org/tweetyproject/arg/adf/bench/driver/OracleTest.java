@@ -191,6 +191,46 @@ class OracleTest {
 		}
 	}
 
+	@Test
+	void verifyAndAcceptanceAgreeWithEnumeration() {
+		Random rng = new Random(7);
+		for (int trial = 0; trial < 60; trial++) {
+			String family = InstanceGenerator.FAMILIES.get(trial % InstanceGenerator.FAMILIES.size());
+			int n = 1 + rng.nextInt(4);
+			KppAdf adf = KppAdf.parse(InstanceGenerator.generate(family, n, rng));
+			Oracle oracle = new Oracle(adf);
+			for (String semantics : Oracle.SEMANTICS) {
+				Set<String> models = new HashSet<>(oracle.models(semantics));
+				for (byte[] v : interpretations(oracle, n, v -> true)) {
+					assertEquals(models.contains(oracle.canonical(v)), oracle.verify(v, semantics), semantics + " " + oracle.canonical(v));
+				}
+				for (String a : adf.names) {
+					boolean credulous = models.stream().anyMatch(m -> trueSet(m).contains(a));
+					boolean skeptical = models.stream().allMatch(m -> trueSet(m).contains(a));
+					assertEquals(credulous, oracle.accepted(semantics, a, true), semantics + " DC " + a);
+					assertEquals(skeptical, oracle.accepted(semantics, a, false), semantics + " DS " + a);
+				}
+			}
+		}
+	}
+
+	@Test
+	void verifyGivesUpOnLargeMaximalityChecks() {
+		StringBuilder kpp = new StringBuilder();
+		for (int a = 0; a < 20; a++) {
+			kpp.append("s(a").append(a).append("). ac(a").append(a).append(",a").append(a).append("). ");
+		}
+		Oracle oracle = new Oracle(KppAdf.parse(kpp.toString()));
+		byte[] undecided = oracle.interpretation(Set.of(), Set.of());
+		assertEquals(Boolean.TRUE, oracle.verify(undecided, "CO"));
+		assertEquals(null, oracle.verify(undecided, "PR"));
+		assertEquals(Boolean.FALSE, oracle.verify(oracle.interpretation(Set.of("a0"), Set.of()), "MOD"));
+	}
+
+	private static Set<String> trueSet(String canonical) {
+		return org.tweetyproject.arg.adf.bench.common.Answers.parseCanonical(canonical).get(0);
+	}
+
 	private interface Check {
 		boolean test(byte[] v);
 	}

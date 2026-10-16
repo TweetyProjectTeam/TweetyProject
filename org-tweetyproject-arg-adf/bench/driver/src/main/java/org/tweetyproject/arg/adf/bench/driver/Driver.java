@@ -22,12 +22,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.tweetyproject.arg.adf.bench.common.Answers;
 import org.tweetyproject.arg.adf.bench.common.Json;
 
 /**
@@ -35,10 +36,11 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  *
  * <pre>
  * generate --out DIR [--seed 2026] [--sizes 4,6,..,20] [--per 5]
- * run      --instances DIR --results FILE [--impls old,old-fixed,new] [--sem CO] [--timeout-s 60]
+ * run      --instances DIR --results FILE [--impls old,old-fixed,new] [--sem CO] [--task EE] [--timeout-s 60]
  *          [--heap 4g] [--warmup 1] [--reps 3] [--budget-ms 10000] [--cores 0,1,2,3,4,5] [--oracle-max 10]
  * report   --instances DIR --results FILE --out FILE [--timeout-s 60]
- * check    --file FILE [--sem CO] [--impls old-fixed,new] [--timeout-s 60] [--heap 4g]
+ * check    --file FILE [--sem CO] [--task EE] [--arg A | --interpretation "t:{..} f:{..}"] [--impls old-fixed,new]
+ *          [--timeout-s 60] [--heap 4g]
  * </pre>
  *
  * {@code run} starts every run in its own JVM, pinned with taskset to one
@@ -47,12 +49,15 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * of a size has timed out, larger sizes of that chain are recorded as skipped.
  * Chains run in parallel on disjoint cores. Results are appended to a JSONL
  * file, and runs already present are not repeated. Before the runners, the
- * independent {@link Oracle} solves every instance with at most
- * {@code --oracle-max} arguments in the driver's JVM; its answers are recorded
- * as implementation {@code oracle}.
+ * driver builds the frozen queries of every instance ({@link Queries}: e.g.
+ * the arguments for DC/DS, the candidates for VE) and records the expected
+ * answers of the independent {@link Oracle} as implementation {@code oracle}:
+ * for instances with at most {@code --oracle-max} arguments, and for VE also
+ * beyond as an independent check.
  * <p>
- * {@code check} runs one instance once per implementation and prints the
- * answers next to the oracle's models; it is the reproduction command for
+ * {@code check} runs the queries of one instance (all frozen ones, or the given
+ * {@code --arg} / {@code --interpretation}) once per implementation and prints
+ * the answers next to the oracle's; it is the reproduction command for
  * mismatches listed by {@code report}.
  * <p>
  * Implementations: {@code old} (adf:1.31-baseline as tagged), {@code old-fixed}
@@ -97,7 +102,15 @@ public final class Driver {
 
 	private record Instance(String file, String family, int n, int index) {}
 
-	private record Chain(String impl, String family, List<Instance> instances) {}
+	/** one runner invocation: an instance with one of its frozen queries */
+	private record Unit(Instance instance, Queries.Query query) {}
+
+	private record Chain(String impl, String family, List<Unit> units) {}
+
+	/** the key under which a result line is recorded; lines without task or query are EE results */
+	private static String key(String impl, String instance, String sem, String task, String query) {
+		return impl + "|" + instance + "|" + sem + "|" + task + "|" + query;
+	}
 
 	private static void run(Map<String, String> opts) throws Exception {
 		Path instances = Path.of(opts.get("instances"));
@@ -109,9 +122,11 @@ public final class Driver {
 			}
 		}
 		String sem = opts.getOrDefault("sem", "CO");
+		String task = opts.getOrDefault("task", "EE");
+		int oracleMax = Integer.parseInt(opts.getOrDefault("oracle-max", "10"));
 		double timeoutS = Double.parseDouble(opts.getOrDefault("timeout-s", "60"));
 		List<Integer> cores = ints(opts.getOrDefault("cores", "0,1,2,3,4,5"));
-		List<String> runnerFlags = List.of("--task", "EE", "--sem", sem, "--warmup", opts.getOrDefault("warmup", "1"),
+		List<String> runnerFlags = List.of("--task", task, "--sem", sem, "--warmup", opts.getOrDefault("warmup", "1"),
 				"--reps", opts.getOrDefault("reps", "3"), "--budget-ms", opts.getOrDefault("budget-ms", "10000"));
 		String heap = opts.getOrDefault("heap", "4g");
 
@@ -120,7 +135,8 @@ public final class Driver {
 			for (String line : Files.readAllLines(results)) {
 				Map<String, Object> r = Json.parseObject(line);
 				if (r.containsKey("impl") && r.containsKey("instance")) {
-					done.add(r.get("impl") + "|" + r.get("instance") + "|" + r.get("sem"));
+					done.add(key((String) r.get("impl"), (String) r.get("instance"), (String) r.get("sem"),
+							(String) r.getOrDefault("task", "EE"), (String) r.getOrDefault("query", "")));
 				}
 			}
 		} else {
@@ -145,14 +161,16 @@ public final class Driver {
 			String[] f = line.split("\t");
 			all.add(new Instance(f[0], f[1], Integer.parseInt(f[2]), Integer.parseInt(f[3])));
 		}
-		runOracle(all, instances, results, sem, Integer.parseInt(opts.getOrDefault("oracle-max", "10")), cores.size(), done);
+		Map<String, List<Queries.Query>> queries = prepare(all, instances, results, sem, task, oracleMax, cores.size(), done);
 		ConcurrentLinkedQueue<Chain> chains = new ConcurrentLinkedQueue<>();
 		for (String impl : impls) {
 			for (String family : InstanceGenerator.FAMILIES) {
-				List<Instance> list = all.stream().filter(i -> i.family().equals(family))
-						.sorted((a, b) -> a.n() != b.n() ? Integer.compare(a.n(), b.n()) : Integer.compare(a.index(), b.index())).toList();
-				if (!list.isEmpty()) {
-					chains.add(new Chain(impl, family, list));
+				List<Unit> units = new ArrayList<>();
+				all.stream().filter(i -> i.family().equals(family))
+						.sorted((a, b) -> a.n() != b.n() ? Integer.compare(a.n(), b.n()) : Integer.compare(a.index(), b.index()))
+						.forEach(i -> queries.get(i.file()).forEach(q -> units.add(new Unit(i, q))));
+				if (!units.isEmpty()) {
+					chains.add(new Chain(impl, family, units));
 				}
 			}
 		}
@@ -162,7 +180,7 @@ public final class Driver {
 				Chain chain;
 				while ((chain = chains.poll()) != null) {
 					try {
-						runChain(chain, core, instances, results, sem, runnerFlags, heap, timeoutS, done);
+						runChain(chain, core, instances, results, sem, task, runnerFlags, heap, timeoutS, done);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -176,91 +194,116 @@ public final class Driver {
 		}
 	}
 
-	private static void runOracle(List<Instance> all, Path instances, Path results, String sem, int oracleMax, int threads,
-			Set<String> done) throws Exception {
+	/**
+	 * Builds the frozen queries of every instance and records the oracle's
+	 * expected answers (implementation {@code oracle}) that are not yet in the
+	 * results.
+	 *
+	 * @return the queries per instance file
+	 */
+	private static Map<String, List<Queries.Query>> prepare(List<Instance> all, Path instances, Path results, String sem, String task,
+			int oracleMax, int threads, Set<String> done) throws Exception {
+		Map<String, List<Queries.Query>> queries = new ConcurrentHashMap<>();
 		ExecutorService pool = Executors.newFixedThreadPool(threads);
+		List<Future<?>> futures = new ArrayList<>();
 		for (Instance instance : all) {
-			if (instance.n() > oracleMax || done.contains("oracle|" + instance.file() + "|" + sem)) {
-				continue;
-			}
-			pool.submit(() -> {
-				Map<String, Object> line = new LinkedHashMap<>();
-				line.put("impl", "oracle");
-				line.put("instance", instance.file());
-				line.put("family", instance.family());
-				line.put("n", instance.n());
-				line.put("sem", sem);
-				line.putAll(oracle(instances.resolve(instance.file()), sem).result());
-				synchronized (Driver.class) {
-					try {
-						Files.writeString(results, Json.write(line) + "\n", StandardOpenOption.APPEND);
-					} catch (IOException e) {
-						throw new UncheckedIOException(e);
+			futures.add(pool.submit(() -> {
+				KppAdf adf = KppAdf.parse(instances.resolve(instance.file()));
+				List<Queries.Query> list = Queries.of(adf, instance.file(), task, sem, oracleMax);
+				queries.put(instance.file(), list);
+				for (Queries.Query query : list) {
+					if (done.contains(key(ORACLE, instance.file(), sem, task, query.label()))) {
+						continue;
 					}
-					System.out.printf("%-9s %-8s %-22s %-8s %s%n", "oracle", instance.family(), instance.file(), line.get("status"),
-							line.get("timesMs"));
+					Map<String, Object> expected = Queries.expectation(adf, query, task, sem, oracleMax);
+					if (expected == null) {
+						continue;
+					}
+					Map<String, Object> line = new LinkedHashMap<>();
+					line.put("impl", ORACLE);
+					line.put("instance", instance.file());
+					line.put("family", instance.family());
+					line.put("n", instance.n());
+					line.put("sem", sem);
+					line.put("task", task);
+					line.put("query", query.label());
+					line.putAll(expected);
+					synchronized (Driver.class) {
+						Files.writeString(results, Json.write(line) + "\n", StandardOpenOption.APPEND);
+					}
 				}
-			});
+				return null;
+			}));
 		}
 		pool.shutdown();
-		pool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-	}
-
-	/** an oracle answer: the result fields in runner format and the canonical models (null on error) */
-	private record OracleAnswer(Map<String, Object> result, List<String> models) {}
-
-	private static OracleAnswer oracle(Path file, String sem) {
-		Map<String, Object> result = new LinkedHashMap<>();
-		try {
-			KppAdf adf = KppAdf.parse(file);
-			long t0 = System.nanoTime();
-			List<String> models = new Oracle(adf).models(sem);
-			double ms = (System.nanoTime() - t0) / 1e6;
-			result.put("status", "ok");
-			result.put("count", models.size());
-			result.put("answerHash", Answers.hash(models));
-			result.put("timesMs", List.of(ms));
-			return new OracleAnswer(result, models);
-		} catch (Exception | StackOverflowError e) {
-			result.put("status", "error");
-			result.put("error", e.toString());
-			return new OracleAnswer(result, null);
+		for (Future<?> future : futures) {
+			// rethrows parse errors: every instance must be readable by the oracle's parser
+			future.get();
 		}
+		return queries;
 	}
+
+	private static final String ORACLE = "oracle";
 
 	private static void check(Map<String, String> opts) throws Exception {
 		Path file = Path.of(opts.get("file"));
 		String sem = opts.getOrDefault("sem", "CO");
-		List<String> flags = List.of("--task", "EE", "--sem", sem, "--warmup", "0", "--reps", "1");
-		for (String impl : opts.getOrDefault("impls", "old-fixed,new").split(",")) {
-			Map<String, Object> r = runOne(impl, file, 0, flags, opts.getOrDefault("heap", "4g"),
-					Double.parseDouble(opts.getOrDefault("timeout-s", "60")));
-			System.out.printf("%-9s %-8s count=%s hash=%s %s%n", impl, r.get("status"), r.get("count"), r.get("answerHash"),
-					Objects.toString(r.get("error"), ""));
+		String task = opts.getOrDefault("task", "EE");
+		int oracleMax = Integer.parseInt(opts.getOrDefault("oracle-max", "10"));
+		KppAdf adf = KppAdf.parse(file);
+		List<Queries.Query> queries;
+		if (opts.containsKey("arg")) {
+			queries = List.of(new Queries.Query("arg=" + opts.get("arg"), List.of("--arg", opts.get("arg"))));
+		} else if (opts.containsKey("interpretation")) {
+			queries = List.of(new Queries.Query("interpretation=" + opts.get("interpretation"),
+					List.of("--interpretation", opts.get("interpretation"))));
+		} else {
+			queries = Queries.of(adf, file.getFileName().toString(), task, sem, oracleMax);
 		}
-		OracleAnswer oracle = oracle(file, sem);
-		Map<String, Object> r = oracle.result();
-		System.out.printf("%-9s %-8s count=%s hash=%s %s%n", "oracle", r.get("status"), r.get("count"), r.get("answerHash"),
-				Objects.toString(r.get("error"), ""));
-		if (oracle.models() != null) {
-			oracle.models().stream().limit(100).forEach(m -> System.out.println("  " + m));
-			if (oracle.models().size() > 100) {
-				System.out.println("  … " + (oracle.models().size() - 100) + " more");
+		for (Queries.Query query : queries) {
+			System.out.println(task + " " + sem + (query.label().isEmpty() ? "" : " " + query.label()));
+			List<String> flags = new ArrayList<>(List.of("--task", task, "--sem", sem, "--warmup", "0", "--reps", "1"));
+			flags.addAll(query.flags());
+			for (String impl : opts.getOrDefault("impls", "old-fixed,new").split(",")) {
+				Map<String, Object> r = runOne(impl, file, 0, flags, opts.getOrDefault("heap", "4g"),
+						Double.parseDouble(opts.getOrDefault("timeout-s", "60")));
+				System.out.println("  " + describe(impl, r));
+			}
+			Map<String, Object> expected = Queries.expectation(adf, query, task, sem, oracleMax);
+			System.out.println("  " + (expected == null ? "oracle    (no answer: instance too large)" : describe(ORACLE, expected)));
+		}
+		if (adf.size() <= oracleMax) {
+			List<String> models = new Oracle(adf).models(sem);
+			System.out.println("oracle models (" + models.size() + "):");
+			models.stream().limit(100).forEach(m -> System.out.println("  " + m));
+			if (models.size() > 100) {
+				System.out.println("  … " + (models.size() - 100) + " more");
 			}
 		}
 	}
 
-	private static void runChain(Chain chain, int core, Path instances, Path results, String sem, List<String> runnerFlags,
+	private static String describe(String impl, Map<String, Object> r) {
+		StringBuilder s = new StringBuilder(String.format("%-9s %-8s", impl, r.get("status")));
+		for (String field : List.of("count", "answerHash", "answer", "validation", "method", "error")) {
+			if (r.containsKey(field)) {
+				s.append(' ').append(field).append('=').append(r.get(field));
+			}
+		}
+		return s.toString();
+	}
+
+	private static void runChain(Chain chain, int core, Path instances, Path results, String sem, String task, List<String> runnerFlags,
 			String heap, double timeoutS, Set<String> done) throws Exception {
-		Map<Integer, List<Instance>> bySize = new TreeMap<>();
-		for (Instance i : chain.instances()) {
-			bySize.computeIfAbsent(i.n(), k -> new ArrayList<>()).add(i);
+		Map<Integer, List<Unit>> bySize = new TreeMap<>();
+		for (Unit u : chain.units()) {
+			bySize.computeIfAbsent(u.instance().n(), k -> new ArrayList<>()).add(u);
 		}
 		boolean skipRest = false;
-		for (Map.Entry<Integer, List<Instance>> size : bySize.entrySet()) {
+		for (Map.Entry<Integer, List<Unit>> size : bySize.entrySet()) {
 			int timeouts = 0;
-			for (Instance instance : size.getValue()) {
-				if (done.contains(chain.impl() + "|" + instance.file() + "|" + sem)) {
+			for (Unit unit : size.getValue()) {
+				Instance instance = unit.instance();
+				if (done.contains(key(chain.impl(), instance.file(), sem, task, unit.query().label()))) {
 					continue;
 				}
 				Map<String, Object> result;
@@ -268,7 +311,9 @@ public final class Driver {
 					result = new LinkedHashMap<>();
 					result.put("status", "skipped");
 				} else {
-					result = runOne(chain.impl(), instances.resolve(instance.file()), core, runnerFlags, heap, timeoutS);
+					List<String> flags = new ArrayList<>(runnerFlags);
+					flags.addAll(unit.query().flags());
+					result = runOne(chain.impl(), instances.resolve(instance.file()), core, flags, heap, timeoutS);
 				}
 				if ("timeout".equals(result.get("status")) || "memout".equals(result.get("status"))) {
 					timeouts++;
@@ -279,14 +324,16 @@ public final class Driver {
 				line.put("family", instance.family());
 				line.put("n", instance.n());
 				line.put("sem", sem);
+				line.put("task", task);
+				line.put("query", unit.query().label());
 				line.put("core", core);
 				line.putAll(result);
 				line.remove("file");
 				line.put("impl", chain.impl());
 				synchronized (Driver.class) {
 					Files.writeString(results, Json.write(line) + "\n", StandardOpenOption.APPEND);
-					System.out.printf("%-4s %-8s %-22s %-8s %s%n", chain.impl(), chain.family(), instance.file(), line.get("status"),
-							line.get("timesMs"));
+					System.out.printf("%-9s %-8s %-22s %-8s %s %s%n", chain.impl(), chain.family(), instance.file(), line.get("status"),
+							unit.query().label(), line.get("timesMs"));
 				}
 			}
 			if (timeouts == size.getValue().size()) {

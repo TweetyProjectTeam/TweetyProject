@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.tweetyproject.arg.adf.bench.common.Answers;
 import org.tweetyproject.arg.adf.bench.driver.KppAdf.Atom;
@@ -32,14 +33,24 @@ import org.tweetyproject.arg.adf.bench.driver.KppAdf.Op;
  * Γ(v)(a) is the consensus of phi_a over all two-valued completions of v,
  * enumerated over the undecided parents of a. No optimisation (e.g. the Kleene
  * fast path) is applied, so the oracle shares no shortcut with either
- * implementation. All 3^n interpretations are checked, so it is meant for
- * n ≤ 10.
+ * implementation. Enumeration checks all 3^n interpretations, so
+ * {@link #models} and {@link #accepted} are meant for n ≤ 10.
+ * {@link #verify} only evaluates the definition for one interpretation and also
+ * works for large ADFs with few parents per argument (an independent check);
+ * for PR and NA it searches all more informative interpretations and gives up
+ * beyond {@link #MAX_OPEN} undecided arguments.
  */
 final class Oracle {
 
 	static final byte F = 0, T = 1, U = 2;
 
 	static final List<String> SEMANTICS = List.of("MOD", "3MOD", "CF", "NA", "ADM", "CO", "GR", "PR", "ST");
+
+	/** maximal number of undecided arguments for which verify checks PR/NA maximality */
+	static final int MAX_OPEN = 12;
+
+	/** maximal number of undecided parents for which Γ enumerates the completions */
+	static final int MAX_UNDECIDED_PARENTS = 24;
 
 	private final KppAdf adf;
 
@@ -52,7 +63,105 @@ final class Oracle {
 
 	/** @return the canonical models of the semantics, sorted */
 	List<String> models(String semantics) {
-		List<byte[]> models = switch (semantics) {
+		List<String> canonical = new ArrayList<>();
+		for (byte[] v : modelList(semantics)) {
+			canonical.add(canonical(v));
+		}
+		canonical.sort(null);
+		return canonical;
+	}
+
+	/**
+	 * @return whether the argument is true in some model (credulous) or in every
+	 *         model (skeptical; vacuously true without models)
+	 */
+	boolean accepted(String semantics, String argument, boolean credulous) {
+		int a = index(argument);
+		for (byte[] v : modelList(semantics)) {
+			if ((v[a] == T) == credulous) {
+				return credulous;
+			}
+		}
+		return !credulous;
+	}
+
+	/**
+	 * @return whether v is a model of the semantics, or null if the check is
+	 *         infeasible (PR/NA with more than {@link #MAX_OPEN} undecided
+	 *         arguments, or too many undecided parents)
+	 */
+	Boolean verify(byte[] v, String semantics) {
+		try {
+			return switch (semantics) {
+				case "MOD" -> isTwoValuedModel(v);
+				case "3MOD" -> isThreeValuedModel(v);
+				case "CF" -> isConflictFree(v);
+				case "NA" -> isConflictFree(v) ? noMoreInformative(v, this::isConflictFree) : Boolean.FALSE;
+				case "ADM" -> isAdmissible(v);
+				case "CO" -> isComplete(v);
+				case "GR" -> Arrays.equals(v, grounded());
+				case "PR" -> isAdmissible(v) ? noMoreInformative(v, this::isAdmissible) : Boolean.FALSE;
+				case "ST" -> isStable(v);
+				default -> throw new IllegalArgumentException("Unknown semantics " + semantics);
+			};
+		} catch (UnsupportedOperationException e) {
+			return null;
+		}
+	}
+
+	/** @return the interpretation with the given true and false arguments, all others undecided */
+	byte[] interpretation(Set<String> satisfied, Set<String> unsatisfied) {
+		byte[] v = new byte[n];
+		Arrays.fill(v, U);
+		for (String name : satisfied) {
+			v[index(name)] = T;
+		}
+		for (String name : unsatisfied) {
+			v[index(name)] = F;
+		}
+		return v;
+	}
+
+	private int index(String name) {
+		int a = adf.names.indexOf(name);
+		if (a < 0) {
+			throw new IllegalArgumentException("Unknown argument " + name);
+		}
+		return a;
+	}
+
+	/** no w with v <ᵢ w satisfies the check; null if v has too many undecided arguments */
+	private Boolean noMoreInformative(byte[] v, Check check) {
+		List<Integer> open = new ArrayList<>();
+		for (int a = 0; a < n; a++) {
+			if (v[a] == U) {
+				open.add(a);
+			}
+		}
+		if (open.size() > MAX_OPEN) {
+			return null;
+		}
+		long total = 1;
+		for (int i = 0; i < open.size(); i++) {
+			total *= 3;
+		}
+		byte[] w = v.clone();
+		// code 0 assigns u everywhere, i.e. w = v
+		for (long code = 1; code < total; code++) {
+			long x = code;
+			for (int a : open) {
+				w[a] = (byte) ((x % 3 + 2) % 3);
+				x /= 3;
+			}
+			if (check.test(w)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private List<byte[]> modelList(String semantics) {
+		return switch (semantics) {
 			case "MOD" -> filter(true, this::isTwoValuedModel);
 			case "3MOD" -> filter(false, this::isThreeValuedModel);
 			case "CF" -> filter(false, this::isConflictFree);
@@ -64,12 +173,6 @@ final class Oracle {
 			case "ST" -> filter(true, this::isStable);
 			default -> throw new IllegalArgumentException("Unknown semantics " + semantics);
 		};
-		List<String> canonical = new ArrayList<>();
-		for (byte[] v : models) {
-			canonical.add(canonical(v));
-		}
-		canonical.sort(null);
-		return canonical;
 	}
 
 	String canonical(byte[] v) {
@@ -207,6 +310,9 @@ final class Oracle {
 			if (v[p] == U) {
 				undecided.add(p);
 			}
+		}
+		if (undecided.size() > MAX_UNDECIDED_PARENTS) {
+			throw new UnsupportedOperationException("Too many undecided parents: " + undecided.size());
 		}
 		byte[] w = v.clone();
 		for (long mask = 0; mask < 1L << undecided.size(); mask++) {

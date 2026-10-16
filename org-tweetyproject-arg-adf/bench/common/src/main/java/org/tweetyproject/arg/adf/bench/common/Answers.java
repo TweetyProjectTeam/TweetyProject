@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Canonical answers shared by the runners and the oracle: a model is written as
@@ -26,6 +29,37 @@ public final class Answers {
 	 */
 	public static String canonical(Collection<String> satisfied, Collection<String> unsatisfied) {
 		return "t:{" + String.join(",", new TreeSet<>(satisfied)) + "} f:{" + String.join(",", new TreeSet<>(unsatisfied)) + "}";
+	}
+
+	/**
+	 * @param canonical an interpretation in canonical form, e.g. {@code t:{a,b} f:{c}}
+	 * @return the names of the true and of the false arguments
+	 * @throws IllegalArgumentException if the text is not in canonical form or a name is both true and false
+	 */
+	public static List<Set<String>> parseCanonical(String canonical) {
+		Matcher m = CANONICAL.matcher(canonical.strip());
+		if (!m.matches()) {
+			throw new IllegalArgumentException("Not a canonical interpretation: " + canonical);
+		}
+		Set<String> satisfied = names(m.group(1)), unsatisfied = names(m.group(2));
+		for (String name : satisfied) {
+			if (unsatisfied.contains(name)) {
+				throw new IllegalArgumentException("Argument both true and false: " + name);
+			}
+		}
+		return List.of(satisfied, unsatisfied);
+	}
+
+	private static final Pattern CANONICAL = Pattern.compile("t:\\{([^}]*)\\}\\s*f:\\{([^}]*)\\}");
+
+	private static Set<String> names(String list) {
+		Set<String> names = new TreeSet<>();
+		for (String name : list.split(",")) {
+			if (!name.isBlank()) {
+				names.add(name.strip());
+			}
+		}
+		return names;
 	}
 
 	/**
