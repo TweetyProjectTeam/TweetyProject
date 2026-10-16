@@ -108,10 +108,15 @@ class ThreeValuedInterpretationTest {
 	void informationOrderCourseExample() {
 		AbstractDialecticalFramework adf = adf(D1);
 		ThreeValuedInterpretation v1 = v(adf, "tuuf"), v2 = v(adf, "ttuf"), v3 = v(adf, "tftf");
-		assertTrue(v1.leqInfo(v2));
-		assertTrue(v1.leqInfo(v3));
-		assertFalse(v2.leqInfo(v3));
-		assertFalse(v3.leqInfo(v2));
+		assertTrue(v2.isAtLeastAsInformativeAs(v1));
+		assertTrue(v3.isAtLeastAsInformativeAs(v1));
+		assertFalse(v1.isAtLeastAsInformativeAs(v2));
+		assertFalse(v3.isAtLeastAsInformativeAs(v2));
+		assertFalse(v2.isAtLeastAsInformativeAs(v3));
+		assertTrue(v1.isAtLeastAsInformativeAs(v1));
+		assertTrue(v2.isMoreInformativeThan(v1));
+		assertFalse(v1.isMoreInformativeThan(v1));
+		assertFalse(v1.isMoreInformativeThan(v2));
 		assertTrue(v2.isIncomparable(v3));
 		assertFalse(v1.isIncomparable(v2));
 		assertEquals(v1, v2.consensus(v3));
@@ -157,7 +162,8 @@ class ThreeValuedInterpretationTest {
 		assertThrows(IllegalArgumentException.class, () -> v.get(C));
 		assertThrows(IllegalArgumentException.class, () -> v.with(C, TruthValue.TRUE));
 		ThreeValuedInterpretation other = ThreeValuedInterpretation.allUndecided(Set.of(A));
-		assertThrows(IllegalArgumentException.class, () -> v.leqInfo(other));
+		assertThrows(IllegalArgumentException.class, () -> v.isAtLeastAsInformativeAs(other));
+		assertThrows(IllegalArgumentException.class, () -> v.isMoreInformativeThan(other));
 		assertThrows(IllegalArgumentException.class, () -> v.consensus(other));
 		assertThrows(IllegalArgumentException.class, () -> ThreeValuedInterpretation.consensus(List.of()));
 	}

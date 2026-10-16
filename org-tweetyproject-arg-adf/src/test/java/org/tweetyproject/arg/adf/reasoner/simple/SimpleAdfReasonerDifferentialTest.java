@@ -118,7 +118,7 @@ class SimpleAdfReasonerDifferentialTest {
 			assertTrue(co.contains(grounded), context);
 			assertEquals(grounded, ThreeValuedInterpretation.consensus(co), context);
 			for (ThreeValuedInterpretation c : co) {
-				assertTrue(grounded.leqInfo(c), context);
+				assertTrue(c.isAtLeastAsInformativeAs(grounded), context);
 			}
 			assertEquals(maximal(adm), pr, context);
 			assertEquals(maximal(cf), na, context);
@@ -128,7 +128,7 @@ class SimpleAdfReasonerDifferentialTest {
 	private static Set<ThreeValuedInterpretation> maximal(Set<ThreeValuedInterpretation> set) {
 		Set<ThreeValuedInterpretation> result = new HashSet<>();
 		for (ThreeValuedInterpretation v : set) {
-			if (set.stream().noneMatch(w -> !w.equals(v) && v.leqInfo(w))) {
+			if (set.stream().noneMatch(w -> w.isMoreInformativeThan(v))) {
 				result.add(v);
 			}
 		}

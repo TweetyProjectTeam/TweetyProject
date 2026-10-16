@@ -69,10 +69,18 @@ public enum TruthValue {
 
 	/**
 	 * @param other a truth value
-	 * @return true if this value carries at most as much information as the other
+	 * @return true if other ≤_i this, i.e. other is u or equal to this value
 	 */
-	public boolean leqInfo(TruthValue other) {
-		return this == UNDECIDED || this == other;
+	public boolean isAtLeastAsInformativeAs(TruthValue other) {
+		return other == UNDECIDED || other == this;
+	}
+
+	/**
+	 * @param other a truth value
+	 * @return true if other &lt;_i this, i.e. this value is t or f and other is u
+	 */
+	public boolean isMoreInformativeThan(TruthValue other) {
+		return other == UNDECIDED && this != UNDECIDED;
 	}
 
 	/**

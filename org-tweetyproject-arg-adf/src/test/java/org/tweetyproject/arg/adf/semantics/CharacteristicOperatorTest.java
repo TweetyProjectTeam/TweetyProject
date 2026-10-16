@@ -65,7 +65,7 @@ class CharacteristicOperatorTest {
 		AbstractDialecticalFramework d1 = adf(D1);
 		ThreeValuedInterpretation v1 = v(d1, "fttu");
 		assertEquals(v(d1, "fttf"), CharacteristicOperator.apply(d1, v1));
-		assertTrue(v1.leqInfo(CharacteristicOperator.apply(d1, v1)));
+		assertTrue(CharacteristicOperator.apply(d1, v1).isAtLeastAsInformativeAs(v1));
 	}
 
 	@Test

@@ -49,7 +49,7 @@ public class SimplePreferredAdfReasoner extends AbstractSimpleAdfReasoner {
 			return false;
 		}
 		for (byte[] p : preferred(adf)) {
-			if (leqInfo(v, p)) {
+			if (isAtLeastAsInformativeAs(p, v)) {
 				return java.util.Arrays.equals(v, p);
 			}
 		}
@@ -68,7 +68,7 @@ public class SimplePreferredAdfReasoner extends AbstractSimpleAdfReasoner {
 		for (byte[] candidate : complete) {
 			boolean dominated = false;
 			for (byte[] m : maximal) {
-				if (leqInfo(candidate, m)) {
+				if (isAtLeastAsInformativeAs(m, candidate)) {
 					dominated = true;
 					break;
 				}

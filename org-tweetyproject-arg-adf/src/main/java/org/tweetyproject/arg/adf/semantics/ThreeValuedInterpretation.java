@@ -50,23 +50,14 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
- * An immutable three-valued interpretation υ : A → {t, f, u} over a fixed
+ * An immutable three-valued interpretation v : A -> {t, f, u} over a fixed
  * domain A of arguments.
- * <p>
- * Besides access to the truth values, this class provides the notions on which
- * the ADF semantics are built: the information order ≤_i, the consensus ⊓, the
- * set [υ]_2 of two-valued completions, and Kleene's strong three-valued
- * evaluation of formulas. Interpretations over different domains are never
- * compared or combined; such calls throw an {@link IllegalArgumentException}.
- * <p>
- * Following the Tweety {@code Interpretation} contract, {@link #satisfies(Argument)}
- * holds iff the argument is mapped to t.
  *
  * @author Lars Bengel
  */
 public final class ThreeValuedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework, Argument> {
 
-	/** truth values by argument name; unmodifiable */
+	/** truth values by argument name */
 	private final Map<String, TruthValue> values;
 
 	private ThreeValuedInterpretation(Map<String, TruthValue> values) {
@@ -79,7 +70,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	/**
 	 * @param domain the arguments
-	 * @return the interpretation υ_u that maps every argument to u
+	 * @return the interpretation v_u that maps every argument to u
 	 */
 	public static ThreeValuedInterpretation allUndecided(Collection<Argument> domain) {
 		Map<String, TruthValue> values = new LinkedHashMap<>();
@@ -132,18 +123,17 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * Returns the interpretation υ_S of an extension S of an AF: the arguments of
+	 * Returns the interpretation v_S of an extension S of an AF: the arguments of
 	 * S are mapped to t, the arguments attacked by S to f, and all others to u.
 	 *
 	 * @param af        an abstract argumentation framework
-	 * @param extension a conflict-free set of its arguments
-	 * @return the interpretation υ_S over the arguments of the AF
-	 * @throws IllegalArgumentException if the extension is not a conflict-free
-	 *                                  subset of the arguments of the AF
+	 * @param extension a conflict-free set of arguments
+	 * @return the interpretation v_S over the arguments of the AF
+	 * @throws IllegalArgumentException if the extension is not conflict-free
 	 */
 	public static ThreeValuedInterpretation fromExtension(DungTheory af, Extension<?> extension) {
 		if (!af.containsAll(extension) || !af.isConflictFree(new ArrayList<Argument>(extension))) {
-			throw new IllegalArgumentException("The extension is not a conflict-free set of arguments of the AF.");
+			throw new IllegalArgumentException("The extension is not conflict-free.");
 		}
 		Set<Argument> attacked = new LinkedHashSet<>(af.getAttacked(new ArrayList<Argument>(extension)));
 		return of(new LinkedHashSet<>(extension), attacked, af);
@@ -241,12 +231,13 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	/**
 	 * @param other an interpretation over the same domain
-	 * @return true if υ ≤_i other, i.e. other agrees with every decided value of υ
+	 * @return true if other ≤_i this, i.e. this interpretation agrees with every
+	 *         decided value of other
 	 */
-	public boolean leqInfo(ThreeValuedInterpretation other) {
+	public boolean isAtLeastAsInformativeAs(ThreeValuedInterpretation other) {
 		requireSameDomain(other);
 		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			if (!entry.getValue().leqInfo(other.values.get(entry.getKey()))) {
+			if (!entry.getValue().isAtLeastAsInformativeAs(other.values.get(entry.getKey()))) {
 				return false;
 			}
 		}
@@ -255,15 +246,24 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	/**
 	 * @param other an interpretation over the same domain
-	 * @return true if neither interpretation is ≤_i the other
+	 * @return true if other &lt;_i this, i.e. this interpretation is at least as
+	 *         informative as other and differs from it
 	 */
-	public boolean isIncomparable(ThreeValuedInterpretation other) {
-		return !leqInfo(other) && !other.leqInfo(this);
+	public boolean isMoreInformativeThan(ThreeValuedInterpretation other) {
+		return isAtLeastAsInformativeAs(other) && !equals(other);
 	}
 
 	/**
 	 * @param other an interpretation over the same domain
-	 * @return the consensus υ ⊓ other, which keeps the values both agree on and maps the rest to u
+	 * @return true if neither interpretation is at least as informative as the other
+	 */
+	public boolean isIncomparable(ThreeValuedInterpretation other) {
+		return !isAtLeastAsInformativeAs(other) && !other.isAtLeastAsInformativeAs(this);
+	}
+
+	/**
+	 * @param other an interpretation over the same domain
+	 * @return the consensus v ⊓ other, which keeps the values both agree on and maps the rest to u
 	 */
 	public ThreeValuedInterpretation consensus(ThreeValuedInterpretation other) {
 		requireSameDomain(other);
@@ -364,8 +364,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * Returns a lazy iterator over [υ]_2, the two-valued interpretations w with
-	 * υ ≤_i w. The completions are generated one at a time and never stored.
+	 * Returns a lazy iterator over [v]_2, the two-valued interpretations w with
+	 * v ≤_i w. The completions are generated one at a time and never stored.
 	 *
 	 * @return an iterator over all completions
 	 */
@@ -374,8 +374,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * Returns a lazy iterator over the completions of υ restricted to the given
-	 * arguments: every argument of the given collection that υ maps to u is
+	 * Returns a lazy iterator over the completions of v restricted to the given
+	 * arguments: every argument of the given collection that v maps to u is
 	 * assigned t or f, all other values are kept.
 	 *
 	 * @param arguments arguments of the domain

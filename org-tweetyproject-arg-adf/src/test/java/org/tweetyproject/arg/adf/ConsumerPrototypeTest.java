@@ -74,7 +74,7 @@ class ConsumerPrototypeTest {
 	static final class CourseHelpers {
 
 		static boolean isMoreInformative(ThreeValuedInterpretation i1, ThreeValuedInterpretation i2) {
-			return i1.leqInfo(i2);
+			return i1.isAtLeastAsInformativeAs(i2);
 		}
 
 		static boolean isEquallyInformative(ThreeValuedInterpretation i1, ThreeValuedInterpretation i2) {
@@ -145,7 +145,8 @@ class ConsumerPrototypeTest {
 	@Test
 	void courseHelpersReproduceTheCourseExamples() {
 		AbstractDialecticalFramework d1 = adf(D1);
-		assertTrue(CourseHelpers.isMoreInformative(v(d1, "tuuf"), v(d1, "ttuf")));
+		assertTrue(CourseHelpers.isMoreInformative(v(d1, "ttuf"), v(d1, "tuuf")));
+		assertFalse(CourseHelpers.isMoreInformative(v(d1, "tuuf"), v(d1, "ttuf")));
 		assertTrue(CourseHelpers.isIncomparable(v(d1, "ttuf"), v(d1, "tftf")));
 		assertFalse(CourseHelpers.isEquallyInformative(v(d1, "ttuf"), v(d1, "tftf")));
 		assertEquals(vs(d1, "tftf", "tfff", "tttf", "ttff"), CourseHelpers.getCompletions(v(d1, "tuuf")));

@@ -123,11 +123,11 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 	/**
 	 * @param a an interpretation
 	 * @param b an interpretation over the same arguments
-	 * @return true if a ≤_i b
+	 * @return true if b ≤_i a, i.e. a agrees with every decided value of b
 	 */
-	protected static boolean leqInfo(byte[] a, byte[] b) {
+	protected static boolean isAtLeastAsInformativeAs(byte[] a, byte[] b) {
 		for (int i = 0; i < a.length; i++) {
-			if (a[i] != CompiledAdf.U && a[i] != b[i]) {
+			if (b[i] != CompiledAdf.U && b[i] != a[i]) {
 				return false;
 			}
 		}

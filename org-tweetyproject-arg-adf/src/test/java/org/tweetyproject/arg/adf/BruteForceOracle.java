@@ -173,7 +173,7 @@ public final class BruteForceOracle {
 	public Set<ThreeValuedInterpretation> adm() {
 		Set<ThreeValuedInterpretation> result = new LinkedHashSet<>();
 		for (ThreeValuedInterpretation v : all) {
-			if (v.leqInfo(gamma(v))) {
+			if (gamma(v).isAtLeastAsInformativeAs(v)) {
 				result.add(v);
 			}
 		}
@@ -233,7 +233,7 @@ public final class BruteForceOracle {
 		for (ThreeValuedInterpretation v : set) {
 			boolean maximal = true;
 			for (ThreeValuedInterpretation w : set) {
-				if (!w.equals(v) && v.leqInfo(w)) {
+				if (w.isMoreInformativeThan(v)) {
 					maximal = false;
 					break;
 				}
