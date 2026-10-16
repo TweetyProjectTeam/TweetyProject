@@ -6,7 +6,7 @@ Old-vs-new comparison for the ADF rework (see `../docs/REWORK_PLAN.md`, section 
 |---|---|---|
 | `common` | – | runner protocol, JSON, canonical answer hash |
 | `runner-old` | `org.tweetyproject.arg:adf:1.31-baseline` or `1.31-baseline-fixed` | frozen old implementation, native MiniSat (`--impls old` / `old-fixed`) |
-| `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation: `Simple*` reasoners (`--impls new`) or SAT reasoners (`--impls new-sat`; semantics without a SAT reasoner are `unsupported`) |
+| `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation: `Simple*` reasoners (`--impls new`) or SAT reasoners with Sat4j (`--impls new-sat`) or native MiniSat (`--impls new-sat-native`); semantics without a SAT reasoner are `unsupported` |
 | `driver` | – | instance generation, supervised runs, independent brute-force oracle, reports |
 
 ## Setup

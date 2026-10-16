@@ -62,7 +62,8 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * <p>
  * Implementations: {@code old} (adf:1.31-baseline as tagged), {@code old-fixed}
  * (adf:1.31-baseline-fixed, the performance reference), {@code new} (the
- * Simple* reasoners) and {@code new-sat} (the SAT reasoners).
+ * Simple* reasoners), {@code new-sat} (the SAT reasoners with Sat4j) and
+ * {@code new-sat-native} (the SAT reasoners with native MiniSat).
  */
 public final class Driver {
 
@@ -119,7 +120,7 @@ public final class Driver {
 		Path results = Path.of(opts.get("results"));
 		List<String> impls = List.of(opts.getOrDefault("impls", "old,old-fixed,new").split(","));
 		for (String impl : impls) {
-			if (!impl.equals("new") && !impl.equals("new-sat") && !BASELINES.containsKey(impl)) {
+			if (!List.of("new", "new-sat", "new-sat-native").contains(impl) && !BASELINES.containsKey(impl)) {
 				throw new IllegalArgumentException("Unknown implementation " + impl);
 			}
 		}
@@ -354,12 +355,15 @@ public final class Driver {
 		if (old) {
 			classpath += ":" + BENCH.resolve(runner).resolve("target/adf/adf-" + BASELINES.get(impl) + ".jar");
 		}
-		List<String> cmd = new ArrayList<>(List.of("taskset", "-c", core + "," + (core + 8), "java"));
+		List<String> cmd = new ArrayList<>(List.of("taskset", "-c", core + "," + (core + 8), "java", "--enable-native-access=ALL-UNNAMED"));
 		cmd.addAll(jvmFlags(heap));
 		cmd.addAll(List.of("-cp", classpath, main, "--file", file.toAbsolutePath().toString()));
 		cmd.addAll(runnerFlags);
-		if (impl.equals("new-sat")) {
+		if (impl.startsWith("new-sat")) {
 			cmd.addAll(List.of("--reasoner", "sat"));
+		}
+		if (impl.equals("new-sat-native")) {
+			cmd.addAll(List.of("--backend", "minisat"));
 		}
 		Process process = new ProcessBuilder(cmd).start();
 
