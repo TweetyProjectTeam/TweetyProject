@@ -28,8 +28,8 @@ import java.nio.file.StandardCopyOption;
 
 /**
  * Loads the native libraries of the solver bindings, which are bundled as
- * resources for Linux (x86-64) and Windows. A library inside a jar is first
- * extracted to a temporary file.
+ * resources in {@code org/tweetyproject/sat/native} for Linux (x86-64) and
+ * Windows. A library inside a jar is first extracted to a temporary file.
  *
  * @author Lars Bengel
  */
@@ -46,7 +46,7 @@ public final class NativeLibrary {
 	public static void load(String name) {
 		String os = System.getProperty("os.name").toLowerCase();
 		String suffix = os.contains("win") ? ".dll" : os.contains("nux") ? ".so" : null;
-		URL url = suffix == null ? null : NativeLibrary.class.getResource("/" + name + suffix);
+		URL url = suffix == null ? null : NativeLibrary.class.getResource("/org/tweetyproject/sat/native/" + name + suffix);
 		if (url == null) {
 			throw new UnsatisfiedLinkError("No native " + name + " library for " + System.getProperty("os.name"));
 		}
