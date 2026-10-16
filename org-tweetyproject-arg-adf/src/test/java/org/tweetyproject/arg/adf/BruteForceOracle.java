@@ -77,7 +77,7 @@ public final class BruteForceOracle {
 	}
 
 	/**
-	 * @return Γ(v) = ⊓{ w(φ_a) | w ∈ [v]_2 } for every a
+	 * @return Γ(v) = ⊓{ w(phi_a) | w ∈ [v]_2 } for every a
 	 */
 	static ThreeValuedInterpretation gammaByDefinition(AbstractDialecticalFramework adf, Map<Argument, PlFormula> conditions,
 			ThreeValuedInterpretation v) {

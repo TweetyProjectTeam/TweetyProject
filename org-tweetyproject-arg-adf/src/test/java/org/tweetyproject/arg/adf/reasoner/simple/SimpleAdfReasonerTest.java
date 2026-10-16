@@ -125,7 +125,7 @@ class SimpleAdfReasonerTest {
 
 	@Test
 	void conflictFreeUsesSatisfiabilityAndRefutability() {
-		// φ_a = a ∧ ¬a cannot be satisfied; φ_b = b ∨ ¬b cannot be refuted
+		// phi_a = a ∧ ¬a cannot be satisfied; phi_b = b ∨ ¬b cannot be refuted
 		AbstractDialecticalFramework adf = adf("s(a). s(b). ac(a,and(a,neg(a))). ac(b,or(b,neg(b))).");
 		assertEquals(vs(adf, "uu", "fu", "ut", "ft"), models(CF, adf));
 		assertEquals(vs(adf, "ft"), models(NA, adf));

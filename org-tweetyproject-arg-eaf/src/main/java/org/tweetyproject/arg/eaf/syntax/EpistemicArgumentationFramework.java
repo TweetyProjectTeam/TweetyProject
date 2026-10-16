@@ -99,8 +99,8 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 *
 	 * Note: The parser does not support negated modal operators directly.
 	 * If you need to use them, please convert as follows:
-	 *   - Convert "¬M φ" to "K ¬φ".
-	 *   - Convert "¬K φ" to "M ¬φ".
+	 *   - Convert "¬M phi" to "K ¬phi".
+	 *   - Convert "¬K phi" to "M ¬phi".
 	 *
 	 * @param graph      A graph representing the structure of the argumentation framework.
 	 * @param constraint A string representing the epistemic constraint.
@@ -141,8 +141,8 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	 *
 	 * Note: The parser does not support negated modal operators directly.
 	 * If you need to use them, please convert as follows:
-	 *   - Convert "¬M φ" to "K ¬φ".
-	 *   - Convert "¬K φ" to "M ¬φ".
+	 *   - Convert "¬M phi" to "K ¬phi".
+	 *   - Convert "¬K phi" to "M ¬phi".
 	 *
 	 * @param constraint the constraint string to parse (e.g., "K(in(a)) ∨ K(out(a))")
 	 * @return true if the constraint was successfully parsed and set; false if parsing fails
@@ -528,7 +528,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	private boolean satisfiesModalFormula(MlBeliefSet beliefSet, RelationalFormula formula) {
 	    if (formula instanceof Necessity) {
-	        // For []φ (necessity), φ must be true in all extensions
+	        // For []phi (necessity), phi must be true in all extensions
 	        Necessity nec = (Necessity) formula;
 	        FolFormula innerFormula = (FolFormula) nec.getFormula();
 
@@ -543,7 +543,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	    	//handle special case of empty set
 	    	if (beliefSet.isEmpty()) return true;
 
-	        // For <>φ (possibility), φ must be true in at least one extension
+	        // For <>phi (possibility), phi must be true in at least one extension
 	        Possibility poss = (Possibility) formula;
 	        FolFormula innerFormula = (FolFormula) poss.getFormula();
 
@@ -733,7 +733,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	/**
 	 * Computes if the given newConstraint is stronger than the underlying constraint of the EAF.
-	 * A constraint φ₁ is stronger than φ₂ if, whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
+	 * A constraint phi₁ is stronger than phi₂ if, whenever a set of labelings SL satisfies phi₁, it also satisfies phi₂.
 	 * @param w the semantics for which to test if constraint is stronger
 	 * @param newConstraint a string representing the constraint
 	 * @return w the semantics for which to test if constraint is stronger
@@ -752,7 +752,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 
 	/**
 	 * Computes if the given newConstraint is stronger than the underlying constraint of the EAF.
-	 * A constraint φ₁ is stronger than φ₂ if whenever a set of labelings SL satisfies φ₁, it also satisfies φ₂.
+	 * A constraint phi₁ is stronger than phi₂ if whenever a set of labelings SL satisfies phi₁, it also satisfies phi₂.
 	 *
 	 * @param newConstraint a FolFormula representing the constraint
 	 * @param w the semantics for which to test if constraint is stronger
@@ -769,11 +769,11 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	    for (Collection<Labeling> sl : labelSets1) {
 	        MlBeliefSet kb = createEpistemicKnowledgeBase(sl);
 	        if (!satisfiesConstraint(kb)) {
-	            return false; // φ₁ ⊭ φ₂
+	            return false; // phi₁ ⊭ phi₂
 	        }
 	    }
 
-	    return true; // All sets satisfying φ₁ also satisfy φ₂
+	    return true; // All sets satisfying phi₁ also satisfy phi₂
 	}
 
 
@@ -931,21 +931,21 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	private static RelationalFormula applyEpistemicTransformations(RelationalFormula formula) {
 	    // Proposition 1 transformations
 
-	    // (i) ¬M φ ↔ K ¬φ
+	    // (i) ¬M phi ↔ K ¬phi
 	    if (formula instanceof Negation &&
 	        ((Negation)formula).getFormula() instanceof Possibility) {
 	        Possibility poss = (Possibility)((Negation)formula).getFormula();
 	        return new Necessity(new Negation((FolFormula)poss.getFormula()));
 	    }
 
-	    // (ii) ¬K φ ↔ M ¬φ
+	    // (ii) ¬K phi ↔ M ¬phi
 	    if (formula instanceof Negation &&
 	        ((Negation)formula).getFormula() instanceof Necessity) {
 	        Necessity nec = (Necessity)((Negation)formula).getFormula();
 	        return new Possibility(new Negation((FolFormula)nec.getFormula()));
 	    }
 
-	    // (iii) M(φ ∨ ψ) ↔ M φ ∨ M ψ
+	    // (iii) M(phi ∨ ψ) ↔ M phi ∨ M ψ
 	    if (formula instanceof Possibility &&
 	        ((Possibility)formula).getFormula() instanceof Disjunction) {
 	        Disjunction disj = (Disjunction)((Possibility)formula).getFormula();
@@ -956,7 +956,7 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	        return new Disjunction(newDisjuncts);
 	    }
 
-	    // (iv) K(φ ∧ ψ) ↔ K φ ∧ K ψ
+	    // (iv) K(phi ∧ ψ) ↔ K phi ∧ K ψ
 	    if (formula instanceof Necessity &&
 	        ((Necessity)formula).getFormula() instanceof Conjunction) {
 	        Conjunction conj = (Conjunction)((Necessity)formula).getFormula();
@@ -967,102 +967,102 @@ public class EpistemicArgumentationFramework extends DungTheory{
 	        return new Conjunction(newConjuncts);
 	    }
 
-	    // (v) K(φ → ψ) transformation
+	    // (v) K(phi → ψ) transformation
 	    if (formula instanceof Necessity &&
 	        ((Necessity)formula).getFormula() instanceof Implication) {
 	        Implication impl = (Implication)((Necessity)formula).getFormula();
 	        RelationalFormula left = impl.getFormulas().getFirst();
 	        RelationalFormula right = impl.getFormulas().getSecond();
 
-	        // First transform implication to ¬φ ∨ ψ
+	        // First transform implication to ¬phi ∨ ψ
 	        List<RelationalFormula> disjuncts = new ArrayList<>();
 
-	        // Create ¬φ
+	        // Create ¬phi
 	        RelationalFormula negatedLeft = new Negation((FolFormula)left);
 
-	        // Create ¬φ ∨ ψ
+	        // Create ¬phi ∨ ψ
 	        disjuncts.add(negatedLeft);
 	        disjuncts.add(right);
 	        Disjunction transformedImpl = new Disjunction(disjuncts);
 
-	        // Now apply K to the transformed formula: K(¬φ ∨ ψ)
+	        // Now apply K to the transformed formula: K(¬phi ∨ ψ)
 	        return applyEpistemicTransformations(new Necessity(transformedImpl));
 	    }
 
-	    // (vi) M(φ → ψ) transformation
+	    // (vi) M(phi → ψ) transformation
 	    if (formula instanceof Possibility &&
 	        ((Possibility)formula).getFormula() instanceof Implication) {
 	        Implication impl = (Implication)((Possibility)formula).getFormula();
 	        RelationalFormula left = impl.getFormulas().getFirst();
 	        RelationalFormula right = impl.getFormulas().getSecond();
 
-	        // First transform implication to ¬φ ∨ ψ
+	        // First transform implication to ¬phi ∨ ψ
 	        List<RelationalFormula> disjuncts = new ArrayList<>();
 
-	        // Create ¬φ
+	        // Create ¬phi
 	        RelationalFormula negatedLeft = new Negation((FolFormula)left);
 
-	        // Create ¬φ ∨ ψ
+	        // Create ¬phi ∨ ψ
 	        disjuncts.add(negatedLeft);
 	        disjuncts.add(right);
 	        Disjunction transformedImpl = new Disjunction(disjuncts);
 
-	        // Now apply M to the transformed formula: M(¬φ ∨ ψ)
+	        // Now apply M to the transformed formula: M(¬phi ∨ ψ)
 	        return applyEpistemicTransformations(new Possibility(transformedImpl));
 	    }
 
-	    // (vii) K(φ ↔ ψ) transformation
+	    // (vii) K(phi ↔ ψ) transformation
 	    if (formula instanceof Necessity &&
 	        ((Necessity)formula).getFormula() instanceof Equivalence) {
 	        Equivalence equiv = (Equivalence)((Necessity)formula).getFormula();
 	        RelationalFormula left = equiv.getFormulas().getFirst();
 	        RelationalFormula right = equiv.getFormulas().getSecond();
 
-	        // Transform equivalence to (φ → ψ) ∧ (ψ → φ)
-	        // First implication: φ → ψ
+	        // Transform equivalence to (phi → ψ) ∧ (ψ → phi)
+	        // First implication: phi → ψ
 	        Implication impl1 = new Implication(left, right);
 
-	        // Second implication: ψ → φ
+	        // Second implication: ψ → phi
 	        Implication impl2 = new Implication(right, left);
 
-	        // Create conjunction: (φ → ψ) ∧ (ψ → φ)
+	        // Create conjunction: (phi → ψ) ∧ (ψ → phi)
 	        List<RelationalFormula> conjuncts = new ArrayList<>();
 	        conjuncts.add(impl1);
 	        conjuncts.add(impl2);
 	        Conjunction transformedEquiv = new Conjunction(conjuncts);
 
-	        // apply K to the transformed formula: K((φ → ψ) ∧ (ψ → φ))
+	        // apply K to the transformed formula: K((phi → ψ) ∧ (ψ → phi))
 	        return applyEpistemicTransformations(new Necessity(transformedEquiv));
 	    }
 
-	    // (viii) M(φ ↔ ψ) transformation
+	    // (viii) M(phi ↔ ψ) transformation
 	    if (formula instanceof Possibility &&
 	        ((Possibility)formula).getFormula() instanceof Equivalence) {
 	        Equivalence equiv = (Equivalence)((Possibility)formula).getFormula();
 	        RelationalFormula left = equiv.getFormulas().getFirst();
 	        RelationalFormula right = equiv.getFormulas().getSecond();
 
-	        // Transform equivalence to (¬φ ∨ ψ) ∧ (¬ψ ∨ φ)
+	        // Transform equivalence to (¬phi ∨ ψ) ∧ (¬ψ ∨ phi)
 
-	        // First disjunction: ¬φ ∨ ψ
+	        // First disjunction: ¬phi ∨ ψ
 	        List<RelationalFormula> disjuncts1 = new ArrayList<>();
 	        disjuncts1.add(new Negation((FolFormula)left));
 	        disjuncts1.add(right);
 	        Disjunction disj1 = new Disjunction(disjuncts1);
 
-	        // Second disjunction: ¬ψ ∨ φ
+	        // Second disjunction: ¬ψ ∨ phi
 	        List<RelationalFormula> disjuncts2 = new ArrayList<>();
 	        disjuncts2.add(new Negation((FolFormula)right));
 	        disjuncts2.add(left);
 	        Disjunction disj2 = new Disjunction(disjuncts2);
 
-	        // Create conjunction: (¬φ ∨ ψ) ∧ (¬ψ ∨ φ)
+	        // Create conjunction: (¬phi ∨ ψ) ∧ (¬ψ ∨ phi)
 	        List<RelationalFormula> conjuncts = new ArrayList<>();
 	        conjuncts.add(disj1);
 	        conjuncts.add(disj2);
 	        Conjunction transformedEquiv = new Conjunction(conjuncts);
 
-	        // apply M to the transformed formula: M((¬φ ∨ ψ) ∧ (¬ψ ∨ φ))
+	        // apply M to the transformed formula: M((¬phi ∨ ψ) ∧ (¬ψ ∨ phi))
 	        return applyEpistemicTransformations(new Possibility(transformedEquiv));
 	    }
 

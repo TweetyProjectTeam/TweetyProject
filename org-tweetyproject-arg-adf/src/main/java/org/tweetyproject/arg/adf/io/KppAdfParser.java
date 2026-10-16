@@ -56,7 +56,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * </pre>
  *
  * Every statement {@code s(x)} declares an argument and every
- * {@code ac(x, φ)} gives its acceptance condition. Conditions are built from
+ * {@code ac(x, phi)} gives its acceptance condition. Conditions are built from
  * argument names, the constants {@code c(v)} (⊤) and {@code c(f)} (⊥), and the
  * connectives {@code neg/1}, {@code and}, {@code or}, {@code xor} (one or more
  * operands), {@code imp/2} and {@code iff/2}. Text after {@code %} up to the
@@ -113,7 +113,7 @@ public class KppAdfParser {
 					throw new ParserException("Duplicate acceptance condition for " + name + ".");
 				}
 			} else {
-				throw new ParserException("Expected s(x) or ac(x, φ), found " + statement + ".");
+				throw new ParserException("Expected s(x) or ac(x, phi), found " + statement + ".");
 			}
 		}
 		Map<Argument, PlFormula> result = new LinkedHashMap<>();

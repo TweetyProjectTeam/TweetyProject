@@ -14,7 +14,7 @@ import java.util.Random;
  * parser can read every instance.
  * <ul>
  * <li>{@code af}: ADFs D_F of random AFs; every argument has 0-3 random
- * attackers (no self-attacks), φ_a = ∧ ¬b.</li>
+ * attackers (no self-attacks), phi_a = ∧ ¬b.</li>
  * <li>{@code bipolar}: every argument has 1-3 distinct parents (possibly
  * itself), each occurring exactly once as a supporting (b) or attacking (¬b)
  * literal in a random and/or tree; bipolar by construction.</li>

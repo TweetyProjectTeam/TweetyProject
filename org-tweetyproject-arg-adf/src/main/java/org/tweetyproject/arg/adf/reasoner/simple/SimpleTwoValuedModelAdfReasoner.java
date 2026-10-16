@@ -24,7 +24,7 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
  * Enumerates the two-valued models (MOD) of an ADF: the two-valued
- * interpretations v with v(a) = v(φ_a) for every argument a. Checks all 2^n
+ * interpretations v with v(a) = v(phi_a) for every argument a. Checks all 2^n
  * two-valued interpretations.
  *
  * @author Lars Bengel

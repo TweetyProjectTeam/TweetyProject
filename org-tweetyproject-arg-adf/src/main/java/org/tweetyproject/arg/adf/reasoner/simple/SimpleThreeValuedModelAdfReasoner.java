@@ -24,7 +24,7 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
  * Enumerates the three-valued models (3MOD) of an ADF in the sense of the
- * course text: interpretations v such that v(a) = u or v(a) = v(φ_a) under
+ * course text: interpretations v such that v(a) = u or v(a) = v(phi_a) under
  * Kleene's strong three-valued evaluation, for every argument a. This notion
  * differs from the conflict-free semantics of
  * {@link SimpleConflictFreeAdfReasoner}; every admissible interpretation is

@@ -268,7 +268,7 @@ public final class CompiledAdf {
 	/**
 	 * @param a an argument index
 	 * @param v an interpretation
-	 * @return the Kleene value of φ_a under v; for two-valued v this is the classical value
+	 * @return the Kleene value of phi_a under v; for two-valued v this is the classical value
 	 */
 	public byte kleene(int a, byte[] v) {
 		return eval(root[a], v);
@@ -350,8 +350,8 @@ public final class CompiledAdf {
 	}
 
 	/**
-	 * Computes Γ(v)(a), the consensus of φ_a over all completions of v. Only the
-	 * undecided parents of a are completed, and if the Kleene value of φ_a is
+	 * Computes Γ(v)(a), the consensus of phi_a over all completions of v. Only the
+	 * undecided parents of a are completed, and if the Kleene value of phi_a is
 	 * already t or f no completion is enumerated at all.
 	 *
 	 * @param a an argument index
@@ -387,7 +387,7 @@ public final class CompiledAdf {
 	}
 
 	/**
-	 * Decides whether some completion w of v satisfies w(φ_a) = target.
+	 * Decides whether some completion w of v satisfies w(phi_a) = target.
 	 *
 	 * @param a      an argument index
 	 * @param v      an interpretation; restored before returning

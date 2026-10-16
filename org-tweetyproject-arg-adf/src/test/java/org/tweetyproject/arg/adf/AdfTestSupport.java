@@ -63,7 +63,7 @@ public final class AdfTestSupport {
 	/** Brewka et al. 2013, Example 2 (cyclic support): a[c], b[c], c[a ↔ b]. */
 	public static final String BREWKA_2 = "s(a). s(b). s(c). ac(a,c). ac(b,c). ac(c,iff(a,b)).";
 
-	/** φ_a = a, φ_b = a ∨ ¬a: (u,t) is complete, hence admissible, but no Kleene three-valued model. */
+	/** phi_a = a, phi_b = a ∨ ¬a: (u,t) is complete, hence admissible, but no Kleene three-valued model. */
 	public static final String ADM_NOT_3MOD = "s(a). s(b). ac(a,a). ac(b,or(a,neg(a))).";
 
 	/** D_F of the AF a → b: (t,u) is admissible but no canonical interpretation v_S. */

@@ -77,7 +77,7 @@ class CharacteristicOperatorTest {
 
 	/**
 	 * Compares the operator (parent-restricted completions with Kleene fast path,
-	 * on the compiled representation) with its definition: the consensus of φ_a
+	 * on the compiled representation) with its definition: the consensus of phi_a
 	 * over all completions of the whole interpretation, evaluated on PlFormulas.
 	 */
 	@Test

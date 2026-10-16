@@ -53,13 +53,13 @@ import org.tweetyproject.math.term.IntegerConstant;
 
 /**
  * An abstract dialectical framework (ADF) D = (A, C): a set of arguments A and
- * an acceptance condition φ_a for every a ∈ A, which is a propositional formula
+ * an acceptance condition phi_a for every a ∈ A, which is a propositional formula
  * over A (Brewka and Woltran, KR 2010; Brewka et al., IJCAI 2013).
  * <p>
  * Arguments are Dung {@link Argument}s and acceptance conditions are
  * {@link PlFormula}s; the proposition {@code Proposition("a")} refers to the
  * argument {@code Argument("a")}. The links of the ADF, i.e. its graph edges,
- * are implied by the conditions: (b, a) is a link iff b occurs in φ_a.
+ * are implied by the conditions: (b, a) is a link iff b occurs in phi_a.
  * <p>
  * <b>Mutation and ownership.</b> The framework is mutable, like
  * {@code DungTheory}. It stores argument names and copies of the given
@@ -130,7 +130,7 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 
 	/**
 	 * Returns the ADF D_F associated with an AF F = (A, R), in which
-	 * φ_a = ∧_{(b,a) ∈ R} ¬b, and φ_a = ⊤ for unattacked arguments.
+	 * phi_a = ∧_{(b,a) ∈ R} ¬b, and phi_a = ⊤ for unattacked arguments.
 	 *
 	 * @param af an abstract argumentation framework
 	 * @return the associated ADF
@@ -446,7 +446,7 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	}
 
 	/**
-	 * @return all links (b, a) such that b occurs in φ_a
+	 * @return all links (b, a) such that b occurs in phi_a
 	 */
 	public Collection<Link> getLinks() {
 		List<Link> links = new ArrayList<>();
@@ -560,7 +560,7 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	/**
 	 * An argument a is attacked by a set S if the acceptance condition of a is
 	 * already false when S is accepted and nothing else is known, i.e. Kleene
-	 * evaluation of φ_a under the interpretation mapping S to t and all other
+	 * evaluation of phi_a under the interpretation mapping S to t and all other
 	 * arguments to u yields f. For the ADF D_F of an AF this is exactly the case
 	 * if some argument of S attacks a.
 	 *

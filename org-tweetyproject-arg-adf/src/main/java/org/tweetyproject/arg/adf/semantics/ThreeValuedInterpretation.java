@@ -298,8 +298,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	/**
 	 * Evaluates a formula in Kleene's strong three-valued logic. Implications,
-	 * equivalences and exclusive disjunctions are evaluated as (¬φ ∨ ψ),
-	 * (φ → ψ) ∧ (ψ → φ) and the parity of the operands, so each yields u as soon
+	 * equivalences and exclusive disjunctions are evaluated as (¬phi ∨ ψ),
+	 * (phi → ψ) ∧ (ψ → phi) and the parity of the operands, so each yields u as soon
 	 * as an operand that matters is u; ⊕ and ↔ are u whenever an operand is u.
 	 * Empty conjunctions are t; empty disjunctions and exclusive disjunctions are f.
 	 *

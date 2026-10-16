@@ -43,18 +43,18 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 /**
  * Computes the {@link LinkType}s of the links of an ADF.
  * <p>
- * A link (b, a) is supporting if φ_a is monotone in b (making b true never makes
- * φ_a false), attacking if φ_a is antitone in b, redundant if both, and
+ * A link (b, a) is supporting if phi_a is monotone in b (making b true never makes
+ * phi_a false), attacking if phi_a is antitone in b, redundant if both, and
  * dependent if neither. Each property is decided as follows:
  * <ol>
- * <li>If b occurs in φ_a only positively (only negatively), φ_a is monotone
+ * <li>If b occurs in phi_a only positively (only negatively), phi_a is monotone
  * (antitone) in b. This syntactic certificate does not exclude redundancy, so
  * {@link #classify(AbstractDialecticalFramework)} still checks the other
  * direction.</li>
  * <li>Otherwise, the property is checked exactly: by a truth table over the
  * parents of a if there are at most {@value #TRUTH_TABLE_LIMIT} of them, and by
- * an unsatisfiability check of φ_a[b/⊥] ∧ ¬φ_a[b/⊤] (resp. φ_a[b/⊤] ∧
- * ¬φ_a[b/⊥]) with the default SAT solver of {@code logics-pl} otherwise.</li>
+ * an unsatisfiability check of phi_a[b/⊥] ∧ ¬phi_a[b/⊤] (resp. phi_a[b/⊤] ∧
+ * ¬phi_a[b/⊥]) with the default SAT solver of {@code logics-pl} otherwise.</li>
  * </ol>
  * Results are computed on demand from the current state of the framework and
  * are not cached.
