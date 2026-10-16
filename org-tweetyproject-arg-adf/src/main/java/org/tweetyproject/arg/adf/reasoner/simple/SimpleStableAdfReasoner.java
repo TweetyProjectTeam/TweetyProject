@@ -18,7 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
+import java.util.List;
+
 import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
@@ -37,7 +38,7 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleStableAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected ModelIterator models(CompiledAdf adf) {
+	protected List<byte[]> models(CompiledAdf adf) {
 		return twoValued(adf, this::verify);
 	}
 

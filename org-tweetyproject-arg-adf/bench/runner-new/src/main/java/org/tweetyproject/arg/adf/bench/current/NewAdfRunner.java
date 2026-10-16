@@ -9,7 +9,6 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.bench.common.RunnerSupport;
 import org.tweetyproject.arg.adf.io.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleThreeValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
@@ -45,11 +44,7 @@ public class NewAdfRunner implements RunnerSupport.Implementation<AbstractDialec
 			case "3MOD" -> new SimpleThreeValuedModelAdfReasoner();
 			default -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.valueOf(semantics));
 		};
-		List<ThreeValuedInterpretation> models = new ArrayList<>();
-		try (ModelIterator it = reasoner.modelIterator(adf)) {
-			it.forEachRemaining(models::add);
-		}
-		return models;
+		return new ArrayList<>(reasoner.getModels(adf));
 	}
 
 	@Override

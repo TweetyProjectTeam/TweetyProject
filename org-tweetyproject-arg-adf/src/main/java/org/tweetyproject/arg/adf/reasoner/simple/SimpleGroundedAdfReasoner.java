@@ -21,7 +21,6 @@ package org.tweetyproject.arg.adf.reasoner.simple;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
 import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
@@ -35,8 +34,8 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleGroundedAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected ModelIterator models(CompiledAdf adf) {
-		return of(adf, List.of(adf.grounded()));
+	protected List<byte[]> models(CompiledAdf adf) {
+		return List.of(adf.grounded());
 	}
 
 	@Override

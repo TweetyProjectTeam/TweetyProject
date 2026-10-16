@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
 import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
@@ -31,16 +30,15 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
  * <p>
  * Every admissible interpretation lies below a complete one, so these are
  * exactly the ≤_i-maximal complete interpretations. The reasoner collects all
- * complete interpretations (3^n candidates) and keeps the maximal ones, so it
- * is not lazy.
+ * complete interpretations (3^n candidates) and keeps the maximal ones.
  *
  * @author Lars Bengel
  */
 public class SimplePreferredAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected ModelIterator models(CompiledAdf adf) {
-		return of(adf, preferred(adf));
+	protected List<byte[]> models(CompiledAdf adf) {
+		return preferred(adf);
 	}
 
 	@Override
@@ -57,10 +55,7 @@ public class SimplePreferredAdfReasoner extends AbstractSimpleAdfReasoner {
 	}
 
 	private static List<byte[]> preferred(CompiledAdf adf) {
-		List<byte[]> complete = new ArrayList<>();
-		try (ModelIterator it = new SimpleCompleteAdfReasoner().models(adf)) {
-			it.forEachRemaining(v -> complete.add(adf.encode(v)));
-		}
+		List<byte[]> complete = threeValued(adf, SimpleCompleteAdfReasoner::isComplete);
 		// candidates with more decided arguments first: anything strictly above a
 		// candidate is visited before it, and so is a maximal element above that
 		complete.sort(Comparator.comparingInt(SimplePreferredAdfReasoner::undecided));

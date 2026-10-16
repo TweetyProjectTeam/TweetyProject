@@ -37,11 +37,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -180,33 +178,11 @@ class SimpleAdfReasonerTest {
 	}
 
 	@Test
-	void iteratorsCloseOnExhaustionEarlyReturnAndStreams() {
+	void getModelReturnsSomeModel() {
 		AbstractDialecticalFramework d1 = adf(D1);
-		try (ModelIterator it = CO.modelIterator(d1)) {
-			assertTrue(it.hasNext());
-			it.next();
-			it.close();
-			assertFalse(it.hasNext());
-			it.close();
-		}
-		ModelIterator it = CO.modelIterator(d1);
-		try (Stream<ThreeValuedInterpretation> stream = it.stream()) {
-			assertEquals(3, stream.count());
-		}
-		assertFalse(it.hasNext());
-		ModelIterator early = ADM.modelIterator(d1);
-		try (Stream<ThreeValuedInterpretation> stream = early.stream()) {
-			assertTrue(stream.findFirst().isPresent());
-		}
-		assertFalse(early.hasNext());
-	}
-
-	@Test
-	void iteratorTakesASnapshot() {
-		AbstractDialecticalFramework d1 = adf(D1);
-		try (ModelIterator it = MOD.modelIterator(d1)) {
-			d1.remove(new Argument("d"));
-			assertEquals(4, it.next().size());
+		for (AbstractAdfReasoner reasoner : ALL) {
+			ThreeValuedInterpretation model = reasoner.getModel(d1);
+			assertTrue(reasoner.getModels(d1).contains(model), reasoner.getClass().getSimpleName());
 		}
 	}
 

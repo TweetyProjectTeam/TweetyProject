@@ -18,13 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.concurrent.CancellationException;
 
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.ModelIterator;
 import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -47,8 +46,19 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 	private static final int INTERRUPT_CHECK_INTERVAL = 1 << 12;
 
 	@Override
-	public ModelIterator modelIterator(AbstractDialecticalFramework adf) {
-		return models(CompiledAdf.of(adf));
+	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
+		CompiledAdf compiled = CompiledAdf.of(adf);
+		List<ThreeValuedInterpretation> models = new ArrayList<>();
+		for (byte[] v : models(compiled)) {
+			models.add(compiled.decode(v));
+		}
+		return models;
+	}
+
+	@Override
+	public ThreeValuedInterpretation getModel(AbstractDialecticalFramework adf) {
+		Collection<ThreeValuedInterpretation> models = getModels(adf);
+		return models.isEmpty() ? null : models.iterator().next();
 	}
 
 	@Override
@@ -60,9 +70,9 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 
 	/**
 	 * @param adf a compiled ADF
-	 * @return an iterator over its models
+	 * @return all its models in array representation
 	 */
-	protected abstract ModelIterator models(CompiledAdf adf);
+	protected abstract List<byte[]> models(CompiledAdf adf);
 
 	/**
 	 * @param adf a compiled ADF
@@ -85,39 +95,19 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 	/**
 	 * @param adf   a compiled ADF
 	 * @param check the definition of the semantics
-	 * @return a lazy iterator over all three-valued interpretations that pass the check
+	 * @return all three-valued interpretations that pass the check
 	 */
-	protected static ModelIterator threeValued(CompiledAdf adf, Check check) {
-		return new Enumeration(adf, check, new byte[] { CompiledAdf.U, CompiledAdf.T, CompiledAdf.F });
+	protected static List<byte[]> threeValued(CompiledAdf adf, Check check) {
+		return enumerate(adf, check, new byte[] { CompiledAdf.U, CompiledAdf.T, CompiledAdf.F });
 	}
 
 	/**
 	 * @param adf   a compiled ADF
 	 * @param check the definition of the semantics
-	 * @return a lazy iterator over all two-valued interpretations that pass the check
+	 * @return all two-valued interpretations that pass the check
 	 */
-	protected static ModelIterator twoValued(CompiledAdf adf, Check check) {
-		return new Enumeration(adf, check, new byte[] { CompiledAdf.T, CompiledAdf.F });
-	}
-
-	/**
-	 * @param adf    a compiled ADF
-	 * @param models some interpretations in array representation
-	 * @return an iterator over them
-	 */
-	protected static ModelIterator of(CompiledAdf adf, List<byte[]> models) {
-		Iterator<byte[]> it = models.iterator();
-		return ModelIterator.of(new Iterator<>() {
-			@Override
-			public boolean hasNext() {
-				return it.hasNext();
-			}
-
-			@Override
-			public ThreeValuedInterpretation next() {
-				return adf.decode(it.next());
-			}
-		});
+	protected static List<byte[]> twoValued(CompiledAdf adf, Check check) {
+		return enumerate(adf, check, new byte[] { CompiledAdf.T, CompiledAdf.F });
 	}
 
 	/**
@@ -134,55 +124,19 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 		return true;
 	}
 
-	/** odometer over all assignments of the given values to the arguments */
-	private static final class Enumeration implements ModelIterator {
-		private final CompiledAdf adf;
-		private final Check check;
-		private final byte[] values;
-		private final byte[] v;
-		/** digit (index into values) per argument */
-		private final int[] digits;
-		private boolean exhausted;
-		private boolean found;
-		private long steps;
-
-		Enumeration(CompiledAdf adf, Check check, byte[] values) {
-			this.adf = adf;
-			this.check = check;
-			this.values = values;
-			this.v = new byte[adf.size()];
-			this.digits = new int[adf.size()];
-			java.util.Arrays.fill(v, values[0]);
-		}
-
-		@Override
-		public boolean hasNext() {
-			while (!found && !exhausted) {
-				if (++steps % INTERRUPT_CHECK_INTERVAL == 0 && Thread.currentThread().isInterrupted()) {
-					close();
-					throw new CancellationException("Enumeration interrupted.");
-				}
-				if (check.test(adf, v)) {
-					found = true;
-				} else {
-					advance();
-				}
+	/** checks every assignment of the given values to the arguments, counting like an odometer */
+	private static List<byte[]> enumerate(CompiledAdf adf, Check check, byte[] values) {
+		List<byte[]> models = new ArrayList<>();
+		byte[] v = new byte[adf.size()];
+		int[] digits = new int[adf.size()];
+		java.util.Arrays.fill(v, values[0]);
+		for (long step = 1;; step++) {
+			if (step % INTERRUPT_CHECK_INTERVAL == 0 && Thread.currentThread().isInterrupted()) {
+				throw new CancellationException("Enumeration interrupted.");
 			}
-			return found;
-		}
-
-		@Override
-		public ThreeValuedInterpretation next() {
-			if (!hasNext()) {
-				throw new NoSuchElementException();
+			if (check.test(adf, v)) {
+				models.add(v.clone());
 			}
-			ThreeValuedInterpretation model = adf.decode(v);
-			found = false;
-			advance();
-			return model;
-		}
-
-		private void advance() {
 			int i = 0;
 			while (i < digits.length && digits[i] == values.length - 1) {
 				digits[i] = 0;
@@ -190,16 +144,9 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 				i++;
 			}
 			if (i == digits.length) {
-				exhausted = true;
-			} else {
-				v[i] = values[++digits[i]];
+				return models;
 			}
-		}
-
-		@Override
-		public void close() {
-			exhausted = true;
-			found = false;
+			v[i] = values[++digits[i]];
 		}
 	}
 

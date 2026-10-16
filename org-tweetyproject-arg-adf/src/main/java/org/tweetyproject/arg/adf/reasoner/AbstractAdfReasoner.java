@@ -18,10 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
@@ -32,7 +30,6 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
-import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -41,54 +38,21 @@ import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
- * Common base of all ADF reasoners. A reasoner enumerates the models of an ADF
+ * Common base of all ADF reasoners. A reasoner computes the models of an ADF
  * under one semantics as {@link ThreeValuedInterpretation}s and answers
  * acceptance and verification queries.
  * <p>
- * Every call works on a snapshot of the framework taken when the call (or, for
- * {@link #modelIterator(AbstractDialecticalFramework)}, the iterator) starts.
- * The default implementations of the query methods enumerate models and stop
- * as soon as the answer is known; subclasses may override them with direct
- * procedures. An argument is accepted skeptically if every model maps it to t
- * (vacuously true without models) and credulously if some model does.
+ * As in {@code AbstractExtensionReasoner} of the Dung module, the default
+ * implementations of the query methods are based on
+ * {@link #getModels(AbstractDialecticalFramework)}; subclasses may override them
+ * with direct procedures. An argument is accepted skeptically if every model
+ * maps it to t (vacuously true without models) and credulously if some model
+ * does.
  *
  * @author Lars Bengel
  */
 public abstract class AbstractAdfReasoner implements QualitativeReasoner<AbstractDialecticalFramework, Argument>,
 		ModelProvider<Argument, AbstractDialecticalFramework, ThreeValuedInterpretation> {
-
-	/**
-	 * Returns a lazy iterator over the models of the ADF. The caller must close it
-	 * if it does not exhaust it.
-	 *
-	 * @param adf an ADF
-	 * @return an iterator over all models, without duplicates
-	 */
-	public abstract ModelIterator modelIterator(AbstractDialecticalFramework adf);
-
-	/**
-	 * @param adf an ADF
-	 * @return all models
-	 */
-	@Override
-	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
-		List<ThreeValuedInterpretation> models = new ArrayList<>();
-		try (ModelIterator it = modelIterator(adf)) {
-			it.forEachRemaining(models::add);
-		}
-		return models;
-	}
-
-	/**
-	 * @param adf an ADF
-	 * @return some model, or null if there is none
-	 */
-	@Override
-	public ThreeValuedInterpretation getModel(AbstractDialecticalFramework adf) {
-		try (ModelIterator it = modelIterator(adf)) {
-			return it.hasNext() ? it.next() : null;
-		}
-	}
 
 	/**
 	 * Decides whether the given interpretation is a model of the ADF (the
@@ -126,12 +90,9 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
 		}
 		boolean credulous = mode == InferenceMode.CREDULOUS;
-		try (ModelIterator it = modelIterator(adf)) {
-			while (it.hasNext()) {
-				boolean accepted = it.next().get(argument) == TruthValue.TRUE;
-				if (accepted == credulous) {
-					return credulous;
-				}
+		for (ThreeValuedInterpretation model : getModels(adf)) {
+			if (model.satisfies(argument) == credulous) {
+				return credulous;
 			}
 		}
 		return !credulous;
@@ -145,14 +106,11 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	public Collection<Argument> queryAll(AbstractDialecticalFramework adf, InferenceMode mode) {
 		boolean credulous = mode == InferenceMode.CREDULOUS;
 		Set<Argument> result = new LinkedHashSet<>(credulous ? Set.of() : adf.getNodes());
-		try (ModelIterator it = modelIterator(adf)) {
-			while (it.hasNext()) {
-				Set<Argument> satisfied = it.next().satisfied();
-				if (credulous) {
-					result.addAll(satisfied);
-				} else {
-					result.retainAll(satisfied);
-				}
+		for (ThreeValuedInterpretation model : getModels(adf)) {
+			if (credulous) {
+				result.addAll(model.satisfied());
+			} else {
+				result.retainAll(model.satisfied());
 			}
 		}
 		return result;
