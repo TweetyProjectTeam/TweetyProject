@@ -35,7 +35,7 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * Orchestrates the old-vs-new evaluation (plan, section 4).
  *
  * <pre>
- * generate --out DIR [--seed 2026] [--sizes 4,6,..,20] [--per 5]
+ * generate --out DIR [--seed 2026] [--families af,bipolar,general] [--sizes 4,6,..,20] [--per 5]
  * run      --instances DIR --results FILE [--impls old,old-fixed,new] [--sem CO] [--task EE] [--timeout-s 60]
  *          [--heap 4g] [--warmup 1] [--reps 3] [--budget-ms 10000] [--cores 0,1,2,3,4,5] [--oracle-max 10]
  * report   --instances DIR --results FILE --out FILE [--timeout-s 60]
@@ -83,6 +83,7 @@ public final class Driver {
 		}
 		switch (args[0]) {
 			case "generate" -> InstanceGenerator.generate(Path.of(opts.get("out")), Long.parseLong(opts.getOrDefault("seed", "2026")),
+					List.of(opts.getOrDefault("families", String.join(",", InstanceGenerator.FAMILIES)).split(",")),
 					ints(opts.getOrDefault("sizes", "4,6,8,10,12,14,16,18,20")), Integer.parseInt(opts.getOrDefault("per", "5")));
 			case "run" -> run(opts);
 			case "report" -> Report.write(Path.of(opts.get("instances")), Path.of(opts.get("results")), Path.of(opts.get("out")),

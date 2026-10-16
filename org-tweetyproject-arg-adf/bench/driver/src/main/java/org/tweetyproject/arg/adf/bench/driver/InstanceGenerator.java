@@ -33,11 +33,17 @@ public final class InstanceGenerator {
 	private InstanceGenerator() {}
 
 	/** @return the manifest lines (file, family, n, index, seed) */
-	public static List<String> generate(Path dir, long masterSeed, List<Integer> sizes, int perSize) throws IOException {
+	public static List<String> generate(Path dir, long masterSeed, List<String> families, List<Integer> sizes, int perSize)
+			throws IOException {
+		for (String family : families) {
+			if (!FAMILIES.contains(family)) {
+				throw new IllegalArgumentException("Unknown family " + family);
+			}
+		}
 		Files.createDirectories(dir);
 		List<String> manifest = new ArrayList<>();
 		manifest.add("file\tfamily\tn\tindex\tseed");
-		for (String family : FAMILIES) {
+		for (String family : families) {
 			for (int n : sizes) {
 				for (int i = 0; i < perSize; i++) {
 					long seed = masterSeed * 1_000_003L + family.hashCode() * 10_007L + n * 101L + i;

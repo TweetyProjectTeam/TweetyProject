@@ -1,0 +1,12 @@
+s(a0).
+s(a1).
+s(a2).
+s(a3).
+s(a4).
+s(a5).
+ac(a0,or(and(a0,neg(a4)),neg(a1))).
+ac(a1,a2).
+ac(a2,or(and(a2,a3),neg(a1))).
+ac(a3,and(a0,a5)).
+ac(a4,neg(a4)).
+ac(a5,and(a1,a3)).

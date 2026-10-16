@@ -43,6 +43,10 @@ Tasks (`--task`): `EE` enumerate all models, `CE` count them, `SE` find one mode
 - Before the runners, `run` answers every query of an instance with at most `--oracle-max` (default 10) arguments with the oracle (`Oracle`, `KppAdf`), which shares no code with either implementation: its own k++ADF parser, Kleene evaluation and Γ over completions, written from the definitions in `../docs/ARCHITECTURE.md`. Its answers are recorded as implementation `oracle`. VE candidates of larger instances are checked with the oracle's verifier (`independent-check`), except PR/NA with more than 12 undecided arguments.
 - The report's validation section classifies every solved run as oracle-verified, independently verified (VE answers; SE witnesses of any size), wrong, in agreement or disagreement with the other side of the reference/new pair, or unchecked. Answers are compared per task: EE by count and hash, CE by count, SE by the existence of a model (witnesses may differ), DC/DS/VE by the Boolean answer. Wrong answers and disagreements also go to `mismatches.jsonl` next to the report, each with a `check` command that reproduces it.
 
+## Instance sets
+
+`co-scaling` (first measurement, n = 4–20), `dev` (correctness, n = 4–12, all families) and `dev-large` (performance, af/bipolar, n = 50–200); all frozen, see `../docs/REWORK_PLAN.md`, section 4.3.
+
 ## Instance families
 
 `af` (D_F of random AFs), `bipolar` (each parent occurs once with fixed polarity), `general` (random formulas with ∧ ∨ ¬ → ↔ ⊕). Seeds are in `manifest.tsv`. The old parser rejects syntactically equal operands such as `or(a1,a1)`, so the generator never emits them.
