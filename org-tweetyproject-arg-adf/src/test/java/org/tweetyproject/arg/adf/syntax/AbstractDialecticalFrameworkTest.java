@@ -82,13 +82,11 @@ class AbstractDialecticalFrameworkTest {
 	void unknownAtomsAreRejectedAndLeaveTheFrameworkUnchanged() {
 		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
 		adf.add(A);
-		long revision = adf.getRevision();
 		assertThrows(IllegalArgumentException.class, () -> adf.add(B, PC));
 		assertThrows(IllegalArgumentException.class, () -> adf.setAcceptanceCondition(A, PB));
 		assertThrows(IllegalArgumentException.class, () -> adf.setAcceptanceCondition(B, PA));
 		assertEquals(Set.of(A), adf.getNodes());
 		assertEquals(new Tautology(), adf.getAcceptanceCondition(A));
-		assertEquals(revision, adf.getRevision());
 	}
 
 	@Test
@@ -137,11 +135,9 @@ class AbstractDialecticalFrameworkTest {
 	@Test
 	void removeReplacesTheArgumentByFalsum() {
 		AbstractDialecticalFramework adf = adf(D1);
-		long revision = adf.getRevision();
 		assertTrue(adf.remove(B));
 		assertFalse(adf.remove(B));
 		assertFalse(adf.remove("a"));
-		assertTrue(adf.getRevision() > revision);
 		assertEquals(new Negation(new Contradiction()), adf.getAcceptanceCondition(A));
 		assertEquals(new Conjunction(new Negation(new Contradiction()), new Negation(PC)), adf.getAcceptanceCondition(D));
 		assertEquals(Set.of(C), adf.getParents(D));

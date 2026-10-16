@@ -68,9 +68,8 @@ import org.tweetyproject.math.term.IntegerConstant;
  * condition may only mention arguments of the framework; violations are
  * rejected with an {@link IllegalArgumentException} and leave the framework
  * unchanged. Removing an argument replaces its proposition by ⊥ in all
- * remaining conditions. Every change increments {@link #getRevision()}.
- * Reasoners capture an immutable snapshot of the framework when they start, so
- * a framework must not be changed concurrently with that capture.
+ * remaining conditions. Like other Tweety belief bases, the framework is not
+ * synchronised; it must not be changed while a reasoner works on it.
  *
  * @author Lars Bengel
  */
@@ -79,8 +78,6 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 
 	/** acceptance conditions by argument name, in insertion order */
 	private final Map<String, PlFormula> conditions = new LinkedHashMap<>();
-
-	private long revision;
 
 	/** parent and child names by argument name; null if invalidated by a mutation */
 	private Map<String, Set<String>> parents;
@@ -311,19 +308,8 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	}
 
 	private void changed() {
-		revision++;
 		parents = null;
 		children = null;
-	}
-
-	/**
-	 * Returns a counter that changes with every modification of this framework.
-	 * Analyses can use it to detect whether a cached result is still valid.
-	 *
-	 * @return the current revision
-	 */
-	public long getRevision() {
-		return revision;
 	}
 
 	// ------------------------------------------------------------------
