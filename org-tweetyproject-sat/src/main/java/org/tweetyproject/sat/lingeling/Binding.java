@@ -1,14 +1,11 @@
 package org.tweetyproject.sat.lingeling;
 
+import org.tweetyproject.sat.NativeLibrary;
+
 final class Binding {
 	
 	static {
-		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.contains("win")) {
-			System.load(Binding.class.getResource("/lingeling.dll").getPath());			
-		} else if (osName.contains("nux")) {
-			System.load(Binding.class.getResource("/lingeling.so").getPath());			
-		}
+		NativeLibrary.load("lingeling");
 	}
 	
 	static native long init();

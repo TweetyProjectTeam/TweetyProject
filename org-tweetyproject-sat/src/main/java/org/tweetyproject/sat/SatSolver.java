@@ -54,7 +54,7 @@ public interface SatSolver extends AutoCloseable {
      * @param variables an array of variable indices for which the truth assignment
      *                  is requested.
      * @return an array of booleans representing the truth assignment of the given
-     *         variables.
+     *         variables, or {@code null} if the formula is unsatisfiable.
      */
     default boolean[] witness(int[] variables) {
         return witness(variables, new int[0]);
@@ -62,14 +62,16 @@ public interface SatSolver extends AutoCloseable {
 
     /**
      * Returns the truth assignment of the given variables under the specified
-     * assumptions.
+     * assumptions. The assignment is taken from a model that satisfies the
+     * assumptions; the assumptions only hold for this call.
      *
      * @param variables   an array of variable indices for which the truth
      *                    assignment is requested.
      * @param assumptions an array of literals that are assumed to be true. If the
      *                    array is empty, no assumptions are made.
      * @return an array of booleans representing the truth assignment of the given
-     *         variables under the assumptions.
+     *         variables under the assumptions, or {@code null} if the formula is
+     *         unsatisfiable under the assumptions.
      */
     boolean[] witness(int[] variables, int[] assumptions);
 
@@ -95,6 +97,10 @@ public interface SatSolver extends AutoCloseable {
 	 */
 	int newVar();
 
+	/**
+	 * Releases the solver, which must not be used afterwards. Calling it again
+	 * has no effect.
+	 */
 	@Override
 	void close();
 
