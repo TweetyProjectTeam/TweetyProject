@@ -1,0 +1,81 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2026 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+package org.tweetyproject.arg.adf.reasoner.sat;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.tweetyproject.arg.adf.AdfTestSupport.randomAdf;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+import org.tweetyproject.arg.adf.BruteForceOracle;
+import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
+
+/**
+ * Differential tests of the SAT-based Γ and reasoners against the brute-force
+ * variants and the independent {@link BruteForceOracle}.
+ */
+class SatAdfReasonerTest {
+
+	@Test
+	void gammaAgreesWithBruteForce() {
+		Random rng = new Random(1);
+		for (int i = 0; i < 150; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(4), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			try (SatCharacteristicOperator gamma = new SatCharacteristicOperator(adf)) {
+				for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
+					ThreeValuedInterpretation expected = CharacteristicOperator.apply(adf, v);
+					assertEquals(expected, gamma.apply(v), v + " on " + adf);
+					for (Argument a : adf) {
+						assertEquals(expected.get(a), gamma.apply(v, a), a + " under " + v + " on " + adf);
+					}
+				}
+			}
+		}
+	}
+
+	@Test
+	void twoValuedModelsAgreeWithOracle() {
+		Random rng = new Random(2);
+		SatTwoValuedModelAdfReasoner reasoner = new SatTwoValuedModelAdfReasoner();
+		for (int i = 0; i < 500; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(6), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			Set<ThreeValuedInterpretation> expected = new BruteForceOracle(adf).mod();
+			Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
+			assertEquals(expected, new HashSet<>(models), adf.toString());
+			assertEquals(expected.size(), models.size(), "duplicate models on " + adf);
+			ThreeValuedInterpretation model = reasoner.getModel(adf);
+			assertTrue(model == null ? expected.isEmpty() : expected.contains(model), adf.toString());
+		}
+	}
+
+	@Test
+	void emptyAdf() {
+		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
+		assertEquals(Set.of(ThreeValuedInterpretation.allUndecided(adf.getNodes())), Set.copyOf(new SatTwoValuedModelAdfReasoner().getModels(adf)));
+	}
+
+}
