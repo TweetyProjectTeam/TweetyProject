@@ -3,6 +3,7 @@ package org.tweetyproject.arg.adf.bench.driver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,11 +19,15 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.tweetyproject.arg.adf.bench.common.Answers;
 import org.tweetyproject.arg.adf.bench.common.Json;
 
 /**
@@ -31,8 +36,9 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * <pre>
  * generate --out DIR [--seed 2026] [--sizes 4,6,..,20] [--per 5]
  * run      --instances DIR --results FILE [--impls old,old-fixed,new] [--sem CO] [--timeout-s 60]
- *          [--heap 4g] [--warmup 1] [--reps 3] [--budget-ms 10000] [--cores 0,1,2,3,4,5]
+ *          [--heap 4g] [--warmup 1] [--reps 3] [--budget-ms 10000] [--cores 0,1,2,3,4,5] [--oracle-max 10]
  * report   --instances DIR --results FILE --out FILE [--timeout-s 60]
+ * check    --file FILE [--sem CO] [--impls old-fixed,new] [--timeout-s 60] [--heap 4g]
  * </pre>
  *
  * {@code run} starts every run in its own JVM, pinned with taskset to one
@@ -40,7 +46,14 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * (implementation, family), processed in increasing size; once every instance
  * of a size has timed out, larger sizes of that chain are recorded as skipped.
  * Chains run in parallel on disjoint cores. Results are appended to a JSONL
- * file, and runs already present are not repeated.
+ * file, and runs already present are not repeated. Before the runners, the
+ * independent {@link Oracle} solves every instance with at most
+ * {@code --oracle-max} arguments in the driver's JVM; its answers are recorded
+ * as implementation {@code oracle}.
+ * <p>
+ * {@code check} runs one instance once per implementation and prints the
+ * answers next to the oracle's models; it is the reproduction command for
+ * mismatches listed by {@code report}.
  * <p>
  * Implementations: {@code old} (adf:1.31-baseline as tagged), {@code old-fixed}
  * (adf:1.31-baseline-fixed, the performance reference) and {@code new}.
@@ -57,7 +70,7 @@ public final class Driver {
 
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
-			throw new IllegalArgumentException("Usage: generate|run|report [options]");
+			throw new IllegalArgumentException("Usage: generate|run|report|check [options]");
 		}
 		Map<String, String> opts = new HashMap<>();
 		for (int i = 1; i + 1 < args.length; i += 2) {
@@ -69,6 +82,7 @@ public final class Driver {
 			case "run" -> run(opts);
 			case "report" -> Report.write(Path.of(opts.get("instances")), Path.of(opts.get("results")), Path.of(opts.get("out")),
 					Double.parseDouble(opts.getOrDefault("timeout-s", "60")));
+			case "check" -> check(opts);
 			default -> throw new IllegalArgumentException("Unknown command " + args[0]);
 		}
 	}
@@ -131,6 +145,7 @@ public final class Driver {
 			String[] f = line.split("\t");
 			all.add(new Instance(f[0], f[1], Integer.parseInt(f[2]), Integer.parseInt(f[3])));
 		}
+		runOracle(all, instances, results, sem, Integer.parseInt(opts.getOrDefault("oracle-max", "10")), cores.size(), done);
 		ConcurrentLinkedQueue<Chain> chains = new ConcurrentLinkedQueue<>();
 		for (String impl : impls) {
 			for (String family : InstanceGenerator.FAMILIES) {
@@ -158,6 +173,80 @@ public final class Driver {
 		}
 		for (Thread worker : workers) {
 			worker.join();
+		}
+	}
+
+	private static void runOracle(List<Instance> all, Path instances, Path results, String sem, int oracleMax, int threads,
+			Set<String> done) throws Exception {
+		ExecutorService pool = Executors.newFixedThreadPool(threads);
+		for (Instance instance : all) {
+			if (instance.n() > oracleMax || done.contains("oracle|" + instance.file() + "|" + sem)) {
+				continue;
+			}
+			pool.submit(() -> {
+				Map<String, Object> line = new LinkedHashMap<>();
+				line.put("impl", "oracle");
+				line.put("instance", instance.file());
+				line.put("family", instance.family());
+				line.put("n", instance.n());
+				line.put("sem", sem);
+				line.putAll(oracle(instances.resolve(instance.file()), sem).result());
+				synchronized (Driver.class) {
+					try {
+						Files.writeString(results, Json.write(line) + "\n", StandardOpenOption.APPEND);
+					} catch (IOException e) {
+						throw new UncheckedIOException(e);
+					}
+					System.out.printf("%-9s %-8s %-22s %-8s %s%n", "oracle", instance.family(), instance.file(), line.get("status"),
+							line.get("timesMs"));
+				}
+			});
+		}
+		pool.shutdown();
+		pool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+	}
+
+	/** an oracle answer: the result fields in runner format and the canonical models (null on error) */
+	private record OracleAnswer(Map<String, Object> result, List<String> models) {}
+
+	private static OracleAnswer oracle(Path file, String sem) {
+		Map<String, Object> result = new LinkedHashMap<>();
+		try {
+			KppAdf adf = KppAdf.parse(file);
+			long t0 = System.nanoTime();
+			List<String> models = new Oracle(adf).models(sem);
+			double ms = (System.nanoTime() - t0) / 1e6;
+			result.put("status", "ok");
+			result.put("count", models.size());
+			result.put("answerHash", Answers.hash(models));
+			result.put("timesMs", List.of(ms));
+			return new OracleAnswer(result, models);
+		} catch (Exception | StackOverflowError e) {
+			result.put("status", "error");
+			result.put("error", e.toString());
+			return new OracleAnswer(result, null);
+		}
+	}
+
+	private static void check(Map<String, String> opts) throws Exception {
+		Path file = Path.of(opts.get("file"));
+		String sem = opts.getOrDefault("sem", "CO");
+		List<String> flags = List.of("--task", "EE", "--sem", sem, "--warmup", "0", "--reps", "1");
+		for (String impl : opts.getOrDefault("impls", "old-fixed,new").split(",")) {
+			Map<String, Object> r = runOne(impl, file, 0, flags, opts.getOrDefault("heap", "4g"),
+					Double.parseDouble(opts.getOrDefault("timeout-s", "60")));
+			System.out.printf("%-9s %-8s count=%s hash=%s %s%n", impl, r.get("status"), r.get("count"), r.get("answerHash"),
+					Objects.toString(r.get("error"), ""));
+		}
+		OracleAnswer oracle = oracle(file, sem);
+		Map<String, Object> r = oracle.result();
+		System.out.printf("%-9s %-8s count=%s hash=%s %s%n", "oracle", r.get("status"), r.get("count"), r.get("answerHash"),
+				Objects.toString(r.get("error"), ""));
+		if (oracle.models() != null) {
+			oracle.models().stream().limit(100).forEach(m -> System.out.println("  " + m));
+			if (oracle.models().size() > 100) {
+				System.out.println("  … " + (oracle.models().size() - 100) + " more");
+			}
 		}
 	}
 

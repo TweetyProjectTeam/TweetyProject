@@ -7,7 +7,7 @@ Old-vs-new comparison for the ADF rework (see `../docs/REWORK_PLAN.md`, section 
 | `common` | – | runner protocol, JSON, canonical answer hash |
 | `runner-old` | `org.tweetyproject.arg:adf:1.31-baseline` or `1.31-baseline-fixed` | frozen old implementation, native MiniSat (`--impls old` / `old-fixed`) |
 | `runner-new` | `org.tweetyproject.arg:adf:1.31-SNAPSHOT` | reworked implementation (`Simple*` reasoners until phase 4) |
-| `driver` | – | instance generation, supervised runs, reports |
+| `driver` | – | instance generation, supervised runs, independent brute-force oracle, reports |
 
 ## Setup
 
@@ -31,12 +31,15 @@ Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -Dsk
 ./driver.sh generate --out instances/NAME --seed 2026 --sizes 4,6,8 --per 5
 ./driver.sh run --instances instances/NAME --results results/NAME/results.jsonl --impls old,old-fixed,new --sem CO --timeout-s 60 --cores 0,1,2,3,4,5
 ./driver.sh report --instances instances/NAME --results results/NAME/results.jsonl --out results/NAME/report.md --timeout-s 60
+./driver.sh check --file instances/NAME/x.kpp --sem CO --impls old-fixed,new
 ```
 
 - Every run is a fresh JVM (`-Xms512m -Xmx4g -XX:+UseSerialGC -Xss64m`) pinned with `taskset` to one physical core (both SMT threads). The timeout applies to each solve. Parsing is untimed and repeated before every solve, so no solver state or cached link types carry over between repetitions.
 - Runs are grouped into chains, one per implementation and family, and processed in increasing size. Once every instance of a size has timed out, the chain records larger sizes as `skipped`. Chains run in parallel on the given cores.
 - `run` is resumable: runs already in the JSONL file are skipped.
 - The report compares `new` with `old-fixed` (or with `old` if `old-fixed` was not run) and lists crashes of every implementation.
+- Before the runners, `run` solves every instance with at most `--oracle-max` (default 10) arguments with the oracle (`Oracle`, `KppAdf`), which shares no code with either implementation: its own k++ADF parser, Kleene evaluation and Γ over completions, written from the definitions in `../docs/ARCHITECTURE.md`. Its answers are recorded as implementation `oracle`.
+- The report's validation section classifies every solved run as oracle-verified, wrong, in agreement or disagreement with the other side of the reference/new pair, or unchecked. Wrong answers and disagreements also go to `mismatches.jsonl` next to the report, each with a `check` command that reproduces it.
 
 ## Instance families
 
@@ -44,4 +47,4 @@ Then install the current module (`mvn -pl org-tweetyproject-arg-adf install -Dsk
 
 ## Not yet implemented (compared with plan section 4)
 
-The independent oracle in the driver, tasks other than EE, cold mode, peak memory, SAT statistics and plots.
+Tasks other than EE, cold mode, peak memory, SAT statistics and plots.

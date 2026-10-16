@@ -4,17 +4,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * The runner protocol shared by the old and the new implementation (plan,
@@ -33,7 +29,7 @@ import java.util.TreeSet;
  * <p>
  * Answers are reported as the model count and an order-independent SHA-256
  * over the canonical models {@code t:{..} f:{..}} (sorted names); converting
- * models to canonical form happens outside the timed section.
+ * models to canonical form happens outside the timed section (see {@link Answers}).
  */
 public final class RunnerSupport {
 
@@ -132,23 +128,12 @@ public final class RunnerSupport {
 		System.out.flush();
 	}
 
-	private static <A, M> String hash(Implementation<A, M> impl, List<M> models) throws Exception {
+	private static <A, M> String hash(Implementation<A, M> impl, List<M> models) {
 		List<String> canonical = new ArrayList<>();
 		for (M m : models) {
-			canonical.add("t:{" + String.join(",", new TreeSet<>(impl.satisfied(m))) + "} f:{"
-					+ String.join(",", new TreeSet<>(impl.unsatisfied(m))) + "}");
+			canonical.add(Answers.canonical(impl.satisfied(m), impl.unsatisfied(m)));
 		}
-		Collections.sort(canonical);
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		for (String c : canonical) {
-			digest.update(c.getBytes(StandardCharsets.UTF_8));
-			digest.update((byte) '\n');
-		}
-		StringBuilder hex = new StringBuilder();
-		for (byte b : digest.digest()) {
-			hex.append(String.format("%02x", b));
-		}
-		return hex.substring(0, 16);
+		return Answers.hash(canonical);
 	}
 
 	private static String firstLines(String s, int n) {

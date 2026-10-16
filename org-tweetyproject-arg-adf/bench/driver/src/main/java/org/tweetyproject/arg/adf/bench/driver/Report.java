@@ -25,6 +25,13 @@ import org.tweetyproject.arg.adf.bench.common.Json;
  * otherwise {@code old}) and {@code new}: the geometric mean of the
  * per-instance speedups reference/new, and whether model count and answer hash
  * agree. Crashes and errors are listed for every implementation.
+ * <p>
+ * Validation (plan, section 4.2): a solved run is {@code oracle}-checked if the
+ * oracle solved the instance, and then either verified or wrong. Otherwise it
+ * is compared with the other side of the reference/new pair ({@code old} with
+ * the reference): agreement is only differential evidence, a difference is an
+ * unresolved disagreement. Every wrong answer and disagreement is written to
+ * {@code mismatches.jsonl} next to the report, with a reproduction command.
  */
 final class Report {
 
@@ -57,7 +64,7 @@ final class Report {
 		for (Run run : runs) {
 			byKey.put(run.impl() + "|" + run.instance(), run);
 		}
-		List<String> impls = runs.stream().map(Run::impl).distinct().sorted().toList();
+		List<String> impls = runs.stream().map(Run::impl).filter(i -> !i.equals(ORACLE)).distinct().sorted().toList();
 		String reference = impls.contains("old-fixed") ? "old-fixed" : "old";
 		String sem = header == null ? "?" : String.valueOf(((List<?>) header.get("runnerFlags")).get(3));
 
@@ -129,11 +136,9 @@ final class Report {
 					if (old != null && neu != null && old.solved() && neu.solved()) {
 						both++;
 						speedups.add(old.medianMs() / neu.medianMs());
+						// differences are reported by the validation section
 						if (Objects.equals(old.count(), neu.count()) && Objects.equals(old.hash(), neu.hash())) {
 							agree++;
-						} else {
-							problems.add("`" + instance + "`: answers differ (" + reference + " " + old.count() + " models, " + old.hash() + "; new "
-									+ neu.count() + " models, " + neu.hash() + ")");
 						}
 					}
 				}
@@ -142,6 +147,9 @@ final class Report {
 			}
 			md.append('\n');
 		}
+		List<Map<String, Object>> mismatches = new ArrayList<>();
+		md.append(validation(instancesByFamily, byKey, impls, reference, instances, sem, problems, mismatches));
+
 		md.append("## Crashes, errors and disagreements\n\n");
 		if (problems.isEmpty()) {
 			md.append("None.\n");
@@ -159,6 +167,85 @@ final class Report {
 					Objects.toString(r.hash(), ""))).append('\n');
 		}
 		Files.writeString(out.resolveSibling(out.getFileName().toString().replaceAll("\\.md$", "") + ".csv"), csv.toString());
+
+		StringBuilder jsonl = new StringBuilder();
+		for (Map<String, Object> m : mismatches) {
+			jsonl.append(Json.write(m)).append('\n');
+		}
+		Files.writeString(out.resolveSibling("mismatches.jsonl"), jsonl.toString());
+	}
+
+	private static final String ORACLE = "oracle";
+
+	private static String validation(Map<String, Map<Integer, List<String>>> instancesByFamily, Map<String, Run> byKey, List<String> impls,
+			String reference, Path instances, String sem, List<String> problems, List<Map<String, Object>> mismatches) {
+		StringBuilder md = new StringBuilder("## Validation\n\n");
+		md.append("Solved runs by validation strength. *oracle ok* / *wrong*: compared with the independent brute-force oracle. ")
+				.append("Without an oracle answer, runs are compared with the other side of the ").append(reference)
+				.append("/new pair (old with ").append(reference).append("): *agreement* is differential evidence only, ")
+				.append("*disagreement* is unresolved. *unchecked*: nothing to compare with.\n\n");
+		md.append("| family | implementation | solved | oracle ok | wrong | agreement | disagreement | unchecked |\n");
+		md.append("|---|---|---:|---:|---:|---:|---:|---:|\n");
+		for (Map.Entry<String, Map<Integer, List<String>>> family : instancesByFamily.entrySet()) {
+			for (String impl : impls) {
+				int solved = 0, verified = 0, wrong = 0, agreement = 0, disagreement = 0, unchecked = 0;
+				for (List<String> size : family.getValue().values()) {
+					for (String instance : size) {
+						Run run = byKey.get(impl + "|" + instance);
+						if (run == null || !run.solved()) {
+							continue;
+						}
+						solved++;
+						Run oracle = byKey.get(ORACLE + "|" + instance);
+						String otherImpl = impl.equals("new") ? reference : impl.equals(reference) ? "new" : reference;
+						Run other = byKey.get(otherImpl + "|" + instance);
+						Run against;
+						if (oracle != null && oracle.solved()) {
+							against = oracle;
+						} else if (other != null && other.solved() && !otherImpl.equals(impl)) {
+							against = other;
+						} else {
+							unchecked++;
+							continue;
+						}
+						boolean same = Objects.equals(run.count(), against.count()) && Objects.equals(run.hash(), against.hash());
+						if (against == oracle) {
+							if (same) {
+								verified++;
+							} else {
+								wrong++;
+							}
+						} else if (same) {
+							agreement++;
+						} else {
+							disagreement++;
+						}
+						if (!same) {
+							String kind = against == oracle ? "wrong" : "disagreement";
+							Map<String, Object> m = new LinkedHashMap<>();
+							m.put("kind", kind);
+							m.put("instance", instance);
+							m.put("sem", sem);
+							m.put("impl", impl);
+							m.put("count", run.count());
+							m.put("answerHash", run.hash());
+							m.put("against", against.impl());
+							m.put("expectedCount", against.count());
+							m.put("expectedHash", against.hash());
+							m.put("repro", "./driver.sh check --file " + instances.resolve(instance) + " --sem " + sem + " --impls " + impl
+									+ (against == oracle ? "" : "," + against.impl()));
+							mismatches.add(m);
+							problems.add("`" + instance + "` " + impl + ": **" + kind + "** (" + run.count() + " models, " + run.hash() + "; "
+									+ against.impl() + " " + against.count() + " models, " + against.hash() + ")");
+						}
+					}
+				}
+				md.append("| ").append(family.getKey()).append(" | ").append(impl).append(" | ").append(solved).append(" | ").append(verified)
+						.append(" | ").append(wrong).append(" | ").append(agreement).append(" | ").append(disagreement).append(" | ")
+						.append(unchecked).append(" |\n");
+			}
+		}
+		return md.append('\n').toString();
 	}
 
 	private static Double median(Object times) {
