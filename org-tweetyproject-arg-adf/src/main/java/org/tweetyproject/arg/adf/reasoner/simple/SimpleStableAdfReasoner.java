@@ -24,9 +24,9 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
  * Enumerates the stable models (ST) of an ADF (Brewka et al. 2013,
- * Definition 6): the two-valued models υ such that the arguments mapped to t
+ * Definition 6): the two-valued models v such that the arguments mapped to t
  * are exactly those mapped to t by the grounded interpretation of the reduct
- * D^υ.
+ * D^v.
  * <p>
  * The reduct keeps the true arguments and replaces every false argument by ⊥;
  * its grounded interpretation is computed by iterating Γ on the original

@@ -24,9 +24,9 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
  * Enumerates the conflict-free interpretations (CF) of an ADF in the sense of
- * k++ADF (Linsbichler et al., AIJ 2022, Definition 2.6): υ is conflict-free if
- * φ_a[υ] is satisfiable for every a with υ(a) = t and refutable for every a with
- * υ(a) = f, i.e. some completion of υ makes φ_a true (resp. false). Checks all
+ * k++ADF (Linsbichler et al., AIJ 2022, Definition 2.6): v is conflict-free if
+ * φ_a[v] is satisfiable for every a with v(a) = t and refutable for every a with
+ * v(a) = f, i.e. some completion of v makes φ_a true (resp. false). Checks all
  * 3^n interpretations.
  *
  * @author Lars Bengel

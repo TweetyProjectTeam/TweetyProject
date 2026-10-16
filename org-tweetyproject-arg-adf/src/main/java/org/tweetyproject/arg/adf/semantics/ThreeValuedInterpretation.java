@@ -296,10 +296,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return new ThreeValuedInterpretation(result);
 	}
 
-	// ------------------------------------------------------------------
-	// evaluation and completions
-	// ------------------------------------------------------------------
-
 	/**
 	 * Evaluates a formula in Kleene's strong three-valued logic. Implications,
 	 * equivalences and exclusive disjunctions are evaluated as (¬φ ∨ ψ),
@@ -422,13 +418,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		};
 	}
 
-	// ------------------------------------------------------------------
-	// AF conversions
-	// ------------------------------------------------------------------
-
 	/**
-	 * @return the set of arguments mapped to t, as an extension; this does not
-	 *         claim that the set has any particular Dung semantics
+	 * @return the set of arguments mapped to t, as an extension
 	 */
 	public Extension<DungTheory> toExtension() {
 		return new Extension<>(satisfied());
@@ -448,10 +439,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		}
 		return labeling;
 	}
-
-	// ------------------------------------------------------------------
-	// Interpretation contract
-	// ------------------------------------------------------------------
 
 	/**
 	 * @return true if the argument is mapped to t
@@ -485,10 +472,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return true;
 	}
 
-	// ------------------------------------------------------------------
-	// equality and printing
-	// ------------------------------------------------------------------
-
 	@Override
 	public int hashCode() {
 		return values.hashCode();
@@ -505,8 +488,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * @return the k++ADF/DIAMOND notation, e.g. {@code {t(a) t(c) f(b) u(d)}}:
-	 *         true, then false, then undecided arguments, each sorted by name
+	 * @return string representation: true, then false, then undecided arguments, 
+	 * 			each sorted by name, e.g. {@code {t(a) t(c) f(b) u(d)}}
 	 */
 	@Override
 	public String toString() {

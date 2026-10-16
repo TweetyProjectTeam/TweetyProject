@@ -99,7 +99,7 @@ class ConsumerPrototypeTest {
 			return new SimpleThreeValuedModelAdfReasoner().isModel(adf, v);
 		}
 
-		/** Γ_D(υ), called {@code evaluate} in the course code */
+		/** Γ_D(v), called {@code evaluate} in the course code */
 		static ThreeValuedInterpretation evaluate(ThreeValuedInterpretation v, AbstractDialecticalFramework adf) {
 			return CharacteristicOperator.apply(adf, v);
 		}
@@ -108,7 +108,7 @@ class ConsumerPrototypeTest {
 			return ThreeValuedInterpretation.consensus(vs);
 		}
 
-		/** SemanticsModelTask: previously getModels().contains(υ) */
+		/** SemanticsModelTask: previously getModels().contains(v) */
 		static boolean isModel(Semantics semantics, AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 			return AbstractAdfReasoner.getSimpleReasonerForSemantics(semantics).isModel(adf, v);
 		}

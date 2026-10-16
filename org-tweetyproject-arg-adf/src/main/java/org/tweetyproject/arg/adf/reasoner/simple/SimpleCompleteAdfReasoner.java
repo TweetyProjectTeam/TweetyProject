@@ -24,7 +24,7 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
  * Enumerates the complete interpretations (CO) of an ADF: the fixpoints
- * υ = Γ(υ) (Brewka et al. 2013, Definition 3). Checks all 3^n
+ * v = Γ(v) (Brewka et al. 2013, Definition 3). Checks all 3^n
  * interpretations.
  *
  * @author Lars Bengel

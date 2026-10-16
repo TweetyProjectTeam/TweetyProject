@@ -129,7 +129,7 @@ class ThreeValuedInterpretationTest {
 		Set<ThreeValuedInterpretation> completions = new HashSet<>();
 		v(adf, "tuuf").completions().forEachRemaining(completions::add);
 		assertEquals(vs(adf, "tftf", "tfff", "tttf", "ttff"), completions);
-		// υ = ⊓[υ]_2
+		// v = ⊓[v]_2
 		assertEquals(v(adf, "tuuf"), ThreeValuedInterpretation.consensus(completions));
 	}
 

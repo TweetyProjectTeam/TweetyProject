@@ -142,7 +142,7 @@ class SimpleAdfReasonerDifferentialTest {
 			DungTheory af = randomAf(rng, 1 + rng.nextInt(7), rng.nextDouble() * 0.5);
 			AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromDungTheory(af);
 			String context = af.toString();
-			// exact correspondence via υ_S
+			// exact correspondence via v_S
 			assertEquals(canonical(af, Semantics.CO), models(CO, adf), context);
 			assertEquals(canonical(af, Semantics.GR), models(GR, adf), context);
 			assertEquals(canonical(af, Semantics.PR), models(PR, adf), context);

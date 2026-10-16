@@ -24,13 +24,13 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 /**
  * The characteristic operator Γ_D of an ADF D (Brewka and Woltran 2010;
  * Brewka et al. 2013):
- * Γ_D(υ)(a) = ⊓{ w(φ_a) | w ∈ [υ]_2 },
- * i.e. a is mapped to t (f) if φ_a is true (false) in every completion of υ,
+ * Γ_D(v)(a) = ⊓{ w(phi_a) | w ∈ [v]_2 },
+ * i.e. a is mapped to t (f) if phi_a is true (false) in every completion of v,
  * and to u otherwise.
  * <p>
  * This is the brute-force variant: it completes only the undecided
  * <em>parents</em> of a, and skips the completions entirely if the Kleene value
- * of φ_a under υ is already t or f, since Kleene evaluation agrees with the
+ * of phi_a under v is already t or f, since Kleene evaluation agrees with the
  * consensus whenever it is decided.
  *
  * @author Lars Bengel
@@ -42,8 +42,8 @@ public final class CharacteristicOperator {
 	/**
 	 * @param adf an ADF
 	 * @param v   an interpretation over the arguments of the ADF
-	 * @return Γ_D(υ)
-	 * @throws IllegalArgumentException if the domain of υ differs from the arguments of the ADF
+	 * @return Γ_D(v)
+	 * @throws IllegalArgumentException if the domain of v differs from the arguments of the ADF
 	 */
 	public static ThreeValuedInterpretation apply(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		CompiledAdf compiled = compile(adf, v);
@@ -54,8 +54,8 @@ public final class CharacteristicOperator {
 	 * @param adf      an ADF
 	 * @param v        an interpretation over the arguments of the ADF
 	 * @param argument an argument of the ADF
-	 * @return Γ_D(υ)(a)
-	 * @throws IllegalArgumentException if the domain of υ differs from the
+	 * @return Γ_D(v)(a)
+	 * @throws IllegalArgumentException if the domain of v differs from the
 	 *                                  arguments of the ADF or the argument is unknown
 	 */
 	public static TruthValue apply(AbstractDialecticalFramework adf, ThreeValuedInterpretation v, Argument argument) {

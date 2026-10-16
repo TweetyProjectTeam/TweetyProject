@@ -31,10 +31,7 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 /**
  * Base class of the brute-force reasoners. They enumerate all 3^n (or 2^n for
  * two-valued semantics) interpretations of a compiled snapshot of the ADF and
- * check the definition of the semantics for each, so they are meant for small
- * ADFs (up to about 12 arguments) and serve as reference implementations and
- * test oracles. Enumeration is lazy and needs constant memory, except for
- * semantics defined by maximality.
+ * check the definition of the semantics for each.
  * <p>
  * The enumeration stops with a {@link CancellationException} if the current
  * thread is interrupted.

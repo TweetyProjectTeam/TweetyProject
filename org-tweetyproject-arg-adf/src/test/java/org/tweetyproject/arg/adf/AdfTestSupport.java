@@ -66,7 +66,7 @@ public final class AdfTestSupport {
 	/** φ_a = a, φ_b = a ∨ ¬a: (u,t) is complete, hence admissible, but no Kleene three-valued model. */
 	public static final String ADM_NOT_3MOD = "s(a). s(b). ac(a,a). ac(b,or(a,neg(a))).";
 
-	/** D_F of the AF a → b: (t,u) is admissible but no canonical interpretation υ_S. */
+	/** D_F of the AF a → b: (t,u) is admissible but no canonical interpretation v_S. */
 	public static final String ATTACK = "s(a). s(b). ac(a,c(v)). ac(b,neg(a)).";
 
 	/**

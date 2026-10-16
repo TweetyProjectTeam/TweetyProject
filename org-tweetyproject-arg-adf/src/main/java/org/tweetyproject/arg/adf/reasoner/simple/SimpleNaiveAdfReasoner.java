@@ -28,7 +28,7 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
  * {@link SimpleConflictFreeAdfReasoner}.
  * <p>
  * Conflict-freeness is closed under ≤_i-smaller interpretations (a smaller
- * interpretation has more completions), so a conflict-free υ is maximal iff no
+ * interpretation has more completions), so a conflict-free v is maximal iff no
  * single undecided argument can be set to t or f without losing
  * conflict-freeness. Checks all 3^n interpretations.
  *

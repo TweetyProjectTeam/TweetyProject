@@ -196,7 +196,7 @@ public final class BruteForceOracle {
 		return maximal(adm());
 	}
 
-	/** @return the grounded interpretation: least fixpoint of Γ, iterated from υ_u */
+	/** @return the grounded interpretation: least fixpoint of Γ, iterated from v_u */
 	public ThreeValuedInterpretation gr() {
 		return groundedOf(adf);
 	}

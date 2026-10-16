@@ -23,8 +23,8 @@ import java.util.List;
 import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 
 /**
- * Enumerates the admissible interpretations (ADM) of an ADF: the υ with
- * υ ≤_i Γ(υ) (Brewka et al. 2013, Definition 2). Checks all 3^n
+ * Enumerates the admissible interpretations (ADM) of an ADF: the v with
+ * v ≤_i Γ(v) (Brewka et al. 2013, Definition 2). Checks all 3^n
  * interpretations.
  *
  * @author Lars Bengel
