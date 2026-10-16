@@ -19,10 +19,11 @@
 package org.tweetyproject.arg.adf.semantics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -57,11 +58,45 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  */
 public final class ThreeValuedInterpretation extends AbstractInterpretation<AbstractDialecticalFramework, Argument> {
 
-	/** truth values by argument name */
-	private final Map<String, TruthValue> values;
+	/**
+	 * The argument names of a domain and their positions. Interpretations derived
+	 * from each other share one instance, so their values can be compared
+	 * position by position; interpretations over separately created but equal
+	 * domains are compared by name.
+	 */
+	private static final class Domain {
+		final String[] names;
+		final Map<String, Integer> index;
 
-	private ThreeValuedInterpretation(Map<String, TruthValue> values) {
-		this.values = Collections.unmodifiableMap(values);
+		Domain(Collection<String> names) {
+			this.names = new LinkedHashSet<>(names).toArray(new String[0]);
+			this.index = new HashMap<>();
+			for (int i = 0; i < this.names.length; i++) {
+				index.put(this.names[i], i);
+			}
+		}
+
+		int indexOf(String name) {
+			Integer i = index.get(name);
+			if (i == null) {
+				throw new IllegalArgumentException("The argument " + name + " is not part of the domain.");
+			}
+			return i;
+		}
+
+		boolean hasSameNames(Domain other) {
+			return this == other || names.length == other.names.length && index.keySet().equals(other.index.keySet());
+		}
+	}
+
+	private final Domain domain;
+	/** the truth value of every argument, by its position in the domain */
+	private final TruthValue[] values;
+	private int hash;
+
+	private ThreeValuedInterpretation(Domain domain, TruthValue[] values) {
+		this.domain = domain;
+		this.values = values;
 	}
 
 	// ------------------------------------------------------------------
@@ -73,11 +108,10 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @return the interpretation v_u that maps every argument to u
 	 */
 	public static ThreeValuedInterpretation allUndecided(Collection<Argument> domain) {
-		Map<String, TruthValue> values = new LinkedHashMap<>();
-		for (Argument a : domain) {
-			values.put(nameOf(a), TruthValue.UNDECIDED);
-		}
-		return new ThreeValuedInterpretation(values);
+		Domain d = new Domain(names(domain));
+		TruthValue[] values = new TruthValue[d.names.length];
+		Arrays.fill(values, TruthValue.UNDECIDED);
+		return new ThreeValuedInterpretation(d, values);
 	}
 
 	/**
@@ -89,24 +123,20 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 *                                  not contained in the domain
 	 */
 	public static ThreeValuedInterpretation of(Set<Argument> satisfied, Set<Argument> unsatisfied, Collection<Argument> domain) {
-		Map<String, TruthValue> values = new LinkedHashMap<>();
-		for (Argument a : domain) {
-			values.put(nameOf(a), TruthValue.UNDECIDED);
-		}
-		assign(values, satisfied, TruthValue.TRUE);
-		assign(values, unsatisfied, TruthValue.FALSE);
-		return new ThreeValuedInterpretation(values);
+		ThreeValuedInterpretation v = allUndecided(domain);
+		v.assign(satisfied, TruthValue.TRUE);
+		v.assign(unsatisfied, TruthValue.FALSE);
+		return v;
 	}
 
-	private static void assign(Map<String, TruthValue> values, Set<Argument> arguments, TruthValue value) {
+	/** only used during construction, before the instance is published */
+	private void assign(Set<Argument> arguments, TruthValue value) {
 		for (Argument a : arguments) {
-			TruthValue old = values.get(nameOf(a));
-			if (old == null) {
-				throw new IllegalArgumentException("The argument " + a + " is not part of the domain.");
-			} else if (old != TruthValue.UNDECIDED) {
+			int i = domain.indexOf(nameOf(a));
+			if (values[i] != TruthValue.UNDECIDED) {
 				throw new IllegalArgumentException("The argument " + a + " cannot be both true and false.");
 			}
-			values.put(a.getName(), value);
+			values[i] = value;
 		}
 	}
 
@@ -115,11 +145,12 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @return the interpretation
 	 */
 	public static ThreeValuedInterpretation of(Map<Argument, TruthValue> values) {
-		Map<String, TruthValue> copy = new LinkedHashMap<>();
+		Domain d = new Domain(names(values.keySet()));
+		TruthValue[] array = new TruthValue[d.names.length];
 		for (Map.Entry<Argument, TruthValue> entry : values.entrySet()) {
-			copy.put(nameOf(entry.getKey()), Objects.requireNonNull(entry.getValue()));
+			array[d.indexOf(nameOf(entry.getKey()))] = Objects.requireNonNull(entry.getValue());
 		}
-		return new ThreeValuedInterpretation(copy);
+		return new ThreeValuedInterpretation(d, array);
 	}
 
 	/**
@@ -139,6 +170,23 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return of(new LinkedHashSet<>(extension), attacked, af);
 	}
 
+	/**
+	 * @param values the values of a new interpretation over the domain of this
+	 *               one, by position; the array is not copied
+	 * @return the interpretation
+	 */
+	ThreeValuedInterpretation withValues(TruthValue[] values) {
+		return new ThreeValuedInterpretation(domain, values);
+	}
+
+	/**
+	 * @param i a position in the domain
+	 * @return the argument at that position
+	 */
+	Argument argumentAt(int i) {
+		return new Argument(domain.names[i]);
+	}
+
 	// ------------------------------------------------------------------
 	// access
 	// ------------------------------------------------------------------
@@ -149,15 +197,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @throws IllegalArgumentException if the argument is not part of the domain
 	 */
 	public TruthValue get(Argument argument) {
-		return get(nameOf(argument));
-	}
-
-	private TruthValue get(String name) {
-		TruthValue value = values.get(name);
-		if (value == null) {
-			throw new IllegalArgumentException("The argument " + name + " is not part of the domain.");
-		}
-		return value;
+		return values[domain.indexOf(nameOf(argument))];
 	}
 
 	/**
@@ -190,9 +230,9 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	private Set<Argument> arguments(TruthValue value) {
 		Set<Argument> result = new LinkedHashSet<>();
-		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			if (value == null || entry.getValue() == value) {
-				result.add(new Argument(entry.getKey()));
+		for (int i = 0; i < values.length; i++) {
+			if (value == null || values[i] == value) {
+				result.add(new Argument(domain.names[i]));
 			}
 		}
 		return Collections.unmodifiableSet(result);
@@ -202,14 +242,19 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @return the size of the domain
 	 */
 	public int size() {
-		return values.size();
+		return values.length;
 	}
 
 	/**
 	 * @return true if no argument is mapped to u
 	 */
 	public boolean isTwoValued() {
-		return !values.containsValue(TruthValue.UNDECIDED);
+		for (TruthValue value : values) {
+			if (value == TruthValue.UNDECIDED) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -219,10 +264,10 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @throws IllegalArgumentException if the argument is not part of the domain
 	 */
 	public ThreeValuedInterpretation with(Argument argument, TruthValue value) {
-		get(argument);
-		Map<String, TruthValue> copy = new LinkedHashMap<>(values);
-		copy.put(argument.getName(), Objects.requireNonNull(value));
-		return new ThreeValuedInterpretation(copy);
+		int i = domain.indexOf(nameOf(argument));
+		TruthValue[] copy = values.clone();
+		copy[i] = Objects.requireNonNull(value);
+		return new ThreeValuedInterpretation(domain, copy);
 	}
 
 	// ------------------------------------------------------------------
@@ -235,9 +280,9 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 *         decided value of other
 	 */
 	public boolean isAtLeastAsInformativeAs(ThreeValuedInterpretation other) {
-		requireSameDomain(other);
-		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			if (!entry.getValue().isAtLeastAsInformativeAs(other.values.get(entry.getKey()))) {
+		TruthValue[] others = aligned(other);
+		for (int i = 0; i < values.length; i++) {
+			if (!values[i].isAtLeastAsInformativeAs(others[i])) {
 				return false;
 			}
 		}
@@ -266,12 +311,12 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @return the consensus v ⊓ other, which keeps the values both agree on and maps the rest to u
 	 */
 	public ThreeValuedInterpretation consensus(ThreeValuedInterpretation other) {
-		requireSameDomain(other);
-		Map<String, TruthValue> result = new LinkedHashMap<>();
-		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			result.put(entry.getKey(), entry.getValue().consensus(other.values.get(entry.getKey())));
+		TruthValue[] others = aligned(other);
+		TruthValue[] result = new TruthValue[values.length];
+		for (int i = 0; i < values.length; i++) {
+			result[i] = values[i].consensus(others[i]);
 		}
-		return new ThreeValuedInterpretation(result);
+		return new ThreeValuedInterpretation(domain, result);
 	}
 
 	/**
@@ -285,15 +330,14 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 			throw new IllegalArgumentException("The consensus of no interpretations is undefined.");
 		}
 		ThreeValuedInterpretation first = it.next();
-		Map<String, TruthValue> result = new LinkedHashMap<>(first.values);
+		TruthValue[] result = first.values.clone();
 		while (it.hasNext()) {
-			ThreeValuedInterpretation next = it.next();
-			first.requireSameDomain(next);
-			for (Map.Entry<String, TruthValue> entry : result.entrySet()) {
-				entry.setValue(entry.getValue().consensus(next.values.get(entry.getKey())));
+			TruthValue[] next = first.aligned(it.next());
+			for (int i = 0; i < result.length; i++) {
+				result[i] = result[i].consensus(next[i]);
 			}
 		}
-		return new ThreeValuedInterpretation(result);
+		return new ThreeValuedInterpretation(first.domain, result);
 	}
 
 	/**
@@ -311,7 +355,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	public TruthValue evaluate(PlFormula formula) {
 		if (formula instanceof Proposition) {
 			Proposition p = (Proposition) formula;
-			return get(p.getName());
+			return values[domain.indexOf(p.getName())];
 		} else if (formula instanceof Tautology) {
 			return TruthValue.TRUE;
 		} else if (formula instanceof Contradiction) {
@@ -379,14 +423,16 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 * @throws IllegalArgumentException if an argument is not part of the domain
 	 */
 	public Iterator<ThreeValuedInterpretation> completions(Collection<Argument> arguments) {
-		List<String> open = new ArrayList<>();
+		Set<Integer> positions = new LinkedHashSet<>();
 		for (Argument a : arguments) {
-			if (get(a) == TruthValue.UNDECIDED && !open.contains(a.getName())) {
-				open.add(a.getName());
+			int i = domain.indexOf(nameOf(a));
+			if (values[i] == TruthValue.UNDECIDED) {
+				positions.add(i);
 			}
 		}
+		int[] open = positions.stream().mapToInt(Integer::intValue).toArray();
 		return new Iterator<>() {
-			private final boolean[] assignment = new boolean[open.size()];
+			private final boolean[] assignment = new boolean[open.length];
 			private boolean hasNext = true;
 
 			@Override
@@ -399,9 +445,9 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 				if (!hasNext) {
 					throw new NoSuchElementException();
 				}
-				Map<String, TruthValue> completion = new LinkedHashMap<>(values);
-				for (int i = 0; i < assignment.length; i++) {
-					completion.put(open.get(i), TruthValue.valueOf(assignment[i]));
+				TruthValue[] completion = values.clone();
+				for (int i = 0; i < open.length; i++) {
+					completion[open[i]] = TruthValue.valueOf(assignment[i]);
 				}
 				// binary increment; done after the all-true assignment
 				int i = 0;
@@ -413,7 +459,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 				} else {
 					assignment[i] = true;
 				}
-				return new ThreeValuedInterpretation(completion);
+				return new ThreeValuedInterpretation(domain, completion);
 			}
 		};
 	}
@@ -430,8 +476,8 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 */
 	public Labeling toLabeling() {
 		Labeling labeling = new Labeling();
-		for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-			labeling.put(new Argument(entry.getKey()), switch (entry.getValue()) {
+		for (int i = 0; i < values.length; i++) {
+			labeling.put(new Argument(domain.names[i]), switch (values[i]) {
 				case TRUE -> ArgumentStatus.IN;
 				case FALSE -> ArgumentStatus.OUT;
 				case UNDECIDED -> ArgumentStatus.UNDECIDED;
@@ -474,7 +520,15 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	@Override
 	public int hashCode() {
-		return values.hashCode();
+		if (hash == 0) {
+			// independent of the order of the domain, like Map.hashCode
+			int h = 0;
+			for (int i = 0; i < values.length; i++) {
+				h += domain.names[i].hashCode() ^ values[i].ordinal();
+			}
+			hash = h == 0 ? 1 : h;
+		}
+		return hash;
 	}
 
 	/**
@@ -483,8 +537,17 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return this == obj || obj instanceof ThreeValuedInterpretation
-				&& values.equals(((ThreeValuedInterpretation) obj).values);
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof ThreeValuedInterpretation)) {
+			return false;
+		}
+		ThreeValuedInterpretation other = (ThreeValuedInterpretation) obj;
+		if (domain == other.domain) {
+			return Arrays.equals(values, other.values);
+		}
+		return domain.hasSameNames(other.domain) && hashCode() == other.hashCode() && Arrays.equals(values, aligned(other));
 	}
 
 	/**
@@ -496,9 +559,9 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		StringBuilder s = new StringBuilder("{");
 		for (TruthValue value : TruthValue.values()) {
 			Set<String> names = new TreeSet<>();
-			for (Map.Entry<String, TruthValue> entry : values.entrySet()) {
-				if (entry.getValue() == value) {
-					names.add(entry.getKey());
+			for (int i = 0; i < values.length; i++) {
+				if (values[i] == value) {
+					names.add(domain.names[i]);
 				}
 			}
 			for (String name : names) {
@@ -508,10 +571,31 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return s.append('}').toString();
 	}
 
-	private void requireSameDomain(ThreeValuedInterpretation other) {
-		if (!values.keySet().equals(other.values.keySet())) {
+	/**
+	 * @param other an interpretation over the same arguments
+	 * @return the values of other, ordered by the positions of this domain
+	 * @throws IllegalArgumentException if the domains differ
+	 */
+	private TruthValue[] aligned(ThreeValuedInterpretation other) {
+		if (domain == other.domain) {
+			return other.values;
+		}
+		if (!domain.hasSameNames(other.domain)) {
 			throw new IllegalArgumentException("The interpretations have different domains.");
 		}
+		TruthValue[] result = new TruthValue[values.length];
+		for (int i = 0; i < values.length; i++) {
+			result[i] = other.values[other.domain.indexOf(domain.names[i])];
+		}
+		return result;
+	}
+
+	private static List<String> names(Collection<Argument> arguments) {
+		List<String> names = new ArrayList<>(arguments.size());
+		for (Argument a : arguments) {
+			names.add(nameOf(a));
+		}
+		return names;
 	}
 
 	private static String nameOf(Argument argument) {

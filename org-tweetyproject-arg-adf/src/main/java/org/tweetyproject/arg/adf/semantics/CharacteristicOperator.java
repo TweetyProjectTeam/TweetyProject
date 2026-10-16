@@ -19,8 +19,6 @@
 package org.tweetyproject.arg.adf.semantics;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -52,11 +50,11 @@ public final class CharacteristicOperator {
 	 */
 	public static ThreeValuedInterpretation apply(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		requireDomain(adf, v);
-		Map<Argument, TruthValue> result = new LinkedHashMap<>();
-		for (Argument a : adf) {
-			result.put(a, gamma(adf, v, a));
+		TruthValue[] result = new TruthValue[v.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = gamma(adf, v, v.argumentAt(i));
 		}
-		return ThreeValuedInterpretation.of(result);
+		return v.withValues(result);
 	}
 
 	/**

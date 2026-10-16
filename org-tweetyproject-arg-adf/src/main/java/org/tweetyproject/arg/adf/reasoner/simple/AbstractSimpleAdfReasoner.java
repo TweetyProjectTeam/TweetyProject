@@ -21,9 +21,7 @@ package org.tweetyproject.arg.adf.reasoner.simple;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CancellationException;
 
@@ -89,42 +87,47 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 		return isTwoValued() ? undecided.completions() : new AllInterpretations(adf.getNodes());
 	}
 
-	/** all 3^n interpretations over the given arguments, counting like an odometer */
+	/**
+	 * All 3^n interpretations over the given arguments, counting like an
+	 * odometer. Each candidate is derived from the previous one, so all share one
+	 * domain and only the changed values are copied.
+	 */
 	private static final class AllInterpretations implements Iterator<ThreeValuedInterpretation> {
 		private static final TruthValue[] VALUES = { TruthValue.UNDECIDED, TruthValue.TRUE, TruthValue.FALSE };
 		private final List<Argument> arguments;
 		private final int[] digits;
-		private boolean hasNext = true;
+		private ThreeValuedInterpretation next;
 
 		AllInterpretations(Collection<Argument> arguments) {
 			this.arguments = new ArrayList<>(arguments);
 			this.digits = new int[arguments.size()];
+			this.next = ThreeValuedInterpretation.allUndecided(arguments);
 		}
 
 		@Override
 		public boolean hasNext() {
-			return hasNext;
+			return next != null;
 		}
 
 		@Override
 		public ThreeValuedInterpretation next() {
-			if (!hasNext) {
+			if (next == null) {
 				throw new NoSuchElementException();
 			}
-			Map<Argument, TruthValue> values = new LinkedHashMap<>();
-			for (int i = 0; i < digits.length; i++) {
-				values.put(arguments.get(i), VALUES[digits[i]]);
-			}
+			ThreeValuedInterpretation current = next;
+			ThreeValuedInterpretation successor = current;
 			int i = 0;
 			while (i < digits.length && digits[i] == VALUES.length - 1) {
-				digits[i++] = 0;
+				digits[i] = 0;
+				successor = successor.with(arguments.get(i), VALUES[0]);
+				i++;
 			}
 			if (i == digits.length) {
-				hasNext = false;
+				next = null;
 			} else {
-				digits[i]++;
+				next = successor.with(arguments.get(i), VALUES[++digits[i]]);
 			}
-			return ThreeValuedInterpretation.of(values);
+			return current;
 		}
 	}
 

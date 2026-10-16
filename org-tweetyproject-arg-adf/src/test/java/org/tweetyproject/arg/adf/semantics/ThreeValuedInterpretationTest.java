@@ -179,6 +179,11 @@ class ThreeValuedInterpretationTest {
 		assertFalse(v.isTwoValued());
 		assertTrue(v.with(C, TruthValue.FALSE).isTwoValued());
 		assertEquals(v, ThreeValuedInterpretation.of(Set.of(A), Set.of(B), List.of(C, B, A)));
+		// separately created domain with another order: compared by name
+		ThreeValuedInterpretation reordered = ThreeValuedInterpretation.of(Set.of(A), Set.of(B), List.of(C, B, A));
+		assertEquals(v.hashCode(), reordered.hashCode());
+		assertTrue(v.isAtLeastAsInformativeAs(reordered));
+		assertEquals(v, v.consensus(reordered));
 		assertEquals("{t(a) f(b) u(c)}", v.toString());
 		assertEquals("{}", ThreeValuedInterpretation.allUndecided(List.of()).toString());
 		v.satisfied().iterator().next().setName("renamed");
