@@ -19,11 +19,15 @@
 package org.tweetyproject.arg.adf.analysis;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.AcceptanceConditions;
 import org.tweetyproject.arg.adf.syntax.Link;
@@ -128,7 +132,6 @@ public final class LinkTypeClassifier {
 	/** classification state for one snapshot of a framework */
 	private static final class Context {
 		private final AbstractDialecticalFramework adf;
-		private CompiledAdf compiled;
 
 		Context(AbstractDialecticalFramework adf) {
 			this.adf = adf;
@@ -157,10 +160,7 @@ public final class LinkTypeClassifier {
 		/** @return {monotone, antitone}, both decided exactly; known properties are not checked again */
 		private boolean[] check(PlFormula condition, Argument parent, Argument child, boolean monotone, boolean antitone) {
 			if (adf.getParents(child).size() <= TRUTH_TABLE_LIMIT) {
-				if (compiled == null) {
-					compiled = CompiledAdf.of(adf);
-				}
-				boolean[] table = truthTable(compiled, compiled.indexOf(parent), compiled.indexOf(child));
+				boolean[] table = truthTable(adf, condition, parent, child);
 				return new boolean[] { monotone || table[0], antitone || table[1] };
 			}
 			PlFormula withFalse = AcceptanceConditions.substitute(condition, Map.of(parent.getName(), new Contradiction()));
@@ -172,25 +172,15 @@ public final class LinkTypeClassifier {
 		}
 	}
 
-	private static boolean[] truthTable(CompiledAdf compiled, int b, int a) {
-		int[] parents = compiled.parents(a);
-		int[] others = new int[parents.length - 1];
-		int i = 0;
-		for (int p : parents) {
-			if (p != b) {
-				others[i++] = p;
-			}
-		}
-		byte[] v = new byte[compiled.size()];
+	private static boolean[] truthTable(AbstractDialecticalFramework adf, PlFormula condition, Argument parent, Argument child) {
+		Set<Argument> others = new LinkedHashSet<>(adf.getParents(child));
+		others.remove(parent);
 		boolean monotone = true, antitone = true;
-		for (long mask = 0; mask < (1L << others.length) && (monotone || antitone); mask++) {
-			for (int k = 0; k < others.length; k++) {
-				v[others[k]] = ((mask >>> k) & 1L) != 0 ? CompiledAdf.T : CompiledAdf.F;
-			}
-			v[b] = CompiledAdf.F;
-			boolean withFalse = compiled.kleene(a, v) == CompiledAdf.T;
-			v[b] = CompiledAdf.T;
-			boolean withTrue = compiled.kleene(a, v) == CompiledAdf.T;
+		Iterator<ThreeValuedInterpretation> it = ThreeValuedInterpretation.allUndecided(adf.getNodes()).completions(others);
+		while (it.hasNext() && (monotone || antitone)) {
+			ThreeValuedInterpretation w = it.next();
+			boolean withFalse = w.with(parent, TruthValue.FALSE).evaluate(condition) == TruthValue.TRUE;
+			boolean withTrue = w.with(parent, TruthValue.TRUE).evaluate(condition) == TruthValue.TRUE;
 			monotone &= !withFalse || withTrue;
 			antitone &= !withTrue || withFalse;
 		}

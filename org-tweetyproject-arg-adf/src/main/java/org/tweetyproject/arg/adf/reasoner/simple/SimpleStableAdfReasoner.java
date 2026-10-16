@@ -18,9 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the stable models (ST) of an ADF (Brewka et al. 2013,
@@ -28,49 +27,23 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
  * are exactly those mapped to t by the grounded interpretation of the reduct
  * D^v.
  * <p>
- * The reduct keeps the true arguments and replaces every false argument by ⊥;
- * its grounded interpretation is computed by iterating Γ on the original
- * conditions with the false arguments fixed to f, which is the same operator.
  * Checks all 2^n two-valued interpretations.
  *
  * @author Lars Bengel
  */
 public class SimpleStableAdfReasoner extends AbstractSimpleAdfReasoner {
 
-	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return twoValued(adf, this::verify);
-	}
+	private final SimpleTwoValuedModelAdfReasoner twoValuedModel = new SimpleTwoValuedModelAdfReasoner();
+	private final SimpleGroundedAdfReasoner grounded = new SimpleGroundedAdfReasoner();
 
 	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return SimpleTwoValuedModelAdfReasoner.isTwoValuedModel(adf, v) && reductGroundedIsTotal(adf, v);
-	}
-
-	/** @return true if the grounded interpretation of the reduct D^v maps every true argument of v to t */
-	private static boolean reductGroundedIsTotal(CompiledAdf adf, byte[] v) {
-		byte[] w = new byte[v.length];
-		for (int a = 0; a < v.length; a++) {
-			w[a] = v[a] == CompiledAdf.F ? CompiledAdf.F : CompiledAdf.U;
-		}
-		boolean changed = true;
-		while (changed) {
-			changed = false;
-			byte[] next = w.clone();
-			for (int a = 0; a < v.length; a++) {
-				if (v[a] == CompiledAdf.T) {
-					next[a] = adf.gamma(a, w);
-					changed |= next[a] != w[a];
-				}
-			}
-			w = next;
-		}
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] == CompiledAdf.T && w[a] != CompiledAdf.T) {
-				return false;
-			}
-		}
+	protected boolean isTwoValued() {
 		return true;
+	}
+
+	@Override
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		return twoValuedModel.isModel(adf, v) && grounded.getModel(adf.reduct(v)).satisfied().equals(v.satisfied());
 	}
 
 }

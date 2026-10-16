@@ -18,9 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the three-valued models (3MOD) of an ADF in the sense of the
@@ -36,18 +35,9 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleThreeValuedModelAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return threeValued(adf, this::verify);
-	}
-
-	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] != CompiledAdf.U && adf.kleene(a, v) != v[a]) {
-				return false;
-			}
-		}
-		return true;
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		requireDomain(adf, v);
+		return v.satisfies(adf);
 	}
 
 }

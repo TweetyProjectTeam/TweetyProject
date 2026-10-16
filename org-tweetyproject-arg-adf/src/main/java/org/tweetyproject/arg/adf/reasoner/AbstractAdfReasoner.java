@@ -35,12 +35,20 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
+import org.tweetyproject.commons.ModelVerifier;
 import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
  * Common base of all ADF reasoners. A reasoner computes the models of an ADF
  * under one semantics as {@link ThreeValuedInterpretation}s and answers
  * acceptance and verification queries.
+ * <p>
+ * Every reasoner implements {@link #isModel(AbstractDialecticalFramework, ThreeValuedInterpretation)}
+ * directly. A reasoner whose models are computed from that check alone (generate
+ * and test) needs nothing else, see {@code AbstractSimpleAdfReasoner}; others
+ * also override {@link #getModels(AbstractDialecticalFramework)}. Implementations
+ * of {@code isModel} must not rely on {@code getModels} of the same reasoner if
+ * that one is based on {@code isModel}.
  * <p>
  * As in {@code AbstractExtensionReasoner} of the Dung module, the default
  * implementations of the query methods are based on
@@ -52,20 +60,21 @@ import org.tweetyproject.commons.QualitativeReasoner;
  * @author Lars Bengel
  */
 public abstract class AbstractAdfReasoner implements QualitativeReasoner<AbstractDialecticalFramework, Argument>,
-		ModelProvider<Argument, AbstractDialecticalFramework, ThreeValuedInterpretation> {
+		ModelProvider<Argument, AbstractDialecticalFramework, ThreeValuedInterpretation>,
+		ModelVerifier<Argument, AbstractDialecticalFramework, ThreeValuedInterpretation> {
 
 	/**
 	 * Decides whether the given interpretation is a model of the ADF (the
-	 * verification problem). Every reasoner implements this directly, i.e.
-	 * without enumerating the models, since verification is usually much easier
-	 * than enumeration: polynomial for two- and three-valued models, one Γ check
-	 * per argument for admissible and complete interpretations.
+	 * verification problem). Verification is usually much easier than
+	 * enumeration: polynomial for two- and three-valued models, one Γ check per
+	 * argument for admissible and complete interpretations.
 	 *
 	 * @param adf an ADF
 	 * @param v   an interpretation over the arguments of the ADF
 	 * @return true if v is a model
 	 * @throws IllegalArgumentException if the domain of v differs from the arguments of the ADF
 	 */
+	@Override
 	public abstract boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v);
 
 	/**

@@ -161,7 +161,9 @@ class ConsumerPrototypeTest {
 	@Test
 	void webAdapterKeepsTheAnswerFormat() throws Exception {
 		AbstractDialecticalFramework adf = WebAdapter.getAdf(3, List.of("ac(1,neg(2))", "ac(2,neg(1))", "ac(3,c(v))"));
-		assertEquals("{{t(2) t(3) f(1)}, {t(1) t(3) f(2)}}", WebAdapter.getModels(Executors.newSingleThreadExecutor(), Semantics.ST, adf, 10, TimeUnit.SECONDS));
+		String stable = WebAdapter.getModels(Executors.newSingleThreadExecutor(), Semantics.ST, adf, 10, TimeUnit.SECONDS);
+		// the order of the models is not specified
+		assertTrue(stable.equals("{{t(1) t(3) f(2)}, {t(2) t(3) f(1)}}") || stable.equals("{{t(2) t(3) f(1)}, {t(1) t(3) f(2)}}"), stable);
 		assertEquals("{{t(3) u(1) u(2)}}", WebAdapter.getModels(Executors.newSingleThreadExecutor(), Semantics.GR, adf, 10, TimeUnit.SECONDS));
 	}
 

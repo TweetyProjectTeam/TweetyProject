@@ -20,18 +20,26 @@ package org.tweetyproject.arg.adf.reasoner.simple;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CancellationException;
 
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Base class of the brute-force reasoners. They enumerate all 3^n (or 2^n for
- * two-valued semantics) interpretations of a compiled snapshot of the ADF and
- * check the definition of the semantics for each.
+ * Base class of the brute-force reasoners. By default they generate all 3^n
+ * (or 2^n for two-valued semantics) interpretations of the ADF and keep those
+ * for which {@link #isModel(AbstractDialecticalFramework, ThreeValuedInterpretation)}
+ * holds, so a subclass only has to implement the verification of its
+ * semantics. Semantics computed differently (e.g. by maximality or a fixpoint
+ * iteration) override {@link #getModels(AbstractDialecticalFramework)}.
  * <p>
  * The enumeration stops with a {@link CancellationException} if the current
  * thread is interrupted.
@@ -44,10 +52,16 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 
 	@Override
 	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
-		CompiledAdf compiled = CompiledAdf.of(adf);
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
-		for (byte[] v : models(compiled)) {
-			models.add(compiled.decode(v));
+		long step = 0;
+		for (Iterator<ThreeValuedInterpretation> it = candidates(adf); it.hasNext();) {
+			if (++step % INTERRUPT_CHECK_INTERVAL == 0 && Thread.currentThread().isInterrupted()) {
+				throw new CancellationException("Enumeration interrupted.");
+			}
+			ThreeValuedInterpretation v = it.next();
+			if (isModel(adf, v)) {
+				models.add(v);
+			}
 		}
 		return models;
 	}
@@ -58,92 +72,59 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 		return models.isEmpty() ? null : models.iterator().next();
 	}
 
-	@Override
-	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		requireDomain(adf, v);
-		CompiledAdf compiled = CompiledAdf.of(adf);
-		return verify(compiled, compiled.encode(v));
+	/**
+	 * @return true if the models of this semantics are two-valued, so only the
+	 *         2^n two-valued interpretations are candidates
+	 */
+	protected boolean isTwoValued() {
+		return false;
 	}
 
 	/**
-	 * @param adf a compiled ADF
-	 * @return all its models in array representation
+	 * @param adf an ADF
+	 * @return all candidate interpretations over the arguments of the ADF
 	 */
-	protected abstract List<byte[]> models(CompiledAdf adf);
-
-	/**
-	 * @param adf a compiled ADF
-	 * @param v   an interpretation in array representation; may be modified
-	 *            temporarily but must be restored
-	 * @return true if v is a model
-	 */
-	protected abstract boolean verify(CompiledAdf adf, byte[] v);
-
-	/** A test of a candidate interpretation; it may modify v temporarily but must restore it. */
-	protected interface Check {
-		/**
-		 * @param adf a compiled ADF
-		 * @param v   a candidate interpretation
-		 * @return true if the candidate is a model
-		 */
-		boolean test(CompiledAdf adf, byte[] v);
+	private Iterator<ThreeValuedInterpretation> candidates(AbstractDialecticalFramework adf) {
+		ThreeValuedInterpretation undecided = ThreeValuedInterpretation.allUndecided(adf.getNodes());
+		return isTwoValued() ? undecided.completions() : new AllInterpretations(adf.getNodes());
 	}
 
-	/**
-	 * @param adf   a compiled ADF
-	 * @param check the definition of the semantics
-	 * @return all three-valued interpretations that pass the check
-	 */
-	protected static List<byte[]> threeValued(CompiledAdf adf, Check check) {
-		return enumerate(adf, check, new byte[] { CompiledAdf.U, CompiledAdf.T, CompiledAdf.F });
-	}
+	/** all 3^n interpretations over the given arguments, counting like an odometer */
+	private static final class AllInterpretations implements Iterator<ThreeValuedInterpretation> {
+		private static final TruthValue[] VALUES = { TruthValue.UNDECIDED, TruthValue.TRUE, TruthValue.FALSE };
+		private final List<Argument> arguments;
+		private final int[] digits;
+		private boolean hasNext = true;
 
-	/**
-	 * @param adf   a compiled ADF
-	 * @param check the definition of the semantics
-	 * @return all two-valued interpretations that pass the check
-	 */
-	protected static List<byte[]> twoValued(CompiledAdf adf, Check check) {
-		return enumerate(adf, check, new byte[] { CompiledAdf.T, CompiledAdf.F });
-	}
-
-	/**
-	 * @param a an interpretation
-	 * @param b an interpretation over the same arguments
-	 * @return true if b ≤_i a, i.e. a agrees with every decided value of b
-	 */
-	protected static boolean isAtLeastAsInformativeAs(byte[] a, byte[] b) {
-		for (int i = 0; i < a.length; i++) {
-			if (b[i] != CompiledAdf.U && b[i] != a[i]) {
-				return false;
-			}
+		AllInterpretations(Collection<Argument> arguments) {
+			this.arguments = new ArrayList<>(arguments);
+			this.digits = new int[arguments.size()];
 		}
-		return true;
-	}
 
-	/** checks every assignment of the given values to the arguments, counting like an odometer */
-	private static List<byte[]> enumerate(CompiledAdf adf, Check check, byte[] values) {
-		List<byte[]> models = new ArrayList<>();
-		byte[] v = new byte[adf.size()];
-		int[] digits = new int[adf.size()];
-		java.util.Arrays.fill(v, values[0]);
-		for (long step = 1;; step++) {
-			if (step % INTERRUPT_CHECK_INTERVAL == 0 && Thread.currentThread().isInterrupted()) {
-				throw new CancellationException("Enumeration interrupted.");
+		@Override
+		public boolean hasNext() {
+			return hasNext;
+		}
+
+		@Override
+		public ThreeValuedInterpretation next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
 			}
-			if (check.test(adf, v)) {
-				models.add(v.clone());
+			Map<Argument, TruthValue> values = new LinkedHashMap<>();
+			for (int i = 0; i < digits.length; i++) {
+				values.put(arguments.get(i), VALUES[digits[i]]);
 			}
 			int i = 0;
-			while (i < digits.length && digits[i] == values.length - 1) {
-				digits[i] = 0;
-				v[i] = values[0];
-				i++;
+			while (i < digits.length && digits[i] == VALUES.length - 1) {
+				digits[i++] = 0;
 			}
 			if (i == digits.length) {
-				return models;
+				hasNext = false;
+			} else {
+				digits[i]++;
 			}
-			v[i] = values[++digits[i]];
+			return ThreeValuedInterpretation.of(values);
 		}
 	}
 

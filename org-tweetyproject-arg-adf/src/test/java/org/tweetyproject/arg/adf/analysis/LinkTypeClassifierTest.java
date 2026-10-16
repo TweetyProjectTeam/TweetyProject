@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
+import org.tweetyproject.arg.adf.BruteForceOracle;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -137,8 +138,8 @@ class LinkTypeClassifierTest {
 		ThreeValuedInterpretation base = ThreeValuedInterpretation.allUndecided(adf.getNodes());
 		for (var it = base.completions(others); it.hasNext();) {
 			ThreeValuedInterpretation w = it.next();
-			TruthValue withFalse = w.with(link.getParent(), TruthValue.FALSE).evaluate(adf.getAcceptanceCondition(link.getChild()));
-			TruthValue withTrue = w.with(link.getParent(), TruthValue.TRUE).evaluate(adf.getAcceptanceCondition(link.getChild()));
+			TruthValue withFalse = BruteForceOracle.classical(w.with(link.getParent(), TruthValue.FALSE), adf.getAcceptanceCondition(link.getChild()));
+			TruthValue withTrue = BruteForceOracle.classical(w.with(link.getParent(), TruthValue.TRUE), adf.getAcceptanceCondition(link.getChild()));
 			monotone &= !(withFalse == TruthValue.TRUE && withTrue == TruthValue.FALSE);
 			antitone &= !(withTrue == TruthValue.TRUE && withFalse == TruthValue.FALSE);
 		}

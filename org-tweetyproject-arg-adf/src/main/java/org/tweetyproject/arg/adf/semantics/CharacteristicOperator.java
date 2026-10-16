@@ -18,8 +18,13 @@
  */
 package org.tweetyproject.arg.adf.semantics;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * The characteristic operator Γ_D of an ADF D (Brewka and Woltran 2010;
@@ -46,8 +51,12 @@ public final class CharacteristicOperator {
 	 * @throws IllegalArgumentException if the domain of v differs from the arguments of the ADF
 	 */
 	public static ThreeValuedInterpretation apply(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		CompiledAdf compiled = compile(adf, v);
-		return compiled.decode(compiled.gamma(compiled.encode(v)));
+		requireDomain(adf, v);
+		Map<Argument, TruthValue> result = new LinkedHashMap<>();
+		for (Argument a : adf) {
+			result.put(a, gamma(adf, v, a));
+		}
+		return ThreeValuedInterpretation.of(result);
 	}
 
 	/**
@@ -59,15 +68,34 @@ public final class CharacteristicOperator {
 	 *                                  arguments of the ADF or the argument is unknown
 	 */
 	public static TruthValue apply(AbstractDialecticalFramework adf, ThreeValuedInterpretation v, Argument argument) {
-		CompiledAdf compiled = compile(adf, v);
-		return CompiledAdf.decode(compiled.gamma(compiled.indexOf(argument), compiled.encode(v)));
+		requireDomain(adf, v);
+		if (!adf.contains(argument)) {
+			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
+		}
+		return gamma(adf, v, argument);
 	}
 
-	private static CompiledAdf compile(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+	private static TruthValue gamma(AbstractDialecticalFramework adf, ThreeValuedInterpretation v, Argument a) {
+		PlFormula condition = adf.getAcceptanceCondition(a);
+		TruthValue kleene = v.evaluate(condition);
+		if (kleene.isDecided()) {
+			return kleene;
+		}
+		TruthValue result = null;
+		for (Iterator<ThreeValuedInterpretation> it = v.completions(adf.getParents(a)); it.hasNext();) {
+			TruthValue value = it.next().evaluate(condition);
+			result = result == null ? value : result.consensus(value);
+			if (result == TruthValue.UNDECIDED) {
+				break;
+			}
+		}
+		return result;
+	}
+
+	private static void requireDomain(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		if (!v.getDomain().equals(adf.getNodes())) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of the ADF.");
 		}
-		return CompiledAdf.of(adf);
 	}
 
 }

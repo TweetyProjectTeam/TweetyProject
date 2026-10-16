@@ -19,10 +19,11 @@
 package org.tweetyproject.arg.adf.reasoner.simple;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.List;
 
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the preferred interpretations (PR) of an ADF: the ≤_i-maximal
@@ -36,53 +37,32 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
  */
 public class SimplePreferredAdfReasoner extends AbstractSimpleAdfReasoner {
 
-	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return preferred(adf);
-	}
+	private final SimpleCompleteAdfReasoner complete = new SimpleCompleteAdfReasoner();
 
 	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		if (!SimpleCompleteAdfReasoner.isComplete(adf, v)) {
-			return false;
-		}
-		for (byte[] p : preferred(adf)) {
-			if (isAtLeastAsInformativeAs(p, v)) {
-				return java.util.Arrays.equals(v, p);
+	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
+		Collection<ThreeValuedInterpretation> candidates = complete.getModels(adf);
+		List<ThreeValuedInterpretation> models = new ArrayList<>();
+		for (ThreeValuedInterpretation v : candidates) {
+			if (isMaximal(v, candidates)) {
+				models.add(v);
 			}
 		}
-		throw new IllegalStateException("A complete interpretation must lie below a preferred one.");
+		return models;
 	}
 
-	private static List<byte[]> preferred(CompiledAdf adf) {
-		List<byte[]> complete = threeValued(adf, SimpleCompleteAdfReasoner::isComplete);
-		// candidates with more decided arguments first: anything strictly above a
-		// candidate is visited before it, and so is a maximal element above that
-		complete.sort(Comparator.comparingInt(SimplePreferredAdfReasoner::undecided));
-		List<byte[]> maximal = new ArrayList<>();
-		for (byte[] candidate : complete) {
-			boolean dominated = false;
-			for (byte[] m : maximal) {
-				if (isAtLeastAsInformativeAs(m, candidate)) {
-					dominated = true;
-					break;
-				}
-			}
-			if (!dominated) {
-				maximal.add(candidate);
-			}
-		}
-		return maximal;
+	@Override
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		return complete.isModel(adf, v) && isMaximal(v, complete.getModels(adf));
 	}
 
-	private static int undecided(byte[] v) {
-		int count = 0;
-		for (byte b : v) {
-			if (b == CompiledAdf.U) {
-				count++;
+	private static boolean isMaximal(ThreeValuedInterpretation v, Collection<ThreeValuedInterpretation> candidates) {
+		for (ThreeValuedInterpretation w : candidates) {
+			if (w.isMoreInformativeThan(v)) {
+				return false;
 			}
 		}
-		return count;
+		return true;
 	}
 
 }

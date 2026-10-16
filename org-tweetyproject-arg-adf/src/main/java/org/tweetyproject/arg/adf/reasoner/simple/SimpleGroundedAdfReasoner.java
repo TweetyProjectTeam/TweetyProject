@@ -18,10 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Computes the grounded interpretation (GR) of an ADF, the least fixpoint of Γ,
@@ -34,13 +36,25 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleGroundedAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return List.of(adf.grounded());
+	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
+		return List.of(grounded(adf));
 	}
 
 	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return Arrays.equals(adf.grounded(), v);
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		requireDomain(adf, v);
+		return grounded(adf).equals(v);
+	}
+
+	private static ThreeValuedInterpretation grounded(AbstractDialecticalFramework adf) {
+		ThreeValuedInterpretation v = ThreeValuedInterpretation.allUndecided(adf.getNodes());
+		while (true) {
+			ThreeValuedInterpretation next = CharacteristicOperator.apply(adf, v);
+			if (next.equals(v)) {
+				return v;
+			}
+			v = next;
+		}
 	}
 
 }

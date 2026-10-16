@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -30,15 +31,28 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.logics.pl.syntax.Conjunction;
+import org.tweetyproject.logics.pl.syntax.Contradiction;
+import org.tweetyproject.logics.pl.syntax.Disjunction;
+import org.tweetyproject.logics.pl.syntax.Equivalence;
+import org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction;
+import org.tweetyproject.logics.pl.syntax.Implication;
+import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * An independent test oracle for all ADF semantics. It follows the definitions
  * literally on {@link PlFormula}s: Γ is the consensus over <em>all</em>
  * completions of the whole interpretation (no restriction to parents, no Kleene
  * fast path), maximality is checked by pairwise comparison, and the stable
- * semantics uses {@link AbstractDialecticalFramework#reduct}. It shares no
- * evaluation code with the reasoners, which work on {@code CompiledAdf}.
+ * semantics uses {@link AbstractDialecticalFramework#reduct}. Completions are
+ * evaluated with its own classical evaluator, so the oracle does not share
+ * evaluation code with the reasoners. Only the Kleene
+ * evaluation for three-valued models uses
+ * {@link ThreeValuedInterpretation#evaluate}, which is tested against explicit
+ * truth tables.
  * <p>
  * All results for one ADF are computed once in the constructor, so it is only
  * usable for very small ADFs (up to about 6 arguments).
@@ -85,12 +99,51 @@ public final class BruteForceOracle {
 		for (Map.Entry<Argument, PlFormula> entry : conditions.entrySet()) {
 			TruthValue value = null;
 			for (Iterator<ThreeValuedInterpretation> it = v.completions(); it.hasNext();) {
-				TruthValue w = it.next().evaluate(entry.getValue());
+				TruthValue w = classical(it.next(), entry.getValue());
 				value = value == null ? w : value.consensus(w);
 			}
 			result.put(entry.getKey(), value);
 		}
 		return ThreeValuedInterpretation.of(result);
+	}
+
+	/**
+	 * @param w       a two-valued interpretation
+	 * @param formula a formula over its domain
+	 * @return the classical truth value of the formula under w
+	 */
+	public static TruthValue classical(ThreeValuedInterpretation w, PlFormula formula) {
+		Set<String> trueAtoms = new HashSet<>();
+		for (Argument a : w.satisfied()) {
+			trueAtoms.add(a.getName());
+		}
+		return TruthValue.valueOf(holds(formula, trueAtoms));
+	}
+
+	/** classical two-valued evaluation, deliberately independent of ThreeValuedInterpretation.evaluate */
+	private static boolean holds(PlFormula f, Set<String> trueAtoms) {
+		if (f instanceof Proposition) {
+			return trueAtoms.contains(((Proposition) f).getName());
+		} else if (f instanceof Tautology) {
+			return true;
+		} else if (f instanceof Contradiction) {
+			return false;
+		} else if (f instanceof Negation) {
+			return !holds(((Negation) f).getFormula(), trueAtoms);
+		} else if (f instanceof Conjunction) {
+			return ((Conjunction) f).getFormulas().stream().allMatch(g -> holds(g, trueAtoms));
+		} else if (f instanceof Disjunction) {
+			return ((Disjunction) f).getFormulas().stream().anyMatch(g -> holds(g, trueAtoms));
+		} else if (f instanceof ExclusiveDisjunction) {
+			return ((ExclusiveDisjunction) f).getFormulas().stream().filter(g -> holds(g, trueAtoms)).count() % 2 == 1;
+		} else if (f instanceof Implication) {
+			Implication i = (Implication) f;
+			return !holds(i.getFirstFormula(), trueAtoms) || holds(i.getSecondFormula(), trueAtoms);
+		} else if (f instanceof Equivalence) {
+			Equivalence e = (Equivalence) f;
+			return holds(e.getFormulas().getFirst(), trueAtoms) == holds(e.getFormulas().getSecond(), trueAtoms);
+		}
+		throw new IllegalArgumentException(f.getClass().getName());
 	}
 
 	/** @return Γ(v) */
@@ -130,7 +183,9 @@ public final class BruteForceOracle {
 			if (skipUndecided && v.get(a) == TruthValue.UNDECIDED) {
 				continue;
 			}
-			if (v.evaluate(conditions.get(a)) != v.get(a)) {
+			// Kleene evaluation coincides with classical evaluation on two-valued interpretations
+			TruthValue value = v.isTwoValued() ? classical(v, conditions.get(a)) : v.evaluate(conditions.get(a));
+			if (value != v.get(a)) {
 				return false;
 			}
 		}
@@ -157,7 +212,7 @@ public final class BruteForceOracle {
 
 	private boolean someCompletionGives(ThreeValuedInterpretation v, Argument a, TruthValue target) {
 		for (Iterator<ThreeValuedInterpretation> it = v.completions(); it.hasNext();) {
-			if (it.next().evaluate(conditions.get(a)) == target) {
+			if (classical(it.next(), conditions.get(a)) == target) {
 				return true;
 			}
 		}

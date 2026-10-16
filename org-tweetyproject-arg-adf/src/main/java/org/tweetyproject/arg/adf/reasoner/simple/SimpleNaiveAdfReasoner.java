@@ -18,9 +18,10 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.semantics.TruthValue;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
  * Enumerates the naive interpretations (NA) of an ADF: the ≤_i-maximal
@@ -36,30 +37,16 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
  */
 public class SimpleNaiveAdfReasoner extends AbstractSimpleAdfReasoner {
 
-	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return threeValued(adf, this::verify);
-	}
+	private final SimpleConflictFreeAdfReasoner conflictFree = new SimpleConflictFreeAdfReasoner();
 
 	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		if (!SimpleConflictFreeAdfReasoner.isConflictFree(adf, v)) {
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		if (!conflictFree.isModel(adf, v)) {
 			return false;
 		}
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] == CompiledAdf.U) {
-				try {
-					v[a] = CompiledAdf.T;
-					if (SimpleConflictFreeAdfReasoner.isConflictFree(adf, v)) {
-						return false;
-					}
-					v[a] = CompiledAdf.F;
-					if (SimpleConflictFreeAdfReasoner.isConflictFree(adf, v)) {
-						return false;
-					}
-				} finally {
-					v[a] = CompiledAdf.U;
-				}
+		for (Argument a : v.undecided()) {
+			if (conflictFree.isModel(adf, v.with(a, TruthValue.TRUE)) || conflictFree.isModel(adf, v.with(a, TruthValue.FALSE))) {
+				return false;
 			}
 		}
 		return true;

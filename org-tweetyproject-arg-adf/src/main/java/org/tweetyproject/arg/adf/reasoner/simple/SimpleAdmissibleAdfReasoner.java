@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the admissible interpretations (ADM) of an ADF: the v with
@@ -32,22 +32,8 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleAdmissibleAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return threeValued(adf, SimpleAdmissibleAdfReasoner::isAdmissible);
-	}
-
-	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return isAdmissible(adf, v);
-	}
-
-	static boolean isAdmissible(CompiledAdf adf, byte[] v) {
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] != CompiledAdf.U && adf.gamma(a, v) != v[a]) {
-				return false;
-			}
-		}
-		return true;
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		return CharacteristicOperator.apply(adf, v).isAtLeastAsInformativeAs(v);
 	}
 
 }

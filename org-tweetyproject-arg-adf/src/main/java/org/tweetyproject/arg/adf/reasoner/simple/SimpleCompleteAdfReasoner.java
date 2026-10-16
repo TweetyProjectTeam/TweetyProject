@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the complete interpretations (CO) of an ADF: the fixpoints
@@ -32,22 +32,8 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleCompleteAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return threeValued(adf, SimpleCompleteAdfReasoner::isComplete);
-	}
-
-	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return isComplete(adf, v);
-	}
-
-	static boolean isComplete(CompiledAdf adf, byte[] v) {
-		for (int a = 0; a < v.length; a++) {
-			if (adf.gamma(a, v) != v[a]) {
-				return false;
-			}
-		}
-		return true;
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		return CharacteristicOperator.apply(adf, v).equals(v);
 	}
 
 }

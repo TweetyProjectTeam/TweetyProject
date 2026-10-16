@@ -18,9 +18,11 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.semantics.TruthValue;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
  * Enumerates the conflict-free interpretations (CF) of an ADF in the sense of
@@ -34,18 +36,12 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleConflictFreeAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return threeValued(adf, SimpleConflictFreeAdfReasoner::isConflictFree);
-	}
-
-	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return isConflictFree(adf, v);
-	}
-
-	static boolean isConflictFree(CompiledAdf adf, byte[] v) {
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] != CompiledAdf.U && !adf.hasCompletion(a, v, v[a])) {
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		requireDomain(adf, v);
+		for (Argument a : adf) {
+			TruthValue value = v.get(a);
+			// some completion makes phi_a true (false) iff not all of them make it false (true)
+			if (value.isDecided() && CharacteristicOperator.apply(adf, v, a) == value.not()) {
 				return false;
 			}
 		}

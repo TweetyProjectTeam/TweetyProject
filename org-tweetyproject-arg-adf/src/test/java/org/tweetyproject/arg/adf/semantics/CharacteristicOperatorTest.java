@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
+import org.tweetyproject.arg.adf.BruteForceOracle;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
@@ -57,7 +59,7 @@ class CharacteristicOperatorTest {
 		assertEquals(v(d1, "uutu"), v1);
 		assertEquals(v(d1, "uutf"), v2);
 		assertEquals(v2, v3);
-		assertEquals(v(d1, "uutf"), CompiledAdf.of(d1).decode(CompiledAdf.of(d1).grounded()));
+		assertEquals(v(d1, "uutf"), new SimpleGroundedAdfReasoner().getModel(d1));
 	}
 
 	@Test
@@ -95,7 +97,7 @@ class CharacteristicOperatorTest {
 		for (Argument a : adf) {
 			TruthValue value = null;
 			for (Iterator<ThreeValuedInterpretation> it = v.completions(); it.hasNext();) {
-				TruthValue w = it.next().evaluate(adf.getAcceptanceCondition(a));
+				TruthValue w = BruteForceOracle.classical(it.next(), adf.getAcceptanceCondition(a));
 				value = value == null ? w : value.consensus(w);
 			}
 			result.put(a, value);

@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.arg.adf.reasoner.simple;
 
-import java.util.List;
-
-import org.tweetyproject.arg.adf.semantics.CompiledAdf;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
  * Enumerates the two-valued models (MOD) of an ADF: the two-valued
@@ -32,18 +32,18 @@ import org.tweetyproject.arg.adf.semantics.CompiledAdf;
 public class SimpleTwoValuedModelAdfReasoner extends AbstractSimpleAdfReasoner {
 
 	@Override
-	protected List<byte[]> models(CompiledAdf adf) {
-		return twoValued(adf, SimpleTwoValuedModelAdfReasoner::isTwoValuedModel);
+	protected boolean isTwoValued() {
+		return true;
 	}
 
 	@Override
-	protected boolean verify(CompiledAdf adf, byte[] v) {
-		return isTwoValuedModel(adf, v);
-	}
-
-	static boolean isTwoValuedModel(CompiledAdf adf, byte[] v) {
-		for (int a = 0; a < v.length; a++) {
-			if (v[a] == CompiledAdf.U || adf.kleene(a, v) != v[a]) {
+	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		requireDomain(adf, v);
+		if (!v.isTwoValued()) {
+			return false;
+		}
+		for (Argument a : adf) {
+			if (v.evaluate(adf.getAcceptanceCondition(a)) != v.get(a)) {
 				return false;
 			}
 		}
