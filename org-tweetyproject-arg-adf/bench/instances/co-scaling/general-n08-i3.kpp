@@ -1,0 +1,16 @@
+s(a0).
+s(a1).
+s(a2).
+s(a3).
+s(a4).
+s(a5).
+s(a6).
+s(a7).
+ac(a0,and(iff(and(a6,a5),neg(a5)),a5)).
+ac(a1,xor(xor(a4,a1),and(a1,a4))).
+ac(a2,a5).
+ac(a3,a4).
+ac(a4,and(a2,imp(neg(a7),a7))).
+ac(a5,imp(or(imp(a4,a3),xor(a4,a3)),a3)).
+ac(a6,neg(or(and(a4,a1),neg(a1)))).
+ac(a7,or(a3,imp(a7,a3))).

@@ -1,0 +1,8 @@
+s(a0).
+s(a1).
+s(a2).
+s(a3).
+ac(a0,iff(and(a1,a3),iff(a3,a1))).
+ac(a1,a0).
+ac(a2,neg(neg(and(a3,a2)))).
+ac(a3,or(or(or(a0,a2),xor(a2,a0)),a0)).
