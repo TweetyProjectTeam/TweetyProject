@@ -91,24 +91,18 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	}
 
 	/**
-	 * Decides whether the given interpretation is a model of the ADF.
+	 * Decides whether the given interpretation is a model of the ADF (the
+	 * verification problem). Every reasoner implements this directly, i.e.
+	 * without enumerating the models, since verification is usually much easier
+	 * than enumeration: polynomial for two- and three-valued models, one Γ check
+	 * per argument for admissible and complete interpretations.
 	 *
 	 * @param adf an ADF
 	 * @param v   an interpretation over the arguments of the ADF
 	 * @return true if v is a model
 	 * @throws IllegalArgumentException if the domain of v differs from the arguments of the ADF
 	 */
-	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		requireDomain(adf, v);
-		try (ModelIterator it = modelIterator(adf)) {
-			while (it.hasNext()) {
-				if (it.next().equals(v)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	public abstract boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v);
 
 	/**
 	 * @param adf      an ADF
