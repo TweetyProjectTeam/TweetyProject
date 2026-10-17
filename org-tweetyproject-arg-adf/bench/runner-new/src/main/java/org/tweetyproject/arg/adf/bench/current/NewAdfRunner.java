@@ -10,7 +10,9 @@ import java.util.function.Supplier;
 import org.tweetyproject.arg.adf.bench.common.RunnerSupport;
 import org.tweetyproject.arg.adf.io.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatConflictFreeAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleThreeValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
@@ -66,6 +68,8 @@ public class NewAdfRunner implements RunnerSupport.Implementation<AbstractDialec
 			return switch (semantics) {
 				case "MOD" -> new SatTwoValuedModelAdfReasoner(solvers);
 				case "GR" -> new SatGroundedAdfReasoner(solvers);
+				case "CF" -> new SatConflictFreeAdfReasoner(solvers);
+				case "NA" -> new SatNaiveAdfReasoner(solvers);
 				default -> throw new UnsupportedOperationException("No SAT reasoner for " + semantics + " yet");
 			};
 		}
