@@ -14,6 +14,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.SatAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatConflictFreeAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleThreeValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
@@ -72,6 +73,7 @@ public class NewAdfRunner implements RunnerSupport.Implementation<AbstractDialec
 				case "CF" -> new SatConflictFreeAdfReasoner(solvers);
 				case "NA" -> new SatNaiveAdfReasoner(solvers);
 				case "ADM" -> new SatAdmissibleAdfReasoner(solvers);
+				case "PR" -> new SatPreferredAdfReasoner(solvers);
 				default -> throw new UnsupportedOperationException("No SAT reasoner for " + semantics + " yet");
 			};
 		}
