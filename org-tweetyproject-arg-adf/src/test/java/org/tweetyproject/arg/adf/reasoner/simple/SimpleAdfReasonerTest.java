@@ -45,6 +45,7 @@ import java.util.concurrent.CancellationException;
 
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -67,6 +68,7 @@ class SimpleAdfReasonerTest {
 	private static final AbstractAdfReasoner GR = new SimpleGroundedAdfReasoner();
 	private static final AbstractAdfReasoner PR = new SimplePreferredAdfReasoner();
 	private static final AbstractAdfReasoner ST = new SimpleStableAdfReasoner();
+	private static final AbstractAdfReasoner IS = new SimpleInitialAdfReasoner();
 	private static final List<AbstractAdfReasoner> ALL = List.of(MOD, MOD3, CF, NA, ADM, CO, GR, PR, ST);
 
 	private static Set<ThreeValuedInterpretation> models(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf) {
@@ -94,6 +96,27 @@ class SimpleAdfReasonerTest {
 		AbstractDialecticalFramework d2 = adf(D2);
 		assertEquals(vs(d2, "tftfft", "tftftf", "fttttf", "ftttft"), models(MOD, d2));
 		assertTrue(MOD3.isModel(d2, v(d2, "ftuutf")));
+	}
+
+	/** Example 1 and 2 of Strass and Wallner (COMMA 2026) */
+	@Test
+	void initialModelsSeparateIndependentArguments() {
+		AbstractDialecticalFramework adf = adf("s(a). s(b). s(c). ac(a,b). ac(b,a). ac(c,c).");
+		assertEquals(vs(adf, "ttu", "ffu", "uut", "uuf"), models(IS, adf));
+		assertTrue(IS.isModel(adf, v(adf, "ttu")));
+		assertFalse(IS.isModel(adf, v(adf, "ttt")));
+		assertFalse(IS.isModel(adf, v(adf, "uuu")));
+	}
+
+	@Test
+	void noInitialModelIfOnlyTheTrivialInterpretationIsAdmissible() {
+		AbstractDialecticalFramework adf = adf("s(a). ac(a,neg(a)).");
+		Argument a = new Argument("a");
+		assertEquals(Set.of(), models(IS, adf));
+		assertEquals(Set.of(), models(IS, new AbstractDialecticalFramework()));
+		assertNull(IS.getModel(adf));
+		assertFalse(IS.query(adf, a, InferenceMode.CREDULOUS));
+		assertTrue(IS.query(adf, a, InferenceMode.SKEPTICAL));
 	}
 
 	@Test
@@ -255,6 +278,15 @@ class SimpleAdfReasonerTest {
 			assertEquals(canonical(af, Semantics.ST), models(MOD, adf), context);
 			assertTrue(models(ADM, adf).containsAll(canonical(af, Semantics.ADM)), context);
 			assertTrue(models(CF, adf).containsAll(canonical(af, Semantics.CF)), context);
+			Set<Set<Argument>> initial = new HashSet<>();
+			for (ThreeValuedInterpretation v : models(IS, adf)) {
+				initial.add(v.satisfied());
+			}
+			Set<Set<Argument>> initialSets = new HashSet<>();
+			for (ThreeValuedInterpretation v : canonical(af, Semantics.IS)) {
+				initialSets.add(v.satisfied());
+			}
+			assertEquals(initialSets, initial, context);
 		}
 	}
 
@@ -288,7 +320,9 @@ class SimpleAdfReasonerTest {
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.PR) instanceof SimplePreferredAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.NA) instanceof SimpleNaiveAdfReasoner);
 		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SST));
+		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.IS) instanceof SimpleInitialAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.PR) instanceof SatPreferredAdfReasoner);
+		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.IS) instanceof SatInitialAdfReasoner);
 		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.SST));
 	}
 

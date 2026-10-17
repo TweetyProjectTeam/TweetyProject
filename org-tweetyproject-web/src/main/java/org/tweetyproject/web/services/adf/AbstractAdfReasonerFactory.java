@@ -45,7 +45,7 @@ public abstract class AbstractAdfReasonerFactory {
      * @return An array of all available semantics.
      */
     public static Semantics[] getSemantics() {
-        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA};
+        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA,Semantics.IS};
     }
 
     /**

@@ -162,6 +162,24 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 	}
 
 	/**
+	 * @return an admissible model of the encoding under the assumptions, or null;
+	 *         if the encoding is not exact, the candidates that are not admissible
+	 *         are excluded
+	 */
+	ThreeValuedInterpretation next(AbstractDialecticalFramework adf, ThreeValuedEncoding encoding, SatSolver solver, boolean exact, int[] assumptions) {
+		int[] variables = encoding.variables();
+		boolean[] witness;
+		while ((witness = solver.witness(variables, assumptions)) != null) {
+			ThreeValuedInterpretation candidate = encoding.decode(witness);
+			if (exact || isAdmissible(adf, candidate)) {
+				return candidate;
+			}
+			encoding.exclude(candidate);
+		}
+		return null;
+	}
+
+	/**
 	 * Adds the k-bipolar encoding if k is smaller than the bound, and the
 	 * conflict-free encoding with the bipolar clauses otherwise.
 	 *

@@ -63,7 +63,7 @@ class RequestControllerAdfTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","NA"
+                            "CF","ADM","CO","GR","PR","ST","NA","IS"
                           ],
                           "commands": [
                             "get_models",

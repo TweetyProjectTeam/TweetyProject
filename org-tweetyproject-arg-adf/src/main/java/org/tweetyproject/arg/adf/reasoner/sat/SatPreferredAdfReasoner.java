@@ -101,7 +101,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 				encoding.addAdmissible(types, g, exact);
 				encoding.addMoreInformativeThan(g);
 				ThreeValuedInterpretation model;
-				while (models.size() < limit && (model = next(adf, encoding, solver, exact, NO_ASSUMPTIONS)) != null) {
+				while (models.size() < limit && (model = admissible.next(adf, encoding, solver, exact, NO_ASSUMPTIONS)) != null) {
 					checkInterrupted();
 					model = maximize(adf, types, exact, model);
 					models.add(model);
@@ -126,7 +126,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			ThreeValuedInterpretation maximal = v;
 			while (!maximal.isTwoValued()) {
 				encoding.addMoreInformativeThan(maximal);
-				ThreeValuedInterpretation larger = next(adf, encoding, solver, exact, NO_ASSUMPTIONS);
+				ThreeValuedInterpretation larger = admissible.next(adf, encoding, solver, exact, NO_ASSUMPTIONS);
 				if (larger == null) {
 					break;
 				}
@@ -134,24 +134,6 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			}
 			return maximal;
 		}
-	}
-
-	/**
-	 * @return an admissible model of the encoding under the assumptions, or null;
-	 *         if the encoding is not exact, the candidates that are not admissible
-	 *         are excluded
-	 */
-	private ThreeValuedInterpretation next(AbstractDialecticalFramework adf, ThreeValuedEncoding encoding, SatSolver solver, boolean exact, int[] assumptions) {
-		int[] variables = encoding.variables();
-		boolean[] witness;
-		while ((witness = solver.witness(variables, assumptions)) != null) {
-			ThreeValuedInterpretation candidate = encoding.decode(witness);
-			if (exact || admissible.isModel(adf, candidate)) {
-				return candidate;
-			}
-			encoding.exclude(candidate);
-		}
-		return null;
 	}
 
 	@Override
@@ -170,13 +152,13 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 			encoding.addAdmissible(types, g, exact);
 			encoding.addMoreInformativeThan(g);
-			if (next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null) {
+			if (admissible.next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null) {
 				// g is the only preferred interpretation
 				return false;
 			}
 			int[] notTrue = { -encoding.trueVariable(argument) };
 			ThreeValuedInterpretation model;
-			while ((model = next(adf, encoding, solver, exact, notTrue)) != null) {
+			while ((model = admissible.next(adf, encoding, solver, exact, notTrue)) != null) {
 				checkInterrupted();
 				try (SatSolver maximizer = solvers.get()) {
 					ThreeValuedEncoding maximal = new ThreeValuedEncoding(adf, maximizer);
@@ -184,13 +166,13 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 					int at = maximal.trueVariable(argument);
 					while (!model.isTwoValued()) {
 						maximal.addMoreInformativeThan(model);
-						ThreeValuedInterpretation larger = next(adf, maximal, maximizer, exact, new int[] { -at });
+						ThreeValuedInterpretation larger = admissible.next(adf, maximal, maximizer, exact, new int[] { -at });
 						if (larger == null) {
 							break;
 						}
 						model = larger;
 					}
-					if (model.isTwoValued() || next(adf, maximal, maximizer, exact, new int[] { at }) == null) {
+					if (model.isTwoValued() || admissible.next(adf, maximal, maximizer, exact, new int[] { at }) == null) {
 						return false;
 					}
 				}
@@ -215,7 +197,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 			encoding.addAdmissible(types, v, exact);
 			encoding.addMoreInformativeThan(v);
-			return next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null;
+			return admissible.next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null;
 		}
 	}
 

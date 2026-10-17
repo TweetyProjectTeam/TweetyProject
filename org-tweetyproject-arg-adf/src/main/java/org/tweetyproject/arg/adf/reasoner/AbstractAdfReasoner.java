@@ -26,6 +26,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.SatAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatCompleteAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatConflictFreeAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatStableAdfReasoner;
@@ -33,6 +34,7 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleCompleteAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleConflictFreeAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
@@ -131,7 +133,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 
 	/**
 	 * Returns the simple reference reasoner for one of the semantics CF, NA,
-	 * ADM, CO, GR, PR and ST. Two- and three-valued models have no constant in
+	 * ADM, CO, GR, PR, ST and IS. Two- and three-valued models have no constant in
 	 * {@link Semantics}; use {@code SimpleTwoValuedModelAdfReasoner} and
 	 * {@code SimpleThreeValuedModelAdfReasoner} directly.
 	 *
@@ -155,6 +157,8 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SimplePreferredAdfReasoner();
 			case ST:
 				return new SimpleStableAdfReasoner();
+			case IS:
+				return new SimpleInitialAdfReasoner();
 			default:
 				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
 		}
@@ -162,7 +166,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 
 	/**
 	 * Returns the SAT-based reasoner with the {@code Sat4jIncrementalSolver} for
-	 * one of the semantics CF, NA, ADM, CO, GR, PR and ST. Two-valued models have
+	 * one of the semantics CF, NA, ADM, CO, GR, PR, ST and IS. Two-valued models have
 	 * no constant in {@link Semantics}; use {@code SatTwoValuedModelAdfReasoner}
 	 * directly.
 	 *
@@ -186,6 +190,8 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SatPreferredAdfReasoner();
 			case ST:
 				return new SatStableAdfReasoner();
+			case IS:
+				return new SatInitialAdfReasoner();
 			default:
 				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
 		}

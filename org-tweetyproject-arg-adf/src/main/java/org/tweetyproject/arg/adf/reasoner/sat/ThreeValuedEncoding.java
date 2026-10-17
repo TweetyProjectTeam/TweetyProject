@@ -309,6 +309,43 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
+	 * Restricts the models to interpretations that are strictly less informative
+	 * than v.
+	 *
+	 * @param v an interpretation that is not trivial
+	 */
+	void addLessInformativeThan(ThreeValuedInterpretation v) {
+		for (Argument s : arguments) {
+			TruthValue value = v.get(s);
+			if (value != TruthValue.TRUE) {
+				solver.add(-trueVariables.get(s));
+			}
+			if (value != TruthValue.FALSE) {
+				solver.add(-falseVariables.get(s));
+			}
+		}
+		excludeMoreInformative(v);
+	}
+
+	/**
+	 * Excludes v and all more informative interpretations from the models.
+	 *
+	 * @param v an interpretation that is not trivial
+	 */
+	void excludeMoreInformative(ThreeValuedInterpretation v) {
+		List<Integer> clause = new ArrayList<>();
+		for (Argument s : arguments) {
+			TruthValue value = v.get(s);
+			if (value == TruthValue.TRUE) {
+				clause.add(-trueVariables.get(s));
+			} else if (value == TruthValue.FALSE) {
+				clause.add(-falseVariables.get(s));
+			}
+		}
+		solver.add(clause.stream().mapToInt(Integer::intValue).toArray());
+	}
+
+	/**
 	 * Excludes v and all less informative interpretations from the models.
 	 *
 	 * @param v an interpretation
