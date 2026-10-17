@@ -1,6 +1,6 @@
 package org.tweetyproject.logics.translators.adfcl;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -10,16 +10,13 @@ import org.tweetyproject.logics.cl.syntax.ClBeliefSet;
 import org.tweetyproject.logics.cl.semantics.RankingFunction;
 import org.tweetyproject.logics.cl.reasoner.ZReasoner;
 
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
-import org.tweetyproject.arg.adf.reasoner.GroundReasoner;
-import org.tweetyproject.arg.adf.reasoner.ModelReasoner;
-import org.tweetyproject.arg.adf.reasoner.PreferredReasoner;
-import org.tweetyproject.arg.adf.reasoner.StableReasoner;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatTwoValuedModelAdfReasoner;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * This class compares the inference behavior of Abstract Dialectical Frameworks (AFDs) and Ranking Functions (OCFs)
@@ -43,10 +40,7 @@ public class CompareInference {
 		/*
 		 * Step 1: Create ADF from text file
 		 */
-		NativeMinisatSolver solver = new NativeMinisatSolver();
-		LinkStrategy strat = new SatLinkStrategy(solver);
-		KppADFFormatParser parser = new KppADFFormatParser(strat, true);
-		AbstractDialecticalFramework adf = parser.parse(new File(path_to_file));
+		AbstractDialecticalFramework adf = new KppAdfParser().parse(Path.of(path_to_file));
 		
 		/*
 		 * Step 2: Create conditional belief base from ADF
@@ -77,22 +71,22 @@ public class CompareInference {
 			
 			// ADF semantics
 			// grounded
-			AbstractDialecticalFrameworkReasoner reasoner_adf = new GroundReasoner(solver);
+			AbstractAdfReasoner reasoner_adf = new SatGroundedAdfReasoner();
 			System.out.println("----------------------------------------");
 			System.out.println("ADF grounded semantics:");		
 			converter.compareInference(adf,reasoner_adf,kappa);
 			// preferred
-			reasoner_adf = new PreferredReasoner(solver);
+			reasoner_adf = new SatPreferredAdfReasoner();
 			System.out.println("----------------------------------------");
 			System.out.println("ADF preferred semantics:");
 			converter.compareInference(adf,reasoner_adf,kappa);
 			// 2-valued
-			reasoner_adf = new ModelReasoner(solver);
+			reasoner_adf = new SatTwoValuedModelAdfReasoner();
 			System.out.println("----------------------------------------");
 			System.out.println("ADF 2-valued semantics:");
 			converter.compareInference(adf,reasoner_adf,kappa);
 			// stable
-			reasoner_adf = new StableReasoner(solver);
+			reasoner_adf = new SatStableAdfReasoner();
 			System.out.println("----------------------------------------");
 			System.out.println("ADF stable semantics:");
 			converter.compareInference(adf,reasoner_adf,kappa);

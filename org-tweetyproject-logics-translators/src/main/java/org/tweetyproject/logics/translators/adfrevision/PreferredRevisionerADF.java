@@ -1,21 +1,17 @@
 package org.tweetyproject.logics.translators.adfrevision;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
-import org.tweetyproject.arg.adf.reasoner.PreferredReasoner;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
-import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
@@ -43,13 +39,10 @@ public class PreferredRevisionerADF {
 		 * Step 1: Create an ADF D from text file
 		 */
 		System.out.println("Step 1: Read ADF from file:");
-		NativeMinisatSolver solver = new NativeMinisatSolver();
-		LinkStrategy strat = new SatLinkStrategy(solver);
-		KppADFFormatParser parser_adf = new KppADFFormatParser(strat, true);
-		AbstractDialecticalFramework adf = parser_adf.parse(new File(path_to_adf));
-		for (Argument ar : adf.getArguments()) {
+		AbstractDialecticalFramework adf = new KppAdfParser().parse(Path.of(path_to_adf));
+		for (Argument ar : adf.getNodes()) {
 			System.out.println("Argument: \t\t " + ar);
-			AcceptanceCondition ac = adf.getAcceptanceCondition(ar);
+			PlFormula ac = adf.getAcceptanceCondition(ar);
 			System.out.println("Acceptance Condition \t" + ac);
 		}
 		
@@ -59,8 +52,8 @@ public class PreferredRevisionerADF {
 		 * Step 2: Calculate preferred models of D
 		 */
 		System.out.println("Step 2: Calculate preferred extensions:");
-		AbstractDialecticalFrameworkReasoner reasoner_adf = new PreferredReasoner(solver);
-		Collection<Interpretation> extensions = reasoner_adf.getModels(adf);
+		AbstractAdfReasoner reasoner_adf = new SatPreferredAdfReasoner();
+		Collection<ThreeValuedInterpretation> extensions = reasoner_adf.getModels(adf);
 		System.out.println(extensions);
 		System.out.println("------------------------------------------");
 		
@@ -71,7 +64,7 @@ public class PreferredRevisionerADF {
 		// Translate extensions into PriestWorlds
 		System.out.println("Step 3: Translate extensions to (3-valued) PriestWorlds:");
 		HashSet<PriestWorldAdapted> extensions_priest = new HashSet<PriestWorldAdapted>();
-		for (Interpretation ex : extensions) {
+		for (ThreeValuedInterpretation ex : extensions) {
 			
 			PriestWorldAdapted pw = new PriestWorldAdapted();
 			for (Argument arg : ex.satisfied()) {
@@ -89,7 +82,7 @@ public class PreferredRevisionerADF {
 		
 		// Extract Signature from ADF
 		PlSignature sig = new PlSignature();
-		for (Argument arg : adf.getArguments()) {
+		for (Argument arg : adf.getNodes()) {
 			sig.add(new Proposition(arg.getName()));
 		}
 		System.out.println("Signature: " + sig);
