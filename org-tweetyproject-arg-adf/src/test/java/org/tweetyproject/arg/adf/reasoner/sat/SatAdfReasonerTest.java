@@ -19,7 +19,11 @@
 package org.tweetyproject.arg.adf.reasoner.sat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.tweetyproject.arg.adf.AdfTestSupport.BREWKA_2;
+import static org.tweetyproject.arg.adf.AdfTestSupport.adf;
 import static org.tweetyproject.arg.adf.AdfTestSupport.randomAdf;
 
 import java.util.Collection;
@@ -150,12 +154,34 @@ class SatAdfReasonerTest {
 		}
 	}
 
+	@Test
+	void stableAgreesWithOracle() {
+		Random rng = new Random(10);
+		SatStableAdfReasoner reasoner = new SatStableAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).st());
+		}
+	}
+
+	@Test
+	void stableCyclicSupport() {
+		AbstractDialecticalFramework adf = adf(BREWKA_2);
+		SatStableAdfReasoner reasoner = new SatStableAdfReasoner();
+		Argument a = new Argument("a");
+		assertTrue(reasoner.getModels(adf).isEmpty());
+		assertNull(reasoner.getModel(adf));
+		assertFalse(reasoner.query(adf, a, InferenceMode.CREDULOUS));
+		assertTrue(reasoner.query(adf, a, InferenceMode.SKEPTICAL));
+	}
+
 	/** Compares enumeration, {@code getModel} and {@code isModel} on all interpretations. */
 	private static void assertAgreesWithOracle(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf, Set<ThreeValuedInterpretation> expected) {
 		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
 		assertEquals(expected, new HashSet<>(models), adf.toString());
 		assertEquals(expected.size(), models.size(), "duplicate models on " + adf);
-		assertTrue(expected.contains(reasoner.getModel(adf)), adf.toString());
+		ThreeValuedInterpretation some = reasoner.getModel(adf);
+		assertTrue(some == null ? expected.isEmpty() : expected.contains(some), adf.toString());
 		for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
 			assertEquals(expected.contains(v), reasoner.isModel(adf, v), v + " on " + adf);
 		}
@@ -180,6 +206,7 @@ class SatAdfReasonerTest {
 		assertEquals(empty, Set.copyOf(new SatNaiveAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatAdmissibleAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatPreferredAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatStableAdfReasoner().getModels(adf)));
 	}
 
 }
