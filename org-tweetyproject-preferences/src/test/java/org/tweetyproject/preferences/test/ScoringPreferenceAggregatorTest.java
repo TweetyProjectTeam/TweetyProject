@@ -18,9 +18,12 @@
  */
 package org.tweetyproject.preferences.test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import org.junit.*;
+import org.tweetyproject.math.opt.solver.LpSolve;
+import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.preferences.PreferenceOrder;
 import org.tweetyproject.preferences.aggregation.BordaScoringPreferenceAggregator;
 import org.tweetyproject.preferences.aggregation.PluralityScoringPreferenceAggregator;
@@ -69,16 +72,19 @@ public class ScoringPreferenceAggregatorTest {
 		return null;
 	}
 	/**
-	 * initialize orders
+	 * initialize orders from the test files on the classpath; the aggregators
+	 * need an integer linear solver, so the tests are skipped without lp_solve
+	 * @throws Exception if a test file cannot be located
 	 */
-	public void initializeOrders(){
+	@Before
+	public void initializeOrders() throws Exception {
+		Assume.assumeTrue("lp_solve is not installed", LpSolve.isInstalled());
+		Solver.setDefaultIntegerLinearSolver(new LpSolve());
 		for(int i = 0; i < files.length; i++){
-			PreferenceOrder<String> po = parseFile(files[i]);
-			if (!po.equals(null)){
-//				if(po.isValid()){
-					orders.add(po);
-//				}
-			}
+			String path = new File(getClass().getResource("/" + files[i]).toURI()).getPath();
+			PreferenceOrder<String> po = parseFile(path);
+			assertNotNull("could not parse " + files[i], po);
+			orders.add(po);
 		}
 	}
 	/**
