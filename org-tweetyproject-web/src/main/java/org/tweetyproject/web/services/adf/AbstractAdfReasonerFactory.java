@@ -18,15 +18,12 @@
  */
 package org.tweetyproject.web.services.adf;
 
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.reasoner.*;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.commons.ParserException;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,7 +45,7 @@ public abstract class AbstractAdfReasonerFactory {
      * @return An array of all available semantics.
      */
     public static Semantics[] getSemantics() {
-        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA};
+        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA,Semantics.IS};
     }
 
     /**
@@ -58,24 +55,8 @@ public abstract class AbstractAdfReasonerFactory {
      * @param sem some identifier of a semantics.
      * @return the requested reasoner.
      */
-    public static AbstractADFReasoner getReasoner(Semantics sem) {
-        switch (sem) {
-            case CF -> {
-                return new ConflictFreeReasoner(new NativeMinisatSolver());
-            } case ADM -> {
-                return new AdmissibleReasoner(new NativeMinisatSolver());
-            } case CO -> {
-                return new CompleteReasoner(new NativeMinisatSolver());
-            } case PR -> {
-                return new PreferredReasoner(new NativeMinisatSolver());
-            } case GR -> {
-                return new GroundReasoner(new NativeMinisatSolver());
-            } case ST -> {
-                return new StableReasoner(new NativeMinisatSolver());
-            } case NA -> {
-                return new NaiveReasoner(new NativeMinisatSolver());
-            } default -> throw new IllegalArgumentException("unsupported semantics");
-        }
+    public static AbstractAdfReasoner getReasoner(Semantics sem) {
+        return AbstractAdfReasoner.getSatReasonerForSemantics(sem);
     }
 
     /**
@@ -92,13 +73,10 @@ public abstract class AbstractAdfReasonerFactory {
         for (String condition : conditions) {
             s.append(condition).append(".\n");
         }
-        NativeMinisatSolver solver = new NativeMinisatSolver();
-        LinkStrategy strat = new SatLinkStrategy(solver);
-        KppADFFormatParser parser = new KppADFFormatParser(strat, true);
         try {
-            return parser.parse(s.toString());
-        } catch (IOException ignored) {
-            throw new IllegalArgumentException("syntactical error in adf conditions");
+            return new KppAdfParser().parse(s.toString());
+        } catch (ParserException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("syntactical error in adf conditions", e);
         }
     }
 }

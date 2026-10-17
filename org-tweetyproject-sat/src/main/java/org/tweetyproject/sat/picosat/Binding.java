@@ -1,14 +1,11 @@
 package org.tweetyproject.sat.picosat;
 
+import org.tweetyproject.sat.NativeLibrary;
+
 final class Binding {
 	
 	static {
-		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.contains("win")) {
-			System.load(Binding.class.getResource("/picosat.dll").getPath());			
-		} else if (osName.contains("nux")) {
-			System.load(Binding.class.getResource("/picosat.so").getPath());			
-		}
+		NativeLibrary.load("picosat");
 	}
 	
 	static final int NO_DECISION_LIMIT = -1;

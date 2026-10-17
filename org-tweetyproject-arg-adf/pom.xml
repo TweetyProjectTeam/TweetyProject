@@ -18,14 +18,24 @@
     </parent>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.tweetyproject.arg</groupId>
             <artifactId>dung</artifactId>
+            <version>1.31-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tweetyproject.logics</groupId>
+            <artifactId>pl</artifactId>
+            <version>1.31-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tweetyproject</groupId>
+            <artifactId>sat</artifactId>
             <version>1.31-SNAPSHOT</version>
         </dependency>
     </dependencies>

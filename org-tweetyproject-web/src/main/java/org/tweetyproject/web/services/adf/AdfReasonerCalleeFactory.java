@@ -19,8 +19,8 @@
 package org.tweetyproject.web.services.adf;
 
 
-import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
 
@@ -87,16 +87,16 @@ public class AdfReasonerCalleeFactory {
     }
 
     /**
-     * Creates and returns a Callee instance based on the provided Command, AbstractADFReasoner,
+     * Creates and returns a Callee instance based on the provided Command, AbstractAdfReasoner,
      * and ADF parameters.
      *
      * @param cmd      The command to be executed
-     * @param reasoner The AbstractADFReasoner to be used
+     * @param reasoner The AbstractAdfReasoner to be used
      * @param bbase    The ADF to be processed
      * @return A Callee instance corresponding to the specified command
      * @throws RuntimeException If the specified command is not found
      */
-    public static Callee getCallee(Command cmd, AbstractADFReasoner reasoner, AbstractDialecticalFramework bbase) {
+    public static Callee getCallee(Command cmd, AbstractAdfReasoner reasoner, AbstractDialecticalFramework bbase) {
         switch (cmd) {
             case GET_MODELS:
                 return new AdfReasonerGetModelsCallee(reasoner, bbase);

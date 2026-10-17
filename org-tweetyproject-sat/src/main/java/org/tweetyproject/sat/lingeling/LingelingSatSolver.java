@@ -29,6 +29,8 @@ public final class LingelingSatSolver implements SatSolver {
      */
     private int currentVar = 1;
 
+    private boolean closed;
+
     /**
      * Initializes a new instance of the Lingeling SAT solver.
      *
@@ -51,8 +53,8 @@ public final class LingelingSatSolver implements SatSolver {
      */
     @Override
     public boolean satisfiable(int[] assumptions) {
-        assume(handle, assumptions);
-        return Binding.sat(handle);
+        assume(handle(), assumptions);
+        return Binding.sat(handle());
     }
 
     /**
@@ -76,7 +78,7 @@ public final class LingelingSatSolver implements SatSolver {
             }
             return witness;
         }
-        return new boolean[0];
+        return null;
     }
 
     /**
@@ -87,9 +89,9 @@ public final class LingelingSatSolver implements SatSolver {
     @Override
     public void add(int[] clause) {
         for (int i = 0; i < clause.length; i++) {
-            Binding.add(handle, clause[i]);
+            Binding.add(handle(), clause[i]);
         }
-        Binding.add(handle, 0); // 0 indicates end of clause
+        Binding.add(handle(), 0); // 0 indicates end of clause
     }
 
     /**
@@ -104,6 +106,8 @@ public final class LingelingSatSolver implements SatSolver {
      */
     @Override
     public int newVar() {
+        // Lingeling only accepts assumptions on frozen variables
+        Binding.freeze(handle(), currentVar);
         return currentVar++;
     }
 
@@ -117,7 +121,10 @@ public final class LingelingSatSolver implements SatSolver {
      */
     @Override
     public void close() {
-        Binding.release(handle);
+        if (!closed) {
+            closed = true;
+            Binding.release(handle);
+        }
     }
 
     /**
@@ -125,6 +132,13 @@ public final class LingelingSatSolver implements SatSolver {
      * @param handle the handle to the Lingeling solver instance
      * @param assumptions an array of literals that are assumed to be true
      */
+    private long handle() {
+        if (closed) {
+            throw new IllegalStateException("The solver is closed.");
+        }
+        return handle;
+    }
+
     private static void assume(long handle, int[] assumptions) {
         for (int i = 0; i < assumptions.length; i++) {
             Binding.assume(handle, assumptions[i]);

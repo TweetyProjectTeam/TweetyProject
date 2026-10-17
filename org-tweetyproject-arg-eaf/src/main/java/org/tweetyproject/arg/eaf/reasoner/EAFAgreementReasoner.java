@@ -288,8 +288,8 @@ public class EAFAgreementReasoner {
      * (e.g., in(a), out(a), or und(a)) is accepted by the majority under the specified inference
      * mode and semantics.
      *
-     * In credulous mode, the label must be satisfied in at least one labelling set (M φ).
-     * In skeptical mode, the label must be satisfied in all labelling sets (K φ).
+     * In credulous mode, the label must be satisfied in at least one labelling set (M phi).
+     * In skeptical mode, the label must be satisfied in all labelling sets (K phi).
      * The query label wins if it gets strictly more votes than any other label.
      *
      * @param query the argument label to evaluate, in the form in(arg), out(arg), or und(arg)
