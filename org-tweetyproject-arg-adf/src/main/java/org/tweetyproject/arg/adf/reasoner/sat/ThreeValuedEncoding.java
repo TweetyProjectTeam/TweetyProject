@@ -30,6 +30,7 @@ import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.Link;
 import org.tweetyproject.arg.adf.syntax.LinkType;
+import org.tweetyproject.arg.adf.util.TseitinEncoder;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.sat.SatSolver;
 
@@ -37,9 +38,9 @@ import org.tweetyproject.sat.SatSolver;
  * The encoding of three-valued interpretations of k++ADF: variables s_t and
  * s_f for the value of every argument s, and a variable p_rs for every link
  * (r, s), which represents the value of r in a completion considered for
- * phi_s. The building blocks of the conflict-free, bipolar and k-bipolar
- * encodings are added separately, together with the clauses φ_{&lt;_i},
- * Refine_≠ and Refine_&gt;.
+ * phi_s. The clauses of the conflict-free, bipolar and k-bipolar encodings are
+ * added separately, as are the clauses that restrict the models to more
+ * informative interpretations or exclude interpretations found before.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  *
@@ -64,7 +65,8 @@ final class ThreeValuedEncoding {
 	private int top;
 
 	/**
-	 * Adds the variables, the clauses ¬s_t ∨ ¬s_f and φ^pr_s for all arguments.
+	 * Adds the variables, the clauses ¬s_t ∨ ¬s_f, and the clauses that fix p_rs
+	 * to the value of r if r is decided.
 	 *
 	 * @param adf    an ADF, which must not be modified while the encoding is used
 	 * @param solver the solver the clauses are added to
@@ -95,7 +97,7 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds φ^Γ_s for all arguments s, which completes Φ_cf.
+	 * Adds the conflict-free clauses of all arguments.
 	 */
 	void addConflictFree() {
 		for (Argument s : arguments) {
@@ -104,7 +106,7 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds φ^Γ_s: phi_s is true (false) under the values p_rs if s_t (s_f).
+	 * Adds the conflict-free clauses of s: phi_s is true (false) under the values p_rs if s_t (s_f).
 	 *
 	 * @param s an argument
 	 */
@@ -116,7 +118,7 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds φ^bip: for an attacking (supporting) link (r, s), p_rs takes the value
+	 * Adds the bipolar clauses: for an attacking (supporting) link (r, s), p_rs takes the value
 	 * of r that is worst for s_t and s_f unless r is decided. Redundant and
 	 * dependent links are skipped.
 	 *
@@ -139,8 +141,8 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds the k-bipolar encoding of s in place of φ^Γ_s: for every assignment of
-	 * the dependent parents, phi_s under this assignment and the values p_rs of
+	 * Adds the k-bipolar encoding of s in place of its conflict-free clauses: for
+	 * every assignment of the dependent parents, phi_s under this assignment and the values p_rs of
 	 * the other parents is true (false) if s_t (s_f) and no dependent parent is
 	 * decided otherwise.
 	 *
@@ -170,10 +172,10 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds φ^bip and, for every argument s, the k-bipolar encoding over the
-	 * dependent parents of s that are undecided in v, or φ^Γ_s if there are none
-	 * or the k-bipolar encoding is not used. Requires that the models are at
-	 * least as informative as v.
+	 * Adds the bipolar clauses and, for every argument s, the k-bipolar encoding
+	 * over the dependent parents of s that are undecided in v, or the
+	 * conflict-free clauses of s if there are none or the k-bipolar encoding is
+	 * not used. Requires that the models are at least as informative as v.
 	 *
 	 * @param types    the types of the links
 	 * @param v        an interpretation
@@ -286,8 +288,8 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds φ_{&lt;_i}, which restricts the models to interpretations that are
-	 * strictly more informative than v.
+	 * Restricts the models to interpretations that are strictly more informative
+	 * than v.
 	 *
 	 * @param v an interpretation that is not two-valued
 	 */
@@ -308,7 +310,7 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds Refine_≠, which excludes v.
+	 * Excludes v from the models.
 	 *
 	 * @param v an interpretation
 	 */
@@ -329,7 +331,7 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
-	 * Adds Refine_&gt;, which excludes v and all less informative interpretations.
+	 * Excludes v and all less informative interpretations from the models.
 	 *
 	 * @param v an interpretation
 	 */

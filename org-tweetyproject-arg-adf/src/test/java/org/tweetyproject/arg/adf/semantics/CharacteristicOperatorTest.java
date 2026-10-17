@@ -42,7 +42,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 class CharacteristicOperatorTest {
 
 	@Test
-	void courseExampleGamma() {
+	void exampleGamma() {
 		AbstractDialecticalFramework d1 = adf(D1);
 		ThreeValuedInterpretation v = v(d1, "tfuu");
 		assertEquals(v(d1, "tftu"), CharacteristicOperator.apply(d1, v));
@@ -51,7 +51,7 @@ class CharacteristicOperatorTest {
 	}
 
 	@Test
-	void courseExampleGroundedIteration() {
+	void exampleGroundedIteration() {
 		AbstractDialecticalFramework d1 = adf(D1);
 		ThreeValuedInterpretation v1 = CharacteristicOperator.apply(d1, v(d1, "uuuu"));
 		ThreeValuedInterpretation v2 = CharacteristicOperator.apply(d1, v1);
@@ -63,7 +63,7 @@ class CharacteristicOperatorTest {
 	}
 
 	@Test
-	void courseExampleAdmissible() {
+	void exampleAdmissible() {
 		AbstractDialecticalFramework d1 = adf(D1);
 		ThreeValuedInterpretation v1 = v(d1, "fttu");
 		assertEquals(v(d1, "fttf"), CharacteristicOperator.apply(d1, v1));

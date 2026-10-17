@@ -50,19 +50,10 @@ import org.tweetyproject.commons.QualitativeReasoner;
  * under one semantics as {@link ThreeValuedInterpretation}s and answers
  * acceptance and verification queries.
  * <p>
- * Every reasoner implements {@link #isModel(AbstractDialecticalFramework, ThreeValuedInterpretation)}
- * directly. A reasoner whose models are computed from that check alone (generate
- * and test) needs nothing else, see {@code AbstractSimpleAdfReasoner}; others
- * also override {@code getModels}. Implementations
- * of {@code isModel} must not rely on {@code getModels} of the same reasoner if
- * that one is based on {@code isModel}.
- * <p>
- * As in {@code AbstractExtensionReasoner} of the Dung module, the default
- * implementations of the query methods are based on
- * {@code getModels}; subclasses may override them
- * with direct procedures. An argument is accepted skeptically if every model
- * maps it to t (vacuously true without models) and credulously if some model
- * does.
+ * The default implementations of the query methods are based on
+ * {@code getModels}; subclasses may override them with direct procedures. An
+ * argument is accepted skeptically if every model maps it to t (vacuously true
+ * without models) and credulously if some model does.
  *
  * @author Lars Bengel
  */
@@ -71,10 +62,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 		ModelVerifier<Argument, AbstractDialecticalFramework, ThreeValuedInterpretation> {
 
 	/**
-	 * Decides whether the given interpretation is a model of the ADF (the
-	 * verification problem). Verification is usually much easier than
-	 * enumeration: polynomial for two- and three-valued models, one Γ check per
-	 * argument for admissible and complete interpretations.
+	 * Decides whether the given interpretation is a model of the ADF.
 	 *
 	 * @param adf an ADF
 	 * @param v   an interpretation over the arguments of the ADF

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -44,23 +44,26 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * Example ADFs, compact interpretation notation and a seeded random ADF
- * generator for the tests of the reworked module.
+ * generator for the tests of the ADF module. {@link #BREWKA_1} and
+ * {@link #BREWKA_2} are Examples 1 and 2 of the paper below.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  */
 public final class AdfTestSupport {
 
 	private AdfTestSupport() {}
 
-	/** D_1 of the course text (3.6): the ADF of the AF a⇄b, b→d, c→d. */
+	/** The ADF D_F of the AF a⇄b, b→d, c→d. */
 	public static final String D1 = "s(a). s(b). s(c). s(d). ac(a,neg(b)). ac(b,neg(a)). ac(c,c(v)). ac(d,and(neg(b),neg(c))).";
 
-	/** D_2 of the course text (3.6). */
+	/** An ADF with six arguments, including the self-supporting argument f. */
 	public static final String D2 = "s(a). s(b). s(c). s(d). s(e). s(f). ac(a,neg(b)). ac(b,neg(a)). ac(c,or(a,b)). "
 			+ "ac(d,and(b,c)). ac(e,and(or(b,neg(d)),neg(f))). ac(f,f).";
 
-	/** Brewka et al. 2013, Example 1: a[⊤], b[¬a ∨ c], c[b]. */
+	/** a[⊤], b[¬a ∨ c], c[b]. */
 	public static final String BREWKA_1 = "s(a). s(b). s(c). ac(a,c(v)). ac(b,or(neg(a),c)). ac(c,b).";
 
-	/** Brewka et al. 2013, Example 2 (cyclic support): a[c], b[c], c[a ↔ b]. */
+	/** Cyclic support: a[c], b[c], c[a ↔ b]. */
 	public static final String BREWKA_2 = "s(a). s(b). s(c). ac(a,c). ac(b,c). ac(c,iff(a,b)).";
 
 	/** phi_a = a, phi_b = a ∨ ¬a: (u,t) is complete, hence admissible, but no Kleene three-valued model. */

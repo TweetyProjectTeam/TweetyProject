@@ -86,7 +86,7 @@ class LinkTypeClassifierTest {
 	}
 
 	@Test
-	void courseAndBrewkaExamples() {
+	void exampleAdfs() {
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf(D2));
 		assertEquals(LinkType.ATTACKING, types.get(new Link(new Argument("b"), new Argument("a"))));
 		assertEquals(LinkType.SUPPORTING, types.get(new Link(new Argument("a"), new Argument("c"))));

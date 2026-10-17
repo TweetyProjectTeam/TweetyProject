@@ -1,8 +1,0 @@
-s(a0).
-s(a1).
-s(a2).
-s(a3).
-ac(a0,and(neg(a3),neg(a1))).
-ac(a1,neg(a0)).
-ac(a2,and(neg(a3),neg(a1))).
-ac(a3,and(neg(a2),neg(a1))).

@@ -1,8 +1,0 @@
-s(a0).
-s(a1).
-s(a2).
-s(a3).
-ac(a0,and(a1,and(a3,a1))).
-ac(a1,neg(or(a1,a0))).
-ac(a2,xor(imp(a0,a3),a2)).
-ac(a3,and(a2,neg(a2))).

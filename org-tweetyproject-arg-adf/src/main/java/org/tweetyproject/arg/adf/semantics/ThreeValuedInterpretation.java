@@ -99,10 +99,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		this.values = values;
 	}
 
-	// ------------------------------------------------------------------
-	// construction
-	// ------------------------------------------------------------------
-
 	/**
 	 * @param domain the arguments
 	 * @return the interpretation v_u that maps every argument to u
@@ -187,10 +183,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return new Argument(domain.names[i]);
 	}
 
-	// ------------------------------------------------------------------
-	// access
-	// ------------------------------------------------------------------
-
 	/**
 	 * @param argument an argument of the domain
 	 * @return its truth value
@@ -270,10 +262,6 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 		return new ThreeValuedInterpretation(domain, copy);
 	}
 
-	// ------------------------------------------------------------------
-	// information order and consensus
-	// ------------------------------------------------------------------
-
 	/**
 	 * @param other an interpretation over the same domain
 	 * @return true if other ≤_i this, i.e. this interpretation agrees with every
@@ -291,8 +279,9 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 
 	/**
 	 * @param other an interpretation over the same domain
-	 * @return true if other &lt;_i this, i.e. this interpretation is at least as
-	 *         informative as other and differs from it
+	 * @return true if this interpretation is strictly more informative than
+	 *         other, i.e. it is at least as informative as other and differs
+	 *         from it
 	 */
 	public boolean isMoreInformativeThan(ThreeValuedInterpretation other) {
 		return isAtLeastAsInformativeAs(other) && !equals(other);
@@ -341,11 +330,10 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	}
 
 	/**
-	 * Evaluates a formula in Kleene's strong three-valued logic. Implications,
-	 * equivalences and exclusive disjunctions are evaluated as (¬phi ∨ ψ),
-	 * (phi → ψ) ∧ (ψ → phi) and the parity of the operands, so each yields u as soon
-	 * as an operand that matters is u; ⊕ and ↔ are u whenever an operand is u.
-	 * Empty conjunctions are t; empty disjunctions and exclusive disjunctions are f.
+	 * Evaluates a formula in Kleene's strong three-valued logic. An implication
+	 * phi → ψ is evaluated as ¬phi ∨ ψ; equivalences and exclusive disjunctions
+	 * are u if some operand is u, and otherwise evaluated classically. Empty
+	 * conjunctions are t; empty disjunctions and exclusive disjunctions are f.
 	 *
 	 * @param formula a formula over the domain
 	 * @return its truth value

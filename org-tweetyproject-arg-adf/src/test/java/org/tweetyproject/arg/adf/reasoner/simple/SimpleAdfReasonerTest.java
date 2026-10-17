@@ -64,12 +64,8 @@ class SimpleAdfReasonerTest {
 		return new HashSet<>(reasoner.getModels(adf));
 	}
 
-	// ------------------------------------------------------------------
-	// worked examples of the course text (chapter 3.6)
-	// ------------------------------------------------------------------
-
 	@Test
-	void courseD1() {
+	void exampleD1() {
 		AbstractDialecticalFramework d1 = adf(D1);
 		assertEquals(vs(d1, "tftf", "fttf"), models(MOD, d1));
 		assertEquals(vs(d1, "uutf"), models(GR, d1));
@@ -81,15 +77,11 @@ class SimpleAdfReasonerTest {
 	}
 
 	@Test
-	void courseD2() {
+	void exampleD2() {
 		AbstractDialecticalFramework d2 = adf(D2);
 		assertEquals(vs(d2, "tftfft", "tftftf", "fttttf", "ftttft"), models(MOD, d2));
 		assertTrue(MOD3.isModel(d2, v(d2, "ftuutf")));
 	}
-
-	// ------------------------------------------------------------------
-	// Brewka et al. 2013
-	// ------------------------------------------------------------------
 
 	@Test
 	void brewkaExample1StableBreaksCyclicSupport() {
@@ -131,10 +123,6 @@ class SimpleAdfReasonerTest {
 		assertEquals(vs(adf, "uu", "fu", "ut", "ft"), models(CF, adf));
 		assertEquals(vs(adf, "ft"), models(NA, adf));
 	}
-
-	// ------------------------------------------------------------------
-	// API contracts
-	// ------------------------------------------------------------------
 
 	@Test
 	void emptyAdfHasTheEmptyInterpretationAsOnlyModel() {

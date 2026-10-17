@@ -22,12 +22,11 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the stable models (ST) of an ADF (Brewka et al. 2013,
- * Definition 6): the two-valued models v such that the arguments mapped to t
- * are exactly those mapped to t by the grounded interpretation of the reduct
- * D^v.
- * <p>
- * Checks all 2^n two-valued interpretations.
+ * Enumerates the stable models (ST) of an ADF: the two-valued models v such
+ * that the arguments mapped to t are exactly those mapped to t by the grounded
+ * interpretation of the reduct D^v. Checks all 2^n two-valued interpretations.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

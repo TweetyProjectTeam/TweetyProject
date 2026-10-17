@@ -10,7 +10,7 @@ import org.tweetyproject.logics.cl.syntax.ClBeliefSet;
 import org.tweetyproject.logics.cl.semantics.RankingFunction;
 import org.tweetyproject.logics.cl.reasoner.ZReasoner;
 
-import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;

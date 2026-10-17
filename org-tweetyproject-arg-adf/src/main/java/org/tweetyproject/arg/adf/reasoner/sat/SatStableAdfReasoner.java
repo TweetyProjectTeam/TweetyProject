@@ -34,10 +34,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * Enumerates the stable models (ST) of an ADF: the two-valued models v such
  * that the arguments mapped to t are exactly those mapped to t by the grounded
  * interpretation of the reduct D^v. As in k++ADF, the two-valued models are
- * enumerated with one SAT instance x_a ↔ phi_a, and each of them is checked;
- * the grounded interpretation of the reduct is computed with
- * {@link SatGroundedAdfReasoner}. Credulous (skeptical) acceptance of a
- * searches for a stable model with (without) a_t.
+ * enumerated with one SAT instance and each of them is checked.
  *
  * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"

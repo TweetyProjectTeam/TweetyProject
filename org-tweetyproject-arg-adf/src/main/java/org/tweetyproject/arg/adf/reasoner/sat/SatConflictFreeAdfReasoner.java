@@ -31,11 +31,9 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the conflict-free interpretations (CF) of an ADF as k++ADF does:
- * the interpretation that maps every argument to u, followed by the models of
- * Φ_cf that are strictly more informative, each excluded after it is found.
- * Credulous acceptance of a is one SAT call on Φ_cf with a_t; skeptical
- * acceptance is always false, also as in k++ADF.
+ * Enumerates the conflict-free interpretations (CF) of an ADF with the
+ * conflict-free encoding of k++ADF. Skeptical acceptance is always false, since
+ * the interpretation mapping every argument to u is conflict-free.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"

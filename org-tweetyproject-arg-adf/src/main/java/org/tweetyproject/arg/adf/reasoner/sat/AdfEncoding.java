@@ -28,6 +28,7 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.util.TseitinEncoder;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.sat.SatSolver;
 

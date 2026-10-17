@@ -54,22 +54,15 @@ import org.tweetyproject.math.term.IntegerConstant;
 /**
  * An abstract dialectical framework (ADF) D = (A, C): a set of arguments A and
  * an acceptance condition phi_a for every a ∈ A, which is a propositional formula
- * over A (Brewka and Woltran, KR 2010; Brewka et al., IJCAI 2013).
+ * over A.
  * <p>
  * Arguments are Dung {@link Argument}s and acceptance conditions are
  * {@link PlFormula}s; the proposition {@code Proposition("a")} refers to the
- * argument {@code Argument("a")}. The links of the ADF, i.e. its graph edges,
- * are implied by the conditions: (b, a) is a link iff b occurs in phi_a.
- * <p>
- * <b>Mutation and ownership.</b> The framework is mutable, like
- * {@code DungTheory}. It stores argument names and copies of the given
- * formulas, and every getter returns detached copies, so changing a supplied or
- * returned {@code Argument} or formula never changes the framework. Every
- * condition may only mention arguments of the framework; violations are
- * rejected with an {@link IllegalArgumentException} and leave the framework
- * unchanged. Removing an argument replaces its proposition by ⊥ in all
- * remaining conditions. Like other Tweety belief bases, the framework is not
- * synchronised; it must not be changed while a reasoner works on it.
+ * argument {@code Argument("a")}. The links of the ADF are implied by the
+ * conditions: (b, a) is a link iff b occurs in phi_a.
+ *
+ * @see "Gerhard Brewka, Stefan Woltran. 'Abstract Dialectical Frameworks.' KR 2010."
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */
@@ -145,13 +138,8 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 		return adf;
 	}
 
-	// ------------------------------------------------------------------
-	// mutation
-	// ------------------------------------------------------------------
-
 	/**
-	 * Adds an argument with the acceptance condition ⊤ (as for an unattacked
-	 * argument in D_F).
+	 * Adds an argument with the acceptance condition ⊤
 	 *
 	 * @param argument an argument
 	 * @return false if the argument already exists, in which case nothing changes
@@ -311,10 +299,6 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 		parents = null;
 		children = null;
 	}
-
-	// ------------------------------------------------------------------
-	// access
-	// ------------------------------------------------------------------
 
 	/**
 	 * @param argument an argument of this ADF
@@ -561,15 +545,10 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 		return v.evaluate(conditions.get(argument.getName())) == TruthValue.FALSE;
 	}
 
-	// ------------------------------------------------------------------
-	// derived frameworks
-	// ------------------------------------------------------------------
-
 	/**
-	 * Returns the reduct D^v of this ADF for a two-valued interpretation v
-	 * (Brewka et al. 2013, Definition 6): it contains the arguments that v maps to
-	 * true, and every argument that v maps to false is replaced by ⊥ in their
-	 * conditions.
+	 * Returns the reduct D^v of this ADF for a two-valued interpretation v: it
+	 * contains the arguments that v maps to true, and every argument that v maps
+	 * to false is replaced by ⊥ in their conditions.
 	 *
 	 * @param v a two-valued interpretation over exactly the arguments of this ADF
 	 * @return the reduct
@@ -620,10 +599,6 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 		}
 		return result;
 	}
-
-	// ------------------------------------------------------------------
-	// signature, equality, printing
-	// ------------------------------------------------------------------
 
 	@Override
 	protected DungSignature instantiateSignature() {
@@ -682,10 +657,6 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	public String toString(boolean showSignature) {
 		return toString();
 	}
-
-	// ------------------------------------------------------------------
-	// helpers
-	// ------------------------------------------------------------------
 
 	private Map<String, Set<String>> parentMap() {
 		if (parents == null) {

@@ -37,3 +37,6 @@ testBuild
 gurobi-9.1.0.jar
 isula-1.1.1.jar
 /org-tweetyproject-web/logs/server.log.lck
+
+# local ADF benchmark harness
+org-tweetyproject-arg-adf/bench/

@@ -27,11 +27,11 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the preferred interpretations (PR) of an ADF: the ≤_i-maximal
- * admissible interpretations (Brewka et al. 2013, Definition 4).
- * <p>
- * Every admissible interpretation lies below a complete one, so these are
- * exactly the ≤_i-maximal complete interpretations. The reasoner collects all
- * complete interpretations (3^n candidates) and keeps the maximal ones.
+ * admissible interpretations, which are exactly the ≤_i-maximal complete
+ * ones. Checks all 3^n interpretations for completeness and keeps the maximal
+ * ones.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

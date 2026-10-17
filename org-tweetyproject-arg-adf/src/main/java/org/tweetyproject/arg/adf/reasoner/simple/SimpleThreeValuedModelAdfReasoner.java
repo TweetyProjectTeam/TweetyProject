@@ -22,13 +22,11 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the three-valued models (3MOD) of an ADF in the sense of the
- * course text: interpretations v such that v(a) = u or v(a) = v(phi_a) under
- * Kleene's strong three-valued evaluation, for every argument a. This notion
- * differs from the conflict-free semantics of
- * {@link SimpleConflictFreeAdfReasoner}; every admissible interpretation is
- * conflict-free but not necessarily a three-valued model. Checks all 3^n
- * interpretations.
+ * Enumerates the three-valued models (3MOD) of an ADF: the interpretations v
+ * such that v(a) = u or v(a) = v(phi_a) under Kleene's strong three-valued
+ * evaluation, for every argument a. Unlike conflict-freeness in the sense of
+ * {@link SimpleConflictFreeAdfReasoner}, this notion does not contain all
+ * admissible interpretations. Checks all 3^n interpretations.
  *
  * @author Lars Bengel
  */

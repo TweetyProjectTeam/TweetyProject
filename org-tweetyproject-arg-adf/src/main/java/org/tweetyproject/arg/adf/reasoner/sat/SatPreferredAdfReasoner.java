@@ -38,19 +38,10 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 /**
  * Enumerates the preferred interpretations (PR) of an ADF as k++ADF does:
  * admissible interpretations that are strictly more informative than the
- * grounded interpretation g are extended to ≤_i-maximal ones with a second
- * solver, each of which is then excluded together with all less informative
- * interpretations by Refine_&gt;. If there is none, g is the only preferred
- * interpretation. The admissible interpretations are encoded as in
- * {@link SatAdmissibleAdfReasoner}.
- * <p>
- * Verification checks that v is admissible and that no admissible
- * interpretation is strictly more informative. Credulous acceptance is decided
- * as for admissible interpretations. Skeptical acceptance of a is decided by g
- * if g(a) is t or f; otherwise, admissible interpretations without a_t are
- * maximised under the same restriction, and if the result cannot be extended
- * with a_t, it is a counterexample. Unlike k++ADF, skeptical acceptance also
- * handles the case where g is the only preferred interpretation.
+ * grounded interpretation g are extended to ≤_i-maximal ones, each of which is
+ * then excluded together with all less informative interpretations. If there
+ * is none, g is the only preferred interpretation; unlike in k++ADF, skeptical
+ * acceptance also handles this case.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"
@@ -152,7 +143,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 	/**
 	 * @return an admissible model of the encoding under the assumptions, or null;
 	 *         if the encoding is not exact, the candidates that are not admissible
-	 *         are excluded by Refine_≠
+	 *         are excluded
 	 */
 	private ThreeValuedInterpretation next(AbstractDialecticalFramework adf, ThreeValuedEncoding encoding, SatSolver solver, boolean exact, int[] assumptions) {
 		int[] variables = encoding.variables();

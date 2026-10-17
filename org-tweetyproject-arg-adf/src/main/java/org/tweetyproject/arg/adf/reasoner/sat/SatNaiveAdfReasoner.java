@@ -32,18 +32,9 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
  * Enumerates the naive interpretations (NA) of an ADF as k++ADF does: every
- * model of Φ_cf is extended to a ≤_i-maximal one with a second solver, which
- * is then excluded together with all less informative interpretations by
- * Refine_&gt;. If Φ_cf has no model that is more informative than the
- * interpretation mapping every argument to u, the latter is the only naive
- * interpretation.
- * <p>
- * Credulous acceptance is decided as for conflict-free interpretations.
- * Skeptical acceptance of a searches for a naive interpretation that does not
- * map a to t: models of Φ_cf without a_t are maximised under the same
- * restriction; if the result cannot be extended with a_t, it is such a
- * counterexample, otherwise it is excluded by Refine_&gt;. Both as in k++ADF,
- * except that skeptical acceptance also handles the case where the
+ * model of the conflict-free encoding is extended to a ≤_i-maximal one, which
+ * is then excluded together with all less informative interpretations. Unlike
+ * in k++ADF, skeptical acceptance also handles the case where the
  * interpretation mapping every argument to u is the only naive one.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."

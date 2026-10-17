@@ -77,7 +77,8 @@ public enum TruthValue {
 
 	/**
 	 * @param other a truth value
-	 * @return true if other &lt;_i this, i.e. this value is t or f and other is u
+	 * @return true if this value is strictly more informative than other, i.e. this
+	 *         value is t or f and other is u
 	 */
 	public boolean isMoreInformativeThan(TruthValue other) {
 		return other == UNDECIDED && this != UNDECIDED;

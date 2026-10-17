@@ -36,14 +36,13 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Computes the grounded interpretation (GR) of an ADF, the least fixpoint of Γ
- * (Brewka et al. 2013), as the previous implementation did: starting from the
- * interpretation that maps every argument to u, an undecided argument a becomes
- * t if phi_a has no falsifying completion and f if it has no satisfying one.
- * Since the iteration only adds information, a decided argument is fixed by a
- * unit clause, and every check is one call to an incremental solver. The calls
- * are skipped if the Kleene value of phi_a is already decided, which then
- * agrees with Γ (as in the brute-force {@code CharacteristicOperator}).
+ * Computes the grounded interpretation (GR) of an ADF, the least fixpoint of Γ,
+ * with one incremental SAT solver: starting from the interpretation that maps
+ * every argument to u, an undecided argument a becomes t if phi_a has no
+ * falsifying completion and f if it has no satisfying one. Decided arguments
+ * are fixed by unit clauses.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

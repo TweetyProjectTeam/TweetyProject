@@ -105,7 +105,7 @@ class ThreeValuedInterpretationTest {
 	}
 
 	@Test
-	void informationOrderCourseExample() {
+	void informationOrderExample() {
 		AbstractDialecticalFramework adf = adf(D1);
 		ThreeValuedInterpretation v1 = v(adf, "tuuf"), v2 = v(adf, "ttuf"), v3 = v(adf, "tftf");
 		assertTrue(v2.isAtLeastAsInformativeAs(v1));
@@ -124,7 +124,7 @@ class ThreeValuedInterpretationTest {
 	}
 
 	@Test
-	void completionsCourseExample() {
+	void completionsExample() {
 		AbstractDialecticalFramework adf = adf(D1);
 		Set<ThreeValuedInterpretation> completions = new HashSet<>();
 		v(adf, "tuuf").completions().forEachRemaining(completions::add);
@@ -203,7 +203,7 @@ class ThreeValuedInterpretationTest {
 	}
 
 	@Test
-	void threeValuedModelsCourseExample() {
+	void threeValuedModelsExample() {
 		AbstractDialecticalFramework d1 = adf(D1);
 		for (ThreeValuedInterpretation v : vs(d1, "tftf", "fttf", "uutf", "uutu", "uuuu", "tftu", "tfuu", "fttu", "ftuf")) {
 			assertTrue(v.satisfies(d1), v.toString());

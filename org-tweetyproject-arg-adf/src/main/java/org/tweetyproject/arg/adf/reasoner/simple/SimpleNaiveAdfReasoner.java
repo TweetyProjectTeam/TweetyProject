@@ -27,11 +27,9 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * Enumerates the naive interpretations (NA) of an ADF: the ≤_i-maximal
  * conflict-free interpretations in the sense of
  * {@link SimpleConflictFreeAdfReasoner}.
- * <p>
- * Conflict-freeness is closed under ≤_i-smaller interpretations (a smaller
- * interpretation has more completions), so a conflict-free v is maximal iff no
- * single undecided argument can be set to t or f without losing
- * conflict-freeness. Checks all 3^n interpretations.
+ * Since conflict-freeness is closed under ≤_i-smaller interpretations, a
+ * conflict-free v is maximal iff no single undecided argument can be set to t
+ * or f. Checks all 3^n interpretations.
  *
  * @author Lars Bengel
  */

@@ -24,8 +24,9 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the complete interpretations (CO) of an ADF: the fixpoints
- * v = Γ(v) (Brewka et al. 2013, Definition 3). Checks all 3^n
- * interpretations.
+ * v = Γ(v). Checks all 3^n interpretations.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

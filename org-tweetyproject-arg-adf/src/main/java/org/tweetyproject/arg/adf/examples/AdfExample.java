@@ -50,7 +50,7 @@ public class AdfExample {
 	}
 
 	/**
-	 * Builds the ADF a[!b], b[!a], c[+], d[!b &amp;&amp; !c] and prints its models,
+	 * Builds the ADF a[¬b], b[¬a], c[⊤], d[¬b ∧ ¬c] and prints its models,
 	 * an acceptance query and a verification query.
 	 *
 	 * @param args not used

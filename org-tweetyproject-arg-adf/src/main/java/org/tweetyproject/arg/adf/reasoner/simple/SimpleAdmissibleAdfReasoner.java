@@ -24,8 +24,9 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Enumerates the admissible interpretations (ADM) of an ADF: the v with
- * v ≤_i Γ(v) (Brewka et al. 2013, Definition 2). Checks all 3^n
- * interpretations.
+ * v ≤_i Γ(v). Checks all 3^n interpretations.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

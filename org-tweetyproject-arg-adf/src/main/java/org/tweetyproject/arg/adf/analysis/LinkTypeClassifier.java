@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.sat.TseitinEncoder;
+import org.tweetyproject.arg.adf.util.TseitinEncoder;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.AcceptanceConditions;
 import org.tweetyproject.arg.adf.syntax.Link;
@@ -44,18 +44,10 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * <p>
  * A link (b, a) is supporting if phi_a is monotone in b (making b true never makes
  * phi_a false), attacking if phi_a is antitone in b, redundant if both, and
- * dependent if neither. Each property is decided as follows:
- * <ol>
- * <li>If b occurs in phi_a only positively (only negatively), phi_a is monotone
- * (antitone) in b. This syntactic certificate does not exclude redundancy, so
- * {@link #classify(AbstractDialecticalFramework)} still checks the other
- * direction.</li>
- * <li>Otherwise, the property is checked as in k++ADF: phi_a is monotone
- * (antitone) in b iff phi_a[b/⊥] ∧ ¬phi_a[b/⊤] (phi_a[b/⊤] ∧ ¬phi_a[b/⊥]) is
- * unsatisfiable, decided with one incremental solver for all links.</li>
- * </ol>
- * Results are computed on demand from the current state of the framework and
- * are not cached.
+ * dependent if neither. If b occurs in phi_a only positively (negatively),
+ * phi_a is monotone (antitone) in b. Otherwise, phi_a is monotone (antitone) in
+ * b iff phi_a[b/⊥] ∧ ¬phi_a[b/⊤] (phi_a[b/⊤] ∧ ¬phi_a[b/⊥]) is unsatisfiable,
+ * which is decided with a SAT solver. Results are not cached.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"
@@ -167,9 +159,6 @@ public final class LinkTypeClassifier {
 			boolean antitone = (polarity & POSITIVE) == 0;
 			if (!exact && (monotone || antitone)) {
 				return LinkType.of(monotone, antitone);
-			}
-			if (monotone && antitone) {
-				return LinkType.REDUNDANT; // cannot happen for an occurring atom, kept for safety
 			}
 			boolean[] checked = check(condition, parent, child, monotone, antitone);
 			return LinkType.of(checked[0], checked[1]);

@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.ParserException;

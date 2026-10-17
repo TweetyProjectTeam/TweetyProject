@@ -25,16 +25,16 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * The characteristic operator Γ_D of an ADF D (Brewka and Woltran 2010;
- * Brewka et al. 2013):
+ * The characteristic operator Γ_D of an ADF D:
  * Γ_D(v)(a) = ⊓{ w(phi_a) | w ∈ [v]_2 },
  * i.e. a is mapped to t (f) if phi_a is true (false) in every completion of v,
  * and to u otherwise.
  * <p>
- * This is the brute-force variant: it completes only the undecided
- * <em>parents</em> of a, and skips the completions entirely if the Kleene value
- * of phi_a under v is already t or f, since Kleene evaluation agrees with the
- * consensus whenever it is decided.
+ * This is the brute-force variant: it completes only the undecided parents of
+ * a, and only if the Kleene value of phi_a under v is u.
+ *
+ * @see "Gerhard Brewka, Stefan Woltran. 'Abstract Dialectical Frameworks.' KR 2010."
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */

@@ -36,19 +36,13 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the admissible interpretations (ADM) of an ADF as k++ADF does.
- * Let k be the maximal number of dependent parents of an argument. If k is
- * smaller than the given bound K, the models of the k-bipolar encoding (the
- * bipolar encoding if k = 0) are exactly the admissible interpretations.
- * Otherwise, the models of the conflict-free encoding with the bipolar clauses
- * are candidates, each verified with one SAT call. Every model is excluded by
- * Refine_≠ after it is found; the interpretation that maps every argument to u
- * comes first.
- * <p>
- * Verification checks that no completion of v falsifies phi_a for an a with
- * v(a) = t or satisfies it for an a with v(a) = f. Credulous acceptance of a
- * searches for an admissible model with a_t; skeptical acceptance is always
- * false.
+ * Enumerates the admissible interpretations (ADM) of an ADF with the
+ * k-bipolar encoding of k++ADF, where k is the maximal number of dependent
+ * parents of an argument. If k is not smaller than the bound K, the models of
+ * the conflict-free encoding with the bipolar clauses are used as candidates
+ * and each of them is verified with one SAT call. Skeptical acceptance is
+ * always false, since the interpretation mapping every argument to u is
+ * admissible.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"

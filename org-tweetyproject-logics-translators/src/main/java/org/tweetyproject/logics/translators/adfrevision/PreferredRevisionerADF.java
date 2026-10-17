@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.tweetyproject.arg.adf.io.KppAdfParser;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;

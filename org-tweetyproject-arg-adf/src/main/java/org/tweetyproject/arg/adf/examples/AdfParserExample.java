@@ -21,8 +21,8 @@ package org.tweetyproject.arg.adf.examples;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.tweetyproject.arg.adf.io.KppAdfParser;
-import org.tweetyproject.arg.adf.io.KppAdfWriter;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
+import org.tweetyproject.arg.adf.writer.KppAdfWriter;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;

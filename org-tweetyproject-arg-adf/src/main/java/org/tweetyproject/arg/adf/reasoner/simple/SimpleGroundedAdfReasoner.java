@@ -27,9 +27,9 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * Computes the grounded interpretation (GR) of an ADF, the least fixpoint of Γ,
- * by iterating Γ from the interpretation that maps every argument to u. Unlike
- * the other simple reasoners it does not enumerate interpretations; each step
- * completes only the undecided parents of an argument whose Kleene value is u.
+ * by iterating Γ from the interpretation that maps every argument to u.
+ *
+ * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
  *
  * @author Lars Bengel
  */
