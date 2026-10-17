@@ -26,10 +26,11 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
  * Enumerates the conflict-free interpretations (CF) of an ADF in the sense of
- * k++ADF (Linsbichler et al., AIJ 2022, Definition 2.6): v is conflict-free if
- * phi_a[v] is satisfiable for every a with v(a) = t and refutable for every a with
- * v(a) = f, i.e. some completion of v makes phi_a true (resp. false). Checks all
- * 3^n interpretations.
+ * k++ADF: v is conflict-free if phi_a[v] is satisfiable for every a with
+ * v(a) = t and refutable for every a with v(a) = f, i.e. some completion of v
+ * makes phi_a true (resp. false). Checks all 3^n interpretations.
+ *
+ * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018, Section 2."
  *
  * @author Lars Bengel
  */

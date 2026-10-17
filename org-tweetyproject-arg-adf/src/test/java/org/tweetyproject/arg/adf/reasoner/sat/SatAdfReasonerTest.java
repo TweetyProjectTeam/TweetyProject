@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.adf.BruteForceOracle;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -88,11 +89,44 @@ class SatAdfReasonerTest {
 	}
 
 	@Test
+	void conflictFreeAgreesWithOracle() {
+		Random rng = new Random(4);
+		SatConflictFreeAdfReasoner reasoner = new SatConflictFreeAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).cf());
+		}
+	}
+
+	@Test
+	void naiveAgreesWithOracle() {
+		Random rng = new Random(5);
+		SatNaiveAdfReasoner reasoner = new SatNaiveAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).na());
+		}
+	}
+
+	/** Compares enumeration, {@code getModel} and {@code isModel} on all interpretations. */
+	private static void assertAgreesWithOracle(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf, Set<ThreeValuedInterpretation> expected) {
+		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
+		assertEquals(expected, new HashSet<>(models), adf.toString());
+		assertEquals(expected.size(), models.size(), "duplicate models on " + adf);
+		assertTrue(expected.contains(reasoner.getModel(adf)), adf.toString());
+		for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
+			assertEquals(expected.contains(v), reasoner.isModel(adf, v), v + " on " + adf);
+		}
+	}
+
+	@Test
 	void emptyAdf() {
 		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
 		Set<ThreeValuedInterpretation> empty = Set.of(ThreeValuedInterpretation.allUndecided(adf.getNodes()));
 		assertEquals(empty, Set.copyOf(new SatTwoValuedModelAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatGroundedAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatConflictFreeAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatNaiveAdfReasoner().getModels(adf)));
 	}
 
 }
