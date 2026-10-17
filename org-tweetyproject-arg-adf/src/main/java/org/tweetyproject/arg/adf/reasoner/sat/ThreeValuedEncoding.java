@@ -198,6 +198,44 @@ final class ThreeValuedEncoding {
 	}
 
 	/**
+	 * Adds the clauses that complete interpretations satisfy in addition to the
+	 * admissible ones: for every argument s, two copies of phi_s over fresh link
+	 * variables, in which every parent takes the value of the interpretation if
+	 * decided, and otherwise an attacking (supporting) parent is t (f) in the
+	 * first and f (t) in the second copy. If the first copy is true, s_t holds;
+	 * if the second copy is false, s_f holds.
+	 *
+	 * @param types the types of the links
+	 */
+	void addComplete(Map<Link, LinkType> types) {
+		for (Argument s : arguments) {
+			Map<Argument, Integer> first = new HashMap<>(), second = new HashMap<>();
+			for (Argument r : adf.getParents(s)) {
+				int q1 = solver.newVar(), q2 = solver.newVar();
+				first.put(r, q1);
+				second.put(r, q2);
+				int rt = trueVariables.get(r), rf = falseVariables.get(r);
+				solver.add(-rt, q1);
+				solver.add(-rf, -q1);
+				solver.add(-rt, q2);
+				solver.add(-rf, -q2);
+				LinkType type = types.get(new Link(r, s));
+				if (type == LinkType.ATTACKING) {
+					solver.add(rf, q1);
+					solver.add(rt, -q2);
+				} else if (type == LinkType.SUPPORTING) {
+					solver.add(rt, -q1);
+					solver.add(rf, q2);
+				}
+			}
+			int phi1 = new TseitinEncoder(solver, q -> first.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+			int phi2 = new TseitinEncoder(solver, q -> second.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+			solver.add(-phi1, trueVariables.get(s));
+			solver.add(phi2, falseVariables.get(s));
+		}
+	}
+
+	/**
 	 * @param types the types of the links of an ADF
 	 * @return the maximal number k of dependent parents of an argument
 	 */

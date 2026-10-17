@@ -155,6 +155,26 @@ class SatAdfReasonerTest {
 	}
 
 	@Test
+	void completeAgreesWithOracle() {
+		Random rng = new Random(11);
+		SatCompleteAdfReasoner reasoner = new SatCompleteAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).co());
+		}
+	}
+
+	@Test
+	void completeWithoutKBipolarEncodingAgreesWithOracle() {
+		Random rng = new Random(12);
+		SatCompleteAdfReasoner reasoner = new SatCompleteAdfReasoner(Sat4jIncrementalSolver::new, 0);
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).co());
+		}
+	}
+
+	@Test
 	void stableAgreesWithOracle() {
 		Random rng = new Random(10);
 		SatStableAdfReasoner reasoner = new SatStableAdfReasoner();
@@ -207,6 +227,7 @@ class SatAdfReasonerTest {
 		assertEquals(empty, Set.copyOf(new SatAdmissibleAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatPreferredAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatStableAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatCompleteAdfReasoner().getModels(adf)));
 	}
 
 }
