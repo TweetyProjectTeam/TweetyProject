@@ -30,7 +30,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * v(a) = t and refutable for every a with v(a) = f, i.e. some completion of v
  * makes phi_a true (resp. false). Checks all 3^n interpretations.
  *
- * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018, Section 2."
+ * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  *
  * @author Lars Bengel
  */

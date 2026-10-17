@@ -38,7 +38,7 @@ import org.tweetyproject.sat.SatSolver;
  * refutes (s_f) phi_s. Also provides the clauses φ_{&lt;_i}, Refine_≠ and
  * Refine_&gt;.
  *
- * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018, Section 5, Figure 1."
+ * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  *
  * @author Lars Bengel
  */
@@ -88,6 +88,11 @@ final class ConflictFreeEncoding {
 			solver.add(-st, phi);
 			solver.add(-sf, -phi);
 		}
+	}
+
+	/** @return the variable s_t */
+	int trueVariable(Argument s) {
+		return trueVariables.get(s);
 	}
 
 	/** @return the variables s_t and s_f of all arguments */

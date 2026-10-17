@@ -34,6 +34,7 @@ import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.commons.InferenceMode;
 
 /**
  * Differential tests of the SAT-based Γ and reasoners against the brute-force
@@ -116,6 +117,15 @@ class SatAdfReasonerTest {
 		assertTrue(expected.contains(reasoner.getModel(adf)), adf.toString());
 		for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
 			assertEquals(expected.contains(v), reasoner.isModel(adf, v), v + " on " + adf);
+		}
+		for (Argument a : adf) {
+			boolean credulous = false, skeptical = true;
+			for (ThreeValuedInterpretation model : expected) {
+				credulous |= model.satisfies(a);
+				skeptical &= model.satisfies(a);
+			}
+			assertEquals(credulous, reasoner.query(adf, a, InferenceMode.CREDULOUS), "credulous " + a + " on " + adf);
+			assertEquals(skeptical, reasoner.query(adf, a, InferenceMode.SKEPTICAL), "skeptical " + a + " on " + adf);
 		}
 	}
 

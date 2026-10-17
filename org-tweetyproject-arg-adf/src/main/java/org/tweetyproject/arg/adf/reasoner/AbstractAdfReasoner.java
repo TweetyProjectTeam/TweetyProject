@@ -95,9 +95,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	 * @throws IllegalArgumentException if the argument is not part of the ADF
 	 */
 	public Boolean query(AbstractDialecticalFramework adf, Argument argument, InferenceMode mode) {
-		if (!adf.contains(argument)) {
-			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
-		}
+		requireArgument(adf, argument);
 		boolean credulous = mode == InferenceMode.CREDULOUS;
 		for (ThreeValuedInterpretation model : getModels(adf)) {
 			if (model.satisfies(argument) == credulous) {
@@ -169,6 +167,17 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	protected static void requireDomain(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		if (!v.getDomain().equals(adf.getNodes())) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of the ADF.");
+		}
+	}
+
+	/**
+	 * @param adf      an ADF
+	 * @param argument an argument
+	 * @throws IllegalArgumentException if the argument is not part of the ADF
+	 */
+	protected static void requireArgument(AbstractDialecticalFramework adf, Argument argument) {
+		if (!adf.contains(argument)) {
+			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
 		}
 	}
 

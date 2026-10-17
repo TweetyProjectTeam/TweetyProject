@@ -27,6 +27,8 @@ import java.util.function.Supplier;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
@@ -37,15 +39,25 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * Refine_&gt;. If Φ_cf has no model that is more informative than the
  * interpretation mapping every argument to u, the latter is the only naive
  * interpretation.
+ * <p>
+ * Credulous acceptance is decided as for conflict-free interpretations.
+ * Skeptical acceptance of a searches for a naive interpretation that does not
+ * map a to t: models of Φ_cf without a_t are maximised under the same
+ * restriction; if the result cannot be extended with a_t, it is such a
+ * counterexample, otherwise it is excluded by Refine_&gt;. Both as in k++ADF,
+ * except that skeptical acceptance also handles the case where the
+ * interpretation mapping every argument to u is the only naive one.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
- * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf (enumerate_nai)"
+ * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"
  *
  * @author Lars Bengel
  */
 public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 
 	private final Supplier<SatSolver> solvers;
+
+	private final SatConflictFreeAdfReasoner conflictFree;
 
 	/**
 	 * Creates the reasoner with the {@link Sat4jIncrementalSolver}.
@@ -59,6 +71,7 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 	 */
 	public SatNaiveAdfReasoner(Supplier<SatSolver> solvers) {
 		this.solvers = solvers;
+		this.conflictFree = new SatConflictFreeAdfReasoner(solvers);
 	}
 
 	@Override
@@ -116,6 +129,49 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 			}
 			return maximal;
 		}
+	}
+
+	@Override
+	public Boolean query(AbstractDialecticalFramework adf, Argument argument, InferenceMode mode) {
+		requireArgument(adf, argument);
+		if (mode == InferenceMode.CREDULOUS) {
+			return conflictFree.query(adf, argument, mode);
+		}
+		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
+		try (SatSolver solver = solvers.get()) {
+			ConflictFreeEncoding encoding = new ConflictFreeEncoding(copy, solver);
+			encoding.addMoreInformativeThan(ThreeValuedInterpretation.allUndecided(copy.getNodes()));
+			int[] variables = encoding.variables();
+			int[] notTrue = { -encoding.trueVariable(argument) };
+			if (!solver.satisfiable()) {
+				// the interpretation mapping every argument to u is the only naive one
+				return false;
+			}
+			boolean[] witness;
+			while ((witness = solver.witness(variables, notTrue)) != null) {
+				if (Thread.currentThread().isInterrupted()) {
+					throw new CancellationException("Query interrupted.");
+				}
+				ThreeValuedInterpretation model = encoding.decode(witness);
+				try (SatSolver maximizer = solvers.get()) {
+					ConflictFreeEncoding maximal = new ConflictFreeEncoding(copy, maximizer);
+					int at = maximal.trueVariable(argument);
+					while (!model.isTwoValued()) {
+						maximal.addMoreInformativeThan(model);
+						boolean[] larger = maximizer.witness(maximal.variables(), new int[] { -at });
+						if (larger == null) {
+							break;
+						}
+						model = maximal.decode(larger);
+					}
+					if (model.isTwoValued() || !maximizer.satisfiable(new int[] { at })) {
+						return false;
+					}
+				}
+				encoding.addRefineLarger(model);
+			}
+		}
+		return true;
 	}
 
 	@Override

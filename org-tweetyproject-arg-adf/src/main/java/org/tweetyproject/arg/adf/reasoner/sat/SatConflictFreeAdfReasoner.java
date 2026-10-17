@@ -27,6 +27,8 @@ import java.util.function.Supplier;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
@@ -34,9 +36,11 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  * Enumerates the conflict-free interpretations (CF) of an ADF as k++ADF does:
  * the interpretation that maps every argument to u, followed by the models of
  * Φ_cf that are strictly more informative, each excluded after it is found.
+ * Credulous acceptance of a is one SAT call on Φ_cf with a_t; skeptical
+ * acceptance is always false, also as in k++ADF.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
- * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf (enumerate_cf)"
+ * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"
  *
  * @author Lars Bengel
  */
@@ -86,6 +90,18 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 	@Override
 	public ThreeValuedInterpretation getModel(AbstractDialecticalFramework adf) {
 		return ThreeValuedInterpretation.allUndecided(adf.getNodes());
+	}
+
+	@Override
+	public Boolean query(AbstractDialecticalFramework adf, Argument argument, InferenceMode mode) {
+		requireArgument(adf, argument);
+		if (mode == InferenceMode.SKEPTICAL) {
+			return false;
+		}
+		try (SatSolver solver = solvers.get()) {
+			ConflictFreeEncoding encoding = new ConflictFreeEncoding(new AbstractDialecticalFramework(adf), solver);
+			return solver.satisfiable(new int[] { encoding.trueVariable(argument) });
+		}
 	}
 
 	@Override
