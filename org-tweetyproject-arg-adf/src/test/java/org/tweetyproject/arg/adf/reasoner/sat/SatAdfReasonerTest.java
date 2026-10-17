@@ -35,6 +35,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.InferenceMode;
+import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
  * Differential tests of the SAT-based Γ and reasoners against the brute-force
@@ -109,6 +110,26 @@ class SatAdfReasonerTest {
 		}
 	}
 
+	@Test
+	void admissibleAgreesWithOracle() {
+		Random rng = new Random(6);
+		SatAdmissibleAdfReasoner reasoner = new SatAdmissibleAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).adm());
+		}
+	}
+
+	@Test
+	void admissibleWithoutKBipolarEncodingAgreesWithOracle() {
+		Random rng = new Random(7);
+		SatAdmissibleAdfReasoner reasoner = new SatAdmissibleAdfReasoner(Sat4jIncrementalSolver::new, 0);
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).adm());
+		}
+	}
+
 	/** Compares enumeration, {@code getModel} and {@code isModel} on all interpretations. */
 	private static void assertAgreesWithOracle(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf, Set<ThreeValuedInterpretation> expected) {
 		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
@@ -137,6 +158,7 @@ class SatAdfReasonerTest {
 		assertEquals(empty, Set.copyOf(new SatGroundedAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatConflictFreeAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatNaiveAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatAdmissibleAdfReasoner().getModels(adf)));
 	}
 
 }

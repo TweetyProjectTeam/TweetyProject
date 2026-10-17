@@ -46,7 +46,7 @@ import org.tweetyproject.sat.SatSolver;
  *
  * @author Lars Bengel
  */
-final class TseitinEncoder {
+public final class TseitinEncoder {
 
 	private final SatSolver solver;
 
@@ -61,7 +61,7 @@ final class TseitinEncoder {
 	 * @param solver the solver the clauses are added to
 	 * @param atoms  the solver variable of each proposition
 	 */
-	TseitinEncoder(SatSolver solver, ToIntFunction<Proposition> atoms) {
+	public TseitinEncoder(SatSolver solver, ToIntFunction<Proposition> atoms) {
 		this.solver = solver;
 		this.atoms = atoms;
 	}
@@ -70,7 +70,7 @@ final class TseitinEncoder {
 	 * @param formula a formula
 	 * @return a literal that is equivalent to the formula
 	 */
-	int encode(PlFormula formula) {
+	public int encode(PlFormula formula) {
 		if (formula instanceof Proposition) {
 			return atoms.applyAsInt((Proposition) formula);
 		}

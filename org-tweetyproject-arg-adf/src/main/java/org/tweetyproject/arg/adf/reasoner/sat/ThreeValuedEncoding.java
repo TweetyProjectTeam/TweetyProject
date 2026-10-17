@@ -28,21 +28,26 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.Link;
+import org.tweetyproject.arg.adf.syntax.LinkType;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.sat.SatSolver;
 
 /**
- * The encoding Φ_cf of conflict-free interpretations of k++ADF: variables s_t
- * and s_f for the value of every argument s, and a variable p_rs for every link
- * (r, s), which guesses the value of r in a completion that satisfies (s_t) or
- * refutes (s_f) phi_s. Also provides the clauses φ_{&lt;_i}, Refine_≠ and
- * Refine_&gt;.
+ * The encoding of three-valued interpretations of k++ADF: variables s_t and
+ * s_f for the value of every argument s, and a variable p_rs for every link
+ * (r, s), which represents the value of r in a completion considered for
+ * phi_s. The building blocks of the conflict-free, bipolar and k-bipolar
+ * encodings are added separately, together with the clauses φ_{&lt;_i},
+ * Refine_≠ and Refine_&gt;.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  *
  * @author Lars Bengel
  */
-final class ConflictFreeEncoding {
+final class ThreeValuedEncoding {
+
+	private final AbstractDialecticalFramework adf;
 
 	private final SatSolver solver;
 
@@ -52,13 +57,20 @@ final class ConflictFreeEncoding {
 
 	private final Map<Argument, Integer> falseVariables = new HashMap<>();
 
+	/** the variables p_rs, by s and r */
+	private final Map<Argument, Map<Argument, Integer>> links = new HashMap<>();
+
+	/** a variable fixed to true, created on first use */
+	private int top;
+
 	/**
-	 * Adds Φ_cf for the given ADF to the solver.
+	 * Adds the variables, the clauses ¬s_t ∨ ¬s_f and φ^pr_s for all arguments.
 	 *
 	 * @param adf    an ADF, which must not be modified while the encoding is used
 	 * @param solver the solver the clauses are added to
 	 */
-	ConflictFreeEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
+	ThreeValuedEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
+		this.adf = adf;
 		this.solver = solver;
 		this.arguments = new ArrayList<>(adf.getNodes());
 		for (Argument s : arguments) {
@@ -66,7 +78,6 @@ final class ConflictFreeEncoding {
 			falseVariables.put(s, solver.newVar());
 			solver.add(-trueVariables.get(s), -falseVariables.get(s));
 		}
-		Map<Argument, Map<Argument, Integer>> links = new HashMap<>();
 		for (Argument s : arguments) {
 			Map<Argument, Integer> parents = new HashMap<>();
 			for (Argument r : adf.getParents(s)) {
@@ -75,19 +86,95 @@ final class ConflictFreeEncoding {
 			links.put(s, parents);
 		}
 		for (Argument s : arguments) {
-			int st = trueVariables.get(s), sf = falseVariables.get(s);
-			// φ^pr_s
 			for (Argument r : adf.getChildren(s)) {
 				int p = links.get(r).get(s);
-				solver.add(-st, p);
-				solver.add(-sf, -p);
+				solver.add(-trueVariables.get(s), p);
+				solver.add(-falseVariables.get(s), -p);
 			}
-			// φ^Γ_s
-			Map<Argument, Integer> parents = links.get(s);
-			int phi = new TseitinEncoder(solver, q -> parents.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
-			solver.add(-st, phi);
-			solver.add(-sf, -phi);
 		}
+	}
+
+	/**
+	 * Adds φ^Γ_s for all arguments s, which completes Φ_cf.
+	 */
+	void addConflictFree() {
+		for (Argument s : arguments) {
+			addConflictFree(s);
+		}
+	}
+
+	/**
+	 * Adds φ^Γ_s: phi_s is true (false) under the values p_rs if s_t (s_f).
+	 *
+	 * @param s an argument
+	 */
+	void addConflictFree(Argument s) {
+		Map<Argument, Integer> parents = links.get(s);
+		int phi = new TseitinEncoder(solver, q -> parents.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+		solver.add(-trueVariables.get(s), phi);
+		solver.add(-falseVariables.get(s), -phi);
+	}
+
+	/**
+	 * Adds φ^bip: for an attacking (supporting) link (r, s), p_rs takes the value
+	 * of r that is worst for s_t and s_f unless r is decided. Redundant and
+	 * dependent links are skipped.
+	 *
+	 * @param types the types of the links
+	 */
+	void addBipolar(Map<Link, LinkType> types) {
+		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
+			Argument r = entry.getKey().getParent(), s = entry.getKey().getChild();
+			int p = links.get(s).get(r);
+			int st = trueVariables.get(s), sf = falseVariables.get(s);
+			int rt = trueVariables.get(r), rf = falseVariables.get(r);
+			if (entry.getValue() == LinkType.ATTACKING) {
+				solver.add(-st, rf, p);
+				solver.add(-sf, rt, -p);
+			} else if (entry.getValue() == LinkType.SUPPORTING) {
+				solver.add(-st, rt, -p);
+				solver.add(-sf, rf, p);
+			}
+		}
+	}
+
+	/**
+	 * Adds the k-bipolar encoding of s in place of φ^Γ_s: for every assignment of
+	 * the dependent parents, phi_s under this assignment and the values p_rs of
+	 * the other parents is true (false) if s_t (s_f) and no dependent parent is
+	 * decided otherwise.
+	 *
+	 * @param s         an argument
+	 * @param dependent the dependent parents of s, fewer than 31
+	 */
+	void addKBipolar(Argument s, List<Argument> dependent) {
+		Map<Argument, Integer> parents = links.get(s);
+		for (int j = 0; j < (1 << dependent.size()); j++) {
+			Map<Argument, Integer> values = new HashMap<>(parents);
+			int[] whenTrue = new int[dependent.size() + 2], whenFalse = new int[dependent.size() + 2];
+			for (int i = 0; i < dependent.size(); i++) {
+				Argument r = dependent.get(i);
+				boolean value = (j & (1 << i)) != 0;
+				values.put(r, value ? top() : -top());
+				whenTrue[i] = value ? falseVariables.get(r) : trueVariables.get(r);
+				whenFalse[i] = whenTrue[i];
+			}
+			int phi = new TseitinEncoder(solver, q -> values.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+			whenTrue[dependent.size()] = -trueVariables.get(s);
+			whenTrue[dependent.size() + 1] = phi;
+			whenFalse[dependent.size()] = -falseVariables.get(s);
+			whenFalse[dependent.size() + 1] = -phi;
+			solver.add(whenTrue);
+			solver.add(whenFalse);
+		}
+	}
+
+	private int top() {
+		if (top == 0) {
+			top = solver.newVar();
+			solver.add(top);
+		}
+		return top;
 	}
 
 	/** @return the variable s_t */

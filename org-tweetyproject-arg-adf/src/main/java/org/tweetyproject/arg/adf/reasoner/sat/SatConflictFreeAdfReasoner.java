@@ -71,7 +71,8 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 			return models;
 		}
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(new AbstractDialecticalFramework(adf), solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(new AbstractDialecticalFramework(adf), solver);
+			encoding.addConflictFree();
 			encoding.addMoreInformativeThan(undecided);
 			int[] variables = encoding.variables();
 			boolean[] witness;
@@ -99,7 +100,8 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 			return false;
 		}
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(new AbstractDialecticalFramework(adf), solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(new AbstractDialecticalFramework(adf), solver);
+			encoding.addConflictFree();
 			return solver.satisfiable(new int[] { encoding.trueVariable(argument) });
 		}
 	}
@@ -108,7 +110,8 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		requireDomain(adf, v);
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(new AbstractDialecticalFramework(adf), solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(new AbstractDialecticalFramework(adf), solver);
+			encoding.addConflictFree();
 			return solver.satisfiable(encoding.assumptions(v));
 		}
 	}

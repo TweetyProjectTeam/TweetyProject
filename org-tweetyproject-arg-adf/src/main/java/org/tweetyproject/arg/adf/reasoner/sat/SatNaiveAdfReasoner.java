@@ -90,7 +90,8 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 		if (!adf.isEmpty()) {
 			AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 			try (SatSolver solver = solvers.get()) {
-				ConflictFreeEncoding encoding = new ConflictFreeEncoding(copy, solver);
+				ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+				encoding.addConflictFree();
 				encoding.addMoreInformativeThan(undecided);
 				int[] variables = encoding.variables();
 				boolean[] witness;
@@ -116,7 +117,8 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 	 */
 	private ThreeValuedInterpretation maximize(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(adf, solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
+			encoding.addConflictFree();
 			int[] variables = encoding.variables();
 			ThreeValuedInterpretation maximal = v;
 			while (!maximal.isTwoValued()) {
@@ -139,7 +141,8 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 		}
 		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(copy, solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+			encoding.addConflictFree();
 			encoding.addMoreInformativeThan(ThreeValuedInterpretation.allUndecided(copy.getNodes()));
 			int[] variables = encoding.variables();
 			int[] notTrue = { -encoding.trueVariable(argument) };
@@ -154,7 +157,8 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 				}
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				try (SatSolver maximizer = solvers.get()) {
-					ConflictFreeEncoding maximal = new ConflictFreeEncoding(copy, maximizer);
+					ThreeValuedEncoding maximal = new ThreeValuedEncoding(copy, maximizer);
+					maximal.addConflictFree();
 					int at = maximal.trueVariable(argument);
 					while (!model.isTwoValued()) {
 						maximal.addMoreInformativeThan(model);
@@ -178,7 +182,8 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		requireDomain(adf, v);
 		try (SatSolver solver = solvers.get()) {
-			ConflictFreeEncoding encoding = new ConflictFreeEncoding(new AbstractDialecticalFramework(adf), solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(new AbstractDialecticalFramework(adf), solver);
+			encoding.addConflictFree();
 			if (!solver.satisfiable(encoding.assumptions(v))) {
 				return false;
 			}

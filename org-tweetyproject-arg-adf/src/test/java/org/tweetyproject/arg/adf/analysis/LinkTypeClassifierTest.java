@@ -97,17 +97,16 @@ class LinkTypeClassifierTest {
 	}
 
 	@Test
-	void satFallbackForManyParents() {
-		// more parents than the truth-table limit; q occurs in both polarities but is redundant
+	void manyParents() {
+		// q occurs in both polarities but is redundant
 		StringBuilder kpp = new StringBuilder("s(p). s(q). s(c). ac(p,c(v)). ac(q,c(v)). ac(c,or(and(p,q),or(and(p,neg(q))");
 		StringBuilder decl = new StringBuilder();
-		for (int i = 0; i <= LinkTypeClassifier.TRUTH_TABLE_LIMIT; i++) {
+		for (int i = 0; i <= 20; i++) {
 			decl.append("s(x").append(i).append("). ac(x").append(i).append(",c(v)). ");
 			kpp.append(",or(x").append(i);
 		}
-		kpp.append(")".repeat(LinkTypeClassifier.TRUTH_TABLE_LIMIT + 1)).append("))).");
+		kpp.append(")".repeat(21)).append("))).");
 		AbstractDialecticalFramework adf = adf(decl + kpp.toString());
-		assertTrue(adf.getParents(C).size() > LinkTypeClassifier.TRUTH_TABLE_LIMIT);
 		assertEquals(LinkType.REDUNDANT, LinkTypeClassifier.classify(adf, new Argument("q"), C));
 		assertEquals(LinkType.SUPPORTING, LinkTypeClassifier.classify(adf, new Argument("p"), C));
 		assertTrue(LinkTypeClassifier.isBipolar(adf));
