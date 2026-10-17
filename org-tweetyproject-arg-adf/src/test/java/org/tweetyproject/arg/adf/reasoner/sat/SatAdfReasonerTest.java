@@ -130,6 +130,26 @@ class SatAdfReasonerTest {
 		}
 	}
 
+	@Test
+	void preferredAgreesWithOracle() {
+		Random rng = new Random(8);
+		SatPreferredAdfReasoner reasoner = new SatPreferredAdfReasoner();
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).pr());
+		}
+	}
+
+	@Test
+	void preferredWithoutKBipolarEncodingAgreesWithOracle() {
+		Random rng = new Random(9);
+		SatPreferredAdfReasoner reasoner = new SatPreferredAdfReasoner(Sat4jIncrementalSolver::new, 0);
+		for (int i = 0; i < 300; i++) {
+			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).pr());
+		}
+	}
+
 	/** Compares enumeration, {@code getModel} and {@code isModel} on all interpretations. */
 	private static void assertAgreesWithOracle(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf, Set<ThreeValuedInterpretation> expected) {
 		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
@@ -159,6 +179,7 @@ class SatAdfReasonerTest {
 		assertEquals(empty, Set.copyOf(new SatConflictFreeAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatNaiveAdfReasoner().getModels(adf)));
 		assertEquals(empty, Set.copyOf(new SatAdmissibleAdfReasoner().getModels(adf)));
+		assertEquals(empty, Set.copyOf(new SatPreferredAdfReasoner().getModels(adf)));
 	}
 
 }

@@ -20,7 +20,6 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -168,27 +167,8 @@ public class SatAdmissibleAdfReasoner extends AbstractAdfReasoner {
 	 */
 	private boolean encode(AbstractDialecticalFramework adf, ThreeValuedEncoding encoding) {
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
-		Map<Argument, List<Argument>> dependent = new HashMap<>();
-		int k = 0;
-		for (Argument a : adf) {
-			dependent.put(a, new ArrayList<>());
-		}
-		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
-			if (entry.getValue() == LinkType.DEPENDENT) {
-				List<Argument> parents = dependent.get(entry.getKey().getChild());
-				parents.add(entry.getKey().getParent());
-				k = Math.max(k, parents.size());
-			}
-		}
-		boolean exact = k < maxDependentParents;
-		encoding.addBipolar(types);
-		for (Argument a : adf) {
-			if (exact && !dependent.get(a).isEmpty()) {
-				encoding.addKBipolar(a, dependent.get(a));
-			} else {
-				encoding.addConflictFree(a);
-			}
-		}
+		boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+		encoding.addAdmissible(types, ThreeValuedInterpretation.allUndecided(adf.getNodes()), exact);
 		return exact;
 	}
 

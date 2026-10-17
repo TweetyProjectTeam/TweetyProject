@@ -169,6 +169,49 @@ final class ThreeValuedEncoding {
 		}
 	}
 
+	/**
+	 * Adds φ^bip and, for every argument s, the k-bipolar encoding over the
+	 * dependent parents of s that are undecided in v, or φ^Γ_s if there are none
+	 * or the k-bipolar encoding is not used. Requires that the models are at
+	 * least as informative as v.
+	 *
+	 * @param types    the types of the links
+	 * @param v        an interpretation
+	 * @param kBipolar whether the k-bipolar encoding is used
+	 */
+	void addAdmissible(Map<Link, LinkType> types, ThreeValuedInterpretation v, boolean kBipolar) {
+		addBipolar(types);
+		Map<Argument, List<Argument>> dependent = new HashMap<>();
+		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
+			Argument r = entry.getKey().getParent(), s = entry.getKey().getChild();
+			if (entry.getValue() == LinkType.DEPENDENT && v.get(r) == TruthValue.UNDECIDED) {
+				dependent.computeIfAbsent(s, a -> new ArrayList<>()).add(r);
+			}
+		}
+		for (Argument s : arguments) {
+			if (kBipolar && dependent.containsKey(s)) {
+				addKBipolar(s, dependent.get(s));
+			} else {
+				addConflictFree(s);
+			}
+		}
+	}
+
+	/**
+	 * @param types the types of the links of an ADF
+	 * @return the maximal number k of dependent parents of an argument
+	 */
+	static int maxDependentParents(Map<Link, LinkType> types) {
+		Map<Argument, Integer> count = new HashMap<>();
+		int k = 0;
+		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
+			if (entry.getValue() == LinkType.DEPENDENT) {
+				k = Math.max(k, count.merge(entry.getKey().getChild(), 1, Integer::sum));
+			}
+		}
+		return k;
+	}
+
 	private int top() {
 		if (top == 0) {
 			top = solver.newVar();
