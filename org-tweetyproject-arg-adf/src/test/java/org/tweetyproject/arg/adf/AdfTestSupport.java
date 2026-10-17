@@ -19,6 +19,8 @@
 package org.tweetyproject.arg.adf;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,8 +45,8 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
- * Example ADFs, compact interpretation notation and a seeded random ADF
- * generator for the tests of the ADF module. {@link #BREWKA_1} and
+ * Example ADFs, compact interpretation notation, a seeded random ADF generator
+ * and reference definitions for the tests of the ADF module. {@link #BREWKA_1} and
  * {@link #BREWKA_2} are Examples 1 and 2 of the paper below.
  *
  * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."
@@ -113,6 +115,86 @@ public final class AdfTestSupport {
 			result.add(v(adf, value));
 		}
 		return result;
+	}
+
+	/**
+	 * @param adf an ADF
+	 * @return all 3^n interpretations over its arguments
+	 */
+	public static List<ThreeValuedInterpretation> allInterpretations(AbstractDialecticalFramework adf) {
+		List<ThreeValuedInterpretation> result = new ArrayList<>(List.of(ThreeValuedInterpretation.allUndecided(adf.getNodes())));
+		for (Argument a : adf) {
+			List<ThreeValuedInterpretation> extended = new ArrayList<>();
+			for (ThreeValuedInterpretation v : result) {
+				for (TruthValue value : TruthValue.values()) {
+					extended.add(v.with(a, value));
+				}
+			}
+			result = extended;
+		}
+		return result;
+	}
+
+	/**
+	 * Γ by its definition: the consensus of phi_a over all completions of v,
+	 * evaluated with {@link #classical(ThreeValuedInterpretation, PlFormula)}.
+	 *
+	 * @param adf an ADF
+	 * @param v   an interpretation over its arguments
+	 * @return Γ(v)
+	 */
+	public static ThreeValuedInterpretation gammaByDefinition(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
+		Map<Argument, TruthValue> result = new LinkedHashMap<>();
+		for (Argument a : adf) {
+			PlFormula condition = adf.getAcceptanceCondition(a);
+			TruthValue value = null;
+			for (Iterator<ThreeValuedInterpretation> it = v.completions(); it.hasNext();) {
+				TruthValue w = classical(it.next(), condition);
+				value = value == null ? w : value.consensus(w);
+			}
+			result.put(a, value);
+		}
+		return ThreeValuedInterpretation.of(result);
+	}
+
+	/**
+	 * Classical evaluation, independent of {@link ThreeValuedInterpretation#evaluate(PlFormula)}.
+	 *
+	 * @param w       a two-valued interpretation
+	 * @param formula a formula over its domain
+	 * @return the classical truth value of the formula under w
+	 */
+	public static TruthValue classical(ThreeValuedInterpretation w, PlFormula formula) {
+		Set<String> trueAtoms = new HashSet<>();
+		for (Argument a : w.satisfied()) {
+			trueAtoms.add(a.getName());
+		}
+		return TruthValue.valueOf(holds(formula, trueAtoms));
+	}
+
+	private static boolean holds(PlFormula f, Set<String> trueAtoms) {
+		if (f instanceof Proposition) {
+			return trueAtoms.contains(((Proposition) f).getName());
+		} else if (f instanceof Tautology) {
+			return true;
+		} else if (f instanceof Contradiction) {
+			return false;
+		} else if (f instanceof Negation) {
+			return !holds(((Negation) f).getFormula(), trueAtoms);
+		} else if (f instanceof Conjunction) {
+			return ((Conjunction) f).getFormulas().stream().allMatch(g -> holds(g, trueAtoms));
+		} else if (f instanceof Disjunction) {
+			return ((Disjunction) f).getFormulas().stream().anyMatch(g -> holds(g, trueAtoms));
+		} else if (f instanceof ExclusiveDisjunction) {
+			return ((ExclusiveDisjunction) f).getFormulas().stream().filter(g -> holds(g, trueAtoms)).count() % 2 == 1;
+		} else if (f instanceof Implication) {
+			Implication i = (Implication) f;
+			return !holds(i.getFirstFormula(), trueAtoms) || holds(i.getSecondFormula(), trueAtoms);
+		} else if (f instanceof Equivalence) {
+			Equivalence e = (Equivalence) f;
+			return holds(e.getFormulas().getFirst(), trueAtoms) == holds(e.getFormulas().getSecond(), trueAtoms);
+		}
+		throw new IllegalArgumentException(f.getClass().getName());
 	}
 
 	/**

@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tweetyproject.arg.adf.AdfTestSupport.classical;
 import static org.tweetyproject.arg.adf.AdfTestSupport.randomFormula;
 
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.adf.BruteForceOracle;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -68,7 +68,7 @@ class TseitinEncoderTest {
 						(value ? satisfied : unsatisfied).add(new Argument(ATOMS.get(k)));
 					}
 					ThreeValuedInterpretation w = ThreeValuedInterpretation.of(satisfied, unsatisfied, ATOMS.stream().map(Argument::new).toList());
-					boolean expected = BruteForceOracle.classical(w, formula) == TruthValue.TRUE;
+					boolean expected = classical(w, formula) == TruthValue.TRUE;
 					assumptions[ATOMS.size()] = literal;
 					assertEquals(expected, solver.satisfiable(assumptions), formula + " under " + w);
 					assumptions[ATOMS.size()] = -literal;

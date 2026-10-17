@@ -23,18 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tweetyproject.arg.adf.AdfTestSupport.D1;
 import static org.tweetyproject.arg.adf.AdfTestSupport.adf;
+import static org.tweetyproject.arg.adf.AdfTestSupport.gammaByDefinition;
 import static org.tweetyproject.arg.adf.AdfTestSupport.randomAdf;
 import static org.tweetyproject.arg.adf.AdfTestSupport.v;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.adf.BruteForceOracle;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -78,9 +77,9 @@ class CharacteristicOperatorTest {
 	}
 
 	/**
-	 * Compares the operator (parent-restricted completions with Kleene fast path,
-	 * on the compiled representation) with its definition: the consensus of phi_a
-	 * over all completions of the whole interpretation, evaluated on PlFormulas.
+	 * Compares the operator (parent-restricted completions with Kleene fast path)
+	 * with its definition: the consensus of phi_a over all completions of the
+	 * whole interpretation.
 	 */
 	@Test
 	void agreesWithDefinitionOnRandomAdfs() {
@@ -88,21 +87,8 @@ class CharacteristicOperatorTest {
 		for (int round = 0; round < 400; round++) {
 			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 4, 3);
 			ThreeValuedInterpretation v = randomInterpretation(rng, adf);
-			assertEquals(byDefinition(adf, v), CharacteristicOperator.apply(adf, v), adf + " under " + v);
+			assertEquals(gammaByDefinition(adf, v), CharacteristicOperator.apply(adf, v), adf + " under " + v);
 		}
-	}
-
-	static ThreeValuedInterpretation byDefinition(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		Map<Argument, TruthValue> result = new LinkedHashMap<>();
-		for (Argument a : adf) {
-			TruthValue value = null;
-			for (Iterator<ThreeValuedInterpretation> it = v.completions(); it.hasNext();) {
-				TruthValue w = BruteForceOracle.classical(it.next(), adf.getAcceptanceCondition(a));
-				value = value == null ? w : value.consensus(w);
-			}
-			result.put(a, value);
-		}
-		return ThreeValuedInterpretation.of(result);
 	}
 
 	static ThreeValuedInterpretation randomInterpretation(Random rng, AbstractDialecticalFramework adf) {

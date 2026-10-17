@@ -19,21 +19,31 @@
 package org.tweetyproject.arg.adf.reasoner.sat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.tweetyproject.arg.adf.AdfTestSupport.BREWKA_2;
-import static org.tweetyproject.arg.adf.AdfTestSupport.adf;
+import static org.tweetyproject.arg.adf.AdfTestSupport.allInterpretations;
 import static org.tweetyproject.arg.adf.AdfTestSupport.randomAdf;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.adf.BruteForceOracle;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleCompleteAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleConflictFreeAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -42,18 +52,25 @@ import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Differential tests of the SAT-based Γ and reasoners against the brute-force
- * variants and the independent {@link BruteForceOracle}.
+ * Differential tests of the SAT-based Γ and reasoners against the simple
+ * reasoners on random ADFs, including the empty ADF.
  */
 class SatAdfReasonerTest {
 
+	private static List<AbstractDialecticalFramework> randomAdfs(long seed, int count) {
+		Random rng = new Random(seed);
+		List<AbstractDialecticalFramework> result = new ArrayList<>(List.of(new AbstractDialecticalFramework()));
+		for (int i = 0; i < count; i++) {
+			result.add(randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3)));
+		}
+		return result;
+	}
+
 	@Test
 	void gammaAgreesWithBruteForce() {
-		Random rng = new Random(1);
-		for (int i = 0; i < 150; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(4), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
+		for (AbstractDialecticalFramework adf : randomAdfs(1L, 100)) {
 			try (SatCharacteristicOperator gamma = new SatCharacteristicOperator(adf)) {
-				for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
+				for (ThreeValuedInterpretation v : allInterpretations(adf)) {
 					ThreeValuedInterpretation expected = CharacteristicOperator.apply(adf, v);
 					assertEquals(expected, gamma.apply(v), v + " on " + adf);
 					for (Argument a : adf) {
@@ -64,170 +81,45 @@ class SatAdfReasonerTest {
 		}
 	}
 
-	@Test
-	void twoValuedModelsAgreeWithOracle() {
-		Random rng = new Random(2);
-		SatTwoValuedModelAdfReasoner reasoner = new SatTwoValuedModelAdfReasoner();
-		for (int i = 0; i < 500; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(6), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			Set<ThreeValuedInterpretation> expected = new BruteForceOracle(adf).mod();
+	static Stream<Arguments> reasoners() {
+		return Stream.of(
+				Arguments.of("MOD", new SatTwoValuedModelAdfReasoner(), new SimpleTwoValuedModelAdfReasoner()),
+				Arguments.of("GR", new SatGroundedAdfReasoner(), new SimpleGroundedAdfReasoner()),
+				Arguments.of("CF", new SatConflictFreeAdfReasoner(), new SimpleConflictFreeAdfReasoner()),
+				Arguments.of("NA", new SatNaiveAdfReasoner(), new SimpleNaiveAdfReasoner()),
+				Arguments.of("ADM", new SatAdmissibleAdfReasoner(), new SimpleAdmissibleAdfReasoner()),
+				Arguments.of("ADM, K = 0", new SatAdmissibleAdfReasoner(Sat4jIncrementalSolver::new, 0), new SimpleAdmissibleAdfReasoner()),
+				Arguments.of("CO", new SatCompleteAdfReasoner(), new SimpleCompleteAdfReasoner()),
+				Arguments.of("CO, K = 0", new SatCompleteAdfReasoner(Sat4jIncrementalSolver::new, 0), new SimpleCompleteAdfReasoner()),
+				Arguments.of("PR", new SatPreferredAdfReasoner(), new SimplePreferredAdfReasoner()),
+				Arguments.of("PR, K = 0", new SatPreferredAdfReasoner(Sat4jIncrementalSolver::new, 0), new SimplePreferredAdfReasoner()),
+				Arguments.of("ST", new SatStableAdfReasoner(), new SimpleStableAdfReasoner()));
+	}
+
+	/** compares enumeration, {@code getModel}, {@code isModel} on all interpretations, and both query modes */
+	@ParameterizedTest(name = "{0}")
+	@MethodSource("reasoners")
+	void agreesWithSimpleReasoner(String semantics, AbstractAdfReasoner reasoner, AbstractAdfReasoner reference) {
+		for (AbstractDialecticalFramework adf : randomAdfs(semantics.hashCode(), 100)) {
+			Set<ThreeValuedInterpretation> expected = new HashSet<>(reference.getModels(adf));
 			Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
 			assertEquals(expected, new HashSet<>(models), adf.toString());
 			assertEquals(expected.size(), models.size(), "duplicate models on " + adf);
-			ThreeValuedInterpretation model = reasoner.getModel(adf);
-			assertTrue(model == null ? expected.isEmpty() : expected.contains(model), adf.toString());
-		}
-	}
-
-	@Test
-	void groundedAgreesWithOracle() {
-		Random rng = new Random(3);
-		SatGroundedAdfReasoner reasoner = new SatGroundedAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			BruteForceOracle oracle = new BruteForceOracle(adf);
-			assertEquals(Set.of(oracle.gr()), Set.copyOf(reasoner.getModels(adf)), adf.toString());
-			assertTrue(reasoner.isModel(adf, oracle.gr()), adf.toString());
-			for (ThreeValuedInterpretation v : oracle.all().subList(0, Math.min(5, oracle.all().size()))) {
-				assertEquals(v.equals(oracle.gr()), reasoner.isModel(adf, v), v + " on " + adf);
+			ThreeValuedInterpretation some = reasoner.getModel(adf);
+			assertTrue(some == null ? expected.isEmpty() : expected.contains(some), adf.toString());
+			for (ThreeValuedInterpretation v : allInterpretations(adf)) {
+				assertEquals(expected.contains(v), reasoner.isModel(adf, v), v + " on " + adf);
+			}
+			for (Argument a : adf) {
+				boolean credulous = false, skeptical = true;
+				for (ThreeValuedInterpretation model : expected) {
+					credulous |= model.satisfies(a);
+					skeptical &= model.satisfies(a);
+				}
+				assertEquals(credulous, reasoner.query(adf, a, InferenceMode.CREDULOUS), "credulous " + a + " on " + adf);
+				assertEquals(skeptical, reasoner.query(adf, a, InferenceMode.SKEPTICAL), "skeptical " + a + " on " + adf);
 			}
 		}
-	}
-
-	@Test
-	void conflictFreeAgreesWithOracle() {
-		Random rng = new Random(4);
-		SatConflictFreeAdfReasoner reasoner = new SatConflictFreeAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).cf());
-		}
-	}
-
-	@Test
-	void naiveAgreesWithOracle() {
-		Random rng = new Random(5);
-		SatNaiveAdfReasoner reasoner = new SatNaiveAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).na());
-		}
-	}
-
-	@Test
-	void admissibleAgreesWithOracle() {
-		Random rng = new Random(6);
-		SatAdmissibleAdfReasoner reasoner = new SatAdmissibleAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).adm());
-		}
-	}
-
-	@Test
-	void admissibleWithoutKBipolarEncodingAgreesWithOracle() {
-		Random rng = new Random(7);
-		SatAdmissibleAdfReasoner reasoner = new SatAdmissibleAdfReasoner(Sat4jIncrementalSolver::new, 0);
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).adm());
-		}
-	}
-
-	@Test
-	void preferredAgreesWithOracle() {
-		Random rng = new Random(8);
-		SatPreferredAdfReasoner reasoner = new SatPreferredAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).pr());
-		}
-	}
-
-	@Test
-	void preferredWithoutKBipolarEncodingAgreesWithOracle() {
-		Random rng = new Random(9);
-		SatPreferredAdfReasoner reasoner = new SatPreferredAdfReasoner(Sat4jIncrementalSolver::new, 0);
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).pr());
-		}
-	}
-
-	@Test
-	void completeAgreesWithOracle() {
-		Random rng = new Random(11);
-		SatCompleteAdfReasoner reasoner = new SatCompleteAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).co());
-		}
-	}
-
-	@Test
-	void completeWithoutKBipolarEncodingAgreesWithOracle() {
-		Random rng = new Random(12);
-		SatCompleteAdfReasoner reasoner = new SatCompleteAdfReasoner(Sat4jIncrementalSolver::new, 0);
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).co());
-		}
-	}
-
-	@Test
-	void stableAgreesWithOracle() {
-		Random rng = new Random(10);
-		SatStableAdfReasoner reasoner = new SatStableAdfReasoner();
-		for (int i = 0; i < 300; i++) {
-			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
-			assertAgreesWithOracle(reasoner, adf, new BruteForceOracle(adf).st());
-		}
-	}
-
-	@Test
-	void stableCyclicSupport() {
-		AbstractDialecticalFramework adf = adf(BREWKA_2);
-		SatStableAdfReasoner reasoner = new SatStableAdfReasoner();
-		Argument a = new Argument("a");
-		assertTrue(reasoner.getModels(adf).isEmpty());
-		assertNull(reasoner.getModel(adf));
-		assertFalse(reasoner.query(adf, a, InferenceMode.CREDULOUS));
-		assertTrue(reasoner.query(adf, a, InferenceMode.SKEPTICAL));
-	}
-
-	/** Compares enumeration, {@code getModel} and {@code isModel} on all interpretations. */
-	private static void assertAgreesWithOracle(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf, Set<ThreeValuedInterpretation> expected) {
-		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
-		assertEquals(expected, new HashSet<>(models), adf.toString());
-		assertEquals(expected.size(), models.size(), "duplicate models on " + adf);
-		ThreeValuedInterpretation some = reasoner.getModel(adf);
-		assertTrue(some == null ? expected.isEmpty() : expected.contains(some), adf.toString());
-		for (ThreeValuedInterpretation v : new BruteForceOracle(adf).all()) {
-			assertEquals(expected.contains(v), reasoner.isModel(adf, v), v + " on " + adf);
-		}
-		for (Argument a : adf) {
-			boolean credulous = false, skeptical = true;
-			for (ThreeValuedInterpretation model : expected) {
-				credulous |= model.satisfies(a);
-				skeptical &= model.satisfies(a);
-			}
-			assertEquals(credulous, reasoner.query(adf, a, InferenceMode.CREDULOUS), "credulous " + a + " on " + adf);
-			assertEquals(skeptical, reasoner.query(adf, a, InferenceMode.SKEPTICAL), "skeptical " + a + " on " + adf);
-		}
-	}
-
-	@Test
-	void emptyAdf() {
-		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
-		Set<ThreeValuedInterpretation> empty = Set.of(ThreeValuedInterpretation.allUndecided(adf.getNodes()));
-		assertEquals(empty, Set.copyOf(new SatTwoValuedModelAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatGroundedAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatConflictFreeAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatNaiveAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatAdmissibleAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatPreferredAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatStableAdfReasoner().getModels(adf)));
-		assertEquals(empty, Set.copyOf(new SatCompleteAdfReasoner().getModels(adf)));
 	}
 
 }

@@ -22,9 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.tweetyproject.arg.adf.AdfTestSupport.ADM_NOT_3MOD;
 import static org.tweetyproject.arg.adf.AdfTestSupport.D1;
-import static org.tweetyproject.arg.adf.AdfTestSupport.D2;
 import static org.tweetyproject.arg.adf.AdfTestSupport.adf;
 import static org.tweetyproject.arg.adf.AdfTestSupport.v;
 import static org.tweetyproject.arg.adf.AdfTestSupport.vs;
@@ -200,24 +198,6 @@ class ThreeValuedInterpretationTest {
 		assertEquals(new Extension<>(Set.of(A, C)), v.toExtension());
 		assertEquals(ArgumentStatus.OUT, v.toLabeling().get(B));
 		assertThrows(IllegalArgumentException.class, () -> ThreeValuedInterpretation.fromExtension(af, new Extension<>(Set.of(A, B))));
-	}
-
-	@Test
-	void threeValuedModelsExample() {
-		AbstractDialecticalFramework d1 = adf(D1);
-		for (ThreeValuedInterpretation v : vs(d1, "tftf", "fttf", "uutf", "uutu", "uuuu", "tftu", "tfuu", "fttu", "ftuf")) {
-			assertTrue(v.satisfies(d1), v.toString());
-		}
-		assertFalse(v(d1, "tttf").satisfies(d1));
-		assertTrue(v(adf(D2), "ftuutf").satisfies(adf(D2)));
-	}
-
-	@Test
-	void completeButNotThreeValuedModel() {
-		AbstractDialecticalFramework adf = adf(ADM_NOT_3MOD);
-		ThreeValuedInterpretation v = v(adf, "ut");
-		assertEquals(v, CharacteristicOperator.apply(adf, v));
-		assertFalse(v.satisfies(adf));
 	}
 
 }

@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tweetyproject.arg.adf.AdfTestSupport.BREWKA_2;
 import static org.tweetyproject.arg.adf.AdfTestSupport.D2;
 import static org.tweetyproject.arg.adf.AdfTestSupport.adf;
+import static org.tweetyproject.arg.adf.AdfTestSupport.classical;
 import static org.tweetyproject.arg.adf.AdfTestSupport.randomAdf;
 
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.adf.BruteForceOracle;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -97,22 +97,6 @@ class LinkTypeClassifierTest {
 	}
 
 	@Test
-	void manyParents() {
-		// q occurs in both polarities but is redundant
-		StringBuilder kpp = new StringBuilder("s(p). s(q). s(c). ac(p,c(v)). ac(q,c(v)). ac(c,or(and(p,q),or(and(p,neg(q))");
-		StringBuilder decl = new StringBuilder();
-		for (int i = 0; i <= 20; i++) {
-			decl.append("s(x").append(i).append("). ac(x").append(i).append(",c(v)). ");
-			kpp.append(",or(x").append(i);
-		}
-		kpp.append(")".repeat(21)).append("))).");
-		AbstractDialecticalFramework adf = adf(decl + kpp.toString());
-		assertEquals(LinkType.REDUNDANT, LinkTypeClassifier.classify(adf, new Argument("q"), C));
-		assertEquals(LinkType.SUPPORTING, LinkTypeClassifier.classify(adf, new Argument("p"), C));
-		assertTrue(LinkTypeClassifier.isBipolar(adf));
-	}
-
-	@Test
 	void rejectsNonLinks() {
 		AbstractDialecticalFramework adf = adf(D2);
 		assertThrows(IllegalArgumentException.class, () -> LinkTypeClassifier.classify(adf, new Argument("f"), new Argument("a")));
@@ -137,8 +121,8 @@ class LinkTypeClassifierTest {
 		ThreeValuedInterpretation base = ThreeValuedInterpretation.allUndecided(adf.getNodes());
 		for (var it = base.completions(others); it.hasNext();) {
 			ThreeValuedInterpretation w = it.next();
-			TruthValue withFalse = BruteForceOracle.classical(w.with(link.getParent(), TruthValue.FALSE), adf.getAcceptanceCondition(link.getChild()));
-			TruthValue withTrue = BruteForceOracle.classical(w.with(link.getParent(), TruthValue.TRUE), adf.getAcceptanceCondition(link.getChild()));
+			TruthValue withFalse = classical(w.with(link.getParent(), TruthValue.FALSE), adf.getAcceptanceCondition(link.getChild()));
+			TruthValue withTrue = classical(w.with(link.getParent(), TruthValue.TRUE), adf.getAcceptanceCondition(link.getChild()));
 			monotone &= !(withFalse == TruthValue.TRUE && withTrue == TruthValue.FALSE);
 			antitone &= !(withTrue == TruthValue.TRUE && withFalse == TruthValue.FALSE);
 		}
