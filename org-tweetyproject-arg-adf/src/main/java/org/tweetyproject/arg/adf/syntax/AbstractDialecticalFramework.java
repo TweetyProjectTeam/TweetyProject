@@ -418,13 +418,13 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	 * @return all links (b, a) such that b occurs in phi_a
 	 */
 	public Collection<Link> getLinks() {
-		List<Link> links = new ArrayList<>();
+		Set<Link> links = new LinkedHashSet<>();
 		for (Map.Entry<String, Set<String>> entry : parentMap().entrySet()) {
 			for (String parent : entry.getValue()) {
 				links.add(new Link(new Argument(parent), new Argument(entry.getKey())));
 			}
 		}
-		return Collections.unmodifiableList(links);
+		return Collections.unmodifiableSet(links);
 	}
 
 	/**

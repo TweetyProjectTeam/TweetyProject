@@ -173,6 +173,21 @@ class AbstractDialecticalFrameworkTest {
 	}
 
 	@Test
+	void subgraphsIncludeNodeAndEdgeSubsets() {
+		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
+		assertEquals(1, adf.getSubgraphs().size());
+		adf.add(A);
+		assertEquals(2, adf.getSubgraphs().size());
+		adf.setAcceptanceCondition(A, PA);
+		assertEquals(3, adf.getSubgraphs().size());
+		assertTrue(adf.getSubgraphs().stream().anyMatch(g -> g.getNodes().equals(Set.of(A))
+				&& g.getNumberOfEdges() == 0));
+		assertTrue(adf.getSubgraphs().stream().anyMatch(g -> g.getNodes().equals(Set.of(A))
+				&& g.getEdges().contains(new Link(A, A))));
+		assertEquals(Set.of(new Link(A, A)), adf.getEdges());
+	}
+
+	@Test
 	void fromDungTheory() {
 		DungTheory af = new DungTheory();
 		af.add(A, B, C, D);
