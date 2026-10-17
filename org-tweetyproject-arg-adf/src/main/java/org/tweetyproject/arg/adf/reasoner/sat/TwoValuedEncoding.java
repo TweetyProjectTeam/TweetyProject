@@ -33,13 +33,15 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.sat.SatSolver;
 
 /**
- * The encoding of an ADF in a {@link SatSolver}: a variable x_a for the
- * (two-valued) truth value of every argument a, and the Tseitin literal of
- * every acceptance condition phi_a over these variables, encoded on first use.
+ * The two-valued encoding of an ADF in a {@link SatSolver}: a variable x_a for
+ * the truth value of every argument a, and the Tseitin literal of every
+ * acceptance condition phi_a over these variables, encoded on first use.
+ * Unlike in {@link ThreeValuedEncoding}, all conditions are encoded over these
+ * shared variables, so every model is one two-valued interpretation.
  *
  * @author Lars Bengel
  */
-final class AdfEncoding {
+final class TwoValuedEncoding {
 
 	private final AbstractDialecticalFramework adf;
 
@@ -57,7 +59,7 @@ final class AdfEncoding {
 	 * @param adf    an ADF, which must not be modified while the encoding is used
 	 * @param solver the solver the clauses are added to
 	 */
-	AdfEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
+	TwoValuedEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
 		this.adf = adf;
 		this.solver = solver;
 		this.arguments = new ArrayList<>(adf.getNodes());
@@ -122,7 +124,7 @@ final class AdfEncoding {
 	}
 
 	/** @return the literals that fix the decided arguments of v */
-	int[] assumptions(ThreeValuedInterpretation v) {
+	int[] decided(ThreeValuedInterpretation v) {
 		List<Integer> result = new ArrayList<>();
 		for (Argument a : arguments) {
 			TruthValue value = v.get(a);

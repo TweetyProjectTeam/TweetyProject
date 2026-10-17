@@ -80,13 +80,12 @@ public class SatGroundedAdfReasoner extends AbstractSatAdfReasoner {
 
 	private ThreeValuedInterpretation grounded(AbstractDialecticalFramework adf) {
 		try (SatSolver solver = solvers.get()) {
-			AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
-			AdfEncoding encoding = new AdfEncoding(copy, solver);
+			TwoValuedEncoding encoding = new TwoValuedEncoding(adf, solver);
 			Map<Argument, TruthValue> values = new LinkedHashMap<>();
 			Map<Argument, PlFormula> conditions = new HashMap<>();
 			for (Argument a : encoding.arguments()) {
 				values.put(a, TruthValue.UNDECIDED);
-				conditions.put(a, copy.getAcceptanceCondition(a));
+				conditions.put(a, adf.getAcceptanceCondition(a));
 			}
 			List<Argument> undecided = new ArrayList<>(encoding.arguments());
 			boolean changed = true;

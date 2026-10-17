@@ -32,12 +32,11 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Base class of the brute-force reasoners. By default they generate all 3^n
+ * Base class of all simple reasoners. By default they generate all 3^n
  * (or 2^n for two-valued semantics) interpretations of the ADF and keep those
  * for which {@link #isModel(AbstractDialecticalFramework, ThreeValuedInterpretation)}
  * holds, so a subclass only has to implement the verification of its
- * semantics. Semantics computed differently (e.g. by maximality or a fixpoint
- * iteration) override {@link #getModels(AbstractDialecticalFramework)}.
+ * semantics.
  * <p>
  * The enumeration stops with a {@link CancellationException} if the current
  * thread is interrupted.
@@ -62,12 +61,6 @@ public abstract class AbstractSimpleAdfReasoner extends AbstractAdfReasoner {
 			}
 		}
 		return models;
-	}
-
-	@Override
-	public ThreeValuedInterpretation getModel(AbstractDialecticalFramework adf) {
-		Collection<ThreeValuedInterpretation> models = getModels(adf);
-		return models.isEmpty() ? null : models.iterator().next();
 	}
 
 	/**

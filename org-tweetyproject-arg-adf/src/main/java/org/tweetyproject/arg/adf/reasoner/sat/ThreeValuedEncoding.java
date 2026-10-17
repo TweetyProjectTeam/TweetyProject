@@ -40,8 +40,7 @@ import org.tweetyproject.sat.SatSolver;
  * s_f for the value of every argument s, and a variable p_rs for every link
  * (r, s), which represents the value of r in a completion considered for
  * phi_s. The clauses of the conflict-free, bipolar and k-bipolar encodings are
- * added separately, as are the clauses that restrict the models to more
- * informative interpretations or exclude interpretations found before.
+ * added separately.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  *

@@ -91,20 +91,19 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 	}
 
 	private List<ThreeValuedInterpretation> models(AbstractDialecticalFramework adf, int limit) {
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
-		ThreeValuedInterpretation g = grounded.getModel(copy);
+		ThreeValuedInterpretation g = grounded.getModel(adf);
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
 		if (!g.isTwoValued()) {
-			Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
+			Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
 			boolean exact = admissible.isExact(types);
 			try (SatSolver solver = solvers.get()) {
-				ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+				ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 				encoding.addAdmissible(types, g, exact);
 				encoding.addMoreInformativeThan(g);
 				ThreeValuedInterpretation model;
-				while (models.size() < limit && (model = next(copy, encoding, solver, exact, NO_ASSUMPTIONS)) != null) {
+				while (models.size() < limit && (model = next(adf, encoding, solver, exact, NO_ASSUMPTIONS)) != null) {
 					checkInterrupted();
-					model = maximize(copy, types, exact, model);
+					model = maximize(adf, types, exact, model);
 					models.add(model);
 					encoding.excludeLessInformative(model);
 				}
@@ -161,38 +160,37 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 		if (mode == InferenceMode.CREDULOUS) {
 			return admissible.query(adf, argument, mode);
 		}
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
-		ThreeValuedInterpretation g = grounded.getModel(copy);
+		ThreeValuedInterpretation g = grounded.getModel(adf);
 		if (g.get(argument).isDecided()) {
 			return g.get(argument) == TruthValue.TRUE;
 		}
-		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
+		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
 		boolean exact = admissible.isExact(types);
 		try (SatSolver solver = solvers.get()) {
-			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 			encoding.addAdmissible(types, g, exact);
 			encoding.addMoreInformativeThan(g);
-			if (next(copy, encoding, solver, exact, NO_ASSUMPTIONS) == null) {
+			if (next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null) {
 				// g is the only preferred interpretation
 				return false;
 			}
 			int[] notTrue = { -encoding.trueVariable(argument) };
 			ThreeValuedInterpretation model;
-			while ((model = next(copy, encoding, solver, exact, notTrue)) != null) {
+			while ((model = next(adf, encoding, solver, exact, notTrue)) != null) {
 				checkInterrupted();
 				try (SatSolver maximizer = solvers.get()) {
-					ThreeValuedEncoding maximal = new ThreeValuedEncoding(copy, maximizer);
+					ThreeValuedEncoding maximal = new ThreeValuedEncoding(adf, maximizer);
 					maximal.addAdmissible(types, model, exact);
 					int at = maximal.trueVariable(argument);
 					while (!model.isTwoValued()) {
 						maximal.addMoreInformativeThan(model);
-						ThreeValuedInterpretation larger = next(copy, maximal, maximizer, exact, new int[] { -at });
+						ThreeValuedInterpretation larger = next(adf, maximal, maximizer, exact, new int[] { -at });
 						if (larger == null) {
 							break;
 						}
 						model = larger;
 					}
-					if (model.isTwoValued() || next(copy, maximal, maximizer, exact, new int[] { at }) == null) {
+					if (model.isTwoValued() || next(adf, maximal, maximizer, exact, new int[] { at }) == null) {
 						return false;
 					}
 				}
@@ -205,20 +203,19 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 	@Override
 	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		requireDomain(adf, v);
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
-		if (!admissible.isModel(copy, v)) {
+		if (!admissible.isModel(adf, v)) {
 			return false;
 		}
 		if (v.isTwoValued()) {
 			return true;
 		}
-		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
+		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
 		boolean exact = admissible.isExact(types);
 		try (SatSolver solver = solvers.get()) {
-			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 			encoding.addAdmissible(types, v, exact);
 			encoding.addMoreInformativeThan(v);
-			return next(copy, encoding, solver, exact, NO_ASSUMPTIONS) == null;
+			return next(adf, encoding, solver, exact, NO_ASSUMPTIONS) == null;
 		}
 	}
 

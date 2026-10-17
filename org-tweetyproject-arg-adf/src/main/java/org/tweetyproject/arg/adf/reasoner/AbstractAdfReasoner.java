@@ -49,11 +49,6 @@ import org.tweetyproject.commons.QualitativeReasoner;
  * Common base of all ADF reasoners. A reasoner computes the models of an ADF
  * under one semantics as {@link ThreeValuedInterpretation}s and answers
  * acceptance and verification queries.
- * <p>
- * The default implementations of the query methods are based on
- * {@code getModels}; subclasses may override them with direct procedures. An
- * argument is accepted skeptically if every model maps it to t (vacuously true
- * without models) and credulously if some model does.
  *
  * @author Lars Bengel
  */
@@ -71,6 +66,17 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	 */
 	@Override
 	public abstract boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v);
+
+	/**
+	 * @param adf an ADF
+	 * @return some model of the ADF, here the first of {@code getModels}, or
+	 *         null if there is none
+	 */
+	@Override
+	public ThreeValuedInterpretation getModel(AbstractDialecticalFramework adf) {
+		Collection<ThreeValuedInterpretation> models = getModels(adf);
+		return models.isEmpty() ? null : models.iterator().next();
+	}
 
 	/**
 	 * @param adf      an ADF
@@ -124,7 +130,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	}
 
 	/**
-	 * Returns the brute-force reference reasoner for one of the semantics CF, NA,
+	 * Returns the simple reference reasoner for one of the semantics CF, NA,
 	 * ADM, CO, GR, PR and ST. Two- and three-valued models have no constant in
 	 * {@link Semantics}; use {@code SimpleTwoValuedModelAdfReasoner} and
 	 * {@code SimpleThreeValuedModelAdfReasoner} directly.

@@ -36,11 +36,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 /**
  * SAT-based variant of the {@link CharacteristicOperator}: Γ_D(v)(a) is t if
  * phi_a has no falsifying completion of v, f if it has no satisfying one, and
- * u otherwise. Both checks are calls to one incremental solver, with the
- * decided arguments of v as assumptions. As in the brute-force variant, the
- * calls are skipped if the Kleene value of phi_a under v is already decided.
- * The operator works on a copy of the ADF and must be closed to release the
- * solver.
+ * u otherwise.
  *
  * @author Lars Bengel
  */
@@ -50,7 +46,7 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 
 	private final SatSolver solver;
 
-	private final AdfEncoding encoding;
+	private final TwoValuedEncoding encoding;
 
 	private final Map<Argument, PlFormula> conditions = new HashMap<>();
 
@@ -68,9 +64,9 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 	 * @param solvers creates the solver used by this operator
 	 */
 	public SatCharacteristicOperator(AbstractDialecticalFramework adf, Supplier<SatSolver> solvers) {
-		this.adf = new AbstractDialecticalFramework(adf);
+		this.adf = adf;
 		this.solver = solvers.get();
-		this.encoding = new AdfEncoding(this.adf, solver);
+		this.encoding = new TwoValuedEncoding(this.adf, solver);
 	}
 
 	/**
@@ -80,7 +76,7 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 	 */
 	public ThreeValuedInterpretation apply(ThreeValuedInterpretation v) {
 		requireDomain(v);
-		int[] assumptions = encoding.assumptions(v);
+		int[] assumptions = encoding.decided(v);
 		Map<Argument, TruthValue> result = new LinkedHashMap<>();
 		for (Argument a : encoding.arguments()) {
 			result.put(a, gamma(v, assumptions, a));
@@ -100,7 +96,7 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 		if (!adf.contains(argument)) {
 			throw new IllegalArgumentException("Not an argument of the ADF: " + argument);
 		}
-		return gamma(v, encoding.assumptions(v), argument);
+		return gamma(v, encoding.decided(v), argument);
 	}
 
 	private TruthValue gamma(ThreeValuedInterpretation v, int[] assumptions, Argument a) {

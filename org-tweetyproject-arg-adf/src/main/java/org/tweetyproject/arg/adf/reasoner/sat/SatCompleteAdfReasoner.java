@@ -80,17 +80,16 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 
 	@Override
 	public Collection<ThreeValuedInterpretation> getModels(AbstractDialecticalFramework adf) {
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
-		ThreeValuedInterpretation g = grounded.getModel(copy);
+		ThreeValuedInterpretation g = grounded.getModel(adf);
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
 		models.add(g);
 		if (g.isTwoValued()) {
 			return models;
 		}
-		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
+		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
 		boolean exact = admissible.isExact(types);
-		try (SatSolver solver = solvers.get(); SatCharacteristicOperator gamma = new SatCharacteristicOperator(copy, solvers)) {
-			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
+		try (SatSolver solver = solvers.get(); SatCharacteristicOperator gamma = new SatCharacteristicOperator(adf, solvers)) {
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
 			encoding.addAdmissible(types, g, exact);
 			if (exact) {
 				encoding.addComplete(types);
@@ -103,7 +102,7 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				if (exact) {
 					models.add(model);
-				} else if (admissible.isModel(copy, model)) {
+				} else if (admissible.isModel(adf, model)) {
 					ThreeValuedInterpretation next = gamma.apply(model);
 					while (!next.equals(model)) {
 						encoding.exclude(model);

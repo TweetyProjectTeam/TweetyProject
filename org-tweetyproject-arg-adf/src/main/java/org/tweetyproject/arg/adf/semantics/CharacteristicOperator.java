@@ -29,9 +29,6 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * Γ_D(v)(a) = ⊓{ w(phi_a) | w ∈ [v]_2 },
  * i.e. a is mapped to t (f) if phi_a is true (false) in every completion of v,
  * and to u otherwise.
- * <p>
- * This is the brute-force variant: it completes only the undecided parents of
- * a, and only if the Kleene value of phi_a under v is u.
  *
  * @see "Gerhard Brewka, Stefan Woltran. 'Abstract Dialectical Frameworks.' KR 2010."
  * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."

@@ -91,17 +91,16 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 		if (adf.isEmpty()) {
 			return models;
 		}
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 		try (SatSolver solver = solvers.get()) {
-			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
-			boolean exact = encode(copy, encoding);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
+			boolean exact = encode(adf, encoding);
 			encoding.addMoreInformativeThan(undecided);
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while ((witness = solver.witness(variables)) != null) {
 				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
-				if (exact || isAdmissible(copy, model)) {
+				if (exact || isAdmissible(adf, model)) {
 					models.add(model);
 				}
 				encoding.exclude(model);
@@ -121,17 +120,16 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 		if (mode == InferenceMode.SKEPTICAL) {
 			return false;
 		}
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 		try (SatSolver solver = solvers.get()) {
-			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
-			boolean exact = encode(copy, encoding);
+			ThreeValuedEncoding encoding = new ThreeValuedEncoding(adf, solver);
+			boolean exact = encode(adf, encoding);
 			int[] variables = encoding.variables();
 			int[] accepted = { encoding.trueVariable(argument) };
 			boolean[] witness;
 			while ((witness = solver.witness(variables, accepted)) != null) {
 				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
-				if (exact || isAdmissible(copy, model)) {
+				if (exact || isAdmissible(adf, model)) {
 					return true;
 				}
 				encoding.exclude(model);
@@ -143,7 +141,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 	@Override
 	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
 		requireDomain(adf, v);
-		return isAdmissible(new AbstractDialecticalFramework(adf), v);
+		return isAdmissible(adf, v);
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 			return true;
 		}
 		try (SatSolver solver = solvers.get()) {
-			AdfEncoding encoding = new AdfEncoding(adf, solver);
+			TwoValuedEncoding encoding = new TwoValuedEncoding(adf, solver);
 			List<Integer> violated = new ArrayList<>();
 			for (Argument a : encoding.arguments()) {
 				TruthValue value = v.get(a);
@@ -196,7 +194,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 				}
 			}
 			solver.add(violated.stream().mapToInt(Integer::intValue).toArray());
-			return !solver.satisfiable(encoding.assumptions(v));
+			return !solver.satisfiable(encoding.decided(v));
 		}
 	}
 

@@ -83,7 +83,7 @@ public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 
 	@Override
 	public boolean isModel(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		return twoValuedModel.isModel(adf, v) && isStable(new AbstractDialecticalFramework(adf), v);
+		return twoValuedModel.isModel(adf, v) && isStable(adf, v);
 	}
 
 	/**
@@ -92,9 +92,8 @@ public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 	 */
 	private List<ThreeValuedInterpretation> models(AbstractDialecticalFramework adf, Argument argument, boolean accepted, int limit) {
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
-		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 		try (SatSolver solver = solvers.get()) {
-			AdfEncoding encoding = new AdfEncoding(copy, solver);
+			TwoValuedEncoding encoding = new TwoValuedEncoding(adf, solver);
 			encoding.addTwoValuedModels();
 			int[] assumptions = argument == null ? new int[0]
 					: new int[] { accepted ? encoding.variable(argument) : -encoding.variable(argument) };
@@ -103,7 +102,7 @@ public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 			while (models.size() < limit && (witness = solver.witness(variables, assumptions)) != null) {
 				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
-				if (isStable(copy, model)) {
+				if (isStable(adf, model)) {
 					models.add(model);
 				}
 				encoding.exclude(witness);
