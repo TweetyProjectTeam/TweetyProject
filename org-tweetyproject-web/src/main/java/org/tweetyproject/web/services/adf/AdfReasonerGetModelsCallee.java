@@ -20,9 +20,9 @@ package org.tweetyproject.web.services.adf;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
-import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.web.services.Callee;
 /**
  * The ADFReasonerGetModelsCallee class represents a callee for obtaining multiple models
@@ -33,8 +33,8 @@ import org.tweetyproject.web.services.Callee;
  */
 public class AdfReasonerGetModelsCallee extends Callee {
 
-    /** The AbstractADFReasoner used for obtaining multiple models */
-    private AbstractADFReasoner reasoner;
+    /** The AbstractAdfReasoner used for obtaining multiple models */
+    private AbstractAdfReasoner reasoner;
 
     /** The ADF on which the getModels operation is performed */
     private AbstractDialecticalFramework bbase;
@@ -42,10 +42,10 @@ public class AdfReasonerGetModelsCallee extends Callee {
     /**
      * Constructs a new AdfReasonerGetModelsCallee with the specified reasoner and base ADF.
      *
-     * @param reasoner The AbstractADFReasoner to be used for obtaining multiple models
+     * @param reasoner The AbstractAdfReasoner to be used for obtaining multiple models
      * @param bbase    The base ADF on which the getModels operation is performed
      */
-    public AdfReasonerGetModelsCallee(AbstractADFReasoner reasoner, AbstractDialecticalFramework bbase) {
+    public AdfReasonerGetModelsCallee(AbstractAdfReasoner reasoner, AbstractDialecticalFramework bbase) {
         this.reasoner = reasoner;
         this.bbase = bbase;
     }
@@ -57,7 +57,7 @@ public class AdfReasonerGetModelsCallee extends Callee {
      * @throws Exception If an error occurs during the getModels operation
      */
     @Override
-    public Collection<Interpretation> call() throws Exception {
+    public Collection<ThreeValuedInterpretation> call() throws Exception {
         return this.reasoner.getModels(this.bbase);
     }
 }
