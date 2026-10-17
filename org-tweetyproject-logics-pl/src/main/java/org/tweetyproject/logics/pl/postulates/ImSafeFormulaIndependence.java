@@ -70,7 +70,7 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
 		PlFormula safeFormula = orderedKB.get(0);
-		kb2.add(safeFormula);
+		kb2.remove(safeFormula);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 == inconsistency2);
 	}

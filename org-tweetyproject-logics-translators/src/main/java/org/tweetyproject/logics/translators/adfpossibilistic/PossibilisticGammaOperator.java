@@ -1,7 +1,7 @@
 
 package org.tweetyproject.logics.translators.adfpossibilistic;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,13 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.parser.KppAdfParser;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.Negation;
@@ -28,7 +24,6 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
-import org.tweetyproject.logics.translators.adfcl.ConverterADF2CL;
 
 
 /**
@@ -82,13 +77,10 @@ public class PossibilisticGammaOperator {
 		 */
 		System.out.println("");
 		System.out.println("Step 1: Input ADF:");
-		NativeMinisatSolver solver = new NativeMinisatSolver();
-		LinkStrategy strat = new SatLinkStrategy(solver);
-		KppADFFormatParser parser_adf = new KppADFFormatParser(strat, true);
-		AbstractDialecticalFramework adf = parser_adf.parse(new File(path_to_adf));
-		for (Argument ar : adf.getArguments()) {
+		AbstractDialecticalFramework adf = new KppAdfParser().parse(Path.of(path_to_adf));
+		for (Argument ar : adf.getNodes()) {
 			System.out.println("Argument: \t\t " + ar);
-			AcceptanceCondition ac = adf.getAcceptanceCondition(ar);
+			PlFormula ac = adf.getAcceptanceCondition(ar);
 			System.out.println("Acceptance Condition \t" + ac);
 		}		
 		
@@ -190,13 +182,11 @@ public class PossibilisticGammaOperator {
 		System.out.println("");
 		System.out.println("Step 3: Order all arguments (and their negation) by the possibility measure of their (negated) acceptance condition");	
 		System.out.println("");
-		ConverterADF2CL converter = new ConverterADF2CL();
 		HashMap<PlFormula,Double> map_possibility = new HashMap<PlFormula,Double>();
 		HashMap<PlFormula,Double> map_necessity = new HashMap<PlFormula,Double>();
 		
-		for (Argument ar : adf.getArguments()) {
-			AcceptanceCondition ac = adf.getAcceptanceCondition(ar);
-			PlFormula ac_form = converter.getFormulaFromAcc(ac);
+		for (Argument ar : adf.getNodes()) {
+			PlFormula ac_form = adf.getAcceptanceCondition(ar);
 			PlFormula ar_form = new Proposition(ar.getName());
 			map_possibility.put(ar_form, possDistInput.getPossibility(ac_form));
 			map_possibility.put(new Negation(ar_form), possDistInput.getPossibility(new Negation(ac_form)));

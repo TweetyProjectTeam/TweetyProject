@@ -26,13 +26,16 @@ import org.tweetyproject.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.syntax.AssociativePlFormula;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
+import org.tweetyproject.logics.pl.syntax.Contradiction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Equivalence;
+import org.tweetyproject.logics.pl.syntax.ExclusiveDisjunction;
 import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * A common base class for inconsistency measure implementations based on SAT
@@ -124,6 +127,50 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 	 * @return SAT encoding based on the specific inconsistency measure
 	 */
 	protected abstract PlBeliefSet getSATEncoding(Collection<PlFormula> kb, int upper_bound);
+
+	/**
+	 * Returns the copy of the given proposition with the given index, used to
+	 * rename formulas apart in SAT encodings. The index is enclosed in characters
+	 * that cannot occur in parsed proposition names, so that copies of different
+	 * propositions never coincide (with name+index, e.g., copy 11 of "a1" and copy
+	 * 1 of "a11" would be the same proposition).
+	 *
+	 * @param p some proposition
+	 * @param index the index of the copy
+	 * @return the copy of p with the given index
+	 */
+	protected static Proposition copyOf(Proposition p, Object index) {
+		return new Proposition(p.getName() + "<" + index + ">");
+	}
+
+	/**
+	 * Returns the copy of the given formula with the given index, i.e., the formula
+	 * with every proposition p replaced by copyOf(p, index).
+	 *
+	 * @param f some formula
+	 * @param index the index of the copy
+	 * @return the copy of f with the given index
+	 */
+	protected static PlFormula copyOf(PlFormula f, Object index) {
+		PlFormula fnew = f.clone();
+		for (Proposition p : f.getAtoms()) {
+			Proposition p_i = copyOf(p, index);
+			for (int ai = 0; ai < f.numberOfOccurrences(p); ai++)
+				fnew = fnew.replace(p, p_i, 1);
+		}
+		return fnew;
+	}
+
+	/**
+	 * Returns an auxiliary proposition for SAT encodings. Its name cannot occur in
+	 * parsed formulas and differs from all copies of propositions (see copyOf).
+	 *
+	 * @param name some name
+	 * @return a proposition named &lt;name&gt;
+	 */
+	protected static Proposition auxiliary(String name) {
+		return new Proposition("<" + name + ">");
+	}
 
 	/**
 	 * Returns the given formula in conjunctive normal form.
@@ -218,7 +265,6 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 					if (alias.equals(right))
 						return alias;
 					Equivalence eT = new Equivalence(alias,right);
-					System.out.println("adding conjunction " + eT);
 					equivalences.add(eT.toCnf());
 					return alias;
 				}
@@ -249,6 +295,24 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 				equivalences.add(eT.toCnf());
 				transformSubformula(c);
 				return alias;
+			} else if (f instanceof Tautology || f instanceof Contradiction) {
+				PlFormula alias = generateFormulaAlias(f);
+				equivalences.add(f instanceof Tautology ? alias : new Negation(alias));
+				return alias;
+			} else if (f instanceof ExclusiveDisjunction) {
+				if (((ExclusiveDisjunction) f).isEmpty())
+					return transformSubformula(new Contradiction());
+				ExclusiveDisjunction rest = (ExclusiveDisjunction) f.clone();
+				PlFormula first = rest.iterator().next();
+				rest.remove(first);
+				transformSubformula(first);
+				PlFormula alias = generateFormulaAlias(f);
+				if (rest.isEmpty())
+					return alias;
+				Equivalence eT = new Equivalence(alias, new ExclusiveDisjunction(generateFormulaAlias(first), generateFormulaAlias(rest)));
+				equivalences.add(eT.toCnf());
+				transformSubformula(rest);
+				return alias;
 			}
 			else
 				throw new IllegalArgumentException("Unknown formula type " + f.getClass());
@@ -268,16 +332,11 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 				return input;
 			if ((input instanceof AssociativePlFormula) && ((AssociativePlFormula)input).size()==1)
 				return generateFormulaAlias(((AssociativePlFormula)input).iterator().next());
-			String name = "TxT";
-			if (mappings.containsKey(input))
-					name += "" + mappings.get(input);
-			else {
+			if (!mappings.containsKey(input)) {
 				i++;
 				mappings.put(input, i);
-				name += "" + i;
 			}
-			name = name + "T";
-			return new Proposition(name);
+			return auxiliary("T" + mappings.get(input));
 		}
 	}
 

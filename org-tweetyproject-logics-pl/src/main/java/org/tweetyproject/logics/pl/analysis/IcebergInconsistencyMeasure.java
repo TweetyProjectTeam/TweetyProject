@@ -18,8 +18,11 @@
  */
 package org.tweetyproject.logics.pl.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.commons.util.SetTools;
@@ -31,6 +34,7 @@ import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class implements the inconsistency measures proposed in [De Bona,
@@ -184,26 +188,58 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	}
 
 	/**
-	 * Attempts to find a surjective mapping from "m" to the powerset of "candidate".
+	 * Attempts to find a surjective mapping from "m" to the powerset of "candidate",
+	 * i.e., a choice of a minimal subset of "candidate" entailing f (wrt. the
+	 * consequence operation) for every f in "m" such that the chosen subsets cover
+	 * "candidate". (Minimal entailing subsets are not unique in general, so all of
+	 * them are considered; choosing just one would make the result depend on the
+	 * iteration order of the formulas.)
 	 * 
 	 * @param m         a minimal inconsistent subset in Cn*(candidate)
 	 * @param candidate a set of formulas
 	 * @return true iff there is a *-mapping for m and candidate
 	 */
 	private boolean hasStarMapping(Collection<PlFormula> m, Set<PlFormula> candidate) {
-		Set<PlFormula> minimal_entailing_sets = new HashSet<PlFormula>();
+		List<Set<PlFormula>> subsets = new ArrayList<Set<PlFormula>>(new SetTools<PlFormula>().subsets(candidate));
+		subsets.sort(Comparator.comparingInt(Set::size));
+		List<List<Set<PlFormula>>> options = new ArrayList<List<Set<PlFormula>>>();
 		for (PlFormula mf : m) {
-			Set<PlFormula> minimal_entailing_set = new HashSet<PlFormula>(candidate);
-			// Try removing formulas to find the minimal set of formulas implying mf
-			for (PlFormula cf : candidate) {
-				minimal_entailing_set.remove(cf);
-				if (!isInConsequence(mf, minimal_entailing_set))
-					minimal_entailing_set.add(cf);
+			// all minimal subsets of candidate implying mf
+			List<Set<PlFormula>> minimal_entailing_sets = new ArrayList<Set<PlFormula>>();
+			for (Set<PlFormula> subset : subsets) {
+				boolean minimal = true;
+				for (Set<PlFormula> e : minimal_entailing_sets)
+					if (subset.containsAll(e)) {
+						minimal = false;
+						break;
+					}
+				if (minimal && isInConsequence(mf, subset))
+					minimal_entailing_sets.add(subset);
 			}
-			minimal_entailing_sets.addAll(minimal_entailing_set);
+			options.add(minimal_entailing_sets);
 		}
-		if (minimal_entailing_sets.equals(candidate))
-			return true;
+		return coversCandidate(options, 0, new HashSet<PlFormula>(), candidate);
+	}
+
+	/**
+	 * Checks whether one of the given sets can be chosen for each index &gt;= i
+	 * such that their union with "covered" is "candidate".
+	 * 
+	 * @param options   for every formula of a mis, its minimal entailing subsets
+	 * @param i         the current index
+	 * @param covered   the union of the sets chosen for the indices &lt; i
+	 * @param candidate a set of formulas
+	 * @return true iff such a choice exists
+	 */
+	private boolean coversCandidate(List<List<Set<PlFormula>>> options, int i, Set<PlFormula> covered, Set<PlFormula> candidate) {
+		if (i == options.size())
+			return covered.equals(candidate);
+		for (Set<PlFormula> s : options.get(i)) {
+			Set<PlFormula> c = new HashSet<PlFormula>(covered);
+			c.addAll(s);
+			if (coversCandidate(options, i + 1, c, candidate))
+				return true;
+		}
 		return false;
 	}
 
@@ -250,18 +286,20 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 				return false;
 		} else if (cn == ConsequenceOperation.CONJUNCTS) {
 			// a formula is in Cn^(kb) iff it is a conjunct of kb
-			Collection<PlFormula> consequence = getConjuncts((Set<PlFormula>) kb);
+			Collection<PlFormula> consequence = getConjuncts(kb);
 			return consequence.containsAll(subset);
 		} else if (cn == ConsequenceOperation.SMALLEST_CONJUNCTS) {
 			// a formula is in Cn^(kb) iff it is a smallest conjunct of kb
 			Collection<PlFormula> consequence = new HashSet<PlFormula>();
 			for (PlFormula f : kb) {
-				if (f instanceof Conjunction) {
-					Conjunction c = (Conjunction) f.collapseAssociativeFormulas();
-					consequence.addAll(c.getFormulas());
-				}
-				if (f.isLiteral())
+				PlFormula c = f.collapseAssociativeFormulas();
+				if (c instanceof Conjunction)
+					consequence.addAll(((Conjunction) c).getFormulas());
+				else {
+					// a formula that is not a conjunction is its own (smallest) conjunct
 					consequence.add(f);
+					consequence.add(c);
+				}
 			}
 			return consequence.containsAll(subset);
 		} else if (cn == ConsequenceOperation.MODULAR_CLASSICAL_CONSEQUENCE) {
@@ -272,34 +310,37 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 			}
 			return true;
 		} else if (cn == ConsequenceOperation.MODUS_PONENS) {
-			// a formula is in Cn->(kb) iff it can be derived from a conjunct of a formula
-			// in kb using modus ponens
-
-			// trivial case
-			if (kb.containsAll(subset))
-				return true;
-
-			Collection<PlFormula> conjuncts = getConjuncts((Set<PlFormula>) kb);
+			// a formula is in Cn->(kb) iff it is a conjunct of a formula in kb or it can
+			// be derived from the formulas of kb and their conjuncts (and the conjuncts of
+			// derived formulas) by repeatedly applying modus ponens
+			Collection<PlFormula> conjuncts = getConjuncts(kb);
+			Collection<PlFormula> derived = new ArrayList<PlFormula>();
+			for (PlFormula f : kb) {
+				derived.add(f);
+				derived.addAll(getSmallestConjuncts(f));
+			}
+			conjuncts.addAll(derived);
 			boolean changed = true;
 			while (changed) {
 				changed = false;
-				Collection<PlFormula> new_conjuncts = getConjuncts((Set<PlFormula>) kb);
-				for (PlFormula c : conjuncts) {
+				for (PlFormula c : new ArrayList<PlFormula>(derived)) {
 					if (c instanceof Implication) {
 						Implication i = (Implication) c;
-						if (conjuncts.contains(i.getFormulas().getFirst())) {
-							new_conjuncts.add(i.getFormulas().getSecond());
+						PlFormula conclusion = i.getFormulas().getSecond();
+						if (conjuncts.contains(i.getFormulas().getFirst()) && !conjuncts.contains(conclusion)) {
+							conjuncts.add(conclusion);
+							derived.add(conclusion);
+							for (PlFormula d : getSmallestConjuncts(conclusion))
+								if (!conjuncts.contains(d)) {
+									conjuncts.add(d);
+									derived.add(d);
+								}
 							changed = true;
 						}
 					}
 				}
-				conjuncts = new_conjuncts;
 			}
-
-			for (PlFormula f : subset)
-				if (!conjuncts.contains(f))
-					return false;
-			return true;
+			return conjuncts.containsAll(subset);
 
 		} else if (cn == ConsequenceOperation.PRIME_IMPLICATE) {
 			// a formula is in Cn^PI(kb) iff it is a prime implicate of some formula in kb
@@ -307,7 +348,7 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 				boolean found = false;
 				for (PlFormula t : kb) {
 					if (new SimplePlReasoner().query(t, s))
-						if (t.getPrimeImplicants().containsAll(s.getPrimeImplicants()))
+						if (getPrimeImplicants(t).containsAll(getPrimeImplicants(s)))
 							found = true;
 				}
 				if (!found)
@@ -319,7 +360,7 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 			SimplePlReasoner reasoner = new SimplePlReasoner();
 			for (PlFormula s : subset) {
 				if (s.isLiteral()) {
-					if (!reasoner.query((PlBeliefSet) kb, s))
+					if (!reasoner.query(new PlBeliefSet(kb), s))
 						return false;
 				} else
 					return false;
@@ -330,23 +371,66 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	}
 
 	/**
+	 * Returns all conjuncts of the formulas of a knowledge base: every formula itself
+	 * and, for a conjunction c_1&amp;&amp;...&amp;&amp;c_n, all conjunctions of non-empty
+	 * subsets of {c_1,...,c_n} (e.g. {a,b,a&amp;&amp;b} for a&amp;&amp;b).
+	 * 
 	 * @param kb pl beliefset
 	 * @return all conjuncts (of all sizes) of a knowledge base
 	 */
-	private Collection<PlFormula> getConjuncts(Set<PlFormula> kb) {
+	private Collection<PlFormula> getConjuncts(Collection<PlFormula> kb) {
 		Collection<PlFormula> conjuncts = new HashSet<PlFormula>();
 		for (PlFormula f : kb) {
-			if (f instanceof Conjunction) {
-				Conjunction c = (Conjunction) f.collapseAssociativeFormulas();
-				while (!c.isEmpty()) {
-					conjuncts.add(c.collapseAssociativeFormulas());
-					c.remove(0);
-				}
+			conjuncts.add(f);
+			PlFormula c = f.collapseAssociativeFormulas();
+			if (!(c instanceof Conjunction)) {
+				conjuncts.add(c);
+				continue;
 			}
-			if (f.isLiteral())
-				conjuncts.add(f);
+			List<PlFormula> elements = new ArrayList<PlFormula>(((Conjunction) c).getFormulas());
+			for (long mask = 1; mask < (1L << elements.size()); mask++) {
+				List<PlFormula> sub = new ArrayList<PlFormula>();
+				for (int j = 0; j < elements.size(); j++)
+					if ((mask & (1L << j)) != 0)
+						sub.add(elements.get(j));
+				conjuncts.add(sub.size() == 1 ? sub.get(0) : new Conjunction(sub));
+			}
 		}
 		return conjuncts;
+	}
+
+	/**
+	 * @param f some formula
+	 * @return the elements of the (collapsed) conjunction f, or f itself if it is
+	 *         not a conjunction
+	 */
+	private Collection<PlFormula> getSmallestConjuncts(PlFormula f) {
+		PlFormula c = f.collapseAssociativeFormulas();
+		Collection<PlFormula> result = new ArrayList<PlFormula>();
+		if (c instanceof Conjunction)
+			result.addAll(((Conjunction) c).getFormulas());
+		else
+			result.add(c);
+		return result;
+	}
+
+	/**
+	 * @param f some formula
+	 * @return the prime implicants of f, each given as the set of its literals
+	 *         (prime implicants are compared as sets, not as formulas, whose
+	 *         order of literals is arbitrary)
+	 */
+	private Set<Set<PlFormula>> getPrimeImplicants(PlFormula f) {
+		Set<Set<PlFormula>> result = new HashSet<Set<PlFormula>>();
+		for (PlFormula pi : f.getPrimeImplicants()) {
+			Set<PlFormula> literals = new HashSet<PlFormula>();
+			if (pi instanceof Conjunction)
+				literals.addAll(((Conjunction) pi).getFormulas());
+			else if (!(pi instanceof Tautology))
+				literals.add(pi);
+			result.add(literals);
+		}
+		return result;
 	}
 
 	/**

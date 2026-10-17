@@ -199,7 +199,7 @@ public class Equivalence extends PlFormula {
 
 	@Override
 	public Equivalence clone() {
-		return new Equivalence(this.formulas);
+		return new Equivalence(this.formulas.getFirst().clone(), this.formulas.getSecond().clone());
 	}
 	
 	@Override

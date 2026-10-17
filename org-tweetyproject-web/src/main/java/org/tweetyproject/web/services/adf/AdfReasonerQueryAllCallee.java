@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.web.services.adf;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractADFReasoner;
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.web.services.Callee;
@@ -29,7 +29,7 @@ import java.util.Collection;
 
 /**
  * The AdfReasonerQueryAllCallee class represents a callee for obtaining the credulous/skeptical arguments
- * using a specified AbstractADFReasoner and AbstractDialecticalFramework.
+ * using a specified AbstractAdfReasoner and AbstractDialecticalFramework.
  *
  * This class extends the Callee class and implements the call() method to execute
  * the getModel operation using the provided reasoner and base AbstractDialecticalFramework.
@@ -38,8 +38,8 @@ import java.util.Collection;
  */
 public class AdfReasonerQueryAllCallee extends Callee {
 
-    /** The AbstractADFReasoner used for obtaining the model */
-    private final AbstractADFReasoner reasoner;
+    /** The AbstractAdfReasoner used for obtaining the model */
+    private final AbstractAdfReasoner reasoner;
 
     /** The AbstractDialecticalFramework on which the getModel operation is performed */
     private final AbstractDialecticalFramework bbase;
@@ -50,11 +50,11 @@ public class AdfReasonerQueryAllCallee extends Callee {
     /**
      * Constructs a new AdfReasonerGetModelCallee with the specified reasoner and base AbstractDialecticalFramework.
      *
-     * @param reasoner The AbstractADFReasoner to be used for obtaining the model
+     * @param reasoner The AbstractAdfReasoner to be used for obtaining the model
      * @param bbase    The base AbstractDialecticalFramework on which the getModel operation is performed
      * @param mode     The inference mode
      */
-    public AdfReasonerQueryAllCallee(AbstractADFReasoner reasoner, AbstractDialecticalFramework bbase, InferenceMode mode) {
+    public AdfReasonerQueryAllCallee(AbstractAdfReasoner reasoner, AbstractDialecticalFramework bbase, InferenceMode mode) {
         this.reasoner = reasoner;
         this.bbase = bbase;
         this.mode = mode;

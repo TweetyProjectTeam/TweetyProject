@@ -266,20 +266,37 @@ public abstract class PlFormula implements ClassicalFormula {
 		// first we obtain the DNF
 		PlFormula f = this.toDnf();
 		
+		// represent every implicant as a conjunction of literals: the DNF may still
+		// contain the constants + and - (and their negations), which are removed
+		// (+) or make the implicant inconsistent (-)
+		Set<PlFormula> implicants = new HashSet<PlFormula>();
+		boolean tautology = false;
+		for (PlFormula i : (f instanceof Disjunction) ? ((Disjunction) f).getFormulas() : java.util.Collections.singleton(f)) {
+			Conjunction c = new Conjunction();
+			boolean inconsistent = false;
+			for (PlFormula l : (i instanceof Conjunction) ? ((Conjunction) i).getFormulas() : java.util.Collections.singleton(i)) {
+				PlFormula inner = (l instanceof Negation) ? ((Negation) l).getFormula() : null;
+				if (l instanceof Tautology || inner instanceof Contradiction)
+					continue;
+				if (l instanceof Contradiction || inner instanceof Tautology) {
+					inconsistent = true;
+					break;
+				}
+				c.add(l);
+			}
+			if (inconsistent)
+				continue;
+			if (c.isEmpty())
+				tautology = true;
+			implicants.add(c);
+		}
+		if (tautology)
+			return new Tautology();
+		if (implicants.isEmpty())
+			return new Contradiction();
 		// special case: only one conjunctive clause
-		if (!(f instanceof Disjunction) || (f instanceof Disjunction && ((Disjunction)f).size()==1))
-			return f;
-		Set<PlFormula> implicants = new HashSet<PlFormula>(((Disjunction) f).getFormulas());
-		// check that every implicant is represented as a conjunction
-		Set<PlFormula> tmp = new HashSet<PlFormula>();
-		for (PlFormula i : implicants)
-			if (!(i instanceof Conjunction)) {
-				Conjunction c = new Conjunction();
-				c.add(i);
-				tmp.add(c);
-			} else
-				tmp.add(i);
-		implicants = tmp;
+		if (implicants.size() == 1)
+			return implicants.iterator().next().collapseAssociativeFormulas();
 		
 		// resolve implicants until this is no more possible
 		boolean changed;

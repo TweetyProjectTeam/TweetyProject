@@ -1,16 +1,13 @@
 package org.tweetyproject.sat.minisat;
 
+import org.tweetyproject.sat.NativeLibrary;
+
 final class Binding {
 
 	static {
-		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.contains("win")) {
-			System.load(Binding.class.getResource("/minisat.dll").getPath());			
-		} else if (osName.contains("nux")) {
-			System.load(Binding.class.getResource("/minisat.so").getPath());			
-		}
+		NativeLibrary.load("minisat");
 	}
-	
+
 	static native long init();
 
 	static native void delete(long handle);

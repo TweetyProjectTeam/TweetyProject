@@ -164,8 +164,10 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
 		boolean isRightFormula = false;
+		// split at the first operator, so that chains associate to the right (if all
+		// operators were dropped, "a=>b=>c" would be parsed as "a=>bc")
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(LogicalSymbols.EQUIVALENCE()) )
+			if(!isRightFormula && (o instanceof String) && ((String)o).equals(LogicalSymbols.EQUIVALENCE()) )
 				isRightFormula = true;
 			else if (isRightFormula) 
 				right.add(o);
@@ -193,8 +195,10 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
 		boolean isRightFormula = false;
+		// split at the first operator, so that chains associate to the right (if all
+		// operators were dropped, "a=>b=>c" would be parsed as "a=>bc")
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(LogicalSymbols.IMPLICATION()) )
+			if(!isRightFormula && (o instanceof String) && ((String)o).equals(LogicalSymbols.IMPLICATION()) )
 				isRightFormula = true;
 			else if (isRightFormula) 
 				right.add(o);

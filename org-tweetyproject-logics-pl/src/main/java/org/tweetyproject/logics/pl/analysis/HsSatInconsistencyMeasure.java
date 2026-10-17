@@ -85,22 +85,16 @@ public class HsSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 			List<PlFormula> list = Arrays.asList(kb.toArray(new PlFormula[0]));
 			for (int j = 0; j < kb.size(); j++) {
 				// Create alibi versions for all formulas
-				PlFormula fnew = list.get(j).clone();
-				for (Proposition p : list.get(j).getAtoms()) {
-					Proposition p_i = new Proposition(p.getName() + i);
-					for (int ai = 0; ai < list.get(j).numberOfOccurrences(p); ai++) {
-						fnew = fnew.replace(p, p_i, 1);
-					}
-				}
+				PlFormula fnew = copyOf(list.get(j), i);
 				// Create clauses that represent membership of a formula in a block
 				// The alibis of all formulas inside each block are set to true
-				Proposition pij = new Proposition("p_" + i + "_" + j);
+				Proposition pij = auxiliary("p_" + i + "_" + j);
 				encoding.add(new Implication(pij,fnew));
 				
 				// every formula has to be a member of at least one partition
 				Set<Proposition> exactly_one_of = new HashSet<Proposition>();
 				for (int xi = 0; xi < upper_bound; xi++) {
-					pij = new Proposition("p_" + xi + "_" + j);
+					pij = auxiliary("p_" + xi + "_" + j);
 					exactly_one_of.add(pij);
 				}
 				encoding.add(new Disjunction(exactly_one_of));

@@ -28,6 +28,8 @@ public final class PicosatSatSolver implements SatSolver {
      */
     private int currentVar = 1;
 
+    private boolean closed;
+
     /**
      * Initializes a new instance of the PicoSAT SAT solver.
      *
@@ -43,8 +45,8 @@ public final class PicosatSatSolver implements SatSolver {
 
 	@Override
 	public boolean satisfiable(int[] assumptions) {
-		assume(handle, assumptions);
-		return Binding.sat(handle, Binding.NO_DECISION_LIMIT);
+		assume(handle(), assumptions);
+		return Binding.sat(handle(), Binding.NO_DECISION_LIMIT);
 	}
 
 	@Override
@@ -56,15 +58,15 @@ public final class PicosatSatSolver implements SatSolver {
 			}
 			return witness;
 		}
-		return new boolean[0];
+		return null;
 	}
 
 	@Override
 	public void add(int[] clause) {
 		for (int i = 0; i < clause.length; i++) {
-			Binding.add(handle, clause[i]);
+			Binding.add(handle(), clause[i]);
 		}
-		Binding.add(handle, 0); // 0 indicates end of clause
+		Binding.add(handle(), 0); // 0 indicates end of clause
 	}
 
 	@Override
@@ -74,7 +76,17 @@ public final class PicosatSatSolver implements SatSolver {
 
 	@Override
 	public void close() {
-		Binding.reset(handle);
+		if (!closed) {
+			closed = true;
+			Binding.reset(handle);
+		}
+	}
+
+	private long handle() {
+		if (closed) {
+			throw new IllegalStateException("The solver is closed.");
+		}
+		return handle;
 	}
 
 	private static void assume(long handle, int[] assumptions) {

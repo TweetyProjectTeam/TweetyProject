@@ -63,7 +63,7 @@ class RequestControllerAdfTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","NA"
+                            "CF","ADM","CO","GR","PR","ST","NA","IS"
                           ],
                           "commands": [
                             "get_models",
@@ -103,7 +103,7 @@ class RequestControllerAdfTest {
                           ],
                           "semantics": "ADM",
                           "solver": null,
-                          "answer": "{{ u(1) u(2) u(3)}, {t(2) u(1) u(3)}, {t(2) f(1) u(3)}, {t(2) f(1) f(3)}}",
+                          "answer": "{{u(1) u(2) u(3)}, {t(2) u(1) u(3)}, {t(2) f(1) u(3)}, {t(2) f(1) f(3)}}",
                           "unit_time": "s",
                           "status": "SUCCESS"
                         }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.tweetyproject.arg.adf.util.ThreeValuedBitSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.InterpretationIterator;
 import org.tweetyproject.commons.Signature;
@@ -31,7 +30,8 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 
 	private List<Proposition> set;
 	
-	private ThreeValuedBitSet currentItem;
+	/** the current values, null for both */
+	private Boolean[] currentItem;
 
 	/**
 	 * Creates new iterator.
@@ -45,7 +45,7 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 	 */
 	public PriestWorldIterator(PlSignature sig){
 		this.set = new ArrayList<Proposition>(sig.toCollection());
-		this.currentItem = new ThreeValuedBitSet(set.size());
+		this.currentItem = new Boolean[set.size()];
 		this.sig = sig;
 	}
 	
@@ -69,7 +69,7 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 		
 		// Iterate over all propositions
 		for(int i = 0; i < this.set.size(); i++) {
-				Boolean bool = this.currentItem.get(i);
+				Boolean bool = this.currentItem[i];
 				if (bool == null) {
 					next_pw.set(this.set.get(i),TruthValue.BOTH);
 				}
@@ -89,7 +89,7 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 	 * @param bitSet some bit set.
 	 * @return the incremented bit set
 	 */
-	private ThreeValuedBitSet increment(ThreeValuedBitSet bitSet){
+	private Boolean[] increment(Boolean[] bitSet){
 		// carry = true = need to place +1 from last round
 		// carry = false = kein Übertrag >> das +1 konnte bereits "integriert" werden
 		boolean carry = true;
@@ -98,18 +98,18 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 		while(carry){
 			
 			// Null und False vertragen den Carry, in dem sie eins hochsetzen			
-			if (bitSet.get(i) == null) {
+			if (bitSet[i] == null) {
 				carry = false;
-				bitSet.set(i, false);
+				bitSet[i] = false;
 			}
-			else if (bitSet.get(i) == false) {
+			else if (bitSet[i] == false) {
 				carry = false;
-				bitSet.set(i, true);
+				bitSet[i] = true;
 			}
 			// nur wenn das bit auf "true" steht, dann bleibt der carry erhalten
 			else {
 				carry = true;
-				bitSet.set(i, null);
+				bitSet[i] = null;
 				// Wenn selbst das letzte Bits geflippt wurde, dann 
 				// steht jetzt alles auf "u", ich bin einmal durch und breche ab!
 				if (i == this.set.size()-1) {

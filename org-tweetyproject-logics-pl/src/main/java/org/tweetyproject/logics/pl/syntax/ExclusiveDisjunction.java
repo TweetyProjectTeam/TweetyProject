@@ -101,7 +101,8 @@ public class ExclusiveDisjunction extends AssociativePlFormula {
 				Conjunction right = new Conjunction(temp_left, new Negation(temp_right));
 				temp_left = new Disjunction(left, right);
 			}
-			return (Disjunction) temp_left.trim();
+			// the operands of the negations are in CNF, not yet in NNF
+			return temp_left.toNnf();
 		}
 		else 
 			return new Disjunction();
@@ -145,7 +146,9 @@ public class ExclusiveDisjunction extends AssociativePlFormula {
 				Disjunction right = new Disjunction(temp_left, temp_right);
 				temp_left = new Conjunction(left, right);
 			}
-			return (Conjunction) temp_left.trim();
+			// negations and disjunctions of the CNFs of the operands still have to be
+			// normalised (otherwise, e.g., (a&&b)^^c yields the clause !(a&&b)||!c)
+			return temp_left.toCnf();
 		}
 		else 
 			return new Conjunction();
@@ -183,10 +186,9 @@ public class ExclusiveDisjunction extends AssociativePlFormula {
 	 */
 	@Override
 	public boolean isClause() {
-		for (PlFormula f : this.getFormulas())
-			if (!f.isLiteral())
-				return false;
-		return true;
+		// an exclusive disjunction is not a disjunction of literals, even if all
+		// its operands are literals (a^^b is equivalent to (a||b)&&(!a||!b))
+		return false;
 	}
 
 	/*

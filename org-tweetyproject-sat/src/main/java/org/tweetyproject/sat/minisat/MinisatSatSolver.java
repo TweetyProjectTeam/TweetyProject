@@ -24,6 +24,7 @@ public final class MinisatSatSolver implements SatSolver {
      */
 	private final long handle;
 
+	private boolean closed;
 
     /**
      * Initializes a new instance of the MiniSat SAT solver.
@@ -40,12 +41,8 @@ public final class MinisatSatSolver implements SatSolver {
 	}
 
 	@Override
-	public boolean satisfiable() {
-		return Binding.solve(handle);
-	}
-
-	@Override
 	public boolean satisfiable(int[] assumptions) {
+		long handle = handle();
 		switch (assumptions.length) {
 		case 0:
 			return Binding.solve(handle);
@@ -61,50 +58,52 @@ public final class MinisatSatSolver implements SatSolver {
 	}
 
 	@Override
-	public boolean[] witness(int[] atoms) {
-		if (satisfiable()) {
-			boolean[] values = new boolean[atoms.length];
-			for (int i = 0; i < values.length; i++) {
-				values[i] = value(handle, atoms[i]);
-			}
-			return values;
+	public boolean[] witness(int[] atoms, int[] assumptions) {
+		if (!satisfiable(assumptions)) {
+			return null;
 		}
-		return new boolean[0];
+		boolean[] values = new boolean[atoms.length];
+		for (int i = 0; i < values.length; i++) {
+			values[i] = value(handle, atoms[i]);
+		}
+		return values;
 	}
 
 	private static boolean value(long handle, int literal) {
 		int value = Binding.value(handle, literal);
 		switch (value) {
 		case 0:
-			return false;
-		case 1:
 			return true;
+		case 1:
+			return false;
 		default:
 			throw new IllegalStateException("undef truth value for literal " + literal);
 		}
 	}
 
 	@Override
-	public boolean[] witness(int[] atoms, int[] assumptions) {
-		if (satisfiable(assumptions)) {
-			return witness(atoms);
-		}
-		return new boolean[0];
-	}
-
-	@Override
 	public void add(int[] clause) {
-		Binding.add(handle, clause, clause.length);
+		Binding.add(handle(), clause, clause.length);
 	}
 
 	@Override
 	public int newVar() {
-		return Binding.newVar(handle);
+		return Binding.newVar(handle());
 	}
 
 	@Override
 	public void close() {
-		Binding.delete(handle);
+		if (!closed) {
+			closed = true;
+			Binding.delete(handle);
+		}
+	}
+
+	private long handle() {
+		if (closed) {
+			throw new IllegalStateException("The solver is closed.");
+		}
+		return handle;
 	}
 
 }
