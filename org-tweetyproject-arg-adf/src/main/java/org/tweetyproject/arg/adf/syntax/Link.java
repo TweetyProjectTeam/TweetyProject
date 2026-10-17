@@ -23,7 +23,7 @@ import org.tweetyproject.graphs.DirectedEdge;
 
 /**
  * A link (parent, child) of an ADF: the parent occurs in the acceptance
- * condition of the child. Links carry no type; see {@link LinkType}.
+ * condition of the child.
  *
  * @author Lars Bengel
  */

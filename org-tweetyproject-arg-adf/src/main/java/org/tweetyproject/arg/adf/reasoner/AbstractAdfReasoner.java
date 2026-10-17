@@ -132,10 +132,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	}
 
 	/**
-	 * Returns the simple reference reasoner for one of the semantics CF, NA,
-	 * ADM, CO, GR, PR, ST and IS. Two- and three-valued models have no constant in
-	 * {@link Semantics}; use {@code SimpleTwoValuedModelAdfReasoner} and
-	 * {@code SimpleThreeValuedModelAdfReasoner} directly.
+	 * Returns the simple reference reasoner for one of the {@link Semantics}
 	 *
 	 * @param semantics a semantics
 	 * @return the simple reasoner for it
@@ -166,9 +163,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 
 	/**
 	 * Returns the SAT-based reasoner with the {@code Sat4jIncrementalSolver} for
-	 * one of the semantics CF, NA, ADM, CO, GR, PR, ST and IS. Two-valued models have
-	 * no constant in {@link Semantics}; use {@code SatTwoValuedModelAdfReasoner}
-	 * directly.
+	 * one of the {@link Semantics}
 	 *
 	 * @param semantics a semantics
 	 * @return the SAT-based reasoner for it

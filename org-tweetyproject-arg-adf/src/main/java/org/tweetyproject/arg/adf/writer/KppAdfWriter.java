@@ -43,11 +43,7 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * Writes ADFs in the k++ADF / DIAMOND text format read by {@link org.tweetyproject.arg.adf.parser.KppAdfParser}.
  * <p>
  * Conjunctions, disjunctions and exclusive disjunctions are written as nested
- * binary terms, so that the output is also readable by tools that only accept
- * binary connectives; a single operand is written on its own, an empty
- * conjunction as {@code c(v)} and an empty (exclusive) disjunction as
- * {@code c(f)}. All of these rewritings preserve classical and Kleene
- * evaluation.
+ * binary terms.
  *
  * @author Lars Bengel
  */

@@ -59,12 +59,9 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * Every statement {@code s(x)} declares an argument and every
  * {@code ac(x, phi)} gives its acceptance condition. Conditions are built from
  * argument names, the constants {@code c(v)} (⊤) and {@code c(f)} (⊥), and the
- * connectives {@code neg/1}, {@code and}, {@code or}, {@code xor} (one or more
- * operands), {@code imp/2} and {@code iff/2}. Text after {@code %} up to the
- * end of a line is a comment. Every argument needs exactly one acceptance
+ * connectives {@code neg/1}, {@code and}, {@code or}, {@code xor}, {@code imp/2} 
+ * and {@code iff/2}. Every argument needs exactly one acceptance
  * condition, and conditions may only mention declared arguments.
- * {@link #parseFormula(Reader)} parses a single acceptance condition, whose
- * argument names are not checked.
  *
  * @author Lars Bengel
  */
