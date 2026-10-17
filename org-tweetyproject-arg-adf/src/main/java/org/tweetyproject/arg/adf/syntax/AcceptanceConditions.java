@@ -103,7 +103,7 @@ public final class AcceptanceConditions {
 			return new Equivalence(substitute(e.getFormulas().getFirst(), replacements),
 					substitute(e.getFormulas().getSecond(), replacements));
 		}
-		throw unsupported(formula);
+		throw unsupportedConnective(formula);
 	}
 
 	private static List<PlFormula> substituteAll(List<PlFormula> formulas, Map<String, ? extends PlFormula> replacements) {
@@ -167,7 +167,7 @@ public final class AcceptanceConditions {
 			Equivalence e = (Equivalence) formula;
 			return List.of(e.getFormulas().getFirst(), e.getFormulas().getSecond());
 		}
-		throw unsupported(formula);
+		throw unsupportedConnective(formula);
 	}
 
 	/**
@@ -189,7 +189,12 @@ public final class AcceptanceConditions {
 		return literals.size() == 1 ? literals.get(0) : new Conjunction(literals);
 	}
 
-	private static IllegalArgumentException unsupported(PlFormula formula) {
+	/**
+	 * @param formula a formula with a connective that is not supported in
+	 *                acceptance conditions
+	 * @return the exception to throw for it
+	 */
+	public static IllegalArgumentException unsupportedConnective(PlFormula formula) {
 		return new IllegalArgumentException("Unsupported connective in acceptance condition: "
 				+ (formula == null ? "null" : formula.getClass().getSimpleName()));
 	}

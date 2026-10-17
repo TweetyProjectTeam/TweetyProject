@@ -404,8 +404,7 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	 */
 	@Override
 	public Set<Argument> getChildren(Node node) {
-		requireArgument(node);
-		return toArguments(childMap().get(((Argument) node).getName()));
+		return toArguments(childMap().get(requireArgument(node)));
 	}
 
 	@Override
@@ -691,11 +690,7 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument, DungSignat
 	}
 
 	private void requireDomain(ThreeValuedInterpretation v) {
-		Set<String> names = new HashSet<>();
-		for (Argument a : v.getDomain()) {
-			names.add(a.getName());
-		}
-		if (!names.equals(conditions.keySet())) {
+		if (!v.isDefinedOver(this)) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of this ADF.");
 		}
 	}

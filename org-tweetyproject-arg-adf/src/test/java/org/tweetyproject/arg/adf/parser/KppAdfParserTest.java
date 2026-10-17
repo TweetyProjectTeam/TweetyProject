@@ -101,6 +101,16 @@ class KppAdfParserTest {
 	}
 
 	@Test
+	void parserMethodsOfCommons(@TempDir Path dir) throws IOException {
+		Proposition a = new Proposition("a"), b = new Proposition("b");
+		assertEquals(new Conjunction(List.of(a, new Negation(b))), parser.parseFormula("and(a, neg(b))"));
+		assertThrows(ParserException.class, () -> parser.parseFormula("and(a, b) c"));
+		Path file = dir.resolve("d2.kpp");
+		writer.write(adf(D2), file);
+		assertEquals(adf(D2), parser.parseBeliefBaseFromFile(file.toString()));
+	}
+
+	@Test
 	void writerRejectsUnrepresentableNames() {
 		AbstractDialecticalFramework adf = new AbstractDialecticalFramework();
 		adf.add(new Argument("a b"));

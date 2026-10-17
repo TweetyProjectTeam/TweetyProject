@@ -191,7 +191,7 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	 * @throws IllegalArgumentException if the domain of v differs from the arguments of the ADF
 	 */
 	protected static void requireDomain(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		if (!v.getDomain().equals(adf.getNodes())) {
+		if (!v.isDefinedOver(adf)) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of the ADF.");
 		}
 	}

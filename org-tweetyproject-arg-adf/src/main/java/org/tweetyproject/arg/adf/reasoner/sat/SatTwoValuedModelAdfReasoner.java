@@ -66,21 +66,13 @@ public class SatTwoValuedModelAdfReasoner extends AbstractSatAdfReasoner {
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
 		try (SatSolver solver = solvers.get()) {
 			AdfEncoding encoding = new AdfEncoding(new AbstractDialecticalFramework(adf), solver);
-			for (Argument a : encoding.arguments()) {
-				int x = encoding.variable(a), phi = encoding.condition(a);
-				solver.add(-x, phi);
-				solver.add(x, -phi);
-			}
+			encoding.addTwoValuedModels();
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while (models.size() < limit && (witness = solver.witness(variables)) != null) {
 				checkInterrupted();
 				models.add(encoding.decode(witness));
-				int[] blocking = new int[variables.length];
-				for (int i = 0; i < variables.length; i++) {
-					blocking[i] = witness[i] ? -variables[i] : variables[i];
-				}
-				solver.add(blocking);
+				encoding.exclude(witness);
 			}
 		}
 		return models;

@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntSupplier;
 import java.util.function.ToIntFunction;
 
+import org.tweetyproject.arg.adf.syntax.AcceptanceConditions;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Contradiction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
@@ -54,16 +56,42 @@ public final class TseitinEncoder {
 
 	private final Map<PlFormula, Integer> literals = new HashMap<>();
 
-	/** a literal fixed to true, created on first use */
-	private int top;
+	/** supplies a literal fixed to true */
+	private final IntSupplier top;
 
 	/**
 	 * @param solver the solver the clauses are added to
 	 * @param atoms  the solver variable of each proposition
 	 */
 	public TseitinEncoder(SatSolver solver, ToIntFunction<Proposition> atoms) {
+		this(solver, atoms, trueLiteral(solver));
+	}
+
+	/**
+	 * @param solver the solver the clauses are added to
+	 * @param atoms  the solver variable of each proposition
+	 * @param top    supplies a literal fixed to true, see {@link #trueLiteral(SatSolver)}
+	 */
+	public TseitinEncoder(SatSolver solver, ToIntFunction<Proposition> atoms, IntSupplier top) {
 		this.solver = solver;
 		this.atoms = atoms;
+		this.top = top;
+	}
+
+	/**
+	 * @param solver a solver
+	 * @return a supplier of one literal that is fixed to true in the solver,
+	 *         created on first use; it can be shared by several encoders
+	 */
+	public static IntSupplier trueLiteral(SatSolver solver) {
+		int[] literal = new int[1];
+		return () -> {
+			if (literal[0] == 0) {
+				literal[0] = solver.newVar();
+				solver.add(literal[0]);
+			}
+			return literal[0];
+		};
 	}
 
 	/**
@@ -84,9 +112,9 @@ public final class TseitinEncoder {
 
 	private int define(PlFormula formula) {
 		if (formula instanceof Tautology) {
-			return top();
+			return top.getAsInt();
 		} else if (formula instanceof Contradiction) {
-			return -top();
+			return -top.getAsInt();
 		} else if (formula instanceof Negation) {
 			return -encode(((Negation) formula).getFormula());
 		} else if (formula instanceof Conjunction) {
@@ -102,7 +130,7 @@ public final class TseitinEncoder {
 		} else if (formula instanceof ExclusiveDisjunction) {
 			int[] operands = encodeAll((ExclusiveDisjunction) formula);
 			if (operands.length == 0) {
-				return -top();
+				return -top.getAsInt();
 			}
 			int result = operands[0];
 			for (int i = 1; i < operands.length; i++) {
@@ -110,7 +138,7 @@ public final class TseitinEncoder {
 			}
 			return result;
 		}
-		throw new IllegalArgumentException("Unsupported formula: " + formula);
+		throw AcceptanceConditions.unsupportedConnective(formula);
 	}
 
 	private int[] encodeAll(Iterable<PlFormula> operands) {
@@ -132,7 +160,7 @@ public final class TseitinEncoder {
 	/** x ↔ (l_1 ∧ ... ∧ l_n) */
 	private int and(int[] operands) {
 		if (operands.length == 0) {
-			return top();
+			return top.getAsInt();
 		} else if (operands.length == 1) {
 			return operands[0];
 		}
@@ -155,14 +183,6 @@ public final class TseitinEncoder {
 		solver.add(x, -a, b);
 		solver.add(x, a, -b);
 		return x;
-	}
-
-	private int top() {
-		if (top == 0) {
-			top = solver.newVar();
-			solver.add(top);
-		}
-		return top;
 	}
 
 }

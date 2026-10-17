@@ -95,11 +95,7 @@ public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 		AbstractDialecticalFramework copy = new AbstractDialecticalFramework(adf);
 		try (SatSolver solver = solvers.get()) {
 			AdfEncoding encoding = new AdfEncoding(copy, solver);
-			for (Argument a : encoding.arguments()) {
-				int x = encoding.variable(a), phi = encoding.condition(a);
-				solver.add(-x, phi);
-				solver.add(x, -phi);
-			}
+			encoding.addTwoValuedModels();
 			int[] assumptions = argument == null ? new int[0]
 					: new int[] { accepted ? encoding.variable(argument) : -encoding.variable(argument) };
 			int[] variables = encoding.variables();
@@ -110,11 +106,7 @@ public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 				if (isStable(copy, model)) {
 					models.add(model);
 				}
-				int[] blocking = new int[variables.length];
-				for (int i = 0; i < variables.length; i++) {
-					blocking[i] = witness[i] ? -variables[i] : variables[i];
-				}
-				solver.add(blocking);
+				encoding.exclude(witness);
 			}
 		}
 		return models;

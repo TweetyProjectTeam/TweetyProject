@@ -43,6 +43,8 @@ final class AdfEncoding {
 
 	private final AbstractDialecticalFramework adf;
 
+	private final SatSolver solver;
+
 	private final List<Argument> arguments;
 
 	private final Map<Argument, Integer> variables = new HashMap<>();
@@ -57,6 +59,7 @@ final class AdfEncoding {
 	 */
 	AdfEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
 		this.adf = adf;
+		this.solver = solver;
 		this.arguments = new ArrayList<>(adf.getNodes());
 		for (Argument a : arguments) {
 			variables.put(a, solver.newVar());
@@ -90,6 +93,32 @@ final class AdfEncoding {
 			conditions.put(a, literal);
 		}
 		return literal;
+	}
+
+	/**
+	 * Adds x_a ↔ phi_a for every argument a, so that the models are the
+	 * two-valued models of the ADF.
+	 */
+	void addTwoValuedModels() {
+		for (Argument a : arguments) {
+			int x = variables.get(a), phi = condition(a);
+			solver.add(-x, phi);
+			solver.add(x, -phi);
+		}
+	}
+
+	/**
+	 * Excludes the given assignment from the models.
+	 *
+	 * @param values the values of {@link #variables()}
+	 */
+	void exclude(boolean[] values) {
+		int[] clause = new int[values.length];
+		for (int i = 0; i < values.length; i++) {
+			int x = variables.get(arguments.get(i));
+			clause[i] = values[i] ? -x : x;
+		}
+		solver.add(clause);
 	}
 
 	/** @return the literals that fix the decided arguments of v */

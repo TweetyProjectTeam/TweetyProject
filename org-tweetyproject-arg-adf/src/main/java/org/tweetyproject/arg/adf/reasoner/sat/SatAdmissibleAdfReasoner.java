@@ -20,6 +20,7 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -103,7 +104,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 				if (exact || isAdmissible(copy, model)) {
 					models.add(model);
 				}
-				encoding.addRefineUnequal(model);
+				encoding.exclude(model);
 			}
 		}
 		return models;
@@ -133,7 +134,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 				if (exact || isAdmissible(copy, model)) {
 					return true;
 				}
-				encoding.addRefineUnequal(model);
+				encoding.exclude(model);
 			}
 		}
 		return false;
@@ -146,6 +147,23 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 	}
 
 	/**
+	 * @param types the types of the links of an ADF
+	 * @return true if the maximal number k of dependent parents of an argument is
+	 *         smaller than the bound K, so that the k-bipolar encoding is used and
+	 *         its models are exactly the admissible interpretations
+	 */
+	boolean isExact(Map<Link, LinkType> types) {
+		Map<Argument, Integer> count = new HashMap<>();
+		int k = 0;
+		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
+			if (entry.getValue() == LinkType.DEPENDENT) {
+				k = Math.max(k, count.merge(entry.getKey().getChild(), 1, Integer::sum));
+			}
+		}
+		return k < maxDependentParents;
+	}
+
+	/**
 	 * Adds the k-bipolar encoding if k is smaller than the bound, and the
 	 * conflict-free encoding with the bipolar clauses otherwise.
 	 *
@@ -153,7 +171,7 @@ public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 	 */
 	private boolean encode(AbstractDialecticalFramework adf, ThreeValuedEncoding encoding) {
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(adf, solvers);
-		boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+		boolean exact = isExact(types);
 		encoding.addAdmissible(types, ThreeValuedInterpretation.allUndecided(adf.getNodes()), exact);
 		return exact;
 	}

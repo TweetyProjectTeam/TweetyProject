@@ -115,7 +115,7 @@ public class KppAdfWriter {
 			write(operands.get(1), s);
 			s.append(')');
 		} else {
-			throw new IllegalArgumentException("Unsupported connective: " + f.getClass().getSimpleName());
+			throw AcceptanceConditions.unsupportedConnective(f);
 		}
 	}
 

@@ -50,8 +50,6 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  */
 public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 
-	private final int maxDependentParents;
-
 	private final SatAdmissibleAdfReasoner admissible;
 
 	private final SatGroundedAdfReasoner grounded;
@@ -76,7 +74,6 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 	 */
 	public SatCompleteAdfReasoner(Supplier<SatSolver> solvers, int maxDependentParents) {
 		super(solvers);
-		this.maxDependentParents = maxDependentParents;
 		this.admissible = new SatAdmissibleAdfReasoner(solvers, maxDependentParents);
 		this.grounded = new SatGroundedAdfReasoner(solvers);
 	}
@@ -91,7 +88,7 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 			return models;
 		}
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
-		boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+		boolean exact = admissible.isExact(types);
 		try (SatSolver solver = solvers.get(); SatCharacteristicOperator gamma = new SatCharacteristicOperator(copy, solvers)) {
 			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
 			encoding.addAdmissible(types, g, exact);
@@ -109,7 +106,7 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 				} else if (admissible.isModel(copy, model)) {
 					ThreeValuedInterpretation next = gamma.apply(model);
 					while (!next.equals(model)) {
-						encoding.addRefineUnequal(model);
+						encoding.exclude(model);
 						model = next;
 						next = gamma.apply(model);
 					}
@@ -119,7 +116,7 @@ public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 					}
 					models.add(model);
 				}
-				encoding.addRefineUnequal(model);
+				encoding.exclude(model);
 			}
 		}
 		return models;

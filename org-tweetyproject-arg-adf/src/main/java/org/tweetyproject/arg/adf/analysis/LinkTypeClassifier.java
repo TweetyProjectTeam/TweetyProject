@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.util.TseitinEncoder;
@@ -137,14 +138,13 @@ public final class LinkTypeClassifier {
 
 		private final Map<Argument, Integer> variables = new HashMap<>();
 
-		/** a variable fixed to true */
-		private final int top;
+		/** supplies a literal fixed to true */
+		private final IntSupplier top;
 
 		Context(AbstractDialecticalFramework adf, SatSolver solver) {
 			this.adf = adf;
 			this.solver = solver;
-			this.top = solver.newVar();
-			solver.add(top);
+			this.top = TseitinEncoder.trueLiteral(solver);
 		}
 
 		/**
@@ -166,8 +166,9 @@ public final class LinkTypeClassifier {
 
 		/** @return {monotone, antitone}, both decided exactly; known properties are not checked again */
 		private boolean[] check(PlFormula condition, Argument parent, Argument child, boolean monotone, boolean antitone) {
-			int withFalse = new TseitinEncoder(solver, p -> atom(p, parent, -top)).encode(condition);
-			int withTrue = new TseitinEncoder(solver, p -> atom(p, parent, top)).encode(condition);
+			int t = top.getAsInt();
+			int withFalse = new TseitinEncoder(solver, p -> atom(p, parent, -t), top).encode(condition);
+			int withTrue = new TseitinEncoder(solver, p -> atom(p, parent, t), top).encode(condition);
 			monotone = monotone || !solver.satisfiable(new int[] { withFalse, -withTrue });
 			antitone = antitone || !solver.satisfiable(new int[] { withTrue, -withFalse });
 			return new boolean[] { monotone, antitone };

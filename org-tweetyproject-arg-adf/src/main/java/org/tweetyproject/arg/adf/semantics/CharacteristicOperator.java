@@ -91,7 +91,7 @@ public final class CharacteristicOperator {
 	}
 
 	private static void requireDomain(AbstractDialecticalFramework adf, ThreeValuedInterpretation v) {
-		if (!v.getDomain().equals(adf.getNodes())) {
+		if (!v.isDefinedOver(adf)) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of the ADF.");
 		}
 	}

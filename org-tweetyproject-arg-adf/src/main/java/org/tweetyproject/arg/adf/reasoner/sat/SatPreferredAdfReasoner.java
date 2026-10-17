@@ -52,8 +52,6 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 
 	private static final int[] NO_ASSUMPTIONS = new int[0];
 
-	private final int maxDependentParents;
-
 	private final SatAdmissibleAdfReasoner admissible;
 
 	private final SatGroundedAdfReasoner grounded;
@@ -78,7 +76,6 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 	 */
 	public SatPreferredAdfReasoner(Supplier<SatSolver> solvers, int maxDependentParents) {
 		super(solvers);
-		this.maxDependentParents = maxDependentParents;
 		this.admissible = new SatAdmissibleAdfReasoner(solvers, maxDependentParents);
 		this.grounded = new SatGroundedAdfReasoner(solvers);
 	}
@@ -99,7 +96,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 		List<ThreeValuedInterpretation> models = new ArrayList<>();
 		if (!g.isTwoValued()) {
 			Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
-			boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+			boolean exact = admissible.isExact(types);
 			try (SatSolver solver = solvers.get()) {
 				ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
 				encoding.addAdmissible(types, g, exact);
@@ -109,7 +106,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 					checkInterrupted();
 					model = maximize(copy, types, exact, model);
 					models.add(model);
-					encoding.addRefineLarger(model);
+					encoding.excludeLessInformative(model);
 				}
 			}
 		}
@@ -153,7 +150,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			if (exact || admissible.isModel(adf, candidate)) {
 				return candidate;
 			}
-			encoding.addRefineUnequal(candidate);
+			encoding.exclude(candidate);
 		}
 		return null;
 	}
@@ -170,7 +167,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			return g.get(argument) == TruthValue.TRUE;
 		}
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
-		boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+		boolean exact = admissible.isExact(types);
 		try (SatSolver solver = solvers.get()) {
 			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
 			encoding.addAdmissible(types, g, exact);
@@ -199,7 +196,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 						return false;
 					}
 				}
-				encoding.addRefineLarger(model);
+				encoding.excludeLessInformative(model);
 			}
 		}
 		return true;
@@ -216,7 +213,7 @@ public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 			return true;
 		}
 		Map<Link, LinkType> types = LinkTypeClassifier.classify(copy, solvers);
-		boolean exact = ThreeValuedEncoding.maxDependentParents(types) < maxDependentParents;
+		boolean exact = admissible.isExact(types);
 		try (SatSolver solver = solvers.get()) {
 			ThreeValuedEncoding encoding = new ThreeValuedEncoding(copy, solver);
 			encoding.addAdmissible(types, v, exact);

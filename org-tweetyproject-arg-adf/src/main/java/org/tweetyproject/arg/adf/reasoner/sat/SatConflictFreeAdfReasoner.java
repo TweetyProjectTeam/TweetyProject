@@ -74,7 +74,7 @@ public class SatConflictFreeAdfReasoner extends AbstractSatAdfReasoner {
 				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				models.add(model);
-				encoding.addRefineUnequal(model);
+				encoding.exclude(model);
 			}
 		}
 		return models;

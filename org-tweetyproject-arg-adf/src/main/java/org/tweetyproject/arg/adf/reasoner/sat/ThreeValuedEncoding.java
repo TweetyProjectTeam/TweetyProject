@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.IntSupplier;
 
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
@@ -61,8 +62,8 @@ final class ThreeValuedEncoding {
 	/** the variables p_rs, by s and r */
 	private final Map<Argument, Map<Argument, Integer>> links = new HashMap<>();
 
-	/** a variable fixed to true, created on first use */
-	private int top;
+	/** supplies a literal fixed to true, shared by all encoders of this encoding */
+	private final IntSupplier top;
 
 	/**
 	 * Adds the variables, the clauses ¬s_t ∨ ¬s_f, and the clauses that fix p_rs
@@ -74,6 +75,7 @@ final class ThreeValuedEncoding {
 	ThreeValuedEncoding(AbstractDialecticalFramework adf, SatSolver solver) {
 		this.adf = adf;
 		this.solver = solver;
+		this.top = TseitinEncoder.trueLiteral(solver);
 		this.arguments = new ArrayList<>(adf.getNodes());
 		for (Argument s : arguments) {
 			trueVariables.put(s, solver.newVar());
@@ -112,7 +114,7 @@ final class ThreeValuedEncoding {
 	 */
 	void addConflictFree(Argument s) {
 		Map<Argument, Integer> parents = links.get(s);
-		int phi = new TseitinEncoder(solver, q -> parents.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+		int phi = new TseitinEncoder(solver, q -> parents.get(adf.toArgument(q)), top).encode(adf.getAcceptanceCondition(s));
 		solver.add(-trueVariables.get(s), phi);
 		solver.add(-falseVariables.get(s), -phi);
 	}
@@ -157,11 +159,11 @@ final class ThreeValuedEncoding {
 			for (int i = 0; i < dependent.size(); i++) {
 				Argument r = dependent.get(i);
 				boolean value = (j & (1 << i)) != 0;
-				values.put(r, value ? top() : -top());
+				values.put(r, value ? top.getAsInt() : -top.getAsInt());
 				whenTrue[i] = value ? falseVariables.get(r) : trueVariables.get(r);
 				whenFalse[i] = whenTrue[i];
 			}
-			int phi = new TseitinEncoder(solver, q -> values.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+			int phi = new TseitinEncoder(solver, q -> values.get(adf.toArgument(q)), top).encode(adf.getAcceptanceCondition(s));
 			whenTrue[dependent.size()] = -trueVariables.get(s);
 			whenTrue[dependent.size() + 1] = phi;
 			whenFalse[dependent.size()] = -falseVariables.get(s);
@@ -230,34 +232,11 @@ final class ThreeValuedEncoding {
 					solver.add(rf, q2);
 				}
 			}
-			int phi1 = new TseitinEncoder(solver, q -> first.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
-			int phi2 = new TseitinEncoder(solver, q -> second.get(adf.toArgument(q))).encode(adf.getAcceptanceCondition(s));
+			int phi1 = new TseitinEncoder(solver, q -> first.get(adf.toArgument(q)), top).encode(adf.getAcceptanceCondition(s));
+			int phi2 = new TseitinEncoder(solver, q -> second.get(adf.toArgument(q)), top).encode(adf.getAcceptanceCondition(s));
 			solver.add(-phi1, trueVariables.get(s));
 			solver.add(phi2, falseVariables.get(s));
 		}
-	}
-
-	/**
-	 * @param types the types of the links of an ADF
-	 * @return the maximal number k of dependent parents of an argument
-	 */
-	static int maxDependentParents(Map<Link, LinkType> types) {
-		Map<Argument, Integer> count = new HashMap<>();
-		int k = 0;
-		for (Map.Entry<Link, LinkType> entry : types.entrySet()) {
-			if (entry.getValue() == LinkType.DEPENDENT) {
-				k = Math.max(k, count.merge(entry.getKey().getChild(), 1, Integer::sum));
-			}
-		}
-		return k;
-	}
-
-	private int top() {
-		if (top == 0) {
-			top = solver.newVar();
-			solver.add(top);
-		}
-		return top;
 	}
 
 	/** @return the variable s_t */
@@ -314,7 +293,7 @@ final class ThreeValuedEncoding {
 	 *
 	 * @param v an interpretation
 	 */
-	void addRefineUnequal(ThreeValuedInterpretation v) {
+	void exclude(ThreeValuedInterpretation v) {
 		List<Integer> clause = new ArrayList<>();
 		for (Argument s : arguments) {
 			TruthValue value = v.get(s);
@@ -335,7 +314,7 @@ final class ThreeValuedEncoding {
 	 *
 	 * @param v an interpretation
 	 */
-	void addRefineLarger(ThreeValuedInterpretation v) {
+	void excludeLessInformative(ThreeValuedInterpretation v) {
 		List<Integer> clause = new ArrayList<>();
 		for (Argument s : arguments) {
 			TruthValue value = v.get(s);

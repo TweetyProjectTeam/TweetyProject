@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Contradiction;
@@ -62,10 +63,12 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  * operands), {@code imp/2} and {@code iff/2}. Text after {@code %} up to the
  * end of a line is a comment. Every argument needs exactly one acceptance
  * condition, and conditions may only mention declared arguments.
+ * {@link #parseFormula(Reader)} parses a single acceptance condition, whose
+ * argument names are not checked.
  *
  * @author Lars Bengel
  */
-public class KppAdfParser {
+public class KppAdfParser extends Parser<AbstractDialecticalFramework, PlFormula> {
 
 	/**
 	 * @param text an ADF in k++ADF format
@@ -74,7 +77,7 @@ public class KppAdfParser {
 	 */
 	public AbstractDialecticalFramework parse(String text) {
 		try {
-			return parse(new StringReader(text));
+			return parseBeliefBase(new StringReader(text));
 		} catch (IOException e) {
 			throw new IllegalStateException(e); // cannot happen for a string
 		}
@@ -88,7 +91,7 @@ public class KppAdfParser {
 	 */
 	public AbstractDialecticalFramework parse(Path file) throws IOException {
 		try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-			return parse(reader);
+			return parseBeliefBase(reader);
 		}
 	}
 
@@ -99,6 +102,11 @@ public class KppAdfParser {
 	 * @throws ParserException if the input is not a valid ADF
 	 */
 	public AbstractDialecticalFramework parse(Reader reader) throws IOException {
+		return parseBeliefBase(reader);
+	}
+
+	@Override
+	public AbstractDialecticalFramework parseBeliefBase(Reader reader) throws IOException, ParserException {
 		Tokenizer tokens = new Tokenizer(reader);
 		Set<String> statements = new LinkedHashSet<>();
 		Map<String, Term> conditions = new LinkedHashMap<>();
@@ -132,9 +140,27 @@ public class KppAdfParser {
 		return new AbstractDialecticalFramework(result);
 	}
 
+	/**
+	 * @param reader a reader providing an acceptance condition in k++ADF format,
+	 *               e.g. {@code and(a, neg(b))}
+	 * @return the condition
+	 * @throws IOException     if reading fails
+	 * @throws ParserException if the input is not a single valid condition
+	 */
+	@Override
+	public PlFormula parseFormula(Reader reader) throws IOException, ParserException {
+		Tokenizer tokens = new Tokenizer(reader);
+		PlFormula formula = formula(term(tokens), null);
+		if (tokens.peek() != null) {
+			throw new ParserException("Expected end of input, found '" + tokens.peek() + "'.");
+		}
+		return formula;
+	}
+
+	/** statements is null if the names are not checked */
 	private static PlFormula formula(Term t, Set<String> statements) {
 		if (t.isName()) {
-			if (!statements.contains(t.name)) {
+			if (statements != null && !statements.contains(t.name)) {
 				throw new ParserException("Unknown statement " + t.name + " in acceptance condition.");
 			}
 			return new Proposition(t.name);

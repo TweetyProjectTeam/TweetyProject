@@ -86,7 +86,7 @@ public class SatNaiveAdfReasoner extends AbstractSatAdfReasoner {
 					checkInterrupted();
 					ThreeValuedInterpretation model = maximize(copy, encoding.decode(witness));
 					models.add(model);
-					encoding.addRefineLarger(model);
+					encoding.excludeLessInformative(model);
 				}
 			}
 		}
@@ -155,7 +155,7 @@ public class SatNaiveAdfReasoner extends AbstractSatAdfReasoner {
 						return false;
 					}
 				}
-				encoding.addRefineLarger(model);
+				encoding.excludeLessInformative(model);
 			}
 		}
 		return true;

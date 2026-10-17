@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.AcceptanceConditions;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
@@ -197,6 +198,22 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 */
 	public Set<Argument> getDomain() {
 		return arguments(null);
+	}
+
+	/**
+	 * @param adf an ADF
+	 * @return true if the domain consists of exactly the arguments of the ADF
+	 */
+	public boolean isDefinedOver(AbstractDialecticalFramework adf) {
+		if (values.length != adf.size()) {
+			return false;
+		}
+		for (String name : domain.names) {
+			if (!adf.contains(new Argument(name))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -387,8 +404,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 			}
 			return TruthValue.valueOf(left == right);
 		}
-		throw new IllegalArgumentException("Unsupported connective: "
-				+ (formula == null ? "null" : formula.getClass().getSimpleName()));
+		throw AcceptanceConditions.unsupportedConnective(formula);
 	}
 
 	/**
@@ -494,7 +510,7 @@ public final class ThreeValuedInterpretation extends AbstractInterpretation<Abst
 	 */
 	@Override
 	public boolean satisfies(AbstractDialecticalFramework adf) {
-		if (!getDomain().equals(adf.getNodes())) {
+		if (!isDefinedOver(adf)) {
 			throw new IllegalArgumentException("The ADF is not defined over the domain of this interpretation.");
 		}
 		for (Argument a : adf) {

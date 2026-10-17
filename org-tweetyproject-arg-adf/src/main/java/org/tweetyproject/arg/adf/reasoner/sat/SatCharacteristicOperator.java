@@ -121,7 +121,7 @@ public final class SatCharacteristicOperator implements AutoCloseable {
 	}
 
 	private void requireDomain(ThreeValuedInterpretation v) {
-		if (!v.getDomain().equals(adf.getNodes())) {
+		if (!v.isDefinedOver(adf)) {
 			throw new IllegalArgumentException("The interpretation is not defined over the arguments of the ADF.");
 		}
 	}
