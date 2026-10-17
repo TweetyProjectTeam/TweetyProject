@@ -21,10 +21,8 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -44,9 +42,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
-
-	private final Supplier<SatSolver> solvers;
+public class SatConflictFreeAdfReasoner extends AbstractSatAdfReasoner {
 
 	/**
 	 * Creates the reasoner with the {@link Sat4jIncrementalSolver}.
@@ -59,7 +55,7 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 	 * @param solvers creates a fresh solver for every call
 	 */
 	public SatConflictFreeAdfReasoner(Supplier<SatSolver> solvers) {
-		this.solvers = solvers;
+		super(solvers);
 	}
 
 	@Override
@@ -77,9 +73,7 @@ public class SatConflictFreeAdfReasoner extends AbstractAdfReasoner {
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while ((witness = solver.witness(variables)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Enumeration interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				models.add(model);
 				encoding.addRefineUnequal(model);

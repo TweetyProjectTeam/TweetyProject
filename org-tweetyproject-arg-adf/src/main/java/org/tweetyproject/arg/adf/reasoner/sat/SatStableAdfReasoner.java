@@ -21,10 +21,8 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -46,9 +44,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatStableAdfReasoner extends AbstractAdfReasoner {
-
-	private final Supplier<SatSolver> solvers;
+public class SatStableAdfReasoner extends AbstractSatAdfReasoner {
 
 	private final SatTwoValuedModelAdfReasoner twoValuedModel;
 
@@ -65,7 +61,7 @@ public class SatStableAdfReasoner extends AbstractAdfReasoner {
 	 * @param solvers creates a fresh solver for every call
 	 */
 	public SatStableAdfReasoner(Supplier<SatSolver> solvers) {
-		this.solvers = solvers;
+		super(solvers);
 		this.twoValuedModel = new SatTwoValuedModelAdfReasoner(solvers);
 		this.grounded = new SatGroundedAdfReasoner(solvers);
 	}
@@ -112,9 +108,7 @@ public class SatStableAdfReasoner extends AbstractAdfReasoner {
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while (models.size() < limit && (witness = solver.witness(variables, assumptions)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Enumeration interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				if (isStable(copy, model)) {
 					models.add(model);

@@ -22,6 +22,13 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.tweetyproject.arg.adf.reasoner.sat.SatAdmissibleAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatCompleteAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatConflictFreeAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatGroundedAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatStableAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleCompleteAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleConflictFreeAdfReasoner;
@@ -46,13 +53,13 @@ import org.tweetyproject.commons.QualitativeReasoner;
  * Every reasoner implements {@link #isModel(AbstractDialecticalFramework, ThreeValuedInterpretation)}
  * directly. A reasoner whose models are computed from that check alone (generate
  * and test) needs nothing else, see {@code AbstractSimpleAdfReasoner}; others
- * also override {@link #getModels(AbstractDialecticalFramework)}. Implementations
+ * also override {@code getModels}. Implementations
  * of {@code isModel} must not rely on {@code getModels} of the same reasoner if
  * that one is based on {@code isModel}.
  * <p>
  * As in {@code AbstractExtensionReasoner} of the Dung module, the default
  * implementations of the query methods are based on
- * {@link #getModels(AbstractDialecticalFramework)}; subclasses may override them
+ * {@code getModels}; subclasses may override them
  * with direct procedures. An argument is accepted skeptically if every model
  * maps it to t (vacuously true without models) and credulously if some model
  * does.
@@ -154,6 +161,37 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SimplePreferredAdfReasoner();
 			case ST:
 				return new SimpleStableAdfReasoner();
+			default:
+				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
+		}
+	}
+
+	/**
+	 * Returns the SAT-based reasoner with the {@code Sat4jIncrementalSolver} for
+	 * one of the semantics CF, NA, ADM, CO, GR, PR and ST. Two-valued models have
+	 * no constant in {@link Semantics}; use {@code SatTwoValuedModelAdfReasoner}
+	 * directly.
+	 *
+	 * @param semantics a semantics
+	 * @return the SAT-based reasoner for it
+	 * @throws IllegalArgumentException if the semantics is not supported for ADFs
+	 */
+	public static AbstractAdfReasoner getSatReasonerForSemantics(Semantics semantics) {
+		switch (semantics) {
+			case CF:
+				return new SatConflictFreeAdfReasoner();
+			case NA:
+				return new SatNaiveAdfReasoner();
+			case ADM:
+				return new SatAdmissibleAdfReasoner();
+			case CO:
+				return new SatCompleteAdfReasoner();
+			case GR:
+				return new SatGroundedAdfReasoner();
+			case PR:
+				return new SatPreferredAdfReasoner();
+			case ST:
+				return new SatStableAdfReasoner();
 			default:
 				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
 		}

@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.analysis.LinkTypeClassifier;
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -57,12 +55,10 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatAdmissibleAdfReasoner extends AbstractAdfReasoner {
+public class SatAdmissibleAdfReasoner extends AbstractSatAdfReasoner {
 
 	/** the default bound K on the dependent parents for the k-bipolar encoding, as in k++ADF */
 	public static final int DEFAULT_MAX_DEPENDENT_PARENTS = 31;
-
-	private final Supplier<SatSolver> solvers;
 
 	private final int maxDependentParents;
 
@@ -85,10 +81,10 @@ public class SatAdmissibleAdfReasoner extends AbstractAdfReasoner {
 	 * @param maxDependentParents the bound K, between 0 and 31
 	 */
 	public SatAdmissibleAdfReasoner(Supplier<SatSolver> solvers, int maxDependentParents) {
+		super(solvers);
 		if (maxDependentParents < 0 || maxDependentParents > 31) {
 			throw new IllegalArgumentException("The bound must be between 0 and 31.");
 		}
-		this.solvers = solvers;
 		this.maxDependentParents = maxDependentParents;
 	}
 
@@ -108,9 +104,7 @@ public class SatAdmissibleAdfReasoner extends AbstractAdfReasoner {
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while ((witness = solver.witness(variables)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Enumeration interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				if (exact || isAdmissible(copy, model)) {
 					models.add(model);
@@ -140,9 +134,7 @@ public class SatAdmissibleAdfReasoner extends AbstractAdfReasoner {
 			int[] accepted = { encoding.trueVariable(argument) };
 			boolean[] witness;
 			while ((witness = solver.witness(variables, accepted)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Query interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				if (exact || isAdmissible(copy, model)) {
 					return true;

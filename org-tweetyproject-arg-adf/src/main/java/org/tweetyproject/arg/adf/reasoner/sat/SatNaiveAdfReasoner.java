@@ -21,10 +21,8 @@ package org.tweetyproject.arg.adf.reasoner.sat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
@@ -53,9 +51,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
-
-	private final Supplier<SatSolver> solvers;
+public class SatNaiveAdfReasoner extends AbstractSatAdfReasoner {
 
 	private final SatConflictFreeAdfReasoner conflictFree;
 
@@ -70,7 +66,7 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 	 * @param solvers creates a fresh solver for every call
 	 */
 	public SatNaiveAdfReasoner(Supplier<SatSolver> solvers) {
-		this.solvers = solvers;
+		super(solvers);
 		this.conflictFree = new SatConflictFreeAdfReasoner(solvers);
 	}
 
@@ -96,9 +92,7 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 				int[] variables = encoding.variables();
 				boolean[] witness;
 				while (models.size() < limit && (witness = solver.witness(variables)) != null) {
-					if (Thread.currentThread().isInterrupted()) {
-						throw new CancellationException("Enumeration interrupted.");
-					}
+					checkInterrupted();
 					ThreeValuedInterpretation model = maximize(copy, encoding.decode(witness));
 					models.add(model);
 					encoding.addRefineLarger(model);
@@ -152,9 +146,7 @@ public class SatNaiveAdfReasoner extends AbstractAdfReasoner {
 			}
 			boolean[] witness;
 			while ((witness = solver.witness(variables, notTrue)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Query interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				try (SatSolver maximizer = solvers.get()) {
 					ThreeValuedEncoding maximal = new ThreeValuedEncoding(copy, maximizer);

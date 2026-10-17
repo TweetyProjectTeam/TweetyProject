@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.analysis.LinkTypeClassifier;
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -55,9 +53,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatCompleteAdfReasoner extends AbstractAdfReasoner {
-
-	private final Supplier<SatSolver> solvers;
+public class SatCompleteAdfReasoner extends AbstractSatAdfReasoner {
 
 	private final int maxDependentParents;
 
@@ -84,7 +80,7 @@ public class SatCompleteAdfReasoner extends AbstractAdfReasoner {
 	 * @param maxDependentParents the bound K of {@link SatAdmissibleAdfReasoner}
 	 */
 	public SatCompleteAdfReasoner(Supplier<SatSolver> solvers, int maxDependentParents) {
-		this.solvers = solvers;
+		super(solvers);
 		this.maxDependentParents = maxDependentParents;
 		this.admissible = new SatAdmissibleAdfReasoner(solvers, maxDependentParents);
 		this.grounded = new SatGroundedAdfReasoner(solvers);
@@ -111,9 +107,7 @@ public class SatCompleteAdfReasoner extends AbstractAdfReasoner {
 			int[] variables = encoding.variables();
 			boolean[] witness;
 			while ((witness = solver.witness(variables)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Enumeration interrupted.");
-				}
+				checkInterrupted();
 				ThreeValuedInterpretation model = encoding.decode(witness);
 				if (exact) {
 					models.add(model);

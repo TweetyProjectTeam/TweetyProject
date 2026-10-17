@@ -25,10 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -49,9 +47,7 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatGroundedAdfReasoner extends AbstractAdfReasoner {
-
-	private final Supplier<SatSolver> solvers;
+public class SatGroundedAdfReasoner extends AbstractSatAdfReasoner {
 
 	/**
 	 * Creates the reasoner with the {@link Sat4jIncrementalSolver}.
@@ -64,7 +60,7 @@ public class SatGroundedAdfReasoner extends AbstractAdfReasoner {
 	 * @param solvers creates a fresh solver for every call
 	 */
 	public SatGroundedAdfReasoner(Supplier<SatSolver> solvers) {
-		this.solvers = solvers;
+		super(solvers);
 	}
 
 	@Override
@@ -96,9 +92,7 @@ public class SatGroundedAdfReasoner extends AbstractAdfReasoner {
 			List<Argument> undecided = new ArrayList<>(encoding.arguments());
 			boolean changed = true;
 			while (changed) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Computation interrupted.");
-				}
+				checkInterrupted();
 				changed = false;
 				ThreeValuedInterpretation v = ThreeValuedInterpretation.of(values);
 				for (Iterator<Argument> it = undecided.iterator(); it.hasNext();) {

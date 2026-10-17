@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.analysis.LinkTypeClassifier;
-import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.semantics.TruthValue;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -59,11 +57,9 @@ import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
  *
  * @author Lars Bengel
  */
-public class SatPreferredAdfReasoner extends AbstractAdfReasoner {
+public class SatPreferredAdfReasoner extends AbstractSatAdfReasoner {
 
 	private static final int[] NO_ASSUMPTIONS = new int[0];
-
-	private final Supplier<SatSolver> solvers;
 
 	private final int maxDependentParents;
 
@@ -90,7 +86,7 @@ public class SatPreferredAdfReasoner extends AbstractAdfReasoner {
 	 * @param maxDependentParents the bound K of {@link SatAdmissibleAdfReasoner}
 	 */
 	public SatPreferredAdfReasoner(Supplier<SatSolver> solvers, int maxDependentParents) {
-		this.solvers = solvers;
+		super(solvers);
 		this.maxDependentParents = maxDependentParents;
 		this.admissible = new SatAdmissibleAdfReasoner(solvers, maxDependentParents);
 		this.grounded = new SatGroundedAdfReasoner(solvers);
@@ -119,9 +115,7 @@ public class SatPreferredAdfReasoner extends AbstractAdfReasoner {
 				encoding.addMoreInformativeThan(g);
 				ThreeValuedInterpretation model;
 				while (models.size() < limit && (model = next(copy, encoding, solver, exact, NO_ASSUMPTIONS)) != null) {
-					if (Thread.currentThread().isInterrupted()) {
-						throw new CancellationException("Enumeration interrupted.");
-					}
+					checkInterrupted();
 					model = maximize(copy, types, exact, model);
 					models.add(model);
 					encoding.addRefineLarger(model);
@@ -197,9 +191,7 @@ public class SatPreferredAdfReasoner extends AbstractAdfReasoner {
 			int[] notTrue = { -encoding.trueVariable(argument) };
 			ThreeValuedInterpretation model;
 			while ((model = next(copy, encoding, solver, exact, notTrue)) != null) {
-				if (Thread.currentThread().isInterrupted()) {
-					throw new CancellationException("Query interrupted.");
-				}
+				checkInterrupted();
 				try (SatSolver maximizer = solvers.get()) {
 					ThreeValuedEncoding maximal = new ThreeValuedEncoding(copy, maximizer);
 					maximal.addAdmissible(types, model, exact);

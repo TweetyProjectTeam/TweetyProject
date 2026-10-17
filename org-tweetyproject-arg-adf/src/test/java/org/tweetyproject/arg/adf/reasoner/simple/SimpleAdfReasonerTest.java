@@ -40,6 +40,7 @@ import java.util.concurrent.CancellationException;
 
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -205,6 +206,8 @@ class SimpleAdfReasonerTest {
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.PR) instanceof SimplePreferredAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.NA) instanceof SimpleNaiveAdfReasoner);
 		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SST));
+		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.PR) instanceof SatPreferredAdfReasoner);
+		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.SST));
 	}
 
 }
