@@ -20,8 +20,8 @@ package org.tweetyproject.web.services.adf;
 
 import org.tweetyproject.arg.adf.parser.KppAdfParser;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.semantics.AdfSemantics;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
-import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.commons.ParserException;
 
 import java.util.List;
@@ -44,19 +44,23 @@ public abstract class AbstractAdfReasonerFactory {
      *
      * @return An array of all available semantics.
      */
-    public static Semantics[] getSemantics() {
-        return new Semantics[]{Semantics.CF,Semantics.ADM,Semantics.CO,Semantics.GR,Semantics.PR,Semantics.ST,Semantics.NA,Semantics.IS};
+    public static AdfSemantics[] getSemantics() {
+        return AdfSemantics.values();
     }
 
     /**
-     * Creates a new reasoner measure of the given semantics with default
-     * settings.
+     * Returns the SAT-based reasoner for the given semantics, or the simple
+     * reasoner if there is no SAT-based one.
      *
      * @param sem some identifier of a semantics.
      * @return the requested reasoner.
      */
-    public static AbstractAdfReasoner getReasoner(Semantics sem) {
-        return AbstractAdfReasoner.getSatReasonerForSemantics(sem);
+    public static AbstractAdfReasoner getReasoner(AdfSemantics sem) {
+        try {
+            return AbstractAdfReasoner.getSatReasonerForSemantics(sem);
+        } catch (IllegalArgumentException e) {
+            return AbstractAdfReasoner.getSimpleReasonerForSemantics(sem);
+        }
     }
 
     /**

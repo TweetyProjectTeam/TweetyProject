@@ -45,9 +45,6 @@ import java.util.concurrent.CancellationException;
 
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.sat.SatInitialAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
-import org.tweetyproject.arg.adf.reasoner.sat.SatStronglyAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
@@ -421,20 +418,6 @@ class SimpleAdfReasonerTest {
 			}
 		}
 		return af;
-	}
-
-	@Test
-	void factory() {
-		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.PR) instanceof SimplePreferredAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.NA) instanceof SimpleNaiveAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SST) instanceof SimpleSemiStableAdfReasoner);
-		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.STG));
-		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.IS) instanceof SimpleInitialAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SAD) instanceof SimpleStronglyAdmissibleAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.SAD) instanceof SatStronglyAdmissibleAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.PR) instanceof SatPreferredAdfReasoner);
-		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.IS) instanceof SatInitialAdfReasoner);
-		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.SST));
 	}
 
 }

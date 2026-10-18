@@ -26,7 +26,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.adf.semantics.AdfSemantics;
 import org.tweetyproject.web.services.adf.AbstractAdfReasonerFactory;
 
 import java.util.stream.Stream;
@@ -63,7 +63,7 @@ class RequestControllerAdfTest {
                           "email": null,
                           "backend_timeout": 600,
                           "semantics": [
-                            "CF","ADM","CO","GR","PR","ST","NA","IS"
+                            "CF","NA","ADM","CO","GR","PR","ST","SST","SAD","IS","MOD2","MOD3","S2V"
                           ],
                           "commands": [
                             "get_models",
@@ -110,13 +110,13 @@ class RequestControllerAdfTest {
                         """, false));
     }
 
-    private static Stream<Semantics> availableSemantics() {
+    private static Stream<AdfSemantics> availableSemantics() {
         return Stream.of(AbstractAdfReasonerFactory.getSemantics());
     }
 
     @ParameterizedTest(name = "semantics {0}")
     @MethodSource("availableSemantics")
-    public void getModelsForSemantics(Semantics semantics) throws Exception {
+    public void getModelsForSemantics(AdfSemantics semantics) throws Exception {
         var post = post("/adf").contentType(MediaType.APPLICATION_JSON)
                 // language=JSON
                 .content(String.format("""
