@@ -26,7 +26,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the preferred interpretations (PR) of an ADF: the ≤_i-maximal
+ * Reasoner for the preferred interpretations (PR) of an ADF: the ≤_i-maximal
  * admissible interpretations, which are exactly the ≤_i-maximal complete
  * ones. Checks all 3^n interpretations for completeness and keeps the maximal
  * ones.

@@ -29,11 +29,10 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the semi-stable models of an ADF: the semi-two-valued models v
+ * Reasoner for the semi-stable models of an ADF: the semi-two-valued models v
  * such that the arguments mapped to t are exactly those mapped to t by the
  * grounded interpretation of the sub-reduct D^v, which keeps the arguments
- * mapped to t or u and replaces those mapped to f by ⊥. Checks every
- * semi-two-valued model.
+ * mapped to t or u and replaces those mapped to f by ⊥.
  *
  * @see "Atefeh Keshavarzi Zafarghandi, Rineke Verbrugge, Bart Verheij. 'Semi-Stable Semantics for Abstract Dialectical Frameworks.' KR 2021."
  * @see "Atefeh Keshavarzi Zafarghandi, Johannes P. Wallner. 'Complexity of Semi-Stable Semantics in Abstract Dialectical Frameworks.' COMMA 2024."

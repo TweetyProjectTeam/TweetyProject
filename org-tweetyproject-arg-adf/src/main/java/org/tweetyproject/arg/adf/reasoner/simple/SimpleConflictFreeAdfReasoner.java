@@ -25,7 +25,7 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the conflict-free interpretations (CF) of an ADF in the sense of
+ * Reasoner for the conflict-free interpretations (CF) of an ADF in the sense of
  * k++ADF: v is conflict-free if phi_a[v] is satisfiable for every a with
  * v(a) = t and refutable for every a with v(a) = f, i.e. some completion of v
  * makes phi_a true (resp. false). Checks all 3^n interpretations.

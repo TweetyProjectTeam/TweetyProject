@@ -31,7 +31,7 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the naive interpretations (NA) of an ADF as k++ADF does: every
+ * Reasoner for the naive interpretations (NA) of an ADF as k++ADF does: every
  * model of the conflict-free encoding is extended to a ≤_i-maximal one, which
  * is then excluded together with all less informative interpretations. Unlike
  * in k++ADF, skeptical acceptance also handles the case where the

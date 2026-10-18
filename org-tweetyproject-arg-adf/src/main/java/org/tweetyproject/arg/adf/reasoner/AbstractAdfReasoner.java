@@ -30,6 +30,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.SatInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatStronglyAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleCompleteAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleConflictFreeAdfReasoner;
@@ -39,6 +40,7 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleSemiStableAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleStronglyAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -157,6 +159,8 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SimpleStableAdfReasoner();
 			case SST:
 				return new SimpleSemiStableAdfReasoner();
+			case SAD:
+				return new SimpleStronglyAdmissibleAdfReasoner();
 			case IS:
 				return new SimpleInitialAdfReasoner();
 			default:
@@ -188,6 +192,8 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SatPreferredAdfReasoner();
 			case ST:
 				return new SatStableAdfReasoner();
+			case SAD:
+				return new SatStronglyAdmissibleAdfReasoner();
 			case IS:
 				return new SatInitialAdfReasoner();
 			default:

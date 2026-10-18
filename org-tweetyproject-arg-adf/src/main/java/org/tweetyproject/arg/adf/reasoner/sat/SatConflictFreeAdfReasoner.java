@@ -31,7 +31,7 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the conflict-free interpretations (CF) of an ADF with the
+ * Reasoner for the conflict-free interpretations (CF) of an ADF with the
  * conflict-free encoding of k++ADF. Skeptical acceptance is always false, since
  * the interpretation mapping every argument to u is conflict-free.
  *

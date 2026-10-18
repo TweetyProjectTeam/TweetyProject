@@ -22,7 +22,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the stable models (ST) of an ADF: the two-valued models v such
+ * Reasoner for the stable models (ST) of an ADF: the two-valued models v such
  * that the arguments mapped to t are exactly those mapped to t by the grounded
  * interpretation of the reduct D^v. Checks all 2^n two-valued interpretations.
  *

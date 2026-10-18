@@ -36,12 +36,12 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the complete interpretations (CO) of an ADF as k++ADF does: the
+ * Reasoner for the complete interpretations (CO) of an ADF as k++ADF does: the
  * grounded interpretation g, followed by those models of the admissible
  * encoding of {@link SatAdmissibleAdfReasoner}, extended by the complete
  * clauses, that are strictly more informative than g. If the bound K is
  * exceeded, Γ is instead iterated to a fixpoint from every admissible
- * candidate. Skeptical acceptance is decided by g.
+ * candidate.
  *
  * @see "Thomas Linsbichler, Marco Maratea, Andreas Niskanen, Johannes P. Wallner, Stefan Woltran. 'Novel Algorithms for Abstract Dialectical Frameworks based on Complexity Analysis of Subclasses and SAT Solving.' IJCAI 2018."
  * @see "k++ADF, https://bitbucket.org/andreasniskanen/k-adf"

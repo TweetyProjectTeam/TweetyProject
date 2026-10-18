@@ -36,13 +36,9 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the initial models (IS) of an ADF: the non-trivial admissible
+ * Reasoner for the initial models (IS) of an ADF: the non-trivial admissible
  * interpretations v such that no admissible interpretation lies strictly
- * between the trivial interpretation and v. Non-trivial admissible
- * interpretations that are not more informative than an initial model found so
- * far are reduced to ≤_i-minimal ones, each of which is then excluded together
- * with all more informative interpretations. If there is none, getModel returns
- * null and every argument is skeptically accepted.
+ * between the trivial interpretation and v.
  * <p>
  * Verification checks admissibility and then runs Algorithm 1 of Strass and
  * Wallner: for every decided argument a, starting from v[a ↦ u], each round sets

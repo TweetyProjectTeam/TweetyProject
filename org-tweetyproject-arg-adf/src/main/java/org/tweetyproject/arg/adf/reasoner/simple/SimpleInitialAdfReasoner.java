@@ -28,7 +28,7 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the initial models (IS) of an ADF: the non-trivial admissible
+ * Reasoner for the initial models (IS) of an ADF: the non-trivial admissible
  * interpretations v such that no admissible interpretation lies strictly
  * between the trivial interpretation and v. Keeps the ≤_i-minimal non-trivial
  * admissible interpretations; verification checks all non-trivial

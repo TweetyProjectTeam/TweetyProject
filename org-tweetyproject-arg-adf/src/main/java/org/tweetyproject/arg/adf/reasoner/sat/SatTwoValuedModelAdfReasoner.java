@@ -30,7 +30,7 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the two-valued models (MOD) of an ADF with one SAT instance
+ * Reasoner for the two-valued models (MOD) of an ADF with one SAT instance
  * x_a ↔ phi_a for every argument a, blocking each model after it is found.
  *
  * @author Lars Bengel

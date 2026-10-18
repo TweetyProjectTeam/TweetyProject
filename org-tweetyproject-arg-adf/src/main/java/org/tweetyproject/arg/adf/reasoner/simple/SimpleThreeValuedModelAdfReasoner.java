@@ -22,7 +22,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the three-valued models (3MOD) of an ADF: the interpretations v
+ * Reasoner for the three-valued models (3MOD) of an ADF: the interpretations v
  * such that v(a) = u or v(a) = v(phi_a) under Kleene's strong three-valued
  * evaluation, for every argument a. Unlike conflict-freeness in the sense of
  * {@link SimpleConflictFreeAdfReasoner}, this notion does not contain all

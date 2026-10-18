@@ -29,10 +29,9 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the semi-two-valued models of an ADF: the complete
+ * Reasoner for the semi-two-valued models of an ADF: the complete
  * interpretations v such that v^u is ⊆-minimal, i.e., v^t ∪ v^f is
- * ⊆-maximal, among all complete interpretations. Checks all 3^n
- * interpretations for completeness and keeps those with maximal range.
+ * ⊆-maximal, among all complete interpretations.
  *
  * @see "Atefeh Keshavarzi Zafarghandi, Rineke Verbrugge, Bart Verheij. 'Semi-Stable Semantics for Abstract Dialectical Frameworks.' KR 2021."
  *
