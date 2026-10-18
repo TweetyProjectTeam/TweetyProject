@@ -52,6 +52,7 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleStronglyAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.CharacteristicOperator;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
@@ -108,6 +109,7 @@ class SatAdfReasonerTest {
 				Arguments.of("PR", new SatPreferredAdfReasoner(), new SimplePreferredAdfReasoner()),
 				Arguments.of("PR, K = 0", new SatPreferredAdfReasoner(Sat4jIncrementalSolver::new, 0), new SimplePreferredAdfReasoner()),
 				Arguments.of("ST", new SatStableAdfReasoner(), new SimpleStableAdfReasoner()),
+				Arguments.of("SAD", new SatStronglyAdmissibleAdfReasoner(), new SimpleStronglyAdmissibleAdfReasoner()),
 				Arguments.of("IS", new SatInitialAdfReasoner(), new SimpleInitialAdfReasoner()),
 				Arguments.of("IS, K = 0", new SatInitialAdfReasoner(Sat4jIncrementalSolver::new, 0), new SimpleInitialAdfReasoner()));
 	}
