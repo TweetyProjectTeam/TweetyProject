@@ -37,6 +37,7 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleSemiStableAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
@@ -154,6 +155,8 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SimplePreferredAdfReasoner();
 			case ST:
 				return new SimpleStableAdfReasoner();
+			case SST:
+				return new SimpleSemiStableAdfReasoner();
 			case IS:
 				return new SimpleInitialAdfReasoner();
 			default:

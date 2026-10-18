@@ -69,7 +69,17 @@ class SimpleAdfReasonerTest {
 	private static final AbstractAdfReasoner PR = new SimplePreferredAdfReasoner();
 	private static final AbstractAdfReasoner ST = new SimpleStableAdfReasoner();
 	private static final AbstractAdfReasoner IS = new SimpleInitialAdfReasoner();
-	private static final List<AbstractAdfReasoner> ALL = List.of(MOD, MOD3, CF, NA, ADM, CO, GR, PR, ST);
+	private static final AbstractAdfReasoner SEMI2 = new SimpleSemiTwoValuedAdfReasoner();
+	private static final AbstractAdfReasoner SST = new SimpleSemiStableAdfReasoner();
+	private static final List<AbstractAdfReasoner> ALL = List.of(MOD, MOD3, CF, NA, ADM, CO, GR, PR, ST, SEMI2, SST);
+
+	/** Example 5 of Keshavarzi Zafarghandi, Verbrugge and Verheij (KR 2021) */
+	private static final String SEMI_STABLE = "s(a). s(b). s(c). ac(a,neg(a)). ac(b,and(c,or(neg(a),c))). ac(c,and(b,or(a,b))).";
+
+	/** Proposition 2 of Keshavarzi Zafarghandi, Verbrugge and Verheij (KR 2021) */
+	private static final String PREFERRED_NOT_SEMI_TWO_VALUED = "s(a). s(b). s(c). s(d). s(e). ac(a,and(neg(c),or(neg(d),neg(b)))). "
+			+ "ac(b,and(neg(a),or(neg(d),neg(c)))). ac(c,and(neg(b),or(neg(d),neg(a)))). "
+			+ "ac(d,and(neg(e),or(neg(a),or(neg(b),neg(c))))). ac(e,neg(d)).";
 
 	private static Set<ThreeValuedInterpretation> models(AbstractAdfReasoner reasoner, AbstractDialecticalFramework adf) {
 		Collection<ThreeValuedInterpretation> models = reasoner.getModels(adf);
@@ -135,6 +145,31 @@ class SimpleAdfReasonerTest {
 		assertEquals(vs(adf, "uuu"), models(GR, adf));
 		assertEquals(vs(adf, "uuu", "ttt"), models(CO, adf));
 		assertEquals(vs(adf, "ttt"), models(PR, adf));
+	}
+
+	@Test
+	void semiStableRequiresConstructiveProof() {
+		AbstractDialecticalFramework adf = adf(SEMI_STABLE);
+		assertEquals(vs(adf, "utt", "uff"), models(SEMI2, adf));
+		assertEquals(vs(adf, "uff"), models(SST, adf));
+		assertFalse(SST.isModel(adf, v(adf, "utt")));
+	}
+
+	@Test
+	void preferredNeedNotBeSemiTwoValued() {
+		AbstractDialecticalFramework adf = adf(PREFERRED_NOT_SEMI_TWO_VALUED);
+		assertEquals(vs(adf, "ffttf", "ftftf", "tfftf", "uuuft"), models(PR, adf));
+		assertEquals(vs(adf, "ffttf", "ftftf", "tfftf"), models(SEMI2, adf));
+		assertFalse(SEMI2.isModel(adf, v(adf, "uuuft")));
+	}
+
+	/** Corollary 3 of Keshavarzi Zafarghandi, Verbrugge and Verheij (KR 2021) */
+	@Test
+	void twoValuedModelWithoutStableModelHasNoSemiStableModel() {
+		AbstractDialecticalFramework adf = adf(BREWKA_2);
+		assertEquals(vs(adf, "ttt"), models(SEMI2, adf));
+		assertEquals(Set.of(), models(SST, adf));
+		assertNull(SST.getModel(adf));
 	}
 
 	@Test
@@ -232,7 +267,8 @@ class SimpleAdfReasonerTest {
 		for (int round = 0; round < 100; round++) {
 			AbstractDialecticalFramework adf = randomAdf(rng, 1 + rng.nextInt(5), 1 + rng.nextInt(4), 1 + rng.nextInt(3));
 			Set<ThreeValuedInterpretation> mod = models(MOD, adf), mod3 = models(MOD3, adf), cf = models(CF, adf),
-					na = models(NA, adf), adm = models(ADM, adf), co = models(CO, adf), pr = models(PR, adf), st = models(ST, adf);
+					na = models(NA, adf), adm = models(ADM, adf), co = models(CO, adf), pr = models(PR, adf), st = models(ST, adf),
+					semi2 = models(SEMI2, adf), sst = models(SST, adf);
 			String context = adf.toString();
 			assertTrue(pr.containsAll(mod), context);
 			assertTrue(co.containsAll(pr), context);
@@ -240,6 +276,13 @@ class SimpleAdfReasonerTest {
 			assertTrue(cf.containsAll(adm), context);
 			assertTrue(mod.containsAll(st), context);
 			assertTrue(adm.containsAll(mod3), context);
+			assertTrue(pr.containsAll(semi2), context);
+			assertTrue(semi2.containsAll(sst), context);
+			assertFalse(semi2.isEmpty(), context);
+			if (!mod.isEmpty()) {
+				assertEquals(mod, semi2, context);
+				assertEquals(st, sst, context);
+			}
 			assertEquals(maximal(adm), pr, context);
 			assertEquals(maximal(cf), na, context);
 			ThreeValuedInterpretation grounded = GR.getModel(adf);
@@ -249,6 +292,7 @@ class SimpleAdfReasonerTest {
 			for (ThreeValuedInterpretation v : allInterpretations(adf)) {
 				assertEquals(v.equals(grounded), GR.isModel(adf, v), context);
 				assertEquals(pr.contains(v), PR.isModel(adf, v), context);
+				assertEquals(sst.contains(v), SST.isModel(adf, v), context);
 			}
 		}
 	}
@@ -276,6 +320,8 @@ class SimpleAdfReasonerTest {
 			assertEquals(canonical(af, Semantics.PR), models(PR, adf), context);
 			assertEquals(canonical(af, Semantics.ST), models(ST, adf), context);
 			assertEquals(canonical(af, Semantics.ST), models(MOD, adf), context);
+			assertEquals(canonical(af, Semantics.SST), models(SEMI2, adf), context);
+			assertEquals(canonical(af, Semantics.SST), models(SST, adf), context);
 			assertTrue(models(ADM, adf).containsAll(canonical(af, Semantics.ADM)), context);
 			assertTrue(models(CF, adf).containsAll(canonical(af, Semantics.CF)), context);
 			Set<Set<Argument>> initial = new HashSet<>();
@@ -319,7 +365,8 @@ class SimpleAdfReasonerTest {
 	void factory() {
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.PR) instanceof SimplePreferredAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.NA) instanceof SimpleNaiveAdfReasoner);
-		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SST));
+		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.SST) instanceof SimpleSemiStableAdfReasoner);
+		assertThrows(IllegalArgumentException.class, () -> AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.STG));
 		assertTrue(AbstractAdfReasoner.getSimpleReasonerForSemantics(Semantics.IS) instanceof SimpleInitialAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.PR) instanceof SatPreferredAdfReasoner);
 		assertTrue(AbstractAdfReasoner.getSatReasonerForSemantics(Semantics.IS) instanceof SatInitialAdfReasoner);
