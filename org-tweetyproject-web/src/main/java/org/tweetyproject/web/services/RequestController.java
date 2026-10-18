@@ -31,6 +31,7 @@ import org.tweetyproject.arg.aba.reasoner.SetafReductionReasoner;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
 import org.tweetyproject.arg.adf.reasoner.AbstractAdfReasoner;
+import org.tweetyproject.arg.adf.semantics.AdfSemantics;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.bipolar.reasoner.AbstractBipolarExtensionReasoner;
 import org.tweetyproject.arg.bipolar.syntax.BipolarArgumentationFramework;
@@ -366,7 +367,7 @@ public class RequestController {
 			return new AdfReasonerResponse();
 
 		AbstractDialecticalFramework adf = AbstractAdfReasonerFactory.getAdf(post.getNr_of_arguments(), post.getConditions());
-		AbstractAdfReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(Semantics.getSemantics(post.getSemantics()));
+		AbstractAdfReasoner reasoner = AbstractAdfReasonerFactory.getReasoner(AdfSemantics.getSemantics(post.getSemantics()));
 		Callee callee = AdfReasonerCalleeFactory.getCallee(cmd, reasoner, adf);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);

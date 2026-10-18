@@ -36,7 +36,7 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the preferred interpretations (PR) of an ADF as k++ADF does:
+ * Reasoner for the preferred interpretations (PR) of an ADF as k++ADF does:
  * admissible interpretations that are strictly more informative than the
  * grounded interpretation g are extended to ≤_i-maximal ones, each of which is
  * then excluded together with all less informative interpretations. If there

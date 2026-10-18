@@ -23,7 +23,7 @@ import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
- * Enumerates the admissible interpretations (ADM) of an ADF: the v with
+ * Reasoner for the admissible interpretations (ADM) of an ADF: the v with
  * v ≤_i Γ(v). Checks all 3^n interpretations.
  *
  * @see "Gerhard Brewka, Stefan Ellmauthaler, Hannes Strass, Johannes P. Wallner, Stefan Woltran. 'Abstract Dialectical Frameworks Revisited.' IJCAI 2013."

@@ -20,6 +20,7 @@ package org.tweetyproject.arg.adf.reasoner;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.reasoner.sat.SatAdmissibleAdfReasoner;
@@ -30,6 +31,8 @@ import org.tweetyproject.arg.adf.reasoner.sat.SatInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatPreferredAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.sat.SatStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatStronglyAdmissibleAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.SatTwoValuedModelAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleAdmissibleAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleCompleteAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleConflictFreeAdfReasoner;
@@ -37,7 +40,13 @@ import org.tweetyproject.arg.adf.reasoner.simple.SimpleGroundedAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleInitialAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleNaiveAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimplePreferredAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleSemiStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleSemiTwoValuedAdfReasoner;
 import org.tweetyproject.arg.adf.reasoner.simple.SimpleStableAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleStronglyAdmissibleAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleThreeValuedModelAdfReasoner;
+import org.tweetyproject.arg.adf.reasoner.simple.SimpleTwoValuedModelAdfReasoner;
+import org.tweetyproject.arg.adf.semantics.AdfSemantics;
 import org.tweetyproject.arg.adf.semantics.ThreeValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -139,6 +148,16 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	 * @throws IllegalArgumentException if the semantics is not supported for ADFs
 	 */
 	public static AbstractAdfReasoner getSimpleReasonerForSemantics(Semantics semantics) {
+		return getSimpleReasonerForSemantics(toAdfSemantics(semantics));
+	}
+
+	/**
+	 * Returns the simple reference reasoner for one of the {@link AdfSemantics}
+	 *
+	 * @param semantics a semantics
+	 * @return the simple reasoner for it
+	 */
+	public static AbstractAdfReasoner getSimpleReasonerForSemantics(AdfSemantics semantics) {
 		switch (semantics) {
 			case CF:
 				return new SimpleConflictFreeAdfReasoner();
@@ -154,8 +173,18 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SimplePreferredAdfReasoner();
 			case ST:
 				return new SimpleStableAdfReasoner();
+			case SST:
+				return new SimpleSemiStableAdfReasoner();
+			case SAD:
+				return new SimpleStronglyAdmissibleAdfReasoner();
 			case IS:
 				return new SimpleInitialAdfReasoner();
+			case MOD2:
+				return new SimpleTwoValuedModelAdfReasoner();
+			case MOD3:
+				return new SimpleThreeValuedModelAdfReasoner();
+			case S2V:
+				return new SimpleSemiTwoValuedAdfReasoner();
 			default:
 				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
 		}
@@ -170,6 +199,18 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 	 * @throws IllegalArgumentException if the semantics is not supported for ADFs
 	 */
 	public static AbstractAdfReasoner getSatReasonerForSemantics(Semantics semantics) {
+		return getSatReasonerForSemantics(toAdfSemantics(semantics));
+	}
+
+	/**
+	 * Returns the SAT-based reasoner with the {@code Sat4jIncrementalSolver} for
+	 * one of the {@link AdfSemantics}
+	 *
+	 * @param semantics a semantics
+	 * @return the SAT-based reasoner for it
+	 * @throws IllegalArgumentException if there is no SAT-based reasoner for the semantics
+	 */
+	public static AbstractAdfReasoner getSatReasonerForSemantics(AdfSemantics semantics) {
 		switch (semantics) {
 			case CF:
 				return new SatConflictFreeAdfReasoner();
@@ -185,10 +226,27 @@ public abstract class AbstractAdfReasoner implements QualitativeReasoner<Abstrac
 				return new SatPreferredAdfReasoner();
 			case ST:
 				return new SatStableAdfReasoner();
+			case SAD:
+				return new SatStronglyAdmissibleAdfReasoner();
 			case IS:
 				return new SatInitialAdfReasoner();
+			case MOD2:
+				return new SatTwoValuedModelAdfReasoner();
 			default:
-				throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
+				throw new IllegalArgumentException("No SAT-based reasoner for semantics: " + semantics);
+		}
+	}
+
+	/**
+	 * @param semantics a semantics
+	 * @return the ADF semantics with the same abbreviation
+	 * @throws IllegalArgumentException if the semantics is not supported for ADFs
+	 */
+	private static AdfSemantics toAdfSemantics(Semantics semantics) {
+		try {
+			return AdfSemantics.getSemantics(semantics.abbreviation());
+		} catch (NoSuchElementException e) {
+			throw new IllegalArgumentException("Unsupported semantics for ADFs: " + semantics);
 		}
 	}
 

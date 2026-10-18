@@ -31,7 +31,7 @@ import org.tweetyproject.sat.SatSolver;
 import org.tweetyproject.sat.sat4j.Sat4jIncrementalSolver;
 
 /**
- * Enumerates the stable models (ST) of an ADF: the two-valued models v such
+ * Reasoner for the stable models (ST) of an ADF: the two-valued models v such
  * that the arguments mapped to t are exactly those mapped to t by the grounded
  * interpretation of the reduct D^v. As in k++ADF, the two-valued models are
  * enumerated with one SAT instance and each of them is checked.

@@ -23,7 +23,7 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the two-valued models (MOD) of an ADF: the two-valued
+ * Reasoner for the two-valued models (MOD) of an ADF: the two-valued
  * interpretations v with v(a) = v(phi_a) for every argument a. Checks all 2^n
  * two-valued interpretations.
  *

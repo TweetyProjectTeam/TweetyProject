@@ -24,7 +24,7 @@ import org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * Enumerates the naive interpretations (NA) of an ADF: the ≤_i-maximal
+ * Reasoner for the naive interpretations (NA) of an ADF: the ≤_i-maximal
  * conflict-free interpretations in the sense of
  * {@link SimpleConflictFreeAdfReasoner}.
  * Since conflict-freeness is closed under ≤_i-smaller interpretations, a
