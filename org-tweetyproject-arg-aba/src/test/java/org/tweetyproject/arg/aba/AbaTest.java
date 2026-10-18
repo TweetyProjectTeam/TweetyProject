@@ -63,6 +63,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Anna Gessler
+ * @author Lars Bengel
  */
 public class AbaTest {
 

@@ -37,6 +37,8 @@ import org.tweetyproject.commons.util.SubsetIterator;
  * extensions, i.e. the closed, conflict-free sets of assumptions that attack
  * every closed set attacking them.
  *
+ * @author Lars Bengel
+ *
  * @param <T> the language of the underlying ABA theory
  */
 public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<T> {
@@ -47,7 +49,7 @@ public class AdmissibleReasoner<T extends Formula> extends ConflictFreeReasoner<
 
 	@Override
 	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
-		// TODO non-flat: check closed attackers cl(T) once that is proven equivalent
+		// TODO non-flat: check closed attackers cl(T)?
 		if (!abat.isFlat())
 			return getNonFlatModels(abat, getClosedSets(abat));
 		Map<Assumption<T>, Set<Set<Assumption<T>>>> attackers = getAttackers(abat);

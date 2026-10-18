@@ -39,6 +39,10 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 /**
  *
  * An implementation of Assumption Based Argumentation.
+ * <p>
+ * The reasoners expect a ground theory. A first-order theory built in code
+ * has to be grounded with {@link #ground()} first; the parser does this
+ * automatically.
  *
  * @param <T> is the type of the language that the ABA theory's rules range over
  * @author Nils Geilen (geilenn@uni-koblenz.de)

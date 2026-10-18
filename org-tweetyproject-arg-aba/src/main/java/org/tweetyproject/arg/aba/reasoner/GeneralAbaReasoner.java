@@ -32,6 +32,8 @@ import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
  * This is an abstract generalization over non-flat ABA reasoners.
+ * <p>
+ * All reasoners expect a ground theory, cf. {@link AbaTheory#ground()}.
  *
  * @param <T> the language of the underlying ABA theory
  * @author Nils Geilen (geilenn@uni-koblenz.de)

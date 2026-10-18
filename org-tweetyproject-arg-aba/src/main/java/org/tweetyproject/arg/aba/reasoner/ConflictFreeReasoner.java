@@ -35,6 +35,8 @@ import org.tweetyproject.commons.util.SubsetIterator;
  * This reasoner for ABA theories performs inference on the conflict-free
  * extensions, i.e. the sets of assumptions that do not attack themselves.
  *
+ * @author Lars Bengel
+ *
  * @param <T> the language of the underlying ABA theory
  */
 public class ConflictFreeReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
