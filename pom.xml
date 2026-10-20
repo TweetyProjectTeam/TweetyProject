@@ -206,6 +206,7 @@
     <module>org-tweetyproject-cli</module>
     <module>org-tweetyproject-causal</module>
     <module>org-tweetyproject-graphs</module>
+    <module>org-tweetyproject-serialisability</module>
     <module>org-tweetyproject-preferences</module>
     <module>org-tweetyproject-machinelearning</module>
     <module>org-tweetyproject-plugin</module>
