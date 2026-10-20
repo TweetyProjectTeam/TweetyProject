@@ -45,8 +45,8 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.IncompleteReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -773,8 +773,8 @@ public class RequestController {
 
 		DungTheory theory = AbstractExtensionReasonerFactory.getDungTheory(post.getNr_of_arguments(), post.getAttacks());
 		Extension<DungTheory> extension = SerialisationFactory.getExtension(post.getExtension());
-		SelectionFunction alpha = SerialisationFactory.getSelectionFunction(post.getSelectionFunction());
-		TerminationFunction beta = SerialisationFactory.getTerminationFunction(post.getTerminationFunction());
+		SelectionFunction<DungTheory, Extension<DungTheory>> alpha = SerialisationFactory.getSelectionFunction(post.getSelectionFunction());
+		TerminationFunction<DungTheory, Extension<DungTheory>> beta = SerialisationFactory.getTerminationFunction(post.getTerminationFunction());
 		Callee callee = SerialisationCalleeFactory.getCallee(cmd, alpha, beta, theory, extension);
 		TimeUnit unit = Utils.getTimeoutUnit(post.getUnit_timeout());
 		int userTimeout = Utils.checkUserTimeout(post.getTimeout(), SERVICES_TIMEOUT_DUNG, unit);

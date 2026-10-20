@@ -18,24 +18,20 @@
  */
 package org.tweetyproject.web.services.serialisation;
 
-import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
+import org.tweetyproject.arg.dung.serialisability.AfExtensionScheme;
+import org.tweetyproject.serialisability.SelectionFunction;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.web.services.Callee;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-
-import static org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner.Initial.*;
 
 public class SerialisationGetSelectionCallee extends Callee {
     /** The DungTheory on which the selection function is performed */
     private final DungTheory bbase;
 
     /** The selection function to use */
-    private final SelectionFunction selectionFunction;
+    private final SelectionFunction<DungTheory, Extension<DungTheory>> selectionFunction;
 
     /**
      * Constructs a new SerialisationGetSelectionCallee with the specified DungTheory and Selection function.
@@ -43,7 +39,7 @@ public class SerialisationGetSelectionCallee extends Callee {
      * @param bbase     The base DungTheory on which the termination status is checked
      * @param alpha     The selection function to be used
      */
-    public SerialisationGetSelectionCallee(DungTheory bbase, SelectionFunction alpha) {
+    public SerialisationGetSelectionCallee(DungTheory bbase, SelectionFunction<DungTheory, Extension<DungTheory>> alpha) {
         this.bbase = bbase;
         this.selectionFunction = alpha;
     }
@@ -56,9 +52,7 @@ public class SerialisationGetSelectionCallee extends Callee {
      */
     @Override
     public Collection<Extension<DungTheory>> call() throws Exception {
-        Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner
-                .partitionInitialSets(this.bbase);
-        return this.selectionFunction.execute(new HashSet<>(initialSets.get(UA)), new HashSet<>(initialSets.get(UC)),
-                new HashSet<>(initialSets.get(C)));
+        // the current model is unknown here; the selection functions of the service do not use it
+        return this.selectionFunction.select(this.bbase, new Extension<>(), new AfExtensionScheme().partition(this.bbase));
     }
 }

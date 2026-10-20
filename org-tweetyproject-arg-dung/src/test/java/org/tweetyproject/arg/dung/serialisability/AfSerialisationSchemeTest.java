@@ -126,12 +126,21 @@ public class AfSerialisationSchemeTest {
 	}
 
 	@Test
-	void unchallengedMatchesPreviousImplementation() {
-		SerialisationSystem<DungTheory, Extension<DungTheory>> uc = system(SelectionFunction.unattackedOrUnchallenged(),
-				TerminationFunction.noUnattackedOrUnchallengedInitialModels());
-		SerialisedExtensionReasoner previous = new SerialisedExtensionReasoner(Semantics.UC);
+	void reasonerMatchesReasoners() {
+		Map<Semantics, AbstractExtensionReasoner> cases = Map.of(
+				Semantics.ADM, new SimpleAdmissibleReasoner(),
+				Semantics.CO, new SimpleCompleteReasoner(),
+				Semantics.PR, new SimplePreferredReasoner(),
+				Semantics.ST, new SimpleStableReasoner(),
+				Semantics.GR, new SimpleGroundedReasoner(),
+				Semantics.SAD, new StronglyAdmissibleReasoner());
 		for (DungTheory af : randomFrameworks())
-			assertEquals(new HashSet<>(previous.getModels(af)), uc.getModels(af), af.toString());
+			for (Map.Entry<Semantics, AbstractExtensionReasoner> c : cases.entrySet())
+				assertEquals(new HashSet<>(c.getValue().getModels(af)),
+						new HashSet<>(new SerialisedExtensionReasoner(c.getKey()).getModels(af)), af.toString());
+		assertEquals(Set.of(ext("df")), new HashSet<>(new SerialisedExtensionReasoner(Semantics.UC)
+				.getModels(af("abcdef", "ab", "ba", "ac", "bc", "ce", "de", "ed", "ef", "fe"))));
+		assertThrows(IllegalArgumentException.class, () -> new SerialisedExtensionReasoner(Semantics.SST));
 	}
 
 	@Test

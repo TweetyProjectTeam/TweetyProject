@@ -21,8 +21,9 @@ package org.tweetyproject.arg.explanations.semantics;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.serialisability.SerialisationSequence;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,22 +31,22 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Models a sequence-based representation for explanations for the acceptance of some argument
- *
+ * Models a sequence-based representation for explanations for the acceptance of some argument.
+ * The explanation is read-only; modifying operations throw an {@link UnsupportedOperationException}.
  *
  * @author Lars Bengel
  */
-public class SequenceExplanation extends Explanation implements List<Collection<? extends Argument>> {
+public class SequenceExplanation extends Explanation implements List<Extension<DungTheory>> {
 
-    /** the sequence of sets of arguments that represents this explanation */
-    List<Collection<? extends Argument>> sequence;
+    /** the serialisation sequence that represents this explanation */
+    private final SerialisationSequence<Extension<DungTheory>> sequence;
 
     /**
      * Instantiates an explanation for the given argument
      * @param argument some argument
-     * @param sequence the explaining sequence of sets of arguments
+     * @param sequence the explaining serialisation sequence
      */
-    public SequenceExplanation(Argument argument, SerialisationSequence sequence) {
+    public SequenceExplanation(Argument argument, SerialisationSequence<Extension<DungTheory>> sequence) {
         super(argument);
         this.sequence = sequence;
     }
@@ -54,13 +55,13 @@ public class SequenceExplanation extends Explanation implements List<Collection<
      * returns the sequence representation of the explanation
      * @return sequence representation of the explanation
      */
-    public List<Collection<? extends Argument>> getSequence() {
-        return new SerialisationSequence(sequence);
+    public SerialisationSequence<Extension<DungTheory>> getSequence() {
+        return this.sequence;
     }
 
     @Override
     public Collection<Argument> getSetExplanation() {
-        return ((SerialisationSequence) getSequence()).getExtension();
+        return this.getArgumentsOfStatus(ArgumentStatus.IN);
     }
 
     @Override
@@ -69,8 +70,14 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public Extension<?> getArgumentsOfStatus(ArgumentStatus status) {
-        return ((SerialisationSequence) sequence).getArgumentsOfStatus(status);
+    public Extension<DungTheory> getArgumentsOfStatus(ArgumentStatus status) {
+        if (status.equals(ArgumentStatus.IN)) {
+            Extension<DungTheory> result = new Extension<>();
+            for (Extension<DungTheory> set : this.sequence)
+                result.addAll(set);
+            return result;
+        }
+        throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
     }
 
     @Override
@@ -94,7 +101,7 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public Iterator<Collection<? extends Argument>> iterator() {
+    public Iterator<Extension<DungTheory>> iterator() {
         return sequence.iterator();
     }
 
@@ -109,7 +116,7 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public boolean add(Collection<? extends Argument> arguments) {
+    public boolean add(Extension<DungTheory> arguments) {
         return sequence.add(arguments);
     }
 
@@ -124,12 +131,12 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public boolean addAll(Collection<? extends Collection<? extends Argument>> c) {
+    public boolean addAll(Collection<? extends Extension<DungTheory>> c) {
         return sequence.addAll(c);
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends Collection<? extends Argument>> c) {
+    public boolean addAll(int index, Collection<? extends Extension<DungTheory>> c) {
         return sequence.addAll(index, c);
     }
 
@@ -149,22 +156,22 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public Collection<? extends Argument> get(int index) {
+    public Extension<DungTheory> get(int index) {
         return sequence.get(index);
     }
 
     @Override
-    public Collection<? extends Argument> set(int index, Collection<? extends Argument> element) {
+    public Extension<DungTheory> set(int index, Extension<DungTheory> element) {
         return sequence.set(index, element);
     }
 
     @Override
-    public void add(int index, Collection<? extends Argument> element) {
+    public void add(int index, Extension<DungTheory> element) {
         sequence.add(index, element);
     }
 
     @Override
-    public Collection<? extends Argument> remove(int index) {
+    public Extension<DungTheory> remove(int index) {
         return sequence.remove(index);
     }
 
@@ -179,17 +186,17 @@ public class SequenceExplanation extends Explanation implements List<Collection<
     }
 
     @Override
-    public ListIterator<Collection<? extends Argument>> listIterator() {
+    public ListIterator<Extension<DungTheory>> listIterator() {
         return sequence.listIterator();
     }
 
     @Override
-    public ListIterator<Collection<? extends Argument>> listIterator(int index) {
+    public ListIterator<Extension<DungTheory>> listIterator(int index) {
         return sequence.listIterator(index);
     }
 
     @Override
-    public List<Collection<? extends Argument>> subList(int fromIndex, int toIndex) {
+    public List<Extension<DungTheory>> subList(int fromIndex, int toIndex) {
         return sequence.subList(fromIndex, toIndex);
     }
 }

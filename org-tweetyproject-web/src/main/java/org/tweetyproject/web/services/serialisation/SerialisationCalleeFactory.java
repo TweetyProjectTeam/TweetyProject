@@ -19,8 +19,8 @@
 package org.tweetyproject.web.services.serialisation;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.web.services.Callee;
 
@@ -97,7 +97,7 @@ public class SerialisationCalleeFactory {
      * @return A Callee instance corresponding to the specified command
      * @throws RuntimeException If the specified command is not found
      */
-    public static Callee getCallee(Command cmd, SelectionFunction alpha, TerminationFunction beta, DungTheory bbase, Extension<DungTheory> extension) {
+    public static Callee getCallee(Command cmd, SelectionFunction<DungTheory, Extension<DungTheory>> alpha, TerminationFunction<DungTheory, Extension<DungTheory>> beta, DungTheory bbase, Extension<DungTheory> extension) {
         switch (cmd) {
             case GET_REDUCT -> {
                 return new SerialisationGetReductCallee(bbase, extension);

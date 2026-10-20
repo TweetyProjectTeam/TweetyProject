@@ -2,8 +2,8 @@ package org.tweetyproject.web.services.serialisation;
 
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.web.services.Callee;
 
@@ -17,10 +17,10 @@ public class SerialisationGetModelsCallee extends Callee {
     private final DungTheory bbase;
 
     /** The selection function to use */
-    private final SelectionFunction selectionFunction;
+    private final SelectionFunction<DungTheory, Extension<DungTheory>> selectionFunction;
 
     /** The termination function to use */
-    private final TerminationFunction terminationFunction;
+    private final TerminationFunction<DungTheory, Extension<DungTheory>> terminationFunction;
 
     /**
      * Constructs a new SerialisationGetModelsCallee with the specified DungTheory and functions.
@@ -29,7 +29,7 @@ public class SerialisationGetModelsCallee extends Callee {
      * @param alpha     The selection function to be used
      * @param beta      The termination function to be used
      */
-    public SerialisationGetModelsCallee(DungTheory bbase, SelectionFunction alpha, TerminationFunction beta) {
+    public SerialisationGetModelsCallee(DungTheory bbase, SelectionFunction<DungTheory, Extension<DungTheory>> alpha, TerminationFunction<DungTheory, Extension<DungTheory>> beta) {
         this.bbase = bbase;
         this.selectionFunction = alpha;
         this.terminationFunction = beta;

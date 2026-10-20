@@ -19,7 +19,8 @@
 package org.tweetyproject.web.services.serialisation;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
+import org.tweetyproject.arg.dung.serialisability.AfExtensionScheme;
+import org.tweetyproject.serialisability.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.web.services.Callee;
 
@@ -32,7 +33,7 @@ public class SerialisationIsTerminalCallee extends Callee {
     private final DungTheory bbase;
 
     /** The termination function to use */
-    private final TerminationFunction terminationFunction;
+    private final TerminationFunction<DungTheory, Extension<DungTheory>> terminationFunction;
 
     /**
      * Constructs a new SerialisationIsTerminalCallee with the specified DungTheory, Extension and Termination function.
@@ -41,7 +42,7 @@ public class SerialisationIsTerminalCallee extends Callee {
      * @param extension The extension by which the termination function is tested
      * @param beta      The termination function to be used
      */
-    public SerialisationIsTerminalCallee(DungTheory bbase, Extension<DungTheory> extension, TerminationFunction beta) {
+    public SerialisationIsTerminalCallee(DungTheory bbase, Extension<DungTheory> extension, TerminationFunction<DungTheory, Extension<DungTheory>> beta) {
         this.bbase = bbase;
         this.extension = extension;
         this.terminationFunction = beta;
@@ -55,6 +56,6 @@ public class SerialisationIsTerminalCallee extends Callee {
      */
     @Override
     public Boolean call() throws Exception {
-        return this.terminationFunction.execute(this.bbase, this.extension);
+        return this.terminationFunction.isTerminal(this.bbase, this.extension, new AfExtensionScheme().partition(this.bbase));
     }
 }

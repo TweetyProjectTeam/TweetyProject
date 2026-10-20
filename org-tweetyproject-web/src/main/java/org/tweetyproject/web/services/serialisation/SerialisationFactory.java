@@ -19,8 +19,8 @@
 package org.tweetyproject.web.services.serialisation;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -51,15 +51,15 @@ public class SerialisationFactory {
      * @param selectionFunction string id of selection functions
      * @return the selection function
      */
-    public static SelectionFunction getSelectionFunction(String selectionFunction) {
+    public static SelectionFunction<DungTheory, Extension<DungTheory>> getSelectionFunction(String selectionFunction) {
         if (selectionFunction==null) return null;
         switch (selectionFunction) {
             case "ADM" -> {
-                return SelectionFunction.ADMISSIBLE;
+                return SelectionFunction.all();
             } case "UC" -> {
-                return SelectionFunction.UNCHALLENGED;
+                return SelectionFunction.unattackedOrUnchallenged();
             } case "GR" -> {
-                return SelectionFunction.GROUNDED;
+                return SelectionFunction.unattacked();
             } default -> throw new IllegalArgumentException("unknown selection function " + selectionFunction);
         }
     }
@@ -77,19 +77,19 @@ public class SerialisationFactory {
      * @param terminationFunction string idf of termination function
      * @return the termination function
      */
-    public static TerminationFunction getTerminationFunction(String terminationFunction) {
+    public static TerminationFunction<DungTheory, Extension<DungTheory>> getTerminationFunction(String terminationFunction) {
         if (terminationFunction==null) return null;
         switch (terminationFunction) {
             case "ADM" -> {
-                return TerminationFunction.ADMISSIBLE;
+                return TerminationFunction.always();
             } case "UC" -> {
-                return TerminationFunction.UNCHALLENGED;
+                return TerminationFunction.noUnattackedOrUnchallengedInitialModels();
             } case "CO" -> {
-                return TerminationFunction.COMPLETE;
+                return TerminationFunction.noUnattackedInitialModels();
             } case "PR" -> {
-                return TerminationFunction.PREFERRED;
+                return TerminationFunction.noInitialModels();
             } case "ST" -> {
-                return TerminationFunction.STABLE;
+                return TerminationFunction.emptyFramework();
             } default -> throw new IllegalArgumentException("unknown selection function " + terminationFunction);
         }
     }

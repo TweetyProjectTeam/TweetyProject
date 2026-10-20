@@ -25,14 +25,16 @@ import java.util.List;
 /**
  * The formalism-specific part of a serialisation system: initial models, their
  * classification, the reduct and the union of models. The initial models are
- * the ⊑-minimal non-empty models of a base notion τ (e.g. admissibility), where
- * ⊑ is an information order documented by each scheme (e.g. set inclusion for
- * AF extensions). For AFs, initial models are the initial sets.
+ * the possible steps of a serialisation; by default, they are the ⊑-minimal
+ * non-empty models of a base notion τ (e.g. admissibility), where ⊑ is an
+ * information order documented by each scheme (e.g. set inclusion for AF
+ * extensions). For AFs, initial models are the initial sets.
  * <p>
  * By default, the initial models are computed from the models of τ, so the
  * first part of C5 holds by construction. Enumerating τ(F) is exponential in
  * general; implementations may override {@link #getInitialModels(Object)} with
- * an equivalent, more efficient computation.
+ * a more efficient computation, or with a different notion of step, in which
+ * case the first part of C5 does not hold.
  * <p>
  * Contract:
  * <ul>
@@ -91,8 +93,8 @@ public interface SerialisationScheme<T, S> {
 	Collection<S> getBaseModels(T framework);
 
 	/**
-	 * Returns the initial models of the framework, i.e. the ⊑-minimal models of
-	 * τ(F) other than {@code empty(F)}. Overrides must return the same models.
+	 * Returns the initial models of the framework, by default the ⊑-minimal
+	 * models of τ(F) other than {@code empty(F)}.
 	 *
 	 * @param framework some framework
 	 * @return the initial models of the framework

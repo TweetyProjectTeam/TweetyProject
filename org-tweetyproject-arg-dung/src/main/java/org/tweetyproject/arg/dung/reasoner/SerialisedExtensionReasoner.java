@@ -18,46 +18,37 @@
  */
 package org.tweetyproject.arg.dung.reasoner;
 
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.Set;
 
-import static org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner.Initial.*;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisability.AfExtensionScheme;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.SerialisationGraph;
+import org.tweetyproject.serialisability.SerialisationSequence;
+import org.tweetyproject.serialisability.SerialisationSystem;
+import org.tweetyproject.serialisability.TerminationFunction;
 
 /**
  * Reasoner for serialisable semantics
  * <p>
- * A semantics is serialisable iff it can be characterised by two functions
- * <br>
- * <ul>
- * <li>{@link SelectionFunction} a(UA, UC, C): Return a subset of the initial
- * sets
- * <li>{@link TerminationFunction} b(AF, S): True, iff S is an extension
- * </ul>
- * which describe a transition system where {@code a(UA,UC,C)} provides the
- * possible transitions to new states
- * and {@code b(AF,S)} determines whether the current state is an extension of
- * the semantics.
+ * A semantics is serialisable iff its extensions are exactly the results of
+ * the serialisation system given by a selection function α, which selects the
+ * initial sets to add next, and a termination function β, which decides
+ * whether the current state yields an extension. The reasoner delegates to a
+ * {@link SerialisationSystem} over the {@link AfExtensionScheme}.
  *
- * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation' Argument & Computation (2022)"
+ * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation' Argument &amp; Computation (2022)"
  *
  * @author Lars Bengel
  */
 public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
-    /** Selection function of the reasoner */
-    private final SelectionFunction selectionFunction;
-    /** Termination function of the reasoner */
-    private final TerminationFunction terminationFunction;
-    /** Semantics of the reasoner */
+    /** the serialisation system of the reasoner */
+    private final SerialisationSystem<DungTheory, Extension<DungTheory>> system;
+    /** the semantics of the reasoner, or null for custom functions */
     private final Semantics semantics;
 
     /**
@@ -67,78 +58,83 @@ public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
      * @param alpha some selection function
      * @param beta  some termination function
      */
-    public SerialisedExtensionReasoner(SelectionFunction alpha, TerminationFunction beta) {
-        this(alpha, beta, Semantics.diverse);
-    }
-
-    /**
-     * Initializes a serialisation reasoner with the given selection and termination
-     * functions
-     * and sets the semantics
-     *
-     * @param alpha     some selection function
-     * @param beta      some termination function
-     * @param semantics some semantics
-     */
-    public SerialisedExtensionReasoner(SelectionFunction alpha, TerminationFunction beta, Semantics semantics) {
-        this.selectionFunction = alpha;
-        this.terminationFunction = beta;
-        this.semantics = semantics;
+    public SerialisedExtensionReasoner(SelectionFunction<DungTheory, Extension<DungTheory>> alpha,
+            TerminationFunction<DungTheory, Extension<DungTheory>> beta) {
+        this(alpha, beta, null);
     }
 
     /**
      * Initializes a serialisation reasoner for the given semantics
      *
-     * @param semantics some selection function
+     * @param semantics some serialisable semantics
+     * @throws IllegalArgumentException if the semantics is not serialisable
      */
     public SerialisedExtensionReasoner(Semantics semantics) {
+        this(getSelectionFunction(semantics), getTerminationFunction(semantics), semantics);
+    }
+
+    /**
+     * Initializes a serialisation reasoner
+     *
+     * @param alpha     some selection function
+     * @param beta      some termination function
+     * @param semantics the semantics, or null
+     */
+    private SerialisedExtensionReasoner(SelectionFunction<DungTheory, Extension<DungTheory>> alpha,
+            TerminationFunction<DungTheory, Extension<DungTheory>> beta, Semantics semantics) {
+        this.system = new SerialisationSystem<>(new AfExtensionScheme(), alpha, beta);
         this.semantics = semantics;
+    }
+
+    /**
+     * @param semantics some semantics
+     * @return the selection function of the semantics
+     * @throws IllegalArgumentException if the semantics is not serialisable
+     */
+    private static SelectionFunction<DungTheory, Extension<DungTheory>> getSelectionFunction(Semantics semantics) {
         switch (semantics) {
-            case ADM -> {
-                selectionFunction = SelectionFunction.ADMISSIBLE;
-                terminationFunction = TerminationFunction.ADMISSIBLE;
-            }
-            case CO -> {
-                selectionFunction = SelectionFunction.ADMISSIBLE;
-                terminationFunction = TerminationFunction.COMPLETE;
-            }
-            case PR -> {
-                selectionFunction = SelectionFunction.ADMISSIBLE;
-                terminationFunction = TerminationFunction.PREFERRED;
-            }
-            case SAD -> {
-                selectionFunction = SelectionFunction.GROUNDED;
-                terminationFunction = TerminationFunction.ADMISSIBLE;
-            }
-            case GR -> {
-                selectionFunction = SelectionFunction.GROUNDED;
-                terminationFunction = TerminationFunction.COMPLETE;
-            }
-            case UC -> {
-                selectionFunction = SelectionFunction.UNCHALLENGED;
-                terminationFunction = TerminationFunction.UNCHALLENGED;
-            }
-            case ST -> {
-                selectionFunction = SelectionFunction.ADMISSIBLE;
-                terminationFunction = TerminationFunction.STABLE;
-            }
-            default -> throw new IllegalArgumentException("Semantics is not serialisable: " + semantics);
+            case ADM: case CO: case PR: case ST:
+                return SelectionFunction.all();
+            case GR: case SAD:
+                return SelectionFunction.unattacked();
+            case UC:
+                return SelectionFunction.unattackedOrUnchallenged();
+            default:
+                throw new IllegalArgumentException("Semantics is not serialisable: " + semantics);
+        }
+    }
+
+    /**
+     * @param semantics some semantics
+     * @return the termination function of the semantics
+     * @throws IllegalArgumentException if the semantics is not serialisable
+     */
+    private static TerminationFunction<DungTheory, Extension<DungTheory>> getTerminationFunction(Semantics semantics) {
+        switch (semantics) {
+            case ADM: case SAD:
+                return TerminationFunction.always();
+            case CO: case GR:
+                return TerminationFunction.noUnattackedInitialModels();
+            case PR:
+                return TerminationFunction.noInitialModels();
+            case ST:
+                return TerminationFunction.emptyFramework();
+            case UC:
+                return TerminationFunction.noUnattackedOrUnchallengedInitialModels();
+            default:
+                throw new IllegalArgumentException("Semantics is not serialisable: " + semantics);
         }
     }
 
     @Override
     public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
-        Collection<Extension<DungTheory>> result = new HashSet<>();
-        for (SerialisationSequence sequence : this.getSequences(bbase)) {
-            result.add(sequence.getExtension());
-        }
-        return result;
+        return this.system.getModels(bbase);
     }
 
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
-        Collection<Extension<DungTheory>> result = new HashSet<>();
-        return this.getSequences(bbase).iterator().next().getExtension();
+        Iterator<Extension<DungTheory>> models = this.getModels(bbase).iterator();
+        return models.hasNext() ? models.next() : null;
     }
 
     /**
@@ -147,93 +143,31 @@ public class SerialisedExtensionReasoner extends AbstractExtensionReasoner {
      * @param bbase some argumentation framework
      * @return the set of serialisation sequences
      */
-    public Collection<SerialisationSequence> getSequences(DungTheory bbase) {
-        return this.getSequences(bbase, new SerialisationSequence());
+    public Set<SerialisationSequence<Extension<DungTheory>>> getSequences(DungTheory bbase) {
+        return this.system.getSequences(bbase);
     }
 
     /**
-     * Recursively computes all serialisation sequences wrt. the semantics
+     * Computes the serialisation graph of the framework wrt. the semantics
      *
-     * @param theory         an argumentation framework
-     * @param parentSequence the current serialisation sequence
-     * @return the set of serialisation sequences
+     * @param bbase some argumentation framework
+     * @return the serialisation graph
      */
-    private Collection<SerialisationSequence> getSequences(DungTheory theory, SerialisationSequence parentSequence) {
-        Collection<SerialisationSequence> result = new HashSet<>();
-
-        // check whether the current state is acceptable, if yes add to results
-        if (this.isTerminal(theory, parentSequence.getExtension())) {
-            result.add(parentSequence);
-        }
-        Map<SimpleInitialReasoner.Initial, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner
-                .partitionInitialSets(theory);
-        Collection<Extension<DungTheory>> candidateSets = this.getSelection(initialSets.get(UA), initialSets.get(UC),
-                initialSets.get(C));
-        // iterate depth-first through all initial sets (and hence their induced states)
-        // and add all found serialisation sequences
-        for (Extension<DungTheory> set : candidateSets) {
-            DungTheory reduct = theory.getReduct(set);
-
-            SerialisationSequence newSequence = new SerialisationSequence(parentSequence);
-            newSequence.add(set);
-            // continue computation of the serialisation in the reduct
-            result.addAll(this.getSequences(reduct, newSequence));
-        }
-        return result;
+    public SerialisationGraph<DungTheory, Extension<DungTheory>> getSerialisationGraph(DungTheory bbase) {
+        return this.system.getGraph(bbase);
     }
 
     /**
-     * Creates a graph, visualizing the transition states of the serialisation
-     * process, which creates all serialisable extensions
-     * according to the specified semantics of the specified framework.
-     *
-     * @param bbase argumentation framework, for which the extensions shall be
-     *              computed
-     * @return Graph representing the serialisation sequences
+     * @return the serialisation system of this reasoner
      */
-    public SerialisationGraph getSerialisationGraph(DungTheory bbase) {
-        return new SerialisationGraph(bbase, this);
+    public SerialisationSystem<DungTheory, Extension<DungTheory>> getSystem() {
+        return this.system;
     }
 
     /**
-     * Return the semantics of this reasoner
-     *
-     * @return the semantics
+     * @return the semantics of this reasoner, or null if it was created from custom functions
      */
     public Semantics getSemantics() {
-        return semantics;
+        return this.semantics;
     }
-
-    /**
-     * Applies a selection function to compute a collection of preferred extensions
-     * from given sets of extensions.
-     *
-     * @param ua A collection of unattacked extensions of the Dung theory.
-     * @param uc A collection of unattacked but conflicting extensions.
-     * @param c  A collection of conflicting extensions.
-     * @return A collection of {@link Extension} objects selected based on the
-     *         applied selection function.
-     *
-     * @throws ClassCastException if any of the input collections cannot be cast to
-     *                            {@link Set<Extension<DungTheory>>}.
-     */
-    public Collection<Extension<DungTheory>> getSelection(Collection<Extension<DungTheory>> ua,
-            Collection<Extension<DungTheory>> uc, Collection<Extension<DungTheory>> c) {
-        return this.selectionFunction.execute((Set<Extension<DungTheory>>) ua, (Set<Extension<DungTheory>>) uc,
-                (Set<Extension<DungTheory>>) c);
-    }
-
-    /**
-     * Checks whether a given extension is terminal in the specified Dung theory.
-     *
-     *
-     * @param theory    The {@link DungTheory} in which the extension is evaluated.
-     * @param extension The {@link Extension} to be checked for terminal status.
-     * @return {@code true} if the extension is terminal in the given theory;
-     *         {@code false} otherwise.
-     */
-    public boolean isTerminal(DungTheory theory, Extension<DungTheory> extension) {
-        return this.terminationFunction.execute(theory, extension);
-    }
-
 }

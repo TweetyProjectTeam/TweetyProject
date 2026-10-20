@@ -18,25 +18,29 @@
  */
 package org.tweetyproject.arg.dung.serialisability.util;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.Map;
 
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.commons.PlotterMultiFrame;
+import org.tweetyproject.serialisability.SerialisationGraph;
+import org.tweetyproject.serialisability.util.SerialisationGraphPlotter;
 
 /**
  * This class summarizes static methods used to plot serialisability analyses,
- * consisting of plotting the underlying argumentation framework and the serialisation graphs regarding the specified semantics.
+ * consisting of plotting the underlying argumentation framework and its
+ * serialisation graphs.
  *
  * @see DungTheoryPlotter
+ * @see SerialisationGraphPlotter
  *
  * @author Julian Sander
+ * @author Lars Bengel
  */
 public class SerialisationAnalysisPlotter {
 
@@ -46,152 +50,115 @@ public class SerialisationAnalysisPlotter {
     }
 
     /**
-     * Plots specified analyses of the serialising generation of extensions, each in a separate frame.
+     * Plots the framework and its serialisation graphs in a new frame
      * @param framework an argumentation framework
-     * @param graphs Graphs of the serialisation process
-     * @param title Title, common to all specified serialisation graphs to plot
-     * @param width Width of the new frames created
-     * @param height Height of the new frames created
+     * @param graphs serialisation graphs of the framework
+     * @param title title of the plots
+     * @param width width of the frame
+     * @param height height of the frame
      */
-    public static void plotAnalyses(DungTheory framework, SerialisationGraph[] graphs, String title, int width, int height) {
-        HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
-
-        for (SerialisationGraph analysis : graphs) {
-            convExamples.put(framework, new SerialisationGraph[] {analysis});
-        }
-        SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
+    public static void plotAnalyses(DungTheory framework, List<SerialisationGraph<DungTheory, Extension<DungTheory>>> graphs,
+            String title, int width, int height) {
+        plotAnalyses(Map.of(framework, graphs), title, width, height);
     }
 
     /**
-     * Plots specified frameworks and their associated serialisation graphs
-     * for the specified semantics. Creates one frame for every single framework and its graphs.
-     * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
-     * @param title Title, common to all specified analyses to plot
-     * @param width Width of the new frames created
-     * @param height Height of the new frames created
+     * Plots each framework with its serialisation graphs in a separate frame
+     * @param graphs frameworks mapped to their serialisation graphs
+     * @param title title of the plots, followed by the index of the framework
+     * @param width width of the frames
+     * @param height height of the frames
      */
-    public static void plotAnalyses(HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
+    public static void plotAnalyses(Map<DungTheory, List<SerialisationGraph<DungTheory, Extension<DungTheory>>>> graphs,
+            String title, int width, int height) {
         int index = 0;
-        for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
+        for (Map.Entry<DungTheory, List<SerialisationGraph<DungTheory, Extension<DungTheory>>>> entry : graphs.entrySet()) {
             Plotter groundPlotter = new Plotter();
-            String titleToSet = title + " " + index;
             groundPlotter.createFrame(width, height);
-            DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titleToSet);
-            for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
-                SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titleToSet);
-            }
+            plotAnalysis(entry.getKey(), entry.getValue(), groundPlotter, title + " " + index++);
             groundPlotter.show();
-            index++;
         }
     }
 
     /**
-     * Plots specified frameworks and their associated serialisation graphs
-     * for the specified semantics. Creates one frame for every single framework and its graphs.
-     * @param semantics Semantics of the extension created
-     * @param frameworks Frameworks, for which the extensions should be found
-     * @param title Title, common to all specified  serialisation graphs to plot
-     * @param width Width of the new frames created
-     * @param height Height of the new frames created
+     * Plots each framework with its serialisation graphs wrt. the given semantics in a separate frame
+     * @param semantics serialisable semantics
+     * @param frameworks argumentation frameworks
+     * @param title title of the plots, followed by the index of the framework
+     * @param width width of the frames
+     * @param height height of the frames
      */
     public static void plotAnalyses(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
-        SerialisationAnalysisPlotter.plotAnalyses(generateGraphsMapToAF(semantics, frameworks), title, width, height);
+        for (int i = 0; i < frameworks.length; i++) {
+            Plotter groundPlotter = new Plotter();
+            groundPlotter.createFrame(width, height);
+            plotAnalysis(semantics, frameworks[i], groundPlotter, title + " " + i);
+            groundPlotter.show();
+        }
     }
 
     /**
-     * Plots specified frameworks and their associated serialisation graphs
-     * for the specified semantics. Creates one single frame for all frameworks and graphs.
-     * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
-     * @param title Title of the frameworks
-     * @param width Width of the new frames created
-     * @param height Height of the new frames created
-     * @return Frame containing the plotted graphs
+     * Plots all frameworks with their serialisation graphs in a single frame
+     * @param graphs frameworks mapped to their serialisation graphs
+     * @param title title of the plots
+     * @param width width of the frame
+     * @param height height of the frame
+     * @return the frame containing the plots
      */
     public static PlotterMultiFrame plotAnalysesOneFrame(
-            HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
-        var groundPlotter = new PlotterMultiFrame();
+            Map<DungTheory, List<SerialisationGraph<DungTheory, Extension<DungTheory>>>> graphs, String title, int width, int height) {
+        PlotterMultiFrame groundPlotter = new PlotterMultiFrame();
         groundPlotter.createFrame(width, height);
-        for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
-            DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, title);
-            for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
-                if(graph == null) {
-                    var labels = new LinkedList<String>();
-                    labels.add("No Sequence found.");
-                    groundPlotter.addLabels(labels);
-                }
-                else {
-                    SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
-                }
-            }
-        }
+        for (Map.Entry<DungTheory, List<SerialisationGraph<DungTheory, Extension<DungTheory>>>> entry : graphs.entrySet())
+            plotAnalysis(entry.getKey(), entry.getValue(), groundPlotter, title);
         groundPlotter.show();
         return groundPlotter;
     }
 
     /**
-     * Plots specified frameworks and their associated serialisation graphs
-     * for the specified semantics. Creates one single frame for all frameworks and graphs.
-     * @param semantics Semantics of the extension created
-     * @param frameworks Frameworks, for which the extensions should be found.
-     * @param titles Titles of the frameworks
-     * @param width Width of the new frames created.
-     * @param height Height of the new frames created.
-     * @return Frame containing the plotted graphs
+     * Plots all frameworks with their serialisation graphs wrt. the given semantics in a single frame
+     * @param semantics serialisable semantics
+     * @param frameworks argumentation frameworks
+     * @param titles titles of the frameworks
+     * @param width width of the frame
+     * @param height height of the frame
+     * @return the frame containing the plots
      */
-    public static PlotterMultiFrame plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String[] titles, int width, int height) {
-        var groundPlotter = new PlotterMultiFrame();
+    public static PlotterMultiFrame plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String[] titles,
+            int width, int height) {
+        PlotterMultiFrame groundPlotter = new PlotterMultiFrame();
         groundPlotter.createFrame(width, height);
-        for (int i = 0; i < titles.length; i++) {
-            DungTheoryPlotter.plotFramework(frameworks[i], groundPlotter, titles[i]);
-            for (SerialisationGraph graph : generateGraphs(semantics, frameworks[i])) {
-                if(graph == null) {
-                    var labels = new LinkedList<String>();
-                    labels.add("No Sequence found.");
-                    groundPlotter.addLabels(labels);
-                }
-                else {
-                    SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
-                }
-            }
-        }
+        for (int i = 0; i < frameworks.length; i++)
+            plotAnalysis(semantics, frameworks[i], groundPlotter, titles[i]);
         groundPlotter.show();
         return groundPlotter;
     }
 
     /**
-     * Generates serialisation graphs for the given semantics and framework.
-     *
-     * @param semantics semantics to use for graph generation
-     * @param framework framework for which the graphs are generated
-     * @return the generated serialisation graphs, or {@code null} entries if a graph cannot be created
+     * Plots the framework and the given serialisation graphs in the frame of the plotter
+     * @param framework an argumentation framework
+     * @param graphs serialisation graphs of the framework
+     * @param groundPlotter the ground plotter
+     * @param title title of the plots
      */
-    private static SerialisationGraph[] generateGraphs(Semantics[] semantics, DungTheory framework) {
-        SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
-        for (int i = 0; i < graphs.length; i++) {
-            try {
-                graphs[i] = new SerialisedExtensionReasoner(semantics[i]).getSerialisationGraph(framework);
-            }
-            catch(NoSuchElementException e) {
-                graphs[i] = null;
-            }
-        }
-        return graphs;
+    private static void plotAnalysis(DungTheory framework, List<SerialisationGraph<DungTheory, Extension<DungTheory>>> graphs,
+            Plotter groundPlotter, String title) {
+        DungTheoryPlotter.plotFramework(framework, groundPlotter, title);
+        for (SerialisationGraph<DungTheory, Extension<DungTheory>> graph : graphs)
+            SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
     }
 
     /**
-     * Generates a framework-to-graphs map for the given frameworks.
-     *
-     * @param semantics semantics to use for graph generation
-     * @param frameworks frameworks for which the graphs are generated
-     * @return a map from each framework to its serialisation graphs
+     * Plots the framework and its serialisation graphs wrt. the given semantics in the frame of the plotter
+     * @param semantics serialisable semantics
+     * @param framework an argumentation framework
+     * @param groundPlotter the ground plotter
+     * @param title title of the plots
      */
-    private static HashMap<DungTheory, SerialisationGraph[]> generateGraphsMapToAF(Semantics[] semantics, DungTheory[] frameworks) {
-        var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
-
-        for (DungTheory example : frameworks) {
-            var graphs = generateGraphs(semantics, example);
-            convExamples.put(example, graphs);
-        }
-        return convExamples;
+    private static void plotAnalysis(Semantics[] semantics, DungTheory framework, Plotter groundPlotter, String title) {
+        DungTheoryPlotter.plotFramework(framework, groundPlotter, title);
+        for (Semantics s : semantics)
+            SerialisationGraphPlotter.plotGraph(new SerialisedExtensionReasoner(s).getSerialisationGraph(framework),
+                    groundPlotter, title + ": " + s.description());
     }
 }

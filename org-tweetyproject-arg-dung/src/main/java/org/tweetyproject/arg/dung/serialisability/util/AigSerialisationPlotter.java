@@ -1,13 +1,31 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2025 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.serialisability.util;
 
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationState;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.util.AigGraphPlotter;
+import org.tweetyproject.serialisability.SerialisationGraph;
+import org.tweetyproject.serialisability.SerialisationState;
 
 import java.awt.*;
 import java.io.File;
@@ -17,69 +35,42 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Abstract plotter for visualizing the serialisation of Dung argumentation frameworks.
+ * Visualizes an argumentation framework next to its serialisation graph via
+ * the aig-graph-component. States are arranged in levels by their distance to
+ * the root; terminal states are highlighted.
  * <p>
- * This class extends {@link AigGraphPlotter} to provide visualization capabilities
- * specifically tailored for Dung theories and their serialisations under various
- * argumentation semantics.
- * </p>
+ * This class only extends {@link AigGraphPlotter} to access its resources and
+ * cannot be instantiated.
  *
- * <p>
- * It offers a static utility method to generate and display an HTML visualization
- * of both the original argumentation framework and its serialisation graph,
- * facilitating comparative analysis.
- * </p>
- *
- * @author (your name or team)
+ * @author Lars Bengel
  */
-public abstract class AigSerialisationPlotter extends AigGraphPlotter<DungTheory, Argument> {
+public final class AigSerialisationPlotter extends AigGraphPlotter<DungTheory, Argument> {
+    /** color of terminal states */
+    private static final String COLOR_TERMINAL = "lightgreen";
 
-    /**
-     * Constructs a new {@code AigSerialisationPlotter} for the given Dung theory.
-     *
-     * <p>
-     * This initializes the plotter with the specified argumentation framework,
-     * allowing for the visualization of its structure or serialisation.
-     * </p>
-     *
-     * @param graph the Dung argumentation framework to be visualized.
-     */
-    public AigSerialisationPlotter(DungTheory graph) {
-        super(graph);
+    /** Hidden constructor */
+    private AigSerialisationPlotter() {
+        super(new DungTheory());
     }
 
     /**
-     * Visualizes a Dung argumentation framework along with its serialisation
-     * with respect to a given argumentation semantics.
+     * Renders the framework and its serialisation graph wrt. the semantics in the web browser.
+     * The page is written to {@code index.html} in the working directory.
      *
-     * <p>
-     * This method uses a {@link SerialisedExtensionReasoner} to compute
-     * the serialisation graph of the given theory under the specified semantics.
-     * It then renders both the original argumentation framework and the
-     * serialisation graph side by side in a generated HTML file using
-     * {@link AigGraphPlotter}.
-     * </p>
-     *
-     * <p>
-     * The resulting visualization is written to {@code index.html}
-     * and automatically opened in the system's default web browser.
-     * </p>
-     *
-     * @param theory    the Dung theory to be visualized.
-     * @param semantics the argumentation semantics to use for computing the
-     *                  serialisation.
-     * @throws RuntimeException if an I/O error occurs during file handling.
+     * @param theory    some argumentation framework
+     * @param semantics some serialisable semantics
+     * @throws RuntimeException if an I/O error occurs
      */
     public static void showSerialisation(DungTheory theory, Semantics semantics) {
-        SerialisedExtensionReasoner reasoner = new SerialisedExtensionReasoner(semantics);
-
-        SerialisationGraph serialisation = reasoner.getSerialisationGraph(theory);
-        SerialisationState root = new SerialisationState(theory, new Extension<>(),
-                reasoner.isTerminal(theory, new Extension<>()));
+        SerialisationGraph<DungTheory, Extension<DungTheory>> graph = new SerialisedExtensionReasoner(semantics)
+                .getSerialisationGraph(theory);
 
         AigGraphPlotter<DungTheory, Argument> plotter1 = new AigGraphPlotter<>(theory);
-        AigGraphPlotter<SerialisationGraph, SerialisationState> plotter2 = new AigGraphPlotter<>(serialisation);
-        plotter2.makeLeveled(root);
+        AigGraphPlotter<SerialisationGraph<DungTheory, Extension<DungTheory>>, SerialisationState<DungTheory, Extension<DungTheory>>> plotter2 =
+                new AigGraphPlotter<>(graph);
+        plotter2.makeLeveled(graph.getRoot());
+        for (SerialisationState<DungTheory, Extension<DungTheory>> state : graph.getTerminalStates())
+            plotter2.setColor(state, COLOR_TERMINAL);
 
         Path outputPath = Paths.get("index.html");
         try {

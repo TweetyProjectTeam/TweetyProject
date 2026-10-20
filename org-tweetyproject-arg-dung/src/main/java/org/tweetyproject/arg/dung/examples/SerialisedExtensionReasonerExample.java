@@ -20,12 +20,10 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.SerialisedExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-
-import java.util.HashSet;
+import org.tweetyproject.serialisability.SelectionFunction;
+import org.tweetyproject.serialisability.TerminationFunction;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisedExtensionReasoner}
@@ -50,32 +48,34 @@ public class SerialisedExtensionReasonerExample {
 	public static void main(String[] args) {
 		// Use a serialised reasoner for admissible sets
 		SerialisedExtensionReasoner admReasoner = new SerialisedExtensionReasoner(Semantics.ADM);
-		executeExample(admReasoner, example1());
+		executeExample("Admissible", admReasoner, example1());
 
 		// Define a serialised reasoner for a novel semantics
-		SerialisedExtensionReasoner novelReasoner = new SerialisedExtensionReasoner(SelectionFunction.ADMISSIBLE, TerminationFunction.UNCHALLENGED);
-		executeExample(novelReasoner, example2());
+		SerialisedExtensionReasoner novelReasoner = new SerialisedExtensionReasoner(SelectionFunction.all(),
+				TerminationFunction.noUnattackedOrUnchallengedInitialModels());
+		executeExample("Novel semantics", novelReasoner, example2());
 
 		// Define a serialised reasoner via novel selection and termination functions
 		// e.g. only select challenged initial sets and terminate iff reduct has no self-attacks
 		SerialisedExtensionReasoner novelReasoner2 = new SerialisedExtensionReasoner(
-				(ua,uc,c) -> new HashSet<>(c),
-				(theory,extension) -> !theory.hasSelfLoops()
+				(theory, extension, initialSets) -> initialSets.getChallenged(),
+				(theory, extension, initialSets) -> !theory.hasSelfLoops()
 		);
-		executeExample(novelReasoner2, example3());
+		executeExample("Custom semantics", novelReasoner2, example3());
 	}
 
 	/**
 	 * Execute the given reasoner for the given example
+	 * @param name      name of the semantics
 	 * @param reasoner	some serialisation reasoner
 	 * @param theory    exemplary argumentation framework
 	 */
-	protected static void executeExample(SerialisedExtensionReasoner reasoner, DungTheory theory) {
-		System.out.println(reasoner.getSemantics().description() + ":");
+	protected static void executeExample(String name, SerialisedExtensionReasoner reasoner, DungTheory theory) {
+		System.out.println(name + ":");
 		System.out.println("AF: " + theory);
 		System.out.println("Extensions: " + reasoner.getModels(theory));
 		System.out.println("Sequences: " + reasoner.getSequences(theory));
-		System.out.println("Serialisation:\n" + reasoner.getSerialisationGraph(theory).prettyPrint());
+		System.out.println("Serialisation graph: " + reasoner.getSerialisationGraph(theory));
 	}
 
 	/**

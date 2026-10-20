@@ -19,7 +19,7 @@
 
 package org.tweetyproject.arg.explanations.reasoner.acceptance;
 
-import org.tweetyproject.arg.dung.serialisability.semantics.SerialisationSequence;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.explanations.semantics.DialectialSequenceExplanation;
@@ -28,6 +28,7 @@ import org.tweetyproject.arg.explanations.semantics.SequenceExplanation;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Reasoner for dialectical sequence explanations for the acceptance of arguments
@@ -44,12 +45,10 @@ public class DialecticalSequenceExplanationReasoner extends AbstractSequenceExpl
         Collection<Explanation> explanations = new MinimalSequenceExplanationReasoner().getExplanations(theory, argument);
         Collection<Explanation> result = new HashSet<>();
         for (Explanation e : explanations) {
-            SerialisationSequence seq = (SerialisationSequence) ((SequenceExplanation) e).getSequence();
+            List<Extension<DungTheory>> seq = ((SequenceExplanation) e).getSequence();
             DialectialSequenceExplanation ex = new DialectialSequenceExplanation(argument);
-            for (Collection<? extends Argument> s : seq) {
-                Collection<Argument> t = getDefeated(theory, seq, argument, (Collection<Argument>) s);
-                ex.add((Collection<Argument>) s, t);
-            }
+            for (int i = 0; i < seq.size(); i++)
+                ex.add(seq.get(i), getDefeated(theory, seq, argument, i));
             result.add(ex);
         }
         return result;
@@ -61,16 +60,27 @@ public class DialecticalSequenceExplanationReasoner extends AbstractSequenceExpl
      * @param theory some argumentation framework
      * @param seq some serialisation sequence
      * @param a the argument to be explained
-     * @param s the set of arguments
+     * @param i the index of the set 's' in the sequence
      * @return the set of arguments defeated by 's' given the sequence and argument
      */
-    private Collection<Argument> getDefeated(DungTheory theory, SerialisationSequence seq, Argument a, Collection<Argument> s) {
+    private Collection<Argument> getDefeated(DungTheory theory, List<Extension<DungTheory>> seq, Argument a, int i) {
         Collection<Argument> relevantAttackers = new HashSet<>();
         relevantAttackers.addAll(theory.getAttackers(a));
-        relevantAttackers.addAll(theory.getAttackers(seq.getExtension()));
-        DungTheory reduct = theory.getReduct(new SerialisationSequence(seq.subList(0, seq.indexOf(s))).getExtension());
-        Collection<Argument> attacked = new HashSet<>(reduct.getAttacked(s));
+        relevantAttackers.addAll(theory.getAttackers(union(seq)));
+        DungTheory reduct = theory.getReduct(union(seq.subList(0, i)));
+        Collection<Argument> attacked = new HashSet<>(reduct.getAttacked(seq.get(i)));
         relevantAttackers.retainAll(attacked);
         return relevantAttackers;
+    }
+
+    /**
+     * @param sets some sets of arguments
+     * @return the union of the sets
+     */
+    private static Extension<DungTheory> union(List<Extension<DungTheory>> sets) {
+        Extension<DungTheory> result = new Extension<>();
+        for (Extension<DungTheory> set : sets)
+            result.addAll(set);
+        return result;
     }
 }

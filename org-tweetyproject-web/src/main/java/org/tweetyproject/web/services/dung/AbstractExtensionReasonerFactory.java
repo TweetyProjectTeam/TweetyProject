@@ -20,8 +20,6 @@ package org.tweetyproject.web.services.dung;
 
 import org.tweetyproject.arg.dung.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisability.syntax.SelectionFunction;
-import org.tweetyproject.arg.dung.serialisability.syntax.TerminationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
@@ -89,9 +87,9 @@ public abstract class AbstractExtensionReasonerFactory {
 				AbstractExtensionReasoner reduct = getReasoner(getSemantics(args, "reductSemantics", Semantics.ADM));
 				return new VacuousReductReasoner(base, reduct);
 			} case "SER" -> {
-				SelectionFunction selection = SerialisationFactory.getSelectionFunction(getString(args, "selectionFunction", "ADM"));
-				TerminationFunction termination = SerialisationFactory.getTerminationFunction(getString(args, "terminationFunction", "PR"));
-				return new SerialisedExtensionReasoner(selection, termination);
+				return new SerialisedExtensionReasoner(
+						SerialisationFactory.getSelectionFunction(getString(args, "selectionFunction", "ADM")),
+						SerialisationFactory.getTerminationFunction(getString(args, "terminationFunction", "PR")));
 			} default -> {
 				return getReasoner(Semantics.getSemantics(semantics));
 			}
