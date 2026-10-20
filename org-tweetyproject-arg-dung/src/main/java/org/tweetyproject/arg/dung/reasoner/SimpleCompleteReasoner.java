@@ -60,7 +60,7 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 	 * @param dungTheory a Dung theory
 	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
-	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
+	 * @return all complete extensions that are supersets of an argument in {@code remaining}
 	 */
 	private Set<Extension<DungTheory>> getCompleteExtensions(DungTheory dungTheory, Extension<DungTheory> ext, Collection<Argument> remaining){
 		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();

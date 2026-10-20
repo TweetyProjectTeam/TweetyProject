@@ -234,7 +234,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * true if ext1 < ext2
+     * true if {@code ext1 < ext2}
      * @param ext1 first extension
      * @param ext2 second extension
      * @return true if ext1 is strict subset of ext2, false otherwise (equal or superset)
