@@ -29,6 +29,11 @@ import java.util.List;
  * ⊑ is an information order documented by each scheme (e.g. set inclusion for
  * AF extensions). For AFs, initial models are the initial sets.
  * <p>
+ * By default, the initial models are computed from the models of τ, so the
+ * first part of C5 holds by construction. Enumerating τ(F) is exponential in
+ * general; implementations may override {@link #getInitialModels(Object)} with
+ * an equivalent, more efficient computation.
+ * <p>
  * Contract:
  * <ul>
  * <li>C1 Scheme operations are deterministic and do not modify their
@@ -57,6 +62,11 @@ import java.util.List;
  * Under C1–C6, {@link SelectionFunction#all()} and
  * {@link TerminationFunction#always()} yield exactly τ(F). Implementations
  * state whether C5/C6 are proven or conjectured.
+ * <p>
+ * C1–C4 are preconditions of {@link SerialisationSystem}; in particular, merging
+ * states by model is only sound under C4. C5/C6 only concern the correspondence
+ * with τ. Whether a combination of τ, reduct and classification is well-behaved
+ * is the responsibility of the implementation and is not enforced.
  *
  * @see "Matthias Thimm. 'Revisiting initial sets in abstract argumentation' Argument &amp; Computation (2022)"
  * @see "Lars Bengel, Matthias Thimm. 'Serialisability in Formal Argumentation' (2026)"
@@ -76,9 +86,37 @@ public interface SerialisationScheme<T, S> {
 
 	/**
 	 * @param framework some framework
+	 * @return the models of the base notion τ for the framework
+	 */
+	Collection<S> getBaseModels(T framework);
+
+	/**
+	 * Returns the initial models of the framework, i.e. the ⊑-minimal models of
+	 * τ(F) other than {@code empty(F)}. Overrides must return the same models.
+	 *
+	 * @param framework some framework
 	 * @return the initial models of the framework
 	 */
-	Collection<S> getInitialModels(T framework);
+	default Collection<S> getInitialModels(T framework) {
+		S empty = this.empty(framework);
+		List<S> candidates = new ArrayList<>();
+		for (S model : this.getBaseModels(framework))
+			if (!this.isLessOrEqual(model, empty))
+				candidates.add(model);
+		List<S> result = new ArrayList<>();
+		for (S model : candidates) {
+			boolean minimal = true;
+			for (S other : candidates) {
+				if (!other.equals(model) && this.isLessOrEqual(other, model)) {
+					minimal = false;
+					break;
+				}
+			}
+			if (minimal)
+				result.add(model);
+		}
+		return result;
+	}
 
 	/**
 	 * @param framework    some framework
@@ -112,6 +150,13 @@ public interface SerialisationScheme<T, S> {
 	 * @throws IllegalArgumentException if the models are incompatible
 	 */
 	S union(S model, S other);
+
+	/**
+	 * @param model some model
+	 * @param other some model
+	 * @return true iff model ⊑ other in the information order of this scheme
+	 */
+	boolean isLessOrEqual(S model, S other);
 
 	/**
 	 * Partitions the initial models of the framework into unattacked, unchallenged

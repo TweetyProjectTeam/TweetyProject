@@ -25,10 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.tweetyproject.commons.util.SetTools;
+
 /**
  * Scheme over finite sets of integers for testing the engine. A framework is
- * the set of remaining numbers, its initial models are the singletons, even
- * numbers are unattacked and distinct odd numbers conflict with each other.
+ * the set of remaining numbers, τ yields all its subsets, so the initial models
+ * are the singletons (computed directly). Even numbers are unattacked and
+ * distinct odd numbers conflict with each other.
  *
  * @author Lars Bengel
  */
@@ -45,6 +48,11 @@ class ToyScheme implements SerialisationScheme<Set<Integer>, Set<Integer>> {
 	@Override
 	public Set<Integer> empty(Set<Integer> framework) {
 		return new HashSet<>();
+	}
+
+	@Override
+	public Collection<Set<Integer>> getBaseModels(Set<Integer> framework) {
+		return new SetTools<Integer>().subsets(framework);
 	}
 
 	@Override
@@ -77,5 +85,10 @@ class ToyScheme implements SerialisationScheme<Set<Integer>, Set<Integer>> {
 		Set<Integer> result = new HashSet<>(model);
 		result.addAll(other);
 		return result;
+	}
+
+	@Override
+	public boolean isLessOrEqual(Set<Integer> model, Set<Integer> other) {
+		return other.containsAll(model);
 	}
 }
