@@ -46,8 +46,11 @@ import org.tweetyproject.arg.aba.reasoner.StableReasoner;
 import org.tweetyproject.arg.aba.reasoner.WellFoundedReasoner;
 import org.tweetyproject.arg.aba.syntax.AbaTheory;
 import org.tweetyproject.arg.aba.syntax.Assumption;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.setaf.reasoners.AbstractSetAfExtensionReasoner;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.arg.setaf.syntax.SetAttack;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ParserException;
@@ -212,6 +215,39 @@ public class AbaTest {
 			Set<Set<Assumption<PlFormula>>> cf = sets(new ConflictFreeReasoner<PlFormula>().getModels(abat));
 			for (Semantics s : new Semantics[] { Semantics.WAD, Semantics.UD })
 				assertTrue(cf.containsAll(sets(new SetafReductionReasoner<PlFormula>(s).getModels(abat))), s + ": " + abat);
+		}
+	}
+
+	@Test
+	public void WeakSemanticsExamples() throws Exception {
+		// Blümel, König, Ulbricht (KR 2024), Ex. 15/51
+		AbaTheory<PlFormula> climate = theory("{stud,dis,cc}\nnot stud = studc\nnot dis = disc\nnot cc = ccc\n"
+				+ "disc <- dis\nccc <- dis,stud");
+		assertEquals(names("", "stud", "cc", "stud cc"),
+				names(new SetafReductionReasoner<PlFormula>(Semantics.WAD).getModels(climate)));
+		assertEquals(names("stud cc"), names(new SetafReductionReasoner<PlFormula>(Semantics.WPR).getModels(climate)));
+		// Ex. 16
+		assertEquals(names(""), names(new SetafReductionReasoner<PlFormula>(Semantics.WAD)
+				.getModels(theory("{a}\nnot a = ac\nac <- a"))));
+		// Ex. 17/52: c is only attacked by the paradoxical set {a, b}
+		AbaTheory<PlFormula> ex17 = theory("{a,b,c}\nnot a = ac\nnot b = bc\nnot c = cc\nac <- a,b\nbc <- a,b\ncc <- a,b");
+		assertTrue(names(new SetafReductionReasoner<PlFormula>(Semantics.WAD).getModels(ex17)).contains(Set.of("c")));
+	}
+
+	@Test
+	public void SetafReductionDropsDeadAssumptions() throws Exception {
+		// a is attacked by the fact x; the instantiated SETAF keeps it with the attack (∅, a)
+		AbaTheory<PlFormula> abat = theory("{a,b,c}\nx <-\ny <- a,c\nnot a = x\nnot b = y\nnot c = z");
+		SetAf setaf = new SetAf();
+		for (String a : new String[] { "a", "b", "c" })
+			setaf.add(new Argument(a));
+		setaf.add(new SetAttack(Set.of(), new Argument("a")));
+		setaf.add(new SetAttack(Set.of(new Argument("a"), new Argument("c")), new Argument("b")));
+		for (Semantics s : new Semantics[] { Semantics.SAD, Semantics.WAD, Semantics.WCO, Semantics.WPR, Semantics.WGR }) {
+			Set<Set<String>> expected = new HashSet<>();
+			for (Extension<SetAf> ext : AbstractSetAfExtensionReasoner.getSimpleReasonerForSemantics(s).getModels(setaf))
+				expected.add(strings(ext));
+			assertEquals(expected, names(new SetafReductionReasoner<PlFormula>(s).getModels(abat)), s.toString());
 		}
 	}
 
