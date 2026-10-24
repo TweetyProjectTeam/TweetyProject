@@ -108,6 +108,25 @@ public abstract class AbstractSetAfExtensionReasoner extends AbstractSetAfReason
 	 * @return a reasoner for the given SetAF, inference type, and semantics
 	 */
 	public static AbstractSetAfExtensionReasoner getSimpleReasonerForSemantics(Semantics semantics) {
+		AbstractSetAfExtensionReasoner reasoner = getNativeReasoner(semantics);
+		if (reasoner == null)
+			throw new IllegalArgumentException("Unknown semantics.");
+		return reasoner;
+	}
+
+	/**
+	 * Creates a reasoner for the given semantics: a native SetAF reasoner if there
+	 * is one, else one via the reduction to a Dung theory.
+	 *
+	 * @param semantics a semantics
+	 * @return a reasoner for the given semantics
+	 */
+	public static AbstractSetAfExtensionReasoner getReasonerForSemantics(Semantics semantics) {
+		AbstractSetAfExtensionReasoner reasoner = getNativeReasoner(semantics);
+		return reasoner != null ? reasoner : new ReductionBasedSetAfReasoner(semantics);
+	}
+
+	private static AbstractSetAfExtensionReasoner getNativeReasoner(Semantics semantics) {
 		switch (semantics) {
 			case CO:
 				return new SimpleCompleteSetAfReasoner();
@@ -140,7 +159,7 @@ public abstract class AbstractSetAfExtensionReasoner extends AbstractSetAfReason
 			case WGR:
 				return new SimpleWeaklyGroundedSetAfReasoner();
 			default:
-				throw new IllegalArgumentException("Unknown semantics.");
+				return null;
 		}
 	}
 

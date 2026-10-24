@@ -18,11 +18,9 @@
  */
 package org.tweetyproject.web.services.setaf;
 
-import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.reasoners.AbstractSetAfExtensionReasoner;
-import org.tweetyproject.arg.setaf.reasoners.ReductionBasedSetAfReasoner;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 import java.util.*;
@@ -50,7 +48,7 @@ public abstract class AbstractSetAfFactory {
 	 * @return the requested reasoner.
 	 */
 	public static AbstractSetAfExtensionReasoner getReasoner(Semantics sem) {
-		return new ReductionBasedSetAfReasoner(AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem));
+		return AbstractSetAfExtensionReasoner.getReasonerForSemantics(sem);
 	}
 
     /**

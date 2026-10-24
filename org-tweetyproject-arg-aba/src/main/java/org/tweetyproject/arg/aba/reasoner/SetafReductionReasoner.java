@@ -33,7 +33,6 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.reasoners.AbstractSetAfExtensionReasoner;
-import org.tweetyproject.arg.setaf.reasoners.ReductionBasedSetAfReasoner;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.Formula;
 
@@ -62,11 +61,6 @@ import org.tweetyproject.commons.Formula;
  */
 public class SetafReductionReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 
-	/** Semantics evaluated directly on the SETAF */
-	private static final EnumSet<Semantics> NATIVE = EnumSet.of(Semantics.CF, Semantics.ADM, Semantics.CO,
-			Semantics.GR, Semantics.PR, Semantics.ST, Semantics.SST, Semantics.ID, Semantics.EA, Semantics.STG,
-			Semantics.SAD, Semantics.WAD, Semantics.WCO, Semantics.WPR, Semantics.WGR);
-
 	/** Semantics whose metalevel reduction does not preserve conflicts */
 	private static final EnumSet<Semantics> UNSUPPORTED = EnumSet.of(Semantics.NA, Semantics.CF2, Semantics.SCF2,
 			Semantics.STG2);
@@ -82,8 +76,7 @@ public class SetafReductionReasoner<T extends Formula> extends GeneralAbaReasone
 	public SetafReductionReasoner(Semantics semantics) {
 		if (UNSUPPORTED.contains(semantics))
 			throw new IllegalArgumentException("The SETAF reduction does not support " + semantics.description() + ".");
-		this.reasoner = NATIVE.contains(semantics) ? AbstractSetAfExtensionReasoner.getSimpleReasonerForSemantics(semantics)
-				: new ReductionBasedSetAfReasoner(semantics);
+		this.reasoner = AbstractSetAfExtensionReasoner.getReasonerForSemantics(semantics);
 	}
 
 	@Override
