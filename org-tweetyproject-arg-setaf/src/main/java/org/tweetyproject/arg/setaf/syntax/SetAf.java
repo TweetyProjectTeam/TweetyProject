@@ -647,6 +647,30 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
         return graph;
     }
 
+    /**
+     * Computes the reduct of this SetAf wrt. the given arguments, i.e. removes the arguments
+     * and all arguments attacked by them. Attacks whose attackers contain an argument attacked
+     * by <code>arguments</code> are removed, the remaining attacks lose all attackers in <code>arguments</code>.
+     * @param arguments some arguments
+     * @return the reduct
+     * @see "Blümel, König, Ulbricht, 'Weak Admissibility for ABA via Abstract Set-Attacks', KR 2024"
+     */
+    public SetAf getReduct(Collection<Argument> arguments) {
+        Collection<Argument> attacked = this.getAttacked(arguments);
+        SetAf reduct = new SetAf();
+        for (Argument a : this)
+            if (!arguments.contains(a) && !attacked.contains(a))
+                reduct.add(a);
+        for (SetAttack att : this.edges) {
+            if (!reduct.contains(att.getAttacked()) || !Collections.disjoint(att.getAttackers(), attacked))
+                continue;
+            HashSet<Argument> attackers = new HashSet<>(att.getAttackers());
+            attackers.removeAll(arguments);
+            reduct.addAttack(attackers, att.getAttacked());
+        }
+        return reduct;
+    }
+
     @Override
     public boolean hasSelfLoops() {
         for (Argument node1 : this.nodes)
