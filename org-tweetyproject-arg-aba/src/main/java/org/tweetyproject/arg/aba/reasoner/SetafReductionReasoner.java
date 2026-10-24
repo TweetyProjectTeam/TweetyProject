@@ -44,14 +44,17 @@ import org.tweetyproject.commons.Formula;
  * is left out together with the attacks it takes part in.
  * <p>
  * Semantics with a native SETAF reasoner (cf, adm, co, gr, pr, st, sst, id, ea,
- * stg) are evaluated on the SETAF; all others via the metalevel reduction of
- * the SETAF to a Dung framework.
+ * stg, sad, wad, wco, wpr, wgr) are evaluated on the SETAF; all others via the
+ * metalevel reduction of the SETAF to a Dung framework.
  * <p>
  * Proven to coincide for: complete, preferred, grounded and stable.
+ * For flat theories, strong admissibility and the weak semantics are defined via this SETAF.
  * naive, cf2, scf2 and stg2 are rejected; the other reduction-based
  * semantics are unclear as of now.
  *
  * @see "König, Rapberger, Ulbricht, 'Just a Matter of Perspective', COMMA 2022"
+ * @see "Blümel, König, Ulbricht, 'Weak Admissibility for ABA via Abstract Set-Attacks', KR 2024"
+ * @see "Berthold, Blümel, Rapberger, 'On Strong and Weak Admissibility in Non-Flat Assumption-Based Argumentation', 2025"
  *
  * @author Lars Bengel
  *
@@ -61,7 +64,8 @@ public class SetafReductionReasoner<T extends Formula> extends GeneralAbaReasone
 
 	/** Semantics evaluated directly on the SETAF */
 	private static final EnumSet<Semantics> NATIVE = EnumSet.of(Semantics.CF, Semantics.ADM, Semantics.CO,
-			Semantics.GR, Semantics.PR, Semantics.ST, Semantics.SST, Semantics.ID, Semantics.EA, Semantics.STG);
+			Semantics.GR, Semantics.PR, Semantics.ST, Semantics.SST, Semantics.ID, Semantics.EA, Semantics.STG,
+			Semantics.SAD, Semantics.WAD, Semantics.WCO, Semantics.WPR, Semantics.WGR);
 
 	/** Semantics whose metalevel reduction does not preserve conflicts */
 	private static final EnumSet<Semantics> UNSUPPORTED = EnumSet.of(Semantics.NA, Semantics.CF2, Semantics.SCF2,

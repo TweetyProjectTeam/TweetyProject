@@ -30,7 +30,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Reasoner for SetAfs that reduces the SetAf to a dung theory via a polynomial reduction
+ * Reasoner for SetAfs that reduces the SetAf to a dung theory via a polynomial reduction.
+ * Correspondence with the SETAF semantics is only known for the classical semantics; for strong
+ * admissibility and the weak semantics it is unproven, use the native reasoners instead.
  *
  * @see "Modgil and Bench-Capon (2011), 'Metalevel argumentation', J. Log. Comput."
  *

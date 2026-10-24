@@ -129,6 +129,16 @@ public abstract class AbstractSetAfExtensionReasoner extends AbstractSetAfReason
 				return new SimpleEagerSetAfReasoner();
 			case STG:
 				return new SimpleStageSetAfReasoner();
+			case SAD:
+				return new SimpleStronglyAdmissibleSetAfReasoner();
+			case WAD:
+				return new SimpleWeaklyAdmissibleSetAfReasoner();
+			case WCO:
+				return new SimpleWeaklyCompleteSetAfReasoner();
+			case WPR:
+				return new SimpleWeaklyPreferredSetAfReasoner();
+			case WGR:
+				return new SimpleWeaklyGroundedSetAfReasoner();
 			default:
 				throw new IllegalArgumentException("Unknown semantics.");
 		}
